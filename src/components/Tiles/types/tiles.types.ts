@@ -111,10 +111,10 @@ export type LegendProps = {
   milestoneCovers: string[];
   setImageIndex: (e: number[]) => void;
   index: number;
-  disputeGrant: (index: number, id: number) => Promise<void>;
-  commentGrant: (id: number) => Promise<void>;
-  likeGrant: (id: number) => Promise<void>;
-  mirrorGrant: (id: number) => Promise<void>;
+  disputeGrant: (index: number, id: string) => Promise<void>;
+  commentGrant: (id: string) => Promise<void>;
+  likeGrant: (id: string) => Promise<void>;
+  mirrorGrant: (id: string) => Promise<void>;
   setCollectChoice: (e: { color: string; size: string }[]) => void;
   collectChoice: {
     color: string;
