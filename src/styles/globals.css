@@ -2,26 +2,311 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@font-face {
+  font-family: "Bitblox";
+  src: url("/fonts/Bitblox.otf");
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+@font-face {
+  font-family: "Vcr";
+  src: url("/fonts/Vcr.ttf");
+}
+
+@font-face {
+  font-family: "Internal Rainbows";
+  src: url("/fonts/InternalRainbows.otf");
+}
+
+@font-face {
+  font-family: "DS Digital";
+  font-weight: 400;
+  src: url("/fonts/DSDigi.ttf");
+}
+
+@font-face {
+  font-family: "Earls Revenge";
+  font-weight: 400;
+  src: url("/fonts/EarlsRevenge.ttf");
+}
+
+
+@font-face {
+  font-family: "Gamer";
+  src: url("/fonts/Gamer.ttf");
+}
+
+@font-face {
+  font-family: "Network";
+  src: url("/fonts/Network.ttf");
+}
+
+@font-face {
+  font-family: "Dogica";
+  src: url("/fonts/Dogica.ttf");
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: #111313;
 }
+
+body::-webkit-scrollbar {
+  width: 0px;
+  opacity: 0; /* Initially hide the scrollbar */
+}
+
+body:hover::-webkit-scrollbar {
+  opacity: 0; /* Show the scrollbar on hover */
+}
+
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.searchTransition {
+  animation: fadeMoveFade 3s forwards;
+}
+
+.fadeTiles {
+  animation: fadeIn 3s ease-in-out;
+}
+
+#searchBar:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+@keyframes fadeMoveFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#borderSearch {
+  background: linear-gradient(
+    rgba(133, 174, 255, 0.6),
+    rgba(122, 157, 228, 0.6),
+    rgba(124, 148, 232, 0.6),
+    rgba(106, 130, 250, 0.6),
+    rgba(105, 125, 242, 0.6),
+    rgba(87, 124, 246, 0.6),
+    rgba(132, 174, 255, 0.6)
+  );
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+input[type="number"]::-webkit-inner-spin-button:focus,
+input[type="number"]::-webkit-outer-spin-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+#dropDown {
+  background: linear-gradient(
+    rgba(133, 174, 255, 0.6),
+    rgba(122, 157, 228, 0.6),
+    rgba(124, 148, 232, 0.6),
+    rgba(106, 130, 250, 0.6),
+    rgba(105, 125, 242, 0.6),
+    rgba(87, 124, 246, 0.6),
+    rgba(132, 174, 255, 0.6)
+  );
+}
+
+#dropDown::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Initially hide the scrollbar */
+  transition: opacity 0.3s ease;
+}
+
+#dropDown:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#dropDown::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+#dropDown::-webkit-scrollbar-thumb {
+  background-color: rgba(106, 130, 250, 0.6);
+}
+
+#preroll {
+  background: linear-gradient(#712af6, #7e07d6, #9806cf, #5a0ac7, #682af6);
+}
+
+#tiles {
+  background: linear-gradient(#f3f6f7, #f7f7f3, #f9e8fa, #f0ecf6, #f3f6f7);
+}
+
+#prerollScroll::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Initially hide the scrollbar */
+  transition: opacity 0.3s ease;
+}
+
+#prerollScroll:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#prerollScroll::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+#prerollScroll::-webkit-scrollbar-thumb {
+  background-color: rgba(106, 130, 250, 0.6);
+}
+
+#results::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Initially hide the scrollbar */
+  transition: opacity 0.3s ease;
+}
+
+#results:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#results::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+#results::-webkit-scrollbar-thumb {
+  background-color: rgba(106, 130, 250, 0.6);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #111313 !important;
+  color: white !important;
+  font-family: "Bitblox" !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: white !important;
+}
+
+.leaflet-popup-tip {
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+}
+
+.leaflet-bar a {
+  background-color: black !important;
+  color: white !important;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+}
+
+#pfp {
+  background: linear-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
+}
+
+#cart {
+  transform: scale(1.1);
+  animation: shake 0.5s ease;
+}
+@keyframes shake {
+  0% { transform: translate(0, 0) rotate(0); }
+  20% { transform: translate(-10px, 0) rotate(-20deg); }
+  30% { transform: translate(10px, 0) rotate(20deg); }
+  50% { transform: translate(-10px, 0) rotate(-10deg); }
+  60% { transform: translate(10px, 0) rotate(10deg); }
+  100% { transform: translate(0, 0) rotate(0); }
+}
+
+#bar {
+  background-image: url("https://chromadin.infura-ipfs.io/ipfs/QmeQ2sdjGXxUCQHCnK6kHU2c9Do3rjs557hU87jGorAvTs");
+  background-size: cover;
+}
+
+
+#grant {
+  background-image: url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ");
+  background-size: contain;
+}
+
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+input[type="number"]::-webkit-inner-spin-button:focus,
+input[type="number"]::-webkit-outer-spin-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+input::-webkit-inner-spin-button:focus,
+input::-webkit-outer-spin-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+
+#milestone::-webkit-scrollbar {
+  width: 3px;
+  opacity: 1; /* Initially hide the scrollbar */
+}
+
+#milestone:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#milestone::-webkit-scrollbar-track {
+  background-color: #222222;
+}
+
+#milestone::-webkit-scrollbar-thumb {
+  background-color: #d49e78;
+}
+
