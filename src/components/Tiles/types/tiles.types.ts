@@ -1,9 +1,9 @@
 import { FormEvent, MouseEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
-import { PublicationMetadata } from "../../../../graphql/generated";
+import { Post } from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
-import { CartItem, ItemType } from "@/components/Layout/types/footer.types";
+import { CartItem } from "@/components/Layout/types/footer.types";
 
 export type TilesProps = {
   handleMoreSearch: () => Promise<void>;
@@ -16,11 +16,23 @@ export type TilesProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  }[];
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
 };
 
 export type TileSwitchProps = {
   type: string;
-  publication: PublicationMetadata;
+  publication: Post;
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;
@@ -30,76 +42,93 @@ export type TileSwitchProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  }[];
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
+  profileId: string;
+  volume: number;
+  volumeOpen: boolean;
+  setVolumeOpen: (e: boolean) => void;
+  videoSync: VideoSyncState;
+  handleVolumeChange: (e: FormEvent) => void;
+  handleHeart: () => void;
+  progressRef: Ref<HTMLDivElement>;
+  handleSeek: (
+    e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
+  ) => void;
 };
 
 export type ControlsProps = {
-  currentIndex: number;
   videoSync: VideoSyncState;
   volume: number;
   volumeOpen: boolean;
   setVolumeOpen: (volumeOpen: boolean) => void;
   handleVolumeChange: (e: FormEvent) => void;
   handleHeart: () => void;
-  mirrored: boolean;
-  liked: boolean;
-  mirrorVideo: () => Promise<void>;
-  likeVideo: () => Promise<void>;
-  commentVideo: () => Promise<void>;
-  mirrorLoading: boolean;
-  commentLoading: boolean;
-  likeLoading: boolean;
-  authStatus: boolean;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
   profileId: string;
   progressRef: Ref<HTMLDivElement>;
   handleSeek: (
     e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
   ) => void;
-  commentAmount: number[];
-  mirrorAmount: number[];
-  likeAmount: number[];
   dispatch: Dispatch<AnyAction>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  publication: Post;
 };
 
 export type VideoPostProps = {
-  currentIndex: number;
   videoSync: VideoSyncState;
   volume: number;
   volumeOpen: boolean;
   setVolumeOpen: (volumeOpen: boolean) => void;
   handleVolumeChange: (e: FormEvent) => void;
   handleHeart: () => void;
-  mirrored: boolean;
-  liked: boolean;
-  mirrorVideo: () => Promise<void>;
-  likeVideo: () => Promise<void>;
-  commentVideo: () => Promise<void>;
-  mirrorLoading: boolean;
-  commentLoading: boolean;
-  likeLoading: boolean;
-  authStatus: boolean;
   profileId: string;
   progressRef: Ref<HTMLDivElement>;
   handleSeek: (
     e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
   ) => void;
-  commentAmount: number[];
-  mirrorAmount: number[];
-  likeAmount: number[];
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   router: NextRouter;
-  publication: PublicationMetadata;
+  publication: Post;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
 };
 
 export type LegendProps = {
-  publication: PublicationMetadata;
+  publication: Post;
   imageIndex: number[];
   milestoneCovers: string[];
   setImageIndex: (e: number[]) => void;
   index: number;
-  commentGrant: (id: string) => Promise<void>;
-  likeGrant: (id: string) => Promise<void>;
-  mirrorGrant: (id: string) => Promise<void>;
   setCollectChoice: (e: { color: string; size: string }[]) => void;
   collectChoice: {
     color: string;
@@ -114,6 +143,18 @@ export type LegendProps = {
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
 };
 
 export type CollectItemProps = {
@@ -126,7 +167,7 @@ export type CollectItemProps = {
   }[];
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
-  item: PublicationMetadata;
+  item: Post;
 };
 
 export type ChromadinProps = {
@@ -139,7 +180,19 @@ export type ChromadinProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
-  publication: PublicationMetadata;
+  publication: Post;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
 };
 
 export type CoinOpProps = {
@@ -149,27 +202,65 @@ export type CoinOpProps = {
   index: number;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
-  publication: PublicationMetadata;
+  publication: Post;
   cartItems: CartItem[];
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
 };
 
 export type TextPostProps = {
   layoutAmount: number;
   router: NextRouter;
-  publication: PublicationMetadata;
+  publication: Post;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
+  index: number;
 };
 
 export type QuestProps = {
   layoutAmount: number;
   router: NextRouter;
-  publication: PublicationMetadata;
+  publication: Post;
 };
 
 export type ImagePostProps = {
   layoutAmount: number;
   router: NextRouter;
-  publication: PublicationMetadata;
+  publication: Post;
   dispatch: Dispatch<AnyAction>;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
+  index: number;
 };
 
 export type LevelOneProps = {
@@ -200,5 +291,17 @@ export type ListenerProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
-  publication: PublicationMetadata;
+  publication: Post;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
 };

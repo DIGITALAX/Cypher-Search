@@ -9,28 +9,20 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
   handleSeek,
   videoSync,
   handleHeart,
-  likeVideo,
-  likeLoading,
-  liked,
-  authStatus,
   profileId,
-  commentLoading,
-  commentVideo,
-  likeAmount,
   progressRef,
-  commentAmount,
-  mirrored,
-  mirrorVideo,
-  mirrorLoading,
   volumeOpen,
   setVolumeOpen,
   volume,
-  mirrorAmount,
   handleVolumeChange,
-  currentIndex,
   layoutAmount,
   router,
   publication,
+  mirror,
+  like,
+  comment,
+  quote,
+  interactionsLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4">
@@ -51,25 +43,18 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
             handleSeek={handleSeek}
             videoSync={videoSync}
             handleHeart={handleHeart}
-            likeVideo={likeVideo}
-            likeLoading={likeLoading}
-            liked={liked}
-            authStatus={authStatus}
             profileId={profileId}
-            commentLoading={commentLoading}
-            commentVideo={commentVideo}
-            likeAmount={likeAmount}
             progressRef={progressRef}
-            commentAmount={commentAmount}
-            mirrored={mirrored}
-            mirrorVideo={mirrorVideo}
-            mirrorLoading={mirrorLoading}
             volumeOpen={volumeOpen}
             setVolumeOpen={setVolumeOpen}
             volume={volume}
-            mirrorAmount={mirrorAmount}
             handleVolumeChange={handleVolumeChange}
-            currentIndex={currentIndex}
+            mirror={mirror}
+            comment={comment}
+            like={like}
+            quote={quote}
+            interactionsLoading={interactionsLoading}
+            publication={publication}
           />
         </div>
         <div className="relative w-full h-fit p-2 bg-white flex flex-row justify-between gap-2">

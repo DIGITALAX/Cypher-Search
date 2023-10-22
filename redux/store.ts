@@ -13,6 +13,9 @@ import cartAnimReducer from "./reducers/cartAnimSlice";
 import cartItemsReducer from "./reducers/cartItemsSlice";
 import ImageLargeReducer from "./reducers/ImageLargeSlice";
 import layoutSwitchReducer from "./reducers/layoutSwitchSlice";
+import reactBoxReducer from "./reducers/reactBoxSlice";
+import interactionsCountReducer from "./reducers/interactionsCountSlice";
+import searchItemsReducer from "./reducers/searchItemsSlice";
 
 const reducer = combineReducers({
   searchActiveReducer,
@@ -27,7 +30,10 @@ const reducer = combineReducers({
   cartAnimReducer,
   cartItemsReducer,
   ImageLargeReducer,
-  layoutSwitchReducer
+  layoutSwitchReducer,
+  reactBoxReducer,
+  interactionsCountReducer,
+  searchItemsReducer
 });
 
 export const store = configureStore({

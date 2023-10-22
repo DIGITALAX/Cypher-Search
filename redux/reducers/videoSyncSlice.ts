@@ -5,10 +5,6 @@ export interface VideoSyncState {
   currentTime: number;
   heart: boolean;
   isPlaying: boolean;
-  likedArray: boolean[];
-  mirroredArray: boolean[];
-  collectedArray: boolean[];
-  videosLoading: boolean;
 }
 
 const initialVideoSyncState: VideoSyncState = {
@@ -16,10 +12,6 @@ const initialVideoSyncState: VideoSyncState = {
   currentTime: 0,
   heart: false,
   isPlaying: false,
-  likedArray: [],
-  mirroredArray: [],
-  collectedArray: [],
-  videosLoading: false,
 };
 
 export const videoSyncSlice = createSlice({
@@ -33,11 +25,7 @@ export const videoSyncSlice = createSlice({
           actionDuration,
           actionCurrentTime,
           actionHeart,
-          actionLikedArray,
-          actionCollectedArray,
-          actionMirroredArray,
           actionIsPlaying,
-          actionVideosLoading,
         },
       }
     ) => {
@@ -45,10 +33,6 @@ export const videoSyncSlice = createSlice({
       state.currentTime = actionCurrentTime;
       state.heart = actionHeart;
       state.isPlaying = actionIsPlaying;
-      state.likedArray = actionLikedArray;
-      state.collectedArray = actionCollectedArray;
-      state.mirroredArray = actionMirroredArray;
-      state.videosLoading = actionVideosLoading;
     },
   },
 });

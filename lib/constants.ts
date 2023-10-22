@@ -1,4 +1,5 @@
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
+export const BASE_URL: string = "https://api-v2-mumbai.lens.dev/";
 
 export const PLACEHOLDERS: string[] = [
   "know the creator by name? @ them, we won't judge",
@@ -26,7 +27,6 @@ export const FILTER_VALUES: {
   publications: [],
   token: ["MONA", "USDT", "WMATIC", "WETH"],
 };
-
 
 export const ACCEPTED_TOKENS: string[][] = [
   [

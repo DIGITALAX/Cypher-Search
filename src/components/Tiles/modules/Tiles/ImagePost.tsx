@@ -10,6 +10,14 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   publication,
   router,
   dispatch,
+  mirror,
+  like,
+  comment,
+  quote,
+  interactionsLoading,
+  openMirrorChoice,
+  setOpenMirrorChoice,
+  index,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
@@ -21,8 +29,10 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               dispatch(
                 setImageViewer({
                   actionValue: true,
-                  actionType: publication?.marketplace?.image?.raw?.mimeType,
-                  actionImage: publication?.marketplace?.image?.raw?.uri,
+                  actionType:
+                    publication?.metadata?.marketplace?.image?.raw?.mimeType,
+                  actionImage:
+                    publication?.metadata?.marketplace?.image?.raw?.uri,
                 })
               )
             }
@@ -54,7 +64,18 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               })}
             </div>
             <div className="relative h-full w-fit items-center justify-between flex flex-col gap-4">
-              <InteractBar layoutAmount={layoutAmount} />
+              <InteractBar
+                mirror={mirror}
+                like={like}
+                comment={comment}
+                quote={quote}
+                interactionsLoading={interactionsLoading}
+                layoutAmount={layoutAmount}
+                openMirrorChoice={openMirrorChoice}
+                setOpenMirrorChoice={setOpenMirrorChoice}
+                index={index}
+                publication={publication}
+              />
               <div className="relative mb-0 flex flex-row items-center justify-between gap-2 w-full h-fit">
                 <div className="relative w-6 h-6 items-center justify-center flex">
                   <Image
@@ -92,8 +113,10 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 dispatch(
                   setImageViewer({
                     actionValue: true,
-                    actionType: publication?.marketplace?.image?.raw?.mimeType,
-                    actionImage: publication?.marketplace?.image?.raw?.uri,
+                    actionType:
+                      publication?.metadata?.marketplace?.image?.raw?.mimeType,
+                    actionImage:
+                      publication?.metadata?.marketplace?.image?.raw?.uri,
                   })
                 )
               }
@@ -121,7 +144,18 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   </div>
                 );
               })}
-              <InteractBar col />
+              <InteractBar
+                mirror={mirror}
+                like={like}
+                comment={comment}
+                quote={quote}
+                interactionsLoading={interactionsLoading}
+                col
+                openMirrorChoice={openMirrorChoice}
+                setOpenMirrorChoice={setOpenMirrorChoice}
+                index={index}
+                publication={publication}
+              />
             </div>
           </div>
           <div className="relative w-full h-full flex flex-row gap-5 items-center justify-center">

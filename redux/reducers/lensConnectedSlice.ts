@@ -1,21 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Profile } from "../../graphql/generated";
 
 export interface LensConnectedState {
-  profile:
-    | {
-        appId?: string;
-        attributes?: {
-          key: string;
-          type: any;
-          value: any;
-        }[];
-        bio?: string;
-        coverPicture?: string;
-        id: string;
-        name?: string;
-        picture?: string;
-      }
-    | undefined;
+  profile: Profile | undefined;
 }
 
 const initialLensConnectedState: LensConnectedState = {
@@ -28,22 +15,7 @@ export const lensConnectedSlice = createSlice({
   reducers: {
     setLensConnected: (
       state: LensConnectedState,
-      action: PayloadAction<
-        | {
-            appId?: string;
-            attributes?: {
-              key: string;
-              type: any;
-              value: any;
-            }[];
-            bio?: string;
-            coverPicture?: string;
-            id: string;
-            name?: string;
-            picture?: string;
-          }
-        | undefined
-      >
+      action: PayloadAction<Profile | undefined>
     ) => {
       state.profile = action.payload;
     },

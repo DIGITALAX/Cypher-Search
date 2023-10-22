@@ -5706,7 +5706,7 @@ export type ProfileActionHistoryQueryVariables = Exact<{
 }>;
 
 
-export type ProfileActionHistoryQuery = { __typename?: 'Query', profileActionHistory: { __typename?: 'PaginatedProfileActionHistoryResult', items: Array<{ __typename?: 'ProfileActionHistory', id: number }>, pageInfo: { __typename?: 'PaginatedResultInfo', prev?: any | null, next?: any | null } } };
+export type ProfileActionHistoryQuery = { __typename?: 'Query', profileActionHistory: { __typename?: 'PaginatedProfileActionHistoryResult', items: Array<{ __typename?: 'ProfileActionHistory', id: string }>, pageInfo: { __typename?: 'PaginatedResultInfo', prev?: any | null, next?: any | null } } };
 
 export type ProfileAlreadyInvitedQueryVariables = Exact<{
   request: AlreadyInvitedCheckRequest;

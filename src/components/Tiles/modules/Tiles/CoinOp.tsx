@@ -3,9 +3,9 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { CoinOpProps } from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
-import { ItemType } from "../../../../../redux/reducers/cartItemsSlice";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
+import { ItemType } from "@/components/Layout/types/footer.types";
 
 const CoinOp: FunctionComponent<CoinOpProps> = ({
   layoutAmount,
@@ -16,18 +16,36 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   router,
   publication,
   cartItems,
+  mirror,
+  like,
+  comment,
+  quote,
+  interactionsLoading,
+  openMirrorChoice,
+  setOpenMirrorChoice,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
-      <InteractBar />
+      <InteractBar
+        mirror={mirror}
+        like={like}
+        comment={comment}
+        quote={quote}
+        interactionsLoading={interactionsLoading}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        index={index}
+        publication={publication}
+      />
       <div
         className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
         onClick={() =>
           dispatch(
             setImageViewer({
               actionValue: true,
-              actionType: publication?.marketplace?.image?.raw?.mimeType,
-              actionImage: publication?.marketplace?.image?.raw?.uri,
+              actionType:
+                publication?.metadata?.marketplace?.image?.raw?.mimeType,
+              actionImage: publication?.metadata?.marketplace?.image?.raw?.uri,
             })
           )
         }

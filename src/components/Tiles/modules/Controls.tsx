@@ -12,25 +12,18 @@ const Controls: FunctionComponent<ControlsProps> = ({
   handleSeek,
   videoSync,
   handleHeart,
-  likeVideo,
-  likeLoading,
-  liked,
-  authStatus,
   profileId,
-  commentLoading,
-  commentVideo,
-  likeAmount,
   progressRef,
-  commentAmount,
-  mirrored,
-  mirrorVideo,
-  mirrorLoading,
   volumeOpen,
   setVolumeOpen,
   volume,
-  mirrorAmount,
   handleVolumeChange,
-  currentIndex,
+  interactionsLoading,
+  mirror,
+  comment,
+  like,
+  quote,
+  publication,
 }): JSX.Element => {
   return (
     <div
@@ -79,20 +72,20 @@ const Controls: FunctionComponent<ControlsProps> = ({
         <div className="relative flex flex-row w-fit h-fit items-center justify-center">
           <div
             className={`cursor-pointer relative w-fit h-fit ${
-              likeLoading && "animate-spin"
+              interactionsLoading?.like && "animate-spin"
             }`}
             onClick={
-              profileId && authStatus
+              profileId
                 ? () => {
                     handleHeart();
-                    likeVideo();
+                    like(publication.id);
                   }
                 : () => handleHeart()
             }
           >
-            {likeLoading ? (
+            {interactionsLoading?.like ? (
               <AiOutlineLoading size={12} color="white" />
-            ) : liked ? (
+            ) : publication?.operations?.hasReacted ? (
               <div className="relative w-3 h-3 flex items-center justify-center">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/Qmc3KCKWRgN8iKwwAPM5pYkAYNeVwWu3moa5RDMDTBV6ZS`}
@@ -113,17 +106,17 @@ const Controls: FunctionComponent<ControlsProps> = ({
             )}
           </div>
           <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {likeAmount?.[currentIndex]}
+            {publication?.stats?.reactions}
           </div>
         </div>
         <div className="relative flex flex-row w-fit h-fit items-center justify-center">
           <div
-            className={`${
-              profileId && authStatus && "cursor-pointer"
-            } relative w-fit ${commentLoading && "animate-spin"}`}
-            onClick={() => commentVideo()}
+            className={`${profileId && "cursor-pointer"} relative w-fit ${
+              interactionsLoading?.comment && "animate-spin"
+            }`}
+            onClick={() => comment(publication.id)}
           >
-            {commentLoading ? (
+            {interactionsLoading?.comment ? (
               <AiOutlineLoading size={12} color="white" />
             ) : (
               <div className="relative w-3 h-3 flex items-center justify-center">
@@ -137,19 +130,19 @@ const Controls: FunctionComponent<ControlsProps> = ({
             )}
           </div>
           <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {commentAmount?.[currentIndex]}
+            {publication?.stats?.comments}
           </div>
         </div>
         <div className="relative flex flex-row w-fit h-fit items-center justify-center">
           <div
-            className={`${
-              profileId && authStatus && "cursor-pointer"
-            } relative w-fit ${mirrorLoading && "animate-spin"}`}
-            onClick={() => mirrorVideo()}
+            className={`${profileId && "cursor-pointer"} relative w-fit ${
+              interactionsLoading?.mirror && "animate-spin"
+            }`}
+            onClick={() => mirror(publication?.id)}
           >
-            {mirrorLoading ? (
+            {interactionsLoading?.mirror ? (
               <AiOutlineLoading size={12} color="white" />
-            ) : mirrored ? (
+            ) : publication?.operations?.hasMirrored ? (
               <div className="relative w-3 h-3 flex items-center justify-center">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/QmcMNSnbKvUfx3B3iHBd9deZCDf7E4J8W6UtyNer3xoMsB`}
@@ -170,7 +163,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
             )}
           </div>
           <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {mirrorAmount?.[currentIndex]}
+            {publication?.stats?.mirrors}
           </div>
         </div>
         <div
@@ -182,10 +175,6 @@ const Controls: FunctionComponent<ControlsProps> = ({
                 actionDuration: videoSync?.duration,
                 actionCurrentTime: videoSync?.currentTime,
                 actionIsPlaying: videoSync?.isPlaying ? false : true,
-                actionLikedArray: videoSync?.likedArray,
-                actionMirroredArray: videoSync?.mirroredArray,
-                actionCollectedArray: videoSync?.collectedArray,
-                actionVideosLoading: videoSync?.videosLoading,
               })
             )
           }
