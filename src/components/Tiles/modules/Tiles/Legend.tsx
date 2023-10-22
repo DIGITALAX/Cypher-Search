@@ -12,9 +12,6 @@ const Legend: FunctionComponent<LegendProps> = ({
   setImageIndex,
   index,
   collectChoice,
-  commentGrant,
-  likeGrant,
-  mirrorGrant,
   setCollectChoice,
   cartItems,
   dispatch,
@@ -24,6 +21,11 @@ const Legend: FunctionComponent<LegendProps> = ({
   showMirrors,
   milestoneCovers,
   layoutAmount,
+  mirror,
+  like,
+  comment,
+  quote,
+  interactionsLoading,
 }): JSX.Element => {
   return (
     <div className="relative h-fit w-full border border-black flex flex-col items-center justify-center">
@@ -41,7 +43,7 @@ const Legend: FunctionComponent<LegendProps> = ({
                   "QmVFm5onDqzKCV6v9XbGTQirXsWFmRgihsYcXVBbLMxneL",
                   "QmRsAM1oJfiv1Py92uoYk7VMdrnPfWDsgH3Y2tPWVDqxHw",
                 ].map((image: string, index: number) => {
-                  const functions = [likeGrant, commentGrant, mirrorGrant];
+                  const functions = [like, comment, mirror];
                   const show = [showLikes, showComments, showMirrors];
                   return (
                     <div

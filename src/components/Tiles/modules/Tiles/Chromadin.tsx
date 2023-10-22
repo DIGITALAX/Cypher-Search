@@ -3,9 +3,9 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { ChromadinProps } from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
-import { ItemType } from "../../../../../redux/reducers/cartItemsSlice";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
+import { ItemType } from "@/components/Layout/types/footer.types";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   layoutAmount,
@@ -18,10 +18,27 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   popUpOpen,
   cartItems,
   publication,
+  mirror,
+  like,
+  comment,
+  quote,
+  interactionsLoading,
+  setOpenMirrorChoice,
+  openMirrorChoice,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
-      <InteractBar />
+      <InteractBar
+        mirror={mirror}
+        like={like}
+        comment={comment}
+        quote={quote}
+        interactionsLoading={interactionsLoading}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        index={index}
+        publication={publication}
+      />
       <div className="relative flex flex-col items-center justify-start w-full h-fit gap-5">
         <div className="relative flex flex-row w-full justifty-between items-start h-fit gap-4">
           <div
@@ -30,8 +47,10 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               dispatch(
                 setImageViewer({
                   actionValue: true,
-                  actionType: publication?.marketplace?.image?.raw?.mimeType,
-                  actionImage: publication?.marketplace?.image?.raw?.uri,
+                  actionType:
+                    publication?.metadata?.marketplace?.image?.raw?.mimeType,
+                  actionImage:
+                    publication?.metadata?.marketplace?.image?.raw?.uri,
                 })
               )
             }

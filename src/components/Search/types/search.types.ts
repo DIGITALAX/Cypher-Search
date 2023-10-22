@@ -3,6 +3,7 @@ import { FILTER_VALUES } from "../../../../lib/constants";
 import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Layout/types/footer.types";
 import { NextRouter } from "next/router";
+import { Profile } from "../../../../graphql/generated";
 
 export type SearchBarProps = {
   handleSearch: (
@@ -32,24 +33,11 @@ export type HeaderProps = {
   placeholderText: string | undefined;
   setSearchInput: (e: string) => void;
   openConnectModal: (() => void) | undefined;
+  openAccountModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   setCartListOpen: (e: boolean) => void;
-  lensConnected:
-    | {
-        appId?: string;
-        attributes?: {
-          key: string;
-          type: any;
-          value: any;
-        }[];
-        bio?: string;
-        coverPicture?: string;
-        id: string;
-        name?: string;
-        picture?: string;
-      }
-    | undefined;
+  lensConnected: Profile | undefined;
   walletConnected: boolean;
   setOpenAccount: (e: boolean) => void;
   openAccount: boolean;

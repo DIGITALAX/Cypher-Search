@@ -2,7 +2,7 @@ import { Filter } from "@/components/Search/types/search.types";
 import { Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
-import { PublicationMetadata } from "../../../../graphql/generated";
+import { Post } from "../../../../graphql/generated";
 import { MainVideoState } from "../../../../redux/reducers/mainVideoSlice";
 
 export type MapProps = {
@@ -16,7 +16,7 @@ export type FullScreenVideoProps = {
   videoRef: Ref<HTMLDivElement>;
   streamRef: Ref<HTMLVideoElement>;
   wrapperRef: Ref<HTMLDivElement>;
-  dispatchVideos: PublicationMetadata[];
+  dispatchVideos: Post[];
   videoSync: VideoSyncState;
   viewer: string;
   hasMore: boolean;
@@ -33,4 +33,3 @@ export type ImageLargeProps = {
   dispatch: Dispatch<AnyAction>;
   type: string;
 };
-

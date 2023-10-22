@@ -8,6 +8,14 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   layoutAmount,
   router,
   publication,
+  mirror,
+  like,
+  comment,
+  quote,
+  interactionsLoading,
+  setOpenMirrorChoice,
+  openMirrorChoice,
+  index,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
@@ -16,7 +24,18 @@ const TextPost: FunctionComponent<TextPostProps> = ({
       </div>
       <div className="relative w-fit h-fit flex flex-col gap-5 items-end justify-end">
         <div className="relative flex flex-col w-fit h-fit gap-2 items-end justify-center">
-          <InteractBar layoutAmount={layoutAmount} />
+          <InteractBar
+            mirror={mirror}
+            like={like}
+            comment={comment}
+            quote={quote}
+            interactionsLoading={interactionsLoading}
+            layoutAmount={layoutAmount}
+            openMirrorChoice={openMirrorChoice}
+            setOpenMirrorChoice={setOpenMirrorChoice}
+            index={index}
+            publication={publication}
+          />
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">
               <div className="relative w-full h-fit items-end justify-start flex flex-col">

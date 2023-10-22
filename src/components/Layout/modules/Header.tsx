@@ -7,6 +7,7 @@ import Link from "next/link";
 import { AiOutlineLoading } from "react-icons/ai";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { CartItem } from "../types/footer.types";
+import { ImageSet, NftImage } from "../../../../graphql/generated";
 
 const Header: FunctionComponent<HeaderProps> = ({
   handleSearch,
@@ -14,6 +15,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   searchInput,
   setSearchInput,
   openConnectModal,
+  openAccountModal,
   handleLensConnect,
   walletConnected,
   lensConnected,
@@ -54,33 +56,36 @@ const Header: FunctionComponent<HeaderProps> = ({
         layoutAmount={layoutAmount}
       />
       <div className="relative w-fit h-10 flex flex-row gap-4 items-center justify-center">
-        <div
-          className={`w-24 h-8 relative flex items-center justify-center p-px rounded-sm text-center cursor-pointer active:scale-95 hover:opacity-70 ${
-            signInLoading && "animate-spin"
-          }`}
-          id="borderSearch"
-          onClick={
-            !walletConnected
-              ? openConnectModal
-              : walletConnected && !lensConnected
-              ? () => handleLensConnect()
-              : () => setOpenAccount(!openAccount)
-          }
-        >
-          <div className="relative w-full h-full rounded-sm bg-offBlack text-sol font-vcr flex items-center justify-center text-sm">
-            {signInLoading ? (
-              <AiOutlineLoading size={15} color={"white"} />
-            ) : !walletConnected ? (
-              "connect"
-            ) : walletConnected && !lensConnected ? (
-              "lens"
-            ) : (
-              "account"
-            )}
+        {!lensConnected && (
+          <div
+            className={`w-24 h-8 relative flex items-center justify-center p-px rounded-sm text-center cursor-pointer active:scale-95 hover:opacity-70`}
+            id="borderSearch"
+            onClick={
+              !walletConnected
+                ? openConnectModal
+                : walletConnected && !lensConnected
+                ? () => handleLensConnect()
+                : () => {}
+            }
+          >
+            <div
+              className={`relative w-full h-full rounded-sm font-vcr flex items-center justify-center text-sm bg-offBlack text-sol`}
+            >
+              <div
+                className={`relative w-fit h-fit flex items-center justify-center ${
+                  signInLoading && "animate-spin"
+                }`}
+              >
+                {signInLoading ? (
+                  <AiOutlineLoading size={15} color={"white"} />
+                ) : !walletConnected ? (
+                  "connect"
+                ) : (
+                  walletConnected && !lensConnected && "lens"
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-        {openAccount && (
-          <div className="absolute w-24 h-8 top-10 flex items-center justify-center p-px rounded-sm"></div>
         )}
         <div
           className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer active:scale-95"
@@ -98,14 +103,44 @@ const Header: FunctionComponent<HeaderProps> = ({
             {cartItems.length}
           </div>
         )}
-        <div className="relative w-8 h-4/5 flex items-center justify-center">
+        <div
+          className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer"
+          onClick={() => lensConnected && setOpenAccount(!openAccount)}
+        >
           <Image
-            src={`${INFURA_GATEWAY}/ipfs/QmeSSwZt92PgMfvdJih9yyypQGX8gFx3BoLXn3mXwYX5pb`}
+            src={`${INFURA_GATEWAY}/ipfs/${
+              lensConnected?.metadata?.picture?.__typename === "ImageSet" &&
+              (lensConnected.metadata.picture as ImageSet)?.raw.uri
+                ? (lensConnected.metadata.picture as ImageSet)?.raw.uri.split(
+                    "ipfs://"
+                  )[1]
+                : (lensConnected?.metadata?.picture as NftImage)?.image.raw.uri
+                ? (
+                    lensConnected?.metadata?.picture as NftImage
+                  )?.image.raw.uri?.split("ipfs://")[1]
+                : "QmeSSwZt92PgMfvdJih9yyypQGX8gFx3BoLXn3mXwYX5pb"
+            }`}
             layout="fill"
             draggable={false}
           />
         </div>
       </div>
+      {openAccount && (
+        <div className="absolute w-24 h-fit right-3 top-12 flex items-center justify-center p-2 text-white flex-col font-vcr rounded-sm bg-black/80 text-xs gap-4">
+          <div
+            className="relative w-fit h-fit flex items-center justify-center cursor-pointer hover:opacity-80"
+            onClick={() => router.push("/")}
+          >
+            Profile
+          </div>
+          <div
+            className="relative w-fit h-fit flex items-center justify-center cursor-pointer hover:opacity-80"
+            onClick={openAccountModal}
+          >
+            Logout
+          </div>
+        </div>
+      )}
       {cartListOpen && (
         <div
           className="absolute z-20 w-60 right-3 top-12 h-72 rounded-sm bg-black/80 overflow-y-scroll flex flex-col p-3"

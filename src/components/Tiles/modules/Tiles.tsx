@@ -15,6 +15,13 @@ const Tiles: FunctionComponent<TilesProps> = ({
   dispatch,
   router,
   cartItems,
+  mirror,
+  like,
+  comment,
+  quote,
+  interactionsLoading,
+  openMirrorChoice,
+  setOpenMirrorChoice,
 }): JSX.Element => {
   const items = [
     { id: 0, type: "image" },
@@ -43,7 +50,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   }: {
     index: number;
     data: {
-      id: number;
+      id: string;
       type: string;
     };
   }) => {
@@ -61,6 +68,13 @@ const Tiles: FunctionComponent<TilesProps> = ({
         index={index}
         dispatch={dispatch}
         router={router}
+        mirror={mirror}
+        like={like}
+        comment={comment}
+        quote={quote}
+        interactionsLoading={interactionsLoading}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
       />
     );
   };

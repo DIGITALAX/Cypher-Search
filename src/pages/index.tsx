@@ -5,10 +5,11 @@ import { RootState } from "../../redux/store";
 import Tiles from "@/components/Tiles/modules/Tiles";
 import Header from "@/components/Layout/modules/Header";
 import useSignIn from "@/components/Layout/hooks/useSignIn";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import useTiles from "@/components/Tiles/hooks/useTiles";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import useInteractions from "@/components/Tiles/hooks/useInteractions";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ export default function Home() {
     placeholderText,
   } = useSearch();
   const { openConnectModal } = useConnectModal();
+  const { openAccountModal } = useAccountModal();
   const {
     handleLensConnect,
     openAccount,
@@ -51,6 +53,15 @@ export default function Home() {
     cartListOpen,
     setCartListOpen,
   } = useSignIn();
+  const {
+    mirror,
+    like,
+    comment,
+    quote,
+    interactionsLoading,
+    setOpenMirrorChoice,
+    openMirrorChoice,
+  } = useInteractions();
   const { setPopUpOpen, popUpOpen, apparel, setApparel } = useTiles();
   return (
     <div
@@ -73,6 +84,7 @@ export default function Home() {
           setSearchInput={setSearchInput}
           openConnectModal={openConnectModal}
           handleLensConnect={handleLensConnect}
+          openAccountModal={openAccountModal}
           lensConnected={lensConnected}
           walletConnected={walletConnected}
           openAccount={openAccount}
@@ -101,6 +113,13 @@ export default function Home() {
             dispatch={dispatch}
             router={router}
             cartItems={cartItems}
+            mirror={mirror}
+            like={like}
+            comment={comment}
+            quote={quote}
+            interactionsLoading={interactionsLoading}
+            setOpenMirrorChoice={setOpenMirrorChoice}
+            openMirrorChoice={openMirrorChoice}
           />
         )}
       </div>

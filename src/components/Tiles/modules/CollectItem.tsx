@@ -3,11 +3,9 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { CollectItemProps } from "../types/tiles.types";
 import Bar from "../../Common/modules/Bar";
-import {
-  ItemType,
-  setCartItems,
-} from "../../../../redux/reducers/cartItemsSlice";
+import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
+import { ItemType } from "@/components/Layout/types/footer.types";
 
 const CollectItem: FunctionComponent<CollectItemProps> = ({
   index,
@@ -103,7 +101,9 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
         <div
           className={`w-40 h-8 cursor-pointer rounded-sm cursor-pointer active:scale-95 border border-black flex items-center justify-center text-center font-gam text-xl ${
             !cartItems?.some(
-              (item) => item?.id === item?.id && item?.level === index
+              (item) =>
+                item?.collectionId === item?.collectionId &&
+                item?.level === index
             )
               ? "bg-lima"
               : "bg-viol"
@@ -119,15 +119,21 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
 
             if (
               cartItems?.some(
-                (item) => item.id === item?.id && item.level === index
+                (item) =>
+                  item.collectionId === item?.collectionId &&
+                  item.level === index
               )
             ) {
               router.push("/checkout");
             } else {
               const itemIndex = cartItems.findIndex(
-                (cartItem) => cartItem.id === item?.id
+                (cartItem) => cartItem.collectionId === item?.id
               );
-              if (cartItems?.some((item) => item.id === item?.id)) {
+              if (
+                cartItems?.some(
+                  (item) => item.collectionId === item?.collectionId
+                )
+              ) {
                 const newCartItems = [...cartItems];
                 newCartItems.splice(itemIndex, 1);
                 dispatch(setCartItems([...newCartItems, newItem]));
@@ -139,7 +145,8 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
           }}
         >
           {cartItems?.some(
-            (item) => item.id === item?.id && item.level === index
+            (item) =>
+              item.collectionId === item?.collectionId && item.level === index
           )
             ? "Go to Cart"
             : "Choose Level"}

@@ -3,9 +3,9 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { ListenerProps } from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
-import { ItemType } from "../../../../../redux/reducers/cartItemsSlice";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
+import { ItemType } from "@/components/Layout/types/footer.types";
 
 const Listener: FunctionComponent<ListenerProps> = ({
   layoutAmount,
@@ -16,6 +16,13 @@ const Listener: FunctionComponent<ListenerProps> = ({
   router,
   publication,
   cartItems,
+  interactionsLoading,
+  comment,
+  quote,
+  mirror,
+  like,
+  openMirrorChoice,
+  setOpenMirrorChoice,
 }): JSX.Element => {
   return (
     <div
@@ -23,15 +30,27 @@ const Listener: FunctionComponent<ListenerProps> = ({
       id="explainerBg"
     >
       <div className="absolute w-full h-full mix-blend-hard-light bg-listener opacity-60 bg-center bg-cover right-0 top-0"></div>
-      <InteractBar />
+      <InteractBar
+        mirror={mirror}
+        like={like}
+        comment={comment}
+        quote={quote}
+        interactionsLoading={interactionsLoading}
+        layoutAmount={layoutAmount}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        index={index}
+        publication={publication}
+      />
       <div
-        className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer" 
+        className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
         onClick={() =>
           dispatch(
             setImageViewer({
               actionValue: true,
-              actionType: publication?.marketplace?.image?.raw?.mimeType,
-              actionImage: publication?.marketplace?.image?.raw?.uri,
+              actionType:
+                publication?.metadata?.marketplace?.image?.raw?.mimeType,
+              actionImage: publication?.metadata?.marketplace?.image?.raw?.uri,
             })
           )
         }

@@ -1,26 +1,20 @@
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { CartItem, ItemType } from "@/components/Layout/types/footer.types";
+import { NextRouter } from "next/router";
 import { AnyAction, Dispatch } from "redux";
-import { ItemType } from "../../../../redux/reducers/cartItemsSlice";
+import { Post } from "../../../../graphql/generated";
 
 export type BarProps = {
   title: string;
 };
 
 export type PopUpProps = {
-  router: AppRouterInstance;
+  router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   top?: string;
   left?: string;
   bottom?: string;
   right?: string;
-  cartItems: {
-    id: string;
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  cartItems: CartItem[];
   index: number;
   id: string;
   level: number | undefined;
@@ -43,4 +37,18 @@ export type PurchaseTokensProps = {
 export type InteractBarProps = {
   col?: boolean;
   layoutAmount?: number;
+  index: number;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  publication: Post;
+  openMirrorChoice: boolean[];
+  setOpenMirrorChoice: (e: boolean[]) => void;
 };
