@@ -26,3 +26,21 @@ export type PopUpProps = {
   level: number | undefined;
   type: ItemType;
 };
+
+export type PurchaseTokensProps = {
+  currency: string;
+  handleChangeCurrency: (
+    levelIndex: number,
+    itemIndex: number,
+    priceIndex: number,
+    checkoutCurrency: string
+  ) => void;
+  itemIndex: number;
+  levelIndex: number;
+  priceIndex: number;
+};
+
+export type InteractBarProps = {
+  col?: boolean;
+  layoutAmount?: number;
+};

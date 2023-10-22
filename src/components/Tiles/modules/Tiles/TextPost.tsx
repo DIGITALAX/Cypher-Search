@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { TextPostProps } from "../../types/tiles.types";
+import InteractBar from "@/components/Common/modules/InteractBar";
 
 const TextPost: FunctionComponent<TextPostProps> = ({
   layoutAmount,
@@ -15,32 +16,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
       </div>
       <div className="relative w-fit h-fit flex flex-col gap-5 items-end justify-end">
         <div className="relative flex flex-col w-fit h-fit gap-2 items-end justify-center">
-          <div className="relative w-full h-fit rounded-sm border border-frio text-base font-bit text-mar flex flex-col gap-2 p-2 items-center justify-center">
-            {[
-              "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-              "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
-              "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
-              "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
-            ].map((image: string, index: number) => {
-              return (
-                <div
-                  className="relative w-full h-full flex flex-row items-center justify-center gap-4"
-                  key={index}
-                >
-                  <div className="relative w-4 h-4 flex cursor-pointer items-center justify-center active:scale-95">
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/${image}`}
-                      draggable={false}
-                    />
-                  </div>
-                  <div className="relative w-fit h-fit flex items-center justify-center text-center cursor-pointer active:scale-95">
-                    77
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <InteractBar layoutAmount={layoutAmount} />
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">
               <div className="relative w-full h-fit items-end justify-start flex flex-col">

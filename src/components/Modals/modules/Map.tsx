@@ -1,12 +1,12 @@
 import { FunctionComponent } from "react";
-import { MapProps } from "./types/modals.types";
-import { setMap } from "../../../redux/reducers/mapSlice";
+import { MapProps } from "../types/modals.types";
+import { setMap } from "../../../../redux/reducers/mapSlice";
 import { ImCross } from "react-icons/im";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
-import { setFilter } from "../../../redux/reducers/filterSlice";
-import { INFURA_GATEWAY } from "../../../lib/constants";
+import { setFilter } from "../../../../redux/reducers/filterSlice";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
 
 const Map: FunctionComponent<MapProps> = ({
   dispatch,

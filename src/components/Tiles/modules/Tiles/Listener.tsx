@@ -1,13 +1,13 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
-import { CoinOpProps } from "../../types/tiles.types";
+import { ListenerProps } from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
 import { ItemType } from "../../../../../redux/reducers/cartItemsSlice";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 
-const CoinOp: FunctionComponent<CoinOpProps> = ({
+const Listener: FunctionComponent<ListenerProps> = ({
   layoutAmount,
   popUpOpen,
   index,
@@ -18,10 +18,14 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   cartItems,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
+    <div
+      className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
+      id="explainerBg"
+    >
+      <div className="absolute w-full h-full mix-blend-hard-light bg-listener opacity-60 bg-center bg-cover right-0 top-0"></div>
       <InteractBar />
       <div
-        className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
+        className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer" 
         onClick={() =>
           dispatch(
             setImageViewer({
@@ -38,18 +42,18 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           draggable={false}
         />
       </div>
-
       <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">
         <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
           <div
-            className={`relative items-start justify-center uppercase break-words font-bit text-nuba w-fit h-fit ${
+            className={`relative items-start justify-center uppercase break-words font-ignite w-fit h-fit ${
               layoutAmount === 4 ? "text-lg" : "text-2xl"
             }`}
+            id="noCode"
           >
             Coin Op Preroll
           </div>
           <div
-            className={`relative w-fit h-fit flex text-pez font-bit uppercase ${
+            className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
               layoutAmount === 4 ? "text-xs" : "text-sm"
             }`}
           >
@@ -84,11 +88,11 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               />
             )}
             <div
-              className={`relative items-center justify-center uppercase break-words font-bit text-nuba w-fit h-fit ${
-                layoutAmount === 4 ? "text-xl" : "text-4xl"
+              className={`relative items-center justify-center uppercase break-words font-vcr text-ballena w-fit h-fit ${
+                layoutAmount === 4 ? "text-xl" : "text-2xl"
               }`}
             >
-              $120
+              {`( $120 )`}
             </div>
           </div>
         </div>
@@ -105,4 +109,4 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   );
 };
 
-export default CoinOp;
+export default Listener;

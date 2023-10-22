@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
-import ContentSort from "../Search/modules/ContentSort";
-import PrerollSort from "../Search/modules/PrerollSort";
-import { FilterProps } from "../Search/types/search.types";
+import ContentSort from "../../Search/modules/ContentSort";
+import PrerollSort from "../../Search/modules/PrerollSort";
+import { FilterProps } from "../../Search/types/search.types";
 import TileSwitch from "@/components/Tiles/modules/TileSwitch";
 
 const Filters: FunctionComponent<FilterProps> = ({

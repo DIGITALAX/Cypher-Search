@@ -13,7 +13,7 @@ import merge from "lodash.merge";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { polygon } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import Modals from "@/components/Modals/Modals";
+import Modals from "@/components/Modals/modules/Modals";
 import RouterChange from "@/components/Common/modules/RouterChange";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

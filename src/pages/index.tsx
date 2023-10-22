@@ -7,7 +7,7 @@ import Header from "@/components/Layout/modules/Header";
 import useSignIn from "@/components/Layout/hooks/useSignIn";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import useTiles from "@/components/Tiles/hooks/useTiles";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import Head from "next/head";
 
 export default function Home() {
@@ -43,8 +43,14 @@ export default function Home() {
     placeholderText,
   } = useSearch();
   const { openConnectModal } = useConnectModal();
-  const { handleLensConnect, openAccount, setOpenAccount, signInLoading } =
-    useSignIn();
+  const {
+    handleLensConnect,
+    openAccount,
+    setOpenAccount,
+    signInLoading,
+    cartListOpen,
+    setCartListOpen,
+  } = useSignIn();
   const { setPopUpOpen, popUpOpen, apparel, setApparel } = useTiles();
   return (
     <div
@@ -77,6 +83,10 @@ export default function Home() {
           placeholderText={placeholderText}
           dispatch={dispatch}
           layoutAmount={layoutAmount}
+          cartItems={cartItems}
+          cartListOpen={cartListOpen}
+          setCartListOpen={setCartListOpen}
+          router={router}
         />
 
         {searchActive && (
@@ -96,5 +106,5 @@ export default function Home() {
       </div>
       <Footer handleRewind={handleRewind} />
     </div>
-  )
+  );
 }

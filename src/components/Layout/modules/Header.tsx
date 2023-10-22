@@ -5,6 +5,8 @@ import SearchBar from "../../Search/modules/SearchBar";
 import { HeaderProps } from "../../Search/types/search.types";
 import Link from "next/link";
 import { AiOutlineLoading } from "react-icons/ai";
+import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
+import { CartItem } from "../types/footer.types";
 
 const Header: FunctionComponent<HeaderProps> = ({
   handleSearch,
@@ -23,6 +25,10 @@ const Header: FunctionComponent<HeaderProps> = ({
   placeholderText,
   dispatch,
   layoutAmount,
+  cartItems,
+  cartListOpen,
+  setCartListOpen,
+  router,
 }): JSX.Element => {
   return (
     <div className="fixed w-full h-fit flex items-center justify-between p-2 top-0 z-20 bg-offBlack">
@@ -79,6 +85,7 @@ const Header: FunctionComponent<HeaderProps> = ({
         <div
           className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer active:scale-95"
           id="cartAnim"
+          onClick={() => setCartListOpen(!cartListOpen)}
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/QmT5ewiqFhfo8EHxSYiFwFR67pBpg7xesdtwAu9oWBoqqu`}
@@ -86,6 +93,11 @@ const Header: FunctionComponent<HeaderProps> = ({
             draggable={false}
           />
         </div>
+        {cartItems.length > 0 && (
+          <div className="absolute rounded-full border border-mar bg-black w-5 flex items-center justify-center right-10 -bottom-1 h-5 p-1 font-vcr text-mar text-xxs">
+            {cartItems.length}
+          </div>
+        )}
         <div className="relative w-8 h-4/5 flex items-center justify-center">
           <Image
             src={`${INFURA_GATEWAY}/ipfs/QmeSSwZt92PgMfvdJih9yyypQGX8gFx3BoLXn3mXwYX5pb`}
@@ -94,6 +106,72 @@ const Header: FunctionComponent<HeaderProps> = ({
           />
         </div>
       </div>
+      {cartListOpen && (
+        <div
+          className="absolute z-20 w-60 right-3 top-12 h-72 rounded-sm bg-black/80 overflow-y-scroll flex flex-col p-3"
+          id="milestone"
+        >
+          {cartItems?.length > 0 ? (
+            <div className="relative flex flex-col gap-4 items-center justify-start w-full h-fit px-4 pt-2">
+              {cartItems?.map((item, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative flex flex-col gap-2 w-full h-fit items-center justify-start"
+                  >
+                    <div className="relative w-full h-40 flex items-center justify-center rounded-sm ">
+                      <Image
+                        draggable={false}
+                        layout="fill"
+                        src={`${INFURA_GATEWAY}/ipfs/`}
+                        className="rounded-sm"
+                        objectFit="cover"
+                      />
+                    </div>
+                    <div className="relative text-sm font-vcr text-white text-center items-center justify-center w-fit h-fit flex break-words"></div>
+                    <div className="relative flex flex-row items-center justify-between gap-2 w-fit h-fit">
+                      <div
+                        className="relative font-dog items-center justify-center w-fit h-fit text-center cursor-pointer active:scale-95 text-white text-xs"
+                        onClick={() => {
+                          const newItems = cartItems.filter(
+                            (value: CartItem) =>
+                              value.collectionId !== item.collectionId
+                          );
+                          dispatch(setCartItems(newItems));
+                        }}
+                      >
+                        x
+                      </div>
+                      <div className="relative w-fit h-fit items-center justify-center font-vcr text-lg text-white break-words text-center">
+                        ${item.amount}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="relative flex items-center justify-center font-dog text-white text-xxs break-words w-full h-full text-center">
+              No Items <br /> In Cart Yet.
+            </div>
+          )}
+          <div
+            className={`relative w-full h-10 rounded-md bg-emeral border border-black flex items-center justify-center font-dog text-white text-xs break-words text-center ${
+              cartItems?.length > 0
+                ? "cursor-pointer active:scale-95"
+                : "opacity-70"
+            }`}
+            onClick={() => {
+              if (cartItems?.length > 0) {
+                setCartListOpen(false);
+                router.push("/checkout");
+              }
+            }}
+          >
+            checkout
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -8,6 +8,11 @@
 }
 
 @font-face {
+  font-family: "Ignite";
+  src: url("/fonts/Ignite.otf");
+}
+
+@font-face {
   font-family: "Vcr";
   src: url("/fonts/Vcr.ttf");
 }
@@ -252,13 +257,6 @@ input[type="number"]::-webkit-outer-spin-button:focus {
   background-size: cover;
 }
 
-
-#grant {
-  background-image: url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ");
-  background-size: contain;
-}
-
-
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -310,3 +308,48 @@ input::-webkit-outer-spin-button:focus {
   background-color: #d49e78;
 }
 
+
+#legend::-webkit-scrollbar {
+  height: 3px;
+  opacity: 1; /* Initially hide the scrollbar */
+}
+
+#legend:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#legend::-webkit-scrollbar-track {
+  background-color: #222222;
+}
+
+#legend::-webkit-scrollbar-thumb {
+  background-color: #d49e78;
+}
+
+
+#noCode {
+  background-image: linear-gradient(
+    to bottom,
+    #e3e1ee,
+    #e3e1ee,
+    #f7fff0,
+    #89eff5,
+    #23fefc,
+    #2b90fd,
+    #341cfe,
+    #341cfe,
+    #341cfe
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+#explainerBg {
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to right, #1c24ff6a 1px, transparent 1px),
+    linear-gradient(to bottom, #1c24ff6a 1px, transparent 1px);
+  background-size: 20px 20px;
+}

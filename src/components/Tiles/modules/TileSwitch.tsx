@@ -7,6 +7,7 @@ import TextPost from "./Tiles/TextPost";
 import { TileSwitchProps } from "../types/tiles.types";
 import Quest from "./Tiles/Quest";
 import Legend from "./Tiles/Legend";
+import Listener from "./Tiles/Listener";
 
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
@@ -28,6 +29,22 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           layoutAmount={layoutAmount}
           router={router}
           publication={publication}
+          dispatch={dispatch}
+        />
+      );
+    case "listener":
+      return (
+        <Listener
+          popUpOpen={popUpOpen}
+          setPopUpOpen={setPopUpOpen}
+          layoutAmount={layoutAmount}
+          apparel={apparel}
+          setApparel={setApparel}
+          index={index}
+          dispatch={dispatch}
+          router={router}
+          publication={publication}
+          cartItems={cartItems}
         />
       );
     case "chromadin":
@@ -77,7 +94,11 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
       );
     case "quest":
       return (
-        <Quest layoutAmount={layoutAmount} router={router} publication={publication} />
+        <Quest
+          layoutAmount={layoutAmount}
+          router={router}
+          publication={publication}
+        />
       );
     case "legend":
       return (

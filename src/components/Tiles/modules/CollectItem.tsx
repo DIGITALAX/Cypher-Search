@@ -19,18 +19,20 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
   router,
 }): JSX.Element => {
   return (
-    <div className="relative w-60 h-fit flex flex-col">
+    <div className="relative w-60 h-full flex flex-col">
       <Bar title={`Collect Lvl.${index}`} />
-      <div className="relative w-full h-fit flex flex-col bg-virg gap-6 justify-start items-center p-2 border-b border-x rounded-b-sm border-black">
-        <div className="relative w-full h-44 rounded-sm border border-black flex">
-          <Image layout="fill" src={`${INFURA_GATEWAY}/ipfs/`} />
+      <div className="relative w-full h-110 flex flex-col bg-virg gap-6 justify-between items-center p-2 border-b border-x rounded-b-sm border-black">
+        <div className="relative w-52 h-52 rounded-sm border border-black flex items-center justify-center">
+          <Image
+            layout="fill"
+            src={`${INFURA_GATEWAY}/ipfs/`}
+            draggable={false}
+            className="rounded-sm"
+          />
         </div>
         <div className="relative w-fit h-fit flex flex-col gap-3 items-center justify-center text-center break-words">
-          <div className="relative flex items-center items-center justify-center w-fit text-3xl font-net">
+          <div className="relative flex items-center items-center justify-center w-fit text-sm font-net">
             {item?.rawURI?.title}
-          </div>
-          <div className="relative flex items-start justify-center w-full h-24 overflow-y-scroll text-xs font-vcr">
-            {item?.rawURI?.description}
           </div>
         </div>
         <div className="relative flex flex-col gap-1.5 justify-start items-center text-black font-dog text-xxs">
@@ -38,12 +40,12 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
             Choose Size
           </div>
           <div className="relative flex flex-row gap-1 items-center justify-center">
-            {["xs", "s", "m", "lg", "xl"].map(
+            {["xs", "s", "m", "l", "xl"].map(
               (item: string, indexTwo: number) => {
                 return (
                   <div
                     key={indexTwo}
-                    className={`relative w-7 h-7 p-1 flex items-center justify-center text-white text-center text-xxs rounded-sm bg-fondo cursor-pointer ${
+                    className={`relative w-7 h-7 p-1 flex items-center justify-center text-white text-center text-tee rounded-full uppercase bg-fondo cursor-pointer ${
                       collectChoice?.[index - 1]?.size === item
                         ? "border-viol border-2"
                         : "border-black border"
