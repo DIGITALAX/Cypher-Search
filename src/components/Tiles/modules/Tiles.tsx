@@ -24,6 +24,8 @@ const Tiles: FunctionComponent<TilesProps> = ({
     { id: 4, type: "coinop" },
     { id: 5, type: "quest" },
     { id: 6, type: "legend" },
+    { id: 6, type: "listener" },
+    { id: 6, type: "listener" },
     { id: 7, type: "quest" },
     { id: 8, type: "chromadin" },
     { id: 9, type: "video" },

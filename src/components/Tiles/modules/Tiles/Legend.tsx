@@ -4,13 +4,13 @@ import { LegendProps } from "../../types/tiles.types";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import Bar from "../../../Common/modules/Bar";
 import CollectItem from "../CollectItem";
+import LevelOne from "./LevelOne";
 
 const Legend: FunctionComponent<LegendProps> = ({
   publication,
   imageIndex,
   setImageIndex,
   index,
-  disputeGrant,
   collectChoice,
   commentGrant,
   likeGrant,
@@ -28,8 +28,8 @@ const Legend: FunctionComponent<LegendProps> = ({
   return (
     <div className="relative h-fit w-full border border-black flex flex-col items-center justify-center">
       <Bar title={publication?.marketplace?.name!} />
-      <div className="relative w-full h-fit flex flex-col gap-8" id="grant">
-        <div className="p-5 relative w-full h-fit flex items-center justify-center flex-row gap-5">
+      <div className="relative w-full h-fit flex flex-col gap-8 bg-legend bg-contain">
+        <div className="p-5 relative w-full h-fit flex items-center justify-center flex-row gap-5 bg-grant bg-contain">
           <div className="relative w-full h-fit flex break-words font-vcr text-black p-2 justify-start items-center rounded-sm border border-black bg-virg p-2 flex-col gap-4">
             <div className="relative w-full h-40 flex items-center justify-start gap-6">
               <div className="relative w-full overflow-y-scroll h-full ustify-start items-center">
@@ -93,7 +93,23 @@ const Legend: FunctionComponent<LegendProps> = ({
             </div>
           </div>
           <div className="relative w-fit h-full items-end justify-center flex">
-            <div className="relative w-8 rounded-lg h-60 flex items-end justify-center border-2 border-black bg-zana"></div>
+            <div className="relative w-8 rounded-lg h-72 flex items-end justify-center border-2 border-black bg-zana"></div>
+          </div>
+        </div>
+        <div className="relative w-full h-fit flex flex-col justify-start items-center gap-4 text-black border bg-white/60 p-2 border-black font-dog">
+          <div className="relative flex flex-col gap-1.5 items-center justify-start">
+            <div className="relative w-fit h-fit text-sm">
+              Maintenance Strategy
+            </div>
+            <div className="relative w-fit h-fit text-sm"></div>
+          </div>
+          <div className="relative flex flex-col gap-1.5 items-center justify-start">
+            <div className="relative w-fit h-fit text-sm">Tech Stack</div>
+            <div className="relative w-fit h-fit text-sm"></div>
+          </div>
+          <div className="relative flex flex-col gap-1.5 items-center justify-start">
+            <div className="relative w-fit h-fit text-sm">Team Experience</div>
+            <div className="relative w-fit h-fit text-sm"></div>
           </div>
         </div>
         <div
@@ -132,20 +148,12 @@ const Legend: FunctionComponent<LegendProps> = ({
                       <div>{new Date().toDateString()}</div>
                     </div>
                   </div>
-                  <div className="relative w-full h-fit items-center justify-start text-white text-xxs font-dog flex flex-col gap-4">
-                    <div className="relative w-fit h-fit break-words items-center justify-center text-center flex">
-                      Milestone Contestation Period
-                    </div>
-                    <div className="relative w-full h-6 rounded-lg border border-white bg-amar/60 text-black text-center flex items-center justify-center">
-                      Not Completed
-                    </div>
-                  </div>
                 </div>
               </div>
             );
           })}
         </div>
-        <div className="relative flex flex-col items-center justify-center w-full h-fit gap-2 p-5">
+        <div className="relative flex flex-col items-center justify-center w-full h-fit gap-2 p-5 bg-grant bg-contain">
           <div
             className={`relative w-fit px-2 py-1 text-center flex items-center justify-center bg-lima border border-black font-gam uppercase text-fondo h-fit ${
               layoutAmount === 4 ? "text-4xl" : "text-6xl"
@@ -153,41 +161,50 @@ const Legend: FunctionComponent<LegendProps> = ({
           >
             collect grant
           </div>
-          <div className="relative w-full h-fit bg-virg p-2 rounded-sm border border-black overflow-x-hidden items-center justify-center flex flex-col">
-            <div className="relative w-fit h-fit flex flex-row gap-2 pb-2 items-center justify-center">
-              {[
-                ...[
-                  { level: 1 },
-                  { level: 2 },
-                  { level: 3 },
-                  { level: 4 },
-                  { level: 5 },
-                  { level: 6 },
-                  { level: 7 },
-                ].slice(imageIndex?.[index]),
-                ...[
-                  { level: 1 },
-                  { level: 2 },
-                  { level: 3 },
-                  { level: 4 },
-                  { level: 5 },
-                  { level: 6 },
-                  { level: 7 },
-                ].slice(0, imageIndex?.[index]),
-              ].map((_, index: number) => {
-                return (
-                  <CollectItem
-                    key={index}
-                    index={_.level}
-                    collectChoice={collectChoice}
-                    setCollectChoice={setCollectChoice}
-                    dispatch={dispatch}
-                    cartItems={cartItems}
-                    item={publication}
-                    router={router}
-                  />
-                );
-              })}
+          <div className="relative w-full h-fit bg-virg p-2 rounded-sm border border-black items-center justify-center flex flex-col gap-3">
+            <div
+              className="relative w-full h-full flex overflow-x-scroll  items-center justify-start"
+              id="legend"
+            >
+              <div className="relative w-fit h-full flex flex-row gap-2 pb-2 items-center justify-center">
+                {[
+                  ...[
+                    { level: 1 },
+                    { level: 2 },
+                    { level: 3 },
+                    { level: 4 },
+                    { level: 5 },
+                    { level: 6 },
+                    { level: 7 },
+                  ].slice(imageIndex?.[index]),
+                  ...[
+                    { level: 1 },
+                    { level: 2 },
+                    { level: 3 },
+                    { level: 4 },
+                    { level: 5 },
+                    { level: 6 },
+                    { level: 7 },
+                  ].slice(0, imageIndex?.[index]),
+                ].map((_, index: number) => {
+                  if (index == 0) {
+                    return <LevelOne key={index} />;
+                  } else {
+                    return (
+                      <CollectItem
+                        key={index}
+                        index={_.level}
+                        collectChoice={collectChoice}
+                        setCollectChoice={setCollectChoice}
+                        dispatch={dispatch}
+                        cartItems={cartItems}
+                        item={publication}
+                        router={router}
+                      />
+                    );
+                  }
+                })}
+              </div>
             </div>
             <div className="relative w-12 h-7 flex flex-row bg-white border border-black rounded-x-xl items-center justify-between">
               <div className="relative w-fit h-fit flex items-center justify-center p-1">

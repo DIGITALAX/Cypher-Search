@@ -1,9 +1,9 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import Draggable from "react-draggable";
-import { INFURA_GATEWAY } from "../../../lib/constants";
-import { setFullScreenVideo } from "../../../redux/reducers/fullScreenVideoSlice";
-import { FullScreenVideoProps } from "./types/modals.types";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
+import { FullScreenVideoProps } from "../types/modals.types";
 
 const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
   dispatch,

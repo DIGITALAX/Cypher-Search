@@ -36,11 +36,14 @@ const config: Config = {
         marron: "#D49E78",
         cafe: "#222222",
         fertil: "#11FCEB",
+        ballena: "#FFD85F",
+        emeral: "#6DD400",
       },
       fontFamily: {
         bit: "Bitblox",
         vcr: "Vcr",
         rain: "Internal Rainbows",
+        ignite: "Ignite",
         digi: "DS Digital",
         earl: "Earls Revenge",
         dog: "Dogica",
@@ -49,12 +52,19 @@ const config: Config = {
       },
       fontSize: {
         xxs: "0.6rem",
+        tee: "0.4rem",
       },
       width: {
         100: "26rem",
       },
       height: {
         100: "26rem",
+        110: "32rem",
+      },
+      backgroundImage: {
+        legend: `url("https://chromadin.infura-ipfs.io/ipfs/QmWDqwGn7JgWzFsvUuC6pR7P58v6ab1npPueJ9Vfaez8iW")`,
+        grant: `url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ")`,
+        listener: `url("https://chromadin.infura-ipfs.io/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2")`,
       },
     },
   },

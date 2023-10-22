@@ -1,20 +1,8 @@
+import { CartItem } from "@/components/Layout/types/footer.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export enum ItemType {
-  Chromadin = "chromadin",
-  CoinOp = "coinOp",
-  Legend = "legend",
-}
-
 export interface CartItemsState {
-  items: {
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    id: string;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  items: CartItem[];
 }
 
 const initialCartItemsState: CartItemsState = {
@@ -25,7 +13,10 @@ export const cartItemsSlice = createSlice({
   name: "cartItems",
   initialState: initialCartItemsState,
   reducers: {
-    setCartItems: (state: CartItemsState, action: PayloadAction<any[]>) => {
+    setCartItems: (
+      state: CartItemsState,
+      action: PayloadAction<CartItem[]>
+    ) => {
       state.items = action.payload;
     },
   },

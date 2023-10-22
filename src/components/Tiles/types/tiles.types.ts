@@ -2,8 +2,8 @@ import { FormEvent, MouseEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
 import { PublicationMetadata } from "../../../../graphql/generated";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { ItemType } from "../../../../redux/reducers/cartItemsSlice";
+import { NextRouter } from "next/router";
+import { CartItem, ItemType } from "@/components/Layout/types/footer.types";
 
 export type TilesProps = {
   handleMoreSearch: () => Promise<void>;
@@ -13,16 +13,9 @@ export type TilesProps = {
   setPopUpOpen: (e: boolean[]) => void;
   apparel: boolean[];
   setApparel: (e: boolean[]) => void;
-  router: AppRouterInstance;
+  router: NextRouter;
   dispatch: Dispatch<AnyAction>;
-  cartItems: {
-    id: string;
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  cartItems: CartItem[];
 };
 
 export type TileSwitchProps = {
@@ -34,16 +27,9 @@ export type TileSwitchProps = {
   apparel: boolean[];
   setApparel: (e: boolean[]) => void;
   index: number;
-  router: AppRouterInstance;
+  router: NextRouter;
   dispatch: Dispatch<AnyAction>;
-  cartItems: {
-    id: string;
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  cartItems: CartItem[];
 };
 
 export type ControlsProps = {
@@ -101,7 +87,7 @@ export type VideoPostProps = {
   likeAmount: number[];
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
-  router: AppRouterInstance;
+  router: NextRouter;
   publication: PublicationMetadata;
 };
 
@@ -111,7 +97,6 @@ export type LegendProps = {
   milestoneCovers: string[];
   setImageIndex: (e: number[]) => void;
   index: number;
-  disputeGrant: (index: number, id: string) => Promise<void>;
   commentGrant: (id: string) => Promise<void>;
   likeGrant: (id: string) => Promise<void>;
   mirrorGrant: (id: string) => Promise<void>;
@@ -120,16 +105,9 @@ export type LegendProps = {
     color: string;
     size: string;
   }[];
-  cartItems: {
-    id: string;
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
-  router: AppRouterInstance;
+  router: NextRouter;
   showComments: (id: string) => Promise<void>;
   showLikes: (id: string) => Promise<void>;
   showMirrors: (id: string) => Promise<void>;
@@ -140,20 +118,13 @@ export type LegendProps = {
 
 export type CollectItemProps = {
   index: number;
-  router: AppRouterInstance;
+  router: NextRouter;
   setCollectChoice: (e: { color: string; size: string }[]) => void;
   collectChoice: {
     color: string;
     size: string;
   }[];
-  cartItems: {
-    id: string;
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   item: PublicationMetadata;
 };
@@ -165,16 +136,9 @@ export type ChromadinProps = {
   index: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;
-  router: AppRouterInstance;
+  router: NextRouter;
   dispatch: Dispatch<AnyAction>;
-  cartItems: {
-    id: string;
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  cartItems: CartItem[];
   publication: PublicationMetadata;
 };
 
@@ -183,33 +147,58 @@ export type CoinOpProps = {
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;
   index: number;
-  router: AppRouterInstance;
+  router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   publication: PublicationMetadata;
-  cartItems: {
-    id: string;
-    size: string | undefined;
-    color: string | undefined;
-    amount: number;
-    level: number | undefined;
-    type: ItemType;
-  }[];
+  cartItems: CartItem[];
 };
 
 export type TextPostProps = {
   layoutAmount: number;
-  router: AppRouterInstance;
+  router: NextRouter;
   publication: PublicationMetadata;
 };
 
 export type QuestProps = {
   layoutAmount: number;
-  router: AppRouterInstance;
+  router: NextRouter;
   publication: PublicationMetadata;
 };
 
 export type ImagePostProps = {
   layoutAmount: number;
-  router: AppRouterInstance;
+  router: NextRouter;
+  publication: PublicationMetadata;
+  dispatch: Dispatch<AnyAction>;
+};
+
+export type LevelOneProps = {
+  index: {
+    levelIndex: number;
+    imageIndex: number;
+    rate: number;
+    currency: string;
+    price: number[];
+    priceIndex: number;
+    itemIndex: number;
+  };
+  handleChangeCurrency: (
+    levelIndex: number,
+    itemIndex: number,
+    priceIndex: number,
+    checkoutCurrency: string
+  ) => void;
+};
+
+export type ListenerProps = {
+  layoutAmount: number;
+  apparel: boolean[];
+  setApparel: (e: boolean[]) => void;
+  index: number;
+  popUpOpen: boolean[];
+  setPopUpOpen: (e: boolean[]) => void;
+  router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
+  cartItems: CartItem[];
   publication: PublicationMetadata;
 };

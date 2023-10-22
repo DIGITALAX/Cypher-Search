@@ -1,8 +1,8 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../lib/constants";
-import { setImageViewer } from "../../../redux/reducers/ImageLargeSlice";
-import { ImageLargeProps } from "./types/modals.types";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { setImageViewer } from "../../../../redux/reducers/ImageLargeSlice";
+import { ImageLargeProps } from "../types/modals.types";
 
 const ImageLarge: FunctionComponent<ImageLargeProps> = ({
   mainImage,

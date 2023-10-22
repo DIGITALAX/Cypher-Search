@@ -8,6 +8,7 @@ const useSignIn = () => {
   const dispatch = useDispatch();
   const [openAccount, setOpenAccount] = useState<boolean>(false);
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
+  const [cartListOpen, setCartListOpen] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(setWalletConnected(isConnected));
@@ -27,6 +28,8 @@ const useSignIn = () => {
     openAccount,
     setOpenAccount,
     signInLoading,
+    cartListOpen,
+    setCartListOpen,
   };
 };
 

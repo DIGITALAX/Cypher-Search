@@ -2,17 +2,31 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { ImagePostProps } from "../../types/tiles.types";
+import InteractBar from "@/components/Common/modules/InteractBar";
+import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 
 const ImagePost: FunctionComponent<ImagePostProps> = ({
   layoutAmount,
-  id,
+  publication,
   router,
+  dispatch,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
       {layoutAmount === 4 ? (
         <>
-          <div className="relative flex w-full h-40 rounded-sm border border-white bg-amo/30 cursor-pointer items-center justify-center">
+          <div
+            className="relative flex w-full h-40 rounded-sm border border-white bg-amo/30 cursor-pointer items-center justify-center cursor-pointer"
+            onClick={() =>
+              dispatch(
+                setImageViewer({
+                  actionValue: true,
+                  actionType: publication?.marketplace?.image?.raw?.mimeType,
+                  actionImage: publication?.marketplace?.image?.raw?.uri,
+                })
+              )
+            }
+          >
             <Image
               layout="fill"
               src={`${INFURA_GATEWAY}/ipfs/`}
@@ -21,7 +35,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
             />
           </div>
           <div className="relative w-full h-80 rounded-sm border border-mosgu bg-fuego p-1 font-bit text-nuba text-sm text-left break-words flex justify-center items-center"></div>
-          <div className="flex flex-row w-full justify-between gap-2 items-center justify-center">
+          <div className="flex flex-row w-full h-full justify-between gap-2 items-between">
             <div className="relative flex flex-wrap items-start justify-start gap-2 w-fit h-fit">
               {Array.from({ length: 3 }).map((_, index: number) => {
                 return (
@@ -39,33 +53,8 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 );
               })}
             </div>
-            <div className="relative h-full w-fit items-center justify-center flex flex-col gap-4">
-              <div className="relative w-fit h-fit rounded-sm border border-frio text-base font-bit text-mar flex flex-col gap-2 p-2 items-center justify-center">
-                {[
-                  "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-                  "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
-                  "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
-                  "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
-                ].map((image: string, index: number) => {
-                  return (
-                    <div
-                      className="relative w-full h-full flex flex-row items-center justify-center gap-4"
-                      key={index}
-                    >
-                      <div className="relative w-4 h-4 flex cursor-pointer items-center justify-center active:scale-95">
-                        <Image
-                          layout="fill"
-                          src={`${INFURA_GATEWAY}/ipfs/${image}`}
-                          draggable={false}
-                        />
-                      </div>
-                      <div className="relative w-fit h-fit flex items-center justify-center text-center cursor-pointer active:scale-95">
-                        77
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="relative h-full w-fit items-center justify-between flex flex-col gap-4">
+              <InteractBar layoutAmount={layoutAmount} />
               <div className="relative mb-0 flex flex-row items-center justify-between gap-2 w-full h-fit">
                 <div className="relative w-6 h-6 items-center justify-center flex">
                   <Image
@@ -77,7 +66,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 </div>
                 <div
                   className="relative w-6 h-6 flex items-center justify-center cursor-pointer active:scale-95"
-                  onClick={() => router.push(`/item/pub/${id}`)}
+                  onClick={() => router.push(`/item/pub/${publication?.id}`)}
                 >
                   <Image
                     layout="fill"
@@ -97,7 +86,18 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
       ) : (
         <>
           <div className="relative w-full h-full flex flex-row gap-5 items-center justify-end">
-            <div className="flex items-center justify-center w-full border border-white h-[28rem] rounded-sm cursor-pointer bg-amo/30">
+            <div
+              className="flex items-center justify-center w-full border border-white h-[28rem] rounded-sm cursor-pointer bg-amo/30"
+              onClick={() =>
+                dispatch(
+                  setImageViewer({
+                    actionValue: true,
+                    actionType: publication?.marketplace?.image?.raw?.mimeType,
+                    actionImage: publication?.marketplace?.image?.raw?.uri,
+                  })
+                )
+              }
+            >
               <Image
                 layout="fill"
                 src={`${INFURA_GATEWAY}/ipfs/`}
@@ -121,32 +121,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   </div>
                 );
               })}
-              <div className="relative w-full h-fit rounded-sm border border-frio text-base font-bit text-mar flex flex-col gap-2 p-2 items-center justify-center">
-                {[
-                  "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-                  "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
-                  "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
-                  "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
-                ].map((image: string, index: number) => {
-                  return (
-                    <div
-                      className="relative w-full h-full flex flex-row items-center justify-center gap-4"
-                      key={index}
-                    >
-                      <div className="relative w-4 h-4 flex cursor-pointer items-center justify-center active:scale-95">
-                        <Image
-                          layout="fill"
-                          src={`${INFURA_GATEWAY}/ipfs/${image}`}
-                          draggable={false}
-                        />
-                      </div>
-                      <div className="relative w-fit h-fit flex items-center justify-center text-center cursor-pointer active:scale-95">
-                        77
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <InteractBar col />
             </div>
           </div>
           <div className="relative w-full h-full flex flex-row gap-5 items-center justify-center">
@@ -182,7 +157,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   </div>
                   <div
                     className="relative w-6 h-6 flex items-center justify-center cursor-pointer active:scale-95"
-                    onClick={() => router.push(`/item/pub/${id}`)}
+                    onClick={() => router.push(`/item/pub/${publication?.id}`)}
                   >
                     <Image
                       layout="fill"

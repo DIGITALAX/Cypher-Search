@@ -30,7 +30,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
   currentIndex,
   layoutAmount,
   router,
-  id
+  publication,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4">
@@ -77,7 +77,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
           <div className="relative w-fit h-fit text-left font-rain text-mos flex items-start justify-center text-black break-words"></div>
           <div
             className="relative w-10 h-10 flex items-center justify-center ml-auto cursor-pointer active:scale-95"
-            onClick={() => router.push(`/item/pub/${id}`)}
+            onClick={() => router.push(`/item/pub/${publication?.id}`)}
           >
             <Image
               draggable={false}

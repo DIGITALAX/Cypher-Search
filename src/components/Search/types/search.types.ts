@@ -1,6 +1,8 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import { FILTER_VALUES } from "../../../../lib/constants";
 import { AnyAction, Dispatch } from "redux";
+import { CartItem } from "@/components/Layout/types/footer.types";
+import { NextRouter } from "next/router";
 
 export type SearchBarProps = {
   handleSearch: (
@@ -19,6 +21,7 @@ export type SearchBarProps = {
 
 export type HeaderProps = {
   dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
   layoutAmount: number;
   handleSearch: (
     e: KeyboardEvent | MouseEvent,
@@ -30,6 +33,8 @@ export type HeaderProps = {
   setSearchInput: (e: string) => void;
   openConnectModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
+  cartListOpen: boolean;
+  setCartListOpen: (e: boolean) => void;
   lensConnected:
     | {
         appId?: string;
@@ -51,6 +56,7 @@ export type HeaderProps = {
   signInLoading: boolean;
   filtersOpen: boolean;
   handleShuffleSearch: () => Promise<void>;
+  cartItems: CartItem[];
 };
 
 export type DropDownProps = {

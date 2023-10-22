@@ -1,10 +1,11 @@
 import { FunctionComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+import { RootState } from "../../../../redux/store";
 import dynamic from "next/dynamic";
 import FullScreenVideo from "./FullScreenVideo";
 import Filters from "./Filters";
-import useSearch from "../Search/hooks/useSearch";
+import useSearch from "../../Search/hooks/useSearch";
+import ImageLarge from "./ImageLarge";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -20,6 +21,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer.value
   );
+  const image = useSelector((state: RootState) => state.app.ImageLargeReducer);
   const {
     openDropDown,
     setOpenDropDown,
@@ -53,6 +55,13 @@ const Modals: FunctionComponent = (): JSX.Element => {
           setFilteredDropDownValues={setFilteredDropDownValues}
           dispatch={dispatch}
           filterValues={filterValues}
+        />
+      )}
+      {image.value && (
+        <ImageLarge
+          dispatch={dispatch}
+          mainImage={image.image}
+          type={image.type}
         />
       )}
     </>
