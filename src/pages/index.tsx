@@ -66,7 +66,7 @@ export default function Home() {
   return (
     <div
       className={`relative w-full flex flex-col items-center justify-center ${
-        searchActive ? "h-full" : "h-screen"
+        searchActive ? "h-full" : "h-[150vh] sm:h-screen"
       }`}
     >
       <Head>
@@ -104,6 +104,7 @@ export default function Home() {
         {searchActive && (
           <Tiles
             layoutAmount={layoutAmount}
+            filtersOpen={filtersOpen}
             searchActive={searchActive}
             handleMoreSearch={handleMoreSearch}
             popUpOpen={popUpOpen}

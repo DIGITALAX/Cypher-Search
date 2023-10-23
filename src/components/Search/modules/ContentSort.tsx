@@ -231,7 +231,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           );
         })}
       </div>
-      <div className="relative w-full h-fit flex flex-row gap-4 items-center justify-center">
+      <div className="relative w-full h-fit flex flex-wrap sm:flex-nowrap flex-row gap-4 items-center justify-center">
         <div className="relative w-fit h-fit flex flex-row gap-4 items-center justify-center">
           <div className="relative w-10 h-10 flex items-center justify-center">
             <Image
@@ -515,7 +515,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           }
         }}
       />
-      <div className="relative w-full h-fit flex flex-row items-center justify-center gap-6">
+      <div className="relative w-full h-fit flex sm:flex-nowrap flex-wrap flex-row items-center justify-center gap-6">
         <div
           className="relative w-full h-10 p-px rounded-sm flex flex-row items-center justify-center font-bit text-sol text-center"
           id="borderSearch"

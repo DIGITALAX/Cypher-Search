@@ -18,15 +18,15 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`w-full h-fit flex flex-row items-center justify-center p-3 ${
+      className={`w-full h-fit flex items-center justify-center py-0 px-1 sm:py-3 sm:px-3 ${
         searchActive || filtersOpen
           ? "searchTransition relative"
-          : "absolute top-[35vh]"
+          : "absolute top-[35vh] sm:right-auto right-0"
       }`}
     >
-      <div className="relative h-10 w-3/5 flex flex-row gap-2 items-center justify-center">
+      <div className="relative h-fit tablet:h-10 w-full md:w-3/5 flex flex-col tablet:flex-row gap-3 tablet:gap-2 items-center justify-center">
         <div
-          className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
+          className="relative md:w-9 w-8 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
           onClick={() => handleShuffleSearch()}
         >
           <Image
@@ -35,20 +35,22 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             draggable={false}
           />
         </div>
-        <div
-          className="relative w-full h-full rounded-sm p-px flex items-center justify-center"
-          id="borderSearch"
-        >
-          <input
-            className="bg-black text-offWhite p-1.5 rounded-sm w-full h-full font-bit flex items-center justify-start relative text-sm"
-            id="searchBar"
-            placeholder={placeholderText}
-            onKeyDown={(e) => handleSearch(e)}
-            onChange={(e) => setSearchInput(e.target.value)}
-            value={searchInput}
-          />
+        <div className="relative w-full h-full flex items-center justify-center flex-col galaxy:flex-row gap-3">
           <div
-            className="w-12 h-7 flex items-center justify-center absolute right-2 rounded-sm font-bit text-brill uppercase text-center p-px active:scale-95 hover:opacity-70 cursor-pointer"
+            className="relative flex items-center justify-center w-full h-full p-px rounded-sm"
+            id="borderSearch"
+          >
+            <input
+              className="bg-black text-offWhite p-1.5 rounded-sm w-full h-full font-bit flex items-center justify-start relative text-sm"
+              id="searchBar"
+              placeholder={placeholderText}
+              onKeyDown={(e) => handleSearch(e)}
+              onChange={(e) => setSearchInput(e.target.value)}
+              value={searchInput}
+            />
+          </div>
+          <div
+            className="w-12 h-7 relative tablet:absolute tablet:right-2 flex items-center justify-center rounded-sm font-bit text-brill uppercase text-center p-px active:scale-95 hover:opacity-70 cursor-pointer"
             id="borderSearch"
             onClick={(e) => handleSearch(e, true)}
           >
@@ -57,27 +59,29 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             </div>
           </div>
         </div>
-        <div
-          className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
-          onClick={() => dispatch(setFiltersOpen(!filtersOpen))}
-        >
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/QmdAeKBRKxgPrnpQzFbXtvnRZ8pUU3DkFMQnBKosYFJhX1`}
-            layout="fill"
-            draggable={false}
-          />
-        </div>
-        <div
-          className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
-          onClick={() =>
-            dispatch(setLayoutSwitch(layoutAmount < 4 ? layoutAmount + 1 : 2))
-          }
-        >
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/QmeVN7HiJ6K2gfVx3QfXQoCcpS8ijHr7tJpyonZNV9HLBt`}
-            layout="fill"
-            draggable={false}
-          />
+        <div className="relative w-fit h-fit flex flex-row gap-2 items-center justify-center">
+          <div
+            className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
+            onClick={() => dispatch(setFiltersOpen(!filtersOpen))}
+          >
+            <Image
+              src={`${INFURA_GATEWAY}/ipfs/QmdAeKBRKxgPrnpQzFbXtvnRZ8pUU3DkFMQnBKosYFJhX1`}
+              layout="fill"
+              draggable={false}
+            />
+          </div>
+          <div
+            className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
+            onClick={() =>
+              dispatch(setLayoutSwitch(layoutAmount < 4 ? layoutAmount + 1 : 2))
+            }
+          >
+            <Image
+              src={`${INFURA_GATEWAY}/ipfs/QmeVN7HiJ6K2gfVx3QfXQoCcpS8ijHr7tJpyonZNV9HLBt`}
+              layout="fill"
+              draggable={false}
+            />
+          </div>
         </div>
       </div>
     </div>

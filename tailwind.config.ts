@@ -66,6 +66,10 @@ const config: Config = {
         grant: `url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ")`,
         listener: `url("https://chromadin.infura-ipfs.io/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2")`,
       },
+      screens: {
+        tablet: "900px",
+        galaxy: "300px"
+      }
     },
   },
   plugins: [],

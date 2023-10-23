@@ -16,7 +16,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className="relative w-[60rem] h-fit items-center justify-center flex p-px rounded-sm"
+      className="relative w-full lg:w-[60rem] h-fit items-center justify-center flex p-px rounded-sm"
       id="preroll"
     >
       <div
@@ -86,7 +86,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
           </div>
           <div className="relative w-full h-fit flex flex-col items-start justify-items gap-1">
             <div className="relative w-full h-fit flex flex-row items-center justify-center">
-              <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start">
+              <div className="flex relative w-full h-fit sm:flex-nowrap flex-wrap flex-row gap-2 items-center justify-start">
                 {["xs", "s", "m", "l", "xl", "2xl"].map(
                   (size: string, index: number) => {
                     return (
@@ -146,7 +146,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             </div>
             {openDropDown.size && (
               <>
-                <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start">
+                <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
                   {["a0", "a1", "a2", "a4", "a7"].map(
                     (size: string, index: number) => {
                       return (
@@ -184,7 +184,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                     }
                   )}
                 </div>
-                <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start">
+                <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
                   {["a0", "a1", "a2", "a4", "a7"].map(
                     (size: string, index: number) => {
                       return (
@@ -230,7 +230,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
           <div className="relative flex justify-start items-center text-white font-bit uppercase text-sm">
             base color
           </div>
-          <div className="relative flex flex-row gap-2 items-center justify-center">
+          <div className="relative flex flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
             {[
               "#FFFFFF",
               "#0091FF",
@@ -269,7 +269,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             })}
           </div>
         </div>
-        <div className="relative flex flex-row gap-3 w-full h-fit items-center justify-start">
+        <div className="relative flex flex-row gap-3 w-full h-fit items-center justify-start sm:flex-nowrap flex-wrap">
           <div className="relative flex flex-col items-center justify-center">
             <div className="relative flex justify-start items-center text-white font-bit uppercase text-sm">
               price range

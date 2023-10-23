@@ -52,7 +52,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           like={like}
           comment={comment}
           quote={quote}
-          interactionsLoading={interactionsLoading[index]}
+          interactionsLoading={interactionsLoading?.[index]}
           index={index}
         />
       );
@@ -75,7 +75,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           like={like}
           comment={comment}
           quote={quote}
-          interactionsLoading={interactionsLoading[index]}
+          interactionsLoading={interactionsLoading?.[index]}
         />
       );
     case "chromadin":
@@ -97,7 +97,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           like={like}
           comment={comment}
           quote={quote}
-          interactionsLoading={interactionsLoading[index]}
+          interactionsLoading={interactionsLoading?.[index]}
         />
       );
     case "coinop":
@@ -117,7 +117,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           like={like}
           comment={comment}
           quote={quote}
-          interactionsLoading={interactionsLoading[index]}
+          interactionsLoading={interactionsLoading?.[index]}
         />
       );
     case "text":
@@ -132,7 +132,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           like={like}
           comment={comment}
           quote={quote}
-          interactionsLoading={interactionsLoading[index]}
+          interactionsLoading={interactionsLoading?.[index]}
           index={index}
         />
       );
@@ -149,7 +149,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           like={like}
           comment={comment}
           quote={quote}
-          interactionsLoading={interactionsLoading[index]}
+          interactionsLoading={interactionsLoading?.[index]}
           volume={volume}
           volumeOpen={volumeOpen}
           setVolumeOpen={setVolumeOpen}
@@ -184,7 +184,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           like={like}
           comment={comment}
           quote={quote}
-          interactionsLoading={interactionsLoading[index]}
+          interactionsLoading={interactionsLoading?.[index]}
         />
       );
 
