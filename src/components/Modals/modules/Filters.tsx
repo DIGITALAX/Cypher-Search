@@ -13,26 +13,29 @@ const Filters: FunctionComponent<FilterProps> = ({
   filterValues,
 }): JSX.Element => {
   return (
-    <div className="fixed z-20 top-20 left-0 right-0 bottom-0 overflow-y-auto h-auto bg-offBlack items-start" id="milestone">
-      <div className="relative flex flex-row gap-10 mx-auto w-full  p-4 h-full items-start justify-center">
-          <TileSwitch type="chromadin" data={""} />
-          <ContentSort
-            dispatch={dispatch}
-            openDropDown={openDropDown}
-            setOpenDropDown={setOpenDropDown}
-            setFilteredDropDownValues={setFilteredDropDownValues}
-            filteredDropDownValues={filteredDropDownValues}
-            filterValues={filterValues}
-          />
-          <PrerollSort
-            openDropDown={openDropDown}
-            setOpenDropDown={setOpenDropDown}
-            setFilteredDropDownValues={setFilteredDropDownValues}
-            filteredDropDownValues={filteredDropDownValues}
-            dispatch={dispatch}
-            filterValues={filterValues}
-          />
-        </div>
+    <div
+      className="fixed z-20 top-56 sm:top-40 lg:top-20 left-0 right-0 bottom-0 overflow-y-auto h-auto bg-offBlack items-start"
+      id="milestone"
+    >
+      <div className="relative flex flex-col lg:flex-row gap-10 mx-auto w-full p-4 h-fit lg:h-full lg:items-start items-center justify-start lg:justify-center">
+        <TileSwitch type="chromadin" data={""} />
+        <ContentSort
+          dispatch={dispatch}
+          openDropDown={openDropDown}
+          setOpenDropDown={setOpenDropDown}
+          setFilteredDropDownValues={setFilteredDropDownValues}
+          filteredDropDownValues={filteredDropDownValues}
+          filterValues={filterValues}
+        />
+        <PrerollSort
+          openDropDown={openDropDown}
+          setOpenDropDown={setOpenDropDown}
+          setFilteredDropDownValues={setFilteredDropDownValues}
+          filteredDropDownValues={filteredDropDownValues}
+          dispatch={dispatch}
+          filterValues={filterValues}
+        />
+      </div>
     </div>
   );
 };

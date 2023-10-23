@@ -8,6 +8,7 @@ import { CartItem } from "@/components/Layout/types/footer.types";
 export type TilesProps = {
   handleMoreSearch: () => Promise<void>;
   searchActive: boolean;
+  filtersOpen: boolean;
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;

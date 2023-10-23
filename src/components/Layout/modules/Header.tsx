@@ -33,9 +33,13 @@ const Header: FunctionComponent<HeaderProps> = ({
   router,
 }): JSX.Element => {
   return (
-    <div className="fixed w-full h-fit flex items-center justify-between p-2 top-0 z-20 bg-offBlack">
+    <div
+      className={`fixed w-full h-fit flex p-2 top-0 z-30 bg-offBlack ${
+        searchActive || filtersOpen ? "items-start justify-center flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-0 gap-4" : "flex-row items-center justify-between"
+      } `}
+    >
       <Link
-        className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
+        className={`relative w-10 h-10 flex cursor-pointer active:scale-95 items-center justify-center`}
         href={"/"}
       >
         <Image
@@ -55,7 +59,9 @@ const Header: FunctionComponent<HeaderProps> = ({
         placeholderText={placeholderText}
         layoutAmount={layoutAmount}
       />
-      <div className="relative w-fit h-10 flex flex-row gap-4 items-center justify-center">
+      <div className={` w-fit h-10 flex flex-row gap-4 items-center justify-center ${
+        searchActive || filtersOpen ? "absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative" : "relative"
+      }`}>
         {!lensConnected && (
           <div
             className={`w-24 h-8 relative flex items-center justify-center p-px rounded-sm text-center cursor-pointer active:scale-95 hover:opacity-70`}
@@ -126,7 +132,7 @@ const Header: FunctionComponent<HeaderProps> = ({
         </div>
       </div>
       {openAccount && (
-        <div className="absolute w-24 h-fit right-3 top-12 flex items-center justify-center p-2 text-white flex-col font-vcr rounded-sm bg-black/80 text-xs gap-4">
+        <div className="absolute w-24 h-fit right-3 top-12 flex items-center justify-center p-2 text-white flex-col font-vcr rounded-sm bg-black/80 text-xs gap-4 z-30">
           <div
             className="relative w-fit h-fit flex items-center justify-center cursor-pointer hover:opacity-80"
             onClick={() => router.push("/")}
@@ -143,7 +149,7 @@ const Header: FunctionComponent<HeaderProps> = ({
       )}
       {cartListOpen && (
         <div
-          className="absolute z-20 w-60 right-3 top-12 h-72 rounded-sm bg-black/80 overflow-y-scroll flex flex-col p-3"
+          className="absolute z-30 w-60 right-3 top-12 h-72 rounded-sm bg-black/80 overflow-y-scroll flex flex-col p-3"
           id="milestone"
         >
           {cartItems?.length > 0 ? (

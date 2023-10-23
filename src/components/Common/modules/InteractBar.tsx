@@ -80,11 +80,11 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
           </div>
         );
       })}
-      {openMirrorChoice[index] && (
+      {!openMirrorChoice?.[index] && (
         <div className="absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-black/80 rounded-sm left-2 -top-6">
           {[
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-            "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
+            "QmfDNH347Vph4b1tEuegydufjMU2QwKzYnMZCjygGvvUMM",
           ].map((image: string, indexTwo: number) => {
             const functions = [mirror, quote];
             const loaders = [
@@ -104,7 +104,11 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                     <AiOutlineLoading size={15} color="white" />
                   </div>
                 ) : (
-                  <div className="relative w-4 h-4 flex items-center justify-center cursor-pointer active:scale-95">
+                  <div
+                    className={
+                      "relative w-4 h-4 flex items-center justify-center cursor-pointer active:scale-95"
+                    }
+                  >
                     <Image
                       layout="fill"
                       src={`${INFURA_GATEWAY}/ipfs/${image}`}
