@@ -10,6 +10,7 @@ import useTiles from "@/components/Tiles/hooks/useTiles";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
+import useProfile from "@/components/Tiles/hooks/useProfile";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ export default function Home() {
     setSearchInput,
     handleShuffleSearch,
     placeholderText,
+    searchLoading,
   } = useSearch();
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -61,7 +63,10 @@ export default function Home() {
     interactionsLoading,
     setOpenMirrorChoice,
     openMirrorChoice,
+    
   } = useInteractions();
+  const { followLoading, followProfile, unfollowProfile , profileHovers,
+    setProfileHovers,} = useProfile();
   const { setPopUpOpen, popUpOpen, apparel, setApparel } = useTiles();
   return (
     <div
@@ -121,6 +126,12 @@ export default function Home() {
             interactionsLoading={interactionsLoading}
             setOpenMirrorChoice={setOpenMirrorChoice}
             openMirrorChoice={openMirrorChoice}
+            searchLoading={searchLoading}
+            followLoading={followLoading}
+            followProfile={followProfile}
+            unfollowProfile={unfollowProfile}
+            profileHovers={profileHovers}
+            setProfileHovers={setProfileHovers}
           />
         )}
       </div>

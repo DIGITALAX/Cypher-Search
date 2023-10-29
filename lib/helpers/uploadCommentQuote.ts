@@ -1,22 +1,21 @@
 import { v4 as uuidv4 } from "uuid";
-import { TextOnlyMetadataV3 } from "../../graphql/generated";
+import { PublicationMetadataMainFocusType } from "../../graphql/generated";
 
 const uploadCommentQuoteContent = async (
   contentText: string
 ): Promise<string | undefined> => {
-  const data: TextOnlyMetadataV3 = {
-    __typename: "TextOnlyMetadataV3",
-    id: uuidv4(),
-    hideFromFeed: false,
-    locale: "en",
-    appId: "cyphersearch",
-    content: contentText,
-    marketplace: {
-      description: contentText,
-      externalURL: "cyphersearch.xyz",
-      name: contentText.slice(0, 10),
+  const data = {
+    $schema: "https://json-schemas.lens.dev/publications/text/3.0.0.json",
+    lens: {
+      mainContentFocus: PublicationMetadataMainFocusType.TextOnly,
+      title: contentText.slice(0, 10),
+      content: contentText,
+      appId: "legend",
+      id: uuidv4(),
+      hideFromFeed: false,
+      locale: "en",
+      tags: ["legend", "legendgrant"],
     },
-    rawURI: "",
   };
 
   try {

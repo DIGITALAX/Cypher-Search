@@ -9,7 +9,7 @@ import {
 const authenticate = async (
   request: SignedAuthChallenge
 ): Promise<FetchResult<AuthenticateMutation>> => {
-  return authClient.mutate({
+  return await authClient.mutate({
     mutation: AuthenticateDocument,
     variables: {
       request: request,

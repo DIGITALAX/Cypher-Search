@@ -10,13 +10,17 @@ import getPublications from "../../../../graphql/lens/queries/publications";
 import {
   CommentRankingFilterType,
   LimitType,
+  Mirror,
+  Post,
+  Comment,
   PublicationReactionType,
   PublicationType,
-  PublicationsOrderByType,
+  Quote,
 } from "../../../../graphql/generated";
 import { setInteractionsCount } from "../../../../redux/reducers/interactionsCountSlice";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuote";
+import pollUntilIndexed from "../../../../graphql/lens/queries/indexed";
 
 const useInteractions = () => {
   const dispatch = useDispatch();
@@ -40,7 +44,9 @@ const useInteractions = () => {
   >([]);
 
   const like = async (id: string) => {
-    const index = allSearchItems.findIndex((pub) => pub.id === id);
+    const index = allSearchItems.findIndex(
+      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+    );
     if (index === -1) {
       return;
     }
@@ -52,10 +58,21 @@ const useInteractions = () => {
     });
 
     try {
-      await likePost({
+      const data = await likePost({
         for: id,
         reaction: PublicationReactionType.Upvote,
       });
+
+      if (data?.data?.addReaction.__typename === "RelaySuccess") {
+        const result = await pollUntilIndexed({
+          forTxId: data?.data?.addReaction?.txId,
+        });
+
+        if (result === true) {
+        } else {
+          console.error(result);
+        }
+      }
 
       dispatch(
         setInteractionsCount({
@@ -85,7 +102,9 @@ const useInteractions = () => {
   };
 
   const mirror = async (id: string) => {
-    const index = allSearchItems.findIndex((pub) => pub.id === id);
+    const index = allSearchItems.findIndex(
+      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+    );
     if (index === -1) {
       return;
     }
@@ -97,9 +116,20 @@ const useInteractions = () => {
     });
 
     try {
-      await mirrorPost({
+      const data = await mirrorPost({
         mirrorOn: id,
       });
+
+      if (data?.data?.mirrorOnchain.__typename === "RelaySuccess") {
+        const result = await pollUntilIndexed({
+          forTxId: data?.data?.mirrorOnchain?.txId,
+        });
+
+        if (result === true) {
+        } else {
+          console.error(result);
+        }
+      }
 
       dispatch(
         setInteractionsCount({
@@ -128,7 +158,9 @@ const useInteractions = () => {
   };
 
   const quote = async (id: string) => {
-    const index = allSearchItems.findIndex((pub) => pub.id === id);
+    const index = allSearchItems.findIndex(
+      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+    );
     if (index === -1) {
       return;
     }
@@ -142,10 +174,21 @@ const useInteractions = () => {
     try {
       const contentURI = await uploadCommentQuoteContent(postQuote);
 
-      await quotePost({
+      const data = await quotePost({
         contentURI,
         quoteOn: id,
       });
+
+      if (data?.data?.quoteOnchain.__typename === "RelaySuccess") {
+        const result = await pollUntilIndexed({
+          forTxId: data?.data?.quoteOnchain?.txId,
+        });
+
+        if (result === true) {
+        } else {
+          console.error(result);
+        }
+      }
 
       dispatch(
         setInteractionsCount({
@@ -174,7 +217,9 @@ const useInteractions = () => {
   };
 
   const comment = async (id: string) => {
-    const index = allSearchItems.findIndex((pub) => pub.id === id);
+    const index = allSearchItems.findIndex(
+      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+    );
     if (index === -1) {
       return;
     }
@@ -188,10 +233,21 @@ const useInteractions = () => {
     try {
       const contentURI = await uploadCommentQuoteContent(postComment);
 
-      await commentPost({
+      const data = await commentPost({
         contentURI,
         commentOn: id,
       });
+
+      if (data?.data?.commentOnchain.__typename === "RelaySuccess") {
+        const result = await pollUntilIndexed({
+          forTxId: data?.data?.commentOnchain?.txId,
+        });
+
+        if (result === true) {
+        } else {
+          console.error(result);
+        }
+      }
 
       dispatch(
         setInteractionsCount({
@@ -277,12 +333,14 @@ const useInteractions = () => {
       try {
         const data = await getPublications({
           limit: LimitType.Fifty,
-          orderBy: PublicationsOrderByType.Latest,
+
           where: {
             publicationTypes: [PublicationType.Comment],
             commentOn: {
               id: id,
-              commentsRankingFilter: CommentRankingFilterType.Relevant,
+              ranking: {
+                filter: CommentRankingFilterType.Relevant,
+              },
             },
           },
         });
@@ -324,7 +382,6 @@ const useInteractions = () => {
       try {
         const data = await getPublications({
           limit: LimitType.Fifty,
-          orderBy: PublicationsOrderByType.Latest,
           where: {
             publicationTypes: [PublicationType.Mirror],
             mirrorOn: id,
@@ -368,7 +425,6 @@ const useInteractions = () => {
       try {
         const data = await getPublications({
           limit: LimitType.Fifty,
-          orderBy: PublicationsOrderByType.Latest,
           where: {
             publicationTypes: [PublicationType.Quote],
             quoteOn: id,
@@ -429,13 +485,12 @@ const useInteractions = () => {
     try {
       const data = await getPublications({
         limit: LimitType.Fifty,
-        orderBy: PublicationsOrderByType.Latest,
         cursor: reactBox?.comment?.cursor,
         where: {
           publicationTypes: [PublicationType.Comment],
           commentOn: {
             id: reactBox?.comment?.id,
-            commentsRankingFilter: CommentRankingFilterType.Relevant,
+            ranking: { filter: CommentRankingFilterType.Relevant },
           },
         },
       });
@@ -466,7 +521,6 @@ const useInteractions = () => {
     try {
       const data = await getPublications({
         limit: LimitType.Fifty,
-        orderBy: PublicationsOrderByType.Latest,
         where: {
           publicationTypes: [PublicationType.Mirror],
           mirrorOn: reactBox.mirror.id,
@@ -500,7 +554,6 @@ const useInteractions = () => {
     try {
       const data = await getPublications({
         limit: LimitType.Fifty,
-        orderBy: PublicationsOrderByType.Latest,
         where: {
           publicationTypes: [PublicationType.Mirror],
           quoteOn: reactBox.quote.id,

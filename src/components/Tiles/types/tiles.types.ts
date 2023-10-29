@@ -1,12 +1,57 @@
 import { FormEvent, MouseEvent, Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
-import { Post } from "../../../../graphql/generated";
+import {
+  Mirror,
+  Post,
+  Profile,
+  Quote,
+  Comment,
+} from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Layout/types/footer.types";
 
+export interface Creation {
+  amount: string;
+  title: string;
+  tags: string[];
+  pubId: string;
+  prompt: string;
+  profileId: string;
+  profileHandle: string;
+  printType: string;
+  prices: string[];
+  owner: string;
+  microbrandCover: string;
+  microbrand: string;
+  images: string[];
+  fulfillerPercent: string;
+  fulfillerBase: string;
+  fulfiller: string;
+  designerPercent: string;
+  drop: string;
+  description: string;
+  communities: string[];
+  collectionId: string;
+  access: number;
+  unlimited: boolean;
+  colors: string[];
+  sizes: string[];
+  origin: string;
+  profile: Profile;
+}
+
+export interface Publication {
+  post?: Post | Comment | Quote | Mirror | Profile | Creation;
+  type: string;
+  publishedOn?: string;
+}
+
 export type TilesProps = {
   handleMoreSearch: () => Promise<void>;
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
+  searchLoading: boolean;
   searchActive: boolean;
   filtersOpen: boolean;
   layoutAmount: number;
@@ -29,11 +74,16 @@ export type TilesProps = {
   }[];
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
 };
 
 export type TileSwitchProps = {
   type: string;
-  publication: Post;
+  publication: Publication;
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;
@@ -66,6 +116,9 @@ export type TileSwitchProps = {
   handleSeek: (
     e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
   ) => void;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
 };
 
 export type ControlsProps = {
@@ -91,7 +144,7 @@ export type ControlsProps = {
     quote: boolean;
     comment: boolean;
   };
-  publication: Post;
+  publication: Publication;
 };
 
 export type VideoPostProps = {
@@ -109,7 +162,7 @@ export type VideoPostProps = {
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   router: NextRouter;
-  publication: Post;
+  publication: Post | Comment | Quote | Mirror;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
@@ -125,7 +178,7 @@ export type VideoPostProps = {
 };
 
 export type LegendProps = {
-  publication: Post;
+  publication: Post | Comment | Quote | Mirror;
   imageIndex: number[];
   milestoneCovers: string[];
   setImageIndex: (e: number[]) => void;
@@ -181,7 +234,7 @@ export type ChromadinProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
-  publication: Post;
+  publication: Creation;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
@@ -194,6 +247,11 @@ export type ChromadinProps = {
   };
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
 
 export type CoinOpProps = {
@@ -203,7 +261,7 @@ export type CoinOpProps = {
   index: number;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
-  publication: Post;
+  publication: Creation;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
@@ -217,12 +275,17 @@ export type CoinOpProps = {
   };
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
 
 export type TextPostProps = {
   layoutAmount: number;
   router: NextRouter;
-  publication: Post;
+  publication: Post | Comment | Quote | Mirror;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
@@ -236,18 +299,28 @@ export type TextPostProps = {
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
   index: number;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
 
 export type QuestProps = {
   layoutAmount: number;
   router: NextRouter;
-  publication: Post;
+  publication: Post | Comment | Quote | Mirror;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
 
 export type ImagePostProps = {
   layoutAmount: number;
   router: NextRouter;
-  publication: Post;
+  publication: Post | Comment | Quote | Mirror;
   dispatch: Dispatch<AnyAction>;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
@@ -262,6 +335,11 @@ export type ImagePostProps = {
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
   index: number;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
 
 export type LevelOneProps = {
@@ -284,15 +362,13 @@ export type LevelOneProps = {
 
 export type ListenerProps = {
   layoutAmount: number;
-  apparel: boolean[];
-  setApparel: (e: boolean[]) => void;
   index: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
-  publication: Post;
+  publication: Creation;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
@@ -305,4 +381,75 @@ export type ListenerProps = {
   };
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
+
+export interface PrintItem {
+  collectionId: string;
+  uri: {
+    images: string[];
+    description: string;
+    title: string;
+    profileId: string;
+    microbrandCover: string;
+    tags: string[];
+    prompt: string;
+  };
+  profile: Profile;
+  prices: string[];
+  printType: PrintType;
+  fulfiller: string;
+  fulfillerPercent: string;
+  fulfillerBase: string;
+  designerPercent: string;
+}
+
+export enum PrintType {
+  Sticker = "0",
+  Poster = "1",
+  Shirt = "2",
+  Hoodie = "3",
+}
+
+export type ProfileProps = {
+  layoutAmount: number;
+  router: NextRouter;
+  publication: Profile;
+  index: number;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
+};
+
+export type MicrobrandProps = {
+  layoutAmount: number;
+  router: NextRouter;
+  publication: Profile;
+  index: number;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
+};
+
+export interface FilterInput {
+  access_contains?: String;
+  communities_contains?: String;
+  description_contains?: String;
+  drop_contains?: String;
+  microbrand_contains?: String;
+  printType_contains?: String;
+  prompt_contains?: String;
+  tags_contains?: String;
+  title_contains?: String;
+  unlimited?: Boolean;
+  amount_gte?: String;
+  amount_lte?: String;
+}

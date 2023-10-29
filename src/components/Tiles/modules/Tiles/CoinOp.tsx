@@ -6,6 +6,7 @@ import PopUp from "@/components/Common/modules/PopUp";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import { ItemType } from "@/components/Layout/types/footer.types";
+import HoverProfile from "@/components/Common/modules/HoverProfile";
 
 const CoinOp: FunctionComponent<CoinOpProps> = ({
   layoutAmount,
@@ -23,6 +24,11 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
+  profileHovers,
+  followLoading,
+  setProfileHovers,
+  followProfile,
+  unfollowProfile,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
@@ -67,12 +73,27 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             Coin Op Preroll
           </div>
           <div
-            className={`relative w-fit h-fit flex text-pez font-bit uppercase ${
+            className={`relative w-fit h-fit flex text-pez font-bit uppercase cursor-pointer ${
               layoutAmount === 4 ? "text-xs" : "text-sm"
             }`}
+            onMouseOver={() => {
+              const updatedArray = [...followLoading];
+              updatedArray[index] = false;
+              setProfileHovers(updatedArray);
+            }}
           >
             @hiro.lens
           </div>
+          {profileHovers?.[index] && (
+            <HoverProfile
+              followLoading={followLoading}
+              followProfile={followProfile}
+              unfollowProfile={unfollowProfile}
+              router={router}
+              publication={publication?.profile}
+              index={index}
+            />
+          )}
           <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
             <div
               className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
@@ -90,7 +111,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             </div>
             {popUpOpen?.[index] && (
               <PopUp
-                id={publication?.id}
+                id={publication.pubId}
                 index={index}
                 dispatch={dispatch}
                 router={router}

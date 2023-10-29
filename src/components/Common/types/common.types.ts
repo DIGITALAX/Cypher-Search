@@ -1,7 +1,13 @@
 import { CartItem, ItemType } from "@/components/Layout/types/footer.types";
 import { NextRouter } from "next/router";
 import { AnyAction, Dispatch } from "redux";
-import { Post } from "../../../../graphql/generated";
+import {
+  Mirror,
+  Post,
+  Profile,
+  Quote,
+  Comment,
+} from "../../../../graphql/generated";
 
 export type BarProps = {
   title: string;
@@ -42,13 +48,27 @@ export type InteractBarProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
+  collect: (id: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     quote: boolean;
     comment: boolean;
   };
-  publication: Post;
+  publication: Post | Comment | Mirror | Quote;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: boolean[]) => void;
+};
+
+export type HoverProfileProps = {
+  followLoading: boolean[];
+  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string) => Promise<void>;
+  publication: Profile;
+  router: NextRouter;
+  index: number;
+};
+
+export type TileLoaderProps = {
+  layoutAmount: number;
 };

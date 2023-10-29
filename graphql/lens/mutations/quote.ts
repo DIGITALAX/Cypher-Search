@@ -9,7 +9,7 @@ import {
 const quotePost = async (
   request: OnchainQuoteRequest
 ): Promise<FetchResult<QuoteOnchainMutation>> => {
-  return apolloClient.mutate({
+  return await apolloClient.mutate({
     mutation: QuoteOnchainDocument,
     variables: {
       request: request,

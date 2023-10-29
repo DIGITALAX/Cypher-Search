@@ -2,10 +2,10 @@ import Image from "next/legacy/image";
 import { FormEvent, FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
-import { formatTime } from "../../../../lib/helpers/formatTime";
 import { setVideoSync } from "../../../../redux/reducers/videoSyncSlice";
 import { ControlsProps } from "../types/tiles.types";
 import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
+import formatTime from "../../../../lib/helpers/formatTime";
 
 const Controls: FunctionComponent<ControlsProps> = ({
   dispatch,

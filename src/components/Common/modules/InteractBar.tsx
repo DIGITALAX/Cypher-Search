@@ -4,6 +4,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { InteractBarProps } from "../types/common.types";
 import numeral from "numeral";
 import { AiOutlineLoading } from "react-icons/ai";
+import { Post } from "../../../../graphql/generated";
 
 const InteractBar: FunctionComponent<InteractBarProps> = ({
   col,
@@ -37,10 +38,26 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
           interactionsLoading?.comment,
         ];
         const stats = [
-          publication?.stats?.mirrors + publication?.stats?.quotes,
-          publication?.stats?.reactions,
-          publication?.stats?.countOpenActions,
-          publication?.stats?.comments,
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn?.stats
+            : (publication as Post)?.stats
+          )?.mirrors +
+            (publication?.__typename === "Mirror"
+              ? publication?.mirrorOn?.stats
+              : (publication as Post)?.stats
+            )?.quotes,
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn?.stats
+            : (publication as Post)?.stats
+          )?.reactions,
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn?.stats
+            : (publication as Post)?.stats
+          )?.countOpenActions,
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn?.stats
+            : (publication as Post)?.stats
+          )?.comments,
         ];
         return (
           <div

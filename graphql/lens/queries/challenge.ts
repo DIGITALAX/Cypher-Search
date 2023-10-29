@@ -6,10 +6,10 @@ import {
   ChallengeRequest,
 } from "../../generated";
 
-export const generateChallenge = (
+export const generateChallenge = async (
   request: ChallengeRequest
 ): Promise<FetchResult<ChallengeQuery>> => {
-  return authClient.query({
+  return await authClient.query({
     query: ChallengeDocument,
     variables: {
       request: request,

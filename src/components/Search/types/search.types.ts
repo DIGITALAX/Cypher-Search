@@ -1,9 +1,44 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
-import { FILTER_VALUES } from "../../../../lib/constants";
 import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Layout/types/footer.types";
 import { NextRouter } from "next/router";
-import { Profile } from "../../../../graphql/generated";
+import {
+  Profile,
+  PublicationMetadataMainFocusType,
+} from "../../../../graphql/generated";
+
+export interface FilterValues {
+  hashtags: string[];
+  microbrands: string[][];
+  community: string[];
+  access: string[];
+  format: PublicationMetadataMainFocusType[];
+  dropsSuggested: string[],
+  origin: string[][];
+  catalog: string[];
+  colors: string[];
+  sizes: {
+    poster: string[];
+    sticker: string[];
+    apparel: string[];
+  };
+  token: string[];
+  fulfiller: string[];
+}
+
+export interface DropDown {
+  hashtag: boolean;
+  community: boolean;
+  microbrand: boolean;
+  catalog: boolean;
+  access: boolean;
+  format: boolean;
+  origin: boolean;
+  size: boolean;
+  price: boolean;
+  token: boolean;
+  fulfiller: boolean;
+}
 
 export type SearchBarProps = {
   handleSearch: (
@@ -14,7 +49,7 @@ export type SearchBarProps = {
   searchInput: string;
   setSearchInput: (e: string) => void;
   filtersOpen: boolean;
-  handleShuffleSearch: () => Promise<void>;
+  handleShuffleSearch: () => void;
   placeholderText: string | undefined;
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
@@ -43,7 +78,7 @@ export type HeaderProps = {
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;
-  handleShuffleSearch: () => Promise<void>;
+  handleShuffleSearch: () => void;
   cartItems: CartItem[];
 };
 
@@ -59,104 +94,56 @@ export type DropDownProps = {
   onDropDownChoose: (e: string) => void;
 };
 
+export type ImageDropDownProps = {
+  title: string;
+  cover?: boolean;
+  rounded?: boolean;
+  reverse?: boolean;
+  value: string;
+  onChange: (e: ChangeEvent) => void;
+  openDropDown: boolean;
+  setOpenDropDown: () => void;
+  dropDownValues: string[][];
+  onDropDownChoose: (e: string) => void;
+};
+
 export type ContentSortProps = {
+  handleResetFilters: () => void;
+  filterConstants: FilterValues | undefined;
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
-  openDropDown: {
-    hashtag: boolean;
-    community: boolean;
-    microbrand: boolean;
-    publication: boolean;
-    access: boolean;
-    format: boolean;
-    origin: boolean;
-    size: boolean;
-    price: boolean;
-    token: boolean;
-  };
-  setOpenDropDown: (e: {
-    hashtag: boolean;
-    community: boolean;
-    microbrand: boolean;
-    publication: boolean;
-    access: boolean;
-    format: boolean;
-    origin: boolean;
-    size: boolean;
-    price: boolean;
-    token: boolean;
-  }) => void;
-  setFilteredDropDownValues: (e: typeof FILTER_VALUES) => void;
-  filteredDropDownValues: typeof FILTER_VALUES;
+  openDropDown: DropDown;
+  setOpenDropDown: (e: DropDown) => void;
+  setFilteredDropDownValues: (e: FilterValues) => void;
+  filteredDropDownValues: FilterValues;
 };
 
 export type PrerollSortProps = {
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
-  openDropDown: {
-    hashtag: boolean;
-    community: boolean;
-    microbrand: boolean;
-    publication: boolean;
-    access: boolean;
-    format: boolean;
-    origin: boolean;
-    size: boolean;
-    price: boolean;
-    token: boolean;
-  };
-  setOpenDropDown: (e: {
-    hashtag: boolean;
-    community: boolean;
-    microbrand: boolean;
-    publication: boolean;
-    access: boolean;
-    format: boolean;
-    origin: boolean;
-    size: boolean;
-    price: boolean;
-    token: boolean;
-  }) => void;
-  setFilteredDropDownValues: (e: typeof FILTER_VALUES) => void;
-  filteredDropDownValues: typeof FILTER_VALUES;
+  openDropDown: DropDown;
+  filterConstants: FilterValues | undefined;
+  setOpenDropDown: (e: DropDown) => void;
+  setFilteredDropDownValues: (e: FilterValues) => void;
+  filteredDropDownValues: FilterValues;
 };
 
 export type FilterProps = {
   dispatch: Dispatch<AnyAction>;
+  filterConstants: FilterValues | undefined;
   filterValues: Filter;
-  openDropDown: {
-    hashtag: boolean;
-    community: boolean;
-    microbrand: boolean;
-    publication: boolean;
-    access: boolean;
-    format: boolean;
-    origin: boolean;
-    size: boolean;
-    price: boolean;
-    token: boolean;
-  };
-  setOpenDropDown: (e: {
-    hashtag: boolean;
-    community: boolean;
-    microbrand: boolean;
-    publication: boolean;
-    access: boolean;
-    format: boolean;
-    origin: boolean;
-    size: boolean;
-    price: boolean;
-    token: boolean;
-  }) => void;
-  setFilteredDropDownValues: (e: typeof FILTER_VALUES) => void;
-  filteredDropDownValues: typeof FILTER_VALUES;
+  openDropDown: DropDown;
+  handleResetFilters: () => void;
+  setOpenDropDown: (e: DropDown) => void;
+  setFilteredDropDownValues: (e: FilterValues) => void;
+  filteredDropDownValues: FilterValues;
 };
 
 export interface Filter {
   hashtag: string;
   community: string;
   microbrand: string;
-  publication: string;
+  catalog: string;
   access: string;
   format: string;
   origin: string;
@@ -176,4 +163,12 @@ export interface Filter {
   };
   token: string;
   printType: string[];
+}
+
+export enum Origin {
+  CoinOp,
+  Chromadin,
+  Legend,
+  Listener,
+  Other,
 }

@@ -6,6 +6,7 @@ import PopUp from "@/components/Common/modules/PopUp";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import { ItemType } from "@/components/Layout/types/footer.types";
+import HoverProfile from "@/components/Common/modules/HoverProfile";
 
 const Listener: FunctionComponent<ListenerProps> = ({
   layoutAmount,
@@ -23,6 +24,11 @@ const Listener: FunctionComponent<ListenerProps> = ({
   like,
   openMirrorChoice,
   setOpenMirrorChoice,
+  profileHovers,
+  setProfileHovers,
+  followLoading,
+  followProfile,
+  unfollowProfile,
 }): JSX.Element => {
   return (
     <div
@@ -75,9 +81,24 @@ const Listener: FunctionComponent<ListenerProps> = ({
             className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
               layoutAmount === 4 ? "text-xs" : "text-sm"
             }`}
+            onMouseOver={() => {
+              const updatedArray = [...followLoading];
+              updatedArray[index] = false;
+              setProfileHovers(updatedArray);
+            }}
           >
             @hiro.lens
           </div>
+          {profileHovers?.[index] && (
+            <HoverProfile
+              followLoading={followLoading}
+              followProfile={followProfile}
+              unfollowProfile={unfollowProfile}
+              router={router}
+              publication={publication?.profile}
+              index={index}
+            />
+          )}
           <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
             <div
               className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
@@ -95,7 +116,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
             </div>
             {popUpOpen?.[index] && (
               <PopUp
-                id={publication?.id}
+                id={publication?.pubId}
                 index={index}
                 dispatch={dispatch}
                 router={router}

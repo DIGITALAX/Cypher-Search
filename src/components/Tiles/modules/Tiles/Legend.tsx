@@ -4,7 +4,7 @@ import { LegendProps } from "../../types/tiles.types";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import Bar from "../../../Common/modules/Bar";
 import CollectItem from "../CollectItem";
-import LevelOne from "./LevelOne";
+import LevelOne from "../LevelOne";
 
 const Legend: FunctionComponent<LegendProps> = ({
   publication,

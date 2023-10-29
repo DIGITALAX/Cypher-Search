@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { TextPostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
+import HoverProfile from "@/components/Common/modules/HoverProfile";
 
 const TextPost: FunctionComponent<TextPostProps> = ({
   layoutAmount,
@@ -16,6 +17,11 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   setOpenMirrorChoice,
   openMirrorChoice,
   index,
+  profileHovers,
+  setProfileHovers,
+  followLoading,
+  followProfile,
+  unfollowProfile,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
@@ -74,11 +80,25 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                   draggable={false}
                 />
               </div>
-
               <div
                 className="relative w-6 h-6 rounded-full flex items-center justify-center p-1 cursor-pointer"
                 id="pfp"
+                onMouseOver={() => {
+                  const updatedArray = [...followLoading];
+                  updatedArray[index] = false;
+                  setProfileHovers(updatedArray);
+                }}
               ></div>
+              {profileHovers?.[index] && (
+                <HoverProfile
+                  followLoading={followLoading}
+                  followProfile={followProfile}
+                  unfollowProfile={unfollowProfile}
+                  router={router}
+                  publication={publication?.by}
+                  index={index}
+                />
+              )}
             </div>
           </div>
         </div>

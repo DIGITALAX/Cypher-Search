@@ -16,6 +16,8 @@ import layoutSwitchReducer from "./reducers/layoutSwitchSlice";
 import reactBoxReducer from "./reducers/reactBoxSlice";
 import interactionsCountReducer from "./reducers/interactionsCountSlice";
 import searchItemsReducer from "./reducers/searchItemsSlice";
+import cachedProfilesReducer from "./reducers/cachedProfilesSlice";
+import filterConstantsReducer from "./reducers/filterConstantsSlice";
 
 const reducer = combineReducers({
   searchActiveReducer,
@@ -33,7 +35,9 @@ const reducer = combineReducers({
   layoutSwitchReducer,
   reactBoxReducer,
   interactionsCountReducer,
-  searchItemsReducer
+  searchItemsReducer,
+  cachedProfilesReducer,
+  filterConstantsReducer,
 });
 
 export const store = configureStore({

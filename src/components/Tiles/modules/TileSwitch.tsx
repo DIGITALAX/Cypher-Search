@@ -4,10 +4,19 @@ import ImagePost from "./Tiles/ImagePost";
 import CoinOp from "./Tiles/CoinOp";
 import VideoPost from "./Tiles/VideoPost";
 import TextPost from "./Tiles/TextPost";
-import { TileSwitchProps } from "../types/tiles.types";
+import { Creation, TileSwitchProps } from "../types/tiles.types";
 import Quest from "./Tiles/Quest";
 import Legend from "./Tiles/Legend";
 import Listener from "./Tiles/Listener";
+import Microbrand from "./Tiles/Microbrand";
+import Profile from "./Tiles/Profile";
+import {
+  Mirror,
+  Profile as LensProfile,
+  Post,
+  Comment,
+  Quote,
+} from "../../../../graphql/generated";
 
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
@@ -37,8 +46,43 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   handleVolumeChange,
   handleSeek,
   handleHeart,
+  followLoading,
+  unfollowProfile,
+  followProfile,
+  profileHovers,
+  setProfileHovers,
 }) => {
-  switch (type) {
+  switch (type?.toLowerCase()) {
+    case "profile":
+      return (
+        <Profile
+          publication={publication?.post as LensProfile}
+          index={index}
+          router={router}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          layoutAmount={layoutAmount}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+        />
+      );
+
+    case "microbrand":
+      return (
+        <Microbrand
+          publication={publication?.post as LensProfile}
+          index={index}
+          router={router}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          layoutAmount={layoutAmount}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+        />
+      );
+
     case "image":
       return (
         <ImagePost
@@ -46,7 +90,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           setOpenMirrorChoice={setOpenMirrorChoice}
           layoutAmount={layoutAmount}
           router={router}
-          publication={publication}
+          publication={publication?.post as Post | Comment | Quote | Mirror}
           dispatch={dispatch}
           mirror={mirror}
           like={like}
@@ -69,7 +113,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           index={index}
           dispatch={dispatch}
           router={router}
-          publication={publication}
+          publication={publication?.post as Creation}
           cartItems={cartItems}
           mirror={mirror}
           like={like}
@@ -91,7 +135,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           index={index}
           dispatch={dispatch}
           router={router}
-          publication={publication}
+          publication={publication?.post as Creation}
           cartItems={cartItems}
           mirror={mirror}
           like={like}
@@ -111,7 +155,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           index={index}
           dispatch={dispatch}
           router={router}
-          publication={publication}
+          publication={publication?.post as Creation}
           cartItems={cartItems}
           mirror={mirror}
           like={like}
@@ -127,7 +171,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           setOpenMirrorChoice={setOpenMirrorChoice}
           layoutAmount={layoutAmount}
           router={router}
-          publication={publication}
+          publication={publication?.post as Post | Comment | Quote | Mirror}
           mirror={mirror}
           like={like}
           comment={comment}
@@ -144,7 +188,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           layoutAmount={layoutAmount}
           dispatch={dispatch}
           router={router}
-          publication={publication}
+          publication={publication?.post as Post | Comment | Quote | Mirror}
           mirror={mirror}
           like={like}
           comment={comment}
@@ -166,7 +210,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         <Quest
           layoutAmount={layoutAmount}
           router={router}
-          publication={publication}
+          publication={publication?.post as Post | Comment | Quote | Mirror}
         />
       );
     case "legend":
@@ -178,7 +222,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           index={index}
           dispatch={dispatch}
           router={router}
-          publication={publication}
+          publication={publication?.post as Post | Comment | Quote | Mirror}
           cartItems={cartItems}
           mirror={mirror}
           like={like}
