@@ -9,7 +9,7 @@ import {
 const commentPost = async (
   request: OnchainCommentRequest
 ): Promise<FetchResult<CommentOnchainMutation>> => {
-  return apolloClient.mutate({
+  return await apolloClient.mutate({
     mutation: CommentOnchainDocument,
     variables: {
       request: request,

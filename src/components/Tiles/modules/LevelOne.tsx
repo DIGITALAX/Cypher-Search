@@ -2,8 +2,8 @@ import Bar from "@/components/Common/modules/Bar";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import PurchaseTokens from "@/components/Common/modules/PurchaseTokens";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
-import { LevelOneProps } from "../../types/tiles.types";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { LevelOneProps } from "../types/tiles.types";
 
 const LevelOne: FunctionComponent<LevelOneProps> = ({
   handleChangeCurrency,

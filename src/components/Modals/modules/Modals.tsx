@@ -21,12 +21,16 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer.value
   );
+  const filterConstants = useSelector(
+    (state: RootState) => state.app.filterConstantsReducer.items
+  );
   const image = useSelector((state: RootState) => state.app.ImageLargeReducer);
   const {
     openDropDown,
     setOpenDropDown,
     filteredDropDownValues,
     setFilteredDropDownValues,
+    handleResetFilters,
   } = useSearch();
   return (
     <>
@@ -49,12 +53,14 @@ const Modals: FunctionComponent = (): JSX.Element => {
       {mapOpen && <Map dispatch={dispatch} filterValues={filterValues} />}
       {filtersOpen && (
         <Filters
+          filterConstants={filterConstants}
           openDropDown={openDropDown}
           setOpenDropDown={setOpenDropDown}
           filteredDropDownValues={filteredDropDownValues}
           setFilteredDropDownValues={setFilteredDropDownValues}
           dispatch={dispatch}
           filterValues={filterValues}
+          handleResetFilters={handleResetFilters}
         />
       )}
       {image.value && (

@@ -1,7 +1,7 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
-import { DropDownProps,  } from "../types/search.types";
+import { DropDownProps } from "../types/search.types";
 
 const DropDown: FunctionComponent<DropDownProps> = ({
   title,
@@ -15,7 +15,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
   onDropDownChoose,
 }): JSX.Element => {
   return (
-    <div className="relative flex items-center justify-center flex-col w-full h-fit">
+    <div className="relative flex items-center justify-center flex-col w-full h-fit pb-1.5">
       <div
         className="relative w-full h-12 p-px rounded-sm flex flex-row items-center justify-center font-bit text-sol text-center"
         id="borderSearch"
@@ -54,19 +54,17 @@ const DropDown: FunctionComponent<DropDownProps> = ({
           id="dropDown"
         >
           <div className="relative flex flex-col items-center justify-start w-full h-fit gap-px">
-            {dropDownValues?.map(
-              (value: string, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative w-full h-8 py-px bg-offBlack items-center justify-center flex text-sol text-sm uppercase font-bit hover:bg-skyBlue hover:text-black cursor-pointer"
-                    onClick={() => onDropDownChoose(value)}
-                  >
-                    {value}
-                  </div>
-                );
-              }
-            )}
+            {dropDownValues?.map((value: string, index: number) => {
+              return (
+                <div
+                  key={index}
+                  className="relative w-full h-8 py-px bg-offBlack items-center justify-center flex text-sol text-sm uppercase font-bit hover:bg-skyBlue hover:text-black cursor-pointer"
+                  onClick={() => onDropDownChoose(value)}
+                >
+                  {value.replaceAll("_", " ")}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

@@ -1,9 +1,10 @@
 import Image from "next/legacy/image";
 import DropDown from "./DropDown";
-import { FILTER_VALUES, INFURA_GATEWAY } from "../../../../lib/constants";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { ChangeEvent, FunctionComponent } from "react";
 import { ContentSortProps } from "../types/search.types";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
+import ImageDropDown from "./ImageDropDown";
 
 const ContentSort: FunctionComponent<ContentSortProps> = ({
   openDropDown,
@@ -12,22 +13,37 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
   filteredDropDownValues,
   dispatch,
   filterValues,
+  handleResetFilters,
+  filterConstants,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit items-start justify-center flex flex-col gap-5">
-      <div className="font-bit text-white text-left flex items-center justify-center text-sm uppercase break-words h-fit w-fit">
-        Find what you’re really looking for, with filters for everything you can
-        imagine:
+      <div className="relative w-full h-fit justify-between gap-3 flex items-center flex-row sm:flex-nowrap flex-wrap">
+        <div className="font-bit text-white text-left flex items-center justify-center text-sm uppercase break-words h-fit w-fit">
+          Find what you’re really looking for, with filters for everything you
+          can imagine:
+        </div>
+        <div
+          className="relative w-12 h-9 cursor-pointer flex items-center justify-center active:scale-95"
+          onClick={() => handleResetFilters()}
+          title="reset filters"
+        >
+          <Image
+            layout="fill"
+            src={`${INFURA_GATEWAY}/ipfs/QmSqbSXEPerv869YdJAyY7sgE47qC4Btx8FbAeTMLArMqF`}
+            draggable={false}
+          />
+        </div>
       </div>
       <DropDown
-        dropDownValues={filteredDropDownValues.hashtags}
+        dropDownValues={filteredDropDownValues?.hashtags}
         hashtag
         title={"Sort By Hashtag"}
-        value={filterValues.hashtag}
+        value={filterValues?.hashtag}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            hashtags: FILTER_VALUES.hashtags.filter((value) =>
+            hashtags: filterConstants!.hashtags.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -87,13 +103,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         }}
       />
       <DropDown
-        dropDownValues={filteredDropDownValues.community}
+        dropDownValues={filteredDropDownValues?.community}
         title={"Sort By Community"}
-        value={filterValues.community}
+        value={filterValues?.community}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            community: FILTER_VALUES.community.filter((value) =>
+            community: filterConstants!.community.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -152,15 +168,15 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           }
         }}
       />
-      <DropDown
-        dropDownValues={filteredDropDownValues.microbrands}
+      <ImageDropDown
+        dropDownValues={filteredDropDownValues?.microbrands}
         title={"Sort By Microbrand"}
-        value={filterValues.microbrand}
+        value={filterValues?.microbrand}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            microbrands: FILTER_VALUES.microbrands.filter((value) =>
-              value
+            microbrands: filterConstants!.microbrands.filter((value) =>
+              value[0]
                 .toLowerCase()
                 ?.includes(
                   (e.target as HTMLInputElement).value
@@ -248,16 +264,18 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             />
           </div>
         </div>
-        <DropDown
-          dropDownValues={filteredDropDownValues.origin}
+        <ImageDropDown
+          dropDownValues={filteredDropDownValues?.origin}
           reverse
           title={"Sort By Origin"}
-          value={filterValues.origin}
+          cover
+          rounded
+          value={filterValues?.origin}
           onChange={(e: ChangeEvent) => {
             setFilteredDropDownValues({
               ...filteredDropDownValues,
-              origin: FILTER_VALUES.origin.filter((value) =>
-                value
+              origin: filterConstants!.origin.filter((value) =>
+                value[0]
                   .toLowerCase()
                   ?.includes(
                     (e.target as HTMLInputElement).value
@@ -318,13 +336,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         />
       </div>
       <DropDown
-        dropDownValues={filteredDropDownValues.format}
+        dropDownValues={filteredDropDownValues?.format}
         title={"Sort By Media Format"}
-        value={filterValues.format}
+        value={filterValues?.format}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            format: FILTER_VALUES.format.filter((value) =>
+            format: filterConstants!.format.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -384,13 +402,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         }}
       />
       <DropDown
-        dropDownValues={[]}
-        title={"Sort By Publication"}
-        value={filterValues.publication}
+        dropDownValues={filteredDropDownValues?.catalog}
+        title={"Sort By Catalog"}
+        value={filterValues?.catalog}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            publications: FILTER_VALUES.publications.filter((value) =>
+            catalog: filterConstants!.catalog.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -407,27 +425,27 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           dispatch(
             setFilter({
               ...filterValues,
-              publication: (e.target as HTMLInputElement).value.toLowerCase(),
+              catalog: (e.target as HTMLInputElement).value.toLowerCase(),
             })
           );
 
-          if (!openDropDown.publication) {
+          if (!openDropDown.catalog) {
             setOpenDropDown({
               ...openDropDown,
-              publication: true,
+              catalog: true,
             });
           }
         }}
-        openDropDown={openDropDown.publication}
+        openDropDown={openDropDown.catalog}
         setOpenDropDown={() => {
           setOpenDropDown({
             ...openDropDown,
-            publication: !openDropDown.publication,
+            catalog: !openDropDown.catalog,
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues.publication.includes(value)) {
-            const allValues = filterValues.publication.split(",");
+          if (!filterValues.catalog.includes(value)) {
+            const allValues = filterValues.catalog.split(",");
             const isPartialEntry =
               allValues[allValues.length - 1].trim() !== "";
 
@@ -437,26 +455,26 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               allValues[allValues.length - 1] = ` ${value},`;
               newValues = allValues.join(", ").trim();
             } else {
-              newValues = filterValues.publication + ` ${value},`;
+              newValues = filterValues.catalog + ` ${value},`;
             }
 
             dispatch(
               setFilter({
                 ...filterValues,
-                publication: newValues,
+                catalog: newValues,
               })
             );
           }
         }}
       />
       <DropDown
-        dropDownValues={filteredDropDownValues.access}
+        dropDownValues={filteredDropDownValues?.access}
         title={"Sort By Access Eco Scale"}
-        value={filterValues.access}
+        value={filterValues?.access}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            access: FILTER_VALUES.access.filter((value) =>
+            access: filterConstants!.access.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -533,7 +551,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                   })
                 );
               }}
-              value={filterValues.editions}
+              value={filterValues?.editions}
             />
             <div className="relative w-full h-full p-1.5 bg-offBlack flex items-center justify-center text-sm uppercase">
               editions

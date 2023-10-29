@@ -3,6 +3,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { TilesProps } from "../types/tiles.types";
 import TileSwitch from "./TileSwitch";
 import { Masonry } from "masonic";
+import TileLoader from "@/components/Common/modules/TileLoader";
 
 const Tiles: FunctionComponent<TilesProps> = ({
   handleMoreSearch,
@@ -23,11 +24,19 @@ const Tiles: FunctionComponent<TilesProps> = ({
   openMirrorChoice,
   setOpenMirrorChoice,
   filtersOpen,
+  searchLoading,
+  unfollowProfile,
+  followProfile,
+  followLoading,
+  profileHovers,
+  setProfileHovers,
 }): JSX.Element => {
   const items = [
     { id: 0, type: "image" },
     { id: 1, type: "video" },
     { id: 3, type: "chromadin" },
+    { id: 16, type: "profile" },
+    { id: 17, type: "microbrand" },
     { id: 2, type: "quest" },
     { id: 4, type: "coinop" },
     { id: 5, type: "quest" },
@@ -55,9 +64,11 @@ const Tiles: FunctionComponent<TilesProps> = ({
       type: string;
     };
   }) => {
-    return (
+    return searchLoading ? (
+      <TileLoader layoutAmount={layoutAmount} key={index} />
+    ) : (
       <TileSwitch
-        key={data.id}
+        key={index}
         type={data.type}
         publication={""}
         cartItems={cartItems}
@@ -76,17 +87,24 @@ const Tiles: FunctionComponent<TilesProps> = ({
         interactionsLoading={interactionsLoading}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
+        followLoading={followLoading}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
       />
     );
   };
 
   return (
-    <div className={`relative w-full h-fit overflow-y-scroll pb-6 px-4 ${
-      searchActive || filtersOpen ? "pt-52 sm:pt-24" : "pt-24"
-    }`}>
+    <div
+      className={`relative w-full h-fit overflow-y-scroll pb-6 px-4 ${
+        searchActive || filtersOpen ? "pt-52 sm:pt-24" : "pt-24"
+      }`}
+    >
       <InfiniteScroll
         dataLength={16}
-        loader={<></>}
+        loader={<TileLoader layoutAmount={layoutAmount} />}
         hasMore={true}
         next={handleMoreSearch}
         className={`w-full h-full items-start justify-center ${

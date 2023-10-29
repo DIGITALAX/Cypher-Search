@@ -10,7 +10,7 @@ const initialFilterState: FilterState = {
     hashtag: "",
     community: "",
     microbrand: "",
-    publication: "",
+    catalog: "",
     access: "",
     format: "",
     origin: "",

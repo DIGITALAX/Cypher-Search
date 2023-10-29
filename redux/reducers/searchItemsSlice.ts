@@ -1,14 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Post } from "../../graphql/generated";
+import { Publication } from "@/components/Tiles/types/tiles.types";
 
 export interface AllSearchItemsState {
-  items: Post[];
-  cursor?: string;
+  items: Publication[];
+  lensPubCursor?: string;
+  lensProfileCursor?: string;
+  graphCursor?: number;
 }
 
 const initialAllSearchItemsState: AllSearchItemsState = {
   items: [],
-  cursor: undefined,
 };
 
 export const allSearchItemsSlice = createSlice({
@@ -17,10 +18,19 @@ export const allSearchItemsSlice = createSlice({
   reducers: {
     setAllSearchItems: (
       state: AllSearchItemsState,
-      { payload: { actionItems, actionCursor } }
+      {
+        payload: {
+          actionItems,
+          actionLensPubCursor,
+          actionGraphCursor,
+          actionLensProfileCursor,
+        },
+      }
     ) => {
       state.items = actionItems;
-      state.cursor = actionCursor;
+      state.lensPubCursor = actionLensPubCursor;
+      state.lensProfileCursor = actionLensProfileCursor;
+      state.graphCursor = actionGraphCursor;
     },
   },
 });

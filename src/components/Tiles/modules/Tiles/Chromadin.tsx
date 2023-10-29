@@ -6,6 +6,7 @@ import PopUp from "@/components/Common/modules/PopUp";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import { ItemType } from "@/components/Layout/types/footer.types";
+import HoverProfile from "@/components/Common/modules/HoverProfile";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   layoutAmount,
@@ -25,6 +26,11 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   interactionsLoading,
   setOpenMirrorChoice,
   openMirrorChoice,
+  profileHovers,
+  setProfileHovers,
+  followProfile,
+  followLoading,
+  unfollowProfile,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
@@ -95,9 +101,26 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             <div className="relative flex w-fit h-fit break-words text-nuba font-bit text-lg uppercase">
               soul food for thought
             </div>
-            <div className="relative w-fit h-fit flex text-mos text-sm font-bit uppercase">
+            <div
+              className="relative w-fit h-fit flex text-mos text-sm font-bit uppercase cursor-pointer"
+              onMouseOver={() => {
+                const updatedArray = [...followLoading];
+                updatedArray[index] = false;
+                setProfileHovers(updatedArray);
+              }}
+            >
               @hiro.lens
             </div>
+            {profileHovers?.[index] && (
+              <HoverProfile
+                followLoading={followLoading}
+                followProfile={followProfile}
+                unfollowProfile={unfollowProfile}
+                router={router}
+                publication={publication?.profile}
+                index={index}
+              />
+            )}
           </div>
           <div
             className="relative w-10 h-10 flex items-end justify-center mb-0 cursor-pointer active:scale-95"

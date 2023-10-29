@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { ChangeEvent, FunctionComponent } from "react";
-import { FILTER_VALUES, INFURA_GATEWAY } from "../../../../lib/constants";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { PrerollSortProps } from "../types/search.types";
 import DropDown from "./DropDown";
 import { setMap } from "../../../../redux/reducers/mapSlice";
@@ -13,6 +13,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
   setFilteredDropDownValues,
   dispatch,
   filterValues,
+  filterConstants,
 }): JSX.Element => {
   return (
     <div
@@ -52,6 +53,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                     ? "preroll"
                     : "tiles"
                 }
+                title={image[0]}
                 onClick={() => {
                   dispatch(
                     setFilter({
@@ -82,12 +84,12 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
         </div>
         <div className="relative flex flex-col gap-1 w-full h-fit items-start justify-center">
           <div className="relative flex justify-start items-center text-white font-bit uppercase text-sm">
-            size
+            sizes
           </div>
           <div className="relative w-full h-fit flex flex-col items-start justify-items gap-1">
             <div className="relative w-full h-fit flex flex-row items-center justify-center">
               <div className="flex relative w-full h-fit sm:flex-nowrap flex-wrap flex-row gap-2 items-center justify-start">
-                {["xs", "s", "m", "l", "xl", "2xl"].map(
+                {filterConstants?.sizes?.apparel?.map(
                   (size: string, index: number) => {
                     return (
                       <div
@@ -147,12 +149,12 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             {openDropDown.size && (
               <>
                 <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
-                  {["a0", "a1", "a2", "a4", "a7"].map(
+                  {filterConstants?.sizes?.poster?.map(
                     (size: string, index: number) => {
                       return (
                         <div
                           key={index}
-                          className="relative w-7 h-6 flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
+                          className="relative w-fit h-fit flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
                           id={
                             filterValues.size.poster.includes(size)
                               ? "preroll"
@@ -176,8 +178,10 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                             );
                           }}
                         >
-                          <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center">
-                            {size}
+                          <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center p-1">
+                            {size?.match(/^[^\(]+/)?.[0]}
+                            <br />
+                            {size?.match(/\(([^)]+)\)/)?.[1]}
                           </div>
                         </div>
                       );
@@ -185,12 +189,12 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                   )}
                 </div>
                 <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
-                  {["a0", "a1", "a2", "a4", "a7"].map(
+                  {filterConstants?.sizes?.sticker?.map(
                     (size: string, index: number) => {
                       return (
                         <div
                           key={index}
-                          className="relative w-7 h-6 flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
+                          className="relative w-fit h-fit flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
                           id={
                             filterValues.size.sticker.includes(size)
                               ? "preroll"
@@ -214,8 +218,10 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                             );
                           }}
                         >
-                          <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center">
-                            {size}
+                          <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center p-1">
+                            {size?.match(/^[^\(]+/)?.[0]}
+                            <br />
+                            {size?.match(/\(([^)]+)\)/)?.[1]}
                           </div>
                         </div>
                       );
@@ -228,18 +234,10 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
         </div>
         <div className="relative flex flex-col gap-1 w-full h-fit items-start justify-center">
           <div className="relative flex justify-start items-center text-white font-bit uppercase text-sm">
-            base color
+            base colors
           </div>
           <div className="relative flex flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
-            {[
-              "#FFFFFF",
-              "#0091FF",
-              "#FBDB86",
-              "#B620E0",
-              "#E02020",
-              "#6D7278",
-              "#111818",
-            ].map((color: string, index: number) => {
+            {filterConstants?.colors?.map((color: string, index: number) => {
               return (
                 <div
                   key={index}
@@ -325,13 +323,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             </div>
           </div>
           <DropDown
-            dropDownValues={filteredDropDownValues.token}
+            dropDownValues={filteredDropDownValues?.token}
             title={"Token"}
-            value={filterValues.token}
+            value={filterValues?.token}
             onChange={(e: ChangeEvent) => {
               setFilteredDropDownValues({
                 ...filteredDropDownValues,
-                token: FILTER_VALUES.token.filter((value) =>
+                token: filterConstants!.token.filter((value) =>
                   value
                     .toLowerCase()
                     .includes(
@@ -414,27 +412,73 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
           </div>
         </div>
         <div className="relative flex flex-row gap-5 w-full h-fit items-center justify-center">
-          <div
-            className="relative w-full h-12 p-px rounded-sm flex flex-row items-center justify-center"
-            id="borderSearch"
-          >
-            <input
-              className={`relative w-full h-full p-1.5 bg-offBlack flex items-center rounded-sm text-white font-bit justify-center uppercase text-sm`}
-              id="searchBar"
-              placeholder={"find by local fulfiller"}
-              value={filterValues.fulfiller}
-              onChange={(e) =>
+          <DropDown
+            dropDownValues={filteredDropDownValues?.fulfiller}
+            title={"Find by Local Fulfiller"}
+            value={filterValues?.fulfiller}
+            onChange={(e: ChangeEvent) => {
+              setFilteredDropDownValues({
+                ...filteredDropDownValues,
+                fulfiller: filterConstants!.fulfiller.filter((value) =>
+                  value
+                    .toLowerCase()
+                    .includes(
+                      (e.target as HTMLInputElement).value
+                        .split(",")
+                        [
+                          (e.target as HTMLInputElement).value.split(",")
+                            .length - 1
+                        ].trim()
+                        .toLowerCase()
+                    )
+                ),
+              });
+
+              dispatch(
+                setFilter({
+                  ...filterValues,
+                  fulfiller: (e.target as HTMLInputElement).value.toLowerCase(),
+                })
+              );
+
+              if (!openDropDown.fulfiller) {
+                setOpenDropDown({
+                  ...openDropDown,
+                  fulfiller: true,
+                });
+              }
+            }}
+            openDropDown={openDropDown.fulfiller}
+            setOpenDropDown={() => {
+              setOpenDropDown({
+                ...openDropDown,
+                fulfiller: !openDropDown.fulfiller,
+              });
+            }}
+            onDropDownChoose={(value: string) => {
+              if (!filterValues.fulfiller.includes(value)) {
+                const allValues = filterValues.fulfiller.split(",");
+                const isPartialEntry =
+                  allValues[allValues.length - 1].trim() !== "";
+
+                let newValues: string;
+
+                if (isPartialEntry) {
+                  allValues[allValues.length - 1] = ` ${value},`;
+                  newValues = allValues.join(", ").trim();
+                } else {
+                  newValues = filterValues.fulfiller + ` ${value},`;
+                }
+
                 dispatch(
                   setFilter({
                     ...filterValues,
-                    fulfiller: (
-                      e.target as HTMLInputElement
-                    ).value.toLowerCase(),
+                    fulfiller: newValues,
                   })
-                )
+                );
               }
-            />
-          </div>
+            }}
+          />
           <div
             className="relative flex w-10 h-6 cursor-pointer items-center justify-center"
             onClick={() => dispatch(setMap(true))}

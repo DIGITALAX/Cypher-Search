@@ -6,10 +6,10 @@ import {
   ProfilesRequest,
 } from "../../generated";
 
-export const getProfiles = (
+export const getProfiles = async (
   request: ProfilesRequest
 ): Promise<FetchResult<ProfilesQuery>> => {
-  return authClient.query({
+  return await authClient.query({
     query: ProfilesDocument,
     variables: {
       request: request,

@@ -9,7 +9,7 @@ import {
 const actOnGrant = async (
   request: ActOnOpenActionRequest
 ): Promise<FetchResult<ActOnOpenActionMutation>> => {
-  return apolloClient.mutate({
+  return await apolloClient.mutate({
     mutation: ActOnOpenActionDocument,
     variables: {
       request: request,

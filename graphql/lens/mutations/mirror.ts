@@ -9,7 +9,7 @@ import {
 const mirrorPost = async (
   request: OnchainMirrorRequest
 ): Promise<FetchResult<MirrorOnchainMutation>> => {
-  return apolloClient.mutate({
+  return await apolloClient.mutate({
     mutation: MirrorOnchainDocument,
     variables: {
       request: request,

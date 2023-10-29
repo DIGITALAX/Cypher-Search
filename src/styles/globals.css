@@ -353,3 +353,22 @@ input::-webkit-outer-spin-button:focus {
     linear-gradient(to bottom, #1c24ff6a 1px, transparent 1px);
   background-size: 20px 20px;
 }
+
+
+#staticLoad {
+  background-image: repeating-radial-gradient(
+    circle at 18% 36%,
+    #D401F8,
+    #F9ED00 1.8px
+  );
+  animation: back 10s linear infinite;
+}
+
+@keyframes back {
+  from {
+    background-size: 100% 100%;
+  }
+  to {
+    background-size: 200% 200%;
+  }
+}

@@ -9,7 +9,7 @@ import {
 const likePost = async (
   request: ReactionRequest
 ): Promise<FetchResult<AddReactionMutation>> => {
-  return apolloClient.mutate({
+  return await apolloClient.mutate({
     mutation: AddReactionDocument,
     variables: {
       request: request,

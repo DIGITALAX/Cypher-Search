@@ -61,6 +61,9 @@ const config: Config = {
         100: "26rem",
         110: "32rem",
       },
+      zIndex: {
+        60: "60",
+      },
       backgroundImage: {
         legend: `url("https://chromadin.infura-ipfs.io/ipfs/QmWDqwGn7JgWzFsvUuC6pR7P58v6ab1npPueJ9Vfaez8iW")`,
         grant: `url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ")`,
@@ -68,8 +71,8 @@ const config: Config = {
       },
       screens: {
         tablet: "900px",
-        galaxy: "300px"
-      }
+        galaxy: "300px",
+      },
     },
   },
   plugins: [],

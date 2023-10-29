@@ -6,10 +6,10 @@ import {
   PublicationsRequest,
 } from "../../generated";
 
-export const getPublications = (
+export const getPublications = async (
   request: PublicationsRequest
 ): Promise<FetchResult<PublicationsQuery>> => {
-  return authClient.query({
+  return await authClient.query({
     query: PublicationsDocument,
     variables: {
       request: request,

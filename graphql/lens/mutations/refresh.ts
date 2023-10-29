@@ -9,7 +9,7 @@ import {
 const refresh = async (
   request: RefreshRequest
 ): Promise<FetchResult<RefreshMutation>> => {
-  return authClient.mutate({
+  return await authClient.mutate({
     mutation: RefreshDocument,
     variables: {
       request: request,
