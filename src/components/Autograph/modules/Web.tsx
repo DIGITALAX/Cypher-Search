@@ -17,6 +17,13 @@ const Web: FunctionComponent<WebProps> = ({
   setScreenDisplay,
   sortType,
   setSortType,
+  mirror,
+  comment,
+  quote,
+  like,
+  interactionsLoading,
+  openMirrorChoice,
+  setOpenMirrorChoice,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[90vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -35,16 +42,19 @@ const Web: FunctionComponent<WebProps> = ({
                 image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
                 text: "private",
                 function: () => setSortType(SortType.Private),
+                type: SortType.Private,
               },
               {
                 image: "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
                 text: "community",
                 function: () => setSortType(SortType.Community),
+                type: SortType.Community,
               },
               {
                 image: "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
                 text: "public",
                 function: () => setSortType(SortType.Public),
+                type: SortType.Public,
               },
             ].map(
               (
@@ -52,6 +62,7 @@ const Web: FunctionComponent<WebProps> = ({
                   image: string;
                   text: string;
                   function: () => void;
+                  type: SortType;
                 },
                 index: number
               ) => {
@@ -61,7 +72,9 @@ const Web: FunctionComponent<WebProps> = ({
                     key={index}
                   >
                     <div
-                      className="relative w-10 h-10 cursor-pointer flex active:scale-95"
+                      className={`relative w-10 h-10 cursor-pointer flex active:scale-95 ${
+                        item.type === sortType && "mix-blend-luminosity"
+                      }`}
                       onClick={() => item.function()}
                     >
                       <Image
@@ -79,7 +92,19 @@ const Web: FunctionComponent<WebProps> = ({
             )}
           </div>
         </div>
-        <ScreenSwitch screenDisplay={screenDisplay} />
+        <ScreenSwitch
+          autograph={autograph}
+          mirror={mirror}
+          comment={comment}
+          openMirrorChoice={openMirrorChoice}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          sortType={sortType}
+          screenDisplay={screenDisplay}
+          like={like}
+          quote={quote}
+          interactionsLoading={interactionsLoading}
+          setScreenDisplay={setScreenDisplay}
+        />
       </div>
       {autograph?.owner ? (
         <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-5">
@@ -90,6 +115,7 @@ const Web: FunctionComponent<WebProps> = ({
               function: () => setScreenDisplay(ScreenDisplay.Display),
               width: "10",
               height: "10",
+              type: ScreenDisplay.Display,
             },
             {
               image: "QmaGQyeUd1Upcei8b9UxiTC7TuDaQPP4Ps5mZpVB1w6Gto",
@@ -97,6 +123,7 @@ const Web: FunctionComponent<WebProps> = ({
               function: () => setScreenDisplay(ScreenDisplay.Gallery),
               width: "10",
               height: "8",
+              type: ScreenDisplay.Gallery,
             },
             {
               image: "QmT4sotWefLeZzT772BQX4hoDJDTjhm3NUQh12nzuaYe53",
@@ -104,6 +131,7 @@ const Web: FunctionComponent<WebProps> = ({
               function: () => setScreenDisplay(ScreenDisplay.Circuits),
               width: "10",
               height: "10",
+              type: ScreenDisplay.Circuits,
             },
             {
               image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",
@@ -111,6 +139,7 @@ const Web: FunctionComponent<WebProps> = ({
               function: () => setScreenDisplay(ScreenDisplay.Settings),
               width: "10",
               height: "10",
+              type: ScreenDisplay.Settings,
             },
           ].map(
             (
@@ -120,6 +149,7 @@ const Web: FunctionComponent<WebProps> = ({
                 function: () => void;
                 width: string;
                 height: string;
+                type: ScreenDisplay;
               },
               index: number
             ) => {
@@ -132,7 +162,11 @@ const Web: FunctionComponent<WebProps> = ({
                 >
                   <div className="relative w-fit h-fit flex items-center justify-center">
                     <div
-                      className={`relative w-${item.width} h-${item.height} flex items-center justify-center cursor-pointer active:scale-95`}
+                      className={`relative w-${item.width} h-${
+                        item.height
+                      } flex items-center justify-center cursor-pointer active:scale-95 ${
+                        item.type === screenDisplay && "mix-blend-luminosity"
+                      }`}
                       onClick={() => item.function()}
                     >
                       <Image
@@ -156,7 +190,7 @@ const Web: FunctionComponent<WebProps> = ({
             {
               image: !walletConnected
                 ? "QmZKHPMFLzxngWNbik7TS9jSiHasYSbRPeJs9xXBUvHSwm"
-                : "QmQW1q3AHQ5cY6go4hK7FHsMn2wXt93ZPwe9kozDfVxtvK",
+                : "QmdvSykeWq4MphAA8CerK3VqEXMjJBNeVje3Ae2BkKgZxb",
               text: !walletConnected
                 ? "connect"
                 : walletConnected && !lensConnected?.id

@@ -3,15 +3,33 @@ import { Profile } from "../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 
 export interface AutographState {
-  collected: Creation[] | undefined;
-  created: Creation[] | undefined;
+  display:
+    | {
+        main: {
+          private: Creation;
+          community: Creation;
+          public: Creation;
+        };
+        side: {
+          private: Creation[];
+          community: Creation[];
+          public: Creation[];
+        };
+      }
+    | undefined;
+  gallery:
+    | {
+        collected: Creation[] | undefined;
+        created: Creation[] | undefined;
+      }
+    | undefined;
   profile: Profile | undefined;
   owner: boolean;
 }
 
 const initialAutographState: AutographState = {
-  collected: undefined,
-  created: undefined,
+  gallery: undefined,
+  display: undefined,
   profile: undefined,
   owner: false,
 };
@@ -22,12 +40,10 @@ export const autographSlice = createSlice({
   reducers: {
     setAutograph: (
       state: AutographState,
-      {
-        payload: { actionProfile, actionCollected, actionCreated, actionOwner },
-      }
+      { payload: { actionProfile, actionGallery, actionDisplay, actionOwner } }
     ) => {
-      state.collected = actionCollected;
-      state.created = actionCreated;
+      state.gallery = actionGallery;
+      state.display = actionDisplay;
       state.profile = actionProfile;
       state.owner = actionOwner;
     },

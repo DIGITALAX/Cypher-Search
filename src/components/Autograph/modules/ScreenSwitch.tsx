@@ -1,21 +1,25 @@
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
-import { ScreenDisplay, ScreenSwitchProps } from "../types/autograph.types";
+import {
+  ScreenDisplay,
+  ScreenSwitchProps,
+  SortType,
+} from "../types/autograph.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 
 const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
+  setScreenDisplay,
   mirror,
   like,
   comment,
   quote,
   openMirrorChoice,
   setOpenMirrorChoice,
-  index,
   interactionsLoading,
-  setInteractionsLoading,
-  stats,
+  autograph,
+  sortType,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -42,15 +46,18 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
                 draggable={false}
               />
             </div>
-            <div className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95">
+            <div
+              className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95"
+              onClick={() => setScreenDisplay(ScreenDisplay.Circuits)}
+            >
               <Image
                 layout="fill"
                 src={`${INFURA_GATEWAY}/ipfs/QmP9Yr4qocpbztubrebzLKC1NFuvEn955dCFP3HuZ39WFW`}
                 draggable={false}
               />
             </div>
-            <div className="relative absolute bottom-4 left-4 w-fit h-fit rounded-sm bg-black/70 flex flex-row items-center justify-center p-2 border border-[#372B48]">
-              <div className="relative flex flex-col gap-px justify-center items-start font-bit text-white text-left w-fit h-fit">
+            <div className="absolute bottom-4 left-4 w-fit h-fit rounded-sm bg-black/70 flex flex-col items-start justify-center p-2 border gap-2 border-[#372B48]">
+              <div className="relative flex flex-col gap-px justify-center items-start font-bit text-white text-left w-fit h-fit whitespace-nowrap">
                 <div className="relative w-fit h-fit flex text-sm justify-center items-start">
                   CONTENT TITLE
                 </div>
@@ -66,8 +73,16 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
                 interactionsLoading={interactionsLoading}
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}
-                index={index}
-                publication={stats}
+                index={0}
+                publication={
+                  sortType === SortType.Community
+                    ? autograph?.display?.main?.community?.stats!
+                    : sortType == SortType.Private
+                    ? autograph?.display?.main?.private?.stats!
+                    : autograph?.display?.main?.public?.stats!
+                }
+                type={undefined}
+                collect={undefined}
               />
             </div>
           </div>
@@ -82,8 +97,27 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
                   <div className="relative w-full h-full rounded-lg bg-blurs flex items-center justify-center">
                     <Image
                       layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs`}
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        sortType === SortType.Community
+                          ? autograph?.display?.side?.community?.[index]
+                              ?.images?.[0]
+                          : sortType == SortType.Private
+                          ? autograph?.display?.side?.private?.[index]
+                              ?.images?.[0]
+                          : autograph?.display?.side?.public?.[index]
+                              ?.images?.[0]
+                      }`}
                       objectFit="cover"
+                      draggable={false}
+                    />
+                  </div>
+                  <div
+                    className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95"
+                    onClick={() => setScreenDisplay(ScreenDisplay.Circuits)}
+                  >
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/QmP9Yr4qocpbztubrebzLKC1NFuvEn955dCFP3HuZ39WFW`}
                       draggable={false}
                     />
                   </div>

@@ -73,6 +73,8 @@ const Autograph: NextPage = (): JSX.Element => {
     }, 1000);
   }, [profileLoading]);
 
+  console.log(lensConnected);
+
   if (!profileLoading && !globalLoading) {
     return (
       <>
@@ -118,9 +120,9 @@ const Autograph: NextPage = (): JSX.Element => {
                 <meta
                   name="og:image"
                   content={
-                    !autoDispatch?.created?.[0]?.images?.[0]
+                    !autoDispatch?.display?.public?.main?.images?.[0]
                       ? "https://chromadin.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${autoDispatch?.created?.[0]?.images?.[0]?.split(
+                      : `https://chromadin.infura-ipfs.io/ipfs/${autoDispatch?.display?.public?.main?.images?.[0]?.split(
                           "ipfs://"
                         )}`
                   }
