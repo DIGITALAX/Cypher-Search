@@ -7,6 +7,7 @@ import {
   Profile,
   Quote,
   Comment,
+  PublicationStats,
 } from "../../../../graphql/generated";
 
 export type BarProps = {
@@ -48,14 +49,15 @@ export type InteractBarProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
-  collect: (id: string) => Promise<void>;
+  collect: ((id: string, type: string) => Promise<void>) | undefined;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     quote: boolean;
     comment: boolean;
   };
-  publication: Post | Comment | Mirror | Quote;
+  type: string | undefined;
+  publication: PublicationStats;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: boolean[]) => void;
 };
@@ -71,4 +73,42 @@ export type HoverProfileProps = {
 
 export type TileLoaderProps = {
   layoutAmount: number;
+};
+
+export type AccountsProps = {
+  router: NextRouter;
+  searchActive: boolean;
+  openConnectModal: (() => void) | undefined;
+  openAccountModal: (() => void) | undefined;
+  handleLensConnect: () => Promise<void>;
+  cartListOpen: boolean;
+  setCartListOpen: (e: boolean) => void;
+  lensConnected: Profile | undefined;
+  walletConnected: boolean;
+  setOpenAccount: (e: boolean) => void;
+  openAccount: boolean;
+  signInLoading: boolean;
+  filtersOpen: boolean;
+  cartItems: CartItem[];
+  dispatch: Dispatch<AnyAction>;
+  auto?: boolean;
+};
+
+export type NotFoundProps = {
+  router: NextRouter;
+  searchActive: boolean;
+  openConnectModal: (() => void) | undefined;
+  openAccountModal: (() => void) | undefined;
+  handleLensConnect: () => Promise<void>;
+  cartListOpen: boolean;
+  setCartListOpen: (e: boolean) => void;
+  lensConnected: Profile | undefined;
+  walletConnected: boolean;
+  setOpenAccount: (e: boolean) => void;
+  openAccount: boolean;
+  signInLoading: boolean;
+  filtersOpen: boolean;
+  cartItems: CartItem[];
+  dispatch: Dispatch<AnyAction>;
+  handleShuffleSearch: () => void;
 };

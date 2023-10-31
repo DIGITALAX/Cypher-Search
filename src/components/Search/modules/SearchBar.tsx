@@ -44,7 +44,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
               className="bg-black text-offWhite p-1.5 rounded-sm w-full h-full font-bit flex items-center justify-start relative text-sm"
               id="searchBar"
               placeholder={placeholderText}
-              onKeyDown={(e) => handleSearch(e)}
+              // onKeyDown={(e) => handleSearch(e)}
               onChange={(e) => setSearchInput(e.target.value)}
               value={searchInput}
             />

@@ -15,9 +15,6 @@ import useProfile from "@/components/Tiles/hooks/useProfile";
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const handleRewind = (): void => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
   );
@@ -60,13 +57,18 @@ export default function Home() {
     like,
     comment,
     quote,
+    collect,
     interactionsLoading,
     setOpenMirrorChoice,
     openMirrorChoice,
-    
   } = useInteractions();
-  const { followLoading, followProfile, unfollowProfile , profileHovers,
-    setProfileHovers,} = useProfile();
+  const {
+    followLoading,
+    followProfile,
+    unfollowProfile,
+    profileHovers,
+    setProfileHovers,
+  } = useProfile();
   const { setPopUpOpen, popUpOpen, apparel, setApparel } = useTiles();
   return (
     <div
@@ -123,6 +125,7 @@ export default function Home() {
             like={like}
             comment={comment}
             quote={quote}
+            collect={collect}
             interactionsLoading={interactionsLoading}
             setOpenMirrorChoice={setOpenMirrorChoice}
             openMirrorChoice={openMirrorChoice}
@@ -135,7 +138,6 @@ export default function Home() {
           />
         )}
       </div>
-      <Footer handleRewind={handleRewind} />
     </div>
   );
 }

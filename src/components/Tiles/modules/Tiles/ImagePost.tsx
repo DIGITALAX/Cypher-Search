@@ -5,6 +5,7 @@ import { ImagePostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
+import { Post } from "../../../../../graphql/generated";
 
 const ImagePost: FunctionComponent<ImagePostProps> = ({
   layoutAmount,
@@ -24,6 +25,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   followLoading,
   followProfile,
   unfollowProfile,
+  collect,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
@@ -36,9 +38,17 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 setImageViewer({
                   actionValue: true,
                   actionType:
-                    publication?.metadata?.marketplace?.image?.raw?.mimeType,
+                    publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn?.metadata?.marketplace?.image?.raw
+                          ?.mimeType
+                      : (publication as Post)?.metadata?.marketplace?.image?.raw
+                          ?.mimeType,
                   actionImage:
-                    publication?.metadata?.marketplace?.image?.raw?.uri,
+                    publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn?.metadata?.marketplace?.image?.raw
+                          ?.uri
+                      : (publication as Post)?.metadata?.marketplace?.image?.raw
+                          ?.uri,
                 })
               )
             }
@@ -80,7 +90,35 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}
                 index={index}
-                publication={publication}
+                publication={
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn.stats
+                    : (publication as Post)?.stats
+                }
+                collect={
+                  (
+                    publication?.__typename === "Mirror"
+                      ? !publication?.mirrorOn.operations?.actedOn &&
+                        (publication?.mirrorOn?.openActionModules?.[0]
+                          .__typename === "SimpleCollectOpenActionSettings" ||
+                          publication?.mirrorOn?.openActionModules?.[0]
+                            .__typename ===
+                            "MultirecipientFeeCollectOpenActionSettings")
+                      : !(publication as Post)?.operations?.actedOn &&
+                        ((publication as Post)?.openActionModules?.[0]
+                          .__typename !== "SimpleCollectOpenActionSettings" ||
+                          (publication as Post)?.openActionModules?.[0]
+                            .__typename ===
+                            "MultirecipientFeeCollectOpenActionSettings")
+                  )
+                    ? collect
+                    : undefined
+                }
+                type={
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.openActionModules?.[0].__typename
+                    : (publication as Post)?.openActionModules?.[0].__typename
+                }
               />
               <div className="relative mb-0 flex flex-row items-center justify-between gap-2 w-full h-fit">
                 <div className="relative w-6 h-6 items-center justify-center flex">
@@ -134,9 +172,18 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   setImageViewer({
                     actionValue: true,
                     actionType:
-                      publication?.metadata?.marketplace?.image?.raw?.mimeType,
+                      publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn?.metadata?.marketplace?.image
+                            ?.raw?.mimeType
+                        : (publication as Post)?.metadata?.marketplace?.image
+                            ?.raw?.mimeType,
+
                     actionImage:
-                      publication?.metadata?.marketplace?.image?.raw?.uri,
+                      publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn?.metadata?.marketplace?.image
+                            ?.raw?.uri
+                        : (publication as Post)?.metadata?.marketplace?.image
+                            ?.raw?.uri,
                   })
                 )
               }
@@ -174,7 +221,35 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}
                 index={index}
-                publication={publication}
+                publication={
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn.stats
+                    : (publication as Post)?.stats
+                }
+                collect={
+                  (
+                    publication?.__typename === "Mirror"
+                      ? !publication?.mirrorOn.operations?.actedOn &&
+                        (publication?.mirrorOn?.openActionModules?.[0]
+                          .__typename === "SimpleCollectOpenActionSettings" ||
+                          publication?.mirrorOn?.openActionModules?.[0]
+                            .__typename ===
+                            "MultirecipientFeeCollectOpenActionSettings")
+                      : !(publication as Post)?.operations?.actedOn &&
+                        ((publication as Post)?.openActionModules?.[0]
+                          .__typename !== "SimpleCollectOpenActionSettings" ||
+                          (publication as Post)?.openActionModules?.[0]
+                            .__typename ===
+                            "MultirecipientFeeCollectOpenActionSettings")
+                  )
+                    ? collect
+                    : undefined
+                }
+                type={
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.openActionModules?.[0].__typename
+                    : (publication as Post)?.openActionModules?.[0].__typename
+                }
               />
             </div>
           </div>

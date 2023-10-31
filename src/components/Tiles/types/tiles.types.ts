@@ -7,6 +7,7 @@ import {
   Profile,
   Quote,
   Comment,
+  PublicationStats,
 } from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Layout/types/footer.types";
@@ -21,6 +22,7 @@ export interface Creation {
   profileHandle: string;
   printType: string;
   prices: string[];
+  acceptedTokens: string[];
   owner: string;
   microbrandCover: string;
   microbrand: string;
@@ -39,6 +41,8 @@ export interface Creation {
   sizes: string[];
   origin: string;
   profile: Profile;
+  stats: PublicationStats | undefined;
+  publication: Post | undefined;
 }
 
 export interface Publication {
@@ -66,6 +70,7 @@ export type TilesProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
+  collect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -97,6 +102,7 @@ export type TileSwitchProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
+  collect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -178,7 +184,7 @@ export type VideoPostProps = {
 };
 
 export type LegendProps = {
-  publication: Post | Comment | Quote | Mirror;
+  publication: Post;
   imageIndex: number[];
   milestoneCovers: string[];
   setImageIndex: (e: number[]) => void;
@@ -290,6 +296,7 @@ export type TextPostProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
+  collect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -326,6 +333,7 @@ export type ImagePostProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
+  collect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -387,26 +395,6 @@ export type ListenerProps = {
   profileHovers: boolean[];
   setProfileHovers: (e: boolean[]) => void;
 };
-
-export interface PrintItem {
-  collectionId: string;
-  uri: {
-    images: string[];
-    description: string;
-    title: string;
-    profileId: string;
-    microbrandCover: string;
-    tags: string[];
-    prompt: string;
-  };
-  profile: Profile;
-  prices: string[];
-  printType: PrintType;
-  fulfiller: string;
-  fulfillerPercent: string;
-  fulfillerBase: string;
-  designerPercent: string;
-}
 
 export enum PrintType {
   Sticker = "0",

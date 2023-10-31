@@ -17,6 +17,7 @@ import {
   Comment,
   Quote,
 } from "../../../../graphql/generated";
+import Community from "./Tiles/Community";
 
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
@@ -51,8 +52,12 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   followProfile,
   profileHovers,
   setProfileHovers,
+  collect,
 }) => {
   switch (type?.toLowerCase()) {
+    case "community":
+      return <Community />;
+
     case "profile":
       return (
         <Profile
@@ -98,6 +103,12 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           quote={quote}
           interactionsLoading={interactionsLoading?.[index]}
           index={index}
+          collect={collect}
+          followLoading={followLoading}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       );
     case "listener":
@@ -108,8 +119,6 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           popUpOpen={popUpOpen}
           setPopUpOpen={setPopUpOpen}
           layoutAmount={layoutAmount}
-          apparel={apparel}
-          setApparel={setApparel}
           index={index}
           dispatch={dispatch}
           router={router}
@@ -120,6 +129,11 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           comment={comment}
           quote={quote}
           interactionsLoading={interactionsLoading?.[index]}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       );
     case "chromadin":
@@ -142,6 +156,11 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           comment={comment}
           quote={quote}
           interactionsLoading={interactionsLoading?.[index]}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       );
     case "coinop":
@@ -162,6 +181,11 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           comment={comment}
           quote={quote}
           interactionsLoading={interactionsLoading?.[index]}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       );
     case "text":
@@ -178,6 +202,12 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           quote={quote}
           interactionsLoading={interactionsLoading?.[index]}
           index={index}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+          collect={collect}
         />
       );
     case "video":
@@ -203,6 +233,11 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           handleHeart={handleHeart}
           handleSeek={handleSeek}
           handleVolumeChange={handleVolumeChange}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       );
     case "quest":
@@ -211,6 +246,11 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           layoutAmount={layoutAmount}
           router={router}
           publication={publication?.post as Post | Comment | Quote | Mirror}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       );
     case "legend":
@@ -229,6 +269,11 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           comment={comment}
           quote={quote}
           interactionsLoading={interactionsLoading?.[index]}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       );
 

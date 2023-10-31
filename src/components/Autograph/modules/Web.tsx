@@ -1,0 +1,233 @@
+import Image from "next/legacy/image";
+import { FunctionComponent } from "react";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { ScreenDisplay, SortType, WebProps } from "../types/autograph.types";
+import ScreenSwitch from "./ScreenSwitch";
+
+const Web: FunctionComponent<WebProps> = ({
+  router,
+  handleShuffleSearch,
+  autograph,
+  openConnectModal,
+  handleLensConnect,
+  lensConnected,
+  walletConnected,
+  openAccountModal,
+  screenDisplay,
+  setScreenDisplay,
+  sortType,
+  setSortType,
+}): JSX.Element => {
+  return (
+    <div className="relative w-full h-[90vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
+      <div className="relative w-full h-fit flex flex-col items-start justify-start gap-2">
+        <div className="relative flex flex-col items-start justify-between w-full h-fit gap-1">
+          <div className="flex relative items-center justify-start w-16 h-16">
+            <Image
+              layout="fill"
+              src={`${INFURA_GATEWAY}/ipfs/QmfHsZ5w3oy2ENHek7prhM1XVVW8oPBGfEPcNy1jm7sWQq`}
+              draggable={false}
+            />
+          </div>
+          <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
+            {[
+              {
+                image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
+                text: "private",
+                function: () => setSortType(SortType.Private),
+              },
+              {
+                image: "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
+                text: "community",
+                function: () => setSortType(SortType.Community),
+              },
+              {
+                image: "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
+                text: "public",
+                function: () => setSortType(SortType.Public),
+              },
+            ].map(
+              (
+                item: {
+                  image: string;
+                  text: string;
+                  function: () => void;
+                },
+                index: number
+              ) => {
+                return (
+                  <div
+                    className="relative flex flex-col items-center justiy-center gap-1.5"
+                    key={index}
+                  >
+                    <div
+                      className="relative w-10 h-10 cursor-pointer flex active:scale-95"
+                      onClick={() => item.function()}
+                    >
+                      <Image
+                        layout="fill"
+                        src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
+                        draggable={false}
+                      />
+                    </div>
+                    <div className="relative text-white font-bit text-white font-bit text-xs">
+                      {item.text}
+                    </div>
+                  </div>
+                );
+              }
+            )}
+          </div>
+        </div>
+        <ScreenSwitch screenDisplay={screenDisplay} />
+      </div>
+      {autograph?.owner ? (
+        <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-5">
+          {[
+            {
+              image: "QmRozkh6CWW9u3ATqcMKr4w4LUEd4h1vNN4Gon3zsrtCA4",
+              text: "display",
+              function: () => setScreenDisplay(ScreenDisplay.Display),
+              width: "10",
+              height: "10",
+            },
+            {
+              image: "QmaGQyeUd1Upcei8b9UxiTC7TuDaQPP4Ps5mZpVB1w6Gto",
+              text: "gallery",
+              function: () => setScreenDisplay(ScreenDisplay.Gallery),
+              width: "10",
+              height: "8",
+            },
+            {
+              image: "QmT4sotWefLeZzT772BQX4hoDJDTjhm3NUQh12nzuaYe53",
+              text: "circuits",
+              function: () => setScreenDisplay(ScreenDisplay.Circuits),
+              width: "10",
+              height: "10",
+            },
+            {
+              image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",
+              text: "settings",
+              function: () => setScreenDisplay(ScreenDisplay.Settings),
+              width: "10",
+              height: "10",
+            },
+          ].map(
+            (
+              item: {
+                image: string;
+                text: string;
+                function: () => void;
+                width: string;
+                height: string;
+              },
+              index: number
+            ) => {
+              return (
+                <div
+                  className={
+                    "relative flex items-center justify-center w-fit h-fit text-center flex-col gap-1.5"
+                  }
+                  key={index}
+                >
+                  <div className="relative w-fit h-fit flex items-center justify-center">
+                    <div
+                      className={`relative w-${item.width} h-${item.height} flex items-center justify-center cursor-pointer active:scale-95`}
+                      onClick={() => item.function()}
+                    >
+                      <Image
+                        layout="fill"
+                        draggable={false}
+                        src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
+                      />
+                    </div>
+                  </div>
+                  <div className="relative text-white font-bit text-white font-bit text-xs">
+                    {item.text}
+                  </div>
+                </div>
+              );
+            }
+          )}
+        </div>
+      ) : (
+        <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-5">
+          {[
+            {
+              image: !walletConnected
+                ? "QmZKHPMFLzxngWNbik7TS9jSiHasYSbRPeJs9xXBUvHSwm"
+                : "QmQW1q3AHQ5cY6go4hK7FHsMn2wXt93ZPwe9kozDfVxtvK",
+              text: !walletConnected
+                ? "connect"
+                : walletConnected && !lensConnected?.id
+                ? "lens"
+                : "logout",
+              function: !walletConnected
+                ? openConnectModal!
+                : walletConnected && !lensConnected?.id
+                ? () => handleLensConnect()
+                : openAccountModal!,
+              width: "10",
+              height: "10",
+            },
+            {
+              image: "QmP7ESx5WEVSxyvKvsWBCWYhpWJytVt2Eozr6wqMnyb3M5",
+              text: "home",
+              function: () => router.push("/"),
+              width: "10",
+              height: "8",
+            },
+            {
+              image: "QmYbjMNQAVuQSWNNQ5AKbQtt4Dxw2ax4SvLNwKhCNDniL2",
+              text: "discover",
+              function: () => {
+                handleShuffleSearch();
+                router.push("/");
+              },
+              width: "10",
+              height: "10",
+            },
+          ].map(
+            (
+              item: {
+                image: string;
+                text: string;
+                function: () => void;
+                width: string;
+                height: string;
+              },
+              index: number
+            ) => {
+              return (
+                <div
+                  className={
+                    "relative flex items-center justify-center w-fit h-fit text-center flex-col gap-1.5"
+                  }
+                  key={index}
+                >
+                  <div className="relative w-fit h-fit flex items-center justify-center">
+                    <div
+                      className={`relative w-${item.width} h-${item.height} flex items-center justify-center cursor-pointer active:scale-95`}
+                      onClick={() => item.function()}
+                    >
+                      <Image
+                        layout="fill"
+                        draggable={false}
+                        src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
+                      />
+                    </div>
+                  </div>
+                  <div className="relative text-white font-bit text-white font-bit text-xs">
+                    {item.text}
+                  </div>
+                </div>
+              );
+            }
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Web;

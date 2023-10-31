@@ -17,6 +17,7 @@ import Modals from "@/components/Modals/modules/Modals";
 import RouterChange from "@/components/Common/modules/RouterChange";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Footer from "@/components/Layout/modules/Footer";
 
 const walletTheme = merge(darkTheme(), {
   colors: {
@@ -43,6 +44,9 @@ const wagmiConfig = createConfig({
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const handleRewind = (): void => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const [routerChangeLoading, setRouterChangeLoading] =
     useState<boolean>(false);
   useEffect(() => {
@@ -72,9 +76,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} theme={walletTheme}>
         <Provider store={store}>
-          <div className="relative w-full h-auto flex">
+          <div className="relative w-full h-auto flex flex-col">
             <Component {...pageProps} />
             <Modals />
+            <Footer handleRewind={handleRewind} />
           </div>
         </Provider>
       </RainbowKitProvider>

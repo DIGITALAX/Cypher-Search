@@ -7,6 +7,7 @@ import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import { ItemType } from "@/components/Layout/types/footer.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
+import { Post } from "../../../../../graphql/generated";
 
 const Listener: FunctionComponent<ListenerProps> = ({
   layoutAmount,
@@ -46,7 +47,9 @@ const Listener: FunctionComponent<ListenerProps> = ({
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         index={index}
-        publication={publication}
+        publication={publication?.stats!}
+        collect={undefined}
+        type={undefined}
       />
       <div
         className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
@@ -55,8 +58,11 @@ const Listener: FunctionComponent<ListenerProps> = ({
             setImageViewer({
               actionValue: true,
               actionType:
-                publication?.metadata?.marketplace?.image?.raw?.mimeType,
-              actionImage: publication?.metadata?.marketplace?.image?.raw?.uri,
+                publication?.publication?.metadata?.marketplace?.image?.raw
+                  ?.mimeType,
+              actionImage:
+                publication?.publication?.metadata?.marketplace?.image?.raw
+                  ?.uri,
             })
           )
         }

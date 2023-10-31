@@ -4,7 +4,7 @@ export type FooterProps = {
 
 export enum ItemType {
   Chromadin = "chromadin",
-  CoinOp = "coinOp",
+  CoinOp = "coinop",
   Legend = "legend",
   Listener = "listener",
 }
