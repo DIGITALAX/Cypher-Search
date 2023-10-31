@@ -23,7 +23,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-full h-fit rounded-sm border border-frio text-base font-vcr text-mar flex gap-2 p-2 items-center justify-center bg-fuego ${
+      className={`relative w-full h-fit rounded-sm border border-frio text-base font-vcr text-mar flex gap-4 p-2 items-center justify-center bg-fuego ${
         col || layoutAmount ? "flex-col" : "flex-row"
       }`}
     >
@@ -46,7 +46,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
         ];
         return (
           <div
-            className="relative w-full h-full flex flex-row items-center justify-center gap-4"
+            className="relative w-full h-full flex flex-row items-center justify-center gap-2"
             key={indexTwo}
           >
             <div
