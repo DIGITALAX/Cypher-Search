@@ -41,7 +41,9 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         index={index}
-        publication={publication}
+        publication={publication?.stats!}
+        collect={undefined}
+        type={undefined}
       />
       <div
         className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
@@ -49,20 +51,18 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           dispatch(
             setImageViewer({
               actionValue: true,
-              actionType:
-                publication?.metadata?.marketplace?.image?.raw?.mimeType,
-              actionImage: publication?.metadata?.marketplace?.image?.raw?.uri,
+              actionType: "png",
+              actionImage: publication?.images[0],
             })
           )
         }
       >
         <Image
           layout="fill"
-          src={`${INFURA_GATEWAY}/ipfs/`}
+          src={`${INFURA_GATEWAY}/ipfs/${publication?.images[0]}`}
           draggable={false}
         />
       </div>
-
       <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">
         <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
           <div

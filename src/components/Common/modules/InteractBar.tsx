@@ -19,6 +19,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   setOpenMirrorChoice,
   index,
   collect,
+  type
 }): JSX.Element => {
   return (
     <div
@@ -32,32 +33,16 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
         "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
         "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
       ].map((image: string, indexTwo: number) => {
-        const functions = [like, collect, comment];
+        const functions: any = [like, collect, comment];
         const loaders = [
           interactionsLoading?.like,
           interactionsLoading?.comment,
         ];
         const stats = [
-          (publication?.__typename === "Mirror"
-            ? publication?.mirrorOn?.stats
-            : (publication as Post)?.stats
-          )?.mirrors +
-            (publication?.__typename === "Mirror"
-              ? publication?.mirrorOn?.stats
-              : (publication as Post)?.stats
-            )?.quotes,
-          (publication?.__typename === "Mirror"
-            ? publication?.mirrorOn?.stats
-            : (publication as Post)?.stats
-          )?.reactions,
-          (publication?.__typename === "Mirror"
-            ? publication?.mirrorOn?.stats
-            : (publication as Post)?.stats
-          )?.countOpenActions,
-          (publication?.__typename === "Mirror"
-            ? publication?.mirrorOn?.stats
-            : (publication as Post)?.stats
-          )?.comments,
+          publication?.mirrors + publication?.quotes,
+          publication?.reactions,
+          publication?.countOpenActions,
+          publication?.comments,
         ];
         return (
           <div
@@ -72,8 +57,13 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                   choices[index] = !choices[index];
                   setOpenMirrorChoice(choices);
                 } else if (indexTwo === 3) {
+                  !loaders[index] &&
+                    functions[indexTwo] &&
+                    functions[indexTwo]!(publication?.id, type);
                 } else {
-                  !loaders[index] && functions[indexTwo](publication?.id);
+                  !loaders[index] &&
+                    functions[indexTwo] &&
+                    functions[indexTwo]!(publication?.id);
                 }
               }}
             >
@@ -82,7 +72,13 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                   <AiOutlineLoading size={15} color="white" />
                 </div>
               ) : (
-                <div className="relative w-4 h-4 flex items-center justify-center cursor-pointer active:scale-95">
+                <div
+                  className={`relative w-4 h-4 flex items-center justify-center ${
+                    functions[indexTwo]
+                      ? "cursor-pointer active:scale-95"
+                      : "opacity-70"
+                  }`}
+                >
                   <Image
                     layout="fill"
                     src={`${INFURA_GATEWAY}/ipfs/${image}`}

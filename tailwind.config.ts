@@ -68,6 +68,8 @@ const config: Config = {
         legend: `url("https://chromadin.infura-ipfs.io/ipfs/QmWDqwGn7JgWzFsvUuC6pR7P58v6ab1npPueJ9Vfaez8iW")`,
         grant: `url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ")`,
         listener: `url("https://chromadin.infura-ipfs.io/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2")`,
+        web: `url("https://chromadin.infura-ipfs.io/ipfs/QmYRZYGFKgH6wGJ39aWHbr7T1PsySh2kTSjo11yEZrrGcM")`,
+        blurs: `url("https://chromadin.infura-ipfs.io/ipfs/QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY")`
       },
       screens: {
         tablet: "900px",

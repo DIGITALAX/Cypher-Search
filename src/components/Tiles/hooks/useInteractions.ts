@@ -21,6 +21,7 @@ import { setInteractionsCount } from "../../../../redux/reducers/interactionsCou
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuote";
 import pollUntilIndexed from "../../../../graphql/lens/queries/indexed";
+import collectPost from "../../../../graphql/lens/mutations/collect";
 
 const useInteractions = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const useInteractions = () => {
       mirror: boolean;
       quote: boolean;
       comment: boolean;
+      collect: boolean;
     }[]
   >([]);
 
@@ -97,6 +99,71 @@ const useInteractions = () => {
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], like: true };
+      return updatedArray;
+    });
+  };
+
+  const collect = async (id: string, type: string) => {
+    const index = allSearchItems.findIndex(
+      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+    );
+    if (index === -1) {
+      return;
+    }
+
+    setInteractionsLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[index] = { ...updatedArray[index], collect: true };
+      return updatedArray;
+    });
+
+    try {
+      const data = await collectPost({
+        for: id,
+        actOn: {
+          simpleCollectOpenAction:
+            type === "SimpleCollectOpenActionSettings" ? true : undefined,
+          multirecipientCollectOpenAction:
+            type === "MultirecipientFeeCollectOpenActionSettings"
+              ? true
+              : undefined,
+        },
+      });
+
+      if (data?.data?.actOnOpenAction.__typename === "RelaySuccess") {
+        const result = await pollUntilIndexed({
+          forTxId: data?.data?.actOnOpenAction?.txId,
+        });
+
+        if (result === true) {
+        } else {
+          console.error(result);
+        }
+      }
+
+      dispatch(
+        setInteractionsCount({
+          actionLikes: interactionsCount.likes,
+          actionMirrors: interactionsCount.mirrors,
+          actionQuotes: interactionsCount.quotes,
+          actionCollects: interactionsCount.collects.map((obj, ind) =>
+            ind === index ? obj + 1 : obj
+          ),
+          actionComments: interactionsCount.comments,
+          actionHasLiked: interactionsCount.hasLiked,
+          actionHasMirrored: interactionsCount.hasMirrored,
+          actionHasCollected: interactionsCount.hasCollected.map((obj, ind) =>
+            ind === index ? true : obj
+          ),
+        })
+      );
+    } catch (err: any) {
+      console.error(err.message);
+    }
+
+    setInteractionsLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[index] = { ...updatedArray[index], collect: true };
       return updatedArray;
     });
   };
@@ -592,6 +659,7 @@ const useInteractions = () => {
           mirror: false,
           comment: false,
           quote: false,
+          collect: false,
         }))
       );
     }
@@ -602,6 +670,7 @@ const useInteractions = () => {
     like,
     comment,
     quote,
+    collect,
     showMoreMirrors,
     showMoreQuotes,
     showMoreLikes,

@@ -4,6 +4,7 @@ import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { TextPostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
+import { Post } from "../../../../../graphql/generated";
 
 const TextPost: FunctionComponent<TextPostProps> = ({
   layoutAmount,
@@ -22,6 +23,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   followLoading,
   followProfile,
   unfollowProfile,
+  collect,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
@@ -40,7 +42,35 @@ const TextPost: FunctionComponent<TextPostProps> = ({
             openMirrorChoice={openMirrorChoice}
             setOpenMirrorChoice={setOpenMirrorChoice}
             index={index}
-            publication={publication}
+            publication={
+              publication?.__typename === "Mirror"
+                ? publication?.mirrorOn.stats
+                : (publication as Post)?.stats
+            }
+            collect={
+              (
+                publication?.__typename === "Mirror"
+                  ? !publication?.mirrorOn.operations?.actedOn &&
+                    (publication?.mirrorOn?.openActionModules?.[0]
+                      .__typename === "SimpleCollectOpenActionSettings" ||
+                      publication?.mirrorOn?.openActionModules?.[0]
+                        .__typename ===
+                        "MultirecipientFeeCollectOpenActionSettings")
+                  : !(publication as Post)?.operations?.actedOn &&
+                    ((publication as Post)?.openActionModules?.[0]
+                      .__typename !== "SimpleCollectOpenActionSettings" ||
+                      (publication as Post)?.openActionModules?.[0]
+                        .__typename ===
+                        "MultirecipientFeeCollectOpenActionSettings")
+              )
+                ? collect
+                : undefined
+            }
+            type={
+              publication?.__typename === "Mirror"
+                ? publication?.mirrorOn?.openActionModules?.[0].__typename
+                : (publication as Post)?.openActionModules?.[0].__typename
+            }
           />
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">

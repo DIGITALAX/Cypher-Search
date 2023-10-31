@@ -18,6 +18,7 @@ import interactionsCountReducer from "./reducers/interactionsCountSlice";
 import searchItemsReducer from "./reducers/searchItemsSlice";
 import cachedProfilesReducer from "./reducers/cachedProfilesSlice";
 import filterConstantsReducer from "./reducers/filterConstantsSlice";
+import autographReducer from "./reducers/autographSlice";
 
 const reducer = combineReducers({
   searchActiveReducer,
@@ -38,6 +39,7 @@ const reducer = combineReducers({
   searchItemsReducer,
   cachedProfilesReducer,
   filterConstantsReducer,
+  autographReducer,
 });
 
 export const store = configureStore({

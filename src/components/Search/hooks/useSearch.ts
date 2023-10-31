@@ -38,6 +38,9 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import buildQuery from "../../../../lib/helpers/buildQuery";
+import getProfiles from "../../../../graphql/lens/queries/profiles";
+import { setCachedProfiles } from "../../../../redux/reducers/cachedProfilesSlice";
+import getStats from "../../../../graphql/lens/queries/stats";
 
 const useSearch = () => {
   const searchActive = useSelector(
@@ -105,7 +108,7 @@ const useSearch = () => {
           const searchItems = await getTextSearch(searchInput, 25, 0);
 
           if (searchItems?.data.cyphersearch?.length > 0)
-            collections = await handleCollectionProfiles(
+            collections = await handleCollectionProfilesAndPublications(
               searchItems?.data.cyphersearch
             );
         } else {
@@ -240,7 +243,9 @@ const useSearch = () => {
       }
 
       if (collections?.length > 0)
-        collections = await handleCollectionProfiles(collections);
+        collections = await handleCollectionProfilesAndPublications(
+          collections
+        );
 
       return collections || [];
     } catch (err: any) {
@@ -268,7 +273,7 @@ const useSearch = () => {
             allSearchItems?.graphCursor
           );
           if (searchItems?.data.cyphersearch?.length > 0)
-            collections = await handleCollectionProfiles(
+            collections = await handleCollectionProfilesAndPublications(
               searchItems?.data.cyphersearch
             );
         }
@@ -452,7 +457,7 @@ const useSearch = () => {
     });
   };
 
-  const handleCollectionProfiles = async (
+  const handleCollectionProfilesAndPublications = async (
     collections: Creation[]
   ): Promise<Creation[] | undefined> => {
     try {
@@ -463,28 +468,51 @@ const useSearch = () => {
       } else {
         profileCache = profiles;
       }
-      const collectionPromises = collections?.map(async (obj: Creation) => {
-        let profile: Profile = profileCache[DIGITALAX_PROFILE_ID_LENS];
-
+      const profilesToRetrieve: string[] = [];
+      collections?.forEach((obj: Creation) => {
         if (obj?.profileId) {
           if (!profileCache[obj?.profileId]) {
-            const { data } = await getProfile({
-              forProfileId: obj?.profileId,
-            });
-            profileCache[obj?.profileId] = data?.profile?.id;
+            profilesToRetrieve.push(obj?.profileId);
           }
-          profile = profileCache[obj?.profileId];
         }
-
-        const modifiedObj = {
-          ...obj,
-          profile,
-        };
-
-        return modifiedObj;
       });
 
-      return await Promise.all(collectionPromises);
+      const { data } = await getProfiles({
+        where: {
+          profileIds: profilesToRetrieve,
+        },
+      });
+      const { data: statsData } = await getStats({
+        where: {
+          publicationIds: collections?.map((item) => item.pubId),
+        },
+      });
+
+      (data?.profiles?.items as Profile[])?.forEach((profile: Profile) => {
+        profileCache[profile.id] = profile;
+      });
+
+      const profileMap = new Map(
+        Object.entries(profileCache).map(([id, profile]) => [id, profile])
+      );
+
+      const statsMap = new Map(
+        Object.entries(statsData?.publications?.items!).map(
+          ([id, publication]) => [id, publication]
+        )
+      );
+
+      const newCollections: Creation[] = collections.map(
+        (collection: Creation) => ({
+          ...collection,
+          profile: profileMap.get(collection?.profileId),
+          stats: statsMap.get(collection?.pubId),
+        })
+      ) as Creation[];
+
+      dispatch(setCachedProfiles(profileCache));
+
+      return newCollections;
     } catch (err: any) {
       console.error(err.message);
     }

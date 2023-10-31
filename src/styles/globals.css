@@ -34,7 +34,6 @@
   src: url("/fonts/EarlsRevenge.ttf");
 }
 
-
 @font-face {
   font-family: "Gamer";
   src: url("/fonts/Gamer.ttf");
@@ -239,17 +238,40 @@ input[type="number"]::-webkit-outer-spin-button:focus {
   background: linear-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
 }
 
+#smoke {
+  background: linear-gradient(
+    #9acce6,
+    #537684,
+    #45747e,
+    #9cceda,
+    #2f5566,
+    #c5d6e1
+  );
+}
+
 #cart {
   transform: scale(1.1);
   animation: shake 0.5s ease;
 }
 @keyframes shake {
-  0% { transform: translate(0, 0) rotate(0); }
-  20% { transform: translate(-10px, 0) rotate(-20deg); }
-  30% { transform: translate(10px, 0) rotate(20deg); }
-  50% { transform: translate(-10px, 0) rotate(-10deg); }
-  60% { transform: translate(10px, 0) rotate(10deg); }
-  100% { transform: translate(0, 0) rotate(0); }
+  0% {
+    transform: translate(0, 0) rotate(0);
+  }
+  20% {
+    transform: translate(-10px, 0) rotate(-20deg);
+  }
+  30% {
+    transform: translate(10px, 0) rotate(20deg);
+  }
+  50% {
+    transform: translate(-10px, 0) rotate(-10deg);
+  }
+  60% {
+    transform: translate(10px, 0) rotate(10deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
 }
 
 #bar {
@@ -290,7 +312,6 @@ input::-webkit-outer-spin-button:focus {
   box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
 }
 
-
 #milestone::-webkit-scrollbar {
   width: 3px;
   opacity: 1; /* Initially hide the scrollbar */
@@ -308,7 +329,6 @@ input::-webkit-outer-spin-button:focus {
   background-color: #d49e78;
 }
 
-
 #legend::-webkit-scrollbar {
   height: 3px;
   opacity: 1; /* Initially hide the scrollbar */
@@ -325,7 +345,6 @@ input::-webkit-outer-spin-button:focus {
 #legend::-webkit-scrollbar-thumb {
   background-color: #d49e78;
 }
-
 
 #noCode {
   background-image: linear-gradient(
@@ -354,12 +373,11 @@ input::-webkit-outer-spin-button:focus {
   background-size: 20px 20px;
 }
 
-
 #staticLoad {
   background-image: repeating-radial-gradient(
     circle at 18% 36%,
-    #D401F8,
-    #F9ED00 1.8px
+    #d401f8,
+    #f9ed00 1.8px
   );
   animation: back 10s linear infinite;
 }

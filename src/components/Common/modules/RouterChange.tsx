@@ -6,14 +6,12 @@ const RouterChange: FunctionComponent = (): JSX.Element => {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      if (progress < 100) {
-        setProgress(progress + 10);
-      } else {
-        clearInterval(interval);
-      }
+      setProgress((prevProgress) =>
+        prevProgress < 100 ? prevProgress + 10 : 0
+      );
     }, 400);
     return () => clearInterval(interval);
-  }, [progress]);
+  }, []);
   return (
     <div className="relative w-screen h-screen flex justify-center items-center bg-offBlack">
       <div className="relative flex justify-center items-center flex-col gap-4">

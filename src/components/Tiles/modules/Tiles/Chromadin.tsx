@@ -43,7 +43,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         index={index}
-        publication={publication}
+        publication={publication?.stats!}
+        collect={undefined}
+        type={undefined}
       />
       <div className="relative flex flex-col items-center justify-start w-full h-fit gap-5">
         <div className="relative flex flex-row w-full justifty-between items-start h-fit gap-4">
@@ -54,9 +56,11 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 setImageViewer({
                   actionValue: true,
                   actionType:
-                    publication?.metadata?.marketplace?.image?.raw?.mimeType,
+                    publication?.publication?.metadata?.marketplace?.image?.raw
+                      ?.mimeType,
                   actionImage:
-                    publication?.metadata?.marketplace?.image?.raw?.uri,
+                    publication?.publication?.metadata?.marketplace?.image?.raw
+                      ?.uri,
                 })
               )
             }
@@ -139,7 +143,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           {popUpOpen?.[index] && (
             <PopUp
               cartItems={cartItems}
-              id={publication?.id}
+              id={publication?.pubId}
               type={ItemType.Chromadin}
               dispatch={dispatch}
               router={router}
