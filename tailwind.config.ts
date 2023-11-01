@@ -38,6 +38,9 @@ const config: Config = {
         fertil: "#11FCEB",
         ballena: "#FFD85F",
         emeral: "#6DD400",
+        piloto: "#191919",
+        fuera: "#85AEFF",
+        trip: "#078fd6"
       },
       fontFamily: {
         bit: "Bitblox",

@@ -249,6 +249,17 @@ input[type="number"]::-webkit-outer-spin-button:focus {
   );
 }
 
+#mar {
+  background: linear-gradient(
+    #2abdf6,
+    #078fd6,
+    #06a9cf,
+    #0ac7ab,
+    #2f5566,
+    #2abcf6
+  );
+}
+
 #cart {
   transform: scale(1.1);
   animation: shake 0.5s ease;

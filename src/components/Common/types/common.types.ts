@@ -45,11 +45,22 @@ export type InteractBarProps = {
   col?: boolean;
   layoutAmount?: number;
   index: number;
-  mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
-  collect: ((id: string, type: string) => Promise<void>) | undefined;
+  mirror:
+    | ((id: string) => Promise<void>)
+    | ((index: number, id: string) => Promise<void>);
+  like:
+    | ((id: string) => Promise<void>)
+    | ((index: number, id: string) => Promise<void>);
+  comment:
+    | ((id: string) => Promise<void>)
+    | ((index: number, id: string) => Promise<void>);
+  quote:
+    | ((id: string) => Promise<void>)
+    | ((index: number, id: string) => Promise<void>);
+  collect:
+    | ((id: string) => Promise<void>)
+    | ((index: number, id: string) => Promise<void>)
+    | undefined;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -57,7 +68,7 @@ export type InteractBarProps = {
     comment: boolean;
   };
   type: string | undefined;
-  publication: PublicationStats;
+  publication: PublicationStats | undefined;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: boolean[]) => void;
 };
