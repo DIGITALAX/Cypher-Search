@@ -15,10 +15,16 @@ import ImageLargeReducer from "./reducers/ImageLargeSlice";
 import layoutSwitchReducer from "./reducers/layoutSwitchSlice";
 import reactBoxReducer from "./reducers/reactBoxSlice";
 import interactionsCountReducer from "./reducers/interactionsCountSlice";
+import profileDisplayReducer from "./reducers/profileDisplaySlice";
+import displaySearchBoxReducer from "./reducers/displaySearchBoxSlice";
 import searchItemsReducer from "./reducers/searchItemsSlice";
 import cachedProfilesReducer from "./reducers/cachedProfilesSlice";
 import filterConstantsReducer from "./reducers/filterConstantsSlice";
-import autographReducer from "./reducers/autographSlice";
+import interactErrorReducer from "./reducers/interactErrorSlice";
+import lastPostCommentReducer from "./reducers/lastPostCommentSlice";
+import lastPostQuoteReducer from "./reducers/lastPostQuoteSlice";
+import autographProfileReducer from "./reducers/autographProfileSlice";
+import galleryItemsReducer from "./reducers/galleryItemsSlice";
 
 const reducer = combineReducers({
   searchActiveReducer,
@@ -39,7 +45,13 @@ const reducer = combineReducers({
   searchItemsReducer,
   cachedProfilesReducer,
   filterConstantsReducer,
-  autographReducer,
+  interactErrorReducer,
+  lastPostCommentReducer,
+  lastPostQuoteReducer,
+  autographProfileReducer,
+  displaySearchBoxReducer,
+  galleryItemsReducer,
+  profileDisplayReducer,
 });
 
 export const store = configureStore({

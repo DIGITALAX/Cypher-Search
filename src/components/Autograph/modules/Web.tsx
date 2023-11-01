@@ -7,7 +7,6 @@ import ScreenSwitch from "./ScreenSwitch";
 const Web: FunctionComponent<WebProps> = ({
   router,
   handleShuffleSearch,
-  autograph,
   openConnectModal,
   handleLensConnect,
   lensConnected,
@@ -24,78 +23,94 @@ const Web: FunctionComponent<WebProps> = ({
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
+  profile,
+  gallery,
+  display,
+  handleSettingsUpdate,
+  settingsUpdateLoading,
+  settingsData,
+  setSettingsData,
+  coverImage,
+  handleImage,
+  pfpImage,
+  dispatch,
+  displayLoading,
+  handleSetDisplay,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[90vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
-      <div className="relative w-full h-fit flex flex-col items-start justify-start gap-2">
+      <div className="relative w-full h-fit flex flex-col items-start justify-start gap-5">
         <div className="relative flex flex-col items-start justify-between w-full h-fit gap-1">
-          <div className="flex relative items-center justify-start w-16 h-16">
+          <div className="flex absolute items-center justify-start w-16 h-16">
             <Image
               layout="fill"
               src={`${INFURA_GATEWAY}/ipfs/QmfHsZ5w3oy2ENHek7prhM1XVVW8oPBGfEPcNy1jm7sWQq`}
               draggable={false}
             />
           </div>
-          <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
-            {[
-              {
-                image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
-                text: "private",
-                function: () => setSortType(SortType.Private),
-                type: SortType.Private,
-              },
-              {
-                image: "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
-                text: "community",
-                function: () => setSortType(SortType.Community),
-                type: SortType.Community,
-              },
-              {
-                image: "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
-                text: "public",
-                function: () => setSortType(SortType.Public),
-                type: SortType.Public,
-              },
-            ].map(
-              (
-                item: {
-                  image: string;
-                  text: string;
-                  function: () => void;
-                  type: SortType;
+          {screenDisplay !== ScreenDisplay.Settings && (
+            <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
+              {[
+                {
+                  image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
+                  text: "private",
+                  function: () => setSortType(SortType.Private),
+                  type: SortType.Private,
                 },
-                index: number
-              ) => {
-                return (
-                  <div
-                    className="relative flex flex-col items-center justiy-center gap-1.5"
-                    key={index}
-                  >
+                {
+                  image: "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
+                  text: "community",
+                  function: () => setSortType(SortType.Community),
+                  type: SortType.Community,
+                },
+                {
+                  image: "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
+                  text: "public",
+                  function: () => setSortType(SortType.Public),
+                  type: SortType.Public,
+                },
+              ].map(
+                (
+                  item: {
+                    image: string;
+                    text: string;
+                    function: () => void;
+                    type: SortType;
+                  },
+                  index: number
+                ) => {
+                  return (
                     <div
-                      className={`relative w-10 h-10 cursor-pointer flex active:scale-95 ${
-                        item.type === sortType && "mix-blend-luminosity"
-                      }`}
-                      onClick={() => item.function()}
+                      className="relative flex flex-col items-center justiy-center gap-1.5"
+                      key={index}
                     >
-                      <Image
-                        layout="fill"
-                        src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
-                        draggable={false}
-                      />
+                      <div
+                        className={`relative w-10 h-10 cursor-pointer flex active:scale-95 ${
+                          item.type === sortType && "mix-blend-luminosity"
+                        }`}
+                        onClick={() => item.function()}
+                      >
+                        <Image
+                          layout="fill"
+                          src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
+                          draggable={false}
+                        />
+                      </div>
+                      <div className="relative text-white font-bit text-white font-bit text-xs">
+                        {item.text}
+                      </div>
                     </div>
-                    <div className="relative text-white font-bit text-white font-bit text-xs">
-                      {item.text}
-                    </div>
-                  </div>
-                );
-              }
-            )}
-          </div>
+                  );
+                }
+              )}
+            </div>
+          )}
         </div>
         <ScreenSwitch
-          autograph={autograph}
           mirror={mirror}
           comment={comment}
+          displayLoading={displayLoading}
+          handleSetDisplay={handleSetDisplay}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           sortType={sortType}
@@ -103,10 +118,19 @@ const Web: FunctionComponent<WebProps> = ({
           like={like}
           quote={quote}
           interactionsLoading={interactionsLoading}
-          setScreenDisplay={setScreenDisplay}
+          dispatch={dispatch}
+          gallery={gallery}
+          display={display}
+          setSettingsData={setSettingsData}
+          settingsData={settingsData}
+          handleSettingsUpdate={handleSettingsUpdate}
+          settingsUpdateLoading={settingsUpdateLoading}
+          handleImage={handleImage}
+          pfpImage={pfpImage}
+          coverImage={coverImage}
         />
       </div>
-      {autograph?.owner ? (
+      {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
         <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-5">
           {[
             {

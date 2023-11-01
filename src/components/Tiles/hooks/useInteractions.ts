@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import likePost from "../../../../graphql/lens/mutations/like";
-import mirrorPost from "../../../../graphql/lens/mutations/mirror";
-import quotePost from "../../../../graphql/lens/mutations/quote";
-import commentPost from "../../../../graphql/lens/mutations/comment";
 import whoReactedPublication from "../../../../graphql/lens/queries/whoReacted";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import {
@@ -13,15 +9,17 @@ import {
   Mirror,
   Post,
   Comment,
-  PublicationReactionType,
   PublicationType,
   Quote,
 } from "../../../../graphql/generated";
 import { setInteractionsCount } from "../../../../redux/reducers/interactionsCountSlice";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuote";
-import pollUntilIndexed from "../../../../graphql/lens/queries/indexed";
-import collectPost from "../../../../graphql/lens/mutations/collect";
+import lensCollect from "../../../../lib/helpers/api/collectPost";
+import lensLike from "../../../../lib/helpers/api/likePost";
+import lensMirror from "../../../../lib/helpers/api/mirrorPost";
+import lensQuote from "../../../../lib/helpers/api/quotePost";
+import lensComment from "../../../../lib/helpers/api/commentPost";
 
 const useInteractions = () => {
   const dispatch = useDispatch();
@@ -29,11 +27,15 @@ const useInteractions = () => {
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer.items
   );
+  const lastPostQuote = useSelector(
+    (state: RootState) => state.app.lastPostQuoteReducer
+  );
+  const lastPostComment = useSelector(
+    (state: RootState) => state.app.lastPostCommentReducer
+  );
   const interactionsCount = useSelector(
     (state: RootState) => state.app.interactionsCountReducer
   );
-  const [postComment, setPostComment] = useState<string>("");
-  const [postQuote, setPostQuote] = useState<string>("");
   const [openMirrorChoice, setOpenMirrorChoice] = useState<boolean[]>([]);
   const [interactionsLoading, setInteractionsLoading] = useState<
     {
@@ -60,21 +62,7 @@ const useInteractions = () => {
     });
 
     try {
-      const data = await likePost({
-        for: id,
-        reaction: PublicationReactionType.Upvote,
-      });
-
-      if (data?.data?.addReaction.__typename === "RelaySuccess") {
-        const result = await pollUntilIndexed({
-          forTxId: data?.data?.addReaction?.txId,
-        });
-
-        if (result === true) {
-        } else {
-          console.error(result);
-        }
-      }
+      await lensLike(id, dispatch);
 
       dispatch(
         setInteractionsCount({
@@ -98,7 +86,7 @@ const useInteractions = () => {
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], like: true };
+      updatedArray[index] = { ...updatedArray[index], like: false };
       return updatedArray;
     });
   };
@@ -118,28 +106,7 @@ const useInteractions = () => {
     });
 
     try {
-      const data = await collectPost({
-        for: id,
-        actOn: {
-          simpleCollectOpenAction:
-            type === "SimpleCollectOpenActionSettings" ? true : undefined,
-          multirecipientCollectOpenAction:
-            type === "MultirecipientFeeCollectOpenActionSettings"
-              ? true
-              : undefined,
-        },
-      });
-
-      if (data?.data?.actOnOpenAction.__typename === "RelaySuccess") {
-        const result = await pollUntilIndexed({
-          forTxId: data?.data?.actOnOpenAction?.txId,
-        });
-
-        if (result === true) {
-        } else {
-          console.error(result);
-        }
-      }
+      await lensCollect(id, type, dispatch);
 
       dispatch(
         setInteractionsCount({
@@ -163,7 +130,7 @@ const useInteractions = () => {
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], collect: true };
+      updatedArray[index] = { ...updatedArray[index], collect: false };
       return updatedArray;
     });
   };
@@ -183,20 +150,7 @@ const useInteractions = () => {
     });
 
     try {
-      const data = await mirrorPost({
-        mirrorOn: id,
-      });
-
-      if (data?.data?.mirrorOnchain.__typename === "RelaySuccess") {
-        const result = await pollUntilIndexed({
-          forTxId: data?.data?.mirrorOnchain?.txId,
-        });
-
-        if (result === true) {
-        } else {
-          console.error(result);
-        }
-      }
+      await lensMirror(id, dispatch);
 
       dispatch(
         setInteractionsCount({
@@ -239,23 +193,14 @@ const useInteractions = () => {
     });
 
     try {
-      const contentURI = await uploadCommentQuoteContent(postQuote);
+      const contentURI = await uploadCommentQuoteContent(
+        lastPostComment.content,
+        lastPostQuote.images,
+        lastPostQuote.videos,
+        lastPostQuote.gifs
+      );
 
-      const data = await quotePost({
-        contentURI,
-        quoteOn: id,
-      });
-
-      if (data?.data?.quoteOnchain.__typename === "RelaySuccess") {
-        const result = await pollUntilIndexed({
-          forTxId: data?.data?.quoteOnchain?.txId,
-        });
-
-        if (result === true) {
-        } else {
-          console.error(result);
-        }
-      }
+      await lensQuote(id, contentURI!, dispatch, lastPostQuote.collectType);
 
       dispatch(
         setInteractionsCount({
@@ -298,23 +243,14 @@ const useInteractions = () => {
     });
 
     try {
-      const contentURI = await uploadCommentQuoteContent(postComment);
+      const contentURI = await uploadCommentQuoteContent(
+        lastPostComment.content,
+        lastPostComment.images,
+        lastPostComment.videos,
+        lastPostComment.gifs
+      );
 
-      const data = await commentPost({
-        contentURI,
-        commentOn: id,
-      });
-
-      if (data?.data?.commentOnchain.__typename === "RelaySuccess") {
-        const result = await pollUntilIndexed({
-          forTxId: data?.data?.commentOnchain?.txId,
-        });
-
-        if (result === true) {
-        } else {
-          console.error(result);
-        }
-      }
+      await lensComment(id, contentURI!, dispatch, lastPostComment.collectType);
 
       dispatch(
         setInteractionsCount({
@@ -680,8 +616,6 @@ const useInteractions = () => {
     showQuotes,
     showMirrors,
     interactionsLoading,
-    setPostQuote,
-    setPostComment,
     setOpenMirrorChoice,
     openMirrorChoice,
   };

@@ -4,8 +4,15 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { InteractBarProps } from "../types/common.types";
 import numeral from "numeral";
 import { AiOutlineLoading } from "react-icons/ai";
-import { Post } from "../../../../graphql/generated";
 
+type SingleArgFunction = (id: string) => Promise<void>;
+type DualArgFunction = (index: number, id: string) => Promise<void>;
+
+function isSingleArgFunction(
+  func: SingleArgFunction | DualArgFunction
+): func is SingleArgFunction {
+  return (func as SingleArgFunction).length === 1;
+}
 const InteractBar: FunctionComponent<InteractBarProps> = ({
   col,
   layoutAmount,
@@ -19,7 +26,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   setOpenMirrorChoice,
   index,
   collect,
-  type
+  type,
 }): JSX.Element => {
   return (
     <div
@@ -39,7 +46,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
           interactionsLoading?.comment,
         ];
         const stats = [
-          publication?.mirrors + publication?.quotes,
+          publication?.mirrors! + publication?.quotes!,
           publication?.reactions,
           publication?.countOpenActions,
           publication?.comments,
@@ -99,7 +106,10 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
             "QmfDNH347Vph4b1tEuegydufjMU2QwKzYnMZCjygGvvUMM",
           ].map((image: string, indexTwo: number) => {
-            const functions = [mirror, quote];
+            const functions: (
+              | ((id: string) => Promise<void>)
+              | ((index: number, id: string) => Promise<void>)
+            )[] = [mirror, quote];
             const loaders = [
               interactionsLoading?.mirror,
               interactionsLoading?.quote,
@@ -109,7 +119,17 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 key={indexTwo}
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
                 onClick={() =>
-                  !loaders[index] && functions[indexTwo](publication?.id)
+                  !loaders[index] &&
+                  (isSingleArgFunction(functions[indexTwo])
+                    ? (functions[indexTwo] as (id: string) => Promise<void>)(
+                        publication?.id
+                      )
+                    : (
+                        functions[indexTwo] as (
+                          index: number,
+                          id: string
+                        ) => Promise<void>
+                      )(indexTwo, publication?.id))
                 }
               >
                 {loaders[index] ? (

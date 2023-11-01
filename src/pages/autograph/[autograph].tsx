@@ -14,17 +14,26 @@ import Web from "@/components/Autograph/modules/Web";
 import Bio from "@/components/Autograph/modules/Bio";
 import Feed from "@/components/Autograph/modules/Feed";
 import Gallery from "@/components/Autograph/modules/Gallery";
+import useFeed from "@/components/Autograph/hooks/useFeed";
+import useGallery from "@/components/Autograph/hooks/useGallery";
+import useSettings from "@/components/Autograph/hooks/useSettings";
 
 const Autograph: NextPage = (): JSX.Element => {
-  const autoDispatch = useSelector(
-    (state: RootState) => state.app.autographReducer
-  );
   const router = useRouter();
   const { autograph } = router.query;
   const dispatch = useDispatch();
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const gallery = useSelector(
+    (state: RootState) => state.app.galleryItemsReducer.items
+  );
+  const display = useSelector(
+    (state: RootState) => state.app.profileDisplayReducer.value
+  );
+  const profile = useSelector(
+    (state: RootState) => state.app.autographProfileReducer.profile
   );
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
@@ -51,34 +60,70 @@ const Autograph: NextPage = (): JSX.Element => {
   } = useSignIn();
   const {
     profileLoading,
-    notFound,
     getProfileData,
     setScreenDisplay,
     screenDisplay,
     sortType,
     setSortType,
   } = useAutograph();
+  const {
+    feedLoading,
+    interactionsFeedLoading,
+    openMirrorFeedChoice,
+    setOpenMirrorFeedChoice,
+    feedComment,
+    feedQuote,
+    feedLike,
+    feedMirror,
+    feedCollect,
+    profileFeed,
+  } = useFeed();
+  const {
+    galleryComment,
+    galleryLike,
+    galleryMirror,
+    galleryQuote,
+    openMirrorGalleryChoice,
+    setOpenMirrorGalleryChoice,
+    interactionsGalleryLoading,
+    interactionsDisplayLoading,
+    openMirrorDisplayChoice,
+    setOpenMirrorDisplayChoice,
+    displayComment,
+    displayLike,
+    displayMirror,
+    displayQuote,
+    handleSetDisplay,
+    displayLoading,
+  } = useGallery();
+  const {
+    handleSettingsUpdate,
+    settingsUpdateLoading,
+    setSettingsData,
+    settingsData,
+    coverImage,
+    handleImage,
+    pfpImage,
+  } = useSettings();
 
   useEffect(() => {
-    if (autograph && !profileLoading) {
+    if (autograph && !profile) {
       getProfileData(autograph as string);
     }
   }, [autograph]);
 
   useEffect(() => {
     setTimeout(() => {
-      if (!profileLoading) {
+      if (!profileLoading && !feedLoading) {
         setGlobalLoading(false);
       }
     }, 1000);
   }, [profileLoading]);
 
-  console.log(lensConnected);
-
-  if (!profileLoading && !globalLoading) {
+  if (!profileLoading && !globalLoading && !feedLoading) {
     return (
       <>
-        {notFound ? (
+        {!profile ? (
           <NotFound
             router={router}
             searchActive={searchActive}
@@ -98,31 +143,27 @@ const Autograph: NextPage = (): JSX.Element => {
             handleShuffleSearch={handleShuffleSearch}
           />
         ) : (
-          autoDispatch.profile && (
+          profile && (
             <div className="relative flex flex-col w-full h-full" id="results">
               <Head>
                 <title>
-                  Chromadin |{" "}
-                  {autoDispatch.profile?.handle?.localName?.toUpperCase()}
+                  Chromadin | {profile?.handle?.localName?.toUpperCase()}
                 </title>
                 <meta
                   name="og:url"
-                  content={`https://chromadin.xyz/autograph/${autoDispatch.profile?.handle?.localName}`}
+                  content={`https://chromadin.xyz/autograph/${profile?.handle?.localName}`}
                 />
                 <meta
                   name="og:title"
-                  content={autoDispatch.profile?.handle?.localName?.toUpperCase()}
+                  content={profile?.handle?.localName?.toUpperCase()}
                 />
-                <meta
-                  name="og:description"
-                  content={autoDispatch.profile?.metadata?.bio}
-                />
+                <meta name="og:description" content={profile?.metadata?.bio} />
                 <meta
                   name="og:image"
                   content={
-                    !autoDispatch?.display?.public?.main?.images?.[0]
+                    !gallery?.created[0]?.images?.[0]
                       ? "https://chromadin.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${autoDispatch?.display?.public?.main?.images?.[0]?.split(
+                      : `https://chromadin.infura-ipfs.io/ipfs/${gallery?.created[0]?.images?.[0]?.split(
                           "ipfs://"
                         )}`
                   }
@@ -133,11 +174,11 @@ const Autograph: NextPage = (): JSX.Element => {
                 <meta name="twitter:creator" content="@digitalax" />
                 <meta
                   name="twitter:image"
-                  content={`https://chromadin.xyz/autograph/${autoDispatch.profile?.handle?.localName}`}
+                  content={`https://chromadin.xyz/autograph/${profile?.handle?.localName}`}
                 />
                 <meta
                   name="twitter:url"
-                  content={`https://chromadin.xyz/autograph/${autoDispatch.profile?.handle?.localName}`}
+                  content={`https://chromadin.xyz/autograph/${profile?.handle?.localName}`}
                 />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
@@ -215,9 +256,11 @@ const Autograph: NextPage = (): JSX.Element => {
               </Head>
               <Web
                 router={router}
+                dispatch={dispatch}
+                displayLoading={displayLoading}
+                handleSetDisplay={handleSetDisplay}
                 handleShuffleSearch={handleShuffleSearch}
                 openConnectModal={openConnectModal}
-                autograph={autoDispatch}
                 handleLensConnect={handleLensConnect}
                 walletConnected={walletConnected}
                 lensConnected={lensConnected}
@@ -226,11 +269,47 @@ const Autograph: NextPage = (): JSX.Element => {
                 setScreenDisplay={setScreenDisplay}
                 sortType={sortType}
                 setSortType={setSortType}
+                setOpenMirrorChoice={setOpenMirrorDisplayChoice}
+                openMirrorChoice={openMirrorDisplayChoice}
+                comment={displayComment}
+                mirror={displayMirror}
+                like={displayLike}
+                quote={displayQuote}
+                interactionsLoading={interactionsDisplayLoading}
+                profile={profile}
+                gallery={gallery}
+                display={display}
+                handleSettingsUpdate={handleSettingsUpdate}
+                settingsUpdateLoading={settingsUpdateLoading}
+                setSettingsData={setSettingsData}
+                settingsData={settingsData}
+                handleImage={handleImage}
+                pfpImage={pfpImage}
+                coverImage={coverImage}
               />
               <Bio />
               <div className="relative flex flex-row gap-3 items-start justify-between">
-                <Feed />
-                <Gallery />
+                <Feed
+                  comment={feedComment}
+                  mirror={feedMirror}
+                  like={feedLike}
+                  quote={feedQuote}
+                  collect={feedCollect}
+                  openMirrorChoice={openMirrorFeedChoice}
+                  setOpenMirrorChoice={setOpenMirrorFeedChoice}
+                  interactionsLoading={interactionsFeedLoading}
+                  profileFeed={profileFeed}
+                />
+                <Gallery
+                  comment={galleryComment}
+                  mirror={galleryMirror}
+                  like={galleryLike}
+                  quote={galleryQuote}
+                  openMirrorChoice={openMirrorGalleryChoice}
+                  setOpenMirrorChoice={setOpenMirrorGalleryChoice}
+                  interactionsLoading={interactionsGalleryLoading}
+                  gallery={gallery}
+                />
               </div>
             </div>
           )

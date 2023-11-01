@@ -1,0 +1,241 @@
+import { FunctionComponent } from "react";
+import { SettingsProps } from "../../types/autograph.types";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import { AiOutlineLoading } from "react-icons/ai";
+import {
+  MetadataAttributeType,
+  NftImage,
+} from "../../../../../graphql/generated";
+
+const Settings: FunctionComponent<SettingsProps> = ({
+  setSettingsData,
+  settingsData,
+  handleSettingsUpdate,
+  settingsUpdateLoading,
+  handleImage,
+  coverImage,
+  pfpImage,
+}): JSX.Element => {
+  return (
+    <div className="relative w-full h-full pt-4 flex items-center justify-center">
+      <div className="relative flex w-4/5 h-fit items-start justify-center rounded-sm">
+        <div
+          className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
+          id="pfp"
+        >
+          <div className="relative w-full h-full bg-blurs flex items-center justify-start bg-cover flex-col rounded-sm p-3 gap-5">
+            <label
+              className="relative w-full h-40 rounded-sm cursor-pointer p-px"
+              id="pfp"
+            >
+              <div className="relative w-full h-full flex items-center justify-center rounded-sm opacity-70">
+                <Image
+                  layout="fill"
+                  src={
+                    coverImage
+                      ? coverImage
+                      : `${INFURA_GATEWAY}/ipfs/${
+                          settingsData?.coverPicture?.raw?.uri?.split(
+                            "ipfs://"
+                          )[1]
+                        }`
+                  }
+                  objectFit="cover"
+                  draggable={false}
+                  className="relative rounded-sm w-full h-full flex"
+                />
+                <input
+                  hidden
+                  type="file"
+                  accept="image/png"
+                  multiple={false}
+                  onChange={(e) =>
+                    e?.target?.files?.[0] && handleImage(e, "cover")
+                  }
+                />
+              </div>
+              <label
+                className="absolute top-4 right-4 z-10 border border-white w-32 h-32 rounded-sm cursor-pointer p-px"
+                id="pfp"
+              >
+                <div className="relative w-full h-full flex items-center justify-center rounded-sm">
+                  <Image
+                    layout="fill"
+                    src={
+                      pfpImage
+                        ? pfpImage
+                        : `${INFURA_GATEWAY}/ipfs/${
+                            settingsData?.picture?.__typename === "ImageSet"
+                              ? settingsData?.picture?.raw?.uri?.split(
+                                  "ipfs//"
+                                )[1]
+                              : (
+                                  settingsData.picture as NftImage
+                                )?.image?.raw?.uri?.split("ipfs//")[1]
+                          }`
+                    }
+                    objectFit="cover"
+                    draggable={false}
+                    className="relative rounded-sm w-full h-full flex"
+                  />
+                  <input
+                    hidden
+                    type="file"
+                    accept="image/png"
+                    multiple={false}
+                    onChange={(e) =>
+                      e?.target?.files?.[0] && handleImage(e, "pfp")
+                    }
+                  />
+                </div>
+              </label>
+            </label>
+            <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
+              <div className="relative font font-bit text-white text-sm">
+                Display Name
+              </div>
+              <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
+                <input
+                  onChange={(e) =>
+                    setSettingsData({
+                      ...settingsData,
+                      displayName: e.target.value,
+                    })
+                  }
+                  style={{
+                    resize: "none",
+                  }}
+                  value={settingsData?.displayName || ""}
+                  className="bg-piloto p-1 flex w-full h-full items-start justify-start"
+                />
+              </div>
+            </div>
+            <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
+              <div className="relative font font-bit text-white text-sm">
+                Bio
+              </div>
+              <div className="relative w-full h-20 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
+                <textarea
+                  onChange={(e) =>
+                    setSettingsData({
+                      ...settingsData,
+                      bio: e.target.value,
+                    })
+                  }
+                  style={{
+                    resize: "none",
+                  }}
+                  className="bg-piloto p-1 flex w-full h-full items-start justify-start"
+                  value={settingsData?.bio}
+                ></textarea>
+              </div>
+            </div>
+            <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left gap-2 font-bit text-sm">
+              <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
+                <div className="relative w-fit h-fit justify-start items-center">
+                  Location?
+                </div>
+                <input
+                  onChange={(e) => {
+                    const attributes = [...(settingsData.attributes || [])];
+
+                    const index = attributes.findIndex(
+                      (item) => item.key === "location"
+                    );
+
+                    if (index) {
+                      attributes[index].value === e.target.value;
+                    } else {
+                      attributes.push({
+                        key: "location",
+                        value: e.target.value,
+                        type: MetadataAttributeType.String,
+                      });
+                    }
+
+                    setSettingsData({
+                      ...settingsData,
+                      attributes,
+                    });
+                  }}
+                  style={{
+                    resize: "none",
+                  }}
+                  value={
+                    settingsData?.attributes?.find(
+                      (item) => item.key === "location"
+                    )?.value
+                  }
+                  className="bg-piloto p-1 flex w-full h-10 items-start rounded-sm justify-start border border-fuera"
+                />
+              </div>
+              <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left font-fit">
+                <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
+                  <div className="relative w-fit h-fit justify-start items-center">
+                    Link?
+                  </div>
+                  <input
+                    onChange={(e) => {
+                      const attributes = [...(settingsData.attributes || [])];
+
+                      const index = attributes.findIndex(
+                        (item) => item.key === "website"
+                      );
+
+                      if (index) {
+                        attributes[index].value === e.target.value;
+                      } else {
+                        attributes.push({
+                          key: "website",
+                          value: e.target.value,
+                          type: MetadataAttributeType.String,
+                        });
+                      }
+
+                      setSettingsData({
+                        ...settingsData,
+                        attributes,
+                      });
+                    }}
+                    style={{
+                      resize: "none",
+                    }}
+                    value={
+                      settingsData?.attributes?.find(
+                        (item) => item.key === "website"
+                      )?.value
+                    }
+                    className="bg-piloto p-1 flex w-full h-10 items-start rounded-sm justify-start border border-fuera"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="relative w-full h-fit flex justify-end items-center">
+              <div
+                className={`relative w-20 h-10 font-vcr text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
+                  !settingsUpdateLoading && "cursor-pointer active:scale-95"
+                }`}
+                onClick={() => !settingsUpdateLoading && handleSettingsUpdate()}
+              >
+                <div
+                  className={`${
+                    settingsUpdateLoading && "animate-spin"
+                  } relative w-fit h-fit flex items-center justify-center text-center`}
+                >
+                  {settingsUpdateLoading ? (
+                    <AiOutlineLoading size={15} color="white" />
+                  ) : (
+                    "Update"
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Settings;

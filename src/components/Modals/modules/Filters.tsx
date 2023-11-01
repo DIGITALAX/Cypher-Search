@@ -13,6 +13,7 @@ const Filters: FunctionComponent<FilterProps> = ({
   filterValues,
   handleResetFilters,
   filterConstants,
+  publication
 }): JSX.Element => {
   return (
     <div
@@ -20,7 +21,7 @@ const Filters: FunctionComponent<FilterProps> = ({
       id="milestone"
     >
       <div className="relative flex flex-col lg:flex-row gap-10 mx-auto w-full p-4 h-fit lg:items-start items-center justify-start lg:justify-center">
-        <TileSwitch type="chromadin" data={""} />
+        <TileSwitch type="chromadin" data={publication} />
         <ContentSort
           filterConstants={filterConstants}
           handleResetFilters={handleResetFilters}
