@@ -131,10 +131,14 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 </div>
                 <div
                   className="relative w-6 h-6 flex items-center justify-center cursor-pointer active:scale-95"
-                  onClick={() => router.push(`/item/pub/${publication?.id}`)}
-                  onMouseOver={() => {
-                    const updatedArray = [...followLoading];
-                    updatedArray[index] = false;
+                  onClick={() =>
+                    router.push(
+                      `/autograph/${publication?.by?.handle?.localName}`
+                    )
+                  }
+                  onMouseEnter={() => {
+                    const updatedArray = [...profileHovers];
+                    updatedArray[index] = true;
                     setProfileHovers(updatedArray);
                   }}
                 >
@@ -152,6 +156,8 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     router={router}
                     publication={publication?.by}
                     index={index}
+                    profileHovers={profileHovers}
+                    setProfileHovers={setProfileHovers}
                   />
                 )}
                 <div

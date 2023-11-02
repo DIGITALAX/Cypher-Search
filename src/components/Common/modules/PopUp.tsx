@@ -11,7 +11,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
   top,
   cartItems,
   index,
-  id,
+  cartItem,
   level,
   type,
   left,
@@ -33,8 +33,9 @@ const PopUp: FunctionComponent<PopUpProps> = ({
         title="Add to Cart"
         onClick={() => {
           const newItem = {
-            id,
+            item: cartItem,
             amount: 1,
+            price: Number(cartItem.prices?.[0]),
             level,
             type,
             color: "#000000",
@@ -42,7 +43,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
           };
 
           const existingItem = cartItems.find(
-            (item) => item.id === id && item.level === index
+            (item) => item.item.collectionId === cartItem?.collectionId
           );
 
           if (existingItem) {
@@ -79,7 +80,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
       </div>
       <div
         className="relative flex w-8 h-8 items-center justify-center rounded-full cursor-pointer active:scale-95 hover:opacity-70"
-        onClick={() => router.push(`/${type}/${id}`)}
+        onClick={() => router.push(`/${type}/${cartItem?.pubId}`)}
         title="View Item"
       >
         <Image

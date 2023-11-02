@@ -13,6 +13,8 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   publication,
   router,
   index,
+  profileHovers,
+  setProfileHovers,
 }): JSX.Element => {
   const [popperElement, setPopperElement] = useState<HTMLElement | null>();
   const popperRef = useRef<HTMLDivElement>(null);
@@ -20,7 +22,14 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
     placement: "bottom-start",
   });
   return (
-    <div className="absolute w-28 h-fit flex flex-col items-center justify-center p-2 z-20 border border-white rounded-sm bg-black -top-20">
+    <div
+      className="absolute w-28 h-fit flex flex-col items-center justify-center p-2 z-20 border border-white rounded-sm bg-black -top-32"
+      onMouseLeave={() => {
+        const updatedArray = [...profileHovers];
+        updatedArray[index] = false;
+        setProfileHovers(updatedArray);
+      }}
+    >
       <div
         style={{
           ...popper?.styles.popper,

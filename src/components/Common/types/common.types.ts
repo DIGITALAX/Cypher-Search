@@ -1,14 +1,7 @@
-import { CartItem, ItemType } from "@/components/Layout/types/footer.types";
 import { NextRouter } from "next/router";
 import { AnyAction, Dispatch } from "redux";
-import {
-  Mirror,
-  Post,
-  Profile,
-  Quote,
-  Comment,
-  PublicationStats,
-} from "../../../../graphql/generated";
+import { Profile, PublicationStats } from "../../../../graphql/generated";
+import { Creation } from "@/components/Tiles/types/tiles.types";
 
 export type BarProps = {
   title: string;
@@ -23,7 +16,7 @@ export type PopUpProps = {
   right?: string;
   cartItems: CartItem[];
   index: number;
-  id: string;
+  cartItem: Creation;
   level: number | undefined;
   type: ItemType;
 };
@@ -45,6 +38,7 @@ export type InteractBarProps = {
   col?: boolean;
   layoutAmount?: number;
   index: number;
+  hideCollect?: boolean;
   mirror:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>);
@@ -66,6 +60,7 @@ export type InteractBarProps = {
     mirror: boolean;
     quote: boolean;
     comment: boolean;
+    collect?: boolean;
   };
   type: string | undefined;
   publication: PublicationStats | undefined;
@@ -80,6 +75,8 @@ export type HoverProfileProps = {
   publication: Profile;
   router: NextRouter;
   index: number;
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
 
 export type TileLoaderProps = {
@@ -122,4 +119,21 @@ export type NotFoundProps = {
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   handleShuffleSearch: () => void;
+};
+
+export enum ItemType {
+  Chromadin = "chromadin",
+  CoinOp = "coinop",
+  Legend = "legend",
+  Listener = "listener",
+}
+
+export type CartItem = {
+  item: Creation;
+  color: string;
+  size: string;
+  price: number;
+  level?: number;
+  amount: number;
+  type: ItemType;
 };

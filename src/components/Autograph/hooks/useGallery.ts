@@ -39,20 +39,11 @@ const useGallery = () => {
       mirror: boolean;
       quote: boolean;
       comment: boolean;
-      collect: boolean;
     }[]
-  >(
-    Array.from({ length: 4 }, () => ({
-      like: false,
-      mirror: false,
-      quote: false,
-      comment: false,
-      collect: false,
-    }))
-  );
+  >([]);
   const [openMirrorGalleryChoice, setOpenMirrorGalleryChoice] = useState<
     boolean[]
-  >(Array.from({ length: 4 }, () => false));
+  >([]);
   const [interactionsDisplayLoading, setInteractionsDisplayLoading] = useState<
     {
       like: boolean;
@@ -74,6 +65,14 @@ const useGallery = () => {
     boolean[]
   >(Array.from({ length: 4 }, () => false));
   const [displayLoading, setDisplayLoading] = useState<boolean>(false);
+  const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
+  const [galleryLoading, setGalleryLoading] = useState<boolean>(false);
+  const [openInteractions, setOpenInteractions] = useState<boolean[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string>("NEWEST");
+
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+  };
 
   const getDisplayData = async (collections: Creation[]) => {
     try {
@@ -102,10 +101,19 @@ const useGallery = () => {
   };
 
   const getGallery = async () => {
+    setGalleryLoading(true);
     try {
       // both those they've created and the orders that they've collected
 
       await getDisplayData();
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setGalleryLoading(false);
+  };
+
+  const getMoreGallery = async () => {
+    try {
     } catch (err: any) {
       console.error(err.message);
     }
@@ -399,6 +407,46 @@ const useGallery = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (
+      (gallery?.collected && gallery?.collected?.length > 0) ||
+      (gallery?.created && gallery?.created?.length > 0)
+    ) {
+      setOpenInteractions(
+        Array.from(
+          {
+            length:
+              gallery?.collected?.length || 0 + gallery?.created?.length || 0,
+          },
+          () => false
+        )
+      );
+      setOpenMirrorGalleryChoice(
+        Array.from(
+          {
+            length:
+              gallery?.collected?.length || 0 + gallery?.created?.length || 0,
+          },
+          () => false
+        )
+      );
+      setInteractionsGalleryLoading(
+        Array.from(
+          {
+            length:
+              gallery?.collected?.length || 0 + gallery?.created?.length || 0,
+          },
+          () => ({
+            like: false,
+            mirror: false,
+            quote: false,
+            comment: false,
+          })
+        )
+      );
+    }
+  }, [gallery?.collected?.length, gallery?.created?.length]);
+
   return {
     interactionsGalleryLoading,
     galleryMirror,
@@ -416,6 +464,14 @@ const useGallery = () => {
     displayQuote,
     handleSetDisplay,
     displayLoading,
+    optionsOpen,
+    setOptionsOpen,
+    selectedOption,
+    handleOptionSelect,
+    galleryLoading,
+    getMoreGallery,
+    openInteractions,
+    setOpenInteractions,
   };
 };
 

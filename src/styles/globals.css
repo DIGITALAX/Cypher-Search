@@ -8,10 +8,19 @@
 }
 
 @font-face {
+  font-family: "Austral";
+  src: url("/fonts/Austral.otf");
+}
+
+@font-face {
   font-family: "Ignite";
   src: url("/fonts/Ignite.otf");
 }
 
+@font-face {
+  font-family: "Bebas";
+  src: url("/fonts/BebasNeue.ttf");
+}
 @font-face {
   font-family: "Vcr";
   src: url("/fonts/Vcr.ttf");
@@ -67,6 +76,23 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+#feed::-webkit-scrollbar {
+  width: 0px;
+  opacity: 0; /* Initially hide the scrollbar */
+}
+
+#feed:hover::-webkit-scrollbar {
+  opacity: 0; /* Show the scrollbar on hover */
+}
+
+#feed::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+#feed::-webkit-scrollbar-thumb {
   background-color: transparent;
 }
 

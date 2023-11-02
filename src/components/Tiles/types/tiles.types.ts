@@ -10,7 +10,7 @@ import {
   PublicationStats,
 } from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
-import { CartItem } from "@/components/Layout/types/footer.types";
+import { CartItem } from "@/components/Common/types/common.types";
 
 export interface Creation {
   amount: string;
@@ -227,7 +227,7 @@ export type CollectItemProps = {
   }[];
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
-  item: Post;
+  item: Creation;
 };
 
 export type ChromadinProps = {

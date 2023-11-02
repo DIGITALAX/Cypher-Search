@@ -5,8 +5,8 @@ import { ChromadinProps } from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
-import { ItemType } from "@/components/Layout/types/footer.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
+import { ItemType } from "@/components/Common/types/common.types";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   layoutAmount,
@@ -107,9 +107,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             </div>
             <div
               className="relative w-fit h-fit flex text-mos text-sm font-bit uppercase cursor-pointer"
-              onMouseOver={() => {
-                const updatedArray = [...followLoading];
-                updatedArray[index] = false;
+              onMouseEnter={() => {
+                const updatedArray = [...profileHovers];
+                updatedArray[index] = true;
                 setProfileHovers(updatedArray);
               }}
             >
@@ -123,6 +123,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 router={router}
                 publication={publication?.profile}
                 index={index}
+                profileHovers={profileHovers}
+                setProfileHovers={setProfileHovers}
               />
             )}
           </div>
@@ -143,7 +145,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           {popUpOpen?.[index] && (
             <PopUp
               cartItems={cartItems}
-              id={publication?.pubId}
+              cartItem={publication}
               type={ItemType.Chromadin}
               dispatch={dispatch}
               router={router}

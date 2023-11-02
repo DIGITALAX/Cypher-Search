@@ -19,6 +19,7 @@ const Display: FunctionComponent<DisplayProps> = ({
   dispatch,
   handleSetDisplay,
   displayLoading,
+  owner,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col w-full h-full items-start justify-start gap-3">
@@ -35,23 +36,25 @@ const Display: FunctionComponent<DisplayProps> = ({
               draggable={false}
             />
           </div>
-          <div
-            className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95"
-            onClick={() =>
-              dispatch(
-                setDisplaySearchBox({
-                  actionValue: 0,
-                  actionType: sortType,
-                })
-              )
-            }
-          >
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/QmP9Yr4qocpbztubrebzLKC1NFuvEn955dCFP3HuZ39WFW`}
-              draggable={false}
-            />
-          </div>
+          {owner && (
+            <div
+              className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95"
+              onClick={() =>
+                dispatch(
+                  setDisplaySearchBox({
+                    actionValue: 0,
+                    actionType: sortType,
+                  })
+                )
+              }
+            >
+              <Image
+                layout="fill"
+                src={`${INFURA_GATEWAY}/ipfs/QmP9Yr4qocpbztubrebzLKC1NFuvEn955dCFP3HuZ39WFW`}
+                draggable={false}
+              />
+            </div>
+          )}
           {display && (
             <div className="absolute bottom-4 left-4 w-fit h-fit rounded-sm bg-black/70 flex flex-col items-start justify-center p-2 border gap-2 border-[#372B48]">
               <div className="relative flex flex-col gap-px justify-center items-start font-bit text-white text-left w-fit h-fit whitespace-nowrap">
@@ -118,23 +121,25 @@ const Display: FunctionComponent<DisplayProps> = ({
                     className="rounded-lg"
                   />
                 </div>
-                <div
-                  className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95"
-                  onClick={() =>
-                    dispatch(
-                      setDisplaySearchBox({
-                        actionValue: index + 1,
-                        actionType: sortType,
-                      })
-                    )
-                  }
-                >
-                  <Image
-                    layout="fill"
-                    src={`${INFURA_GATEWAY}/ipfs/QmP9Yr4qocpbztubrebzLKC1NFuvEn955dCFP3HuZ39WFW`}
-                    draggable={false}
-                  />
-                </div>
+                {owner && (
+                  <div
+                    className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95"
+                    onClick={() =>
+                      dispatch(
+                        setDisplaySearchBox({
+                          actionValue: index + 1,
+                          actionType: sortType,
+                        })
+                      )
+                    }
+                  >
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/QmP9Yr4qocpbztubrebzLKC1NFuvEn955dCFP3HuZ39WFW`}
+                      draggable={false}
+                    />
+                  </div>
+                )}
                 {display && (
                   <div className="absolute bottom-2 left-2 flex items-center justify-center">
                     <InteractBar
@@ -165,26 +170,28 @@ const Display: FunctionComponent<DisplayProps> = ({
           })}
         </div>
       </div>
-      <div className="relative w-full h-fit flex justify-end items-center">
-        <div
-          className={`relative w-20 h-10 font-vcr text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
-            !displayLoading && "cursor-pointer active:scale-95"
-          }`}
-          onClick={() => !displayLoading && handleSetDisplay()}
-        >
+      {owner && (
+        <div className="relative w-full h-fit flex justify-end items-center">
           <div
-            className={`${
-              displayLoading && "animate-spin"
-            } relative w-fit h-fit flex items-center justify-center text-center`}
+            className={`relative w-20 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
+              !displayLoading && "cursor-pointer active:scale-95"
+            }`}
+            onClick={() => !displayLoading && handleSetDisplay()}
           >
-            {displayLoading ? (
-              <AiOutlineLoading size={15} color="white" />
-            ) : (
-              "Update"
-            )}
+            <div
+              className={`${
+                displayLoading ? "animate-spin" : "top-px"
+              } relative w-fit h-fit flex items-center justify-center text-center`}
+            >
+              {displayLoading ? (
+                <AiOutlineLoading size={15} color="white" />
+              ) : (
+                "Update"
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

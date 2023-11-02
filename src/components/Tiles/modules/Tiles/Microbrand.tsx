@@ -30,10 +30,12 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
         </div>
         <div
           className="absolute top-2 left-2 flex flex-row gap-4 w-10 h-10 items-center justify-start cursor-pointer"
-          onClick={() => router.push(`/item/quest/${publication?.handle}`)}
-          onMouseOver={() => {
-            const updatedArray = [...followLoading];
-            updatedArray[index] = false;
+          onClick={() =>
+            router.push(`/autograph/${publication?.handle?.localName}`)
+          }
+          onMouseEnter={() => {
+            const updatedArray = [...profileHovers];
+            updatedArray[index] = true;
             setProfileHovers(updatedArray);
           }}
         >
@@ -54,6 +56,8 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
             followLoading={followLoading}
             followProfile={followProfile}
             unfollowProfile={unfollowProfile}
+            profileHovers={profileHovers}
+            setProfileHovers={setProfileHovers}
           />
         )}
         <div
