@@ -15,6 +15,7 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   index,
   profileHovers,
   setProfileHovers,
+  feed,
 }): JSX.Element => {
   const [popperElement, setPopperElement] = useState<HTMLElement | null>();
   const popperRef = useRef<HTMLDivElement>(null);
@@ -82,7 +83,11 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
               className={`relative w-7 h-7 flex items-center justify-center cursor-pointer active:scale-95 ${
                 followLoading[index] && "animate-spin"
               }`}
-              onClick={() => followProfile(publication?.id)}
+              onClick={() =>
+                router.asPath.includes("autograph")
+                  ? followProfile(publication?.id, feed)
+                  : followProfile(publication?.id)
+              }
             >
               {followLoading[index] ? (
                 <AiOutlineLoading color="white" size={15} />
@@ -96,7 +101,11 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
             </div>
             <div
               className={`relative w-7 h-7 flex items-center justify-center cursor-pointer active:scale-95`}
-              onClick={() => unfollowProfile(publication?.id)}
+              onClick={() =>
+                router.asPath.includes("autograph")
+                  ? unfollowProfile(publication?.id, feed)
+                  : unfollowProfile(publication?.id)
+              }
             >
               <Image
                 layout="fill"

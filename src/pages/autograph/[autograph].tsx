@@ -17,7 +17,7 @@ import Gallery from "@/components/Autograph/modules/Gallery";
 import useFeed from "@/components/Autograph/hooks/useFeed";
 import useGallery from "@/components/Autograph/hooks/useGallery";
 import useSettings from "@/components/Autograph/hooks/useSettings";
-import useProfile from "@/components/Tiles/hooks/useProfile";
+import useProfile from "@/components/Autograph/hooks/useProfile";
 
 const Autograph: NextPage = (): JSX.Element => {
   const router = useRouter();
@@ -26,6 +26,9 @@ const Autograph: NextPage = (): JSX.Element => {
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const profileFeed = useSelector(
+    (state: RootState) => state.app.autographFeedReducer.feed
   );
   const gallery = useSelector(
     (state: RootState) => state.app.galleryItemsReducer.items
@@ -54,9 +57,12 @@ const Autograph: NextPage = (): JSX.Element => {
   const {
     followProfile,
     unfollowProfile,
-    followLoading,
-    profileHovers,
-    setProfileHovers,
+    feedFollowLoading,
+    galleryFollowLoading,
+    feedProfileHovers,
+    setFeedProfileHovers,
+    galleryProfileHovers,
+    setGalleryProfileHovers,
   } = useProfile();
   const {
     handleLensConnect,
@@ -84,7 +90,6 @@ const Autograph: NextPage = (): JSX.Element => {
     feedLike,
     feedMirror,
     feedCollect,
-    profileFeed,
     getMoreFeed,
   } = useFeed();
   const {
@@ -161,7 +166,10 @@ const Autograph: NextPage = (): JSX.Element => {
           />
         ) : (
           profile && (
-            <div className="relative flex flex-col w-full h-full flex-grow" id="results">
+            <div
+              className="relative flex flex-col w-full h-full flex-grow"
+              id="results"
+            >
               <Head>
                 <title>
                   Chromadin | {profile?.handle?.localName?.toUpperCase()}
@@ -317,6 +325,12 @@ const Autograph: NextPage = (): JSX.Element => {
                   interactionsLoading={interactionsFeedLoading}
                   profileFeed={profileFeed}
                   getMoreFeed={getMoreFeed}
+                  router={router}
+                  followProfile={followProfile}
+                  unfollowProfile={unfollowProfile}
+                  followLoading={galleryFollowLoading}
+                  profileHovers={galleryProfileHovers}
+                  setProfileHovers={setGalleryProfileHovers}
                 />
                 <Gallery
                   comment={galleryComment}
@@ -335,9 +349,9 @@ const Autograph: NextPage = (): JSX.Element => {
                   getMoreGallery={getMoreGallery}
                   followProfile={followProfile}
                   unfollowProfile={unfollowProfile}
-                  followLoading={followLoading}
-                  profileHovers={profileHovers}
-                  setProfileHovers={setProfileHovers}
+                  followLoading={feedFollowLoading}
+                  profileHovers={feedProfileHovers}
+                  setProfileHovers={setFeedProfileHovers}
                   router={router}
                   openInteractions={openInteractions}
                   setOpenInteractions={setOpenInteractions}

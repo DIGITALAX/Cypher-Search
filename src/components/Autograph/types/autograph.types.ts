@@ -2,10 +2,11 @@ import { NextRouter } from "next/router";
 import {
   Post,
   Profile,
-  Comment,
   Quote,
   Mirror,
+  Comment,
   ProfileMetadata,
+  TextOnlyMetadataV3,
 } from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { ChangeEvent } from "react";
@@ -179,20 +180,27 @@ export type PostProps = {
 
 export type FeedProps = {
   profileFeed: (Post | Quote | Mirror)[];
-  mirror: (index: number, id: string) => Promise<void>;
-  like: (index: number, id: string) => Promise<void>;
-  comment: (index: number, id: string) => Promise<void>;
-  quote: (index: number, id: string) => Promise<void>;
-  collect: (index: number, id: string, type: string) => Promise<void>;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  collect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     quote: boolean;
     comment: boolean;
+    collect: boolean;
   }[];
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
   getMoreFeed: () => Promise<void>;
+  router: NextRouter;
+  followLoading: boolean[];
+  unfollowProfile: (id: string, feed?: boolean) => Promise<void>;
+  followProfile: (id: string, feed?: boolean) => Promise<void>;
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
 };
 
 export type GalleryProps = {
@@ -202,7 +210,7 @@ export type GalleryProps = {
         created: Creation[];
       }
     | undefined;
-    cartItems: CartItem[]
+  cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
@@ -215,8 +223,8 @@ export type GalleryProps = {
     comment: boolean;
   }[];
   followLoading: boolean[];
-  unfollowProfile: (id: string) => Promise<void>;
-  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string, feed?: boolean) => Promise<void>;
+  followProfile: (id: string, feed?: boolean) => Promise<void>;
   router: NextRouter;
   profileHovers: boolean[];
   setProfileHovers: (e: boolean[]) => void;
@@ -248,7 +256,7 @@ export type CreationProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followProfile: (id: string) => Promise<void>;
   router: NextRouter;
-  cartItems: CartItem[]
+  cartItems: CartItem[];
   profileHovers: boolean[];
   setProfileHovers: (e: boolean[]) => void;
   created: boolean;
@@ -266,4 +274,34 @@ export type CreationProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
+};
+
+export type PostBarProps = {
+  index: number;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  collect: (id: string, type: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
+  item: Post | Mirror | Quote;
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+    collect: boolean;
+  };
+  router: NextRouter;
+  setProfileHovers: (e: boolean[]) => void;
+  profileHovers: boolean[];
+  followLoading: boolean[];
+  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string) => Promise<void>;
+};
+
+export type TextProps = {
+  item: Post | Quote | Mirror;
+  quote: Comment | Post | Quote | undefined;
 };

@@ -45,7 +45,8 @@ const config: Config = {
         olor: "#F9ED00",
         lirio: "#D401F8",
         hierba: "#03DB6A",
-        afilado: "#4E4D4D"
+        afilado: "#4E4D4D",
+        cereza: "#F28548",
       },
       fontFamily: {
         bit: "Bitblox",

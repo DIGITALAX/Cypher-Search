@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Quote,
-  Post,
-  Mirror,
-  LimitType,
-  PublicationType,
-} from "../../../../graphql/generated";
+import { LimitType, PublicationType } from "../../../../graphql/generated";
 import lensQuote from "../../../../lib/helpers/api/quotePost";
 import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuote";
 import { RootState } from "../../../../redux/store";
@@ -15,6 +9,7 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import getPublications from "../../../../graphql/lens/queries/publications";
+import { setAutographFeed } from "../../../../redux/reducers/autographFeedSlice";
 
 const useFeed = () => {
   const dispatch = useDispatch();
@@ -23,6 +18,9 @@ const useFeed = () => {
   );
   const lastPostQuote = useSelector(
     (state: RootState) => state.app.lastPostCommentReducer
+  );
+  const profileFeed = useSelector(
+    (state: RootState) => state.app.autographFeedReducer.feed
   );
   const profile = useSelector(
     (state: RootState) => state.app.autographProfileReducer.profile
@@ -40,7 +38,6 @@ const useFeed = () => {
       collect: boolean;
     }[]
   >([]);
-  const [profileFeed, setProfileFeed] = useState<(Post | Quote | Mirror)[]>([]);
   const [feedCursor, setFeedCursor] = useState<string>();
 
   const getFeed = async () => {
@@ -58,7 +55,7 @@ const useFeed = () => {
           ],
         },
       });
-      setProfileFeed(data?.publications?.items as any);
+      dispatch(setAutographFeed(data?.publications?.items as any));
       setFeedCursor(data?.publications?.pageInfo?.next);
     } catch (err: any) {
       console.error(err.message);
@@ -82,17 +79,23 @@ const useFeed = () => {
           ],
         },
       });
-      setProfileFeed([
-        ...profileFeed,
-        ...((data?.publications?.items || []) as any),
-      ]);
+      dispatch(
+        setAutographFeed([
+          ...profileFeed,
+          ...((data?.publications?.items || []) as any),
+        ])
+      );
       setFeedCursor(data?.publications?.pageInfo?.next);
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  const feedComment = async (index: number, id: string) => {
+  const feedComment = async (id: string) => {
+    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    if (index === -1) {
+      return;
+    }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], comment: true };
@@ -119,7 +122,11 @@ const useFeed = () => {
     });
   };
 
-  const feedQuote = async (index: number, id: string) => {
+  const feedQuote = async (id: string) => {
+    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    if (index === -1) {
+      return;
+    }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], quote: true };
@@ -146,7 +153,11 @@ const useFeed = () => {
     });
   };
 
-  const feedLike = async (index: number, id: string) => {
+  const feedLike = async (id: string) => {
+    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    if (index === -1) {
+      return;
+    }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], like: true };
@@ -166,7 +177,11 @@ const useFeed = () => {
     });
   };
 
-  const feedCollect = async (index: number, id: string, type: string) => {
+  const feedCollect = async (id: string, type: string) => {
+    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    if (index === -1) {
+      return;
+    }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], like: false };
@@ -192,7 +207,11 @@ const useFeed = () => {
     });
   };
 
-  const feedMirror = async (index: number, id: string) => {
+  const feedMirror = async (id: string) => {
+    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    if (index === -1) {
+      return;
+    }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], mirror: true };
@@ -245,8 +264,7 @@ const useFeed = () => {
     feedMirror,
     feedQuote,
     feedCollect,
-    profileFeed,
-    getMoreFeed
+    getMoreFeed,
   };
 };
 
