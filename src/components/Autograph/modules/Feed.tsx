@@ -1,12 +1,27 @@
 import { FunctionComponent } from "react";
 import { FeedProps } from "../types/autograph.types";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Mirror, Post as PostType, Quote } from "../../../../graphql/generated";
-import Post from "./Post";
+import { Mirror, Post, Quote } from "../../../../graphql/generated";
+import PostSwitch from "./PostSwitch";
+import PostBar from "./PostBar";
 
 const Feed: FunctionComponent<FeedProps> = ({
   profileFeed,
   getMoreFeed,
+  interactionsLoading,
+  mirror,
+  openMirrorChoice,
+  setOpenMirrorChoice,
+  like,
+  collect,
+  comment,
+  quote,
+  router,
+  unfollowProfile,
+  followProfile,
+  followLoading,
+  profileHovers,
+  setProfileHovers,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -26,17 +41,31 @@ const Feed: FunctionComponent<FeedProps> = ({
             className="w-fit h-fit items-start justify-start flex flex-col gap-10"
           >
             {Array.from({ length: 20 })?.map(
-              (item: PostType | Quote | Mirror, index: number) => {
+              (item: Post | Quote | Mirror, index: number) => {
                 return (
                   <div
                     key={index}
-                    className="relative bg-lirio rounded-sm h-72 w-110 p-2 flex flex-col gap-2"
+                    className="relative bg-lirio rounded-sm h-72 w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza"
                   >
-                    <Post item={item} />
-                    <div className="relative w-full justify-between flex flex-row items-center gap-2">
-                      <div></div>
-                      <div></div>
-                    </div>
+                    <PostSwitch item={item} />
+                    <PostBar
+                      index={index}
+                      item={item}
+                      router={router}
+                      quote={quote}
+                      mirror={mirror}
+                      like={like}
+                      comment={comment}
+                      interactionsLoading={interactionsLoading?.[index]}
+                      profileHovers={profileHovers}
+                      setProfileHovers={setProfileHovers}
+                      openMirrorChoice={openMirrorChoice}
+                      setOpenMirrorChoice={setOpenMirrorChoice}
+                      collect={collect}
+                      followLoading={followLoading}
+                      followProfile={followProfile}
+                      unfollowProfile={unfollowProfile}
+                    />
                   </div>
                 );
               }

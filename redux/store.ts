@@ -25,6 +25,7 @@ import lastPostCommentReducer from "./reducers/lastPostCommentSlice";
 import lastPostQuoteReducer from "./reducers/lastPostQuoteSlice";
 import autographProfileReducer from "./reducers/autographProfileSlice";
 import galleryItemsReducer from "./reducers/galleryItemsSlice";
+import autographFeedReducer from "./reducers/autographFeedSlice";
 
 const reducer = combineReducers({
   searchActiveReducer,
@@ -52,6 +53,7 @@ const reducer = combineReducers({
   displaySearchBoxReducer,
   galleryItemsReducer,
   profileDisplayReducer,
+  autographFeedReducer,
 });
 
 export const store = configureStore({

@@ -70,13 +70,18 @@ export type InteractBarProps = {
 
 export type HoverProfileProps = {
   followLoading: boolean[];
-  unfollowProfile: (id: string) => Promise<void>;
-  followProfile: (id: string) => Promise<void>;
+  unfollowProfile:
+    | ((id: string) => Promise<void>)
+    | ((id: string, feed?: boolean) => Promise<void>);
+  followProfile:
+    | ((id: string) => Promise<void>)
+    | ((id: string, feed?: boolean) => Promise<void>);
   publication: Profile;
   router: NextRouter;
   index: number;
   profileHovers: boolean[];
   setProfileHovers: (e: boolean[]) => void;
+  feed?: boolean;
 };
 
 export type TileLoaderProps = {

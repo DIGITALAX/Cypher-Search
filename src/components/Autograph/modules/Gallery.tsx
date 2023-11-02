@@ -128,7 +128,10 @@ const Gallery: FunctionComponent<GalleryProps> = ({
         </InfiniteScroll>
       </div>
       <div className="relative flex-grow flex items-end justify-center w-full h-[55rem]">
-        <div className="relative w-full h-[50rem] bottom-0 flex items-end justify-center">
+        <div
+          className="relative w-full h-[50rem] bottom-0 flex items-end justify-center"
+          draggable={false}
+        >
           <Image
             layout="fill"
             src={`${INFURA_GATEWAY}/ipfs/QmV4yM96Dt2ypLN9GMHkXPTkeCGfTQfJErJLfVjikxt52s`}
