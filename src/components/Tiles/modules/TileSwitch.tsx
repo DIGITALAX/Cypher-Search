@@ -53,10 +53,22 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   profileHovers,
   setProfileHovers,
   collect,
+  community,
 }) => {
   switch (type?.toLowerCase()) {
     case "community":
-      return <Community />;
+      return (
+        <Community
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+          followLoading={followLoading}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          community={community}
+          index={index}
+          router={router}
+        />
+      );
 
     case "profile":
       return (

@@ -11,6 +11,7 @@ import {
 } from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
+import { Origin } from "@/components/Search/types/search.types";
 
 export interface Creation {
   amount: string;
@@ -441,3 +442,36 @@ export interface FilterInput {
   amount_gte?: String;
   amount_lte?: String;
 }
+
+export enum ERC20Tokens {
+  MONA = "MONA",
+  USDT = "USDT",
+  WETH = "WETH",
+  WMATIC = "WMATIC",
+}
+
+export interface Community {
+  name: string;
+  subtopic: string;
+  description: string;
+  sample: Creation[];
+  steward: Profile;
+  validPrintTypes: PrintType[];
+  validTokens: Creation[];
+  tokens: {
+    token: ERC20Tokens;
+    amount: string;
+  }[];
+  members: Profile[];
+}
+
+export type CommunityProps = {
+  community: Community;
+  router: NextRouter;
+  index: number;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
+};

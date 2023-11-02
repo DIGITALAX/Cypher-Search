@@ -1,9 +1,199 @@
 import { FunctionComponent } from "react";
+import { CommunityProps, Creation } from "../../types/tiles.types";
+import { ImageSet, NftImage, Profile } from "../../../../../graphql/generated";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import HoverProfile from "@/components/Common/modules/HoverProfile";
 
-const Community: FunctionComponent = (): JSX.Element => {
-    return (
-        <div></div>
-    )
-}
+const Community: FunctionComponent<CommunityProps> = ({
+  community,
+  router,
+  index,
+  profileHovers,
+  setProfileHovers,
+  unfollowProfile,
+  followProfile,
+  followLoading,
+}): JSX.Element => {
+  return (
+    <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol bg-black gap-4 p-2">
+      <div className="relative w-fit h-fit gap-1 flex items-center justify-center flex-col">
+        <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit text-xl">
+          COMMUNITY NAME
+        </div>
+        <div className="absolute top-1 w-fit h-fit flex items-center justify-center text-sol opacity-50 font-bit text-xl">
+          COMMUNITY NAME
+        </div>
+        <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit text-xs">
+          subtopic
+        </div>
+      </div>
+      <div className="relative w-4/5 h-20  p-2 text-white text-center font-bit text-sm border border-[#1B4986] bg-fuego">
+        <div
+          className="relative w-full h-full flex items-start justify-center overflow-y-scroll"
+          id="feed"
+        >
+          dd dfsgfsdgfdsg dsfgsdfg sdgsdfgdsfg dfsgsdf dsfgdsfgdsfgs dfsgdsfg
+          dsfgsdf dfsgsdf dfsgs dsfgsdg sdfgsdfg dsfg sdfgsdf
+        </div>
+      </div>
+      <div className="relative w-full h-fit flex flex-row gap-4 justify-between items-center">
+        <div className="relative w-fit h-fit text-white font-bit  text-xs flex items-center justify-center text-center">
+          active <br /> members
+        </div>
+        <div
+          className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3"
+          id="feed"
+        >
+          <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
+            {Array.from({ length: 20 })?.map(
+              (member: Profile, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative w-14 h-14 rounded-full border border-white p-1 flex items-center justify-center cursor-pointer"
+                    onClick={() =>
+                      router.push(`/autograph/${member?.handle?.localName}`)
+                    }
+                  >
+                    <div
+                      className="relative w-full h-full rounded-full flex items-center justify-center"
+                      id="pfp"
+                    >
+                      <Image
+                        className="rounded-full"
+                        layout="fill"
+                        objectFit="cover"
+                        src={`${INFURA_GATEWAY}/ipfs/${
+                          member?.metadata?.picture?.__typename === "ImageSet"
+                            ? (
+                                member?.metadata?.picture as ImageSet
+                              )?.raw?.uri?.split("ipfs://")[1]
+                            : (
+                                member?.metadata?.picture as NftImage
+                              )?.image?.raw?.uri?.split("ipfs://")[1]
+                        }`}
+                      />
+                    </div>
+                  </div>
+                );
+              }
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="relative w-full h-fit flex flex-row gap-3 items-center justify-between">
+        <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit">
+          Most <br /> {`Recent >`}
+        </div>
+        <div className="relative w-fit h-fit flex items-center justify-center flex-row gap-3">
+          {[
+            "QmQSwGsGFnea8mq7FYTBGaFScNBwaUUm5dpTe9WfpMsWuW",
+            "QmZ4bBiWL3rAovzNPubpX37PtJCFyDZJojmY5FJkqyyfwe",
+            "QmdxWUz1C8jv7CP53AeDtjj5UZFi9ojP18UxNGkJSNGKt3",
+            "QmQGr3LYUC9wnQye6cHaT9qEkMsH4CJDKiqsEGrKps2gHT",
+          ]?.map((image: string, index: number) => {
+            return (
+              <div
+                key={index}
+                className="relative w-8 h-8 cursor-pointer active:scale-95"
+              >
+                <Image
+                  layout="fill"
+                  src={`${INFURA_GATEWAY}/ipfs/${image}`}
+                  draggable={false}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div
+        className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3"
+        id="feed"
+      >
+        <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
+          {Array.from({ length: 4 }).map((item: Creation, index: number) => {
+            return (
+              <div
+                className="relative w-60 h-60 border border-white rounded-sm"
+                key={index}
+              >
+                <Image
+                  layout="fill"
+                  src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
+                  draggable={false}
+                  objectFit="cover"
+                />
+
+                <div
+                  className="absolute bottom-2 left-2 border border-fuera rounded-full items-center justify-center flex flex-row gap-2 px-2 py-1"
+                  id="mold"
+                >
+                  <div
+                    className="relative flex items-center justify-center rounded-full w-7 h-7 cursor-pointer"
+                    id="pfp"
+                    onMouseEnter={() => {
+                      const updatedArray = [...profileHovers];
+                      updatedArray[index] = true;
+                      setProfileHovers(updatedArray);
+                    }}
+                  >
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        item?.profile?.metadata?.picture?.__typename ===
+                        "ImageSet"
+                          ? (
+                              item?.profile?.metadata?.picture as ImageSet
+                            )?.raw?.uri?.split("ipfs://")[1]
+                          : (
+                              item?.profile?.metadata?.picture as NftImage
+                            )?.image?.raw?.uri?.split("ipfs://")[1]
+                      }`}
+                      draggable={false}
+                    />
+                  </div>
+                  {profileHovers?.[index] && (
+                    <HoverProfile
+                      followLoading={followLoading}
+                      followProfile={followProfile}
+                      unfollowProfile={unfollowProfile}
+                      router={router}
+                      publication={item?.profile}
+                      index={index}
+                      profileHovers={profileHovers}
+                      setProfileHovers={setProfileHovers}
+                      feed
+                    />
+                  )}
+                  <div className="relative w-fit h-fit text-white font-bit items-center justify-center flex top-px text-xs">
+                    username{item?.profile?.handle?.localName}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="relative w-full h-fit flex flex-row gap-2 justify-start items-center">
+        <div
+          className="relative w-10 h-10 cursor-pointer active:scale-95"
+          onClick={() => router.push(`/item/community/${community?.name}`)}
+        >
+          <Image
+            layout="fill"
+            src={`${INFURA_GATEWAY}/ipfs/Qmen1nb9RXZBtWTgZ1wRbSuqACqxceU2D7sxx1sSSnQ5Tq`}
+            draggable={false}
+          />
+        </div>
+        <div className="relative w-fit text-xs h-fit font-bit text-white flex items-center justify-center top-px">
+          find <br /> more
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Community;

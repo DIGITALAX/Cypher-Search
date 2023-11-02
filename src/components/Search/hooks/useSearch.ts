@@ -90,7 +90,7 @@ const useSearch = () => {
     if (!searchActive) {
       dispatch(setSearchActive(true));
     }
-    let query: string,
+    let query: string | undefined,
       collections: Creation[] | undefined = [],
       profiles: Profile[] | undefined = [],
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
@@ -115,7 +115,7 @@ const useSearch = () => {
           collections = await filterSearch(0);
         }
         query = searchInput;
-      } else {
+      } {
         collections = await filterSearch(0);
         if (!searchInput) {
           query = filters?.hashtag || filters?.community;
