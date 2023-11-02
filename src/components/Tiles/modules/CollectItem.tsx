@@ -5,7 +5,7 @@ import { CollectItemProps } from "../types/tiles.types";
 import Bar from "../../Common/modules/Bar";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
-import { ItemType } from "@/components/Layout/types/footer.types";
+import { ItemType } from "@/components/Common/types/common.types";
 
 const CollectItem: FunctionComponent<CollectItemProps> = ({
   index,
@@ -30,7 +30,7 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
         </div>
         <div className="relative w-fit h-fit flex flex-col gap-3 items-center justify-center text-center break-words">
           <div className="relative flex items-center items-center justify-center w-fit text-sm font-net">
-            {item?.rawURI?.title}
+            {item?.title}
           </div>
         </div>
         <div className="relative flex flex-col gap-1.5 justify-start items-center text-black font-dog text-xxs">
@@ -95,15 +95,15 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
         <div className="relative flex flex-col gap-1.5 justify-start items-center font-dog text-black text-xs">
           <div className="relative flex justify-start items-center">Amount</div>
           <div className="relative flex justify-start items-center">
-            $ {item?.rawURI?.amount}
+            $ {item?.prices[index]}
           </div>
         </div>
         <div
           className={`w-40 h-8 cursor-pointer rounded-sm cursor-pointer active:scale-95 border border-black flex items-center justify-center text-center font-gam text-xl ${
             !cartItems?.some(
-              (item) =>
-                item?.collectionId === item?.collectionId &&
-                item?.level === index
+              (value) =>
+                value?.item?.collectionId === item?.collectionId &&
+                value?.level === index
             )
               ? "bg-lima"
               : "bg-viol"
@@ -111,27 +111,28 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
           onClick={() => {
             const newItem = {
               ...collectChoice[index - 1],
-              id: item?.id,
-              amount: item?.rawURI?.amount,
+              item: item,
+              amount: Number(item?.amount),
               level: index,
               type: ItemType.Legend,
+              price: Number(item?.prices[index]),
             };
 
             if (
               cartItems?.some(
-                (item) =>
-                  item.collectionId === item?.collectionId &&
-                  item.level === index
+                (value) =>
+                  value?.item?.collectionId === item?.collectionId &&
+                  value.level === index
               )
             ) {
               router.push("/checkout");
             } else {
               const itemIndex = cartItems.findIndex(
-                (cartItem) => cartItem.collectionId === item?.id
+                (cartItem) => cartItem.item.collectionId === item?.collectionId
               );
               if (
                 cartItems?.some(
-                  (item) => item.collectionId === item?.collectionId
+                  (value) => value.item.collectionId === item?.collectionId
                 )
               ) {
                 const newCartItems = [...cartItems];
@@ -145,8 +146,9 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
           }}
         >
           {cartItems?.some(
-            (item) =>
-              item.collectionId === item?.collectionId && item.level === index
+            (value) =>
+              value.item.collectionId === item?.collectionId &&
+              value.level === index
           )
             ? "Go to Cart"
             : "Choose Level"}

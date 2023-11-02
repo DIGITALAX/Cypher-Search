@@ -33,10 +33,15 @@ const Profile: FunctionComponent<ProfileProps> = ({
         </div>
         <div
           className="relative flex flex-row gap-4 w-10 h-10 items-center justify-start rounded-full border border-offWhite cursor-pointer"
-          onClick={() => router.push(`/item/quest/${publication?.handle}`)}
-          onMouseOver={() => {
-            const updatedArray = [...followLoading];
+          onClick={() => {
+            const updatedArray = [...profileHovers];
             updatedArray[index] = false;
+            setProfileHovers(updatedArray);
+            router.push(`/autograph/${publication?.handle?.localName}`);
+          }}
+          onMouseEnter={() => {
+            const updatedArray = [...profileHovers];
+            updatedArray[index] = true;
             setProfileHovers(updatedArray);
           }}
         >
@@ -64,6 +69,8 @@ const Profile: FunctionComponent<ProfileProps> = ({
             router={router}
             publication={publication}
             index={index}
+            profileHovers={profileHovers}
+            setProfileHovers={setProfileHovers}
           />
         )}
         <div

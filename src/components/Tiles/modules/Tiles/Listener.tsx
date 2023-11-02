@@ -5,9 +5,8 @@ import { ListenerProps } from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
-import { ItemType } from "@/components/Layout/types/footer.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
-import { Post } from "../../../../../graphql/generated";
+import { ItemType } from "@/components/Common/types/common.types";
 
 const Listener: FunctionComponent<ListenerProps> = ({
   layoutAmount,
@@ -87,9 +86,9 @@ const Listener: FunctionComponent<ListenerProps> = ({
             className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
               layoutAmount === 4 ? "text-xs" : "text-sm"
             }`}
-            onMouseOver={() => {
-              const updatedArray = [...followLoading];
-              updatedArray[index] = false;
+            onMouseEnter={() => {
+              const updatedArray = [...profileHovers];
+              updatedArray[index] = true;
               setProfileHovers(updatedArray);
             }}
           >
@@ -103,6 +102,8 @@ const Listener: FunctionComponent<ListenerProps> = ({
               router={router}
               publication={publication?.profile}
               index={index}
+              profileHovers={profileHovers}
+              setProfileHovers={setProfileHovers}
             />
           )}
           <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
@@ -122,7 +123,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
             </div>
             {popUpOpen?.[index] && (
               <PopUp
-                id={publication?.pubId}
+                cartItem={publication}
                 index={index}
                 dispatch={dispatch}
                 router={router}

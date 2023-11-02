@@ -5,8 +5,8 @@ import { CoinOpProps } from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
-import { ItemType } from "@/components/Layout/types/footer.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
+import { ItemType } from "@/components/Common/types/common.types";
 
 const CoinOp: FunctionComponent<CoinOpProps> = ({
   layoutAmount,
@@ -76,9 +76,9 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             className={`relative w-fit h-fit flex text-pez font-bit uppercase cursor-pointer ${
               layoutAmount === 4 ? "text-xs" : "text-sm"
             }`}
-            onMouseOver={() => {
-              const updatedArray = [...followLoading];
-              updatedArray[index] = false;
+            onMouseEnter={() => {
+              const updatedArray = [...profileHovers];
+              updatedArray[index] = true;
               setProfileHovers(updatedArray);
             }}
           >
@@ -92,6 +92,8 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               router={router}
               publication={publication?.profile}
               index={index}
+              profileHovers={profileHovers}
+              setProfileHovers={setProfileHovers}
             />
           )}
           <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
@@ -111,7 +113,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             </div>
             {popUpOpen?.[index] && (
               <PopUp
-                id={publication.pubId}
+                cartItem={publication}
                 index={index}
                 dispatch={dispatch}
                 router={router}

@@ -3,6 +3,7 @@ import { ScreenDisplay, ScreenSwitchProps } from "../types/autograph.types";
 import Display from "./Screen/Display";
 import Settings from "./Screen/Settings";
 import Circuits from "./Screen/Circuits";
+import Gallery from "./Screen/Gallery";
 
 const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
@@ -26,13 +27,14 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleImage,
   handleSetDisplay,
   displayLoading,
+  owner,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
       return <Circuits gallery={gallery} />;
 
     case ScreenDisplay.Gallery:
-      return <></>;
+      return <Gallery gallery={gallery} />;
 
     case ScreenDisplay.Settings:
       return (
@@ -59,10 +61,10 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           setOpenMirrorChoice={setOpenMirrorChoice}
           interactionsLoading={interactionsLoading}
           sortType={sortType}
-          gallery={gallery}
           display={display}
           handleSetDisplay={handleSetDisplay}
           displayLoading={displayLoading}
+          owner={owner}
         />
       );
   }

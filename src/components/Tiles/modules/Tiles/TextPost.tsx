@@ -113,9 +113,9 @@ const TextPost: FunctionComponent<TextPostProps> = ({
               <div
                 className="relative w-6 h-6 rounded-full flex items-center justify-center p-1 cursor-pointer"
                 id="pfp"
-                onMouseOver={() => {
-                  const updatedArray = [...followLoading];
-                  updatedArray[index] = false;
+                onMouseEnter={() => {
+                  const updatedArray = [...profileHovers];
+                  updatedArray[index] = true;
                   setProfileHovers(updatedArray);
                 }}
               ></div>
@@ -127,6 +127,8 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                   router={router}
                   publication={publication?.by}
                   index={index}
+                  profileHovers={profileHovers}
+                  setProfileHovers={setProfileHovers}
                 />
               )}
             </div>

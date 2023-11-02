@@ -213,14 +213,14 @@ const Settings: FunctionComponent<SettingsProps> = ({
             </div>
             <div className="relative w-full h-fit flex justify-end items-center">
               <div
-                className={`relative w-20 h-10 font-vcr text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
+                className={`relative w-20 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
                   !settingsUpdateLoading && "cursor-pointer active:scale-95"
                 }`}
                 onClick={() => !settingsUpdateLoading && handleSettingsUpdate()}
               >
                 <div
                   className={`${
-                    settingsUpdateLoading && "animate-spin"
+                    settingsUpdateLoading ? "animate-spin" : "top-px"
                   } relative w-fit h-fit flex items-center justify-center text-center`}
                 >
                   {settingsUpdateLoading ? (

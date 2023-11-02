@@ -40,7 +40,12 @@ const config: Config = {
         emeral: "#6DD400",
         piloto: "#191919",
         fuera: "#85AEFF",
-        trip: "#078fd6"
+        trip: "#078fd6",
+        saph: "#0091FF",
+        olor: "#F9ED00",
+        lirio: "#D401F8",
+        hierba: "#03DB6A",
+        afilado: "#4E4D4D"
       },
       fontFamily: {
         bit: "Bitblox",
@@ -52,6 +57,8 @@ const config: Config = {
         dog: "Dogica",
         gam: "Gamer",
         net: "Network",
+        beb: "Bebas",
+        aust: "Austral",
       },
       fontSize: {
         xxs: "0.6rem",
@@ -59,6 +66,7 @@ const config: Config = {
       },
       width: {
         100: "26rem",
+        110: "30rem",
       },
       height: {
         100: "26rem",
@@ -72,7 +80,7 @@ const config: Config = {
         grant: `url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ")`,
         listener: `url("https://chromadin.infura-ipfs.io/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2")`,
         web: `url("https://chromadin.infura-ipfs.io/ipfs/QmYRZYGFKgH6wGJ39aWHbr7T1PsySh2kTSjo11yEZrrGcM")`,
-        blurs: `url("https://chromadin.infura-ipfs.io/ipfs/QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY")`
+        blurs: `url("https://chromadin.infura-ipfs.io/ipfs/QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY")`,
       },
       screens: {
         tablet: "900px",

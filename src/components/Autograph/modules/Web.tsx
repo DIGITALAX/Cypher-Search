@@ -38,7 +38,7 @@ const Web: FunctionComponent<WebProps> = ({
   handleSetDisplay,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-[90vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
+    <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
       <div className="relative w-full h-fit flex flex-col items-start justify-start gap-5">
         <div className="relative flex flex-col items-start justify-between w-full h-fit gap-1">
           <div className="flex absolute items-center justify-start w-16 h-16">
@@ -128,6 +128,9 @@ const Web: FunctionComponent<WebProps> = ({
           handleImage={handleImage}
           pfpImage={pfpImage}
           coverImage={coverImage}
+          owner={
+            lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle
+          }
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (

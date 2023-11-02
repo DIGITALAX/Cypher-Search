@@ -1,11 +1,11 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
-import { CartItem } from "@/components/Layout/types/footer.types";
 import { NextRouter } from "next/router";
 import {
   Profile,
   PublicationMetadataMainFocusType,
 } from "../../../../graphql/generated";
+import { CartItem } from "@/components/Common/types/common.types";
 
 export interface FilterValues {
   hashtags: string[];

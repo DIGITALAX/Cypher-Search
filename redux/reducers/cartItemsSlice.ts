@@ -1,4 +1,4 @@
-import { CartItem } from "@/components/Layout/types/footer.types";
+import { CartItem } from "@/components/Common/types/common.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartItemsState {

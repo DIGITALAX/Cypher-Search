@@ -4,8 +4,7 @@ import Image from "next/legacy/image";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ImageSet, NftImage } from "../../../../graphql/generated";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
-import { CartItem } from "@/components/Layout/types/footer.types";
-import { AccountsProps } from "../types/common.types";
+import { AccountsProps, CartItem } from "../types/common.types";
 
 const Accounts: FunctionComponent<AccountsProps> = ({
   searchActive,
@@ -155,7 +154,8 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                         onClick={() => {
                           const newItems = cartItems.filter(
                             (value: CartItem) =>
-                              value.collectionId !== item.collectionId
+                              value?.item?.collectionId !==
+                              item?.item?.collectionId
                           );
                           dispatch(setCartItems(newItems));
                         }}

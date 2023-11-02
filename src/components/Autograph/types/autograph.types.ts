@@ -10,11 +10,12 @@ import {
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { ChangeEvent } from "react";
 import { AnyAction, Dispatch } from "redux";
+import { CartItem } from "@/components/Common/types/common.types";
 
 export type WebProps = {
   router: NextRouter;
   profile: Profile | undefined;
-  dispatch: Dispatch<AnyAction>
+  dispatch: Dispatch<AnyAction>;
   setSettingsData: (e: ProfileMetadata) => void;
   settingsData: ProfileMetadata;
   handleSettingsUpdate: () => Promise<void>;
@@ -43,10 +44,12 @@ export type WebProps = {
   displayLoading: boolean;
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
-  gallery: {
-    collected: Creation[];
-    created: Creation[];
-  } | undefined;
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined;
   display: Display | undefined;
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   coverImage: string | undefined;
@@ -66,9 +69,24 @@ export enum SortType {
   Public,
 }
 
+export type BioProps = {
+  profile: Profile | undefined;
+};
+
+export type GalleryScreenProps = {
+  activeGallery: Creation[] | undefined;
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined;
+};
+
 export type ScreenSwitchProps = {
   screenDisplay: ScreenDisplay;
-  dispatch: Dispatch<AnyAction>
+  dispatch: Dispatch<AnyAction>;
+  owner: boolean;
   handleSetDisplay: () => void;
   displayLoading: boolean;
   mirror: (index: number, id: string) => Promise<void>;
@@ -88,10 +106,12 @@ export type ScreenSwitchProps = {
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
   sortType: SortType;
-  gallery: {
-    collected: Creation[];
-    created: Creation[];
-  } | undefined;
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined;
   display: Display | undefined;
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   coverImage: string | undefined;
@@ -119,6 +139,7 @@ export type DisplayProps = {
     quote: boolean;
     comment: boolean;
   }[];
+  owner: boolean;
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
   sortType: SortType;
@@ -152,8 +173,12 @@ export interface Display {
   };
 }
 
+export type PostProps = {
+  item: Post | Quote | Mirror;
+};
+
 export type FeedProps = {
-  profileFeed: (Post | Comment | Quote | Mirror)[];
+  profileFeed: (Post | Quote | Mirror)[];
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string) => Promise<void>;
   comment: (index: number, id: string) => Promise<void>;
@@ -167,13 +192,18 @@ export type FeedProps = {
   }[];
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
+  getMoreFeed: () => Promise<void>;
 };
 
 export type GalleryProps = {
-  gallery: {
-    collected: Creation[];
-    created: Creation[];
-  } | undefined;
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined;
+    cartItems: CartItem[]
+  dispatch: Dispatch<AnyAction>;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
@@ -184,14 +214,56 @@ export type GalleryProps = {
     quote: boolean;
     comment: boolean;
   }[];
+  followLoading: boolean[];
+  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string) => Promise<void>;
+  router: NextRouter;
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
+  optionsOpen: boolean;
+  setOptionsOpen: (e: boolean) => void;
+  selectedOption: string;
+  handleOptionSelect: (e: string) => void;
+  getMoreGallery: () => Promise<void>;
+  openInteractions: boolean[];
+  setOpenInteractions: (e: boolean[]) => void;
 };
 
 export type CircuitsProps = {
-  gallery: {
-    collected: Creation[];
-    created: Creation[];
-  } | undefined;
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined;
+};
 
+export type CreationProps = {
+  item: Creation;
+  index: number;
+  dispatch: Dispatch<AnyAction>;
+  followLoading: boolean[];
+  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string) => Promise<void>;
+  router: NextRouter;
+  cartItems: CartItem[]
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
+  created: boolean;
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  openMirrorChoice: boolean[];
+  openInteractions: boolean[];
+  setOpenInteractions: (e: boolean[]) => void;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    quote: boolean;
+    comment: boolean;
+  };
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
+  quote: (id: string) => Promise<void>;
 };

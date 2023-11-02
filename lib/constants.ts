@@ -1,3 +1,5 @@
+import { ItemType } from "@/components/Common/types/common.types";
+
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const BASE_URL: string = "https://api-v2-mumbai.lens.dev/";
 export const DIGITALAX_PROFILE_ID_LENS: string = "0x012d";
@@ -54,3 +56,20 @@ export const ACCEPTED_TOKENS_MUMBAI: string[][] = [
     "0x07b722856369f6b923e1f276abca58dd3d15243d",
   ],
 ];
+
+export const GALLERY_OPTIONS: string[] = [
+  "NEWEST",
+  "OLDEST",
+  "PRINT TYPE",
+  "CREATED",
+  "COLLECTED",
+  "PRICE LOWEST",
+  "PRICE HIGHEST",
+];
+
+export const numberToItemTypeMap: { [key: number]: ItemType } = {
+  0: ItemType.CoinOp,
+  1: ItemType.Chromadin,
+  2: ItemType.Legend,
+  3: ItemType.Listener,
+};

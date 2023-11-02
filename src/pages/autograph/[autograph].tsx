@@ -17,6 +17,7 @@ import Gallery from "@/components/Autograph/modules/Gallery";
 import useFeed from "@/components/Autograph/hooks/useFeed";
 import useGallery from "@/components/Autograph/hooks/useGallery";
 import useSettings from "@/components/Autograph/hooks/useSettings";
+import useProfile from "@/components/Tiles/hooks/useProfile";
 
 const Autograph: NextPage = (): JSX.Element => {
   const router = useRouter();
@@ -51,6 +52,13 @@ const Autograph: NextPage = (): JSX.Element => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const {
+    followProfile,
+    unfollowProfile,
+    followLoading,
+    profileHovers,
+    setProfileHovers,
+  } = useProfile();
+  const {
     handleLensConnect,
     openAccount,
     setOpenAccount,
@@ -77,6 +85,7 @@ const Autograph: NextPage = (): JSX.Element => {
     feedMirror,
     feedCollect,
     profileFeed,
+    getMoreFeed,
   } = useFeed();
   const {
     galleryComment,
@@ -95,6 +104,14 @@ const Autograph: NextPage = (): JSX.Element => {
     displayQuote,
     handleSetDisplay,
     displayLoading,
+    handleOptionSelect,
+    selectedOption,
+    setOptionsOpen,
+    optionsOpen,
+    galleryLoading,
+    getMoreGallery,
+    openInteractions,
+    setOpenInteractions,
   } = useGallery();
   const {
     handleSettingsUpdate,
@@ -114,13 +131,13 @@ const Autograph: NextPage = (): JSX.Element => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (!profileLoading && !feedLoading) {
+      if (!profileLoading && !feedLoading && !galleryLoading) {
         setGlobalLoading(false);
       }
     }, 1000);
   }, [profileLoading]);
 
-  if (!profileLoading && !globalLoading && !feedLoading) {
+  if (!profileLoading && !globalLoading && !feedLoading && !galleryLoading) {
     return (
       <>
         {!profile ? (
@@ -287,8 +304,8 @@ const Autograph: NextPage = (): JSX.Element => {
                 pfpImage={pfpImage}
                 coverImage={coverImage}
               />
-              <Bio />
-              <div className="relative flex flex-row gap-3 items-start justify-between">
+              <Bio profile={profile} />
+              <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
                 <Feed
                   comment={feedComment}
                   mirror={feedMirror}
@@ -299,6 +316,7 @@ const Autograph: NextPage = (): JSX.Element => {
                   setOpenMirrorChoice={setOpenMirrorFeedChoice}
                   interactionsLoading={interactionsFeedLoading}
                   profileFeed={profileFeed}
+                  getMoreFeed={getMoreFeed}
                 />
                 <Gallery
                   comment={galleryComment}
@@ -309,6 +327,21 @@ const Autograph: NextPage = (): JSX.Element => {
                   setOpenMirrorChoice={setOpenMirrorGalleryChoice}
                   interactionsLoading={interactionsGalleryLoading}
                   gallery={gallery}
+                  cartItems={cartItems}
+                  optionsOpen={optionsOpen}
+                  setOptionsOpen={setOptionsOpen}
+                  selectedOption={selectedOption}
+                  handleOptionSelect={handleOptionSelect}
+                  getMoreGallery={getMoreGallery}
+                  followProfile={followProfile}
+                  unfollowProfile={unfollowProfile}
+                  followLoading={followLoading}
+                  profileHovers={profileHovers}
+                  setProfileHovers={setProfileHovers}
+                  router={router}
+                  openInteractions={openInteractions}
+                  setOpenInteractions={setOpenInteractions}
+                  dispatch={dispatch}
                 />
               </div>
             </div>

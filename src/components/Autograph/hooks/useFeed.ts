@@ -246,6 +246,7 @@ const useFeed = () => {
     feedQuote,
     feedCollect,
     profileFeed,
+    getMoreFeed
   };
 };
 

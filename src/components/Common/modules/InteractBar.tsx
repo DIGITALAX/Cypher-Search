@@ -27,6 +27,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   index,
   collect,
   type,
+  hideCollect,
 }): JSX.Element => {
   return (
     <div
@@ -34,23 +35,41 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
         col || layoutAmount ? "flex-col" : "flex-row"
       }`}
     >
-      {[
-        "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-        "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
-        "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
-        "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
-      ].map((image: string, indexTwo: number) => {
-        const functions: any = [like, collect, comment];
-        const loaders = [
-          interactionsLoading?.like,
-          interactionsLoading?.comment,
-        ];
-        const stats = [
-          publication?.mirrors! + publication?.quotes!,
-          publication?.reactions,
-          publication?.countOpenActions,
-          publication?.comments,
-        ];
+      {(hideCollect
+        ? [
+            "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
+            "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
+            "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
+          ]
+        : [
+            "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
+            "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
+            "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
+            "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
+          ]
+      ).map((image: string, indexTwo: number) => {
+        const functions: any = hideCollect
+          ? [like, comment]
+          : [like, collect, comment];
+        const loaders = hideCollect
+          ? [interactionsLoading?.like, interactionsLoading?.comment]
+          : [
+              interactionsLoading?.like,
+              interactionsLoading?.collect,
+              interactionsLoading?.comment,
+            ];
+        const stats = hideCollect
+          ? [
+              publication?.mirrors! + publication?.quotes!,
+              publication?.reactions,
+              publication?.comments,
+            ]
+          : [
+              publication?.mirrors! + publication?.quotes!,
+              publication?.reactions,
+              publication?.countOpenActions,
+              publication?.comments,
+            ];
         return (
           <div
             className="relative w-full h-full flex flex-row items-center justify-center gap-2"
