@@ -161,7 +161,7 @@ const Autograph: NextPage = (): JSX.Element => {
           />
         ) : (
           profile && (
-            <div className="relative flex flex-col w-full h-full" id="results">
+            <div className="relative flex flex-col w-full h-full flex-grow" id="results">
               <Head>
                 <title>
                   Chromadin | {profile?.handle?.localName?.toUpperCase()}

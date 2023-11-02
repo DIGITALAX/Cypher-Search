@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { BiArrowToTop } from "react-icons/bi";
 import { FooterProps } from "../types/footer.types";
@@ -8,9 +8,10 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 const Footer: FunctionComponent<FooterProps> = ({
   handleRewind,
 }): JSX.Element => {
-  const [blur, setBlur] = useState<boolean>(true);
   return (
-    <div className="relative bottom-0 w-full bg-offBlack h-fit flex w-full">
+    <div
+      className={`relative bottom-0 w-full h-fit flex w-full`}
+    >
       <div className="relative grid auto-rows-auto grid-flow-row w-full h-full pt-12">
         <div className="relative row-start-4 w-full h-full text-midWhite pt-10">
           <div className="relative grid auto-cols-auto grid-flow-col h-full w-full">
@@ -19,18 +20,13 @@ const Footer: FunctionComponent<FooterProps> = ({
                 <div className="relative w-fit h-fit col-start-1 row-start-1 sm:row-start-1 pl-6 pb-1 hover:text-skyBlue cursor-pointer hover:rotate-3">
                   END OF LINE
                 </div>
-                <div
-                  className={`relative w-36 h-4 row-start-2 ${
-                    blur && "blur-sm animate-unblur"
-                  }`}
-                >
+                <div className={`relative w-36 h-4 row-start-2`}>
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/QmXbwk3dg9GKWhjVTQGsrt6dKARFCyqNz71ssUo2SGx1zc`}
                     draggable={false}
                     width={160}
                     height={20}
                     priority
-                    onLoadingComplete={() => setBlur(false)}
                   />
                 </div>
               </div>
@@ -55,16 +51,13 @@ const Footer: FunctionComponent<FooterProps> = ({
                     href={"https://blog.digitalax.xyz/"}
                     target="_blank"
                     rel="noreferrer"
-                    className={`cursor-pointer h-fit relative pr-1 ${
-                      blur && "blur-sm animate-unblur"
-                    }`}
+                    className={`cursor-pointer h-fit relative pr-1`}
                   >
                     <Image
                       src={`${INFURA_GATEWAY}/ipfs/QmWVdyGgXbPL5SiRnQwALHvWzAnyiXBos1oB4TVTqg7saV`}
                       width={21}
                       height={26}
                       priority
-                      onLoadingComplete={() => setBlur(false)}
                       draggable={false}
                     />
                   </a>
@@ -74,16 +67,13 @@ const Footer: FunctionComponent<FooterProps> = ({
                     href={"https://github.com/digitalax"}
                     target="_blank"
                     rel="noreferrer"
-                    className={`cursor-pointer h-fit relative pr-1 ${
-                      blur && "blur-sm animate-unblur"
-                    }`}
+                    className={`cursor-pointer h-fit relative pr-1`}
                   >
                     <Image
                       src={`${INFURA_GATEWAY}/ipfs/QmP5349vcKLNXUhtLyZWQXB8vEbFwRcKLzzB93vxkLsvpw`}
                       width={29}
                       height={28}
                       priority
-                      onLoadingComplete={() => setBlur(false)}
                       draggable={false}
                     />
                   </a>
@@ -93,16 +83,13 @@ const Footer: FunctionComponent<FooterProps> = ({
                     href={"https://www.chromadin.xyz/autograph/digitalax"}
                     target="_blank"
                     rel="noreferrer"
-                    className={`cursor-pointer h-fit relative ${
-                      blur && "blur-sm animate-unblur"
-                    }`}
+                    className={`cursor-pointer h-fit relative`}
                   >
                     <Image
                       src={`${INFURA_GATEWAY}/ipfs/QmeA7R3J8FrhZuMmiFFrVqNmWzKkJCbP51pajFrYdEGBVX`}
                       width={30}
                       height={30}
                       priority
-                      onLoadingComplete={() => setBlur(false)}
                       draggable={false}
                     />
                   </a>

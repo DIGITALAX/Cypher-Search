@@ -76,7 +76,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} theme={walletTheme}>
         <Provider store={store}>
-          <div className="relative w-full h-auto flex flex-col">
+          <div
+            className={`relative w-full h-auto flex flex-col ${
+              router?.asPath?.includes("autograph") ? "bg-black" : "bg-offBlack"
+            }`}
+          >
             <Component {...pageProps} />
             <Modals />
             <Footer handleRewind={handleRewind} />

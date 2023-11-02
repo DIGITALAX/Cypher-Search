@@ -32,7 +32,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   cartItems,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-col gap-4 items-center justify-start">
+    <div className="relative w-full h-full flex flex-col gap-4 items-center justify-start flex-grow">
       <div className="relative w-full justify-end flex items-center h-fit">
         <div className="relative w-60 h-fit flex items-center justify-between flex p-2 border border-afilado rounded-md gap-3 font-bit">
           <div className="relative w-fit h-fit flex items-center justify-center text-white text-md top-px">
@@ -80,7 +80,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
         )}
       </div>
       <div
-        className="relative w-full h-[130rem] flex items-start justify-center overflow-y-scroll"
+        className="relative w-full h-[145rem] flex items-start justify-center overflow-y-scroll"
         id="feed"
       >
         <InfiniteScroll
@@ -127,15 +127,14 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           )}
         </InfiniteScroll>
       </div>
-      <div className="relative w-full h-full items-end justify-center flex">
-        <div className="absolute w-full h-[36rem] items-end justify-center flex bottom-0">
-          <div className="relative bottom-4 flex items-center justify-center w-full opacity-70 h-[36rem]">
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/QmYNi1AGC6LdWUtxvx5AZegc5yL1jWHGhELskYDSXpCHCk`}
-              draggable={false}
-            />
-          </div>
+      <div className="relative flex-grow flex items-end justify-center w-full h-[55rem]">
+        <div className="relative w-full h-[50rem] bottom-0 flex items-end justify-center">
+          <Image
+            layout="fill"
+            src={`${INFURA_GATEWAY}/ipfs/QmV4yM96Dt2ypLN9GMHkXPTkeCGfTQfJErJLfVjikxt52s`}
+            draggable={false}
+          />
+          <div className="absolute w-full h-full bg-black opacity-[85%]"></div>
         </div>
       </div>
     </div>
