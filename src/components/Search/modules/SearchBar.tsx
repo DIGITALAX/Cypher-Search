@@ -1,4 +1,4 @@
-import { FunctionComponent, MouseEvent } from "react";
+import { FunctionComponent, KeyboardEvent, MouseEvent } from "react";
 import { SearchBarProps } from "../types/search.types";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
@@ -44,7 +44,11 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
               className="bg-black text-offWhite p-1.5 rounded-sm w-full h-full font-bit flex items-center justify-start relative text-sm"
               id="searchBar"
               placeholder={placeholderText}
-              // onKeyDown={(e) => handleSearch(e)}
+              onKeyDown={(e) =>
+                (e as KeyboardEvent).key === "Enter" &&
+                searchInput.trim() !== "" &&
+                handleSearch(e)
+              }
               onChange={(e) => setSearchInput(e.target.value)}
               value={searchInput}
             />

@@ -8,8 +8,7 @@ import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 const Text: FunctionComponent<TextProps> = ({ item, quote }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-center gap-3">
-      {
-        //   (item?.__typename === "Mirror" || item?.__typename === "Quote") &&
+      {(item?.__typename === "Mirror" || item?.__typename === "Quote") && (
         <div className="flex relative w-full h-fit items-center justify-end">
           {item?.__typename === "Mirror" ? (
             <div className="relative flex flex-row gap-1.5 items-center justify-center text-white font-earl text-sm">
@@ -51,7 +50,7 @@ const Text: FunctionComponent<TextProps> = ({ item, quote }): JSX.Element => {
             </div>
           )}
         </div>
-      }
+      )}
       <div
         className="relative w-full h-full bg-black font-aust text-white text-left item-start justify-start break-words flex overflow-y-scroll p-2 text-sm whitespace-preline"
         id="feed"
@@ -77,6 +76,9 @@ const Text: FunctionComponent<TextProps> = ({ item, quote }): JSX.Element => {
         voluptatibus maiores alias consequatur aut perferendis doloribus
         asperiores repellat.
       </div>
+      {item?.__typename === "Quote" && (
+        <div className="relative w-full h-fit"></div>
+      )}
     </div>
   );
 };
