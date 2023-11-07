@@ -2,6 +2,7 @@
 
 const allowedOrigins = [
   "https://api-v2-mumbai.lens.dev/",
+  "https://api-v2.lens.dev/",
   "https://chromadin.infura-ipfs.io",
   "https://api.thegraph.com",
 ];

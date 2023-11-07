@@ -56,3 +56,7 @@ export type ImageLargeProps = {
   dispatch: Dispatch<AnyAction>;
   type: string;
 };
+
+export type IndexProps = {
+  message: string | undefined;
+};

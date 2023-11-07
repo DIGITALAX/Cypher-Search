@@ -14,6 +14,7 @@ import {
 } from "../../../../lib/utils";
 import { Profile } from "../../../../graphql/generated";
 import authenticate from "../../../../graphql/lens/mutations/authenticate";
+import getDefaultProfile from "../../../../graphql/lens/queries/default";
 
 const useSignIn = () => {
   const { isConnected, address } = useAccount();
@@ -26,15 +27,11 @@ const useSignIn = () => {
   const handleLensConnect = async () => {
     setSignInLoading(true);
     try {
-      const profile = await getProfiles({
-        where: {
-          ownedBy: [address],
-        },
+      const profile = await getDefaultProfile({
+        for: address,
       });
       const challengeResponse = await generateChallenge({
-        for: profile?.data?.profiles?.items?.[
-          profile?.data?.profiles?.items?.length - 1
-        ].id,
+        for: profile?.data?.defaultProfile?.id,
         signedBy: address,
       });
       const signature = await signMessageAsync({
@@ -46,13 +43,7 @@ const useSignIn = () => {
       });
       if (accessTokens) {
         setAuthenticationToken({ token: accessTokens.data?.authenticate! });
-        dispatch(
-          setLensConnected(
-            profile?.data?.profiles?.items?.[
-              profile?.data?.profiles?.items?.length - 1
-            ] as Profile
-          )
-        );
+        dispatch(setLensConnected(profile?.data?.defaultProfile as Profile));
       }
     } catch (err: any) {
       console.error(err.message);

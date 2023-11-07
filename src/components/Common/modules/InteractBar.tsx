@@ -4,6 +4,8 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { InteractBarProps } from "../types/common.types";
 import numeral from "numeral";
 import { AiOutlineLoading } from "react-icons/ai";
+import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
+import { Post } from "../../../../graphql/generated";
 
 type SingleArgFunction = (id: string) => Promise<void>;
 type DualArgFunction = (index: number, id: string) => Promise<void>;
@@ -19,7 +21,6 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   mirror,
   like,
   comment,
-  quote,
   interactionsLoading,
   publication,
   openMirrorChoice,
@@ -28,6 +29,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   collect,
   type,
   hideCollect,
+  dispatch,
 }): JSX.Element => {
   return (
     <div
@@ -60,15 +62,44 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             ];
         const stats = hideCollect
           ? [
-              publication?.mirrors! + publication?.quotes!,
-              publication?.reactions,
-              publication?.comments,
+              (publication.__typename === "Mirror"
+                ? publication.mirrorOn
+                : (publication as Post)
+              )?.stats?.mirrors! +
+                (publication.__typename === "Mirror"
+                  ? publication.mirrorOn
+                  : (publication as Post)
+                )?.stats?.quotes!,
+              (publication.__typename === "Mirror"
+                ? publication.mirrorOn
+                : (publication as Post)
+              )?.stats?.reactions,
+              (publication.__typename === "Mirror"
+                ? publication.mirrorOn
+                : (publication as Post)
+              )?.stats?.comments,
             ]
           : [
-              publication?.mirrors! + publication?.quotes!,
-              publication?.reactions,
-              publication?.countOpenActions,
-              publication?.comments,
+              (publication.__typename === "Mirror"
+                ? publication.mirrorOn
+                : (publication as Post)
+              )?.stats?.mirrors! +
+                (publication.__typename === "Mirror"
+                  ? publication.mirrorOn
+                  : (publication as Post)
+                )?.stats?.quotes!,
+              (publication.__typename === "Mirror"
+                ? publication.mirrorOn
+                : (publication as Post)
+              )?.stats?.reactions,
+              (publication.__typename === "Mirror"
+                ? publication.mirrorOn
+                : (publication as Post)
+              )?.stats?.countOpenActions,
+              (publication.__typename === "Mirror"
+                ? publication.mirrorOn
+                : (publication as Post)
+              )?.stats?.comments,
             ];
         return (
           <div
@@ -128,18 +159,30 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             const functions: (
               | ((id: string) => Promise<void>)
               | ((index: number, id: string) => Promise<void>)
-            )[] = [mirror, quote];
-            const loaders = [
-              interactionsLoading?.mirror,
-              interactionsLoading?.quote,
+              | (() => void)
+            )[] = [
+              mirror,
+              () =>
+                dispatch(
+                  setPostBox({
+                    actionOpen: true,
+                    actionId: publication?.id,
+                    actionQuote: publication,
+                  })
+                ),
             ];
+            const loaders = [interactionsLoading?.mirror];
             return (
               <div
                 key={indexTwo}
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
                 onClick={() =>
                   !loaders[index] &&
-                  (isSingleArgFunction(functions[indexTwo])
+                  (isSingleArgFunction(
+                    functions[indexTwo] as
+                      | ((id: string) => Promise<void>)
+                      | ((index: number, id: string) => Promise<void>)
+                  )
                     ? (functions[indexTwo] as (id: string) => Promise<void>)(
                         publication?.id
                       )

@@ -6,7 +6,7 @@ import {
   Mirror,
   Comment,
   ProfileMetadata,
-  TextOnlyMetadataV3,
+  Erc20,
 } from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { ChangeEvent } from "react";
@@ -33,12 +33,10 @@ export type WebProps = {
   setSortType: (e: SortType) => void;
   mirror: (index: number, id: string) => Promise<void>;
   comment: (index: number, id: string) => Promise<void>;
-  quote: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
   }[];
   handleSetDisplay: () => void;
@@ -55,12 +53,45 @@ export type WebProps = {
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   coverImage: string | undefined;
   pfpImage: string | undefined;
+  followUpdateLoading: boolean;
+  handleFollowUpdate: () => Promise<void>;
+  followData: {
+    type: "FreeFollowModule" | "FeeFollowModule" | "RevertFollowModule";
+    value: string | undefined;
+    currency: Erc20 | undefined;
+  };
+  setFollowData: (e: {
+    type: "FreeFollowModule" | "FeeFollowModule" | "RevertFollowModule";
+    value: string | undefined;
+    currency: Erc20 | undefined;
+  }) => void;
+  openType: boolean;
+  setOpenType: (e: boolean) => void;
+  currencies: Erc20[];
+  setCurrencyOpen: (e: boolean) => void;
+  currencyOpen: boolean;
+};
+
+export type BookmarksProps = {
+  bookmarks: Post | Mirror | Comment | Quote;
+  bookmarksLoading: boolean;
+  simpleCollect: (id: string) => Promise<void>;
+  handleRemoveBookmark: (id: string) => Promise<void>;
+  mirror: (index: number, id: string) => Promise<void>;
+  like: (index: number, id: string) => Promise<void>;
+  comment: (index: number, id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    comment: boolean;
+  }[];
 };
 
 export enum ScreenDisplay {
   Display,
   Gallery,
   Circuits,
+  Bookmarks,
   Settings,
 }
 
@@ -86,6 +117,10 @@ export type GalleryScreenProps = {
 
 export type ScreenSwitchProps = {
   screenDisplay: ScreenDisplay;
+  bookmarks: Post | Mirror | Comment | Quote;
+  bookmarksLoading: boolean;
+  simpleCollect: (id: string) => Promise<void>;
+  handleRemoveBookmark: (id: string) => Promise<void>;
   dispatch: Dispatch<AnyAction>;
   owner: boolean;
   handleSetDisplay: () => void;
@@ -93,7 +128,6 @@ export type ScreenSwitchProps = {
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string) => Promise<void>;
   comment: (index: number, id: string) => Promise<void>;
-  quote: (index: number, id: string) => Promise<void>;
   setSettingsData: (e: ProfileMetadata) => void;
   settingsData: ProfileMetadata;
   handleSettingsUpdate: () => Promise<void>;
@@ -101,7 +135,6 @@ export type ScreenSwitchProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
   }[];
   setOpenMirrorChoice: (e: boolean[]) => void;
@@ -117,6 +150,23 @@ export type ScreenSwitchProps = {
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   coverImage: string | undefined;
   pfpImage: string | undefined;
+  followUpdateLoading: boolean;
+  handleFollowUpdate: () => Promise<void>;
+  followData: {
+    type: "FreeFollowModule" | "FeeFollowModule" | "RevertFollowModule";
+    value: string | undefined;
+    currency: Erc20 | undefined;
+  };
+  setFollowData: (e: {
+    type: "FreeFollowModule" | "FeeFollowModule" | "RevertFollowModule";
+    value: string | undefined;
+    currency: Erc20 | undefined;
+  }) => void;
+  openType: boolean;
+  setOpenType: (e: boolean) => void;
+  currencies: Erc20[];
+  setCurrencyOpen: (e: boolean) => void;
+  currencyOpen: boolean;
 };
 
 export type SettingsProps = {
@@ -127,17 +177,32 @@ export type SettingsProps = {
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   coverImage: string | undefined;
   pfpImage: string | undefined;
+  followUpdateLoading: boolean;
+  handleFollowUpdate: () => Promise<void>;
+  followData: {
+    type: "FreeFollowModule" | "FeeFollowModule" | "RevertFollowModule";
+    value: string | undefined;
+    currency: Erc20 | undefined;
+  };
+  setFollowData: (e: {
+    type: "FreeFollowModule" | "FeeFollowModule" | "RevertFollowModule";
+    value: string | undefined;
+    currency: Erc20 | undefined;
+  }) => void;
+  openType: boolean;
+  setOpenType: (e: boolean) => void;
+  currencies: Erc20[];
+  setCurrencyOpen: (e: boolean) => void;
+  currencyOpen: boolean;
 };
 
 export type DisplayProps = {
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string) => Promise<void>;
   comment: (index: number, id: string) => Promise<void>;
-  quote: (index: number, id: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
   }[];
   owner: boolean;
@@ -183,12 +248,10 @@ export type FeedProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
   collect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
     collect: boolean;
   }[];
@@ -215,11 +278,9 @@ export type GalleryProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
   }[];
   followLoading: boolean[];
@@ -267,13 +328,11 @@ export type CreationProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
   };
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
 };
 
 export type PostBarProps = {
@@ -282,14 +341,12 @@ export type PostBarProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   collect: (id: string, type: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
   item: Post | Mirror | Quote;
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
     collect: boolean;
   };
@@ -303,5 +360,4 @@ export type PostBarProps = {
 
 export type TextProps = {
   item: Post | Quote | Mirror;
-  quote: Comment | Post | Quote | undefined;
 };

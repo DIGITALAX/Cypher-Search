@@ -18,7 +18,6 @@ const Web: FunctionComponent<WebProps> = ({
   setSortType,
   mirror,
   comment,
-  quote,
   like,
   interactionsLoading,
   openMirrorChoice,
@@ -36,6 +35,15 @@ const Web: FunctionComponent<WebProps> = ({
   dispatch,
   displayLoading,
   handleSetDisplay,
+  handleFollowUpdate,
+  followUpdateLoading,
+  followData,
+  setFollowData,
+  openType,
+  setOpenType,
+  currencies,
+  setCurrencyOpen,
+  currencyOpen,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -48,66 +56,72 @@ const Web: FunctionComponent<WebProps> = ({
               draggable={false}
             />
           </div>
-          {screenDisplay !== ScreenDisplay.Settings && (
-            <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
-              {[
-                {
-                  image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
-                  text: "private",
-                  function: () => setSortType(SortType.Private),
-                  type: SortType.Private,
-                },
-                {
-                  image: "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
-                  text: "community",
-                  function: () => setSortType(SortType.Community),
-                  type: SortType.Community,
-                },
-                {
-                  image: "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
-                  text: "public",
-                  function: () => setSortType(SortType.Public),
-                  type: SortType.Public,
-                },
-              ].map(
-                (
-                  item: {
-                    image: string;
-                    text: string;
-                    function: () => void;
-                    type: SortType;
+          {screenDisplay !== ScreenDisplay.Settings &&
+            screenDisplay !== ScreenDisplay.Bookmarks && (
+              <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
+                {[
+                  {
+                    image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
+                    text: "private",
+                    function: () => setSortType(SortType.Private),
+                    type: SortType.Private,
                   },
-                  index: number
-                ) => {
-                  return (
-                    <div
-                      className="relative flex flex-col items-center justiy-center gap-1.5"
-                      key={index}
-                    >
+                  {
+                    image: "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
+                    text: "community",
+                    function: () => setSortType(SortType.Community),
+                    type: SortType.Community,
+                  },
+                  {
+                    image: "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
+                    text: "public",
+                    function: () => setSortType(SortType.Public),
+                    type: SortType.Public,
+                  },
+                ].map(
+                  (
+                    item: {
+                      image: string;
+                      text: string;
+                      function: () => void;
+                      type: SortType;
+                    },
+                    index: number
+                  ) => {
+                    return (
                       <div
-                        className={`relative w-10 h-10 cursor-pointer flex active:scale-95 ${
-                          item.type === sortType && "mix-blend-luminosity"
-                        }`}
-                        onClick={() => item.function()}
+                        className="relative flex flex-col items-center justiy-center gap-1.5"
+                        key={index}
                       >
-                        <Image
-                          layout="fill"
-                          src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
-                          draggable={false}
-                        />
+                        <div
+                          className={`relative w-10 h-10 cursor-pointer flex active:scale-95 ${
+                            item.type === sortType && "mix-blend-luminosity"
+                          }`}
+                          onClick={() => item.function()}
+                        >
+                          <Image
+                            layout="fill"
+                            src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
+                            draggable={false}
+                          />
+                        </div>
+                        <div className="relative text-white font-bit text-white font-bit text-xs">
+                          {item.text}
+                        </div>
                       </div>
-                      <div className="relative text-white font-bit text-white font-bit text-xs">
-                        {item.text}
-                      </div>
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          )}
+                    );
+                  }
+                )}
+              </div>
+            )}
         </div>
         <ScreenSwitch
+          currencies={currencies}
+          setCurrencyOpen={setCurrencyOpen}
+          currencyOpen={currencyOpen}
           mirror={mirror}
+          openType={openType}
+          setOpenType={setOpenType}
           comment={comment}
           displayLoading={displayLoading}
           handleSetDisplay={handleSetDisplay}
@@ -116,7 +130,6 @@ const Web: FunctionComponent<WebProps> = ({
           sortType={sortType}
           screenDisplay={screenDisplay}
           like={like}
-          quote={quote}
           interactionsLoading={interactionsLoading}
           dispatch={dispatch}
           gallery={gallery}
@@ -131,6 +144,10 @@ const Web: FunctionComponent<WebProps> = ({
           owner={
             lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle
           }
+          handleFollowUpdate={handleFollowUpdate}
+          followUpdateLoading={followUpdateLoading}
+          followData={followData}
+          setFollowData={setFollowData}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
@@ -159,6 +176,14 @@ const Web: FunctionComponent<WebProps> = ({
               width: "10",
               height: "10",
               type: ScreenDisplay.Circuits,
+            },
+            {
+              image: "QmPh734pzjY3evPPgY9tvXNMyg7EFah6cc4L2R6U9p2gff",
+              text: "bookmarks",
+              function: () => setScreenDisplay(ScreenDisplay.Bookmarks),
+              width: "10",
+              height: "10",
+              type: ScreenDisplay.Bookmarks,
             },
             {
               image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",

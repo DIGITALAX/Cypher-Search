@@ -42,7 +42,6 @@ export interface Creation {
   sizes: string[];
   origin: string;
   profile: Profile;
-  stats: PublicationStats | undefined;
   publication: Post | undefined;
 }
 

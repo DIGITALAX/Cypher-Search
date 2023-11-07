@@ -79,21 +79,50 @@ body::-webkit-scrollbar-thumb {
   background-color: transparent;
 }
 
-#feed::-webkit-scrollbar {
+div::-webkit-scrollbar {
   width: 0px;
   opacity: 0; /* Initially hide the scrollbar */
 }
 
-#feed:hover::-webkit-scrollbar {
+div:hover::-webkit-scrollbar {
   opacity: 0; /* Show the scrollbar on hover */
 }
 
-#feed::-webkit-scrollbar-track {
+div::-webkit-scrollbar-track {
   background-color: transparent;
 }
 
-#feed::-webkit-scrollbar-thumb {
+div::-webkit-scrollbar-thumb {
   background-color: transparent;
+}
+
+#feed {
+  direction: rtl; /* Set direction to right-to-left to move scrollbar to the left */
+  overflow-y: scroll;
+}
+
+#feedWrapper {
+ 
+  direction: rtl; /* This will move the scrollbar to the 'start' of the container, which is now on the left */
+}
+
+#feed > * {
+  direction: ltr; /* Reset the direction of the content inside to left-to-right */
+}
+
+#feed::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+
+#feed::-webkit-scrollbar-track {
+  background-color: transparent; /* Make the track transparent */
+  box-shadow: inset 0 0 0 10px #0090ff; /* Simulate padding with box shadow */
+}
+
+
+#feed::-webkit-scrollbar-thumb {
+  background: linear-gradient(#f3f6f7, #f7f7f3, #f9e8fa, #f0ecf6, #f3f6f7); 
+
 }
 
 .searchTransition {

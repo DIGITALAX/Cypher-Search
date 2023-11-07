@@ -9,6 +9,7 @@ import ImageLarge from "./ImageLarge";
 import InteractError from "./InteractError";
 import DisplaySearch from "./DisplaySearch";
 import useDisplaySearch from "../hooks/useDisplaySearch";
+import Index from "./Indexer";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -18,6 +19,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const filterValues = useSelector(
     (state: RootState) => state.app.filterReducer.filter
   );
+  const indexer = useSelector((state: RootState) => state.app.indexerReducer);
   const galleryItems = useSelector(
     (state: RootState) => state.app.galleryItemsReducer.items
   );
@@ -84,6 +86,9 @@ const Modals: FunctionComponent = (): JSX.Element => {
           handleResetFilters={handleResetFilters}
         />
       )}
+      {!indexer?.open && (
+        <Index message={indexer?.message} />
+      )}
       {image?.value && (
         <ImageLarge
           dispatch={dispatch}
@@ -104,6 +109,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
           numberIndex={displaySearch?.value}
         />
       )}
+
       {interactError.value && <InteractError dispatch={dispatch} />}
     </>
   );

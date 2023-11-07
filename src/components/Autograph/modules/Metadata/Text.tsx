@@ -2,10 +2,9 @@ import { FunctionComponent } from "react";
 import { TextProps } from "../../types/autograph.types";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
-import { Post, Quote } from "../../../../../graphql/generated";
-import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
+import { Quote } from "../../../../../graphql/generated";
 
-const Text: FunctionComponent<TextProps> = ({ item, quote }): JSX.Element => {
+const Text: FunctionComponent<TextProps> = ({ item }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-center gap-3">
       {(item?.__typename === "Mirror" || item?.__typename === "Quote") && (
@@ -53,7 +52,6 @@ const Text: FunctionComponent<TextProps> = ({ item, quote }): JSX.Element => {
       )}
       <div
         className="relative w-full h-full bg-black font-aust text-white text-left item-start justify-start break-words flex overflow-y-scroll p-2 text-sm whitespace-preline"
-        id="feed"
         // dangerouslySetInnerHTML={{
         //   __html: descriptionRegex(
         //     item?.__typename === "Mirror"
