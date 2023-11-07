@@ -11,7 +11,6 @@ const Display: FunctionComponent<DisplayProps> = ({
   mirror,
   like,
   comment,
-  quote,
   openMirrorChoice,
   sortType,
   setOpenMirrorChoice,
@@ -66,10 +65,10 @@ const Display: FunctionComponent<DisplayProps> = ({
                 </div>
               </div>
               <InteractBar
+                dispatch={dispatch}
                 mirror={mirror}
                 like={like}
                 comment={comment}
-                quote={quote}
                 interactionsLoading={interactionsLoading?.[0]}
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}
@@ -77,10 +76,10 @@ const Display: FunctionComponent<DisplayProps> = ({
                 publication={
                   display
                     ? sortType === SortType.Community
-                      ? display?.community?.main?.stats!
+                      ? display?.community?.main?.publication!
                       : sortType === SortType.Public
-                      ? display?.public?.main?.stats!
-                      : display?.private?.main?.stats!
+                      ? display?.public?.main?.publication!
+                      : display?.private?.main?.publication!
                     : undefined
                 }
                 type={undefined}
@@ -143,10 +142,10 @@ const Display: FunctionComponent<DisplayProps> = ({
                 {display && (
                   <div className="absolute bottom-2 left-2 flex items-center justify-center">
                     <InteractBar
+                      dispatch={dispatch}
                       mirror={mirror}
                       like={like}
                       comment={comment}
-                      quote={quote}
                       interactionsLoading={interactionsLoading?.[index + 1]}
                       openMirrorChoice={openMirrorChoice}
                       setOpenMirrorChoice={setOpenMirrorChoice}
@@ -154,10 +153,10 @@ const Display: FunctionComponent<DisplayProps> = ({
                       publication={
                         display
                           ? sortType === SortType.Community
-                            ? display?.community?.side?.[index].stats!
+                            ? display?.community?.side?.[index].publication!
                             : sortType === SortType.Public
-                            ? display?.public?.side?.[index].stats!
-                            : display?.private?.side?.[index].stats!
+                            ? display?.public?.side?.[index].publication!
+                            : display?.private?.side?.[index].publication!
                           : undefined
                       }
                       type={undefined}

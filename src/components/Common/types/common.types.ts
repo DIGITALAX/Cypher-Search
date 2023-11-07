@@ -1,6 +1,13 @@
 import { NextRouter } from "next/router";
 import { AnyAction, Dispatch } from "redux";
-import { Profile, PublicationStats } from "../../../../graphql/generated";
+import {
+  Comment,
+  Mirror,
+  Post,
+  Profile,
+  PublicationStats,
+  Quote,
+} from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 
 export type BarProps = {
@@ -39,6 +46,7 @@ export type InteractBarProps = {
   layoutAmount?: number;
   index: number;
   hideCollect?: boolean;
+  dispatch: Dispatch<AnyAction>;
   mirror:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>);
@@ -48,9 +56,6 @@ export type InteractBarProps = {
   comment:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>);
-  quote:
-    | ((id: string) => Promise<void>)
-    | ((index: number, id: string) => Promise<void>);
   collect:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>)
@@ -58,12 +63,11 @@ export type InteractBarProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
     comment: boolean;
     collect?: boolean;
   };
   type: string | undefined;
-  publication: PublicationStats | undefined;
+  publication: Post | Mirror | Quote | Comment | undefined;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: boolean[]) => void;
 };

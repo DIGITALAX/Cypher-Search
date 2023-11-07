@@ -5,6 +5,7 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
 import mapReducer from "./reducers/mapSlice";
+import postBoxReducer from "./reducers/postBoxSlice";
 import videoSyncReducer from "./reducers/videoSyncSlice";
 import fullScreenVideoReducer from "./reducers/fullScreenVideoSlice";
 import mainVideoReducer from "./reducers/mainVideoSlice";
@@ -15,6 +16,7 @@ import ImageLargeReducer from "./reducers/ImageLargeSlice";
 import layoutSwitchReducer from "./reducers/layoutSwitchSlice";
 import reactBoxReducer from "./reducers/reactBoxSlice";
 import interactionsCountReducer from "./reducers/interactionsCountSlice";
+import indexerReducer from "./reducers/indexerSlice";
 import profileDisplayReducer from "./reducers/profileDisplaySlice";
 import displaySearchBoxReducer from "./reducers/displaySearchBoxSlice";
 import searchItemsReducer from "./reducers/searchItemsSlice";
@@ -54,6 +56,8 @@ const reducer = combineReducers({
   galleryItemsReducer,
   profileDisplayReducer,
   autographFeedReducer,
+  indexerReducer,
+  postBoxReducer
 });
 
 export const store = configureStore({

@@ -4,13 +4,13 @@ import Display from "./Screen/Display";
 import Settings from "./Screen/Settings";
 import Circuits from "./Screen/Circuits";
 import Gallery from "./Screen/Gallery";
+import Bookmarks from "./Screen/Bookmarks";
 
 const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
   mirror,
   like,
   comment,
-  quote,
   openMirrorChoice,
   setOpenMirrorChoice,
   interactionsLoading,
@@ -28,6 +28,19 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleSetDisplay,
   displayLoading,
   owner,
+  handleFollowUpdate,
+  followUpdateLoading,
+  followData,
+  setFollowData,
+  openType,
+  setOpenType,
+  setCurrencyOpen,
+  currencyOpen,
+  currencies,
+  bookmarks,
+  bookmarksLoading,
+  simpleCollect,
+  handleRemoveBookmark,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -35,6 +48,20 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
 
     case ScreenDisplay.Gallery:
       return <Gallery gallery={gallery} />;
+
+    case ScreenDisplay.Bookmarks:
+      return (
+        <Bookmarks
+          bookmarks={bookmarks}
+          bookmarksLoading={bookmarksLoading}
+          simpleCollect={simpleCollect}
+          mirror={mirror}
+          like={like}
+          comment={comment}
+          handleRemoveBookmark={handleRemoveBookmark}
+          interactionsLoading={interactionsLoading}
+        />
+      );
 
     case ScreenDisplay.Settings:
       return (
@@ -46,6 +73,15 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           handleImage={handleImage}
           pfpImage={pfpImage}
           coverImage={coverImage}
+          handleFollowUpdate={handleFollowUpdate}
+          followUpdateLoading={followUpdateLoading}
+          followData={followData}
+          setFollowData={setFollowData}
+          openType={openType}
+          setOpenType={setOpenType}
+          setCurrencyOpen={setCurrencyOpen}
+          currencyOpen={currencyOpen}
+          currencies={currencies}
         />
       );
 
@@ -56,7 +92,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           mirror={mirror}
           like={like}
           comment={comment}
-          quote={quote}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           interactionsLoading={interactionsLoading}

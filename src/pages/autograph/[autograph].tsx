@@ -126,6 +126,15 @@ const Autograph: NextPage = (): JSX.Element => {
     coverImage,
     handleImage,
     pfpImage,
+    handleFollowUpdate,
+    followData,
+    setFollowData,
+    followUpdateLoading,
+    openType,
+    setOpenType,
+    currencies,
+    currencyOpen,
+    setCurrencyOpen,
   } = useSettings();
 
   useEffect(() => {
@@ -281,6 +290,10 @@ const Autograph: NextPage = (): JSX.Element => {
               </Head>
               <Web
                 router={router}
+                openType={openType}
+                setOpenType={setOpenType}
+                setCurrencyOpen={setCurrencyOpen}
+                currencyOpen={currencyOpen}
                 dispatch={dispatch}
                 displayLoading={displayLoading}
                 handleSetDisplay={handleSetDisplay}
@@ -299,7 +312,6 @@ const Autograph: NextPage = (): JSX.Element => {
                 comment={displayComment}
                 mirror={displayMirror}
                 like={displayLike}
-                quote={displayQuote}
                 interactionsLoading={interactionsDisplayLoading}
                 profile={profile}
                 gallery={gallery}
@@ -311,6 +323,11 @@ const Autograph: NextPage = (): JSX.Element => {
                 handleImage={handleImage}
                 pfpImage={pfpImage}
                 coverImage={coverImage}
+                handleFollowUpdate={handleFollowUpdate}
+                followUpdateLoading={followUpdateLoading}
+                followData={followData}
+                setFollowData={setFollowData}
+                currencies={currencies}
               />
               <Bio profile={profile} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
@@ -318,7 +335,6 @@ const Autograph: NextPage = (): JSX.Element => {
                   comment={feedComment}
                   mirror={feedMirror}
                   like={feedLike}
-                  quote={feedQuote}
                   collect={feedCollect}
                   openMirrorChoice={openMirrorFeedChoice}
                   setOpenMirrorChoice={setOpenMirrorFeedChoice}
@@ -336,7 +352,6 @@ const Autograph: NextPage = (): JSX.Element => {
                   comment={galleryComment}
                   mirror={galleryMirror}
                   like={galleryLike}
-                  quote={galleryQuote}
                   openMirrorChoice={openMirrorGalleryChoice}
                   setOpenMirrorChoice={setOpenMirrorGalleryChoice}
                   interactionsLoading={interactionsGalleryLoading}

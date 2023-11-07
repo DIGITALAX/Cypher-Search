@@ -4,6 +4,7 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
 import {
+  Erc20,
   MetadataAttributeType,
   NftImage,
 } from "../../../../../graphql/generated";
@@ -16,6 +17,15 @@ const Settings: FunctionComponent<SettingsProps> = ({
   handleImage,
   coverImage,
   pfpImage,
+  followUpdateLoading,
+  handleFollowUpdate,
+  followData,
+  setFollowData,
+  openType,
+  setOpenType,
+  currencies,
+  setCurrencyOpen,
+  currencyOpen,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full pt-4 flex items-center justify-center">
@@ -24,55 +34,22 @@ const Settings: FunctionComponent<SettingsProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex items-center justify-start bg-cover flex-col rounded-sm p-3 gap-5">
-            <label
-              className="relative w-full h-40 rounded-sm cursor-pointer p-px"
-              id="pfp"
-            >
-              <div className="relative w-full h-full flex items-center justify-center rounded-sm opacity-70">
-                <Image
-                  layout="fill"
-                  src={
-                    coverImage
-                      ? coverImage
-                      : `${INFURA_GATEWAY}/ipfs/${
-                          settingsData?.coverPicture?.raw?.uri?.split(
-                            "ipfs://"
-                          )[1]
-                        }`
-                  }
-                  objectFit="cover"
-                  draggable={false}
-                  className="relative rounded-sm w-full h-full flex"
-                />
-                <input
-                  hidden
-                  type="file"
-                  accept="image/png"
-                  multiple={false}
-                  onChange={(e) =>
-                    e?.target?.files?.[0] && handleImage(e, "cover")
-                  }
-                />
-              </div>
+          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll max-h-[75vh]">
+            <div className="relative w-full h-fit flex items-center justify-start bg-cover flex-col rounded-sm gap-5">
               <label
-                className="absolute top-4 right-4 z-10 border border-white w-32 h-32 rounded-sm cursor-pointer p-px"
+                className="relative w-full h-40 rounded-sm cursor-pointer p-px"
                 id="pfp"
               >
-                <div className="relative w-full h-full flex items-center justify-center rounded-sm">
+                <div className="relative w-full h-full flex items-center justify-center rounded-sm opacity-70">
                   <Image
                     layout="fill"
                     src={
-                      pfpImage
-                        ? pfpImage
+                      coverImage
+                        ? coverImage
                         : `${INFURA_GATEWAY}/ipfs/${
-                            settingsData?.picture?.__typename === "ImageSet"
-                              ? settingsData?.picture?.raw?.uri?.split(
-                                  "ipfs//"
-                                )[1]
-                              : (
-                                  settingsData.picture as NftImage
-                                )?.image?.raw?.uri?.split("ipfs//")[1]
+                            settingsData?.coverPicture?.raw?.uri?.split(
+                              "ipfs://"
+                            )[1]
                           }`
                     }
                     objectFit="cover"
@@ -85,109 +62,104 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     accept="image/png"
                     multiple={false}
                     onChange={(e) =>
-                      e?.target?.files?.[0] && handleImage(e, "pfp")
+                      e?.target?.files?.[0] && handleImage(e, "cover")
                     }
                   />
                 </div>
+                <label
+                  className="absolute top-4 right-4 z-10 border border-white w-32 h-32 rounded-sm cursor-pointer p-px"
+                  id="pfp"
+                >
+                  <div className="relative w-full h-full flex items-center justify-center rounded-sm">
+                    <Image
+                      layout="fill"
+                      src={
+                        pfpImage
+                          ? pfpImage
+                          : `${INFURA_GATEWAY}/ipfs/${
+                              settingsData?.picture?.__typename === "ImageSet"
+                                ? settingsData?.picture?.raw?.uri?.split(
+                                    "ipfs//"
+                                  )[1]
+                                : (
+                                    settingsData.picture as NftImage
+                                  )?.image?.raw?.uri?.split("ipfs//")[1]
+                            }`
+                      }
+                      objectFit="cover"
+                      draggable={false}
+                      className="relative rounded-sm w-full h-full flex"
+                    />
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/png"
+                      multiple={false}
+                      onChange={(e) =>
+                        e?.target?.files?.[0] && handleImage(e, "pfp")
+                      }
+                    />
+                  </div>
+                </label>
               </label>
-            </label>
-            <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
-              <div className="relative font font-bit text-white text-sm">
-                Display Name
-              </div>
-              <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
-                <input
-                  onChange={(e) =>
-                    setSettingsData({
-                      ...settingsData,
-                      displayName: e.target.value,
-                    })
-                  }
-                  style={{
-                    resize: "none",
-                  }}
-                  value={settingsData?.displayName || ""}
-                  className="bg-piloto p-1 flex w-full h-full items-start justify-start"
-                />
-              </div>
-            </div>
-            <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
-              <div className="relative font font-bit text-white text-sm">
-                Bio
-              </div>
-              <div className="relative w-full h-20 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
-                <textarea
-                  onChange={(e) =>
-                    setSettingsData({
-                      ...settingsData,
-                      bio: e.target.value,
-                    })
-                  }
-                  style={{
-                    resize: "none",
-                  }}
-                  className="bg-piloto p-1 flex w-full h-full items-start justify-start"
-                  value={settingsData?.bio}
-                ></textarea>
-              </div>
-            </div>
-            <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left gap-2 font-bit text-sm">
-              <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
-                <div className="relative w-fit h-fit justify-start items-center">
-                  Location?
+              <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
+                <div className="relative font font-bit text-white text-sm">
+                  Display Name
                 </div>
-                <input
-                  onChange={(e) => {
-                    const attributes = [...(settingsData.attributes || [])];
-
-                    const index = attributes.findIndex(
-                      (item) => item.key === "location"
-                    );
-
-                    if (index) {
-                      attributes[index].value === e.target.value;
-                    } else {
-                      attributes.push({
-                        key: "location",
-                        value: e.target.value,
-                        type: MetadataAttributeType.String,
-                      });
+                <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
+                  <input
+                    onChange={(e) =>
+                      setSettingsData({
+                        ...settingsData,
+                        displayName: e.target.value,
+                      })
                     }
-
-                    setSettingsData({
-                      ...settingsData,
-                      attributes,
-                    });
-                  }}
-                  style={{
-                    resize: "none",
-                  }}
-                  value={
-                    settingsData?.attributes?.find(
-                      (item) => item.key === "location"
-                    )?.value
-                  }
-                  className="bg-piloto p-1 flex w-full h-10 items-start rounded-sm justify-start border border-fuera"
-                />
+                    style={{
+                      resize: "none",
+                    }}
+                    value={settingsData?.displayName || ""}
+                    className="bg-piloto p-1 flex w-full h-full items-start justify-start"
+                  />
+                </div>
               </div>
-              <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left font-fit">
+              <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
+                <div className="relative font font-bit text-white text-sm">
+                  Bio
+                </div>
+                <div className="relative w-full h-20 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
+                  <textarea
+                    onChange={(e) =>
+                      setSettingsData({
+                        ...settingsData,
+                        bio: e.target.value,
+                      })
+                    }
+                    style={{
+                      resize: "none",
+                    }}
+                    className="bg-piloto p-1 flex w-full h-full items-start justify-start"
+                    value={settingsData?.bio}
+                  ></textarea>
+                </div>
+              </div>
+              <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left gap-2 font-bit text-sm">
                 <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
                   <div className="relative w-fit h-fit justify-start items-center">
-                    Link?
+                    Location?
                   </div>
                   <input
                     onChange={(e) => {
                       const attributes = [...(settingsData.attributes || [])];
 
                       const index = attributes.findIndex(
-                        (item) => item.key === "website"
+                        (item) => item.key === "location"
                       );
 
                       if (index) {
                         attributes[index].value === e.target.value;
                       } else {
                         attributes.push({
-                          key: "website",
+                          key: "location",
                           value: e.target.value,
                           type: MetadataAttributeType.String,
                         });
@@ -203,31 +175,211 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     }}
                     value={
                       settingsData?.attributes?.find(
-                        (item) => item.key === "website"
+                        (item) => item.key === "location"
                       )?.value
                     }
                     className="bg-piloto p-1 flex w-full h-10 items-start rounded-sm justify-start border border-fuera"
                   />
                 </div>
+                <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left font-fit">
+                  <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
+                    <div className="relative w-fit h-fit justify-start items-center">
+                      Link?
+                    </div>
+                    <input
+                      onChange={(e) => {
+                        const attributes = [...(settingsData.attributes || [])];
+
+                        const index = attributes.findIndex(
+                          (item) => item.key === "website"
+                        );
+
+                        if (index) {
+                          attributes[index].value === e.target.value;
+                        } else {
+                          attributes.push({
+                            key: "website",
+                            value: e.target.value,
+                            type: MetadataAttributeType.String,
+                          });
+                        }
+
+                        setSettingsData({
+                          ...settingsData,
+                          attributes,
+                        });
+                      }}
+                      style={{
+                        resize: "none",
+                      }}
+                      value={
+                        settingsData?.attributes?.find(
+                          (item) => item.key === "website"
+                        )?.value
+                      }
+                      className="bg-piloto p-1 flex w-full h-10 items-start rounded-sm justify-start border border-fuera"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="relative w-full h-fit flex justify-end items-center">
-              <div
-                className={`relative w-20 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
-                  !settingsUpdateLoading && "cursor-pointer active:scale-95"
-                }`}
-                onClick={() => !settingsUpdateLoading && handleSettingsUpdate()}
-              >
+              <div className="relative w-full h-fit flex justify-end items-center">
                 <div
-                  className={`${
-                    settingsUpdateLoading ? "animate-spin" : "top-px"
-                  } relative w-fit h-fit flex items-center justify-center text-center`}
+                  className={`relative w-32 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white text-xs rounded-sm ${
+                    !settingsUpdateLoading && "cursor-pointer active:scale-95"
+                  }`}
+                  onClick={() =>
+                    !settingsUpdateLoading && handleSettingsUpdate()
+                  }
                 >
-                  {settingsUpdateLoading ? (
-                    <AiOutlineLoading size={15} color="white" />
-                  ) : (
-                    "Update"
-                  )}
+                  <div
+                    className={`${
+                      settingsUpdateLoading ? "animate-spin" : "top-px"
+                    } relative w-fit h-fit flex items-center justify-center text-center`}
+                  >
+                    {settingsUpdateLoading ? (
+                      <AiOutlineLoading size={15} color="white" />
+                    ) : (
+                      "Update Settings"
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="relative w-full h-fit flex flex-row gap-2 items-start justify-start">
+                <div className="relative w-fit h-fit flex flex-col gap-2 items-start justify-start">
+                  <div className="relative font font-bit text-white text-sm">
+                    Follow Module
+                  </div>
+                  <div className="relative flex flex-row items-start justify-start gap-3">
+                    <div className="relative flex flex-col items-start justify-start h-10 w-60">
+                      <div
+                        className="relative w-full h-full rounded-sm bg-piloto border border-fuera flex items-center justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"
+                        onClick={() => setOpenType(!openType)}
+                      >
+                        <div className="relative flex items-center justify-center w-fit h-fit">
+                          {followData?.type
+                            ?.replace(/([a-z])([A-Z])/g, "$1 $2")
+                            ?.toLowerCase()}
+                        </div>
+                      </div>
+                      {openType && (
+                        <div className="absolute flex flex-col items-center justify-start w-full h-full top-10 z-10">
+                          {[
+                            "FreeFollowModule",
+                            "FeeFollowModule",
+                            "RevertFollowModule",
+                          ]
+                            .filter((item) => item !== followData.type)
+                            .map((item: string, index) => {
+                              return (
+                                <div
+                                  className="relative w-full h-fit rounded-sm bg-piloto border border-fuera flex items-center  justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"
+                                  key={index}
+                                  onClick={() => {
+                                    setOpenType(!openType);
+                                    setFollowData({
+                                      ...followData,
+                                      type: item as any,
+                                    });
+                                  }}
+                                >
+                                  <div className="relative flex items-center justify-center w-fit h-fit">
+                                    {item
+                                      ?.replace(/([a-z])([A-Z])/g, "$1 $2")
+                                      ?.toLowerCase()}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {followData.type === "FeeFollowModule" && (
+                  <div className="relative flex flex-row gap-3 items-center justify-center">
+                    <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
+                      <div className="relative font font-bit text-white text-sm">
+                        Amount
+                      </div>
+                      <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
+                        <textarea
+                          onChange={(e) =>
+                            setFollowData({
+                              ...followData,
+                              value: e.target.value,
+                            })
+                          }
+                          style={{
+                            resize: "none",
+                          }}
+                          className="bg-piloto p-1 flex w-full h-full items-start justify-start"
+                          value={followData?.value || 0}
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
+                      <div className="relative font font-bit text-white text-sm">
+                        Currency
+                      </div>
+                      <div className="relative flex flex-row items-start justify-start gap-3">
+                        <div className="relative flex flex-col items-start justify-start h-10 w-60">
+                          <div
+                            className="relative w-full h-full rounded-sm bg-piloto border border-fuera flex items-center justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"
+                            onClick={() => setCurrencyOpen(!currencyOpen)}
+                          >
+                            <div className="relative flex items-center justify-center w-fit h-fit">
+                              {followData?.currency?.name}
+                            </div>
+                          </div>
+                          {currencyOpen && (
+                            <div className="absolute flex flex-col items-center justify-start w-full h-40 overflow-y-scroll top-10 z-10" >
+                              {currencies
+                                ?.filter((item) => item !== followData.currency)
+                                ?.map((item: Erc20, index) => {
+                                  return (
+                                    <div
+                                      className="relative w-full h-fit rounded-sm bg-piloto border border-fuera flex items-center  justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"
+                                      key={index}
+                                      onClick={() => {
+                                        setCurrencyOpen(!currencyOpen);
+                                        setFollowData({
+                                          ...followData,
+                                          currency: item,
+                                        });
+                                      }}
+                                    >
+                                      <div className="relative flex items-center justify-center w-fit h-fit">
+                                        {item?.name}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="relative w-full h-fit flex justify-end items-center">
+                <div
+                  className={`relative w-40 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm text-xs ${
+                    !followUpdateLoading && "cursor-pointer active:scale-95"
+                  }`}
+                  onClick={() => !followUpdateLoading && handleFollowUpdate()}
+                >
+                  <div
+                    className={`${
+                      followUpdateLoading ? "animate-spin" : "top-px"
+                    } relative w-fit h-fit flex items-center justify-center text-center`}
+                  >
+                    {followUpdateLoading ? (
+                      <AiOutlineLoading size={15} color="white" />
+                    ) : (
+                      "Update Follow Module"
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

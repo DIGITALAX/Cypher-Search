@@ -31,7 +31,6 @@ const Community: FunctionComponent<CommunityProps> = ({
       <div className="relative w-4/5 h-20  p-2 text-white text-center font-bit text-sm border border-[#1B4986] bg-fuego">
         <div
           className="relative w-full h-full flex items-start justify-center overflow-y-scroll"
-          id="feed"
         >
           dd dfsgfsdgfdsg dsfgsdfg sdgsdfgdsfg dfsgsdf dsfgdsfgdsfgs dfsgdsfg
           dsfgsdf dfsgsdf dfsgs dsfgsdg sdfgsdfg dsfg sdfgsdf
@@ -43,7 +42,6 @@ const Community: FunctionComponent<CommunityProps> = ({
         </div>
         <div
           className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3"
-          id="feed"
         >
           <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
             {Array.from({ length: 20 })?.map(
@@ -110,7 +108,6 @@ const Community: FunctionComponent<CommunityProps> = ({
       </div>
       <div
         className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3"
-        id="feed"
       >
         <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
           {Array.from({ length: 4 }).map((item: Creation, index: number) => {
@@ -127,11 +124,11 @@ const Community: FunctionComponent<CommunityProps> = ({
                 />
 
                 <div
-                  className="absolute bottom-2 left-2 border border-fuera rounded-full items-center justify-center flex flex-row gap-2 px-2 py-1"
+                  className="absolute bottom-2 left-2 border border-fuera rounded-full items-center justify-center flex flex-row gap-2"
                   id="mold"
                 >
                   <div
-                    className="relative flex items-center justify-center rounded-full w-7 h-7 cursor-pointer"
+                    className="relative flex items-center justify-center rounded-full w-9 h-9 cursor-pointer"
                     id="pfp"
                     onMouseEnter={() => {
                       const updatedArray = [...profileHovers];
@@ -167,7 +164,7 @@ const Community: FunctionComponent<CommunityProps> = ({
                       feed
                     />
                   )}
-                  <div className="relative w-fit h-fit text-white font-bit items-center justify-center flex top-px text-xs">
+                  <div className="relative w-fit h-fit text-white font-bit items-center justify-center flex top-px text-xs px-2 py-1">
                     username{item?.profile?.handle?.localName}
                   </div>
                 </div>

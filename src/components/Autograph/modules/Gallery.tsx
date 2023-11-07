@@ -54,10 +54,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           </div>
         </div>
         {optionsOpen && (
-          <div
-            className="absolute flex items-start justify-center w-60 h-40 top-14 z-10 bg-black overflow-y-scroll border border-afilado rounded-md"
-            id="feed"
-          >
+          <div className="absolute flex items-start justify-center w-60 h-40 top-14 z-10 bg-black overflow-y-scroll border border-afilado rounded-md">
             <div className="relative flex flex-col w-full h-fit gap-2 items-center justify-start">
               {GALLERY_OPTIONS?.map((item: string, index: number) => {
                 return (
@@ -79,10 +76,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           </div>
         )}
       </div>
-      <div
-        className="relative w-full h-[145rem] flex items-start justify-center overflow-y-scroll"
-        id="feed"
-      >
+      <div className="relative w-full h-[145rem] flex items-start justify-center overflow-y-scroll">
         <InfiniteScroll
           dataLength={16}
           loader={<></>}

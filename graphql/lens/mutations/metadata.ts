@@ -1,16 +1,16 @@
 import { FetchResult } from "@apollo/client";
 import { apolloClient } from "../../../lib/lens/client";
 import {
+  CreateOnchainSetProfileMetadataTypedDataDocument,
+  CreateOnchainSetProfileMetadataTypedDataMutation,
   OnchainSetProfileMetadataRequest,
-  SetDefaultProfileMutation,
-  SetProfileMetadataDocument,
 } from "../../generated";
 
 const profileMetadata = async (
   request: OnchainSetProfileMetadataRequest
-): Promise<FetchResult<SetDefaultProfileMutation>> => {
+): Promise<FetchResult<CreateOnchainSetProfileMetadataTypedDataMutation>> => {
   return await apolloClient.mutate({
-    mutation: SetProfileMetadataDocument,
+    mutation: CreateOnchainSetProfileMetadataTypedDataDocument,
     variables: {
       request: request,
     },
