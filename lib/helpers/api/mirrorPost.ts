@@ -12,7 +12,7 @@ import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import mirrorPost from "../../../graphql/lens/mutations/mirror";
 
-const lensQuote = async (
+const lensMirror = async (
   mirrorOn: string,
   dispatch: Dispatch<AnyAction>,
   address: `0x${string}`,
@@ -102,4 +102,4 @@ const lensQuote = async (
   );
 };
 
-export default lensQuote;
+export default lensMirror;

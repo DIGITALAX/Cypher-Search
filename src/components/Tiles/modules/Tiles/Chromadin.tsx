@@ -38,14 +38,14 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         mirror={mirror}
         like={like}
         comment={comment}
-        quote={quote}
         interactionsLoading={interactionsLoading}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         index={index}
-        publication={publication?.stats!}
-        collect={undefined}
+        publication={publication?.publication}
+        simpleCollect={undefined}
         type={undefined}
+        dispatch={dispatch}
       />
       <div className="relative flex flex-col items-center justify-start w-full h-fit gap-5">
         <div className="relative flex flex-row w-full justifty-between items-start h-fit gap-4">

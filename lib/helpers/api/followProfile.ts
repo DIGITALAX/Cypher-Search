@@ -98,7 +98,7 @@ const lensFollow = async (
 
   dispatch(
     setIndexer({
-      actionValue: false,
+      actionOpen: false,
       actionMessage: undefined,
     })
   );

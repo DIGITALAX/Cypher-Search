@@ -44,6 +44,8 @@ const useGallery = () => {
       mirror: boolean;
       quote: boolean;
       comment: boolean;
+      bookmark: boolean;
+      hide: boolean;
     }[]
   >([]);
   const [openMirrorGalleryChoice, setOpenMirrorGalleryChoice] = useState<
@@ -56,6 +58,9 @@ const useGallery = () => {
       quote: boolean;
       comment: boolean;
       simpleCollect: boolean;
+      bookmark: boolean;
+      interested: boolean;
+      hide: boolean;
     }[]
   >(
     Array.from({ length: 4 }, () => ({
@@ -64,6 +69,9 @@ const useGallery = () => {
       quote: false,
       comment: false,
       simpleCollect: false,
+      bookmark: false,
+      interested: false,
+      hide: false,
     }))
   );
   const [openMirrorDisplayChoice, setOpenMirrorDisplayChoice] = useState<
@@ -511,6 +519,9 @@ const useGallery = () => {
             mirror: false,
             quote: false,
             comment: false,
+            bookmark: false,
+            interested: false,
+            hide: false,
           })
         )
       );

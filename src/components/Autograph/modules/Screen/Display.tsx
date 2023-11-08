@@ -83,7 +83,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                     : undefined
                 }
                 type={undefined}
-                collect={undefined}
+                simpleCollect={undefined}
               />
             </div>
           )}
@@ -160,7 +160,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                           : undefined
                       }
                       type={undefined}
-                      collect={undefined}
+                      simpleCollect={undefined}
                     />
                   </div>
                 )}

@@ -290,6 +290,7 @@ export type CoinOpProps = {
 
 export type TextPostProps = {
   layoutAmount: number;
+  dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   publication: Post | Comment | Quote | Mirror;
   mirror: (id: string) => Promise<void>;

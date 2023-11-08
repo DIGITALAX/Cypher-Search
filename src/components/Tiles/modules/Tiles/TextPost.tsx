@@ -23,7 +23,8 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   followLoading,
   followProfile,
   unfollowProfile,
-  collect,
+  simpleCollect,
+  dispatch
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
@@ -36,18 +37,16 @@ const TextPost: FunctionComponent<TextPostProps> = ({
             mirror={mirror}
             like={like}
             comment={comment}
-            quote={quote}
+            dispatch={dispatch}
             interactionsLoading={interactionsLoading}
             layoutAmount={layoutAmount}
             openMirrorChoice={openMirrorChoice}
             setOpenMirrorChoice={setOpenMirrorChoice}
             index={index}
             publication={
-              publication?.__typename === "Mirror"
-                ? publication?.mirrorOn.stats
-                : (publication as Post)?.stats
+              publication?.__typename === "Mirror" ? publication : publication
             }
-            collect={
+            simpleCollect={
               (
                 publication?.__typename === "Mirror"
                   ? !publication?.mirrorOn.operations?.actedOn &&
@@ -63,7 +62,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                         .__typename ===
                         "MultirecipientFeeCollectOpenActionSettings")
               )
-                ? collect
+                ? simpleCollect
                 : undefined
             }
             type={

@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { ScreenDisplay, SortType, WebProps } from "../types/autograph.types";
 import ScreenSwitch from "./ScreenSwitch";
+import { setScreenDisplay } from "../../../../redux/reducers/screenDisplaySlice";
 
 const Web: FunctionComponent<WebProps> = ({
   router,
@@ -13,7 +14,6 @@ const Web: FunctionComponent<WebProps> = ({
   walletConnected,
   openAccountModal,
   screenDisplay,
-  setScreenDisplay,
   sortType,
   setSortType,
   mirror,
@@ -44,6 +44,26 @@ const Web: FunctionComponent<WebProps> = ({
   currencies,
   setCurrencyOpen,
   currencyOpen,
+  bookmarks,
+  bookmarksLoading,
+  simpleCollect,
+  handleBookmark,
+  mirrorBookmark,
+  likeBookmark,
+  commentBookmark,
+  openMirrorChoiceBookmark,
+  unfollowProfile,
+  followProfile,
+  openMoreOptions,
+  profileHovers,
+  setOpenMoreOptions,
+  setProfileHovers,
+  followLoading,
+  setOpenMirrorChoiceBookmark,
+  interactionsLoadingBookmark,
+  handleHidePost,
+  handleMoreBookmarks,
+  hasMoreBookmarks,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -148,6 +168,27 @@ const Web: FunctionComponent<WebProps> = ({
           followUpdateLoading={followUpdateLoading}
           followData={followData}
           setFollowData={setFollowData}
+          handleBookmark={handleBookmark}
+          handleHidePost={handleHidePost}
+          handleMoreBookmarks={handleMoreBookmarks}
+          hasMoreBookmarks={hasMoreBookmarks}
+          mirrorBookmark={mirrorBookmark}
+          commentBookmark={commentBookmark}
+          openMirrorChoiceBookmark={openMirrorChoiceBookmark}
+          setOpenMirrorChoiceBookmark={setOpenMirrorChoiceBookmark}
+          setOpenMoreOptions={setOpenMoreOptions}
+          setProfileHovers={setProfileHovers}
+          simpleCollect={simpleCollect}
+          openMoreOptions={openMoreOptions}
+          profileHovers={profileHovers}
+          likeBookmark={likeBookmark}
+          interactionsLoadingBookmark={interactionsLoadingBookmark}
+          bookmarks={bookmarks}
+          bookmarksLoading={bookmarksLoading}
+          router={router}
+          unfollowProfile={unfollowProfile}
+          followLoading={followLoading}
+          followProfile={followProfile}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
@@ -156,7 +197,7 @@ const Web: FunctionComponent<WebProps> = ({
             {
               image: "QmRozkh6CWW9u3ATqcMKr4w4LUEd4h1vNN4Gon3zsrtCA4",
               text: "display",
-              function: () => setScreenDisplay(ScreenDisplay.Display),
+              function: () => dispatch(setScreenDisplay(ScreenDisplay.Display)),
               width: "10",
               height: "10",
               type: ScreenDisplay.Display,
@@ -164,7 +205,7 @@ const Web: FunctionComponent<WebProps> = ({
             {
               image: "QmaGQyeUd1Upcei8b9UxiTC7TuDaQPP4Ps5mZpVB1w6Gto",
               text: "gallery",
-              function: () => setScreenDisplay(ScreenDisplay.Gallery),
+              function: () => dispatch(setScreenDisplay(ScreenDisplay.Gallery)),
               width: "10",
               height: "8",
               type: ScreenDisplay.Gallery,
@@ -172,7 +213,8 @@ const Web: FunctionComponent<WebProps> = ({
             {
               image: "QmT4sotWefLeZzT772BQX4hoDJDTjhm3NUQh12nzuaYe53",
               text: "circuits",
-              function: () => setScreenDisplay(ScreenDisplay.Circuits),
+              function: () =>
+                dispatch(setScreenDisplay(ScreenDisplay.Circuits)),
               width: "10",
               height: "10",
               type: ScreenDisplay.Circuits,
@@ -180,7 +222,8 @@ const Web: FunctionComponent<WebProps> = ({
             {
               image: "QmPh734pzjY3evPPgY9tvXNMyg7EFah6cc4L2R6U9p2gff",
               text: "bookmarks",
-              function: () => setScreenDisplay(ScreenDisplay.Bookmarks),
+              function: () =>
+                dispatch(setScreenDisplay(ScreenDisplay.Bookmarks)),
               width: "12",
               height: "12",
               type: ScreenDisplay.Bookmarks,
@@ -188,7 +231,8 @@ const Web: FunctionComponent<WebProps> = ({
             {
               image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",
               text: "settings",
-              function: () => setScreenDisplay(ScreenDisplay.Settings),
+              function: () =>
+                dispatch(setScreenDisplay(ScreenDisplay.Settings)),
               width: "10",
               height: "10",
               type: ScreenDisplay.Settings,

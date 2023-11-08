@@ -125,7 +125,7 @@ export default function Home() {
             like={like}
             comment={comment}
             quote={quote}
-            collect={collect}
+            simpleCollect={collect}
             interactionsLoading={interactionsLoading}
             setOpenMirrorChoice={setOpenMirrorChoice}
             openMirrorChoice={openMirrorChoice}

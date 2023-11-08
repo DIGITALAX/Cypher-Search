@@ -25,7 +25,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   followLoading,
   followProfile,
   unfollowProfile,
-  collect,
+  simpleCollect,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
@@ -84,7 +84,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 mirror={mirror}
                 like={like}
                 comment={comment}
-                quote={quote}
                 interactionsLoading={interactionsLoading}
                 layoutAmount={layoutAmount}
                 openMirrorChoice={openMirrorChoice}
@@ -92,10 +91,11 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 index={index}
                 publication={
                   publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn.stats
-                    : (publication as Post)?.stats
+                    ? publication
+                    : publication
                 }
-                collect={
+                dispatch={dispatch}
+                simpleCollect={
                   (
                     publication?.__typename === "Mirror"
                       ? !publication?.mirrorOn.operations?.actedOn &&
@@ -111,7 +111,10 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             .__typename ===
                             "MultirecipientFeeCollectOpenActionSettings")
                   )
-                    ? collect
+                    ? (simpleCollect as
+                      | ((id: string) => Promise<void>)
+                      | ((index: number, id: string) => Promise<void>)
+                      | undefined)
                     : undefined
                 }
                 type={
@@ -221,7 +224,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 mirror={mirror}
                 like={like}
                 comment={comment}
-                quote={quote}
                 interactionsLoading={interactionsLoading}
                 col
                 openMirrorChoice={openMirrorChoice}
@@ -229,10 +231,11 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 index={index}
                 publication={
                   publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn.stats
-                    : (publication as Post)?.stats
+                    ? publication
+                    : publication
                 }
-                collect={
+                dispatch={dispatch}
+                simpleCollect={
                   (
                     publication?.__typename === "Mirror"
                       ? !publication?.mirrorOn.operations?.actedOn &&
@@ -248,7 +251,10 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             .__typename ===
                             "MultirecipientFeeCollectOpenActionSettings")
                   )
-                    ? collect
+                    ? (simpleCollect as
+                        | ((id: string) => Promise<void>)
+                        | ((index: number, id: string) => Promise<void>)
+                        | undefined)
                     : undefined
                 }
                 type={

@@ -6,6 +6,7 @@ import { setVideoSync } from "../../../../redux/reducers/videoSyncSlice";
 import { ControlsProps } from "../types/tiles.types";
 import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
 import formatTime from "../../../../lib/helpers/formatTime";
+import { Post } from "../../../../graphql/generated";
 
 const Controls: FunctionComponent<ControlsProps> = ({
   dispatch,
@@ -78,14 +79,14 @@ const Controls: FunctionComponent<ControlsProps> = ({
               profileId
                 ? () => {
                     handleHeart();
-                    like(publication.id);
+                    like((publication?.post as Post)?.id);
                   }
                 : () => handleHeart()
             }
           >
             {interactionsLoading?.like ? (
               <AiOutlineLoading size={12} color="white" />
-            ) : publication?.operations?.hasReacted ? (
+            ) : (publication?.post as Post)?.operations?.hasReacted ? (
               <div className="relative w-3 h-3 flex items-center justify-center">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/Qmc3KCKWRgN8iKwwAPM5pYkAYNeVwWu3moa5RDMDTBV6ZS`}
@@ -106,7 +107,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
             )}
           </div>
           <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {publication?.stats?.reactions}
+            {(publication?.post as Post)?.stats?.reactions}
           </div>
         </div>
         <div className="relative flex flex-row w-fit h-fit items-center justify-center">
@@ -114,7 +115,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
             className={`${profileId && "cursor-pointer"} relative w-fit ${
               interactionsLoading?.comment && "animate-spin"
             }`}
-            onClick={() => comment(publication.id)}
+            onClick={() => comment((publication?.post as Post).id)}
           >
             {interactionsLoading?.comment ? (
               <AiOutlineLoading size={12} color="white" />
@@ -130,7 +131,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
             )}
           </div>
           <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {publication?.stats?.comments}
+            {(publication?.post as Post)?.stats?.comments}
           </div>
         </div>
         <div className="relative flex flex-row w-fit h-fit items-center justify-center">
@@ -138,11 +139,11 @@ const Controls: FunctionComponent<ControlsProps> = ({
             className={`${profileId && "cursor-pointer"} relative w-fit ${
               interactionsLoading?.mirror && "animate-spin"
             }`}
-            onClick={() => mirror(publication?.id)}
+            onClick={() => mirror((publication?.post as Post)?.id)}
           >
             {interactionsLoading?.mirror ? (
               <AiOutlineLoading size={12} color="white" />
-            ) : publication?.operations?.hasMirrored ? (
+            ) : (publication?.post as Post)?.operations?.hasMirrored ? (
               <div className="relative w-3 h-3 flex items-center justify-center">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/QmcMNSnbKvUfx3B3iHBd9deZCDf7E4J8W6UtyNer3xoMsB`}
@@ -163,7 +164,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
             )}
           </div>
           <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {publication?.stats?.mirrors}
+            {(publication?.post as Post)?.stats?.mirrors}
           </div>
         </div>
         <div

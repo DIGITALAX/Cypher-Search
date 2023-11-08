@@ -113,6 +113,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                   }
                   openInteractions={openInteractions}
                   setOpenInteractions={setOpenInteractions}
+                  
                 />
               );
             }

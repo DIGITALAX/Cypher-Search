@@ -40,7 +40,24 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   bookmarks,
   bookmarksLoading,
   simpleCollect,
-  handleRemoveBookmark,
+  handleBookmark,
+  mirrorBookmark,
+  likeBookmark,
+  commentBookmark,
+  openMirrorChoiceBookmark,
+  unfollowProfile,
+  followProfile,
+  openMoreOptions,
+  profileHovers,
+  setOpenMoreOptions,
+  setProfileHovers,
+  followLoading,
+  router,
+  setOpenMirrorChoiceBookmark,
+  interactionsLoadingBookmark,
+  handleHidePost,
+  handleMoreBookmarks,
+  hasMoreBookmarks,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -55,12 +72,25 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           bookmarks={bookmarks}
           bookmarksLoading={bookmarksLoading}
           simpleCollect={simpleCollect}
-          mirror={mirror}
-          like={like}
-          comment={comment}
-          simpleCollect={simpleCollect}
-          handleRemoveBookmark={handleRemoveBookmark}
-          interactionsLoading={interactionsLoading}
+          mirror={mirrorBookmark}
+          like={likeBookmark}
+          comment={commentBookmark}
+          handleBookmark={handleBookmark}
+          interactionsLoading={interactionsLoadingBookmark}
+          openMirrorChoice={openMirrorChoiceBookmark}
+          setOpenMirrorChoice={setOpenMirrorChoiceBookmark}
+          setProfileHovers={setProfileHovers}
+          profileHovers={profileHovers}
+          openMoreOptions={openMoreOptions}
+          setOpenMoreOptions={setOpenMoreOptions}
+          dispatch={dispatch}
+          router={router}
+          followLoading={followLoading}
+          unfollowProfile={unfollowProfile}
+          followProfile={followProfile}
+          handleHidePost={handleHidePost}
+          handleMoreBookmarks={handleMoreBookmarks}
+          hasMoreBookmarks={hasMoreBookmarks}
         />
       );
 

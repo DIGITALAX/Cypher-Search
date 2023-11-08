@@ -26,7 +26,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   openMirrorChoice,
   setOpenMirrorChoice,
   index,
-  collect,
+  simpleCollect,
   type,
   hideCollect,
   dispatch,
@@ -52,51 +52,51 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
       ).map((image: string, indexTwo: number) => {
         const functions: any = hideCollect
           ? [like, comment]
-          : [like, collect, comment];
+          : [like, simpleCollect, comment];
         const loaders = hideCollect
           ? [interactionsLoading?.like, interactionsLoading?.comment]
           : [
               interactionsLoading?.like,
-              interactionsLoading?.collect,
+              interactionsLoading?.simpleCollect,
               interactionsLoading?.comment,
             ];
         const stats = hideCollect
           ? [
-              (publication.__typename === "Mirror"
+              (publication?.__typename === "Mirror"
                 ? publication.mirrorOn
                 : (publication as Post)
               )?.stats?.mirrors! +
-                (publication.__typename === "Mirror"
+                (publication?.__typename === "Mirror"
                   ? publication.mirrorOn
                   : (publication as Post)
                 )?.stats?.quotes!,
-              (publication.__typename === "Mirror"
+              (publication?.__typename === "Mirror"
                 ? publication.mirrorOn
                 : (publication as Post)
               )?.stats?.reactions,
-              (publication.__typename === "Mirror"
+              (publication?.__typename === "Mirror"
                 ? publication.mirrorOn
                 : (publication as Post)
               )?.stats?.comments,
             ]
           : [
-              (publication.__typename === "Mirror"
+              (publication?.__typename === "Mirror"
                 ? publication.mirrorOn
                 : (publication as Post)
               )?.stats?.mirrors! +
-                (publication.__typename === "Mirror"
+                (publication?.__typename === "Mirror"
                   ? publication.mirrorOn
                   : (publication as Post)
                 )?.stats?.quotes!,
-              (publication.__typename === "Mirror"
+              (publication?.__typename === "Mirror"
                 ? publication.mirrorOn
                 : (publication as Post)
               )?.stats?.reactions,
-              (publication.__typename === "Mirror"
+              (publication?.__typename === "Mirror"
                 ? publication.mirrorOn
                 : (publication as Post)
               )?.stats?.countOpenActions,
-              (publication.__typename === "Mirror"
+              (publication?.__typename === "Mirror"
                 ? publication.mirrorOn
                 : (publication as Post)
               )?.stats?.comments,
@@ -109,7 +109,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             <div
               className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95"
               onClick={() => {
-                if (indexTwo === 2) {
+                if (indexTwo === 0) {
                   const choices = [...openMirrorChoice];
                   choices[index] = !choices[index];
                   setOpenMirrorChoice(choices);
@@ -150,7 +150,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
           </div>
         );
       })}
-      {!openMirrorChoice?.[index] && (
+      {openMirrorChoice?.[index] && (
         <div className="absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-black/80 rounded-sm left-2 -top-6">
           {[
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",

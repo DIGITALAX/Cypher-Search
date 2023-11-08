@@ -2,7 +2,13 @@ import { Filter } from "@/components/Search/types/search.types";
 import { Ref } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
-import { Post } from "../../../../graphql/generated";
+import {
+  Post,
+  PublicationReportingFraudSubreason,
+  PublicationReportingIllegalSubreason,
+  PublicationReportingSensitiveSubreason,
+  PublicationReportingSpamSubreason,
+} from "../../../../graphql/generated";
 import { MainVideoState } from "../../../../redux/reducers/mainVideoSlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { SortType } from "@/components/Autograph/types/autograph.types";
@@ -59,4 +65,29 @@ export type ImageLargeProps = {
 
 export type IndexProps = {
   message: string | undefined;
+};
+
+export type ReportPubProps = {
+  dispatch: Dispatch<AnyAction>;
+  id: string;
+  handleReportPost: (id: string) => Promise<void>;
+  reason: {
+    main: "Fraud" | "Illegal" | "Sensitive" | "Spam";
+    subreason:
+      | PublicationReportingFraudSubreason
+      | PublicationReportingIllegalSubreason
+      | PublicationReportingSensitiveSubreason
+      | PublicationReportingSpamSubreason;
+    additionalComments: string;
+  };
+  setReason: (e: {
+    main: "Fraud" | "Illegal" | "Sensitive" | "Spam";
+    subreason:
+      | PublicationReportingFraudSubreason
+      | PublicationReportingIllegalSubreason
+      | PublicationReportingSensitiveSubreason
+      | PublicationReportingSpamSubreason;
+    additionalComments: string;
+  }) => void;
+  reportLoading: boolean;
 };

@@ -88,7 +88,7 @@ const useProfile = () => {
         address as `0x${string}`,
         clientWallet,
         publicClient,
-        clearComment
+        clearFollow
       );
       await refetchProfile(dispatch, lensConnected?.id);
     } catch (err: any) {

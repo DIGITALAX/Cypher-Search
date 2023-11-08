@@ -5,6 +5,7 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
 import mapReducer from "./reducers/mapSlice";
+import reportPubReducer from "./reducers/reportPubSlice";
 import postBoxReducer from "./reducers/postBoxSlice";
 import videoSyncReducer from "./reducers/videoSyncSlice";
 import fullScreenVideoReducer from "./reducers/fullScreenVideoSlice";
@@ -28,10 +29,12 @@ import lastPostQuoteReducer from "./reducers/lastPostQuoteSlice";
 import autographProfileReducer from "./reducers/autographProfileSlice";
 import galleryItemsReducer from "./reducers/galleryItemsSlice";
 import autographFeedReducer from "./reducers/autographFeedSlice";
+import screenDisplayReducer from "./reducers/screenDisplaySlice";
 
 const reducer = combineReducers({
   searchActiveReducer,
   walletConnectedReducer,
+  reportPubReducer,
   lensConnectedReducer,
   filterReducer,
   mapReducer,
@@ -57,7 +60,8 @@ const reducer = combineReducers({
   profileDisplayReducer,
   autographFeedReducer,
   indexerReducer,
-  postBoxReducer
+  postBoxReducer,
+  screenDisplayReducer,
 });
 
 export const store = configureStore({

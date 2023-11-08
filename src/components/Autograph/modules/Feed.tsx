@@ -13,7 +13,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   openMirrorChoice,
   setOpenMirrorChoice,
   like,
-  collect,
+  simpleCollect,
   comment,
   router,
   unfollowProfile,
@@ -21,6 +21,12 @@ const Feed: FunctionComponent<FeedProps> = ({
   followLoading,
   profileHovers,
   setProfileHovers,
+  dispatch,
+  openMoreOptions,
+  setOpenMoreOptions,
+  handleBookmark,
+  handleHidePost,
+  hasMoreFeed
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -45,7 +51,7 @@ const Feed: FunctionComponent<FeedProps> = ({
             <InfiniteScroll
               dataLength={16}
               loader={<></>}
-              hasMore={true}
+              hasMore={hasMoreFeed}
               next={getMoreFeed}
               className="w-fit h-fit items-start justify-start flex flex-col gap-10"
             >
@@ -60,6 +66,7 @@ const Feed: FunctionComponent<FeedProps> = ({
                       <PostBar
                         index={index}
                         item={item}
+                        dispatch={dispatch}
                         router={router}
                         mirror={mirror}
                         like={like}
@@ -69,10 +76,14 @@ const Feed: FunctionComponent<FeedProps> = ({
                         setProfileHovers={setProfileHovers}
                         openMirrorChoice={openMirrorChoice}
                         setOpenMirrorChoice={setOpenMirrorChoice}
-                        collect={collect}
+                        simpleCollect={simpleCollect}
                         followLoading={followLoading}
                         followProfile={followProfile}
                         unfollowProfile={unfollowProfile}
+                        setOpenMoreOptions={setOpenMoreOptions}
+                        openMoreOptions={openMoreOptions}
+                        handleBookmark={handleBookmark}
+                        handleHidePost={handleHidePost}
                       />
                     </div>
                   );

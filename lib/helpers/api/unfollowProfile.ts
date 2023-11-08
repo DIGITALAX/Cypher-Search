@@ -86,9 +86,11 @@ const lensUnfollow = async (
     }
   }
 
+  
+
   dispatch(
     setIndexer({
-      actionValue: false,
+      actionOpen: false,
       actionMessage: undefined,
     })
   );
