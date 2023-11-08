@@ -13,6 +13,8 @@ import { setAutographFeed } from "../../../../redux/reducers/autographFeedSlice"
 import { polygon } from "viem/chains";
 import { createPublicClient, createWalletClient, custom, http } from "viem";
 import { useAccount } from "wagmi";
+import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
+import lensHide from "../../../../lib/helpers/api/hidePost";
 
 const useFeed = () => {
   const dispatch = useDispatch();
@@ -36,6 +38,8 @@ const useFeed = () => {
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []
   );
+  const [openMoreOptions, setOpenMoreOptions] = useState<boolean[]>([]);
+  const [hasMoreFeed, setHasMoreFeed] = useState<boolean>(false);
   const [feedLoading, setFeedLoading] = useState<boolean>(false);
   const [interactionsFeedLoading, setInteractionsFeedLoading] = useState<
     {
@@ -44,6 +48,8 @@ const useFeed = () => {
       quote: boolean;
       comment: boolean;
       simpleCollect: boolean;
+      bookmark: boolean;
+      hide: boolean;
     }[]
   >([]);
   const [feedCursor, setFeedCursor] = useState<string>();
@@ -65,6 +71,12 @@ const useFeed = () => {
       });
       dispatch(setAutographFeed(data?.publications?.items as any));
       setFeedCursor(data?.publications?.pageInfo?.next);
+      if (
+        data?.publications?.items &&
+        data?.publications?.items?.length === 25
+      ) {
+        setHasMoreFeed(true);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -72,7 +84,7 @@ const useFeed = () => {
   };
 
   const getMoreFeed = async () => {
-    if (!feedCursor) return;
+    if (!feedCursor || !hasMoreFeed) return;
 
     try {
       const { data } = await getPublications({
@@ -94,6 +106,14 @@ const useFeed = () => {
         ])
       );
       setFeedCursor(data?.publications?.pageInfo?.next);
+      if (
+        data?.publications?.items &&
+        data?.publications?.items?.length === 25
+      ) {
+        setHasMoreFeed(true);
+      } else {
+        setHasMoreFeed(false);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -216,11 +236,6 @@ const useFeed = () => {
     if (index === -1) {
       return;
     }
-    setInteractionsFeedLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], like: false };
-      return updatedArray;
-    });
 
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
@@ -287,6 +302,42 @@ const useFeed = () => {
     });
   };
 
+  const handleHidePost = async (id: string, index: number) => {
+    setInteractionsFeedLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[index] = { ...updatedArray[index], hide: true };
+      return updatedArray;
+    });
+    try {
+      await lensHide(id, dispatch);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setInteractionsFeedLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[index] = { ...updatedArray[index], hide: false };
+      return updatedArray;
+    });
+  };
+
+  const handleBookmark = async (on: string, index: number) => {
+    setInteractionsFeedLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[index] = { ...updatedArray[index], bookmark: true };
+      return updatedArray;
+    });
+    try {
+      await lensBookmark(on, dispatch);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setInteractionsFeedLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[index] = { ...updatedArray[index], bookmark: false };
+      return updatedArray;
+    });
+  };
+
   useEffect(() => {
     if (profileFeed?.length < 1) {
       getFeed();
@@ -302,6 +353,8 @@ const useFeed = () => {
           comment: false,
           quote: false,
           simpleCollect: false,
+          bookmark: false,
+          hide: false,
         }))
       );
       setOpenMirrorFeedChoice(
@@ -321,6 +374,11 @@ const useFeed = () => {
     feedQuote,
     feedCollect,
     getMoreFeed,
+    openMoreOptions,
+    setOpenMoreOptions,
+    handleBookmark,
+    handleHidePost,
+    hasMoreFeed,
   };
 };
 

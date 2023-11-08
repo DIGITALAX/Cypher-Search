@@ -22,6 +22,12 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   followProfile,
   simpleCollect,
   followLoading,
+  dispatch,
+  openMoreOptions,
+  setOpenMoreOptions,
+  handleBookmark,
+  handleHidePost,
+  bookmarksLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full pt-4 flex items-center justify-center">
@@ -30,12 +36,13 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll max-h-[75vh]">
+          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll max-h-[75vh]">
             <InfiniteScroll
               next={handleMoreBookmarks}
               hasMore={hasMoreBookmarks}
               dataLength={20}
               loader={<></>}
+              className="w-fit h-fit items-center justify-start flex flex-col gap-10"
             >
               {Array.from({ length: 10 }).map(
                 (item: Post | Mirror | Quote | Comment, index: number) => {
@@ -48,19 +55,24 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                       <PostBar
                         index={index}
                         item={item}
+                        dispatch={dispatch}
                         router={router}
                         mirror={mirror}
                         like={like}
                         comment={comment}
-                        interactionsLoading={interactionsLoading}
+                        interactionsLoading={interactionsLoading[index]}
                         profileHovers={profileHovers}
                         setProfileHovers={setProfileHovers}
                         openMirrorChoice={openMirrorChoice}
                         setOpenMirrorChoice={setOpenMirrorChoice}
-                        collect={simpleCollect}
+                        simpleCollect={simpleCollect}
                         followLoading={followLoading}
                         followProfile={followProfile}
                         unfollowProfile={unfollowProfile}
+                        setOpenMoreOptions={setOpenMoreOptions}
+                        openMoreOptions={openMoreOptions}
+                        handleBookmark={handleBookmark}
+                        handleHidePost={handleHidePost}
                       />
                     </div>
                   );

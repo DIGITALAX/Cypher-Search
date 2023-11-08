@@ -11,24 +11,30 @@ import {
 import numeral from "numeral";
 import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
+import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
+import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
   like,
   mirror,
-  quote,
+  dispatch,
   comment,
-  collect,
+  simpleCollect,
   interactionsLoading,
   item,
   openMirrorChoice,
   setOpenMirrorChoice,
+  openMoreOptions,
+  setOpenMoreOptions,
   router,
   profileHovers,
   setProfileHovers,
   followLoading,
   followProfile,
   unfollowProfile,
+  handleHidePost,
+  handleBookmark,
 }): JSX.Element => {
   return (
     <div className="relative w-full justify-between flex flex-row items-center gap-2">
@@ -66,7 +72,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               <div
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95"
                 onClick={() => {
-                  if (indexTwo === 2) {
+                  if (indexTwo === 0) {
                     const choices = [...openMirrorChoice];
                     choices[index] = !choices[index];
                     setOpenMirrorChoice(choices);
@@ -104,8 +110,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           );
         })}
       </div>
-      {!openMirrorChoice?.[index] && (
-        <div className="absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-ballena/20 rounded-sm left-2 -top-8">
+      {openMirrorChoice?.[index] && (
+        <div className="absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-lirio/80 rounded-sm left-2 -top-8 border border-white">
           {[
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
             "QmfDNH347Vph4b1tEuegydufjMU2QwKzYnMZCjygGvvUMM",
@@ -113,11 +119,19 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             const functions: (
               | ((id: string) => Promise<void>)
               | ((index: number, id: string) => Promise<void>)
-            )[] = [mirror, quote];
-            const loaders = [
-              interactionsLoading?.mirror,
-              interactionsLoading?.quote,
+              | (() => void)
+            )[] = [
+              mirror,
+              () =>
+                dispatch(
+                  setPostBox({
+                    actionOpen: true,
+                    actionId: item?.id,
+                    actionQuote: item,
+                  })
+                ),
             ];
+            const loaders = [interactionsLoading?.mirror];
             return (
               <div
                 key={indexTwo}
@@ -153,8 +167,12 @@ const PostBar: FunctionComponent<PostBarProps> = ({
       )}
       <div className="relative w-fit h-fit flex flex-row gap-2">
         <div
-          className="relative w-12 h-5 items-center justify-center flex cursor-pointer active:scale-95"
-          onClick={() => router.push(`/item/pub/${item.id}`)}
+          className="relative w-14 h-5 items-center justify-center flex cursor-pointer active:scale-95"
+          onClick={() => {
+            const arr = [...openMoreOptions];
+            arr[index] = !arr[index];
+            setOpenMoreOptions(arr);
+          }}
         >
           <Image
             layout="fill"
@@ -198,9 +216,9 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   "MultirecipientFeeCollectOpenActionSettings"
               ? "cursor-pointer active:scale-95"
               : "opacity-70"
-          } ${interactionsLoading?.collect && "animate-spin"}`}
+          } ${interactionsLoading?.simpleCollect && "animate-spin"}`}
           onClick={() =>
-            !interactionsLoading?.collect &&
+            !interactionsLoading?.simpleCollect &&
             (item?.__typename === "Mirror"
               ? (item as Mirror)?.mirrorOn?.openActionModules?.[0]
                   ?.__typename === "SimpleCollectOpenActionSettings" ||
@@ -210,7 +228,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   "SimpleCollectOpenActionSettings" ||
                 (item as Post)?.openActionModules?.[0]?.__typename ===
                   "MultirecipientFeeCollectOpenActionSettings") &&
-            collect(
+            simpleCollect(
               item?.__typename === "Mirror"
                 ? (item as Mirror)?.mirrorOn?.id
                 : item?.id,
@@ -221,7 +239,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             )
           }
         >
-          {interactionsLoading?.collect ? (
+          {interactionsLoading?.simpleCollect ? (
             <AiOutlineLoading size={15} color="white" />
           ) : (
             <Image
@@ -245,6 +263,69 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           />
         )}
       </div>
+      {openMoreOptions?.[index] && (
+        <div className="absolute w-fit h-fit flex flex-row gap-4 p-1 items-center justify-center bg-lirio/80 rounded-sm right-2 -top-10 border border-white">
+          {[
+            ["Hide Post", "QmUcaryzjgiLn34eXTPAZxmtfzWgTsUSeaim3yHnsmcnxx"],
+            ["Bookmark", "QmUHAMRX6fenDM6Eyt36N8839b8xbiMDkN9Wb8DXKY2aZC"],
+            ["Report Post", "QmRNwdrGa977LxHPbBv8KEAHBEEidKUiPtn4r6SmxDZHkd"],
+            ["View Post", "QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht"],
+          ].map((image: string[], indexTwo: number) => {
+            const functions = [
+              handleHidePost,
+              handleBookmark,
+              () =>
+                dispatch(
+                  setReportPub({
+                    actionOpen: true,
+                    actionFor: item?.id,
+                  })
+                ),
+              () => router.push(`/item/pub/${item?.id}`),
+            ];
+
+            const loaders = [
+              interactionsLoading?.hide,
+              interactionsLoading?.bookmark,
+            ];
+            return (
+              <div
+                key={indexTwo}
+                className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
+                title={image[0]}
+                onClick={() => {
+                  if (indexTwo !== 3 && indexTwo !== 2) {
+                    !loaders[index] &&
+                      (functions[indexTwo] as (id: string) => Promise<void>)(
+                        item?.id
+                      );
+                  } else {
+                    (functions[indexTwo] as () => void)();
+                  }
+                }}
+              >
+                {loaders[index] ? (
+                  <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
+                    <AiOutlineLoading size={15} color="white" />
+                  </div>
+                ) : (
+                  <div
+                    className={
+                      "relative w-5 h-5 flex items-center justify-center cursor-pointer active:scale-95"
+                    }
+                  >
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/${image[1]}`}
+                      draggable={false}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

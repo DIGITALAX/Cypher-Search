@@ -27,7 +27,6 @@ const Creation: FunctionComponent<CreationProps> = ({
   openInteractions,
   setOpenInteractions,
   comment,
-  quote,
   like,
   mirror,
   dispatch,
@@ -170,17 +169,17 @@ const Creation: FunctionComponent<CreationProps> = ({
         {openInteractions?.[index] && (
           <div className="absolute flex items-center w-fit h-fit justify-center -top-12 right-0">
             <InteractBar
-              collect={undefined}
+              simpleCollect={undefined}
               comment={comment}
+              dispatch={dispatch}
               like={like}
-              quote={quote}
               mirror={mirror}
               openMirrorChoice={openMirrorChoice}
               setOpenMirrorChoice={setOpenMirrorChoice}
               interactionsLoading={interactionsLoading}
               index={index}
               type={undefined}
-              publication={item?.stats}
+              publication={item.publication}
               hideCollect
             />
           </div>

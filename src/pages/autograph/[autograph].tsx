@@ -18,6 +18,7 @@ import useFeed from "@/components/Autograph/hooks/useFeed";
 import useGallery from "@/components/Autograph/hooks/useGallery";
 import useSettings from "@/components/Autograph/hooks/useSettings";
 import useProfile from "@/components/Autograph/hooks/useProfile";
+import useBookmarks from "@/components/Autograph/hooks/useBookmarks";
 
 const Autograph: NextPage = (): JSX.Element => {
   const router = useRouter();
@@ -51,6 +52,9 @@ const Autograph: NextPage = (): JSX.Element => {
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
+  const screenDisplay = useSelector(
+    (state: RootState) => state.app.screenDisplayReducer.value
+  );
   const { handleShuffleSearch } = useSearch();
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -75,8 +79,6 @@ const Autograph: NextPage = (): JSX.Element => {
   const {
     profileLoading,
     getProfileData,
-    setScreenDisplay,
-    screenDisplay,
     sortType,
     setSortType,
   } = useAutograph();
@@ -85,18 +87,21 @@ const Autograph: NextPage = (): JSX.Element => {
     interactionsFeedLoading,
     openMirrorFeedChoice,
     setOpenMirrorFeedChoice,
+    openMoreOptions,
+    setOpenMoreOptions,
     feedComment,
-    feedQuote,
     feedLike,
     feedMirror,
     feedCollect,
     getMoreFeed,
+    handleBookmark,
+    handleHidePost,
+    hasMoreFeed,
   } = useFeed();
   const {
     galleryComment,
     galleryLike,
     galleryMirror,
-    galleryQuote,
     openMirrorGalleryChoice,
     setOpenMirrorGalleryChoice,
     interactionsGalleryLoading,
@@ -106,7 +111,6 @@ const Autograph: NextPage = (): JSX.Element => {
     displayComment,
     displayLike,
     displayMirror,
-    displayQuote,
     handleSetDisplay,
     displayLoading,
     handleOptionSelect,
@@ -136,6 +140,28 @@ const Autograph: NextPage = (): JSX.Element => {
     currencyOpen,
     setCurrencyOpen,
   } = useSettings();
+  const {
+    handleMoreBookmarks,
+    openMirrorChoiceBookmark,
+    setOpenMirrorChoiceBookmark,
+    setOpenMoreOptionsBookmark,
+    interactionsLoadingBookmark,
+    openMoreOptionsBookmark,
+    bookmarksLoading,
+    handleBookmarkForBookmark,
+    handleHidePostForBookmark,
+    bookmarkCollect,
+    bookmarkComment,
+    bookmarkLike,
+    bookmarkMirror,
+    hasMoreBookmarks,
+    unfollowProfileBookmark,
+    setProfileHovers,
+    followProfileBookmark,
+    profileHovers,
+    followLoading,
+    allBookmarks,
+  } = useBookmarks();
 
   useEffect(() => {
     if (autograph && !profile) {
@@ -304,7 +330,6 @@ const Autograph: NextPage = (): JSX.Element => {
                 lensConnected={lensConnected}
                 openAccountModal={openAccountModal}
                 screenDisplay={screenDisplay}
-                setScreenDisplay={setScreenDisplay}
                 sortType={sortType}
                 setSortType={setSortType}
                 setOpenMirrorChoice={setOpenMirrorDisplayChoice}
@@ -328,6 +353,26 @@ const Autograph: NextPage = (): JSX.Element => {
                 followData={followData}
                 setFollowData={setFollowData}
                 currencies={currencies}
+                handleBookmark={handleBookmarkForBookmark}
+                handleHidePost={handleHidePostForBookmark}
+                handleMoreBookmarks={handleMoreBookmarks}
+                hasMoreBookmarks={hasMoreBookmarks}
+                mirrorBookmark={bookmarkMirror}
+                commentBookmark={bookmarkComment}
+                openMirrorChoiceBookmark={openMirrorChoiceBookmark}
+                setOpenMirrorChoiceBookmark={setOpenMirrorChoiceBookmark}
+                setOpenMoreOptions={setOpenMoreOptionsBookmark}
+                setProfileHovers={setProfileHovers}
+                simpleCollect={bookmarkCollect}
+                openMoreOptions={openMoreOptionsBookmark}
+                profileHovers={profileHovers}
+                likeBookmark={bookmarkLike}
+                interactionsLoadingBookmark={interactionsLoadingBookmark}
+                bookmarks={allBookmarks}
+                bookmarksLoading={bookmarksLoading}
+                unfollowProfile={unfollowProfileBookmark}
+                followLoading={followLoading}
+                followProfile={followProfileBookmark}
               />
               <Bio profile={profile} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
@@ -335,7 +380,8 @@ const Autograph: NextPage = (): JSX.Element => {
                   comment={feedComment}
                   mirror={feedMirror}
                   like={feedLike}
-                  collect={feedCollect}
+                  simpleCollect={feedCollect}
+                  dispatch={dispatch}
                   openMirrorChoice={openMirrorFeedChoice}
                   setOpenMirrorChoice={setOpenMirrorFeedChoice}
                   interactionsLoading={interactionsFeedLoading}
@@ -347,6 +393,11 @@ const Autograph: NextPage = (): JSX.Element => {
                   followLoading={galleryFollowLoading}
                   profileHovers={galleryProfileHovers}
                   setProfileHovers={setGalleryProfileHovers}
+                  setOpenMoreOptions={setOpenMoreOptions}
+                  openMoreOptions={openMoreOptions}
+                  handleHidePost={handleHidePost}
+                  handleBookmark={handleBookmark}
+                  hasMoreFeed={hasMoreFeed}
                 />
                 <Gallery
                   comment={galleryComment}

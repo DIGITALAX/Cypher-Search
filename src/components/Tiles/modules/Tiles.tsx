@@ -20,7 +20,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   like,
   comment,
   quote,
-  collect,
+  simpleCollect,
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
@@ -87,7 +87,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
         like={like}
         comment={comment}
         quote={quote}
-        collect={collect}
+        collect={simpleCollect}
         interactionsLoading={interactionsLoading}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}

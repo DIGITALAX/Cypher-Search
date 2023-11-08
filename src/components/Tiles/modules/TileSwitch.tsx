@@ -52,7 +52,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   followProfile,
   profileHovers,
   setProfileHovers,
-  collect,
+  simpleCollect,
   community,
 }) => {
   switch (type?.toLowerCase()) {
@@ -115,7 +115,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           quote={quote}
           interactionsLoading={interactionsLoading?.[index]}
           index={index}
-          collect={collect}
+          simpleCollect={simpleCollect}
           followLoading={followLoading}
           followProfile={followProfile}
           unfollowProfile={unfollowProfile}
@@ -208,6 +208,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           layoutAmount={layoutAmount}
           router={router}
           publication={publication?.post as Post | Comment | Quote | Mirror}
+          dispatch={dispatch}
           mirror={mirror}
           like={like}
           comment={comment}
@@ -219,7 +220,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           followLoading={followLoading}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
-          collect={collect}
+          simpleCollect={simpleCollect}
         />
       );
     case "video":
@@ -274,7 +275,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           index={index}
           dispatch={dispatch}
           router={router}
-          publication={publication?.post as Post | Comment | Quote | Mirror}
+          publication={publication?.post as Post}
           cartItems={cartItems}
           mirror={mirror}
           like={like}

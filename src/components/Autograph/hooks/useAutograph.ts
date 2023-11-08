@@ -1,6 +1,6 @@
 import { useState } from "react";
 import getProfile from "../../../../graphql/lens/queries/profile";
-import { ScreenDisplay, SortType } from "../types/autograph.types";
+import { SortType } from "../types/autograph.types";
 import { Profile } from "../../../../graphql/generated";
 import { setAutographProfile } from "../../../../redux/reducers/autographProfileSlice";
 import { useDispatch } from "react-redux";
@@ -8,9 +8,6 @@ import { useDispatch } from "react-redux";
 const useAutograph = () => {
   const dispatch = useDispatch();
   const [profileLoading, setProfileLoading] = useState<boolean>(false);
-  const [screenDisplay, setScreenDisplay] = useState<ScreenDisplay>(
-    ScreenDisplay.Display
-  );
   const [sortType, setSortType] = useState<SortType>(SortType.Public);
 
   const getProfileData = async (autograph: string) => {
@@ -35,8 +32,6 @@ const useAutograph = () => {
   return {
     profileLoading,
     getProfileData,
-    setScreenDisplay,
-    screenDisplay,
     sortType,
     setSortType,
   };

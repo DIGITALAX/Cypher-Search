@@ -2,10 +2,7 @@ import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
-import {
-  DIGITALAX_PROFILE_ID_LENS,
-  PLACEHOLDERS,
-} from "../../../../lib/constants";
+import { PLACEHOLDERS } from "../../../../lib/constants";
 import {
   LimitType,
   Post,
@@ -33,14 +30,12 @@ import {
 import searchPubs from "../../../../graphql/lens/queries/searchPubs";
 import searchProfiles from "../../../../graphql/lens/queries/searchProfiles";
 import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
-import getProfile from "../../../../graphql/lens/queries/profile";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import buildQuery from "../../../../lib/helpers/buildQuery";
 import getProfiles from "../../../../graphql/lens/queries/profiles";
 import { setCachedProfiles } from "../../../../redux/reducers/cachedProfilesSlice";
-import getStats from "../../../../graphql/lens/queries/stats";
 
 const useSearch = () => {
   const searchActive = useSelector(
@@ -115,7 +110,8 @@ const useSearch = () => {
           collections = await filterSearch(0);
         }
         query = searchInput;
-      } {
+      }
+      {
         collections = await filterSearch(0);
         if (!searchInput) {
           query = filters?.hashtag || filters?.community;
@@ -482,11 +478,6 @@ const useSearch = () => {
           profileIds: profilesToRetrieve,
         },
       });
-      const { data: statsData } = await getStats({
-        where: {
-          publicationIds: collections?.map((item) => item.pubId),
-        },
-      });
 
       (data?.profiles?.items as Profile[])?.forEach((profile: Profile) => {
         profileCache[profile.id] = profile;
@@ -496,17 +487,10 @@ const useSearch = () => {
         Object.entries(profileCache).map(([id, profile]) => [id, profile])
       );
 
-      const statsMap = new Map(
-        Object.entries(statsData?.publications?.items!).map(
-          ([id, publication]) => [id, publication]
-        )
-      );
-
       const newCollections: Creation[] = collections.map(
         (collection: Creation) => ({
           ...collection,
           profile: profileMap.get(collection?.profileId),
-          stats: statsMap.get(collection?.pubId),
         })
       ) as Creation[];
 

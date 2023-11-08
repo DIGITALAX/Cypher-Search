@@ -10,6 +10,8 @@ import InteractError from "./InteractError";
 import DisplaySearch from "./DisplaySearch";
 import useDisplaySearch from "../hooks/useDisplaySearch";
 import Index from "./Indexer";
+import ReportPub from "./ReportPub";
+import useReport from "../hooks/useReport";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -22,6 +24,9 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const indexer = useSelector((state: RootState) => state.app.indexerReducer);
   const galleryItems = useSelector(
     (state: RootState) => state.app.galleryItemsReducer.items
+  );
+  const reportReason = useSelector(
+    (state: RootState) => state.app.reportPubReducer
   );
   const displaySearch = useSelector(
     (state: RootState) => state.app.displaySearchBoxReducer
@@ -53,6 +58,8 @@ const Modals: FunctionComponent = (): JSX.Element => {
     selectedItem,
     sortedGallery,
   } = useDisplaySearch();
+
+  const { handleReportPost, reason, setReason, reportLoading } = useReport();
   return (
     <>
       {fullScreenVideo?.value && (
@@ -86,9 +93,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
           handleResetFilters={handleResetFilters}
         />
       )}
-      {!indexer?.open && (
-        <Index message={indexer?.message} />
-      )}
+      {indexer?.open && <Index message={indexer?.message} />}
       {image?.value && (
         <ImageLarge
           dispatch={dispatch}
@@ -109,7 +114,16 @@ const Modals: FunctionComponent = (): JSX.Element => {
           numberIndex={displaySearch?.value}
         />
       )}
-
+      {reportReason?.open && (
+        <ReportPub
+          dispatch={dispatch}
+          id={reportReason?.for!}
+          reason={reason}
+          setReason={setReason}
+          handleReportPost={handleReportPost}
+          reportLoading={reportLoading}
+        />
+      )}
       {interactError.value && <InteractError dispatch={dispatch} />}
     </>
   );

@@ -28,7 +28,6 @@ export type WebProps = {
   lensConnected: Profile | undefined;
   walletConnected: boolean;
   screenDisplay: ScreenDisplay;
-  setScreenDisplay: (e: ScreenDisplay) => void;
   sortType: SortType;
   setSortType: (e: SortType) => void;
   mirror: (index: number, id: string) => Promise<void>;
@@ -38,6 +37,8 @@ export type WebProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+    hide: boolean;
   }[];
   handleSetDisplay: () => void;
   displayLoading: boolean;
@@ -70,31 +71,65 @@ export type WebProps = {
   currencies: Erc20[];
   setCurrencyOpen: (e: boolean) => void;
   currencyOpen: boolean;
+  interactionsLoadingBookmark: {
+    like: boolean;
+    mirror: boolean;
+    comment: boolean;
+    bookmark: boolean;
+    simpleCollect: boolean;
+    hide: boolean;
+  }[];
+  hasMoreBookmarks: boolean;
+  simpleCollect: (id: string, type: string) => Promise<void>;
+  handleMoreBookmarks: () => Promise<void>;
+  handleBookmark: (id: string, index: number) => Promise<void>;
+  handleHidePost: (id: string, index: number) => Promise<void>;
+  bookmarks: (Post | Mirror | Comment | Quote)[];
+  bookmarksLoading: boolean;
+  mirrorBookmark: (id: string) => Promise<void>;
+  likeBookmark: (id: string) => Promise<void>;
+  commentBookmark: (id: string) => Promise<void>;
+  setOpenMirrorChoiceBookmark: (e: boolean[]) => void;
+  openMirrorChoiceBookmark: boolean[];
+  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string) => Promise<void>;
+  openMoreOptions: boolean[];
+  profileHovers: boolean[];
+  setOpenMoreOptions: (e: boolean[]) => void;
+  setProfileHovers: (e: boolean[]) => void;
+  followLoading: boolean[];
 };
 
 export type BookmarksProps = {
   bookmarks: (Post | Mirror | Comment | Quote)[];
   bookmarksLoading: boolean;
   hasMoreBookmarks: boolean;
-  simpleCollect: (id: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
   handleMoreBookmarks: () => Promise<void>;
-  handleRemoveBookmark: (id: string) => Promise<void>;
-  mirror: (index: number, id: string) => Promise<void>;
-  like: (index: number, id: string) => Promise<void>;
-  comment: (index: number, id: string) => Promise<void>;
+  handleBookmark: (id: string, index: number) => Promise<void>;
+  handleHidePost: (id: string, index: number) => Promise<void>;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  comment: (id: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+    hide: boolean;
+    simpleCollect: boolean;
   }[];
   router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: boolean[]) => void;
   profileHovers: boolean[];
   setProfileHovers: (e: boolean[]) => void;
   unfollowProfile: (id: string) => Promise<void>;
   followProfile: (id: string) => Promise<void>;
-  followLoading: boolean;
+  followLoading: boolean[];
+  setOpenMoreOptions: (e: boolean[]) => void;
+  openMoreOptions: boolean[];
 };
 
 export enum ScreenDisplay {
@@ -127,12 +162,23 @@ export type GalleryScreenProps = {
 
 export type ScreenSwitchProps = {
   screenDisplay: ScreenDisplay;
-  bookmarks: Post | Mirror | Comment | Quote;
+  bookmarks: (Post | Mirror | Comment | Quote)[];
   bookmarksLoading: boolean;
-  simpleCollect: (id: string) => Promise<void>;
-  handleRemoveBookmark: (id: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
+  handleBookmark: (id: string, index: number) => Promise<void>;
+  handleHidePost: (id: string, index: number) => Promise<void>;
+  handleMoreBookmarks: () => Promise<void>;
   dispatch: Dispatch<AnyAction>;
   owner: boolean;
+  interactionsLoadingBookmark: {
+    like: boolean;
+    mirror: boolean;
+    comment: boolean;
+    bookmark: boolean;
+    simpleCollect: boolean;
+    hide: boolean;
+  }[];
+  hasMoreBookmarks: boolean;
   handleSetDisplay: () => void;
   displayLoading: boolean;
   mirror: (index: number, id: string) => Promise<void>;
@@ -146,6 +192,8 @@ export type ScreenSwitchProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+    hide: boolean;
   }[];
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
@@ -177,6 +225,19 @@ export type ScreenSwitchProps = {
   currencies: Erc20[];
   setCurrencyOpen: (e: boolean) => void;
   currencyOpen: boolean;
+  mirrorBookmark: (id: string) => Promise<void>;
+  likeBookmark: (id: string) => Promise<void>;
+  commentBookmark: (id: string) => Promise<void>;
+  setOpenMirrorChoiceBookmark: (e: boolean[]) => void;
+  openMirrorChoiceBookmark: boolean[];
+  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string) => Promise<void>;
+  openMoreOptions: boolean[];
+  profileHovers: boolean[];
+  setOpenMoreOptions: (e: boolean[]) => void;
+  setProfileHovers: (e: boolean[]) => void;
+  followLoading: boolean[];
+  router: NextRouter;
 };
 
 export type SettingsProps = {
@@ -214,6 +275,9 @@ export type DisplayProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+
+    hide: boolean;
   }[];
   owner: boolean;
   setOpenMirrorChoice: (e: boolean[]) => void;
@@ -258,12 +322,18 @@ export type FeedProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
+  openMoreOptions: boolean[];
+  hasMoreFeed: boolean;
+  setOpenMoreOptions: (e: boolean[]) => void;
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     comment: boolean;
     simpleCollect: boolean;
+    bookmark: boolean;
+
+    hide: boolean;
   }[];
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
@@ -274,6 +344,9 @@ export type FeedProps = {
   followProfile: (id: string, feed?: boolean) => Promise<void>;
   profileHovers: boolean[];
   setProfileHovers: (e: boolean[]) => void;
+  dispatch: Dispatch<AnyAction>;
+  handleBookmark: (id: string, index: number) => Promise<void>;
+  handleHidePost: (id: string, index: number) => Promise<void>;
 };
 
 export type GalleryProps = {
@@ -292,6 +365,9 @@ export type GalleryProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+
+    hide: boolean;
   }[];
   followLoading: boolean[];
   unfollowProfile: (id: string, feed?: boolean) => Promise<void>;
@@ -339,6 +415,9 @@ export type CreationProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+
+    hide: boolean;
   };
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
@@ -351,14 +430,20 @@ export type PostBarProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   simpleCollect: (id: string, type: string) => Promise<void>;
+  handleBookmark: (id: string, index: number) => Promise<void>;
+  handleHidePost: (id: string, index: number) => Promise<void>;
   item: Post | Quote | Mirror | Comment;
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
+  openMoreOptions: boolean[];
+  setOpenMoreOptions: (e: boolean[]) => void;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     comment: boolean;
     simpleCollect: boolean;
+    bookmark: boolean;
+    hide: boolean;
   };
   router: NextRouter;
   setProfileHovers: (e: boolean[]) => void;
@@ -366,6 +451,7 @@ export type PostBarProps = {
   followLoading: boolean[];
   unfollowProfile: (id: string) => Promise<void>;
   followProfile: (id: string) => Promise<void>;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type TextProps = {
