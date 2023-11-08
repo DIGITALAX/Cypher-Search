@@ -1,15 +1,20 @@
 import { FetchResult } from "@apollo/client";
+import {
+  CreateFollowTypedDataDocument,
+  CreateFollowTypedDataMutation,
+  FollowRequest,
+} from "../../generated";
 import { apolloClient } from "../../../lib/lens/client";
-import { FollowDocument, FollowMutation, FollowRequest } from "../../generated";
 
 const follow = async (
   request: FollowRequest
-): Promise<FetchResult<FollowMutation>> => {
+): Promise<FetchResult<CreateFollowTypedDataMutation>> => {
   return await apolloClient.mutate({
-    mutation: FollowDocument,
+    mutation: CreateFollowTypedDataDocument,
     variables: {
-      request: request,
+      request,
     },
+    fetchPolicy: "no-cache",
   });
 };
 

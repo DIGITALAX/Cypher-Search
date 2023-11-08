@@ -14,7 +14,6 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   mirror,
   like,
   router,
-  quote,
   openMirrorChoice,
   handleOptionSelect,
   setOpenMirrorChoice,
@@ -34,7 +33,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   return (
     <div className="relative w-full h-full flex flex-col gap-4 items-center justify-start flex-grow">
       <div className="relative w-full justify-end flex items-center h-fit">
-        <div className="relative w-60 h-fit flex items-center justify-between flex p-2 border border-afilado rounded-md gap-3 font-bit">
+        <div className="relative w-[16rem] h-fit flex items-center justify-between flex p-2 border border-afilado rounded-md gap-3 font-bit">
           <div className="relative w-fit h-fit flex items-center justify-center text-white text-md top-px">
             Gallery
           </div>
@@ -99,7 +98,6 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                   comment={comment}
                   mirror={mirror}
                   like={like}
-                  quote={quote}
                   openMirrorChoice={openMirrorChoice}
                   setOpenMirrorChoice={setOpenMirrorChoice}
                   interactionsLoading={interactionsLoading?.[index]}

@@ -56,7 +56,7 @@ export type InteractBarProps = {
   comment:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>);
-  collect:
+    simpleCollect:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>)
     | undefined;
@@ -64,7 +64,7 @@ export type InteractBarProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
-    collect?: boolean;
+    simpleCollect?: boolean;
   };
   type: string | undefined;
   publication: Post | Mirror | Quote | Comment | undefined;

@@ -58,6 +58,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           mirror={mirror}
           like={like}
           comment={comment}
+          simpleCollect={simpleCollect}
           handleRemoveBookmark={handleRemoveBookmark}
           interactionsLoading={interactionsLoading}
         />

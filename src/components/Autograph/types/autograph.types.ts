@@ -73,9 +73,11 @@ export type WebProps = {
 };
 
 export type BookmarksProps = {
-  bookmarks: Post | Mirror | Comment | Quote;
+  bookmarks: (Post | Mirror | Comment | Quote)[];
   bookmarksLoading: boolean;
+  hasMoreBookmarks: boolean;
   simpleCollect: (id: string) => Promise<void>;
+  handleMoreBookmarks: () => Promise<void>;
   handleRemoveBookmark: (id: string) => Promise<void>;
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string) => Promise<void>;
@@ -85,6 +87,14 @@ export type BookmarksProps = {
     mirror: boolean;
     comment: boolean;
   }[];
+  router: NextRouter;
+  openMirrorChoice: boolean[];
+  setOpenMirrorChoice: (e: boolean[]) => void;
+  profileHovers: boolean[];
+  setProfileHovers: (e: boolean[]) => void;
+  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string) => Promise<void>;
+  followLoading: boolean;
 };
 
 export enum ScreenDisplay {
@@ -240,7 +250,7 @@ export interface Display {
 }
 
 export type PostProps = {
-  item: Post | Quote | Mirror;
+  item: Post | Quote | Mirror | Comment;
 };
 
 export type FeedProps = {
@@ -248,12 +258,12 @@ export type FeedProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
-  collect: (id: string, type: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     comment: boolean;
-    collect: boolean;
+    simpleCollect: boolean;
   }[];
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
@@ -340,15 +350,15 @@ export type PostBarProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
-  collect: (id: string, type: string) => Promise<void>;
-  item: Post | Mirror | Quote;
+  simpleCollect: (id: string, type: string) => Promise<void>;
+  item: Post | Quote | Mirror | Comment;
   setOpenMirrorChoice: (e: boolean[]) => void;
   openMirrorChoice: boolean[];
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
     comment: boolean;
-    collect: boolean;
+    simpleCollect: boolean;
   };
   router: NextRouter;
   setProfileHovers: (e: boolean[]) => void;
@@ -359,5 +369,5 @@ export type PostBarProps = {
 };
 
 export type TextProps = {
-  item: Post | Quote | Mirror;
+  item: Post | Quote | Mirror | Comment;
 };

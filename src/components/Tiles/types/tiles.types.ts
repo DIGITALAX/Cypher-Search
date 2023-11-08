@@ -70,7 +70,7 @@ export type TilesProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
-  collect: (id: string, type: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -102,7 +102,7 @@ export type TileSwitchProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
-  collect: (id: string, type: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -296,7 +296,7 @@ export type TextPostProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
-  collect: (id: string, type: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -333,7 +333,7 @@ export type ImagePostProps = {
   like: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   quote: (id: string) => Promise<void>;
-  collect: (id: string, type: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;

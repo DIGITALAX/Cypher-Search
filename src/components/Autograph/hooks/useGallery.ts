@@ -9,15 +9,20 @@ import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuot
 import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { Display } from "../types/autograph.types";
-import { MetadataAttributeType, Profile } from "../../../../graphql/generated";
-import profileMetadata from "../../../../graphql/lens/mutations/metadata";
-import pollUntilIndexed from "../../../../graphql/lens/queries/indexed";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
-import getProfile from "../../../../graphql/lens/queries/profile";
-import { setLensConnected } from "../../../../redux/reducers/lensConnectedSlice";
+import { MetadataAttributeType } from "../../../../graphql/generated";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
+import { useAccount } from "wagmi";
+import setMeta from "../../../../lib/helpers/api/setMeta";
+import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 
 const useGallery = () => {
   const dispatch = useDispatch();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
+  const { address } = useAccount();
   const lastPostComment = useSelector(
     (state: RootState) => state.app.lastPostCommentReducer
   );
@@ -50,7 +55,7 @@ const useGallery = () => {
       mirror: boolean;
       quote: boolean;
       comment: boolean;
-      collect: boolean;
+      simpleCollect: boolean;
     }[]
   >(
     Array.from({ length: 4 }, () => ({
@@ -58,7 +63,7 @@ const useGallery = () => {
       mirror: false,
       quote: false,
       comment: false,
-      collect: false,
+      simpleCollect: false,
     }))
   );
   const [openMirrorDisplayChoice, setOpenMirrorDisplayChoice] = useState<
@@ -153,26 +158,20 @@ const useGallery = () => {
       });
       const responseJSON = await response.json();
 
-      const { data } = await profileMetadata({
-        metadataURI: "ipfs://" + responseJSON.cid,
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
       });
 
-      if (data?.setDefaultProfile.__typename === "RelaySuccess") {
-        const result = await pollUntilIndexed({
-          forTxId: data?.setDefaultProfile?.txId,
-        });
+      await setMeta(
+        "ipfs://" + responseJSON.cid,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
 
-        if (!result) {
-          dispatch(setInteractError(true));
-          console.error(result);
-        } else {
-          const { data } = await getProfile({
-            forProfileId: lensConnected?.id,
-          });
-
-          dispatch(setLensConnected(data?.profile as Profile));
-        }
-      }
+      await refetchProfile(dispatch, lensConnected?.id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -202,7 +201,20 @@ const useGallery = () => {
         lastPostComment.gifs
       );
 
-      await lensComment(id, contentURI!, dispatch, lastPostComment.collectType);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensComment(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostComment.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -235,8 +247,20 @@ const useGallery = () => {
         lastPostQuote.videos,
         lastPostQuote.gifs
       );
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
 
-      await lensQuote(id, contentURI!, dispatch, lastPostQuote.collectType);
+      await lensQuote(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostQuote.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -290,7 +314,17 @@ const useGallery = () => {
     });
 
     try {
-      await lensMirror(id, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      await lensMirror(
+        id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -317,7 +351,20 @@ const useGallery = () => {
         lastPostComment.gifs
       );
 
-      await lensComment(id, contentURI!, dispatch, lastPostComment.collectType);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensComment(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostComment.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -344,7 +391,20 @@ const useGallery = () => {
         lastPostQuote.gifs
       );
 
-      await lensQuote(id, contentURI!, dispatch, lastPostQuote.collectType);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensQuote(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostQuote.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -384,7 +444,17 @@ const useGallery = () => {
     });
 
     try {
-      await lensMirror(id, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      await lensMirror(
+        id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }

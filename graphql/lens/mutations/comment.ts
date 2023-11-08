@@ -1,18 +1,18 @@
 import { FetchResult } from "@apollo/client";
 import { apolloClient } from "../../../lib/lens/client";
 import {
-  CommentOnchainDocument,
-  CommentOnchainMutation,
+  CreateOnchainCommentTypedDataDocument,
+  CreateOnchainCommentTypedDataMutation,
   OnchainCommentRequest,
 } from "../../generated";
 
-const commentPost = async (
+export const commentPost = async (
   request: OnchainCommentRequest
-): Promise<FetchResult<CommentOnchainMutation>> => {
+): Promise<FetchResult<CreateOnchainCommentTypedDataMutation>> => {
   return await apolloClient.mutate({
-    mutation: CommentOnchainDocument,
+    mutation: CreateOnchainCommentTypedDataDocument,
     variables: {
-      request: request,
+      request,
     },
   });
 };

@@ -1,20 +1,19 @@
 import { FetchResult } from "@apollo/client";
 import { apolloClient } from "../../../lib/lens/client";
 import {
+  CreateOnchainQuoteTypedDataDocument,
+  CreateOnchainQuoteTypedDataMutation,
   OnchainQuoteRequest,
-  QuoteOnchainDocument,
-  QuoteOnchainMutation,
 } from "../../generated";
 
 const quotePost = async (
   request: OnchainQuoteRequest
-): Promise<FetchResult<QuoteOnchainMutation>> => {
+): Promise<FetchResult<CreateOnchainQuoteTypedDataMutation>> => {
   return await apolloClient.mutate({
-    mutation: QuoteOnchainDocument,
+    mutation: CreateOnchainQuoteTypedDataDocument,
     variables: {
-      request: request,
+      request,
     },
   });
 };
-
 export default quotePost;

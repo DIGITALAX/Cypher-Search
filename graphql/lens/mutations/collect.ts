@@ -1,16 +1,16 @@
 import { FetchResult } from "@apollo/client";
 import { apolloClient } from "../../../lib/lens/client";
 import {
-  ActOnOpenActionDocument,
-  ActOnOpenActionMutation,
   ActOnOpenActionRequest,
+  CreateActOnOpenActionTypedDataDocument,
+  CreateActOnOpenActionTypedDataMutation,
 } from "../../generated";
 
 const collectPost = async (
   request: ActOnOpenActionRequest
-): Promise<FetchResult<ActOnOpenActionMutation>> => {
+): Promise<FetchResult<CreateActOnOpenActionTypedDataMutation>> => {
   return await apolloClient.mutate({
-    mutation: ActOnOpenActionDocument,
+    mutation: CreateActOnOpenActionTypedDataDocument,
     variables: {
       request: request,
     },

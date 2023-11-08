@@ -181,8 +181,8 @@ const Web: FunctionComponent<WebProps> = ({
               image: "QmPh734pzjY3evPPgY9tvXNMyg7EFah6cc4L2R6U9p2gff",
               text: "bookmarks",
               function: () => setScreenDisplay(ScreenDisplay.Bookmarks),
-              width: "10",
-              height: "10",
+              width: "12",
+              height: "12",
               type: ScreenDisplay.Bookmarks,
             },
             {
