@@ -465,3 +465,20 @@ input::-webkit-outer-spin-button:focus {
     rgba(240, 236, 246, 0.8)
   );
 }
+
+
+#fadedQuote {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #1f2937 0%,
+    #1f2937 50%,
+    transparent 95%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    to bottom,
+    #1f2937 0%,
+    #1f2937 50%,
+    transparent 100%
+  );
+}

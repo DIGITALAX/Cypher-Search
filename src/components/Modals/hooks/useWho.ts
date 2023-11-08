@@ -24,6 +24,7 @@ const useWho = () => {
   const [mirrorQuote, setMirrorQuote] = useState<boolean>(false);
 
   const showLikes = async () => {
+    if (!reactBox.id) return;
     setDataLoading(true);
     try {
       const data = await whoReactedPublication({
@@ -51,6 +52,7 @@ const useWho = () => {
   };
 
   const showComments = async () => {
+    if (!reactBox.id) return;
     setDataLoading(true);
 
     try {
@@ -89,18 +91,12 @@ const useWho = () => {
   };
 
   const showMirrorQuotes = async () => {
-    if (
-      (!hasMore || !pageInfo) &&
-      !mirrorQuote &&
-      (!hasMoreQuote || !pageInfoQuote) &&
-      mirrorQuote
-    )
-      return;
+    if (!reactBox.id) return;
 
     setDataLoading(true);
 
     try {
-      if (hasMore && !mirrorQuote) {
+      if (!mirrorQuote) {
         const mirrorData = await getPublications({
           limit: LimitType.Ten,
           where: {
@@ -123,7 +119,7 @@ const useWho = () => {
         setPageInfo(mirrorData.data?.publications.pageInfo.next);
       }
 
-      if (hasMoreQuote && mirrorQuote) {
+      if (mirrorQuote) {
         const quoteData = await getPublications({
           limit: LimitType.Ten,
           where: {
@@ -152,6 +148,7 @@ const useWho = () => {
   };
 
   const showActors = async () => {
+    if (!reactBox.id) return;
     setDataLoading(true);
     try {
       const data = await whoActedPublication({
@@ -179,6 +176,7 @@ const useWho = () => {
   };
 
   const showFollowing = async () => {
+    if (!reactBox.id) return;
     setDataLoading(true);
     try {
       const data = await following({
@@ -206,6 +204,7 @@ const useWho = () => {
   };
 
   const showFollowers = async () => {
+    if (!reactBox.id) return;
     setDataLoading(true);
     try {
       const data = await followers({
@@ -432,19 +431,19 @@ const useWho = () => {
 
   const showMore = () => {
     switch (reactBox.type) {
-      case "Comment":
+      case "Comments":
         showMoreComments();
         break;
 
-      case "Like":
+      case "Likes":
         showMoreLikes();
         break;
 
-      case "Act":
+      case "Acts":
         showMoreActors();
         break;
 
-      case "Mirror":
+      case "Mirrors":
         showMoreQuoteMirrors();
         break;
 
@@ -461,19 +460,19 @@ const useWho = () => {
   useEffect(() => {
     if (reactBox.open) {
       switch (reactBox.type) {
-        case "Comment":
+        case "Comments":
           reactors?.length < 1 && showComments();
           break;
 
-        case "Like":
+        case "Likes":
           reactors?.length < 1 && showLikes();
           break;
 
-        case "Act":
+        case "Acts":
           reactors?.length < 1 && showActors();
           break;
 
-        case "Mirror":
+        case "Mirrors":
           quoters?.length < 1 && reactors?.length < 1 && showMirrorQuotes();
           break;
 

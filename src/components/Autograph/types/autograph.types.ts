@@ -428,18 +428,19 @@ export type CreationProps = {
 
 export type PostBarProps = {
   index: number;
-  mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  simpleCollect: (id: string, type: string) => Promise<void>;
-  handleBookmark: (id: string, index: number) => Promise<void>;
-  handleHidePost: (id: string, index: number) => Promise<void>;
+  mirror?: (id: string) => Promise<void>;
+  like?: (id: string) => Promise<void>;
+  comment?: (id: string) => Promise<void>;
+  simpleCollect?: (id: string, type: string) => Promise<void>;
+  handleBookmark?: (id: string, index: number) => Promise<void>;
+  handleHidePost?: (id: string, index: number) => Promise<void>;
   item: Post | Quote | Mirror | Comment;
-  setOpenMirrorChoice: (e: boolean[]) => void;
-  openMirrorChoice: boolean[];
-  openMoreOptions: boolean[];
-  setOpenMoreOptions: (e: boolean[]) => void;
-  interactionsLoading: {
+  setOpenMirrorChoice?: (e: boolean[]) => void;
+  openMirrorChoice?: boolean[];
+  openMoreOptions?: boolean[];
+  disabled?: boolean;
+  setOpenMoreOptions?: (e: boolean[]) => void;
+  interactionsLoading?: {
     like: boolean;
     mirror: boolean;
     comment: boolean;
@@ -448,14 +449,49 @@ export type PostBarProps = {
     hide: boolean;
   };
   router: NextRouter;
-  setProfileHovers: (e: boolean[]) => void;
-  profileHovers: boolean[];
-  followLoading: boolean[];
-  unfollowProfile: (id: string) => Promise<void>;
-  followProfile: (id: string) => Promise<void>;
+  setProfileHovers?: (e: boolean[]) => void;
+  profileHovers?: boolean[];
+  followLoading?: boolean[];
+  unfollowProfile?: (id: string) => Promise<void>;
+  followProfile?: (id: string) => Promise<void>;
   dispatch: Dispatch<AnyAction>;
 };
 
 export type TextProps = {
   item: Post | Quote | Mirror | Comment;
+};
+
+export type PostQuoteProps = {
+  quote: Comment | Post | Quote;
+};
+
+export type PublicationProps = {
+  item: Post | Mirror | Quote | Comment;
+  index: number;
+  disabled?: boolean;
+  mirror?: (id: string) => Promise<void>;
+  like?: (id: string) => Promise<void>;
+  comment?: (id: string) => Promise<void>;
+  openMoreOptions?: boolean[];
+  setOpenMoreOptions?: (e: boolean[]) => void;
+  simpleCollect?: (id: string, type: string) => Promise<void>;
+  interactionsLoading?: {
+    like: boolean;
+    mirror: boolean;
+    comment: boolean;
+    simpleCollect: boolean;
+    bookmark: boolean;
+    hide: boolean;
+  }[];
+  setOpenMirrorChoice?: (e: boolean[]) => void;
+  openMirrorChoice?: boolean[];
+  router: NextRouter;
+  followLoading?: boolean[];
+  unfollowProfile?: (id: string, feed?: boolean) => Promise<void>;
+  followProfile?: (id: string, feed?: boolean) => Promise<void>;
+  profileHovers?: boolean[];
+  setProfileHovers?: (e: boolean[]) => void;
+  dispatch: Dispatch<AnyAction>;
+  handleBookmark?: (id: string, index: number) => Promise<void>;
+  handleHidePost?: (id: string, index: number) => Promise<void>;
 };

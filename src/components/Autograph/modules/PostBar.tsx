@@ -2,18 +2,14 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { AiOutlineLoading } from "react-icons/ai";
-import {
-  ImageSet,
-  Mirror,
-  NftImage,
-  Post,
-} from "../../../../graphql/generated";
+import { Mirror, Post } from "../../../../graphql/generated";
 import numeral from "numeral";
 import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
+import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -36,16 +32,17 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   unfollowProfile,
   handleHidePost,
   handleBookmark,
+  disabled,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
     <div className="relative w-full justify-between flex flex-row items-center gap-2">
       <div className="relative w-fit h-fit flex flex-row items-center gap-1.5 justify-center">
         {[
-          "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-          "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
-          "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
-        ].map((image: string, indexTwo: number) => {
+          ["QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3", "Mirrors"],
+          ["QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ", "Likes"],
+          ["QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n", "Comments"],
+        ].map((image: string[], indexTwo: number) => {
           const functions = [like, comment];
 
           const loaders = [
@@ -74,14 +71,23 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               <div
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95"
                 onClick={() => {
-                  if (indexTwo === 0) {
-                    const choices = [...openMirrorChoice];
-                    choices[index] = !choices[index];
-                    setOpenMirrorChoice(choices);
+                  if (disabled) {
+                    dispatch(
+                      setReactBox({
+                        actionOpen: false,
+                      })
+                    );
+                    router.push(`/item/pub/${item?.id}`);
                   } else {
-                    !loaders[index] &&
-                      functions[indexTwo] &&
-                      functions[indexTwo]!(item?.id);
+                    if (indexTwo === 0) {
+                      const choices = [...openMirrorChoice!];
+                      choices[index] = !choices[index];
+                      setOpenMirrorChoice!(choices);
+                    } else {
+                      !loaders[index] &&
+                        functions[indexTwo] &&
+                        functions[indexTwo]!(item?.id);
+                    }
                   }
                 }}
               >
@@ -99,13 +105,36 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   >
                     <Image
                       layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/${image}`}
+                      src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                       draggable={false}
                     />
                   </div>
                 )}
               </div>
-              <div className="relative w-fit h-fit flex items-center justify-center text-center cursor-pointer active:scale-95">
+              <div
+                className={`relative w-fit h-fit flex items-center justify-center text-center ${
+                  stats[indexTwo] > 0 && "cursor-pointer active:scale-95"
+                }`}
+                onClick={() => {
+                  if (disabled) {
+                    dispatch(
+                      setReactBox({
+                        actionOpen: false,
+                      })
+                    );
+                    router.push(`/item/pub/${item?.id}`);
+                  } else {
+                    stats[indexTwo] > 0 &&
+                      dispatch(
+                        setReactBox({
+                          actionOpen: true,
+                          actionId: item?.id,
+                          actionType: image[1],
+                        })
+                      );
+                  }
+                }}
+              >
                 {numeral(stats[indexTwo]).format("0a")}
               </div>
             </div>
@@ -123,7 +152,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               | ((index: number, id: string) => Promise<void>)
               | (() => void)
             )[] = [
-              mirror,
+              mirror!,
               () =>
                 dispatch(
                   setPostBox({
@@ -138,12 +167,21 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               <div
                 key={indexTwo}
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
-                onClick={() =>
-                  !loaders[index] &&
-                  (functions[indexTwo] as (id: string) => Promise<void>)(
-                    item?.id
-                  )
-                }
+                onClick={() => {
+                  if (disabled) {
+                    dispatch(
+                      setReactBox({
+                        actionOpen: false,
+                      })
+                    );
+                    router.push(`/item/pub/${item?.id}`);
+                  } else {
+                    !loaders[index] &&
+                      (functions[indexTwo] as (id: string) => Promise<void>)(
+                        item?.id
+                      );
+                  }
+                }}
               >
                 {loaders[index] ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
@@ -171,9 +209,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
         <div
           className="relative w-14 h-5 items-center justify-center flex cursor-pointer active:scale-95"
           onClick={() => {
-            const arr = [...openMoreOptions];
+            if (disabled) return;
+            const arr = [...openMoreOptions!];
             arr[index] = !arr[index];
-            setOpenMoreOptions(arr);
+            setOpenMoreOptions!(arr);
           }}
         >
           <Image
@@ -186,9 +225,11 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           className="relative flex items-center justify-center rounded-full w-5 h-5 cursor-pointer"
           id="pfp"
           onMouseEnter={() => {
-            const updatedArray = [...profileHovers];
+            if (disabled) return;
+
+            const updatedArray = [...profileHovers!];
             updatedArray[index] = true;
-            setProfileHovers(updatedArray);
+            setProfileHovers!(updatedArray);
           }}
         >
           {profilePicture && (
@@ -210,6 +251,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               : "opacity-70"
           } ${interactionsLoading?.simpleCollect && "animate-spin"}`}
           onClick={() =>
+            !disabled &&
             !interactionsLoading?.simpleCollect &&
             (item?.__typename === "Mirror"
               ? (item as Mirror)?.mirrorOn?.openActionModules?.[0]
@@ -220,7 +262,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   "SimpleCollectOpenActionSettings" ||
                 (item as Post)?.openActionModules?.[0]?.__typename ===
                   "MultirecipientFeeCollectOpenActionSettings") &&
-            simpleCollect(
+            simpleCollect!(
               item?.__typename === "Mirror"
                 ? (item as Mirror)?.mirrorOn?.id
                 : item?.id,
@@ -243,14 +285,14 @@ const PostBar: FunctionComponent<PostBarProps> = ({
         </div>
         {profileHovers?.[index] && (
           <HoverProfile
-            followLoading={followLoading}
-            followProfile={followProfile}
-            unfollowProfile={unfollowProfile}
+            followLoading={followLoading!}
+            followProfile={followProfile!}
+            unfollowProfile={unfollowProfile!}
             router={router}
             publication={item?.by}
             index={index}
             profileHovers={profileHovers}
-            setProfileHovers={setProfileHovers}
+            setProfileHovers={setProfileHovers!}
             feed
           />
         )}
@@ -286,6 +328,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
                 title={image[0]}
                 onClick={() => {
+                  if (!disabled) return;
                   if (indexTwo !== 3 && indexTwo !== 2) {
                     !loaders[index] &&
                       (functions[indexTwo] as (id: string) => Promise<void>)(
