@@ -1,16 +1,16 @@
 import { FetchResult } from "@apollo/client";
 import { apolloClient } from "../../../lib/lens/client";
 import {
-  MirrorOnchainDocument,
-  MirrorOnchainMutation,
+  CreateOnchainMirrorTypedDataDocument,
+  CreateOnchainMirrorTypedDataMutation,
   OnchainMirrorRequest,
 } from "../../generated";
 
 const mirrorPost = async (
   request: OnchainMirrorRequest
-): Promise<FetchResult<MirrorOnchainMutation>> => {
+): Promise<FetchResult<CreateOnchainMirrorTypedDataMutation>> => {
   return await apolloClient.mutate({
-    mutation: MirrorOnchainDocument,
+    mutation: CreateOnchainMirrorTypedDataDocument,
     variables: {
       request: request,
     },

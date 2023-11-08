@@ -1,18 +1,30 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { Post, Comment, Mirror, Quote } from "../../../../graphql/generated";
+import { Post, Mirror, Quote } from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
+import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
+import { useAccount } from "wagmi";
 
 const useProfile = () => {
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const dispatch = useDispatch();
+  const { address } = useAccount();
   const profileFeed = useSelector(
     (state: RootState) => state.app.autographFeedReducer.feed
   );
   const galleryItems = useSelector(
     (state: RootState) => state.app.galleryItemsReducer.items
+  );
+  const lensConnected = useSelector(
+    (state: RootState) => state.app.lensConnectedReducer.profile
   );
   const [feedProfileHovers, setFeedProfileHovers] = useState<boolean[]>([]);
   const [feedFollowLoading, setFeedFollowLoading] = useState<boolean[]>([]);
@@ -55,7 +67,19 @@ const useProfile = () => {
     }
 
     try {
-      await lensFollow(id, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensFollow(
+        id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
+      await refetchProfile(dispatch, lensConnected?.id)
     } catch (err: any) {
       console.error(err.message);
     }
@@ -106,7 +130,20 @@ const useProfile = () => {
     }
 
     try {
-      await lensUnfollow(id, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensUnfollow(
+        id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient,
+        clearComment
+      );
+      await refetchProfile(dispatch, lensConnected?.id);
     } catch (err: any) {
       console.error(err.message);
     }

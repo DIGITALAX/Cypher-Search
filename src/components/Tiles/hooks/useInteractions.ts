@@ -20,9 +20,17 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensQuote from "../../../../lib/helpers/api/quotePost";
 import lensComment from "../../../../lib/helpers/api/commentPost";
+import { useAccount } from "wagmi";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { polygon } from "viem/chains";
 
 const useInteractions = () => {
   const dispatch = useDispatch();
+  const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const reactBox = useSelector((state: RootState) => state.app.reactBoxReducer);
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer.items
@@ -43,7 +51,7 @@ const useInteractions = () => {
       mirror: boolean;
       quote: boolean;
       comment: boolean;
-      collect: boolean;
+      simpleCollect: boolean;
     }[]
   >([]);
 
@@ -101,12 +109,24 @@ const useInteractions = () => {
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], collect: true };
+      updatedArray[index] = { ...updatedArray[index], simpleCollect: true };
       return updatedArray;
     });
 
     try {
-      await lensCollect(id, type, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensCollect(
+        id,
+        type,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
 
       dispatch(
         setInteractionsCount({
@@ -130,7 +150,7 @@ const useInteractions = () => {
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], collect: false };
+      updatedArray[index] = { ...updatedArray[index], simpleCollect: false };
       return updatedArray;
     });
   };
@@ -150,7 +170,17 @@ const useInteractions = () => {
     });
 
     try {
-      await lensMirror(id, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      await lensMirror(
+        id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
 
       dispatch(
         setInteractionsCount({
@@ -200,7 +230,20 @@ const useInteractions = () => {
         lastPostQuote.gifs
       );
 
-      await lensQuote(id, contentURI!, dispatch, lastPostQuote.collectType);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensQuote(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostQuote.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
 
       dispatch(
         setInteractionsCount({
@@ -250,7 +293,20 @@ const useInteractions = () => {
         lastPostComment.gifs
       );
 
-      await lensComment(id, contentURI!, dispatch, lastPostComment.collectType);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensComment(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostComment.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
 
       dispatch(
         setInteractionsCount({
@@ -595,7 +651,7 @@ const useInteractions = () => {
           mirror: false,
           comment: false,
           quote: false,
-          collect: false,
+          simpleCollect: false,
         }))
       );
     }

@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { PostProps } from "../types/autograph.types";
-import { Mirror, Post, Quote } from "../../../../graphql/generated";
+import { Post, Quote } from "../../../../graphql/generated";
 import Text from "./Metadata/Text";
 import Image from "./Metadata/Image";
 import Video from "./Metadata/Video";
@@ -78,29 +78,10 @@ const PostSwitch: FunctionComponent<PostProps> = ({ item }): JSX.Element => {
       );
 
     case "MintMetadataV3":
-      return (
-        <Mint
-          metadata={
-            item?.__typename === "Mirror"
-              ? item?.mirrorOn?.metadata
-              : (item as Post)?.metadata
-          }
-          quote={
-            item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
-          }
-          type={item?.__typename!}
-        />
-      );
+      return <Mint metadata={item} type={item?.__typename!} />;
 
     default:
-      return (
-        <Text
-          item={item}
-          quote={
-            item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
-          }
-        />
-      );
+      return <Text item={item} />;
   }
 };
 

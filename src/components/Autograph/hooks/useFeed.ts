@@ -10,9 +10,17 @@ import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { setAutographFeed } from "../../../../redux/reducers/autographFeedSlice";
+import { polygon } from "viem/chains";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { useAccount } from "wagmi";
 
 const useFeed = () => {
   const dispatch = useDispatch();
+  const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const lastPostComment = useSelector(
     (state: RootState) => state.app.lastPostCommentReducer
   );
@@ -35,7 +43,7 @@ const useFeed = () => {
       mirror: boolean;
       quote: boolean;
       comment: boolean;
-      collect: boolean;
+      simpleCollect: boolean;
     }[]
   >([]);
   const [feedCursor, setFeedCursor] = useState<string>();
@@ -110,7 +118,20 @@ const useFeed = () => {
         lastPostComment.gifs
       );
 
-      await lensComment(id, contentURI!, dispatch, lastPostComment.collectType);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensComment(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostComment.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -141,7 +162,20 @@ const useFeed = () => {
         lastPostQuote.gifs
       );
 
-      await lensQuote(id, contentURI!, dispatch, lastPostComment.collectType);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensQuote(
+        id,
+        contentURI!,
+        dispatch,
+        lastPostComment.collectType,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -190,19 +224,31 @@ const useFeed = () => {
 
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], collect: true };
+      updatedArray[index] = { ...updatedArray[index], simpleCollect: true };
       return updatedArray;
     });
 
     try {
-      await lensCollect(id, type, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensCollect(
+        id,
+        type,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
 
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], collect: false };
+      updatedArray[index] = { ...updatedArray[index], simpleCollect: false };
       return updatedArray;
     });
   };
@@ -219,7 +265,17 @@ const useFeed = () => {
     });
 
     try {
-      await lensMirror(id, dispatch);
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      await lensMirror(
+        id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -245,7 +301,7 @@ const useFeed = () => {
           mirror: false,
           comment: false,
           quote: false,
-          collect: false,
+          simpleCollect: false,
         }))
       );
       setOpenMirrorFeedChoice(

@@ -1,20 +1,21 @@
 import { FetchResult } from "@apollo/client";
-import { apolloClient } from "../../../lib/lens/client";
 import {
-  UnfollowDocument,
-  UnfollowMutation,
+  CreateUnfollowTypedDataDocument,
+  CreateUnfollowTypedDataMutation,
   UnfollowRequest,
 } from "../../generated";
+import { apolloClient } from "../../../lib/lens/client";
 
-const unfollow = async (
+const createUnfollowTypedData = async (
   request: UnfollowRequest
-): Promise<FetchResult<UnfollowMutation>> => {
+): Promise<FetchResult<CreateUnfollowTypedDataMutation>> => {
   return await apolloClient.mutate({
-    mutation: UnfollowDocument,
+    mutation: CreateUnfollowTypedDataDocument,
     variables: {
-      request: request,
+      request,
     },
+    fetchPolicy: "no-cache",
   });
 };
 
-export default unfollow;
+export default createUnfollowTypedData;
