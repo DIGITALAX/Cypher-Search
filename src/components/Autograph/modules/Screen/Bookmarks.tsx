@@ -2,8 +2,7 @@ import { FunctionComponent } from "react";
 import { BookmarksProps } from "../../types/autograph.types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Comment, Mirror, Post, Quote } from "../../../../../graphql/generated";
-import PostBar from "../PostBar";
-import PostSwitch from "../PostSwitch";
+import Publication from "../Publication";
 
 const Bookmarks: FunctionComponent<BookmarksProps> = ({
   bookmarks,
@@ -47,34 +46,29 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
               {Array.from({ length: 10 }).map(
                 (item: Post | Mirror | Quote | Comment, index: number) => {
                   return (
-                    <div
-                      key={index}
-                      className="relative bg-lirio rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza"
-                    >
-                      <PostSwitch item={item} />
-                      <PostBar
-                        index={index}
-                        item={item}
-                        dispatch={dispatch}
-                        router={router}
-                        mirror={mirror}
-                        like={like}
-                        comment={comment}
-                        interactionsLoading={interactionsLoading[index]}
-                        profileHovers={profileHovers}
-                        setProfileHovers={setProfileHovers}
-                        openMirrorChoice={openMirrorChoice}
-                        setOpenMirrorChoice={setOpenMirrorChoice}
-                        simpleCollect={simpleCollect}
-                        followLoading={followLoading}
-                        followProfile={followProfile}
-                        unfollowProfile={unfollowProfile}
-                        setOpenMoreOptions={setOpenMoreOptions}
-                        openMoreOptions={openMoreOptions}
-                        handleBookmark={handleBookmark}
-                        handleHidePost={handleHidePost}
-                      />
-                    </div>
+                    <Publication
+                      index={index}
+                      item={item}
+                      dispatch={dispatch}
+                      router={router}
+                      mirror={mirror}
+                      like={like}
+                      comment={comment}
+                      interactionsLoading={interactionsLoading}
+                      profileHovers={profileHovers}
+                      setProfileHovers={setProfileHovers}
+                      openMirrorChoice={openMirrorChoice}
+                      setOpenMirrorChoice={setOpenMirrorChoice}
+                      simpleCollect={simpleCollect}
+                      followLoading={followLoading}
+                      followProfile={followProfile}
+                      unfollowProfile={unfollowProfile}
+                      setOpenMoreOptions={setOpenMoreOptions}
+                      openMoreOptions={openMoreOptions}
+                      handleBookmark={handleBookmark}
+                      handleHidePost={handleHidePost}
+                      data-post-id={item?.id}
+                    />
                   );
                 }
               )}

@@ -4,6 +4,7 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Link from "next/link";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
+import numeral from "numeral";
 
 const Bio: FunctionComponent<BioProps> = ({
   profile,
@@ -40,6 +41,11 @@ const Bio: FunctionComponent<BioProps> = ({
               ["Qmb6fQG6L2R7Npf1oS55YEB5RS9z7oCyTwxYnTf57DEEjV", "Followers"],
               ["QmP141cw2U9TNsU6AXRoo5X5VCPawUTPkWAUJburJayg7x", "Following"],
             ].map((image: string[], indexTwo: number) => {
+              const amounts: number[] = [
+                profile?.stats?.followers || 0,
+                profile?.stats?.following || 0,
+              ];
+
               return (
                 <div
                   className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2"
@@ -54,18 +60,21 @@ const Bio: FunctionComponent<BioProps> = ({
                     />
                   </div>
                   <div
-                    className="relative w-fit h-fit flex cursor-pointer"
+                    className={`relative w-fit h-fit flex ${
+                      amounts[indexTwo] > 0 && "cursor-pointer"
+                    }`}
                     onClick={() =>
+                      amounts[indexTwo] > 0 &&
                       dispatch(
                         setReactBox({
                           actionOpen: true,
                           actionId: profile?.id,
-                          type: image[1],
+                          actionType: image[1],
                         })
                       )
                     }
                   >
-                    100
+                    {numeral(amounts[indexTwo]).format("0a")}
                   </div>
                 </div>
               );

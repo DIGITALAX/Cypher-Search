@@ -108,19 +108,11 @@ const Modals: FunctionComponent = (): JSX.Element => {
           handleResetFilters={handleResetFilters}
         />
       )}
-      {!reactBox?.open && (
+      {reactBox?.open && (
         <Who
           router={router}
           dispatch={dispatch}
-          type={
-            reactBox.type === "Like"
-              ? 0
-              : reactBox.type === "Act"
-              ? 1
-              : reactBox.type === "Followers" || reactBox.type === "Following"
-              ? 3
-              : 2
-          }
+          type={reactBox.type!}
           reactors={reactors}
           dataLoading={dataLoading}
           quoters={quoters}

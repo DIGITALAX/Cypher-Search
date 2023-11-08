@@ -2,8 +2,7 @@ import { FunctionComponent } from "react";
 import { FeedProps } from "../types/autograph.types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Mirror, Post, Quote } from "../../../../graphql/generated";
-import PostSwitch from "./PostSwitch";
-import PostBar from "./PostBar";
+import Publication from "./Publication";
 
 const Feed: FunctionComponent<FeedProps> = ({
   profileFeed,
@@ -26,7 +25,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   setOpenMoreOptions,
   handleBookmark,
   handleHidePost,
-  hasMoreFeed
+  hasMoreFeed,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -58,34 +57,30 @@ const Feed: FunctionComponent<FeedProps> = ({
               {Array.from({ length: 20 })?.map(
                 (item: Post | Quote | Mirror, index: number) => {
                   return (
-                    <div
+                    <Publication
+                      data-post-id={item?.id}
                       key={index}
-                      className="relative bg-lirio rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza"
-                    >
-                      <PostSwitch item={item} />
-                      <PostBar
-                        index={index}
-                        item={item}
-                        dispatch={dispatch}
-                        router={router}
-                        mirror={mirror}
-                        like={like}
-                        comment={comment}
-                        interactionsLoading={interactionsLoading?.[index]}
-                        profileHovers={profileHovers}
-                        setProfileHovers={setProfileHovers}
-                        openMirrorChoice={openMirrorChoice}
-                        setOpenMirrorChoice={setOpenMirrorChoice}
-                        simpleCollect={simpleCollect}
-                        followLoading={followLoading}
-                        followProfile={followProfile}
-                        unfollowProfile={unfollowProfile}
-                        setOpenMoreOptions={setOpenMoreOptions}
-                        openMoreOptions={openMoreOptions}
-                        handleBookmark={handleBookmark}
-                        handleHidePost={handleHidePost}
-                      />
-                    </div>
+                      index={index}
+                      item={item}
+                      comment={comment}
+                      mirror={mirror}
+                      like={like}
+                      simpleCollect={simpleCollect}
+                      dispatch={dispatch}
+                      openMirrorChoice={openMirrorChoice}
+                      setOpenMirrorChoice={setOpenMirrorChoice}
+                      interactionsLoading={interactionsLoading}
+                      router={router}
+                      followProfile={followProfile}
+                      unfollowProfile={unfollowProfile}
+                      followLoading={followLoading}
+                      profileHovers={profileHovers}
+                      setProfileHovers={setProfileHovers}
+                      setOpenMoreOptions={setOpenMoreOptions}
+                      openMoreOptions={openMoreOptions}
+                      handleHidePost={handleHidePost}
+                      handleBookmark={handleBookmark}
+                    />
                   );
                 }
               )}

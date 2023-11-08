@@ -102,7 +102,19 @@ export type WhoProps = {
   showMore: () => void;
   mirrorQuote: boolean;
   setMirrorQuote: (e: boolean) => void;
-  type: number;
+  type: string;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
+};
+
+export type WhoSwitchProps = {
+  type: string;
+  dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
+  reactors: any[];
+  quoters: any[];
+  hasMore: boolean;
+  hasMoreQuote: boolean;
+  mirrorQuote: boolean;
+  showMore: () => void;
 };
