@@ -3,7 +3,6 @@ import collectPost from "../../../graphql/lens/mutations/collect";
 import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
-import { splitSignature } from "ethers/lib/utils";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction } from "redux";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
@@ -56,11 +55,10 @@ const lensCollect = async (
       dispatch(setInteractError(true));
     }
   } else {
-    const { v, r, s } = splitSignature(signature);
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
-      functionName: "actWithSig",
+      functionName: "act",
       chain: polygon,
       args: [
         {
@@ -71,13 +69,6 @@ const lensCollect = async (
           referrerPubIds: typedData?.value.referrerPubIds,
           actionModuleAddress: typedData?.value.actionModuleAddress,
           actionModuleData: typedData?.value.actionModuleData,
-        },
-        {
-          v,
-          r,
-          s,
-          deadline: typedData?.value.deadline,
-          signer: address,
         },
       ],
       account: address,

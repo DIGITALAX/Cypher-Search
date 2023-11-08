@@ -4,6 +4,7 @@ import { ImageSet, NftImage, Profile } from "../../../../../graphql/generated";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
+import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 
 const Community: FunctionComponent<CommunityProps> = ({
   community,
@@ -29,9 +30,7 @@ const Community: FunctionComponent<CommunityProps> = ({
         </div>
       </div>
       <div className="relative w-4/5 h-20  p-2 text-white text-center font-bit text-sm border border-[#1B4986] bg-fuego">
-        <div
-          className="relative w-full h-full flex items-start justify-center overflow-y-scroll"
-        >
+        <div className="relative w-full h-full flex items-start justify-center overflow-y-scroll">
           dd dfsgfsdgfdsg dsfgsdfg sdgsdfgdsfg dfsgsdf dsfgdsfgdsfgs dfsgdsfg
           dsfgsdf dfsgsdf dfsgs dsfgsdg sdfgsdfg dsfg sdfgsdf
         </div>
@@ -40,38 +39,33 @@ const Community: FunctionComponent<CommunityProps> = ({
         <div className="relative w-fit h-fit text-white font-bit  text-xs flex items-center justify-center text-center">
           active <br /> members
         </div>
-        <div
-          className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3"
-        >
+        <div className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3">
           <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
             {Array.from({ length: 20 })?.map(
               (member: Profile, index: number) => {
+                const profilePicture = createProfilePicture(
+                  member?.metadata?.picture
+                );
                 return (
                   <div
                     key={index}
                     className="relative w-14 h-14 rounded-full border border-white p-1 flex items-center justify-center cursor-pointer"
                     onClick={() =>
-                      router.push(`/autograph/${member?.handle?.localName}`)
+                      router.push(`/autograph/${member?.handle?.suggestedFormatted?.localName?.split("@")[1]}`)
                     }
                   >
                     <div
                       className="relative w-full h-full rounded-full flex items-center justify-center"
                       id="pfp"
                     >
-                      <Image
-                        className="rounded-full"
-                        layout="fill"
-                        objectFit="cover"
-                        src={`${INFURA_GATEWAY}/ipfs/${
-                          member?.metadata?.picture?.__typename === "ImageSet"
-                            ? (
-                                member?.metadata?.picture as ImageSet
-                              )?.raw?.uri?.split("ipfs://")[1]
-                            : (
-                                member?.metadata?.picture as NftImage
-                              )?.image?.raw?.uri?.split("ipfs://")[1]
-                        }`}
-                      />
+                      {profilePicture && (
+                        <Image
+                          className="rounded-full"
+                          layout="fill"
+                          objectFit="cover"
+                          src={profilePicture}
+                        />
+                      )}
                     </div>
                   </div>
                 );
@@ -106,11 +100,12 @@ const Community: FunctionComponent<CommunityProps> = ({
           })}
         </div>
       </div>
-      <div
-        className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3"
-      >
+      <div className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3">
         <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
           {Array.from({ length: 4 }).map((item: Creation, index: number) => {
+            const profilePicture = createProfilePicture(
+              item?.profile?.metadata?.picture
+            );
             return (
               <div
                 className="relative w-60 h-60 border border-white rounded-sm"
@@ -136,20 +131,13 @@ const Community: FunctionComponent<CommunityProps> = ({
                       setProfileHovers(updatedArray);
                     }}
                   >
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/${
-                        item?.profile?.metadata?.picture?.__typename ===
-                        "ImageSet"
-                          ? (
-                              item?.profile?.metadata?.picture as ImageSet
-                            )?.raw?.uri?.split("ipfs://")[1]
-                          : (
-                              item?.profile?.metadata?.picture as NftImage
-                            )?.image?.raw?.uri?.split("ipfs://")[1]
-                      }`}
-                      draggable={false}
-                    />
+                    {profilePicture && (
+                      <Image
+                        layout="fill"
+                        src={profilePicture}
+                        draggable={false}
+                      />
+                    )}
                   </div>
                   {profileHovers?.[index] && (
                     <HoverProfile

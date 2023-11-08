@@ -5,6 +5,7 @@ import Settings from "./Screen/Settings";
 import Circuits from "./Screen/Circuits";
 import Gallery from "./Screen/Gallery";
 import Bookmarks from "./Screen/Bookmarks";
+import Orders from "./Screen/Orders";
 
 const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
@@ -115,6 +116,9 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           currencies={currencies}
         />
       );
+
+    case ScreenDisplay.Orders:
+      return <Orders />;
 
     default:
       return (

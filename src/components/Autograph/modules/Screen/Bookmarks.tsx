@@ -36,7 +36,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll max-h-[75vh]">
+          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[70vh] max-h-[70vh]">
             <InfiniteScroll
               next={handleMoreBookmarks}
               hasMore={hasMoreBookmarks}

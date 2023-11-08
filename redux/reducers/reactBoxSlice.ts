@@ -1,50 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Profile } from "../../graphql/generated";
 
 export interface ReactBoxState {
-  comment: {
-    id: string;
-    cursor?: string;
-    profiles?: Profile[];
-  };
-  like: {
-    id: string;
-    cursor?: string;
-    profiles?: Profile[];
-  };
-  mirror: {
-    id: string;
-    cursor?: string;
-    profiles?: Profile[];
-  };
-  quote: {
-    id: string;
-    cursor?: string;
-    profiles?: Profile[];
-  };
+  open: boolean;
+  id?: string;
+  type?: "Comment" | "Mirror" | "Like" | "Followers" | "Following" | "Act";
 }
 
 const initialReactBoxState: ReactBoxState = {
-  comment: {
-    id: "",
-    cursor: "",
-    profiles: undefined,
-  },
-  like: {
-    id: "",
-    cursor: "",
-    profiles: undefined,
-  },
-  mirror: {
-    id: "",
-    cursor: "",
-    profiles: undefined,
-  },
-  quote: {
-    id: "",
-    cursor: "",
-    profiles: undefined,
-  },
+  open: false,
 };
 
 export const reactBoxSlice = createSlice({
@@ -53,12 +16,11 @@ export const reactBoxSlice = createSlice({
   reducers: {
     setReactBox: (
       state: ReactBoxState,
-      { payload: { actionLike, actionMirror, actionQuote, actionComment } }
+      { payload: { actionOpen, actionType, actionId } }
     ) => {
-      state.like = actionLike;
-      state.mirror = actionMirror;
-      state.quote = actionQuote;
-      state.comment = actionComment;
+      state.open = actionOpen;
+      state.type = actionType;
+      state.id = actionId;
     },
   },
 });

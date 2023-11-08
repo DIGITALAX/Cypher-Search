@@ -12,15 +12,20 @@ import useDisplaySearch from "../hooks/useDisplaySearch";
 import Index from "./Indexer";
 import ReportPub from "./ReportPub";
 import useReport from "../hooks/useReport";
+import Who from "./Who";
+import useWho from "../hooks/useWho";
+import { useRouter } from "next/router";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
 const Modals: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const mapOpen = useSelector((state: RootState) => state.app.mapReducer);
   const filterValues = useSelector(
     (state: RootState) => state.app.filterReducer.filter
   );
+  const reactBox = useSelector((state: RootState) => state.app.reactBoxReducer);
   const indexer = useSelector((state: RootState) => state.app.indexerReducer);
   const galleryItems = useSelector(
     (state: RootState) => state.app.galleryItemsReducer.items
@@ -58,6 +63,16 @@ const Modals: FunctionComponent = (): JSX.Element => {
     selectedItem,
     sortedGallery,
   } = useDisplaySearch();
+  const {
+    dataLoading,
+    reactors,
+    quoters,
+    hasMore,
+    hasMoreQuote,
+    showMore,
+    mirrorQuote,
+    setMirrorQuote,
+  } = useWho();
 
   const { handleReportPost, reason, setReason, reportLoading } = useReport();
   return (
@@ -93,7 +108,30 @@ const Modals: FunctionComponent = (): JSX.Element => {
           handleResetFilters={handleResetFilters}
         />
       )}
-      {indexer?.open && <Index message={indexer?.message} />}
+      {!reactBox?.open && (
+        <Who
+          router={router}
+          dispatch={dispatch}
+          type={
+            reactBox.type === "Like"
+              ? 0
+              : reactBox.type === "Act"
+              ? 1
+              : reactBox.type === "Followers" || reactBox.type === "Following"
+              ? 3
+              : 2
+          }
+          reactors={reactors}
+          dataLoading={dataLoading}
+          quoters={quoters}
+          hasMore={hasMore}
+          hasMoreQuote={hasMoreQuote}
+          showMore={showMore}
+          mirrorQuote={mirrorQuote}
+          setMirrorQuote={setMirrorQuote}
+        />
+      )}
+
       {image?.value && (
         <ImageLarge
           dispatch={dispatch}
@@ -125,6 +163,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
         />
       )}
       {interactError.value && <InteractError dispatch={dispatch} />}
+      {indexer?.open && <Index message={indexer?.message} />}
     </>
   );
 };

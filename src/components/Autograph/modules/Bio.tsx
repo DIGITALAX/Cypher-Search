@@ -3,12 +3,19 @@ import { BioProps } from "../types/autograph.types";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Link from "next/link";
+import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 
-const Bio: FunctionComponent<BioProps> = ({ profile }): JSX.Element => {
+const Bio: FunctionComponent<BioProps> = ({
+  profile,
+  dispatch,
+}): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-row items-start justify-start gap-5 px-5 -top-7">
       <div className="w-full h-fit items-start flex gap-3 flex-row relative">
         <div className="relative flex items-start justify-between gap-1 w-fit h-fit max-w-[18rem] border border-saph bg-black p-2 flex-col">
+          <div className="font-bit text-ballena blur-sm w-fit h-fit absolute top-1 flex">
+            Caption on display:
+          </div>
           <div className="font-bit text-olor w-fit h-fit relative flex">
             Caption on display:
           </div>
@@ -19,78 +26,108 @@ const Bio: FunctionComponent<BioProps> = ({ profile }): JSX.Element => {
             We Trust."
           </div>
         </div>
-        {(profile?.metadata?.bio ||
-          profile?.metadata?.attributes?.find((item) => item.key === "location")
-            ?.value ||
-          profile?.metadata?.attributes?.find((item) => item.key === "website")
-            ?.value) && (
-          <div className="relative flex items-start justify-between gap-2 w-full h-fit p-2 flex-col">
-            {!profile?.metadata?.bio && (
-              <div className="font-aust text-white text-xs  w-fit h-fit relative flex">
-                {profile?.metadata?.bio}
-                decentralization dons a neon glow. Here, epochs blend and
-                governance dances to the beat of synthwave. The underlying
-                ethos: "In Autonomy We Trust."
+        <div className="relative flex items-start justify-between gap-2 w-full h-fit p-2 top-7 flex-col">
+          {!profile?.metadata?.bio && (
+            <div className="font-aust text-white text-xs  w-fit h-fit relative flex">
+              {profile?.metadata?.bio}
+              decentralization dons a neon glow. Here, epochs blend and
+              governance dances to the beat of synthwave. The underlying ethos:
+              "In Autonomy We Trust."
+            </div>
+          )}
+          <div className="relative w-full h-fit flex flex-row gap-10 justify-start items-center">
+            {[
+              ["Qmb6fQG6L2R7Npf1oS55YEB5RS9z7oCyTwxYnTf57DEEjV", "Followers"],
+              ["QmP141cw2U9TNsU6AXRoo5X5VCPawUTPkWAUJburJayg7x", "Following"],
+            ].map((image: string[], indexTwo: number) => {
+              return (
+                <div
+                  className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2"
+                  key={indexTwo}
+                  title={image[1]}
+                >
+                  <div className="relative w-4 h-4 items-center justify-center flex">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
+                      draggable={false}
+                    />
+                  </div>
+                  <div
+                    className="relative w-fit h-fit flex cursor-pointer"
+                    onClick={() =>
+                      dispatch(
+                        setReactBox({
+                          actionOpen: true,
+                          actionId: profile?.id,
+                          type: image[1],
+                        })
+                      )
+                    }
+                  >
+                    100
+                  </div>
+                </div>
+              );
+            })}
+            {!profile?.metadata?.attributes?.find(
+              (item) => item.key === "location"
+            )?.value && (
+              <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
+                <div className="relative w-4 h-4 items-center justify-center flex">
+                  <Image
+                    layout="fill"
+                    draggable={false}
+                    src={`${INFURA_GATEWAY}/ipfs/QmchHAtagS96zqoEL9BxrfHLNN1s7jUXJHiMLgzrcfMVpK`}
+                  />
+                </div>
+                <div className="relative w-fit h-fit flex">
+                  {
+                    profile?.metadata?.attributes?.find(
+                      (item) => item.key === "location"
+                    )?.value
+                  }
+                  NYC
+                </div>
               </div>
             )}
-            <div className="relative w-full h-fit flex flex-row gap-10 justify-start items-center">
-              {!profile?.metadata?.attributes?.find(
-                (item) => item.key === "location"
-              )?.value && (
-                <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
-                  <div className="relative w-4 h-4 items-center justify-center flex">
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/QmPVS9QAg4HYCsAFgMnLA8ghd6j1WF6nMb2kbiReVcjRPn`}
-                    />
-                  </div>
-                  <div className="relative w-fit h-fit flex">
-                    {
-                      profile?.metadata?.attributes?.find(
-                        (item) => item.key === "location"
-                      )?.value
-                    }
-                    NYC
-                  </div>
+            {!profile?.metadata?.attributes?.find(
+              (item) => item.key === "website"
+            )?.value && (
+              <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
+                <div className="relative w-4 h-4 items-center justify-center flex">
+                  <Image
+                    draggable={false}
+                    layout="fill"
+                    src={`${INFURA_GATEWAY}/ipfs/QmPVS9QAg4HYCsAFgMnLA8ghd6j1WF6nMb2kbiReVcjRPn`}
+                  />
                 </div>
-              )}
-              {!profile?.metadata?.attributes?.find(
-                (item) => item.key === "website"
-              )?.value && (
-                <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
-                  <div className="relative w-4 h-4 items-center justify-center flex">
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/QmchHAtagS96zqoEL9BxrfHLNN1s7jUXJHiMLgzrcfMVpK`}
-                    />
-                  </div>
-                  <Link
-                    target="blank"
-                    rel="noreferrer"
-                    href={
-                      // profile?.metadata?.attributes?.find(
-                      //   (item) => item.key === "website"
-                      // )?.value?.includes("https://") ?   profile?.metadata?.attributes?.find(
-                      //   (item) => item.key === "website"
-                      // )?.value : "https://" +profile?.metadata?.attributes?.find(
-                      //   (item) => item.key === "website"
-                      // )?.value
-                      ""
-                    }
-                    className="relative w-fit h-fit flex cursor-pointer"
-                  >
-                    {
-                      profile?.metadata?.attributes?.find(
-                        (item) => item.key === "website"
-                      )?.value
-                    }
-                    www.emma.com
-                  </Link>
-                </div>
-              )}
-            </div>
+                <Link
+                  target="blank"
+                  rel="noreferrer"
+                  href={
+                    // profile?.metadata?.attributes?.find(
+                    //   (item) => item.key === "website"
+                    // )?.value?.includes("https://") ?   profile?.metadata?.attributes?.find(
+                    //   (item) => item.key === "website"
+                    // )?.value : "https://" +profile?.metadata?.attributes?.find(
+                    //   (item) => item.key === "website"
+                    // )?.value
+                    ""
+                  }
+                  className="relative w-fit h-fit flex cursor-pointer"
+                >
+                  {
+                    profile?.metadata?.attributes?.find(
+                      (item) => item.key === "website"
+                    )?.value
+                  }
+                  www.emma.com
+                </Link>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
       <div className="relative w-full h-fit flex items-end justify-center flex-col gap-3 overflow-x-hidden">
         <div className="font-beb text-white text-9xl w-fit h-fit relative flex items-center justify-end">

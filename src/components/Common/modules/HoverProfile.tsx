@@ -5,6 +5,7 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { ImageSet, NftImage } from "../../../../graphql/generated";
 import { AiOutlineLoading } from "react-icons/ai";
+import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 
 const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   followLoading,
@@ -22,6 +23,7 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   const popper = usePopper(popperRef?.current, popperElement, {
     placement: "bottom-start",
   });
+  const profilePicture = createProfilePicture(publication?.metadata?.picture);
   return (
     <div
       className="absolute w-28 h-fit flex flex-col items-center justify-center p-2 z-20 border border-white rounded-sm bg-black -top-32"
@@ -53,21 +55,15 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
               className="relative flex flex-row w-10 h-10 items-center justify-start rounded-full border border-offWhite cursor-pointer"
               onClick={() => router.push(`/item/quest/${publication?.handle}`)}
             >
-              <Image
-                layout="fill"
-                draggable={false}
-                src={`${INFURA_GATEWAY}/ipfs/${
-                  publication?.metadata?.picture?.__typename === "ImageSet"
-                    ? (
-                        publication?.metadata?.picture as ImageSet
-                      )?.raw?.uri?.split("ipfs://")[1]
-                    : (
-                        publication?.metadata?.picture as NftImage
-                      )?.image?.raw?.uri?.split("ipfs://")[1]
-                }`}
-                objectFit="cover"
-                className="rounded-full"
-              />
+              {profilePicture && (
+                <Image
+                  layout="fill"
+                  draggable={false}
+                  src={profilePicture}
+                  objectFit="cover"
+                  className="rounded-full"
+                />
+              )}
             </div>
             <div className="relative w-fit h-fit flex flex-col items-center justify-center font-bit text-xxs">
               <div className="relative flex w-fit h-fit break-words items-center justify-center text-pez">

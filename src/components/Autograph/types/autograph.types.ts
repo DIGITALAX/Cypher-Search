@@ -137,6 +137,7 @@ export enum ScreenDisplay {
   Gallery,
   Circuits,
   Bookmarks,
+  Orders,
   Settings,
 }
 
@@ -148,6 +149,7 @@ export enum SortType {
 
 export type BioProps = {
   profile: Profile | undefined;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type GalleryScreenProps = {
