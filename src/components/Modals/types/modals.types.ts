@@ -12,6 +12,7 @@ import {
 import { MainVideoState } from "../../../../redux/reducers/mainVideoSlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { SortType } from "@/components/Autograph/types/autograph.types";
+import { NextRouter } from "next/router";
 
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
@@ -90,4 +91,18 @@ export type ReportPubProps = {
     additionalComments: string;
   }) => void;
   reportLoading: boolean;
+};
+
+export type WhoProps = {
+  dataLoading: boolean;
+  reactors: any[];
+  quoters: any[];
+  hasMore: boolean;
+  hasMoreQuote: boolean;
+  showMore: () => void;
+  mirrorQuote: boolean;
+  setMirrorQuote: (e: boolean) => void;
+  type: number;
+  router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
 };

@@ -2,7 +2,6 @@ import { Dispatch } from "react";
 import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
-import { splitSignature } from "ethers/lib/utils";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction } from "redux";
 import unfollow from "../../../graphql/lens/mutations/unfollow";
@@ -54,22 +53,14 @@ const lensUnfollow = async (
       dispatch(setInteractError(true));
     }
   } else {
-    const { v, r, s } = splitSignature(signature);
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
-      functionName: "unfollowWithSig",
+      functionName: "unfollow",
       chain: polygon,
       args: [
         typedData?.value?.unfollowerProfileId,
         typedData?.value?.idsOfProfilesToUnfollow,
-        {
-          v,
-          r,
-          s,
-          deadline: typedData?.value?.deadline,
-          signer: address,
-        },
       ],
       account: address,
     });

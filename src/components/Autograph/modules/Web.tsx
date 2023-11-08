@@ -77,7 +77,8 @@ const Web: FunctionComponent<WebProps> = ({
             />
           </div>
           {screenDisplay !== ScreenDisplay.Settings &&
-            screenDisplay !== ScreenDisplay.Bookmarks && (
+            screenDisplay !== ScreenDisplay.Bookmarks &&
+            screenDisplay !== ScreenDisplay.Orders && (
               <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
                 {[
                   {
@@ -227,6 +228,14 @@ const Web: FunctionComponent<WebProps> = ({
               width: "12",
               height: "12",
               type: ScreenDisplay.Bookmarks,
+            },
+            {
+              image: "Qmd7w4HyNrtWvSy48jGnidSx77mSqgAALTsVrbcVcSMeoG",
+              text: "orders",
+              function: () => dispatch(setScreenDisplay(ScreenDisplay.Orders)),
+              width: "10",
+              height: "10",
+              type: ScreenDisplay.Orders,
             },
             {
               image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",

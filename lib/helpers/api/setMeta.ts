@@ -2,10 +2,8 @@ import { Dispatch } from "react";
 import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
-import { splitSignature } from "ethers/lib/utils";
 import LensHubProxy from "../../../abis/LensHubProxy.json";
 import { AnyAction } from "redux";
-import { SimpleCollectOpenActionModuleInput } from "../../../graphql/generated";
 import { polygon } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
@@ -54,22 +52,15 @@ const setMeta = async (
       dispatch(setInteractError(true));
     }
   } else {
-    const { v, r, s } = splitSignature(signature);
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
-      functionName: "setProfileMetadataURIWithSig",
+      functionName: "setProfileMetadataURI",
       chain: polygon,
       args: [
         typedData?.value.profileId,
         typedData?.value.metadataURI,
-        {
-          v,
-          r,
-          s,
-          deadline: typedData?.value.deadline,
-          signer: address,
-        },
+
       ],
       account: address,
     });

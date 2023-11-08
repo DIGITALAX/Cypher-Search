@@ -16,9 +16,6 @@ const Legend: FunctionComponent<LegendProps> = ({
   cartItems,
   dispatch,
   router,
-  showComments,
-  showLikes,
-  showMirrors,
   milestoneCovers,
   layoutAmount,
   mirror,
@@ -44,7 +41,7 @@ const Legend: FunctionComponent<LegendProps> = ({
                   "QmRsAM1oJfiv1Py92uoYk7VMdrnPfWDsgH3Y2tPWVDqxHw",
                 ].map((image: string, index: number) => {
                   const functions = [like, comment, mirror];
-                  const show = [showLikes, showComments, showMirrors];
+                
                   return (
                     <div
                       key={index}
@@ -60,7 +57,7 @@ const Legend: FunctionComponent<LegendProps> = ({
                       </div>
                       <div
                         className="relative w-fit h-fit items-center justify-center flex cursor-pointer"
-                        onClick={() => show[index](publication?.id)}
+                     
                       >
                         2K
                       </div>

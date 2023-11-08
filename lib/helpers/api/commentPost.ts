@@ -2,7 +2,6 @@ import { Dispatch } from "react";
 import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
-import { splitSignature } from "ethers/lib/utils";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction } from "redux";
 import commentPost from "../../../graphql/lens/mutations/comment";
@@ -58,11 +57,10 @@ const lensComment = async (
       dispatch(setInteractError(true));
     }
   } else {
-    const { v, r, s } = splitSignature(signature);
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
-      functionName: "commentWithSig",
+      functionName: "comment",
       chain: polygon,
       args: [
         {
@@ -78,13 +76,7 @@ const lensComment = async (
           referenceModule: typedData?.value.referenceModule,
           referenceModuleInitData: typedData?.value.referenceModuleInitData,
         },
-        {
-          v,
-          r,
-          s,
-          deadline: typedData?.value.deadline,
-          signer: address,
-        },
+        
       ],
       account: address,
     });

@@ -13,6 +13,7 @@ import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
+import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -36,6 +37,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   handleHidePost,
   handleBookmark,
 }): JSX.Element => {
+  const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
     <div className="relative w-full justify-between flex flex-row items-center gap-2">
       <div className="relative w-fit h-fit flex flex-row items-center gap-1.5 justify-center">
@@ -189,19 +191,9 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             setProfileHovers(updatedArray);
           }}
         >
-          <Image
-            layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/${
-              item?.by?.metadata?.picture?.__typename === "ImageSet"
-                ? (item?.by?.metadata?.picture as ImageSet)?.raw?.uri?.split(
-                    "ipfs://"
-                  )[1]
-                : (
-                    item?.by?.metadata?.picture as NftImage
-                  )?.image?.raw?.uri?.split("ipfs://")[1]
-            }`}
-            draggable={false}
-          />
+          {profilePicture && (
+            <Image layout="fill" src={profilePicture} draggable={false} />
+          )}
         </div>
         <div
           className={`relative w-5 h-5 items-center justify-center flex ${

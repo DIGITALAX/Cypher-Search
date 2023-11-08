@@ -5,11 +5,11 @@ import {
   numberToItemTypeMap,
 } from "../../../../../lib/constants";
 import { CreationProps } from "../../types/autograph.types";
-import { NftImage } from "../../../../../graphql/generated";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setCartItems } from "../../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../../redux/reducers/cartAnimSlice";
+import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 
 const Creation: FunctionComponent<CreationProps> = ({
   item,
@@ -32,6 +32,7 @@ const Creation: FunctionComponent<CreationProps> = ({
   dispatch,
   cartItems,
 }): JSX.Element => {
+  const profilePicture = createProfilePicture(item?.profile?.metadata?.picture);
   return (
     <div className="relative w-80 h-80 bg-piloto flex items-center justify-start flex-col p-2 gap-4">
       <div
@@ -115,19 +116,9 @@ const Creation: FunctionComponent<CreationProps> = ({
               setProfileHovers(updatedArray);
             }}
           >
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/${
-                item?.profile?.metadata?.picture?.__typename === "ImageSet"
-                  ? item?.profile?.metadata?.picture?.raw?.uri?.split(
-                      "ipfs//"
-                    )[1]
-                  : (
-                      item?.profile?.metadata?.picture as NftImage
-                    )?.image?.raw?.uri?.split("ipfs//")[1]
-              }`}
-              draggable={false}
-            />
+            {profilePicture && (
+              <Image layout="fill" src={profilePicture} draggable={false} />
+            )}
           </div>
           <div className="relative w-fit h-fit flex items-center justify-center font-bit top-px text-xs">
             {item?.title?.length > 13

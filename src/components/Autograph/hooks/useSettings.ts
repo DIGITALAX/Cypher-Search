@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import pollUntilIndexed from "../../../../graphql/lens/queries/indexed";
-import { splitSignature } from "ethers/lib/utils.js";
 import { omit } from "lodash";
 import { RootState } from "../../../../redux/store";
 import {
@@ -188,23 +187,15 @@ const useSettings = () => {
       if (
         broadcastResult?.data?.broadcastOnchain?.__typename === "RelayError"
       ) {
-        const { v, r, s } = splitSignature(signature);
         const { request } = await publicClient.simulateContract({
           address: LENS_HUB_PROXY_ADDRESS_MATIC,
           abi: LensHubProxy,
-          functionName: "setFollowModuleWithSig",
+          functionName: "setFollowModule",
           chain: polygon,
           args: [
             typedData?.value.profileId,
             typedData?.value.followModule,
             typedData?.value.followModuleInitData,
-            {
-              v,
-              r,
-              s,
-              deadline: typedData?.value.deadline,
-              signer: address,
-            },
           ],
           account: address,
         });

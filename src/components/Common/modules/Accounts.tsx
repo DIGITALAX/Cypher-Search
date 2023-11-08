@@ -5,6 +5,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import { ImageSet, NftImage } from "../../../../graphql/generated";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { AccountsProps, CartItem } from "../types/common.types";
+import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 
 const Accounts: FunctionComponent<AccountsProps> = ({
   searchActive,
@@ -24,6 +25,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   dispatch,
   auto,
 }): JSX.Element => {
+  const profilePicture = createProfilePicture(lensConnected?.metadata?.picture);
   return (
     <>
       <div
@@ -84,22 +86,9 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer"
           onClick={() => lensConnected && setOpenAccount(!openAccount)}
         >
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/${
-              lensConnected?.metadata?.picture?.__typename === "ImageSet" &&
-              (lensConnected.metadata.picture as ImageSet)?.raw.uri
-                ? (lensConnected.metadata.picture as ImageSet)?.raw.uri.split(
-                    "ipfs://"
-                  )[1]
-                : (lensConnected?.metadata?.picture as NftImage)?.image.raw.uri
-                ? (
-                    lensConnected?.metadata?.picture as NftImage
-                  )?.image.raw.uri?.split("ipfs://")[1]
-                : "QmeSSwZt92PgMfvdJih9yyypQGX8gFx3BoLXn3mXwYX5pb"
-            }`}
-            layout="fill"
-            draggable={false}
-          />
+          {profilePicture && (
+            <Image src={profilePicture} layout="fill" draggable={false} />
+          )}
         </div>
       </div>
       {openAccount && (
@@ -108,7 +97,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             className="relative w-full h-full flex items-center justify-center border-sol cursor-pointer hover:opacity-80 border-b"
             onClick={() => {
               setOpenAccount(false);
-              router.push(`/autograph/${lensConnected?.handle?.localName}`);
+              router.push(`/autograph/${lensConnected?.handle?.suggestedFormatted?.localName?.split("@")[1]}`);
             }}
           >
             <div className="relative w-fit h-fit items-center justify-center p-2 flex">

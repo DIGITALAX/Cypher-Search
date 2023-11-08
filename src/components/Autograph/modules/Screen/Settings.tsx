@@ -8,6 +8,7 @@ import {
   MetadataAttributeType,
   NftImage,
 } from "../../../../../graphql/generated";
+import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 
 const Settings: FunctionComponent<SettingsProps> = ({
   setSettingsData,
@@ -34,7 +35,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll max-h-[75vh]">
+          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll min-h-[67vh] max-h-[67vh]">
             <div className="relative w-full h-fit flex items-center justify-start bg-cover flex-col rounded-sm gap-5">
               <label
                 className="relative w-full h-40 rounded-sm cursor-pointer p-px"
@@ -76,15 +77,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                       src={
                         pfpImage
                           ? pfpImage
-                          : `${INFURA_GATEWAY}/ipfs/${
-                              settingsData?.picture?.__typename === "ImageSet"
-                                ? settingsData?.picture?.raw?.uri?.split(
-                                    "ipfs//"
-                                  )[1]
-                                : (
-                                    settingsData.picture as NftImage
-                                  )?.image?.raw?.uri?.split("ipfs//")[1]
-                            }`
+                          : createProfilePicture(settingsData?.picture) || ""
                       }
                       objectFit="cover"
                       draggable={false}
@@ -332,7 +325,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                             </div>
                           </div>
                           {currencyOpen && (
-                            <div className="absolute flex flex-col items-center justify-start w-full h-40 overflow-y-scroll top-10 z-10" >
+                            <div className="absolute flex flex-col items-center justify-start w-full h-40 overflow-y-scroll top-10 z-10">
                               {currencies
                                 ?.filter((item) => item !== followData.currency)
                                 ?.map((item: Erc20, index) => {

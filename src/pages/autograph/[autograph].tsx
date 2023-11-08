@@ -76,12 +76,8 @@ const Autograph: NextPage = (): JSX.Element => {
     cartListOpen,
     setCartListOpen,
   } = useSignIn();
-  const {
-    profileLoading,
-    getProfileData,
-    sortType,
-    setSortType,
-  } = useAutograph();
+  const { profileLoading, getProfileData, sortType, setSortType } =
+    useAutograph();
   const {
     feedLoading,
     interactionsFeedLoading,
@@ -211,7 +207,11 @@ const Autograph: NextPage = (): JSX.Element => {
                 </title>
                 <meta
                   name="og:url"
-                  content={`https://chromadin.xyz/autograph/${profile?.handle?.localName}`}
+                  content={`https://chromadin.xyz/autograph/${
+                    profile?.handle?.suggestedFormatted?.localName?.split(
+                      "@"
+                    )[1]
+                  }`}
                 />
                 <meta
                   name="og:title"
@@ -234,11 +234,19 @@ const Autograph: NextPage = (): JSX.Element => {
                 <meta name="twitter:creator" content="@digitalax" />
                 <meta
                   name="twitter:image"
-                  content={`https://chromadin.xyz/autograph/${profile?.handle?.localName}`}
+                  content={`https://chromadin.xyz/autograph/${
+                    profile?.handle?.suggestedFormatted?.localName?.split(
+                      "@"
+                    )[1]
+                  }`}
                 />
                 <meta
                   name="twitter:url"
-                  content={`https://chromadin.xyz/autograph/${profile?.handle?.localName}`}
+                  content={`https://chromadin.xyz/autograph/${
+                    profile?.handle?.suggestedFormatted?.localName?.split(
+                      "@"
+                    )[1]
+                  }`}
                 />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
@@ -374,7 +382,7 @@ const Autograph: NextPage = (): JSX.Element => {
                 followLoading={followLoading}
                 followProfile={followProfileBookmark}
               />
-              <Bio profile={profile} />
+              <Bio profile={profile} dispatch={dispatch} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
                 <Feed
                   comment={feedComment}

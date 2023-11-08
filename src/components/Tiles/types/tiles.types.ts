@@ -197,9 +197,6 @@ export type LegendProps = {
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
-  showComments: (id: string) => Promise<void>;
-  showLikes: (id: string) => Promise<void>;
-  showMirrors: (id: string) => Promise<void>;
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: boolean[]) => void;

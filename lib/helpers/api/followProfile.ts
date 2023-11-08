@@ -2,7 +2,6 @@ import { Dispatch } from "react";
 import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
-import { splitSignature } from "ethers/lib/utils";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction } from "redux";
 import follow from "../../../graphql/lens/mutations/follow";
@@ -59,24 +58,17 @@ const lensFollow = async (
       console.error(result);
     }
   } else {
-    const { v, r, s } = splitSignature(signature);
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
-      functionName: "followWithSig",
+      functionName: "follow",
       chain: polygon,
       args: [
         typedData?.value?.followerProfileId,
         typedData?.value?.idsOfProfilesToFollow,
         typedData?.value?.followTokenIds,
         typedData?.value?.datas,
-        {
-          v,
-          r,
-          s,
-          deadline: typedData?.value?.deadline,
-          signer: address,
-        },
+       
       ],
       account: address,
     });
