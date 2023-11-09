@@ -15,17 +15,37 @@ import useReport from "../hooks/useReport";
 import Who from "./Who";
 import useWho from "../hooks/useWho";
 import { useRouter } from "next/router";
+import useFilterPost from "../hooks/useFilterPost";
+import PostBox from "./PostBox";
+import useQuote from "../hooks/useQuote";
+import { createPublicClient, http } from "viem";
+import { polygon } from "viem/chains";
+import { useAccount } from "wagmi";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
 const Modals: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const mapOpen = useSelector((state: RootState) => state.app.mapReducer);
-  const filterValues = useSelector(
-    (state: RootState) => state.app.filterReducer.filter
+  const layoutAmount = useSelector(
+    (state: RootState) => state.app.layoutSwitchReducer.value
+  );
+  const filtersOpen = useSelector(
+    (state: RootState) => state.app.filtersOpenReducer
+  );
+  const profileDisplay = useSelector(
+    (state: RootState) => state.app.profileDisplayReducer.value
   );
   const reactBox = useSelector((state: RootState) => state.app.reactBoxReducer);
+  const lensConnected = useSelector(
+    (state: RootState) => state.app.lensConnectedReducer?.profile
+  );
   const indexer = useSelector((state: RootState) => state.app.indexerReducer);
   const galleryItems = useSelector(
     (state: RootState) => state.app.galleryItemsReducer.items
@@ -33,6 +53,10 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const reportReason = useSelector(
     (state: RootState) => state.app.reportPubReducer
   );
+  const availableCurrencies = useSelector(
+    (state: RootState) => state.app.availableCurrenciesReducer.currencies
+  );
+  const postBox = useSelector((state: RootState) => state.app.postBoxReducer);
   const displaySearch = useSelector(
     (state: RootState) => state.app.displaySearchBoxReducer
   );
@@ -42,11 +66,23 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const fullScreenVideo = useSelector(
     (state: RootState) => state.app.fullScreenVideoReducer
   );
-  const filtersOpen = useSelector(
-    (state: RootState) => state.app.filtersOpenReducer
+  const profiles = useSelector(
+    (state: RootState) => state.app.cachedProfilesReducer.profiles
+  );
+  const cartItems = useSelector(
+    (state: RootState) => state.app.cartItemsReducer.items
+  );
+  const searchActive = useSelector(
+    (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const allSearchItems = useSelector(
+    (state: RootState) => state.app.searchItemsReducer
   );
   const filterConstants = useSelector(
     (state: RootState) => state.app.filterConstantsReducer.items
+  );
+  const filters = useSelector(
+    (state: RootState) => state.app.filterReducer.filter
   );
   const image = useSelector((state: RootState) => state.app.ImageLargeReducer);
   const {
@@ -55,14 +91,22 @@ const Modals: FunctionComponent = (): JSX.Element => {
     filteredDropDownValues,
     setFilteredDropDownValues,
     handleResetFilters,
-  } = useSearch();
+  } = useSearch(
+    filtersOpen,
+    searchActive,
+    filterConstants,
+    filters,
+    allSearchItems,
+    profiles,
+    dispatch
+  );
   const {
     handleItemSelect,
     itemSearch,
     setItemSearch,
     selectedItem,
     sortedGallery,
-  } = useDisplaySearch();
+  } = useDisplaySearch(profileDisplay, dispatch);
   const {
     dataLoading,
     reactors,
@@ -72,9 +116,36 @@ const Modals: FunctionComponent = (): JSX.Element => {
     showMore,
     mirrorQuote,
     setMirrorQuote,
-  } = useWho();
-
-  const { handleReportPost, reason, setReason, reportLoading } = useReport();
+  } = useWho(lensConnected, reactBox);
+  const {
+    popUpOpen,
+    setApparel,
+    apparel,
+    mirror,
+    like,
+    setPopUpOpen,
+    interactionsLoading,
+    openMirrorChoice,
+    setOpenMirrorChoice,
+    unfollowProfile,
+    followProfile,
+    followLoading,
+    profileHovers,
+    setProfileHovers,
+    publication,
+  } = useFilterPost(filtersOpen);
+  const {
+    makeQuote,
+    setMakeQuote,
+    quoteLoading,
+    quote,
+    quoteContentLoading,
+    setQuoteContentLoading,
+    gifCollectOpen,
+    setGifCollectOpen,
+  } = useQuote(availableCurrencies, postBox, dispatch, publicClient, address);
+  const { handleReportPost, reason, setReason, reportLoading } =
+    useReport(dispatch);
   return (
     <>
       {fullScreenVideo?.value && (
@@ -93,9 +164,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
           setVideosLoading={setVideosLoading}
         />
       )}
-      {mapOpen?.value && (
-        <Map dispatch={dispatch} filterValues={filterValues} />
-      )}
+      {mapOpen?.value && <Map dispatch={dispatch} filterValues={filters} />}
       {filtersOpen?.value && (
         <Filters
           filterConstants={filterConstants}
@@ -104,8 +173,26 @@ const Modals: FunctionComponent = (): JSX.Element => {
           filteredDropDownValues={filteredDropDownValues!}
           setFilteredDropDownValues={setFilteredDropDownValues}
           dispatch={dispatch}
-          filterValues={filterValues}
+          filterValues={filters}
           handleResetFilters={handleResetFilters}
+          layoutAmount={layoutAmount}
+          popUpOpen={popUpOpen}
+          setPopUpOpen={setPopUpOpen}
+          apparel={apparel}
+          setApparel={setApparel}
+          publication={publication!}
+          router={router}
+          cartItems={cartItems}
+          mirror={mirror}
+          like={like}
+          interactionsLoading={interactionsLoading}
+          openMirrorChoice={openMirrorChoice}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          followLoading={followLoading}
+          unfollowProfile={unfollowProfile}
+          followProfile={followProfile}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
         />
       )}
       {reactBox?.open && (
@@ -152,6 +239,21 @@ const Modals: FunctionComponent = (): JSX.Element => {
           setReason={setReason}
           handleReportPost={handleReportPost}
           reportLoading={reportLoading}
+        />
+      )}
+      {postBox?.open && (
+        <PostBox
+          dispatch={dispatch}
+          quote={postBox?.quote}
+          makePost={makeQuote}
+          setMakePost={setMakeQuote}
+          post={quote}
+          postLoading={quoteLoading}
+          contentLoading={quoteContentLoading}
+          setContentLoading={setQuoteContentLoading}
+          gifCollectOpen={gifCollectOpen}
+          setGifCollectOpen={setGifCollectOpen}
+          availableCurrencies={availableCurrencies}
         />
       )}
       {interactError.value && <InteractError dispatch={dispatch} />}

@@ -83,11 +83,12 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           </div>
         )}
         <div
-          className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer"
+          className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer rounded-full"
+          id="pfp"
           onClick={() => lensConnected && setOpenAccount(!openAccount)}
         >
           {profilePicture && (
-            <Image src={profilePicture} layout="fill" draggable={false} />
+            <Image src={profilePicture} className="rounded-full" layout="fill" draggable={false} />
           )}
         </div>
       </div>
@@ -97,7 +98,13 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             className="relative w-full h-full flex items-center justify-center border-sol cursor-pointer hover:opacity-80 border-b"
             onClick={() => {
               setOpenAccount(false);
-              router.push(`/autograph/${lensConnected?.handle?.suggestedFormatted?.localName?.split("@")[1]}`);
+              router.push(
+                `/autograph/${
+                  lensConnected?.handle?.suggestedFormatted?.localName?.split(
+                    "@"
+                  )[1]
+                }`
+              );
             }}
           >
             <div className="relative w-fit h-fit items-center justify-center p-2 flex">

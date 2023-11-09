@@ -50,7 +50,7 @@ const DropDown: FunctionComponent<DropDownProps> = ({
       </div>
       {openDropDown && (
         <div
-          className="absolute flex items-start justify-center w-full h-32 overflow-y-scroll z-10 bg-offBlack top-12 p-px border border-azul rounded-sm"
+          className="absolute flex items-start justify-center w-full h-fit max-h-[8rem] overflow-y-scroll z-10 bg-offBlack top-12 p-px border border-azul rounded-sm"
           id="dropDown"
         >
           <div className="relative flex flex-col items-center justify-start w-full h-fit gap-px">

@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { LimitType, PublicationType } from "../../../../graphql/generated";
-import lensQuote from "../../../../lib/helpers/api/quotePost";
-import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuote";
-import { RootState } from "../../../../redux/store";
+import {
+  LimitType,
+  Mirror,
+  Post,
+  Profile,
+  PublicationType,
+  Quote,
+} from "../../../../graphql/generated";
+import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensComment from "../../../../lib/helpers/api/commentPost";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
@@ -11,44 +15,51 @@ import lensCollect from "../../../../lib/helpers/api/collectPost";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { setAutographFeed } from "../../../../redux/reducers/autographFeedSlice";
 import { polygon } from "viem/chains";
-import { createPublicClient, createWalletClient, custom, http } from "viem";
-import { useAccount } from "wagmi";
+import { createWalletClient, custom } from "viem";
+import { PublicClient } from "wagmi";
 import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
 import lensHide from "../../../../lib/helpers/api/hidePost";
+import { MakePostComment } from "../types/autograph.types";
+import { Dispatch } from "redux";
 
-const useFeed = () => {
-  const dispatch = useDispatch();
-  const { address } = useAccount();
-  const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
-  });
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile?.id
-  );
-  const lastPostComment = useSelector(
-    (state: RootState) => state.app.lastPostCommentReducer
-  );
-  const lastPostQuote = useSelector(
-    (state: RootState) => state.app.lastPostQuoteReducer
-  );
-  const profileFeed = useSelector(
-    (state: RootState) => state.app.autographFeedReducer.feed
-  );
-  const profile = useSelector(
-    (state: RootState) => state.app.autographProfileReducer.profile
-  );
+const useFeed = (
+  lensConnected: Profile | undefined,
+  profileFeed: (Post | Quote | Mirror)[],
+  profile: Profile | undefined,
+  dispatch: Dispatch,
+  publicClient: PublicClient,
+  address: `0x${string}` | undefined
+) => {
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []
   );
+  const [gifCollectOpenFeed, setGifCollectOpenFeed] = useState<
+    {
+      gif: boolean;
+      collect: boolean;
+    }[]
+  >([
+    {
+      gif: false,
+      collect: false,
+    },
+  ]);
   const [openMoreOptions, setOpenMoreOptions] = useState<boolean[]>([]);
   const [hasMoreFeed, setHasMoreFeed] = useState<boolean>(false);
   const [feedLoading, setFeedLoading] = useState<boolean>(false);
+  const [commentsFeedOpen, setCommentsFeedOpen] = useState<boolean[]>([]);
+  const [commentContentLoading, setCommentContentLoading] = useState<
+    {
+      image: boolean;
+      video: boolean;
+      gif: boolean;
+    }[]
+  >([]);
+  const [makeCommentFeed, setMakeCommentFeed] = useState<MakePostComment[]>([]);
   const [interactionsFeedLoading, setInteractionsFeedLoading] = useState<
     {
       like: boolean;
       mirror: boolean;
-      quote: boolean;
       comment: boolean;
       simpleCollect: boolean;
       bookmark: boolean;
@@ -73,7 +84,7 @@ const useFeed = () => {
             ],
           },
         },
-        lensConnected
+        lensConnected?.id
       );
       dispatch(setAutographFeed(data?.publications?.items as any));
       setFeedCursor(data?.publications?.pageInfo?.next);
@@ -106,7 +117,7 @@ const useFeed = () => {
             ],
           },
         },
-        lensConnected
+        lensConnected?.id
       );
       dispatch(
         setAutographFeed([
@@ -133,6 +144,14 @@ const useFeed = () => {
     if (index === -1) {
       return;
     }
+    if (
+      !makeCommentFeed[index]?.content &&
+      !makeCommentFeed[index]?.images &&
+      !makeCommentFeed[index]?.videos &&
+      !makeCommentFeed[index]?.gifs
+    )
+      return;
+
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], comment: true };
@@ -140,11 +159,11 @@ const useFeed = () => {
     });
 
     try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostComment.content,
-        lastPostComment.images,
-        lastPostComment.videos,
-        lastPostComment.gifs
+      const contentURI = await uploadPostContent(
+        makeCommentFeed[index]?.content,
+        makeCommentFeed[index]?.images!,
+        makeCommentFeed[index]?.videos!,
+        makeCommentFeed[index]?.gifs!
       );
 
       const clientWallet = createWalletClient({
@@ -156,10 +175,11 @@ const useFeed = () => {
         id,
         contentURI!,
         dispatch,
-        lastPostComment.collectType,
+        makeCommentFeed[index]?.collectType,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        () => clearComment(index)
       );
     } catch (err: any) {
       console.error(err.message);
@@ -172,46 +192,23 @@ const useFeed = () => {
     });
   };
 
-  const feedQuote = async (id: string) => {
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
-    if (index === -1) {
-      return;
-    }
-    setInteractionsFeedLoading((prev) => {
+  const clearComment = (index: number) => {
+    setMakeCommentFeed((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: true };
+      updatedArray[index] = {
+        collectType: undefined,
+        content: "",
+        images: [],
+        videos: [],
+        gifs: [],
+        searchedGifs: [],
+        search: "",
+      };
       return updatedArray;
     });
-
-    try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostQuote.content,
-        lastPostQuote.images,
-        lastPostQuote.videos,
-        lastPostQuote.gifs
-      );
-
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-
-      await lensQuote(
-        id,
-        contentURI!,
-        dispatch,
-        lastPostComment.collectType,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
-    } catch (err: any) {
-      console.error(err.message);
-    }
-
-    setInteractionsFeedLoading((prev) => {
+    setCommentsFeedOpen((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: false };
+      updatedArray[index] = !updatedArray[index];
       return updatedArray;
     });
   };
@@ -360,14 +357,49 @@ const useFeed = () => {
           like: false,
           mirror: false,
           comment: false,
-          quote: false,
           simpleCollect: false,
           bookmark: false,
           hide: false,
         }))
       );
+      setOpenMoreOptions(
+        Array.from({ length: profileFeed.length }, () => false)
+      );
+      setCommentsFeedOpen(
+        Array.from({ length: profileFeed.length }, () => false)
+      );
+      setCommentContentLoading(
+        Array.from({ length: profileFeed.length }, () => ({
+          image: false,
+          video: false,
+          gif: false,
+        }))
+      );
       setOpenMirrorFeedChoice(
         Array.from({ length: profileFeed.length }, () => false)
+      );
+      setGifCollectOpenFeed(
+        Array.from({ length: profileFeed.length }, () => ({
+          gif: false,
+          collect: false,
+        }))
+      );
+      setMakeCommentFeed(
+        Array.from({ length: profileFeed.length }, () => ({
+          collectType: undefined,
+          content: "",
+          images: [],
+          videos: [],
+          gifs: [],
+          searchedGifs: [],
+          search: "",
+          collectibleOpen: false,
+          collectible: "",
+          award: "",
+          whoCollectsOpen: false,
+          creatorAwardOpen: false,
+          currencyOpen: false,
+        }))
       );
     }
   }, [profileFeed?.length]);
@@ -380,7 +412,6 @@ const useFeed = () => {
     feedComment,
     feedLike,
     feedMirror,
-    feedQuote,
     feedCollect,
     getMoreFeed,
     openMoreOptions,
@@ -388,6 +419,14 @@ const useFeed = () => {
     handleBookmark,
     handleHidePost,
     hasMoreFeed,
+    makeCommentFeed,
+    setMakeCommentFeed,
+    commentsFeedOpen,
+    setCommentsFeedOpen,
+    commentContentLoading,
+    setCommentContentLoading,
+    gifCollectOpenFeed,
+    setGifCollectOpenFeed,
   };
 };
 

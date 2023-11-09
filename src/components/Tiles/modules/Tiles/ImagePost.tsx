@@ -14,8 +14,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   dispatch,
   mirror,
   like,
-  comment,
-  quote,
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
@@ -83,7 +81,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               <InteractBar
                 mirror={mirror}
                 like={like}
-                comment={comment}
                 interactionsLoading={interactionsLoading}
                 layoutAmount={layoutAmount}
                 openMirrorChoice={openMirrorChoice}
@@ -94,6 +91,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     ? publication
                     : publication
                 }
+                router={router}
                 dispatch={dispatch}
                 simpleCollect={
                   (
@@ -112,9 +110,9 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             "MultirecipientFeeCollectOpenActionSettings")
                   )
                     ? (simpleCollect as
-                      | ((id: string) => Promise<void>)
-                      | ((index: number, id: string) => Promise<void>)
-                      | undefined)
+                        | ((id: string) => Promise<void>)
+                        | ((index: number, id: string) => Promise<void>)
+                        | undefined)
                     : undefined
                 }
                 type={
@@ -139,11 +137,13 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                       `/autograph/${publication?.by?.handle?.localName}`
                     )
                   }
-                  onMouseEnter={() => {
-                    const updatedArray = [...profileHovers];
-                    updatedArray[index] = true;
-                    setProfileHovers(updatedArray);
-                  }}
+                  onMouseEnter={() =>
+                    setProfileHovers((prev) => {
+                      const updatedArray = [...prev];
+                      updatedArray[index] = true;
+                      return updatedArray;
+                    })
+                  }
                 >
                   <Image
                     layout="fill"
@@ -159,7 +159,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     router={router}
                     publication={publication?.by}
                     index={index}
-                    profileHovers={profileHovers}
                     setProfileHovers={setProfileHovers}
                   />
                 )}
@@ -222,8 +221,8 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               })}
               <InteractBar
                 mirror={mirror}
+                router={router}
                 like={like}
-                comment={comment}
                 interactionsLoading={interactionsLoading}
                 col
                 openMirrorChoice={openMirrorChoice}

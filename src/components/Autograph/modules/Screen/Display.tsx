@@ -10,7 +10,6 @@ const Display: FunctionComponent<DisplayProps> = ({
   display,
   mirror,
   like,
-  comment,
   openMirrorChoice,
   sortType,
   setOpenMirrorChoice,
@@ -19,6 +18,7 @@ const Display: FunctionComponent<DisplayProps> = ({
   handleSetDisplay,
   displayLoading,
   owner,
+  router
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col w-full h-full items-start justify-start gap-3">
@@ -65,10 +65,10 @@ const Display: FunctionComponent<DisplayProps> = ({
                 </div>
               </div>
               <InteractBar
+                router={router}
                 dispatch={dispatch}
                 mirror={mirror}
                 like={like}
-                comment={comment}
                 interactionsLoading={interactionsLoading?.[0]}
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}
@@ -142,10 +142,10 @@ const Display: FunctionComponent<DisplayProps> = ({
                 {display && (
                   <div className="absolute bottom-2 left-2 flex items-center justify-center">
                     <InteractBar
+                      router={router}
                       dispatch={dispatch}
                       mirror={mirror}
                       like={like}
-                      comment={comment}
                       interactionsLoading={interactionsLoading?.[index + 1]}
                       openMirrorChoice={openMirrorChoice}
                       setOpenMirrorChoice={setOpenMirrorChoice}

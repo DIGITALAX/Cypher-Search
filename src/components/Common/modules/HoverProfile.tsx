@@ -14,7 +14,6 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   publication,
   router,
   index,
-  profileHovers,
   setProfileHovers,
   feed,
 }): JSX.Element => {
@@ -27,11 +26,13 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   return (
     <div
       className="absolute w-28 h-fit flex flex-col items-center justify-center p-2 z-20 border border-white rounded-sm bg-black -top-32"
-      onMouseLeave={() => {
-        const updatedArray = [...profileHovers];
-        updatedArray[index] = false;
-        setProfileHovers(updatedArray);
-      }}
+      onMouseLeave={() =>
+        setProfileHovers((prev) => {
+          const updatedArray = [...prev];
+          updatedArray[index] = false;
+          return updatedArray;
+        })
+      }
     >
       <div
         style={{

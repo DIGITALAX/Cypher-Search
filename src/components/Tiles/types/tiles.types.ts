@@ -1,4 +1,4 @@
-import { FormEvent, MouseEvent, Ref } from "react";
+import { FormEvent, MouseEvent, Ref, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
 import {
@@ -7,11 +7,9 @@ import {
   Profile,
   Quote,
   Comment,
-  PublicationStats,
 } from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
-import { Origin } from "@/components/Search/types/search.types";
 
 export interface Creation {
   amount: string;
@@ -54,30 +52,27 @@ export interface Publication {
 export type TilesProps = {
   handleMoreSearch: () => Promise<void>;
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   searchLoading: boolean;
   searchActive: boolean;
   filtersOpen: boolean;
   layoutAmount: number;
   popUpOpen: boolean[];
-  setPopUpOpen: (e: boolean[]) => void;
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   apparel: boolean[];
-  setApparel: (e: boolean[]) => void;
+  setApparel: (e: SetStateAction<boolean[]>) => void;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
+
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   }[];
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
@@ -88,38 +83,34 @@ export type TileSwitchProps = {
   type: string;
   publication: Publication;
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   layoutAmount: number;
   popUpOpen: boolean[];
-  setPopUpOpen: (e: boolean[]) => void;
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   apparel: boolean[];
-  setApparel: (e: boolean[]) => void;
+  setApparel: (e: SetStateAction<boolean[]>) => void;
   index: number;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
-  simpleCollect: (id: string, type: string) => Promise<void>;
+  simpleCollect?: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   }[];
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
-  profileId: string;
-  volume: number;
-  volumeOpen: boolean;
-  setVolumeOpen: (e: boolean) => void;
-  videoSync: VideoSyncState;
-  handleVolumeChange: (e: FormEvent) => void;
-  handleHeart: () => void;
-  progressRef: Ref<HTMLDivElement>;
-  handleSeek: (
+  profileId?: string;
+  volume?: number;
+  volumeOpen?: boolean;
+  setVolumeOpen?: (e: SetStateAction<boolean>) => void;
+  videoSync?: VideoSyncState;
+  handleVolumeChange?: (e: SetStateAction<FormEvent>) => void;
+  handleHeart?: () => void;
+  progressRef?: Ref<HTMLDivElement>;
+  handleSeek?: (
     e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
   ) => void;
   followProfile: (id: string) => Promise<void>;
@@ -130,14 +121,13 @@ export type TileSwitchProps = {
 export type ControlsProps = {
   videoSync: VideoSyncState;
   volume: number;
+  router: NextRouter;
   volumeOpen: boolean;
   setVolumeOpen: (volumeOpen: boolean) => void;
-  handleVolumeChange: (e: FormEvent) => void;
+  handleVolumeChange: (e: SetStateAction<FormEvent>) => void;
   handleHeart: () => void;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
   profileId: string;
   progressRef: Ref<HTMLDivElement>;
   handleSeek: (
@@ -147,8 +137,6 @@ export type ControlsProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
   publication: Publication;
 };
@@ -158,7 +146,7 @@ export type VideoPostProps = {
   volume: number;
   volumeOpen: boolean;
   setVolumeOpen: (volumeOpen: boolean) => void;
-  handleVolumeChange: (e: FormEvent) => void;
+  handleVolumeChange: (e: SetStateAction<FormEvent>) => void;
   handleHeart: () => void;
   profileId: string;
   progressRef: Ref<HTMLDivElement>;
@@ -168,18 +156,14 @@ export type VideoPostProps = {
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   router: NextRouter;
-  publication: Post | Comment | Quote | Mirror;
+  publication: Publication;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
 };
 
@@ -187,9 +171,11 @@ export type LegendProps = {
   publication: Post;
   imageIndex: number[];
   milestoneCovers: string[];
-  setImageIndex: (e: number[]) => void;
+  commentsOpen: boolean[];
+  setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
+  setImageIndex: (e: SetStateAction<number[]>) => void;
   index: number;
-  setCollectChoice: (e: { color: string; size: string }[]) => void;
+  setCollectChoice: (e: SetStateAction<{ color: string; size: string }[]>) => void;
   collectChoice: {
     color: string;
     size: string;
@@ -199,25 +185,21 @@ export type LegendProps = {
   router: NextRouter;
   layoutAmount: number;
   popUpOpen: boolean[];
-  setPopUpOpen: (e: boolean[]) => void;
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
 };
 
 export type CollectItemProps = {
   index: number;
   router: NextRouter;
-  setCollectChoice: (e: { color: string; size: string }[]) => void;
+  setCollectChoice: (e: SetStateAction<{ color: string; size: string }[]>) => void;
   collectChoice: {
     color: string;
     size: string;
@@ -230,37 +212,34 @@ export type CollectItemProps = {
 export type ChromadinProps = {
   layoutAmount: number;
   apparel: boolean[];
-  setApparel: (e: boolean[]) => void;
+  setApparel: (e: SetStateAction<boolean[]>) => void;
   index: number;
   popUpOpen: boolean[];
-  setPopUpOpen: (e: boolean[]) => void;
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
   publication: Creation;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
+
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export type CoinOpProps = {
   layoutAmount: number;
   popUpOpen: boolean[];
-  setPopUpOpen: (e: boolean[]) => void;
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   index: number;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
@@ -268,21 +247,18 @@ export type CoinOpProps = {
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
+
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export type TextPostProps = {
@@ -292,23 +268,19 @@ export type TextPostProps = {
   publication: Post | Comment | Quote | Mirror;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   index: number;
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export type QuestProps = {
@@ -319,7 +291,7 @@ export type QuestProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export type ImagePostProps = {
@@ -329,23 +301,20 @@ export type ImagePostProps = {
   dispatch: Dispatch<AnyAction>;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
+
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   index: number;
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export type LevelOneProps = {
@@ -370,28 +339,25 @@ export type ListenerProps = {
   layoutAmount: number;
   index: number;
   popUpOpen: boolean[];
-  setPopUpOpen: (e: boolean[]) => void;
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
   publication: Creation;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-  comment: (id: string) => Promise<void>;
-  quote: (id: string) => Promise<void>;
+
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    quote: boolean;
-    comment: boolean;
   };
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export enum PrintType {
@@ -410,7 +376,7 @@ export type ProfileProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export type MicrobrandProps = {
@@ -422,7 +388,7 @@ export type MicrobrandProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
 export interface FilterInput {
@@ -470,5 +436,5 @@ export type CommunityProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };

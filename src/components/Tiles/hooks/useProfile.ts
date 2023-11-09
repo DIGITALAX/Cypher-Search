@@ -1,27 +1,26 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
-import { Post, Comment, Mirror, Quote } from "../../../../graphql/generated";
+import {
+  Post,
+  Comment,
+  Mirror,
+  Quote,
+  Profile,
+} from "../../../../graphql/generated";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
-import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { PublicClient, createWalletClient, custom } from "viem";
 import { polygon } from "viem/chains";
-import { useAccount } from "wagmi";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
+import { Publication } from "../types/tiles.types";
+import { Dispatch } from "redux";
 
-const useProfile = () => {
-  const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
-  });
-  const dispatch = useDispatch();
-  const { address } = useAccount();
-  const allSearchItems = useSelector(
-    (state: RootState) => state.app.searchItemsReducer.items
-  );
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile
-  );
+const useProfile = (
+  allSearchItems: Publication[],
+  lensConnected: Profile | undefined,
+  dispatch: Dispatch,
+  publicClient: PublicClient,
+  address: `0x${string}` | undefined
+) => {
   const [profileHovers, setProfileHovers] = useState<boolean[]>([]);
   const [followLoading, setFollowLoading] = useState<boolean[]>([]);
 
@@ -122,6 +121,7 @@ const useProfile = () => {
     followLoading,
     profileHovers,
     setProfileHovers,
+    lensConnected,
   };
 };
 

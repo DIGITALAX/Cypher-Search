@@ -18,8 +18,6 @@ const Listener: FunctionComponent<ListenerProps> = ({
   publication,
   cartItems,
   interactionsLoading,
-  comment,
-  quote,
   mirror,
   like,
   openMirrorChoice,
@@ -37,17 +35,17 @@ const Listener: FunctionComponent<ListenerProps> = ({
     >
       <div className="absolute w-full h-full mix-blend-hard-light bg-listener opacity-60 bg-center bg-cover right-0 top-0"></div>
       <InteractBar
+        router={router}
         mirror={mirror}
         like={like}
-        comment={comment}
-        quote={quote}
+        dispatch={dispatch}
         interactionsLoading={interactionsLoading}
         layoutAmount={layoutAmount}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         index={index}
-        publication={publication?.stats!}
-        collect={undefined}
+        publication={publication?.publication}
+        simpleCollect={undefined}
         type={undefined}
       />
       <div
@@ -86,11 +84,13 @@ const Listener: FunctionComponent<ListenerProps> = ({
             className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
               layoutAmount === 4 ? "text-xs" : "text-sm"
             }`}
-            onMouseEnter={() => {
-              const updatedArray = [...profileHovers];
-              updatedArray[index] = true;
-              setProfileHovers(updatedArray);
-            }}
+            onMouseEnter={() =>
+              setProfileHovers((prev) => {
+                const updatedArray = [...prev];
+                updatedArray[index] = true;
+                return updatedArray;
+              })
+            }
           >
             @hiro.lens
           </div>
@@ -102,7 +102,6 @@ const Listener: FunctionComponent<ListenerProps> = ({
               router={router}
               publication={publication?.profile}
               index={index}
-              profileHovers={profileHovers}
               setProfileHovers={setProfileHovers}
             />
           )}

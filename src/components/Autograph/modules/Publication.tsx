@@ -12,6 +12,7 @@ import {
   Quote,
   TextOnlyMetadataV3,
 } from "../../../../graphql/generated";
+import PostComment from "./PostComment";
 
 const Publication: FunctionComponent<PublicationProps> = ({
   item,
@@ -35,6 +36,15 @@ const Publication: FunctionComponent<PublicationProps> = ({
   followProfile,
   handleHidePost,
   disabled,
+  commentsOpen,
+  setCommentsOpen,
+  makeComment,
+  setMakePostComment,
+  setContentLoading,
+  contentLoading,
+  gifCollectOpen,
+  setGifCollectOpen,
+  availableCurrencies
 }): JSX.Element => {
   return (
     <div className="relative bg-lirio rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza">
@@ -97,7 +107,6 @@ const Publication: FunctionComponent<PublicationProps> = ({
         router={router}
         mirror={mirror}
         like={like}
-        comment={comment}
         interactionsLoading={interactionsLoading?.[index]}
         profileHovers={profileHovers}
         setProfileHovers={setProfileHovers}
@@ -112,7 +121,28 @@ const Publication: FunctionComponent<PublicationProps> = ({
         handleBookmark={handleBookmark}
         handleHidePost={handleHidePost}
         disabled={disabled}
+        setCommentsOpen={setCommentsOpen!}
+        commentsOpen={commentsOpen!}
       />
+      {commentsOpen?.[index] && (
+        <PostComment
+          makePostComment={makeComment?.[index]!}
+          setMakePostComment={setMakePostComment!}
+          commentPost={comment!}
+          id={item?.id}
+          commentPostLoading={interactionsLoading?.[index].comment!}
+          height="5rem"
+          imageHeight="1.25rem"
+          imageWidth="1.25rem"
+          top="-10rem"
+          setContentLoading={setContentLoading!}
+          contentLoading={contentLoading?.[index]!}
+          index={index}
+          gifCollectOpen={gifCollectOpen?.[index]!}
+          setGifCollectOpen={setGifCollectOpen!}
+          availableCurrencies={availableCurrencies!}
+        />
+      )}
     </div>
   );
 };

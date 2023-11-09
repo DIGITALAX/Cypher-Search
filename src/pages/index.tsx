@@ -1,4 +1,3 @@
-import Footer from "@/components/Layout/modules/Footer";
 import useSearch from "@/components/Search/hooks/useSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -11,27 +10,50 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import useProfile from "@/components/Tiles/hooks/useProfile";
+import { useAccount } from "wagmi";
+import { polygon } from "viem/chains";
+import { createPublicClient, http } from "viem";
 
 export default function Home() {
-  const dispatch = useDispatch();
   const router = useRouter();
-  const searchActive = useSelector(
-    (state: RootState) => state.app.searchActiveReducer.value
-  );
+  const dispatch = useDispatch();
+  const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
-  );
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile
-  );
-  const filtersOpen = useSelector(
-    (state: RootState) => state.app.filtersOpenReducer.value
   );
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
   const layoutAmount = useSelector(
     (state: RootState) => state.app.layoutSwitchReducer.value
+  );
+  const searchActive = useSelector(
+    (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const filtersOpen = useSelector(
+    (state: RootState) => state.app.filtersOpenReducer
+  );
+  const filterConstants = useSelector(
+    (state: RootState) => state.app.filterConstantsReducer.items
+  );
+  const filters = useSelector(
+    (state: RootState) => state.app.filterReducer.filter
+  );
+  const profiles = useSelector(
+    (state: RootState) => state.app.cachedProfilesReducer.profiles
+  );
+  const allSearchItems = useSelector(
+    (state: RootState) => state.app.searchItemsReducer
+  );
+  const interactionsCount = useSelector(
+    (state: RootState) => state.app.interactionsCountReducer
+  );
+  const lensConnected = useSelector(
+    (state: RootState) => state.app.lensConnectedReducer.profile
   );
   const {
     handleSearch,
@@ -41,7 +63,15 @@ export default function Home() {
     handleShuffleSearch,
     placeholderText,
     searchLoading,
-  } = useSearch();
+  } = useSearch(
+    filtersOpen,
+    searchActive,
+    filterConstants,
+    filters,
+    allSearchItems,
+    profiles,
+    dispatch
+  );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const {
@@ -51,24 +81,34 @@ export default function Home() {
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn();
+  } = useSignIn(dispatch);
   const {
     mirror,
     like,
-    comment,
-    quote,
     collect,
     interactionsLoading,
     setOpenMirrorChoice,
     openMirrorChoice,
-  } = useInteractions();
+  } = useInteractions(
+    allSearchItems.items,
+    interactionsCount,
+    dispatch,
+    publicClient,
+    address
+  );
   const {
     followLoading,
     followProfile,
     unfollowProfile,
     profileHovers,
     setProfileHovers,
-  } = useProfile();
+  } = useProfile(
+    allSearchItems.items,
+    lensConnected,
+    dispatch,
+    publicClient,
+    address
+  );
   const { setPopUpOpen, popUpOpen, apparel, setApparel } = useTiles();
   return (
     <div
@@ -97,7 +137,7 @@ export default function Home() {
           openAccount={openAccount}
           setOpenAccount={setOpenAccount}
           signInLoading={signInLoading}
-          filtersOpen={filtersOpen}
+          filtersOpen={filtersOpen?.value}
           handleShuffleSearch={handleShuffleSearch}
           placeholderText={placeholderText}
           dispatch={dispatch}
@@ -111,7 +151,7 @@ export default function Home() {
         {searchActive && (
           <Tiles
             layoutAmount={layoutAmount}
-            filtersOpen={filtersOpen}
+            filtersOpen={filtersOpen?.value}
             searchActive={searchActive}
             handleMoreSearch={handleMoreSearch}
             popUpOpen={popUpOpen}
@@ -123,8 +163,6 @@ export default function Home() {
             cartItems={cartItems}
             mirror={mirror}
             like={like}
-            comment={comment}
-            quote={quote}
             simpleCollect={collect}
             interactionsLoading={interactionsLoading}
             setOpenMirrorChoice={setOpenMirrorChoice}

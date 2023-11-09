@@ -31,13 +31,21 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
         <div
           className="absolute top-2 left-2 flex flex-row gap-4 w-10 h-10 items-center justify-start cursor-pointer"
           onClick={() =>
-            router.push(`/autograph/${publication?.handle?.suggestedFormatted?.localName?.split("@")[1]}`)
+            router.push(
+              `/autograph/${
+                publication?.handle?.suggestedFormatted?.localName?.split(
+                  "@"
+                )[1]
+              }`
+            )
           }
-          onMouseEnter={() => {
-            const updatedArray = [...profileHovers];
-            updatedArray[index] = true;
-            setProfileHovers(updatedArray);
-          }}
+          onMouseEnter={() =>
+            setProfileHovers((prev) => {
+              const updatedArray = [...prev];
+              updatedArray[index] = true;
+              return updatedArray;
+            })
+          }
         >
           <Image
             layout="fill"
@@ -56,7 +64,6 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
             followLoading={followLoading}
             followProfile={followProfile}
             unfollowProfile={unfollowProfile}
-            profileHovers={profileHovers}
             setProfileHovers={setProfileHovers}
           />
         )}

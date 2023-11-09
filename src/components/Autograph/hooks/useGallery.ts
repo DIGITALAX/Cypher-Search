@@ -1,49 +1,33 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import { useEffect, useState } from "react";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensLike from "../../../../lib/helpers/api/likePost";
-import lensQuote from "../../../../lib/helpers/api/quotePost";
-import lensComment from "../../../../lib/helpers/api/commentPost";
-import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuote";
 import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { Display } from "../types/autograph.types";
-import { MetadataAttributeType } from "../../../../graphql/generated";
-import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { MetadataAttributeType, Profile } from "../../../../graphql/generated";
+import { createWalletClient, custom , PublicClient} from "viem";
 import { polygon } from "viem/chains";
-import { useAccount } from "wagmi";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
+import { Dispatch } from "redux";
 
-const useGallery = () => {
-  const dispatch = useDispatch();
-  const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
-  });
-  const { address } = useAccount();
-  const lastPostComment = useSelector(
-    (state: RootState) => state.app.lastPostCommentReducer
-  );
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile
-  );
-  const profileDisplay = useSelector(
-    (state: RootState) => state.app.profileDisplayReducer.value
-  );
-  const lastPostQuote = useSelector(
-    (state: RootState) => state.app.lastPostQuoteReducer
-  );
-  const gallery = useSelector(
-    (state: RootState) => state.app.galleryItemsReducer.items
-  );
+const useGallery = (
+  lensConnected: Profile | undefined,
+  profileDisplay: Display | undefined,
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined,
+  dispatch: Dispatch,
+  publicClient: PublicClient,
+  address: `0x${string}` | undefined
+) => {
   const [interactionsGalleryLoading, setInteractionsGalleryLoading] = useState<
     {
       like: boolean;
       mirror: boolean;
-      quote: boolean;
-      comment: boolean;
       bookmark: boolean;
       hide: boolean;
     }[]
@@ -55,8 +39,6 @@ const useGallery = () => {
     {
       like: boolean;
       mirror: boolean;
-      quote: boolean;
-      comment: boolean;
       simpleCollect: boolean;
       bookmark: boolean;
       interested: boolean;
@@ -66,8 +48,6 @@ const useGallery = () => {
     Array.from({ length: 4 }, () => ({
       like: false,
       mirror: false,
-      quote: false,
-      comment: false,
       simpleCollect: false,
       bookmark: false,
       interested: false,
@@ -186,100 +166,6 @@ const useGallery = () => {
     setDisplayLoading(false);
   };
 
-  const galleryComment = async (id: string) => {
-    const index = [
-      ...(gallery?.collected || []),
-      ...(gallery?.created || []),
-    ].findIndex((pub) => pub.pubId === id);
-    if (index === -1) {
-      return;
-    }
-
-    setInteractionsGalleryLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], comment: true };
-      return updatedArray;
-    });
-
-    try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostComment.content,
-        lastPostComment.images,
-        lastPostComment.videos,
-        lastPostComment.gifs
-      );
-
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-
-      await lensComment(
-        id,
-        contentURI!,
-        dispatch,
-        lastPostComment.collectType,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
-    } catch (err: any) {
-      console.error(err.message);
-    }
-
-    setInteractionsGalleryLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], comment: false };
-      return updatedArray;
-    });
-  };
-
-  const galleryQuote = async (id: string) => {
-    const index = [
-      ...(gallery?.collected || []),
-      ...(gallery?.created || []),
-    ].findIndex((pub) => pub.pubId === id);
-    if (index === -1) {
-      return;
-    }
-    setInteractionsGalleryLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: true };
-      return updatedArray;
-    });
-
-    try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostQuote.content,
-        lastPostQuote.images,
-        lastPostQuote.videos,
-        lastPostQuote.gifs
-      );
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-
-      await lensQuote(
-        id,
-        contentURI!,
-        dispatch,
-        lastPostQuote.collectType,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
-    } catch (err: any) {
-      console.error(err.message);
-    }
-
-    setInteractionsGalleryLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: false };
-      return updatedArray;
-    });
-  };
-
   const galleryLike = async (id: string) => {
     const index = [
       ...(gallery?.collected || []),
@@ -340,86 +226,6 @@ const useGallery = () => {
     setInteractionsGalleryLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], mirror: false };
-      return updatedArray;
-    });
-  };
-
-  const displayComment = async (index: number, id: string) => {
-    setInteractionsDisplayLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], comment: true };
-      return updatedArray;
-    });
-
-    try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostComment.content,
-        lastPostComment.images,
-        lastPostComment.videos,
-        lastPostComment.gifs
-      );
-
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-
-      await lensComment(
-        id,
-        contentURI!,
-        dispatch,
-        lastPostComment.collectType,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
-    } catch (err: any) {
-      console.error(err.message);
-    }
-
-    setInteractionsDisplayLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], comment: false };
-      return updatedArray;
-    });
-  };
-
-  const displayQuote = async (index: number, id: string) => {
-    setInteractionsDisplayLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: true };
-      return updatedArray;
-    });
-
-    try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostQuote.content,
-        lastPostQuote.images,
-        lastPostQuote.videos,
-        lastPostQuote.gifs
-      );
-
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-
-      await lensQuote(
-        id,
-        contentURI!,
-        dispatch,
-        lastPostQuote.collectType,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
-    } catch (err: any) {
-      console.error(err.message);
-    }
-
-    setInteractionsDisplayLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: false };
       return updatedArray;
     });
   };
@@ -518,7 +324,6 @@ const useGallery = () => {
             like: false,
             mirror: false,
             quote: false,
-            comment: false,
             bookmark: false,
             interested: false,
             hide: false,
@@ -531,18 +336,14 @@ const useGallery = () => {
   return {
     interactionsGalleryLoading,
     galleryMirror,
-    galleryQuote,
     galleryLike,
-    galleryComment,
     openMirrorGalleryChoice,
     setOpenMirrorGalleryChoice,
     interactionsDisplayLoading,
     openMirrorDisplayChoice,
     setOpenMirrorDisplayChoice,
-    displayComment,
     displayLike,
     displayMirror,
-    displayQuote,
     handleSetDisplay,
     displayLoading,
     optionsOpen,

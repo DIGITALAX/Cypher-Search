@@ -6,6 +6,7 @@ import numeral from "numeral";
 import { AiOutlineLoading } from "react-icons/ai";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { Post } from "../../../../graphql/generated";
+import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 
 type SingleArgFunction = (id: string) => Promise<void>;
 type DualArgFunction = (index: number, id: string) => Promise<void>;
@@ -20,7 +21,6 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   layoutAmount,
   mirror,
   like,
-  comment,
   interactionsLoading,
   publication,
   openMirrorChoice,
@@ -30,6 +30,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   type,
   hideCollect,
   dispatch,
+  router,
 }): JSX.Element => {
   return (
     <div
@@ -39,27 +40,42 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
     >
       {(hideCollect
         ? [
-            "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-            "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
-            "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
+            ["QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3", "Mirrors"],
+            ["QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ", "Likes"],
+            ["QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n", "Comments"],
           ]
         : [
-            "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
-            "QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ",
-            "QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF",
-            "QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n",
+            ["QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3", "Mirrors"],
+            ["QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ", "Likes"],
+            ["QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF", "Acts"],
+            ["QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n", "Comments"],
           ]
-      ).map((image: string, indexTwo: number) => {
+      ).map((image: string[], indexTwo: number) => {
         const functions: any = hideCollect
-          ? [like, comment]
-          : [like, simpleCollect, comment];
-        const loaders = hideCollect
-          ? [interactionsLoading?.like, interactionsLoading?.comment]
+          ? [
+              () =>
+                setOpenMirrorChoice((prev) => {
+                  const choices = [...prev];
+                  choices[index] = !choices[index];
+                  return choices;
+                }),
+              like,
+              () => router.push(`/item/pub/${publication?.id}`),
+            ]
           : [
-              interactionsLoading?.like,
-              interactionsLoading?.simpleCollect,
-              interactionsLoading?.comment,
+              () =>
+                setOpenMirrorChoice((prev) => {
+                  const choices = [...prev];
+                  choices[index] = !choices[index];
+                  return choices;
+                }),
+              like,
+              simpleCollect,
+              () => router.push(`/item/pub/${publication?.id}`),
             ];
+        const loaders = hideCollect
+          ? [interactionsLoading?.like]
+          : [interactionsLoading?.like, interactionsLoading?.simpleCollect];
         const stats = hideCollect
           ? [
               (publication?.__typename === "Mirror"
@@ -109,11 +125,9 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             <div
               className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95"
               onClick={() => {
-                if (indexTwo === 0) {
-                  const choices = [...openMirrorChoice];
-                  choices[index] = !choices[index];
-                  setOpenMirrorChoice(choices);
-                } else if (indexTwo === 3) {
+                if (indexTwo === 0 || image[1] === "Comments") {
+                  functions[indexTwo] && functions[indexTwo]!();
+                } else if (indexTwo === 2) {
                   !loaders[index] &&
                     functions[indexTwo] &&
                     functions[indexTwo]!(publication?.id, type);
@@ -138,13 +152,31 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 >
                   <Image
                     layout="fill"
-                    src={`${INFURA_GATEWAY}/ipfs/${image}`}
+                    src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                     draggable={false}
                   />
                 </div>
               )}
             </div>
-            <div className="relative w-fit h-fit flex items-center justify-center text-center cursor-pointer active:scale-95">
+            <div
+              className={`relative w-fit h-fit flex items-center justify-center text-center ${
+               ( stats[indexTwo] > 0 || image[1] === "Comments" ) && "cursor-pointer active:scale-95"
+              }`}
+              onClick={() => {
+                if (image[1] === "Comments") {
+                  router.push(`/item/pub/${publication?.id}`);
+                } else {
+                  stats[indexTwo] > 0 &&
+                    dispatch(
+                      setReactBox({
+                        actionOpen: true,
+                        actionId: publication?.id,
+                        actionType: image[1],
+                      })
+                    );
+                }
+              }}
+            >
               {numeral(stats[indexTwo]).format("0a")}
             </div>
           </div>
@@ -166,7 +198,6 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 dispatch(
                   setPostBox({
                     actionOpen: true,
-                    actionId: publication?.id,
                     actionQuote: publication,
                   })
                 ),

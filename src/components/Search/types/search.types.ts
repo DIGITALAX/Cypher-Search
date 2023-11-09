@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
+import { ChangeEvent, KeyboardEvent, MouseEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { NextRouter } from "next/router";
 import {
@@ -6,6 +6,7 @@ import {
   PublicationMetadataMainFocusType,
 } from "../../../../graphql/generated";
 import { CartItem } from "@/components/Common/types/common.types";
+import { Publication } from "@/components/Tiles/types/tiles.types";
 
 export interface FilterValues {
   hashtags: string[];
@@ -13,7 +14,7 @@ export interface FilterValues {
   community: string[];
   access: string[];
   format: PublicationMetadataMainFocusType[];
-  dropsSuggested: string[],
+  dropsSuggested: string[];
   origin: string[][];
   catalog: string[];
   colors: string[];
@@ -47,7 +48,7 @@ export type SearchBarProps = {
   ) => Promise<void>;
   searchActive: boolean;
   searchInput: string;
-  setSearchInput: (e: string) => void;
+  setSearchInput: (e: SetStateAction<string>) => void;
   filtersOpen: boolean;
   handleShuffleSearch: () => void;
   placeholderText: string | undefined;
@@ -66,15 +67,15 @@ export type HeaderProps = {
   searchActive: boolean;
   searchInput: string;
   placeholderText: string | undefined;
-  setSearchInput: (e: string) => void;
+  setSearchInput: (e: SetStateAction<string>) => void;
   openConnectModal: (() => void) | undefined;
   openAccountModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
-  setCartListOpen: (e: boolean) => void;
+  setCartListOpen: (e: SetStateAction<boolean>) => void;
   lensConnected: Profile | undefined;
   walletConnected: boolean;
-  setOpenAccount: (e: boolean) => void;
+  setOpenAccount: (e: SetStateAction<boolean>) => void;
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;
@@ -113,8 +114,8 @@ export type ContentSortProps = {
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
   openDropDown: DropDown;
-  setOpenDropDown: (e: DropDown) => void;
-  setFilteredDropDownValues: (e: FilterValues) => void;
+  setOpenDropDown: (e: SetStateAction<DropDown>) => void;
+  setFilteredDropDownValues: (e: SetStateAction<FilterValues | undefined>) => void;
   filteredDropDownValues: FilterValues;
 };
 
@@ -123,8 +124,8 @@ export type PrerollSortProps = {
   filterValues: Filter;
   openDropDown: DropDown;
   filterConstants: FilterValues | undefined;
-  setOpenDropDown: (e: DropDown) => void;
-  setFilteredDropDownValues: (e: FilterValues) => void;
+  setOpenDropDown: (e: SetStateAction<DropDown>) => void;
+  setFilteredDropDownValues: (e: SetStateAction<FilterValues | undefined>) => void;
   filteredDropDownValues: FilterValues;
 };
 
@@ -134,9 +135,30 @@ export type FilterProps = {
   filterValues: Filter;
   openDropDown: DropDown;
   handleResetFilters: () => void;
-  setOpenDropDown: (e: DropDown) => void;
-  setFilteredDropDownValues: (e: FilterValues) => void;
+  setOpenDropDown: (e: SetStateAction<DropDown>) => void;
+  setFilteredDropDownValues: (e: SetStateAction<FilterValues | undefined>) => void;
   filteredDropDownValues: FilterValues;
+  publication: Publication;
+  profileHovers: boolean[];
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  layoutAmount: number;
+  popUpOpen: boolean[];
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
+  apparel: boolean[];
+  setApparel: (e: SetStateAction<boolean[]>) => void;
+  router: NextRouter;
+  cartItems: CartItem[];
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+  }[];
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  openMirrorChoice: boolean[];
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
 };
 
 export interface Filter {

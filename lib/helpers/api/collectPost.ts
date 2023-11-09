@@ -86,6 +86,12 @@ const lensCollect = async (
       dispatch
     );
   }
+  dispatch(
+    setIndexer({
+      actionOpen: false,
+      actionMessage: undefined,
+    })
+  );
 };
 
 export default lensCollect;

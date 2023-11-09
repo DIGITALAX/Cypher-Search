@@ -20,7 +20,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-[40vw] h-fit min-h-[40vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
+      <div className="relative w-full md:w-[40vw] h-fit min-h-[40vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
         <div className="relative w-full h-full flex flex-col gap-5 p-2">
           <div className="relative w-fit h-fit items-end justify-end ml-auto cursor-pointer flex">
             <ImCross
@@ -41,7 +41,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
               Report Publication {id}
             </div>
             <div className="relative flex flex-col gap-2 items-center justify-center w-fit h-fit">
-              <div className="relative w-full h-fit flex flex-col items-center justify-center text-white">
+              <div className="relative w-full h-fit flex flex-col items-center justify-center text-white text-center">
                 What's the core reason for reporting?
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center gap-2 flex flex-wrap">
@@ -83,7 +83,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
               </div>
             </div>
             <div className="relative flex flex-col gap-2 items-center justify-center w-fit h-fit">
-              <div className="relative w-full h-fit flex flex-col items-center justify-center text-white">
+              <div className="relative w-full h-fit flex flex-col items-center justify-center text-white text-center">
                 And a little more specific...
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center gap-2 flex flex-wrap">
@@ -130,7 +130,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
               </div>
             </div>
             <div className="relative flex flex-col gap-2 items-center justify-center w-2/3 h-fit">
-              <div className="relative w-full h-fit flex flex-col items-center justify-center text-white">
+              <div className="relative w-full h-fit flex flex-col items-center justify-center text-white text-center">
                 Anything else you can share?
               </div>
               <div className="relative w-full h-fit flex items-center justify-center gap-2 flex flex-wrap border border-white">

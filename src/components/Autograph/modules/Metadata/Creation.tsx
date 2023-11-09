@@ -26,7 +26,6 @@ const Creation: FunctionComponent<CreationProps> = ({
   setOpenMirrorChoice,
   openInteractions,
   setOpenInteractions,
-  comment,
   like,
   mirror,
   dispatch,
@@ -110,11 +109,13 @@ const Creation: FunctionComponent<CreationProps> = ({
           <div
             className="relative flex items-center justify-center w-7 h-7 rounded-full cursor-pointer"
             id="pfp"
-            onMouseEnter={() => {
-              const updatedArray = [...profileHovers];
-              updatedArray[index] = true;
-              setProfileHovers(updatedArray);
-            }}
+            onMouseEnter={() =>
+              setProfileHovers((prev) => {
+                const updatedArray = [...prev];
+                updatedArray[index] = true;
+                return updatedArray;
+              })
+            }
           >
             {profilePicture && (
               <Image layout="fill" src={profilePicture} draggable={false} />
@@ -137,18 +138,19 @@ const Creation: FunctionComponent<CreationProps> = ({
             router={router}
             publication={item?.profile}
             index={index}
-            profileHovers={profileHovers}
             setProfileHovers={setProfileHovers}
           />
         )}
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">
           <div
             className="relative w-7 h-7 items-center justify-center flex cursor-pointer"
-            onClick={() => {
-              const updatedArray = [...openInteractions];
-              updatedArray[index] = !updatedArray[index];
-              setOpenInteractions(updatedArray);
-            }}
+            onClick={() =>
+              setOpenInteractions((prev) => {
+                const updatedArray = [...prev];
+                updatedArray[index] = !updatedArray[index];
+                return updatedArray;
+              })
+            }
           >
             <Image
               layout="fill"
@@ -161,7 +163,6 @@ const Creation: FunctionComponent<CreationProps> = ({
           <div className="absolute flex items-center w-fit h-fit justify-center -top-12 right-0">
             <InteractBar
               simpleCollect={undefined}
-              comment={comment}
               dispatch={dispatch}
               like={like}
               mirror={mirror}
@@ -172,6 +173,7 @@ const Creation: FunctionComponent<CreationProps> = ({
               type={undefined}
               publication={item.publication}
               hideCollect
+              router={router}
             />
           </div>
         )}

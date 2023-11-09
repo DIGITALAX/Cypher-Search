@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Quote } from "../../graphql/generated";
+import { PrimaryPublication } from "../../graphql/generated";
 
 export interface PostBoxState {
   open?: boolean;
-  id?: string;
-  quote?: Quote;
+  quote?: PrimaryPublication;
 }
 
 const initialPostBoxState: PostBoxState = {};
@@ -15,10 +14,9 @@ export const postBoxSlice = createSlice({
   reducers: {
     setPostBox: (
       state: PostBoxState,
-      { payload: { actionOpen, actionId, actionQuote } }
+      { payload: { actionOpen, actionQuote } }
     ) => {
       state.open = actionOpen;
-      state.id = actionId;
       state.quote = actionQuote;
     },
   },

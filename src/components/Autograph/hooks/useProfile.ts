@@ -1,31 +1,26 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
-import { Post, Mirror, Quote } from "../../../../graphql/generated";
+import { Post, Mirror, Quote, Profile } from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
-import { createPublicClient, createWalletClient, custom, http } from "viem";
 import { polygon } from "viem/chains";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
-import { useAccount } from "wagmi";
+import { Dispatch } from "redux";
+import { createWalletClient, custom, PublicClient } from "viem";
 
-const useProfile = () => {
-  const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
-  });
-  const dispatch = useDispatch();
-  const { address } = useAccount();
-  const profileFeed = useSelector(
-    (state: RootState) => state.app.autographFeedReducer.feed
-  );
-  const galleryItems = useSelector(
-    (state: RootState) => state.app.galleryItemsReducer.items
-  );
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile
-  );
+const useProfile = (
+  profileFeed: (Post | Quote | Mirror)[],
+  galleryItems:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined,
+  lensConnected: Profile | undefined,
+  dispatch: Dispatch,
+  publicClient: PublicClient,
+  address: `0x${string}` | undefined
+) => {
   const [feedProfileHovers, setFeedProfileHovers] = useState<boolean[]>([]);
   const [feedFollowLoading, setFeedFollowLoading] = useState<boolean[]>([]);
   const [galleryProfileHovers, setGalleryProfileHovers] = useState<boolean[]>(
@@ -79,7 +74,7 @@ const useProfile = () => {
         clientWallet,
         publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id)
+      await refetchProfile(dispatch, lensConnected?.id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -161,7 +156,7 @@ const useProfile = () => {
       });
     }
   };
-  
+
   useEffect(() => {
     if (profileFeed?.length > 0) {
       setFeedFollowLoading(
@@ -214,6 +209,7 @@ const useProfile = () => {
     setFeedProfileHovers,
     galleryProfileHovers,
     setGalleryProfileHovers,
+    dispatch,
   };
 };
 

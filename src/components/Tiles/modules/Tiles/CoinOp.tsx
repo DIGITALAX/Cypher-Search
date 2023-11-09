@@ -19,8 +19,6 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   cartItems,
   mirror,
   like,
-  comment,
-  quote,
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
@@ -35,15 +33,15 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
       <InteractBar
         mirror={mirror}
         like={like}
-        comment={comment}
-        quote={quote}
         interactionsLoading={interactionsLoading}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         index={index}
-        publication={publication?.stats!}
-        collect={undefined}
+        publication={publication?.publication}
+        simpleCollect={undefined}
         type={undefined}
+        dispatch={dispatch}
+        router={router}
       />
       <div
         className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
@@ -76,11 +74,13 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             className={`relative w-fit h-fit flex text-pez font-bit uppercase cursor-pointer ${
               layoutAmount === 4 ? "text-xs" : "text-sm"
             }`}
-            onMouseEnter={() => {
-              const updatedArray = [...profileHovers];
-              updatedArray[index] = true;
-              setProfileHovers(updatedArray);
-            }}
+            onMouseEnter={() =>
+              setProfileHovers((prev) => {
+                const updatedArray = [...prev];
+                updatedArray[index] = true;
+                return updatedArray;
+              })
+            }
           >
             @hiro.lens
           </div>
@@ -92,18 +92,19 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               router={router}
               publication={publication?.profile}
               index={index}
-              profileHovers={profileHovers}
               setProfileHovers={setProfileHovers}
             />
           )}
           <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
             <div
               className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
-              onClick={() => {
-                const openPopUps = [...popUpOpen];
-                openPopUps[index] = !openPopUps[index];
-                setPopUpOpen(openPopUps);
-              }}
+              onClick={() =>
+                setPopUpOpen((prev) => {
+                  const openPopUps = [...prev];
+                  openPopUps[index] = !openPopUps[index];
+                  return openPopUps;
+                })
+              }
             >
               <Image
                 layout="fill"

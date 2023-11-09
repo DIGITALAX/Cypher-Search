@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useAccount, useSignMessage } from "wagmi";
 import { setWalletConnected } from "../../../../redux/reducers/walletConnectedSlice";
 import { setLensConnected } from "../../../../redux/reducers/lensConnectedSlice";
@@ -15,11 +14,11 @@ import {
 import { Profile } from "../../../../graphql/generated";
 import authenticate from "../../../../graphql/lens/mutations/authenticate";
 import getDefaultProfile from "../../../../graphql/lens/queries/default";
+import { Dispatch } from "redux";
 
-const useSignIn = () => {
+const useSignIn = (dispatch: Dispatch) => {
   const { isConnected, address } = useAccount();
   const { signMessageAsync } = useSignMessage();
-  const dispatch = useDispatch();
   const [openAccount, setOpenAccount] = useState<boolean>(false);
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
   const [cartListOpen, setCartListOpen] = useState<boolean>(false);

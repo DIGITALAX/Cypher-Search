@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface ReactBoxState {
   open: boolean;
   id?: string;
-  type?: "Comments" | "Mirrors" | "Likes" | "Followers" | "Following" | "Acts";
+  type?: "Mirrors" | "Likes" | "Followers" | "Following" | "Acts";
 }
 
 const initialReactBoxState: ReactBoxState = {

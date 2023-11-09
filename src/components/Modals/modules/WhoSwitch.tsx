@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { Comment, Profile, Quote } from "../../../../graphql/generated";
+import {  Profile, Quote } from "../../../../graphql/generated";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Image from "next/legacy/image";
@@ -18,7 +18,6 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
   dispatch,
 }): JSX.Element => {
   switch (type) {
-    case "Comment":
     case "Quote":
       return (
         <div className="relative w-full h-[60vh] flex flex-col overflow-y-scroll">
@@ -29,20 +28,18 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
             next={showMore}
             className="w-fit h-fit items-start justify-start flex flex-col gap-10"
           >
-            {Array.from({ length: 20 })?.map(
-              (item: Comment | Quote, index: number) => {
-                return (
-                  <Publication
-                    index={index}
-                    item={item}
-                    router={router}
-                    disabled={true}
-                    dispatch={dispatch}
-                    data-post-id={item?.id}
-                  />
-                );
-              }
-            )}
+            {Array.from({ length: 20 })?.map((item: Quote, index: number) => {
+              return (
+                <Publication
+                  index={index}
+                  item={item}
+                  router={router}
+                  disabled={true}
+                  dispatch={dispatch}
+                  data-post-id={item?.id}
+                />
+              );
+            })}
           </InfiniteScroll>
         </div>
       );
