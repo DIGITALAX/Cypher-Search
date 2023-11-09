@@ -20,9 +20,9 @@ const Legend: FunctionComponent<LegendProps> = ({
   layoutAmount,
   mirror,
   like,
-  comment,
-  quote,
   interactionsLoading,
+  commentsOpen,
+  setCommentsOpen,
 }): JSX.Element => {
   return (
     <div className="relative h-fit w-full border border-black flex flex-col items-center justify-center">
@@ -39,14 +39,23 @@ const Legend: FunctionComponent<LegendProps> = ({
                   "QmRQVbnK1VajkBzjz9w2zFSSbC9fAdKRo7m53VuvhyvHa4",
                   "QmVFm5onDqzKCV6v9XbGTQirXsWFmRgihsYcXVBbLMxneL",
                   "QmRsAM1oJfiv1Py92uoYk7VMdrnPfWDsgH3Y2tPWVDqxHw",
-                ].map((image: string, index: number) => {
-                  const functions = [like, comment, mirror];
-                
+                ].map((image: string, indexTwo: number) => {
+                  const functions = [
+                    like,
+                    () =>
+                      setCommentsOpen((prev) => {
+                        const arr = [...prev];
+                        arr[index] = !index;
+                        return arr;
+                      }),
+                    mirror,
+                  ];
+
                   return (
                     <div
-                      key={index}
+                      key={indexTwo}
                       className="relative w-fit h-fit flex flex-row items-center justify-center gap-3 font-vcr text-black text-center"
-                      onClick={() => functions[index](publication?.id)}
+                      onClick={() => functions[indexTwo](publication?.id)}
                     >
                       <div className="relative w-4 h-3 flex items-center justify-center cursor-pointer active:scale-95">
                         <Image
@@ -55,10 +64,7 @@ const Legend: FunctionComponent<LegendProps> = ({
                           draggable={false}
                         />
                       </div>
-                      <div
-                        className="relative w-fit h-fit items-center justify-center flex cursor-pointer"
-                     
-                      >
+                      <div className="relative w-fit h-fit items-center justify-center flex cursor-pointer">
                         2K
                       </div>
                     </div>

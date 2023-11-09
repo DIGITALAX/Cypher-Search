@@ -1,5 +1,3 @@
-import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
-import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
@@ -19,7 +17,8 @@ const lensComment = async (
   collectModuleInput: SimpleCollectOpenActionModuleInput | undefined,
   address: `0x${string}`,
   clientWallet: WalletClient,
-  publicClient: PublicClient
+  publicClient: PublicClient,
+  clearComment: () => void
 ): Promise<void> => {
   const data = await commentPost({
     commentOn: id,
@@ -49,6 +48,7 @@ const lensComment = async (
   });
 
   if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+    clearComment();
     await handleIndexCheck(
       {
         forTxId: broadcastResult?.data?.broadcastOnchain.txId,
@@ -86,14 +86,21 @@ const lensComment = async (
         actionMessage: "Indexing Interaction",
       })
     );
-
+    clearComment();
     await handleIndexCheck(
       {
         forTxHash: tx.transactionHash,
       },
       dispatch
     );
+
   }
+  dispatch(
+    setIndexer({
+      actionOpen: false,
+      actionMessage: undefined,
+    })
+  );
 };
 
 export default lensComment;

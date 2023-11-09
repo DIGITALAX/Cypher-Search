@@ -50,7 +50,6 @@ const Web: FunctionComponent<WebProps> = ({
   handleBookmark,
   mirrorBookmark,
   likeBookmark,
-  commentBookmark,
   openMirrorChoiceBookmark,
   unfollowProfile,
   followProfile,
@@ -64,6 +63,23 @@ const Web: FunctionComponent<WebProps> = ({
   handleHidePost,
   handleMoreBookmarks,
   hasMoreBookmarks,
+  commentsOpen,
+  setCommentsOpen,
+  makeComment,
+  setMakeComment,
+  post,
+  makePost,
+  setMakePost,
+  postLoading,
+  commentContentLoading,
+  postContentLoading,
+  setCommentContentLoading,
+  setPostContentLoading,
+  gifCollectOpen,
+  setGifCollectOpen,
+  setGifCollectOpenBookmarks,
+  gifCollectOpenBookmarks,
+  availableCurrencies,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -78,7 +94,8 @@ const Web: FunctionComponent<WebProps> = ({
           </div>
           {screenDisplay !== ScreenDisplay.Settings &&
             screenDisplay !== ScreenDisplay.Bookmarks &&
-            screenDisplay !== ScreenDisplay.Orders && (
+            screenDisplay !== ScreenDisplay.Orders &&
+            screenDisplay !== ScreenDisplay.Post && (
               <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
                 {[
                   {
@@ -137,13 +154,13 @@ const Web: FunctionComponent<WebProps> = ({
             )}
         </div>
         <ScreenSwitch
+          availableCurrencies={availableCurrencies}
           currencies={currencies}
           setCurrencyOpen={setCurrencyOpen}
           currencyOpen={currencyOpen}
           mirror={mirror}
           openType={openType}
           setOpenType={setOpenType}
-          comment={comment}
           displayLoading={displayLoading}
           handleSetDisplay={handleSetDisplay}
           openMirrorChoice={openMirrorChoice}
@@ -174,7 +191,11 @@ const Web: FunctionComponent<WebProps> = ({
           handleMoreBookmarks={handleMoreBookmarks}
           hasMoreBookmarks={hasMoreBookmarks}
           mirrorBookmark={mirrorBookmark}
-          commentBookmark={commentBookmark}
+          comment={comment}
+          makeComment={makeComment}
+          setCommentsOpen={setCommentsOpen}
+          setMakeComment={setMakeComment}
+          commentsOpen={commentsOpen}
           openMirrorChoiceBookmark={openMirrorChoiceBookmark}
           setOpenMirrorChoiceBookmark={setOpenMirrorChoiceBookmark}
           setOpenMoreOptions={setOpenMoreOptions}
@@ -190,6 +211,18 @@ const Web: FunctionComponent<WebProps> = ({
           unfollowProfile={unfollowProfile}
           followLoading={followLoading}
           followProfile={followProfile}
+          makePost={makePost}
+          setMakePost={setMakePost}
+          post={post}
+          postLoading={postLoading}
+          commentContentLoading={commentContentLoading}
+          setCommentContentLoading={setCommentContentLoading}
+          postContentLoading={postContentLoading}
+          setPostContentLoading={setPostContentLoading}
+          gifCollectOpen={gifCollectOpen}
+          setGifCollectOpen={setGifCollectOpen}
+          gifCollectOpenBookmarks={gifCollectOpenBookmarks}
+          setGifCollectOpenBookmarks={setGifCollectOpenBookmarks}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
@@ -228,6 +261,14 @@ const Web: FunctionComponent<WebProps> = ({
               width: "12",
               height: "12",
               type: ScreenDisplay.Bookmarks,
+            },
+            {
+              image: "QmeBzqFPc3nvegBtwpNjViVNtiEkWsPSWjJaTem9bysdBU",
+              text: "post",
+              function: () => dispatch(setScreenDisplay(ScreenDisplay.Post)),
+              width: "10",
+              height: "10",
+              type: ScreenDisplay.Post,
             },
             {
               image: "Qmd7w4HyNrtWvSy48jGnidSx77mSqgAALTsVrbcVcSMeoG",

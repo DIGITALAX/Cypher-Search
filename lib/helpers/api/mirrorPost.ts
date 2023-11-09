@@ -1,5 +1,3 @@
-import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
-import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";

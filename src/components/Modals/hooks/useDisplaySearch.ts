@@ -4,18 +4,13 @@ import {
 } from "@/components/Autograph/types/autograph.types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
-import { RootState } from "../../../../redux/store";
+import { Dispatch } from "redux";
 
-const useDisplaySearch = () => {
-  const dispatch = useDispatch();
-  const profileDisplay = useSelector(
-    (state: RootState) => state.app.profileDisplayReducer.value
-  );
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile
-  );
+const useDisplaySearch = (
+  profileDisplay: Display | undefined,
+  dispatch: Dispatch
+) => {
   const [itemSearch, setItemSearch] = useState<string>("");
   const [sortedGallery, setSortedGallery] = useState<Creation[]>([]);
   const [selectedItem, setSelectedItem] = useState<Creation>();

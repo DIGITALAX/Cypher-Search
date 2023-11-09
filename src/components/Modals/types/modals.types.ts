@@ -1,9 +1,11 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { Ref } from "react";
+import { Ref, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
 import {
+  Erc20,
   Post,
+  PrimaryPublication,
   PublicationReportingFraudSubreason,
   PublicationReportingIllegalSubreason,
   PublicationReportingSensitiveSubreason,
@@ -11,7 +13,10 @@ import {
 } from "../../../../graphql/generated";
 import { MainVideoState } from "../../../../redux/reducers/mainVideoSlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import { SortType } from "@/components/Autograph/types/autograph.types";
+import {
+  MakePostComment,
+  SortType,
+} from "@/components/Autograph/types/autograph.types";
 import { NextRouter } from "next/router";
 
 export type MapProps = {
@@ -29,7 +34,7 @@ export type DisplaySearchProps = {
     | undefined;
   sortType: SortType;
   itemSearch: string;
-  setItemSearch: (e: string) => void;
+  setItemSearch: (e: SetStateAction<string>) => void;
   sortedGallery: Creation[];
   selectedItem: Creation | undefined;
   handleItemSelect: (item: Creation, type: SortType, value: number) => void;
@@ -55,7 +60,7 @@ export type FullScreenVideoProps = {
     | undefined
   >;
   videosLoading: boolean;
-  setVideosLoading: (e: boolean) => void;
+  setVideosLoading: (e: SetStateAction<boolean>) => void;
 };
 
 export type ImageLargeProps = {
@@ -81,15 +86,17 @@ export type ReportPubProps = {
       | PublicationReportingSpamSubreason;
     additionalComments: string;
   };
-  setReason: (e: {
-    main: "Fraud" | "Illegal" | "Sensitive" | "Spam";
-    subreason:
-      | PublicationReportingFraudSubreason
-      | PublicationReportingIllegalSubreason
-      | PublicationReportingSensitiveSubreason
-      | PublicationReportingSpamSubreason;
-    additionalComments: string;
-  }) => void;
+  setReason: (
+    e: SetStateAction<{
+      main: "Fraud" | "Illegal" | "Sensitive" | "Spam";
+      subreason:
+        | PublicationReportingFraudSubreason
+        | PublicationReportingIllegalSubreason
+        | PublicationReportingSensitiveSubreason
+        | PublicationReportingSpamSubreason;
+      additionalComments: string;
+    }>
+  ) => void;
   reportLoading: boolean;
 };
 
@@ -101,7 +108,7 @@ export type WhoProps = {
   hasMoreQuote: boolean;
   showMore: () => void;
   mirrorQuote: boolean;
-  setMirrorQuote: (e: boolean) => void;
+  setMirrorQuote: (e: SetStateAction<boolean>) => void;
   type: string;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
@@ -117,4 +124,30 @@ export type WhoSwitchProps = {
   hasMoreQuote: boolean;
   mirrorQuote: boolean;
   showMore: () => void;
+};
+
+export type PostBoxProps = {
+  dispatch: Dispatch<AnyAction>;
+  quote: PrimaryPublication | undefined;
+  makePost: MakePostComment[];
+  post: () => Promise<void>;
+  setMakePost: (e: SetStateAction<MakePostComment[]>) => void;
+  postLoading: boolean[];
+  availableCurrencies: Erc20[]
+  setContentLoading: (
+    e: SetStateAction<
+      {
+        image: boolean;
+        video: boolean;
+        gif: boolean;
+      }[]
+    >
+  ) => void;
+  contentLoading: {
+    image: boolean;
+    video: boolean;
+    gif: boolean;
+  }[];
+  setGifCollectOpen: (e: SetStateAction<{ gif: boolean; collect: boolean }[]>) => void;
+  gifCollectOpen: { gif: boolean; collect: boolean }[];
 };

@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
 import whoReactedPublication from "../../../../graphql/lens/queries/whoReacted";
 import {
-  CommentRankingFilterType,
   LimitType,
+  Profile,
   PublicationType,
 } from "../../../../graphql/generated";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import whoActedPublication from "../../../../graphql/lens/queries/whoActed";
 import following from "../../../../graphql/lens/queries/following";
 import followers from "../../../../graphql/lens/queries/followers";
+import { ReactBoxState } from "../../../../redux/reducers/reactBoxSlice";
 
-const useWho = () => {
-  const reactBox = useSelector((state: RootState) => state.app.reactBoxReducer);
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer?.profile?.id
-  );
+const useWho = (
+  lensConnected: Profile | undefined,
+  reactBox: ReactBoxState
+) => {
   const [dataLoading, setDataLoading] = useState<boolean>(false);
   const [reactors, setReactors] = useState<any[]>([]);
   const [quoters, setQuoters] = useState<any[]>([]);
@@ -54,47 +52,47 @@ const useWho = () => {
     setDataLoading(false);
   };
 
-  const showComments = async () => {
-    if (!reactBox.id) return;
-    setDataLoading(true);
+  // const showComments = async () => {
+  //   if (!reactBox.id) return;
+  //   setDataLoading(true);
 
-    try {
-      const data = await getPublications(
-        {
-          limit: LimitType.Ten,
+  //   try {
+  //     const data = await getPublications(
+  //       {
+  //         limit: LimitType.Ten,
 
-          where: {
-            publicationTypes: [PublicationType.Comment],
-            commentOn: {
-              id: reactBox.id,
-              ranking: {
-                filter: CommentRankingFilterType.Relevant,
-              },
-            },
-          },
-        },
-        lensConnected
-      );
+  //         where: {
+  //           publicationTypes: [PublicationType.Comment],
+  //           commentOn: {
+  //             id: reactBox.id,
+  //             ranking: {
+  //               filter: CommentRankingFilterType.Relevant,
+  //             },
+  //           },
+  //         },
+  //       },
+  //       lensConnected
+  //     );
 
-      if (
-        !data?.data?.publications?.items ||
-        data?.data?.publications?.items?.length < 1
-      ) {
-        setHasMore(false);
-        setDataLoading(false);
-        return;
-      } else if (data?.data?.publications?.items?.length === 10) {
-        setHasMore(true);
-      }
+  //     if (
+  //       !data?.data?.publications?.items ||
+  //       data?.data?.publications?.items?.length < 1
+  //     ) {
+  //       setHasMore(false);
+  //       setDataLoading(false);
+  //       return;
+  //     } else if (data?.data?.publications?.items?.length === 10) {
+  //       setHasMore(true);
+  //     }
 
-      setReactors(data?.data?.publications?.items);
-      setPageInfo(data.data?.publications.pageInfo.next);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  //     setReactors(data?.data?.publications?.items);
+  //     setPageInfo(data.data?.publications.pageInfo.next);
+  //   } catch (err: any) {
+  //     console.error(err.message);
+  //   }
 
-    setDataLoading(false);
-  };
+  //   setDataLoading(false);
+  // };
 
   const showMirrorQuotes = async () => {
     if (!reactBox.id) return;
@@ -111,7 +109,7 @@ const useWho = () => {
               mirrorOn: reactBox.id,
             },
           },
-          lensConnected
+          lensConnected?.id
         );
         if (
           !mirrorData?.data?.publications?.items ||
@@ -137,7 +135,7 @@ const useWho = () => {
               quoteOn: reactBox.id,
             },
           },
-          lensConnected
+          lensConnected?.id
         );
 
         if (
@@ -354,41 +352,41 @@ const useWho = () => {
     }
   };
 
-  const showMoreComments = async () => {
-    if (!pageInfo || !hasMore) return;
+  // const showMoreComments = async () => {
+  //   if (!pageInfo || !hasMore) return;
 
-    try {
-      const data = await getPublications(
-        {
-          limit: LimitType.Ten,
-          cursor: pageInfo,
-          where: {
-            publicationTypes: [PublicationType.Comment],
-            commentOn: {
-              id: reactBox?.id,
-              ranking: { filter: CommentRankingFilterType.Relevant },
-            },
-          },
-        },
-        lensConnected
-      );
+  //   try {
+  //     const data = await getPublications(
+  //       {
+  //         limit: LimitType.Ten,
+  //         cursor: pageInfo,
+  //         where: {
+  //           publicationTypes: [PublicationType.Comment],
+  //           commentOn: {
+  //             id: reactBox?.id,
+  //             ranking: { filter: CommentRankingFilterType.Relevant },
+  //           },
+  //         },
+  //       },
+  //       lensConnected
+  //     );
 
-      if (
-        !data?.data?.publications?.items ||
-        data?.data?.publications?.items?.length < 1
-      ) {
-        setHasMore(false);
-        return;
-      } else if (data?.data?.publications?.items?.length === 10) {
-        setHasMore(true);
-      }
+  //     if (
+  //       !data?.data?.publications?.items ||
+  //       data?.data?.publications?.items?.length < 1
+  //     ) {
+  //       setHasMore(false);
+  //       return;
+  //     } else if (data?.data?.publications?.items?.length === 10) {
+  //       setHasMore(true);
+  //     }
 
-      setReactors([...reactors, ...(data?.data?.publications?.items || [])]);
-      setPageInfo(data.data?.publications.pageInfo.next);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
+  //     setReactors([...reactors, ...(data?.data?.publications?.items || [])]);
+  //     setPageInfo(data.data?.publications.pageInfo.next);
+  //   } catch (err: any) {
+  //     console.error(err.message);
+  //   }
+  // };
 
   const showMoreQuoteMirrors = async () => {
     if ((!pageInfo || !hasMore) && (!pageInfoQuote || !hasMoreQuote)) return;
@@ -403,7 +401,7 @@ const useWho = () => {
           },
           cursor: pageInfo,
         },
-        lensConnected
+        lensConnected?.id
       );
 
       const quoteData = await getPublications(
@@ -415,7 +413,7 @@ const useWho = () => {
           },
           cursor: pageInfoQuote,
         },
-        lensConnected
+        lensConnected?.id
       );
 
       if (
@@ -452,10 +450,6 @@ const useWho = () => {
 
   const showMore = () => {
     switch (reactBox.type) {
-      case "Comments":
-        showMoreComments();
-        break;
-
       case "Likes":
         showMoreLikes();
         break;
@@ -481,10 +475,6 @@ const useWho = () => {
   useEffect(() => {
     if (reactBox.open) {
       switch (reactBox.type) {
-        case "Comments":
-          reactors?.length < 1 && showComments();
-          break;
-
         case "Likes":
           reactors?.length < 1 && showLikes();
           break;

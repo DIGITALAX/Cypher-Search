@@ -26,6 +26,14 @@ const Feed: FunctionComponent<FeedProps> = ({
   handleBookmark,
   handleHidePost,
   hasMoreFeed,
+  setMakeComment,
+  setCommentsOpen,
+  makeComment,
+  commentsOpen,
+  contentLoading,
+  setContentLoading,
+  gifCollectOpen,
+  setGifCollectOpen,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -62,9 +70,9 @@ const Feed: FunctionComponent<FeedProps> = ({
                       key={index}
                       index={index}
                       item={item}
-                      comment={comment}
                       mirror={mirror}
                       like={like}
+                      comment={comment}
                       simpleCollect={simpleCollect}
                       dispatch={dispatch}
                       openMirrorChoice={openMirrorChoice}
@@ -80,6 +88,14 @@ const Feed: FunctionComponent<FeedProps> = ({
                       openMoreOptions={openMoreOptions}
                       handleHidePost={handleHidePost}
                       handleBookmark={handleBookmark}
+                      setMakePostComment={setMakeComment}
+                      makeComment={makeComment}
+                      setCommentsOpen={setCommentsOpen}
+                      commentsOpen={commentsOpen}
+                      contentLoading={contentLoading}
+                      setContentLoading={setContentLoading}
+                      gifCollectOpen={gifCollectOpen}
+                      setGifCollectOpen={setGifCollectOpen}
                     />
                   );
                 }

@@ -3,10 +3,9 @@ import getProfile from "../../../../graphql/lens/queries/profile";
 import { SortType } from "../types/autograph.types";
 import { Profile } from "../../../../graphql/generated";
 import { setAutographProfile } from "../../../../redux/reducers/autographProfileSlice";
-import { useDispatch } from "react-redux";
+import { Dispatch } from "redux";
 
-const useAutograph = () => {
-  const dispatch = useDispatch();
+const useAutograph = (dispatch: Dispatch) => {
   const [profileLoading, setProfileLoading] = useState<boolean>(false);
   const [sortType, setSortType] = useState<SortType>(SortType.Public);
 

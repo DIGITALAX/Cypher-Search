@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import Controls from "../Controls";
 import { VideoPostProps } from "../../types/tiles.types";
+import { Post } from "../../../../../graphql/generated";
 
 const VideoPost: FunctionComponent<VideoPostProps> = ({
   dispatch,
@@ -20,8 +21,6 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
   publication,
   mirror,
   like,
-  comment,
-  quote,
   interactionsLoading,
 }): JSX.Element => {
   return (
@@ -50,11 +49,10 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
             volume={volume}
             handleVolumeChange={handleVolumeChange}
             mirror={mirror}
-            comment={comment}
             like={like}
-            quote={quote}
             interactionsLoading={interactionsLoading}
             publication={publication}
+            router={router}
           />
         </div>
         <div className="relative w-full h-fit p-2 bg-white flex flex-row justify-between gap-2">
@@ -62,7 +60,9 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
           <div className="relative w-fit h-fit text-left font-rain text-mos flex items-start justify-center text-black break-words"></div>
           <div
             className="relative w-10 h-10 flex items-center justify-center ml-auto cursor-pointer active:scale-95"
-            onClick={() => router.push(`/item/pub/${publication?.id}`)}
+            onClick={() =>
+              router.push(`/item/pub/${(publication?.post as Post)?.id}`)
+            }
           >
             <Image
               draggable={false}

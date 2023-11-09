@@ -5,16 +5,32 @@ import { FilterInput } from "@/components/Tiles/types/tiles.types";
 const COLLECTIONS = `
   query($where: FilterInput, $first: Int, $skip: Int) {
     collectionCreateds(where: $where, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
-      fulfiller
-      uri
-      unlimited
+      amount
+      title
+      tags
+      pubId
+      prompt
+      profileId
+      profileHandle
       printType
       prices
+      owner
+      microbrandCover
+      microbrand
+      images
       fulfillerPercent
       fulfillerBase
+      fulfiller
       designerPercent
+      drop
+      description
+      communities
       collectionId
-      amount
+      access
+      unlimited
+      colors
+      sizes
+      origin
     }
   }
 `;

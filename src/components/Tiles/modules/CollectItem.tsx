@@ -48,12 +48,14 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
                         ? "border-viol border-2"
                         : "border-black border"
                     }`}
-                    onClick={() => {
-                      const choices = [...collectChoice];
-                      choices[index - 1].size =
-                        choices[index - 1].size === item ? "" : item;
-                      setCollectChoice(choices);
-                    }}
+                    onClick={() =>
+                      setCollectChoice((prev) => {
+                        const choices = [...prev];
+                        choices[index - 1].size =
+                          choices[index - 1].size === item ? "" : item;
+                        return choices;
+                      })
+                    }
                   >
                     {item}
                   </div>
@@ -80,12 +82,14 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
                     style={{
                       backgroundColor: item,
                     }}
-                    onClick={() => {
-                      const choices = [...collectChoice];
-                      choices[index - 1].color =
-                        choices[index - 1].color === item ? "" : item;
-                      setCollectChoice(choices);
-                    }}
+                    onClick={() =>
+                      setCollectChoice((prev) => {
+                        const choices = [...prev];
+                        choices[index - 1].color =
+                          choices[index - 1].color === item ? "" : item;
+                        return choices;
+                      })
+                    }
                   ></div>
                 );
               }

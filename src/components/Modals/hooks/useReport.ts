@@ -11,9 +11,9 @@ import {
 } from "../../../../graphql/generated";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
+import { Dispatch } from "redux";
 
-const useReport = () => {
-  const dispatch = useDispatch();
+const useReport = (dispatch: Dispatch) => {
   const [reportLoading, setReportLoading] = useState<boolean>(false);
   const [reason, setReason] = useState<{
     main: "Fraud" | "Illegal" | "Sensitive" | "Spam";

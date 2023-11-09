@@ -18,8 +18,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
   cartItems,
   mirror,
   like,
-  comment,
-  quote,
   simpleCollect,
   interactionsLoading,
   openMirrorChoice,
@@ -85,8 +83,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
         router={router}
         mirror={mirror}
         like={like}
-        comment={comment}
-        quote={quote}
         collect={simpleCollect}
         interactionsLoading={interactionsLoading}
         openMirrorChoice={openMirrorChoice}

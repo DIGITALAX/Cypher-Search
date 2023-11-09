@@ -19,43 +19,76 @@ import useGallery from "@/components/Autograph/hooks/useGallery";
 import useSettings from "@/components/Autograph/hooks/useSettings";
 import useProfile from "@/components/Autograph/hooks/useProfile";
 import useBookmarks from "@/components/Autograph/hooks/useBookmarks";
+import usePost from "@/components/Autograph/hooks/usePost";
+import { useAccount } from "wagmi";
+import { createPublicClient, http } from "viem";
+import { polygon } from "viem/chains";
 
 const Autograph: NextPage = (): JSX.Element => {
   const router = useRouter();
-  const { autograph } = router.query;
   const dispatch = useDispatch();
+  const { address } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
+  const { autograph } = router.query;
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
-  const searchActive = useSelector(
-    (state: RootState) => state.app.searchActiveReducer.value
-  );
   const profileFeed = useSelector(
     (state: RootState) => state.app.autographFeedReducer.feed
-  );
-  const gallery = useSelector(
-    (state: RootState) => state.app.galleryItemsReducer.items
-  );
-  const display = useSelector(
-    (state: RootState) => state.app.profileDisplayReducer.value
   );
   const profile = useSelector(
     (state: RootState) => state.app.autographProfileReducer.profile
   );
-  const walletConnected = useSelector(
-    (state: RootState) => state.app.walletConnectedReducer.value
+  const galleryItems = useSelector(
+    (state: RootState) => state.app.galleryItemsReducer.items
   );
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
+  const searchActive = useSelector(
+    (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const availableCurrencies = useSelector(
+    (state: RootState) => state.app.availableCurrenciesReducer.currencies
+  );
+  const walletConnected = useSelector(
+    (state: RootState) => state.app.walletConnectedReducer.value
+  );
   const filtersOpen = useSelector(
-    (state: RootState) => state.app.filtersOpenReducer.value
+    (state: RootState) => state.app.filtersOpenReducer
   );
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
+  const profileDisplay = useSelector(
+    (state: RootState) => state.app.profileDisplayReducer.value
+  );
   const screenDisplay = useSelector(
     (state: RootState) => state.app.screenDisplayReducer.value
   );
-  const { handleShuffleSearch } = useSearch();
+  const filterConstants = useSelector(
+    (state: RootState) => state.app.filterConstantsReducer.items
+  );
+  const filters = useSelector(
+    (state: RootState) => state.app.filterReducer.filter
+  );
+  const profiles = useSelector(
+    (state: RootState) => state.app.cachedProfilesReducer.profiles
+  );
+  const allSearchItems = useSelector(
+    (state: RootState) => state.app.searchItemsReducer
+  );
+
+  const { handleShuffleSearch } = useSearch(
+    filtersOpen,
+    searchActive,
+    filterConstants,
+    filters,
+    allSearchItems,
+    profiles,
+    dispatch
+  );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const {
@@ -67,7 +100,14 @@ const Autograph: NextPage = (): JSX.Element => {
     setFeedProfileHovers,
     galleryProfileHovers,
     setGalleryProfileHovers,
-  } = useProfile();
+  } = useProfile(
+    profileFeed,
+    galleryItems,
+    lensConnected,
+    dispatch,
+    publicClient,
+    address
+  );
   const {
     handleLensConnect,
     openAccount,
@@ -75,9 +115,9 @@ const Autograph: NextPage = (): JSX.Element => {
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn();
+  } = useSignIn(dispatch);
   const { profileLoading, getProfileData, sortType, setSortType } =
-    useAutograph();
+    useAutograph(dispatch);
   const {
     feedLoading,
     interactionsFeedLoading,
@@ -93,9 +133,23 @@ const Autograph: NextPage = (): JSX.Element => {
     handleBookmark,
     handleHidePost,
     hasMoreFeed,
-  } = useFeed();
+    setCommentsFeedOpen,
+    setMakeCommentFeed,
+    commentsFeedOpen,
+    makeCommentFeed,
+    commentContentLoading,
+    setCommentContentLoading,
+    gifCollectOpenFeed,
+    setGifCollectOpenFeed,
+  } = useFeed(
+    lensConnected,
+    profileFeed,
+    profile,
+    dispatch,
+    publicClient,
+    address
+  );
   const {
-    galleryComment,
     galleryLike,
     galleryMirror,
     openMirrorGalleryChoice,
@@ -104,7 +158,6 @@ const Autograph: NextPage = (): JSX.Element => {
     interactionsDisplayLoading,
     openMirrorDisplayChoice,
     setOpenMirrorDisplayChoice,
-    displayComment,
     displayLike,
     displayMirror,
     handleSetDisplay,
@@ -117,7 +170,14 @@ const Autograph: NextPage = (): JSX.Element => {
     getMoreGallery,
     openInteractions,
     setOpenInteractions,
-  } = useGallery();
+  } = useGallery(
+    lensConnected,
+    profileDisplay,
+    galleryItems,
+    dispatch,
+    publicClient,
+    address
+  );
   const {
     handleSettingsUpdate,
     settingsUpdateLoading,
@@ -135,7 +195,7 @@ const Autograph: NextPage = (): JSX.Element => {
     currencies,
     currencyOpen,
     setCurrencyOpen,
-  } = useSettings();
+  } = useSettings(lensConnected, dispatch, publicClient, address);
   const {
     handleMoreBookmarks,
     openMirrorChoiceBookmark,
@@ -157,7 +217,30 @@ const Autograph: NextPage = (): JSX.Element => {
     profileHovers,
     followLoading,
     allBookmarks,
-  } = useBookmarks();
+    setCommentsBookmarkOpen,
+    commentsBookmarkOpen,
+    makeCommentBookmark,
+    setMakeCommentBookmark,
+    gifCollectOpenBookmarks,
+    setGifCollectOpenBookmarks,
+  } = useBookmarks(
+    lensConnected,
+    profileFeed,
+    screenDisplay,
+    dispatch,
+    publicClient,
+    address
+  );
+  const {
+    makePost,
+    setMakePost,
+    post,
+    postLoading,
+    postContentLoading,
+    setPostContentLoading,
+    gifCollectOpen,
+    setGifCollectOpen,
+  } = usePost(dispatch, publicClient, address);
 
   useEffect(() => {
     if (autograph && !profile) {
@@ -180,7 +263,7 @@ const Autograph: NextPage = (): JSX.Element => {
           <NotFound
             router={router}
             searchActive={searchActive}
-            filtersOpen={filtersOpen}
+            filtersOpen={filtersOpen.value}
             lensConnected={lensConnected}
             walletConnected={walletConnected}
             handleLensConnect={handleLensConnect}
@@ -221,9 +304,9 @@ const Autograph: NextPage = (): JSX.Element => {
                 <meta
                   name="og:image"
                   content={
-                    !gallery?.created[0]?.images?.[0]
+                    !galleryItems?.created[0]?.images?.[0]
                       ? "https://chromadin.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${gallery?.created[0]?.images?.[0]?.split(
+                      : `https://chromadin.infura-ipfs.io/ipfs/${galleryItems?.created[0]?.images?.[0]?.split(
                           "ipfs://"
                         )}`
                   }
@@ -342,13 +425,12 @@ const Autograph: NextPage = (): JSX.Element => {
                 setSortType={setSortType}
                 setOpenMirrorChoice={setOpenMirrorDisplayChoice}
                 openMirrorChoice={openMirrorDisplayChoice}
-                comment={displayComment}
                 mirror={displayMirror}
                 like={displayLike}
                 interactionsLoading={interactionsDisplayLoading}
                 profile={profile}
-                gallery={gallery}
-                display={display}
+                gallery={galleryItems}
+                display={profileDisplay}
                 handleSettingsUpdate={handleSettingsUpdate}
                 settingsUpdateLoading={settingsUpdateLoading}
                 setSettingsData={setSettingsData}
@@ -366,7 +448,7 @@ const Autograph: NextPage = (): JSX.Element => {
                 handleMoreBookmarks={handleMoreBookmarks}
                 hasMoreBookmarks={hasMoreBookmarks}
                 mirrorBookmark={bookmarkMirror}
-                commentBookmark={bookmarkComment}
+                comment={bookmarkComment}
                 openMirrorChoiceBookmark={openMirrorChoiceBookmark}
                 setOpenMirrorChoiceBookmark={setOpenMirrorChoiceBookmark}
                 setOpenMoreOptions={setOpenMoreOptionsBookmark}
@@ -381,11 +463,29 @@ const Autograph: NextPage = (): JSX.Element => {
                 unfollowProfile={unfollowProfileBookmark}
                 followLoading={followLoading}
                 followProfile={followProfileBookmark}
+                setCommentsOpen={setCommentsBookmarkOpen}
+                setMakeComment={setMakeCommentBookmark}
+                commentsOpen={commentsBookmarkOpen}
+                makeComment={makeCommentBookmark}
+                makePost={makePost}
+                setMakePost={setMakePost}
+                post={post}
+                postLoading={postLoading}
+                setCommentContentLoading={setCommentContentLoading}
+                setPostContentLoading={setPostContentLoading}
+                postContentLoading={postContentLoading}
+                commentContentLoading={commentContentLoading}
+                gifCollectOpen={gifCollectOpen}
+                setGifCollectOpen={setGifCollectOpen}
+                gifCollectOpenBookmarks={gifCollectOpenBookmarks}
+                setGifCollectOpenBookmarks={setGifCollectOpenBookmarks}
+                availableCurrencies={availableCurrencies}
               />
               <Bio profile={profile} dispatch={dispatch} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
                 <Feed
                   comment={feedComment}
+                  availableCurrencies={availableCurrencies}
                   mirror={feedMirror}
                   like={feedLike}
                   simpleCollect={feedCollect}
@@ -406,15 +506,22 @@ const Autograph: NextPage = (): JSX.Element => {
                   handleHidePost={handleHidePost}
                   handleBookmark={handleBookmark}
                   hasMoreFeed={hasMoreFeed}
+                  setCommentsOpen={setCommentsFeedOpen}
+                  setMakeComment={setMakeCommentFeed}
+                  commentsOpen={commentsFeedOpen}
+                  makeComment={makeCommentFeed}
+                  contentLoading={postContentLoading}
+                  setContentLoading={setPostContentLoading}
+                  gifCollectOpen={gifCollectOpenFeed}
+                  setGifCollectOpen={setGifCollectOpenFeed}
                 />
                 <Gallery
-                  comment={galleryComment}
                   mirror={galleryMirror}
                   like={galleryLike}
                   openMirrorChoice={openMirrorGalleryChoice}
                   setOpenMirrorChoice={setOpenMirrorGalleryChoice}
                   interactionsLoading={interactionsGalleryLoading}
-                  gallery={gallery}
+                  gallery={galleryItems}
                   cartItems={cartItems}
                   optionsOpen={optionsOpen}
                   setOptionsOpen={setOptionsOpen}

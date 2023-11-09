@@ -13,7 +13,24 @@ const Filters: FunctionComponent<FilterProps> = ({
   filterValues,
   handleResetFilters,
   filterConstants,
-  publication
+  publication,
+  layoutAmount,
+  setApparel,
+  apparel,
+  mirror,
+  like,
+  router,
+  cartItems,
+  popUpOpen,
+  setPopUpOpen,
+  interactionsLoading,
+  openMirrorChoice,
+  setOpenMirrorChoice,
+  unfollowProfile,
+  followProfile,
+  followLoading,
+  profileHovers,
+  setProfileHovers,
 }): JSX.Element => {
   return (
     <div
@@ -21,7 +38,31 @@ const Filters: FunctionComponent<FilterProps> = ({
       id="milestone"
     >
       <div className="relative flex flex-col lg:flex-row gap-10 mx-auto w-full p-4 h-fit lg:items-start items-center justify-start lg:justify-center">
-        <TileSwitch type="chromadin" data={publication} />
+        <TileSwitch
+          type={
+            ["chromadin", "coinop", "listener"][Math.floor(Math.random() * 3)]
+          }
+          publication={publication}
+          layoutAmount={layoutAmount}
+          popUpOpen={popUpOpen}
+          setPopUpOpen={setPopUpOpen}
+          apparel={apparel}
+          setApparel={setApparel}
+          index={0}
+          dispatch={dispatch}
+          router={router}
+          cartItems={cartItems}
+          mirror={mirror}
+          like={like}
+          interactionsLoading={interactionsLoading}
+          openMirrorChoice={openMirrorChoice}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          followLoading={followLoading}
+          unfollowProfile={unfollowProfile}
+          followProfile={followProfile}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+        />
         <ContentSort
           filterConstants={filterConstants}
           handleResetFilters={handleResetFilters}

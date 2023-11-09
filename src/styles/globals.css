@@ -345,26 +345,9 @@ input[type="number"]::-webkit-outer-spin-button:focus {
   background-size: cover;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
 /* For Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
-}
-
-input[type="number"]:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
-}
-
-input[type="number"]::-webkit-inner-spin-button:focus,
-input[type="number"]::-webkit-outer-spin-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
 }
 
 input:focus {
@@ -372,11 +355,19 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
 }
 
-input::-webkit-inner-spin-button:focus,
-input::-webkit-outer-spin-button:focus {
+textarea:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
 }
+
+textarea::-webkit-inner-spin-button:focus,
+textarea::-webkit-outer-spin-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+
+
 
 #milestone::-webkit-scrollbar {
   width: 3px;

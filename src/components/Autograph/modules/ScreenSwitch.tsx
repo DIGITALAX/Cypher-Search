@@ -6,12 +6,12 @@ import Circuits from "./Screen/Circuits";
 import Gallery from "./Screen/Gallery";
 import Bookmarks from "./Screen/Bookmarks";
 import Orders from "./Screen/Orders";
+import ScreenPost from "./Screen/ScreenPost";
 
 const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
   mirror,
   like,
-  comment,
   openMirrorChoice,
   setOpenMirrorChoice,
   interactionsLoading,
@@ -44,7 +44,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleBookmark,
   mirrorBookmark,
   likeBookmark,
-  commentBookmark,
+  comment,
   openMirrorChoiceBookmark,
   unfollowProfile,
   followProfile,
@@ -59,6 +59,23 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleHidePost,
   handleMoreBookmarks,
   hasMoreBookmarks,
+  setMakeComment,
+  makeComment,
+  setCommentsOpen,
+  commentsOpen,
+  makePost,
+  setMakePost,
+  postLoading,
+  post,
+  commentContentLoading,
+  setCommentContentLoading,
+  postContentLoading,
+  setPostContentLoading,
+  gifCollectOpen,
+  setGifCollectOpen,
+  gifCollectOpenBookmarks,
+  setGifCollectOpenBookmarks,
+  availableCurrencies
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -66,6 +83,21 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
 
     case ScreenDisplay.Gallery:
       return <Gallery gallery={gallery} />;
+
+    case ScreenDisplay.Post:
+      return (
+        <ScreenPost
+          makePost={makePost}
+          post={post}
+          setMakePost={setMakePost}
+          postLoading={postLoading}
+          contentLoading={postContentLoading}
+          setContentLoading={setPostContentLoading}
+          gifCollectOpen={gifCollectOpen}
+          setGifCollectOpen={setGifCollectOpen}
+          availableCurrencies={availableCurrencies}
+        />
+      );
 
     case ScreenDisplay.Bookmarks:
       return (
@@ -75,7 +107,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           simpleCollect={simpleCollect}
           mirror={mirrorBookmark}
           like={likeBookmark}
-          comment={commentBookmark}
+          comment={comment}
           handleBookmark={handleBookmark}
           interactionsLoading={interactionsLoadingBookmark}
           openMirrorChoice={openMirrorChoiceBookmark}
@@ -92,6 +124,15 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           handleHidePost={handleHidePost}
           handleMoreBookmarks={handleMoreBookmarks}
           hasMoreBookmarks={hasMoreBookmarks}
+          setMakeComment={setMakeComment}
+          makeComment={makeComment}
+          setCommentsOpen={setCommentsOpen}
+          commentsOpen={commentsOpen}
+          contentLoading={commentContentLoading}
+          setContentLoading={setCommentContentLoading}
+          gifCollectOpen={gifCollectOpenBookmarks}
+          setGifCollectOpen={setGifCollectOpenBookmarks}
+          availableCurrencies={availableCurrencies}
         />
       );
 
@@ -126,7 +167,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           dispatch={dispatch}
           mirror={mirror}
           like={like}
-          comment={comment}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           interactionsLoading={interactionsLoading}
@@ -135,6 +175,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           handleSetDisplay={handleSetDisplay}
           displayLoading={displayLoading}
           owner={owner}
+          router={router}
         />
       );
   }

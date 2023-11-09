@@ -5,10 +5,10 @@ import {
   Mirror,
   Post,
   Profile,
-  PublicationStats,
   Quote,
 } from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
+import { SetStateAction } from "react";
 
 export type BarProps = {
   title: string;
@@ -46,6 +46,7 @@ export type InteractBarProps = {
   layoutAmount?: number;
   index: number;
   hideCollect?: boolean;
+  router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   mirror:
     | ((id: string) => Promise<void>)
@@ -53,23 +54,19 @@ export type InteractBarProps = {
   like:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>);
-  comment:
-    | ((id: string) => Promise<void>)
-    | ((index: number, id: string) => Promise<void>);
-    simpleCollect:
+  simpleCollect:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>)
     | undefined;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
-    comment: boolean;
     simpleCollect?: boolean;
   };
   type: string | undefined;
   publication: Post | Mirror | Quote | Comment | undefined;
   openMirrorChoice: boolean[];
-  setOpenMirrorChoice: (e: boolean[]) => void;
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
 };
 
 export type HoverProfileProps = {
@@ -83,8 +80,7 @@ export type HoverProfileProps = {
   publication: Profile;
   router: NextRouter;
   index: number;
-  profileHovers: boolean[];
-  setProfileHovers: (e: boolean[]) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   feed?: boolean;
 };
 
@@ -99,10 +95,10 @@ export type AccountsProps = {
   openAccountModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
-  setCartListOpen: (e: boolean) => void;
+  setCartListOpen: (e: SetStateAction<boolean>) => void;
   lensConnected: Profile | undefined;
   walletConnected: boolean;
-  setOpenAccount: (e: boolean) => void;
+  setOpenAccount: (e: SetStateAction<boolean>) => void;
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;
@@ -118,10 +114,10 @@ export type NotFoundProps = {
   openAccountModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
-  setCartListOpen: (e: boolean) => void;
+  setCartListOpen: (e: SetStateAction<boolean>) => void;
   lensConnected: Profile | undefined;
   walletConnected: boolean;
-  setOpenAccount: (e: boolean) => void;
+  setOpenAccount: (e: SetStateAction<boolean>) => void;
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;

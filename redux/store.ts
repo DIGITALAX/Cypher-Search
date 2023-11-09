@@ -4,6 +4,7 @@ import searchActiveReducer from "./reducers/searchActiveSlice";
 import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
+import availableCurrenciesReducer from "./reducers/availableCurrenciesSlice";
 import mapReducer from "./reducers/mapSlice";
 import reportPubReducer from "./reducers/reportPubSlice";
 import postBoxReducer from "./reducers/postBoxSlice";
@@ -24,12 +25,11 @@ import searchItemsReducer from "./reducers/searchItemsSlice";
 import cachedProfilesReducer from "./reducers/cachedProfilesSlice";
 import filterConstantsReducer from "./reducers/filterConstantsSlice";
 import interactErrorReducer from "./reducers/interactErrorSlice";
-import lastPostCommentReducer from "./reducers/lastPostCommentSlice";
-import lastPostQuoteReducer from "./reducers/lastPostQuoteSlice";
 import autographProfileReducer from "./reducers/autographProfileSlice";
 import galleryItemsReducer from "./reducers/galleryItemsSlice";
 import autographFeedReducer from "./reducers/autographFeedSlice";
 import screenDisplayReducer from "./reducers/screenDisplaySlice";
+import followCollectReducer from "./reducers/followCollectSlice";
 
 const reducer = combineReducers({
   searchActiveReducer,
@@ -52,8 +52,6 @@ const reducer = combineReducers({
   cachedProfilesReducer,
   filterConstantsReducer,
   interactErrorReducer,
-  lastPostCommentReducer,
-  lastPostQuoteReducer,
   autographProfileReducer,
   displaySearchBoxReducer,
   galleryItemsReducer,
@@ -62,6 +60,8 @@ const reducer = combineReducers({
   indexerReducer,
   postBoxReducer,
   screenDisplayReducer,
+  followCollectReducer,
+  availableCurrenciesReducer,
 });
 
 export const store = configureStore({

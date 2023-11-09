@@ -6,17 +6,16 @@ import { Mirror, Post } from "../../../../graphql/generated";
 import numeral from "numeral";
 import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
-import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
+import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
   like,
   mirror,
   dispatch,
-  comment,
   simpleCollect,
   interactionsLoading,
   item,
@@ -33,6 +32,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   handleHidePost,
   handleBookmark,
   disabled,
+  commentsOpen,
+  setCommentsOpen,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
@@ -43,12 +44,24 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           ["QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ", "Likes"],
           ["QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n", "Comments"],
         ].map((image: string[], indexTwo: number) => {
-          const functions = [like, comment];
+          const functions = [
+            () =>
+              setOpenMirrorChoice!((prev) => {
+                const choices = [...prev!];
+                choices[index] = !choices[index];
+                return choices;
+              }),
 
-          const loaders = [
-            interactionsLoading?.like,
-            interactionsLoading?.comment,
+            like,
+            () =>
+              setCommentsOpen((prev) => {
+                const arr = [...prev];
+                arr[index] = !commentsOpen[index];
+                return arr;
+              }),
           ];
+
+          const loaders = [interactionsLoading?.like];
 
           const stats = [
             item?.__typename === "Mirror"
@@ -79,15 +92,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     );
                     router.push(`/item/pub/${item?.id}`);
                   } else {
-                    if (indexTwo === 0) {
-                      const choices = [...openMirrorChoice!];
-                      choices[index] = !choices[index];
-                      setOpenMirrorChoice!(choices);
-                    } else {
-                      !loaders[index] &&
-                        functions[indexTwo] &&
-                        functions[indexTwo]!(item?.id);
-                    }
+                    functions[indexTwo] && functions[indexTwo]!(item?.id);
                   }
                 }}
               >
@@ -113,7 +118,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               </div>
               <div
                 className={`relative w-fit h-fit flex items-center justify-center text-center ${
-                  stats[indexTwo] > 0 && "cursor-pointer active:scale-95"
+                  (stats[indexTwo] > 0 || image[1] === "Comments") &&
+                  "cursor-pointer active:scale-95"
                 }`}
                 onClick={() => {
                   if (disabled) {
@@ -124,7 +130,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     );
                     router.push(`/item/pub/${item?.id}`);
                   } else {
-                    stats[indexTwo] > 0 &&
+                    (stats[indexTwo] > 0 || image[1] === "Comments") &&
                       dispatch(
                         setReactBox({
                           actionOpen: true,
@@ -157,7 +163,6 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 dispatch(
                   setPostBox({
                     actionOpen: true,
-                    actionId: item?.id,
                     actionQuote: item,
                   })
                 ),
@@ -174,6 +179,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                         actionOpen: false,
                       })
                     );
+
                     router.push(`/item/pub/${item?.id}`);
                   } else {
                     !loaders[index] &&
@@ -210,9 +216,11 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           className="relative w-14 h-5 items-center justify-center flex cursor-pointer active:scale-95"
           onClick={() => {
             if (disabled) return;
-            const arr = [...openMoreOptions!];
-            arr[index] = !arr[index];
-            setOpenMoreOptions!(arr);
+            setOpenMoreOptions!((prev) => {
+              const arr = [...prev!];
+              arr[index] = !arr[index];
+              return arr;
+            });
           }}
         >
           <Image
@@ -226,10 +234,11 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           id="pfp"
           onMouseEnter={() => {
             if (disabled) return;
-
-            const updatedArray = [...profileHovers!];
-            updatedArray[index] = true;
-            setProfileHovers!(updatedArray);
+            setProfileHovers!((prev) => {
+              const updatedArray = [...prev!];
+              updatedArray[index] = true;
+              return updatedArray;
+            });
           }}
         >
           {profilePicture && (
@@ -291,7 +300,6 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             router={router}
             publication={item?.by}
             index={index}
-            profileHovers={profileHovers}
             setProfileHovers={setProfileHovers!}
             feed
           />
@@ -328,7 +336,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
                 title={image[0]}
                 onClick={() => {
-                  if (!disabled) return;
+                  if (disabled) return;
                   if (indexTwo !== 3 && indexTwo !== 2) {
                     !loaders[index] &&
                       (functions[indexTwo] as (id: string) => Promise<void>)(

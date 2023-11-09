@@ -10,7 +10,6 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   optionsOpen,
   setOptionsOpen,
   selectedOption,
-  comment,
   mirror,
   like,
   router,
@@ -95,7 +94,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                   followLoading={followLoading}
                   profileHovers={profileHovers}
                   setProfileHovers={setProfileHovers}
-                  comment={comment}
+                  
                   mirror={mirror}
                   like={like}
                   openMirrorChoice={openMirrorChoice}

@@ -1,20 +1,19 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { omit } from "lodash";
-import { RootState } from "../../../../redux/store";
 import {
   Erc20,
   FeeFollowModuleSettings,
   LimitType,
+  Profile,
   ProfileMetadata,
   RelaySuccess,
 } from "../../../../graphql/generated";
 import setFollowModule from "../../../../graphql/lens/mutations/followModule";
 import createSetFollowModule from "../../../../lib/helpers/createSetFollowModule";
-import { createPublicClient, createWalletClient, custom, http } from "viem";
+import {  createWalletClient, custom } from "viem";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import { polygon } from "viem/chains";
-import { useAccount } from "wagmi";
+import { PublicClient } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../../../lib/constants";
 import broadcast from "../../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
@@ -22,17 +21,14 @@ import getEnabledCurrencies from "../../../../graphql/lens/queries/enabledCurren
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
+import { Dispatch } from "redux";
 
-const useSettings = () => {
-  const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
-  });
-  const dispatch = useDispatch();
-  const { address } = useAccount();
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile
-  );
+const useSettings = (
+  lensConnected: Profile | undefined,
+  dispatch: Dispatch,
+  publicClient: PublicClient,
+  address: `0x${string}` | undefined
+) => {
   const [settingsUpdateLoading, setSettingsUpdateLoading] =
     useState<boolean>(false);
   const [followUpdateLoading, setFollowUpdateLoading] =

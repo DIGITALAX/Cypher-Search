@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { CommunityProps, Creation } from "../../types/tiles.types";
-import { ImageSet, NftImage, Profile } from "../../../../../graphql/generated";
+import { Profile } from "../../../../../graphql/generated";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
@@ -51,7 +51,13 @@ const Community: FunctionComponent<CommunityProps> = ({
                     key={index}
                     className="relative w-14 h-14 rounded-full border border-white p-1 flex items-center justify-center cursor-pointer"
                     onClick={() =>
-                      router.push(`/autograph/${member?.handle?.suggestedFormatted?.localName?.split("@")[1]}`)
+                      router.push(
+                        `/autograph/${
+                          member?.handle?.suggestedFormatted?.localName?.split(
+                            "@"
+                          )[1]
+                        }`
+                      )
                     }
                   >
                     <div
@@ -125,11 +131,13 @@ const Community: FunctionComponent<CommunityProps> = ({
                   <div
                     className="relative flex items-center justify-center rounded-full w-9 h-9 cursor-pointer"
                     id="pfp"
-                    onMouseEnter={() => {
-                      const updatedArray = [...profileHovers];
-                      updatedArray[index] = true;
-                      setProfileHovers(updatedArray);
-                    }}
+                    onMouseEnter={() =>
+                      setProfileHovers((prev) => {
+                        const updatedArray = [...prev];
+                        updatedArray[index] = true;
+                        return updatedArray;
+                      })
+                    }
                   >
                     {profilePicture && (
                       <Image
@@ -147,7 +155,6 @@ const Community: FunctionComponent<CommunityProps> = ({
                       router={router}
                       publication={item?.profile}
                       index={index}
-                      profileHovers={profileHovers}
                       setProfileHovers={setProfileHovers}
                       feed
                     />

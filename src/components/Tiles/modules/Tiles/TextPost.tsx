@@ -12,8 +12,6 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   publication,
   mirror,
   like,
-  comment,
-  quote,
   interactionsLoading,
   setOpenMirrorChoice,
   openMirrorChoice,
@@ -35,8 +33,8 @@ const TextPost: FunctionComponent<TextPostProps> = ({
         <div className="relative flex flex-col w-fit h-fit gap-2 items-end justify-center">
           <InteractBar
             mirror={mirror}
+            router={router}
             like={like}
-            comment={comment}
             dispatch={dispatch}
             interactionsLoading={interactionsLoading}
             layoutAmount={layoutAmount}
@@ -112,11 +110,12 @@ const TextPost: FunctionComponent<TextPostProps> = ({
               <div
                 className="relative w-6 h-6 rounded-full flex items-center justify-center p-1 cursor-pointer"
                 id="pfp"
-                onMouseEnter={() => {
-                  const updatedArray = [...profileHovers];
-                  updatedArray[index] = true;
-                  setProfileHovers(updatedArray);
-                }}
+                onMouseEnter={() =>   setProfileHovers((prev) => {
+                  const updatedArray = [...prev];
+                  updatedArray[index] = false;
+                  return updatedArray;
+                })}
+                
               ></div>
               {profileHovers?.[index] && (
                 <HoverProfile
@@ -126,7 +125,6 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                   router={router}
                   publication={publication?.by}
                   index={index}
-                  profileHovers={profileHovers}
                   setProfileHovers={setProfileHovers}
                 />
               )}

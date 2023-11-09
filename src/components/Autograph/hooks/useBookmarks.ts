@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createPublicClient, createWalletClient, custom, http } from "viem";
+import { createWalletClient, custom, PublicClient } from "viem";
 import { polygon } from "viem/chains";
-import { useAccount } from "wagmi";
-import { RootState } from "../../../../redux/store";
-import uploadCommentQuoteContent from "../../../../lib/helpers/uploadCommentQuote";
+import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensComment from "../../../../lib/helpers/api/commentPost";
-import lensQuote from "../../../../lib/helpers/api/quotePost";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
@@ -18,41 +14,35 @@ import {
   Post,
   Quote,
   Comment,
+  Profile,
 } from "../../../../graphql/generated";
 import bookmarks from "../../../../graphql/lens/queries/bookmarks";
-import { ScreenDisplay } from "../types/autograph.types";
+import { MakePostComment, ScreenDisplay } from "../types/autograph.types";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
+import { Dispatch } from "redux";
 
-const useBookmarks = () => {
-  const dispatch = useDispatch();
-  const { address } = useAccount();
-  const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
-  });
-  const profileFeed = useSelector(
-    (state: RootState) => state.app.autographFeedReducer.feed
-  );
-  const lensConnected = useSelector(
-    (state: RootState) => state.app.lensConnectedReducer.profile
-  );
-  const screenDisplay = useSelector(
-    (state: RootState) => state.app.screenDisplayReducer.value
-  );
-  const lastPostComment = useSelector(
-    (state: RootState) => state.app.lastPostCommentReducer
-  );
-  const lastPostQuote = useSelector(
-    (state: RootState) => state.app.lastPostQuoteReducer
-  );
+const useBookmarks = (
+  lensConnected: Profile | undefined,
+  profileFeed: (Post | Mirror | Quote)[],
+  screenDisplay: ScreenDisplay,
+  dispatch: Dispatch,
+  publicClient: PublicClient,
+  address: `0x${string}` | undefined
+) => {
   const [allBookmarks, setAllBookmarks] = useState<
     (Post | Comment | Quote | Mirror)[]
   >([]);
   const [openMirrorChoiceBookmark, setOpenMirrorChoiceBookmark] = useState<
     boolean[]
   >([]);
+  const [makeCommentBookmark, setMakeCommentBookmark] = useState<
+    MakePostComment[]
+  >([]);
+  const [commentsBookmarkOpen, setCommentsBookmarkOpen] = useState<boolean[]>(
+    []
+  );
   const [openMoreOptionsBookmark, setOpenMoreOptionsBookmark] = useState<
     boolean[]
   >([]);
@@ -63,7 +53,6 @@ const useBookmarks = () => {
       {
         like: boolean;
         mirror: boolean;
-        quote: boolean;
         comment: boolean;
         simpleCollect: boolean;
         bookmark: boolean;
@@ -73,6 +62,9 @@ const useBookmarks = () => {
   const [bookmarkCursor, setBookmarkCursor] = useState<string>();
   const [hasMoreBookmarks, setHasMoreBookmarks] = useState<boolean>(false);
   const [bookmarksLoading, setBookmarksLoading] = useState<boolean>(false);
+  const [gifCollectOpenBookmarks, setGifCollectOpenBookmarks] = useState<
+    { gif: boolean; collect: boolean }[]
+  >([]);
 
   const getBookmarks = async () => {
     setBookmarksLoading(true);
@@ -133,6 +125,14 @@ const useBookmarks = () => {
     if (index === -1) {
       return;
     }
+    if (
+      !makeCommentBookmark[index]?.content &&
+      !makeCommentBookmark[index]?.images &&
+      !makeCommentBookmark[index]?.videos &&
+      !makeCommentBookmark[index]?.gifs
+    )
+      return;
+
     setInteractionsLoadingBookmark((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], comment: true };
@@ -140,11 +140,11 @@ const useBookmarks = () => {
     });
 
     try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostComment.content,
-        lastPostComment.images,
-        lastPostComment.videos,
-        lastPostComment.gifs
+      const contentURI = await uploadPostContent(
+        makeCommentBookmark[index]?.content,
+        makeCommentBookmark[index]?.images,
+        makeCommentBookmark[index]?.videos,
+        makeCommentBookmark[index]?.gifs
       );
 
       const clientWallet = createWalletClient({
@@ -156,10 +156,11 @@ const useBookmarks = () => {
         id,
         contentURI!,
         dispatch,
-        lastPostComment.collectType,
+        makeCommentBookmark[index]?.collectType,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        () => clearComment(index)
       );
     } catch (err: any) {
       console.error(err.message);
@@ -172,46 +173,29 @@ const useBookmarks = () => {
     });
   };
 
-  const bookmarkQuote = async (id: string) => {
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
-    if (index === -1) {
-      return;
-    }
-    setInteractionsLoadingBookmark((prev) => {
+  const clearComment = (index: number) => {
+    setMakeCommentBookmark((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: true };
+      updatedArray[index] = {
+        collectType: undefined,
+        content: "",
+        images: [],
+        videos: [],
+        gifs: [],
+        searchedGifs: [],
+        search: "",
+        collectibleOpen: false,
+        collectible: "",
+        award: "",
+        whoCollectsOpen: false,
+        creatorAwardOpen: false,
+        currencyOpen: false,
+      };
       return updatedArray;
     });
-
-    try {
-      const contentURI = await uploadCommentQuoteContent(
-        lastPostQuote.content,
-        lastPostQuote.images,
-        lastPostQuote.videos,
-        lastPostQuote.gifs
-      );
-
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-
-      await lensQuote(
-        id,
-        contentURI!,
-        dispatch,
-        lastPostComment.collectType,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
-    } catch (err: any) {
-      console.error(err.message);
-    }
-
-    setInteractionsLoadingBookmark((prev) => {
+    setCommentsBookmarkOpen((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], quote: false };
+      updatedArray[index] = !updatedArray[index];
       return updatedArray;
     });
   };
@@ -457,6 +441,12 @@ const useBookmarks = () => {
     profileHovers,
     followLoading,
     allBookmarks,
+    setCommentsBookmarkOpen,
+    commentsBookmarkOpen,
+    makeCommentBookmark,
+    setMakeCommentBookmark,
+    gifCollectOpenBookmarks,
+    setGifCollectOpenBookmarks,
   };
 };
 

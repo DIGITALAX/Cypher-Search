@@ -1,6 +1,4 @@
 import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
 import { PLACEHOLDERS } from "../../../../lib/constants";
 import {
@@ -19,7 +17,7 @@ import {
 } from "../../../../graphql/subgraph/queries/getTextSearch";
 import filterEmpty from "../../../../lib/helpers/filterEmpty";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
-import { DropDown, FilterValues } from "../types/search.types";
+import { DropDown, Filter, FilterValues } from "../types/search.types";
 import { setFilterConstants } from "../../../../redux/reducers/filterConstantsSlice";
 import fetchIpfsJson from "../../../../lib/helpers/fetchIpfsJson";
 import {
@@ -29,34 +27,32 @@ import {
 } from "../../../../lib/helpers/randomElements";
 import searchPubs from "../../../../graphql/lens/queries/searchPubs";
 import searchProfiles from "../../../../graphql/lens/queries/searchProfiles";
-import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
+import {
+  AllSearchItemsState,
+  setAllSearchItems,
+} from "../../../../redux/reducers/searchItemsSlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import buildQuery from "../../../../lib/helpers/buildQuery";
 import getProfiles from "../../../../graphql/lens/queries/profiles";
 import { setCachedProfiles } from "../../../../redux/reducers/cachedProfilesSlice";
+import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
+import { Dispatch } from "redux";
 
-const useSearch = () => {
-  const searchActive = useSelector(
-    (state: RootState) => state.app.searchActiveReducer.value
-  );
-  const filterOpen = useSelector(
-    (state: RootState) => state.app.filtersOpenReducer.value
-  );
-  const filterConstants = useSelector(
-    (state: RootState) => state.app.filterConstantsReducer.items
-  );
-  const filters = useSelector(
-    (state: RootState) => state.app.filterReducer.filter
-  );
-  const profiles = useSelector(
-    (state: RootState) => state.app.cachedProfilesReducer.profiles
-  );
-  const allSearchItems = useSelector(
-    (state: RootState) => state.app.searchItemsReducer
-  );
-  const dispatch = useDispatch();
+const useSearch = (
+  filtersOpen: FiltersOpenState,
+  searchActive: boolean,
+  filterConstants: FilterValues | undefined,
+  filters: Filter,
+  allSearchItems: AllSearchItemsState,
+  profiles:
+    | {
+        [key: string]: Profile;
+      }
+    | undefined,
+  dispatch: Dispatch
+) => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [placeholderText, setPlaceholderText] = useState<string>();
@@ -128,7 +124,13 @@ const useSearch = () => {
             metadata: {
               publishedOn: filters?.origin
                 ? filters?.origin?.split(",").map((word) => word.trim())
-                : ["chromadin", "legend", "kinora", "litlistener"],
+                : [
+                    "chromadin",
+                    "legend",
+                    "kinora",
+                    "litlistener",
+                    "cyphersearch",
+                  ],
               tags: filters?.hashtag
                 ? {
                     oneOf: filters?.hashtag
@@ -296,7 +298,13 @@ const useSearch = () => {
               metadata: {
                 publishedOn: filters?.origin
                   ? filters?.origin?.split(",").map((word) => word.trim())
-                  : ["chromadin", "legend", "kinora"],
+                  : [
+                      "chromadin",
+                      "legend",
+                      "kinora",
+                      "cyphersearch",
+                      "litlistener",
+                    ],
                 tags: filters?.hashtag
                   ? {
                       oneOf: filters?.hashtag
@@ -525,10 +533,10 @@ const useSearch = () => {
   }, []);
 
   useEffect(() => {
-    if (!filterOpen && !filterEmpty(filters)) {
+    if (!filtersOpen.value && !filterEmpty(filters)) {
       handleSearch();
     }
-  }, [filterOpen]);
+  }, [filtersOpen.value]);
 
   return {
     handleSearch,
@@ -543,6 +551,11 @@ const useSearch = () => {
     setFilteredDropDownValues,
     searchLoading,
     handleResetFilters,
+    dispatch,
+    searchActive,
+    filtersOpen,
+    filterConstants,
+    filters,
   };
 };
 

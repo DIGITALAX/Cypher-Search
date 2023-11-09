@@ -27,6 +27,15 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   handleBookmark,
   handleHidePost,
   bookmarksLoading,
+  setCommentsOpen,
+  setMakeComment,
+  makeComment,
+  commentsOpen,
+  contentLoading,
+  setContentLoading,
+  gifCollectOpen,
+  setGifCollectOpen,
+  availableCurrencies
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full pt-4 flex items-center justify-center">
@@ -49,11 +58,15 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                     <Publication
                       index={index}
                       item={item}
+                      key={index}
                       dispatch={dispatch}
                       router={router}
                       mirror={mirror}
                       like={like}
-                      comment={comment}
+                      setMakePostComment={setMakeComment}
+                      makeComment={makeComment}
+                      setCommentsOpen={setCommentsOpen}
+                      commentsOpen={commentsOpen}
                       interactionsLoading={interactionsLoading}
                       profileHovers={profileHovers}
                       setProfileHovers={setProfileHovers}
@@ -68,6 +81,11 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                       handleBookmark={handleBookmark}
                       handleHidePost={handleHidePost}
                       data-post-id={item?.id}
+                      contentLoading={contentLoading}
+                      setContentLoading={setContentLoading}
+                      gifCollectOpen={gifCollectOpen}
+                      setGifCollectOpen={setGifCollectOpen}
+                      availableCurrencies={availableCurrencies}
                     />
                   );
                 }

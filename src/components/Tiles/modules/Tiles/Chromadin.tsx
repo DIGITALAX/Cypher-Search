@@ -21,8 +21,6 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   publication,
   mirror,
   like,
-  comment,
-  quote,
   interactionsLoading,
   setOpenMirrorChoice,
   openMirrorChoice,
@@ -37,7 +35,6 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
       <InteractBar
         mirror={mirror}
         like={like}
-        comment={comment}
         interactionsLoading={interactionsLoading}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
@@ -46,6 +43,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         simpleCollect={undefined}
         type={undefined}
         dispatch={dispatch}
+        router={router}
       />
       <div className="relative flex flex-col items-center justify-start w-full h-fit gap-5">
         <div className="relative flex flex-row w-full justifty-between items-start h-fit gap-4">
@@ -86,11 +84,13 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             </div>
             <div
               className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
-              onClick={() => {
-                const newArray = [...apparel];
-                apparel[index] = !newArray[index];
-                setApparel(newArray);
-              }}
+              onClick={() =>
+                setApparel((prev) => {
+                  const newArray = [...prev];
+                  apparel[index] = !newArray[index];
+                  return newArray;
+                })
+              }
             >
               <Image
                 layout="fill"
@@ -107,11 +107,13 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             </div>
             <div
               className="relative w-fit h-fit flex text-mos text-sm font-bit uppercase cursor-pointer"
-              onMouseEnter={() => {
-                const updatedArray = [...profileHovers];
-                updatedArray[index] = true;
-                setProfileHovers(updatedArray);
-              }}
+              onMouseEnter={() =>
+                setProfileHovers((prev) => {
+                  const updatedArray = [...prev];
+                  updatedArray[index] = true;
+                  return updatedArray;
+                })
+              }
             >
               @hiro.lens
             </div>
@@ -123,18 +125,19 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 router={router}
                 publication={publication?.profile}
                 index={index}
-                profileHovers={profileHovers}
                 setProfileHovers={setProfileHovers}
               />
             )}
           </div>
           <div
             className="relative w-10 h-10 flex items-end justify-center mb-0 cursor-pointer active:scale-95"
-            onClick={() => {
-              const openPopUps = [...popUpOpen];
-              openPopUps[index] = !openPopUps[index];
-              setPopUpOpen(openPopUps);
-            }}
+            onClick={() =>
+              setPopUpOpen((prev) => {
+                const openPopUps = [...prev];
+                openPopUps[index] = !openPopUps[index];
+                return openPopUps;
+              })
+            }
           >
             <Image
               layout="fill"

@@ -7,6 +7,8 @@ import { ControlsProps } from "../types/tiles.types";
 import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
 import formatTime from "../../../../lib/helpers/formatTime";
 import { Post } from "../../../../graphql/generated";
+import numeral from "numeral";
+import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 
 const Controls: FunctionComponent<ControlsProps> = ({
   dispatch,
@@ -21,10 +23,9 @@ const Controls: FunctionComponent<ControlsProps> = ({
   handleVolumeChange,
   interactionsLoading,
   mirror,
-  comment,
   like,
-  quote,
   publication,
+  router,
 }): JSX.Element => {
   return (
     <div
@@ -106,32 +107,50 @@ const Controls: FunctionComponent<ControlsProps> = ({
               </div>
             )}
           </div>
-          <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {(publication?.post as Post)?.stats?.reactions}
+          <div
+            className={`relative w-fit h-fit font-earl text-white text-xs ${
+              (publication?.post as Post)?.stats?.reactions > 0 &&
+              "cursor-pointer active:scale-95"
+            }`}
+            onClick={() =>
+              (publication?.post as Post)?.stats?.reactions > 0 &&
+              dispatch(
+                setReactBox({
+                  actionOpen: true,
+                  actionId: (publication.post as Post)?.id,
+                  actionType: "Likes",
+                })
+              )
+            }
+          >
+            {numeral((publication?.post as Post)?.stats?.reactions).format(
+              "0a"
+            )}
           </div>
         </div>
         <div className="relative flex flex-row w-fit h-fit items-center justify-center">
           <div
-            className={`${profileId && "cursor-pointer"} relative w-fit ${
-              interactionsLoading?.comment && "animate-spin"
-            }`}
-            onClick={() => comment((publication?.post as Post).id)}
+            className={`${profileId && "cursor-pointer"} relative w-fit`}
+            onClick={() =>
+              router.push(`/item/pub/${(publication?.post as Post)?.id}`)
+            }
           >
-            {interactionsLoading?.comment ? (
-              <AiOutlineLoading size={12} color="white" />
-            ) : (
-              <div className="relative w-3 h-3 flex items-center justify-center">
-                <Image
-                  src={`${INFURA_GATEWAY}/ipfs/QmRGf1cz8h9bdw9VKp9zYXZoDfy15nRA1fKc7ARhxnRPwr`}
-                  layout="fill"
-                  alt="collect"
-                  draggable={false}
-                />
-              </div>
-            )}
+            <div className="relative w-3 h-3 flex items-center justify-center">
+              <Image
+                src={`${INFURA_GATEWAY}/ipfs/QmRGf1cz8h9bdw9VKp9zYXZoDfy15nRA1fKc7ARhxnRPwr`}
+                layout="fill"
+                alt="collect"
+                draggable={false}
+              />
+            </div>
           </div>
-          <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {(publication?.post as Post)?.stats?.comments}
+          <div
+            className={`relative w-fit h-fit font-earl text-white text-xs cursor-pointer active:scale-95`}
+            onClick={() =>
+              router.push(`/item/pub/${(publication?.post as Post)?.id}`)
+            }
+          >
+            {numeral((publication?.post as Post)?.stats?.comments).format("0a")}
           </div>
         </div>
         <div className="relative flex flex-row w-fit h-fit items-center justify-center">
@@ -163,8 +182,23 @@ const Controls: FunctionComponent<ControlsProps> = ({
               </div>
             )}
           </div>
-          <div className="relative w-fit h-fit font-earl text-white text-xs">
-            {(publication?.post as Post)?.stats?.mirrors}
+          <div
+            className={`relative w-fit h-fit font-earl text-white text-xs ${
+              (publication?.post as Post)?.stats?.mirrors > 0 &&
+              "cursor-pointer active:scale-95"
+            }`}
+            onClick={() =>
+              (publication?.post as Post)?.stats?.mirrors > 0 &&
+              dispatch(
+                setReactBox({
+                  actionOpen: true,
+                  actionId: (publication.post as Post)?.id,
+                  actionType: "Mirrors",
+                })
+              )
+            }
+          >
+            {numeral((publication?.post as Post)?.stats?.mirrors).format("0a")}
           </div>
         </div>
         <div
@@ -190,7 +224,6 @@ const Controls: FunctionComponent<ControlsProps> = ({
             layout="fill"
           />
         </div>
-
         <div
           className="relative cursor-pointer w-3 h-3 flex items-center justify-center"
           onClick={() => setVolumeOpen(!volumeOpen)}
