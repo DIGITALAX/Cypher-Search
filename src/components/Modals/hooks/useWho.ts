@@ -14,6 +14,9 @@ import followers from "../../../../graphql/lens/queries/followers";
 
 const useWho = () => {
   const reactBox = useSelector((state: RootState) => state.app.reactBoxReducer);
+  const lensConnected = useSelector(
+    (state: RootState) => state.app.lensConnectedReducer?.profile?.id
+  );
   const [dataLoading, setDataLoading] = useState<boolean>(false);
   const [reactors, setReactors] = useState<any[]>([]);
   const [quoters, setQuoters] = useState<any[]>([]);
@@ -56,19 +59,22 @@ const useWho = () => {
     setDataLoading(true);
 
     try {
-      const data = await getPublications({
-        limit: LimitType.Ten,
+      const data = await getPublications(
+        {
+          limit: LimitType.Ten,
 
-        where: {
-          publicationTypes: [PublicationType.Comment],
-          commentOn: {
-            id: reactBox.id,
-            ranking: {
-              filter: CommentRankingFilterType.Relevant,
+          where: {
+            publicationTypes: [PublicationType.Comment],
+            commentOn: {
+              id: reactBox.id,
+              ranking: {
+                filter: CommentRankingFilterType.Relevant,
+              },
             },
           },
         },
-      });
+        lensConnected
+      );
 
       if (
         !data?.data?.publications?.items ||
@@ -97,13 +103,16 @@ const useWho = () => {
 
     try {
       if (!mirrorQuote) {
-        const mirrorData = await getPublications({
-          limit: LimitType.Ten,
-          where: {
-            publicationTypes: [PublicationType.Mirror],
-            mirrorOn: reactBox.id,
+        const mirrorData = await getPublications(
+          {
+            limit: LimitType.Ten,
+            where: {
+              publicationTypes: [PublicationType.Mirror],
+              mirrorOn: reactBox.id,
+            },
           },
-        });
+          lensConnected
+        );
         if (
           !mirrorData?.data?.publications?.items ||
           mirrorData?.data?.publications?.items?.length < 1
@@ -120,13 +129,16 @@ const useWho = () => {
       }
 
       if (mirrorQuote) {
-        const quoteData = await getPublications({
-          limit: LimitType.Ten,
-          where: {
-            publicationTypes: [PublicationType.Quote],
-            quoteOn: reactBox.id,
+        const quoteData = await getPublications(
+          {
+            limit: LimitType.Ten,
+            where: {
+              publicationTypes: [PublicationType.Quote],
+              quoteOn: reactBox.id,
+            },
           },
-        });
+          lensConnected
+        );
 
         if (
           !quoteData?.data?.publications?.items ||
@@ -346,17 +358,20 @@ const useWho = () => {
     if (!pageInfo || !hasMore) return;
 
     try {
-      const data = await getPublications({
-        limit: LimitType.Ten,
-        cursor: pageInfo,
-        where: {
-          publicationTypes: [PublicationType.Comment],
-          commentOn: {
-            id: reactBox?.id,
-            ranking: { filter: CommentRankingFilterType.Relevant },
+      const data = await getPublications(
+        {
+          limit: LimitType.Ten,
+          cursor: pageInfo,
+          where: {
+            publicationTypes: [PublicationType.Comment],
+            commentOn: {
+              id: reactBox?.id,
+              ranking: { filter: CommentRankingFilterType.Relevant },
+            },
           },
         },
-      });
+        lensConnected
+      );
 
       if (
         !data?.data?.publications?.items ||
@@ -379,23 +394,29 @@ const useWho = () => {
     if ((!pageInfo || !hasMore) && (!pageInfoQuote || !hasMoreQuote)) return;
 
     try {
-      const mirrorData = await getPublications({
-        limit: LimitType.Ten,
-        where: {
-          publicationTypes: [PublicationType.Mirror],
-          mirrorOn: reactBox?.id,
+      const mirrorData = await getPublications(
+        {
+          limit: LimitType.Ten,
+          where: {
+            publicationTypes: [PublicationType.Mirror],
+            mirrorOn: reactBox?.id,
+          },
+          cursor: pageInfo,
         },
-        cursor: pageInfo,
-      });
+        lensConnected
+      );
 
-      const quoteData = await getPublications({
-        limit: LimitType.Ten,
-        where: {
-          publicationTypes: [PublicationType.Mirror],
-          mirrorOn: reactBox?.id,
+      const quoteData = await getPublications(
+        {
+          limit: LimitType.Ten,
+          where: {
+            publicationTypes: [PublicationType.Mirror],
+            mirrorOn: reactBox?.id,
+          },
+          cursor: pageInfoQuote,
         },
-        cursor: pageInfoQuote,
-      });
+        lensConnected
+      );
 
       if (
         !mirrorData?.data?.publications?.items ||

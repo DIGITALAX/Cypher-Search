@@ -1,15 +1,15 @@
-import { Dispatch } from "react";
 import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
-import { AnyAction } from "redux";
+import { AnyAction, Dispatch } from "redux";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { polygon } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import mirrorPost from "../../../graphql/lens/mutations/mirror";
+import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 
 const lensMirror = async (
   mirrorOn: string,
@@ -44,13 +44,12 @@ const lensMirror = async (
         actionMessage: "Indexing Interaction",
       })
     );
-    const result = await pollUntilIndexed({
-      forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
-    });
-
-    if (!result) {
-      dispatch(setInteractError(true));
-    }
+    await handleIndexCheck(
+      {
+        forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
+      },
+      dispatch
+    );
   } else {
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
@@ -67,7 +66,6 @@ const lensMirror = async (
           referrerPubIds: typedData?.value.referrerPubIds,
           referenceModuleData: typedData?.value.referenceModuleData,
         },
-
       ],
       account: address,
     });
@@ -78,13 +76,13 @@ const lensMirror = async (
         actionMessage: "Indexing Interaction",
       })
     );
-    await publicClient.waitForTransactionReceipt({ hash: res });
-    const result = await pollUntilIndexed({
-      forTxHash: res,
-    });
-    if (!result) {
-      dispatch(setInteractError(true));
-    }
+    const tx = await publicClient.waitForTransactionReceipt({ hash: res });
+    await handleIndexCheck(
+      {
+        forTxHash: tx.transactionHash,
+      },
+      dispatch
+    );
   }
   dispatch(
     setIndexer({

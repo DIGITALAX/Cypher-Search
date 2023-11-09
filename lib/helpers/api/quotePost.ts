@@ -1,16 +1,14 @@
-import { Dispatch } from "react";
 import quotePost from "../../../graphql/lens/mutations/quote";
-import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
-import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
-import { AnyAction } from "redux";
+import { AnyAction, Dispatch } from "redux";
 import { SimpleCollectOpenActionModuleInput } from "../../../graphql/generated";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { polygon } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
+import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 
 const lensQuote = async (
   quoteOn: string,
@@ -55,13 +53,12 @@ const lensQuote = async (
         actionMessage: "Indexing Interaction",
       })
     );
-    const result = await pollUntilIndexed({
-      forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
-    });
-
-    if (!result) {
-      dispatch(setInteractError(true));
-    }
+    await handleIndexCheck(
+      {
+        forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
+      },
+      dispatch
+    );
   } else {
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
@@ -92,13 +89,13 @@ const lensQuote = async (
         actionMessage: "Indexing Interaction",
       })
     );
-    await publicClient.waitForTransactionReceipt({ hash: res });
-    const result = await pollUntilIndexed({
-      forTxHash: res,
-    });
-    if (!result) {
-      dispatch(setInteractError(true));
-    }
+    const tx = await publicClient.waitForTransactionReceipt({ hash: res });
+    await handleIndexCheck(
+      {
+        forTxHash: tx.transactionHash,
+      },
+      dispatch
+    );
   }
   dispatch(
     setIndexer({

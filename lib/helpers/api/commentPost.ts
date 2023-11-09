@@ -1,9 +1,8 @@
-import { Dispatch } from "react";
 import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
-import { AnyAction } from "redux";
+import { AnyAction, Dispatch } from "redux";
 import commentPost from "../../../graphql/lens/mutations/comment";
 import { SimpleCollectOpenActionModuleInput } from "../../../graphql/generated";
 import { polygon } from "viem/chains";
@@ -11,6 +10,7 @@ import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { PublicClient, WalletClient } from "viem";
+import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 
 const lensComment = async (
   id: string,
@@ -49,13 +49,12 @@ const lensComment = async (
   });
 
   if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
-    const result = await pollUntilIndexed({
-      forTxId: broadcastResult?.data?.broadcastOnchain.txId,
-    });
-
-    if (!result) {
-      dispatch(setInteractError(true));
-    }
+    await handleIndexCheck(
+      {
+        forTxId: broadcastResult?.data?.broadcastOnchain.txId,
+      },
+      dispatch
+    );
   } else {
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
@@ -76,33 +75,25 @@ const lensComment = async (
           referenceModule: typedData?.value.referenceModule,
           referenceModuleInitData: typedData?.value.referenceModuleInitData,
         },
-        
       ],
       account: address,
     });
     const res = await clientWallet.writeContract(request);
-    await publicClient.waitForTransactionReceipt({ hash: res });
+    const tx = await publicClient.waitForTransactionReceipt({ hash: res });
     dispatch(
       setIndexer({
         actionOpen: true,
         actionMessage: "Indexing Interaction",
       })
     );
-    const result = await pollUntilIndexed({
-      forTxHash: res,
-    });
 
-    if (!result) {
-      dispatch(setInteractError(true));
-    }
+    await handleIndexCheck(
+      {
+        forTxHash: tx.transactionHash,
+      },
+      dispatch
+    );
   }
-  
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
 };
 
 export default lensComment;

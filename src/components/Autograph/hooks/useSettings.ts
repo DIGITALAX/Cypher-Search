@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import pollUntilIndexed from "../../../../graphql/lens/queries/indexed";
 import { omit } from "lodash";
 import { RootState } from "../../../../redux/store";
 import {
@@ -11,7 +10,7 @@ import {
   RelaySuccess,
 } from "../../../../graphql/generated";
 import setFollowModule from "../../../../graphql/lens/mutations/followModule";
-import createFollowModule from "../../../../lib/helpers/createFollowModule";
+import createSetFollowModule from "../../../../lib/helpers/createSetFollowModule";
 import { createPublicClient, createWalletClient, custom, http } from "viem";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import { polygon } from "viem/chains";
@@ -20,9 +19,9 @@ import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../../../lib/constants";
 import broadcast from "../../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import getEnabledCurrencies from "../../../../graphql/lens/queries/enabledCurrencies";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
+import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
 
 const useSettings = () => {
   const publicClient = createPublicClient({
@@ -156,7 +155,7 @@ const useSettings = () => {
     setFollowUpdateLoading(true);
     try {
       const { data } = await setFollowModule({
-        followModule: createFollowModule(
+        followModule: createSetFollowModule(
           followData.type,
           followData.value,
           followData?.currency?.contract?.address,
@@ -200,20 +199,19 @@ const useSettings = () => {
           account: address,
         });
         const res = await clientWallet.writeContract(request);
-        await publicClient.waitForTransactionReceipt({ hash: res });
+        const tx = await publicClient.waitForTransactionReceipt({ hash: res });
         dispatch(
           setIndexer({
             actionOpen: true,
             actionMessage: "Indexing Interaction",
           })
         );
-        const result = await pollUntilIndexed({
-          forTxHash: res,
-        });
-        if (!result) {
-          dispatch(setInteractError(true));
-          console.error(result);
-        }
+        await handleIndexCheck(
+          {
+            forTxHash: tx.transactionHash,
+          },
+          dispatch
+        );
       } else {
         dispatch(
           setIndexer({
@@ -222,14 +220,13 @@ const useSettings = () => {
           })
         );
         setTimeout(async () => {
-          const result = await pollUntilIndexed({
-            forTxHash: (broadcastResult?.data?.broadcastOnchain as RelaySuccess)
-              .txHash,
-          });
-          if (!result) {
-            dispatch(setInteractError(true));
-            console.error(result);
-          }
+          await handleIndexCheck(
+            {
+              forTxId: (broadcastResult?.data?.broadcastOnchain as RelaySuccess)
+                .txId,
+            },
+            dispatch
+          );
         }, 7000);
       }
       await refetchProfile(dispatch, lensConnected?.id);

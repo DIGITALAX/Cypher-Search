@@ -33,7 +33,7 @@ const useGallery = () => {
     (state: RootState) => state.app.profileDisplayReducer.value
   );
   const lastPostQuote = useSelector(
-    (state: RootState) => state.app.lastPostCommentReducer
+    (state: RootState) => state.app.lastPostQuoteReducer
   );
   const gallery = useSelector(
     (state: RootState) => state.app.galleryItemsReducer.items
