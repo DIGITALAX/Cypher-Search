@@ -5,8 +5,39 @@ import {
   LensTransactionStatusQuery,
   LensTransactionStatusDocument,
   LensTransactionStatusType,
-  LensTransactionFailureType,
 } from "../../generated";
+import { AnyAction, Dispatch } from "redux";
+import { setIndexer } from "../../../redux/reducers/indexerSlice";
+import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
+
+const handleIndexCheck = async (
+  tx: LensTransactionStatusRequest,
+  dispatch: Dispatch<AnyAction>
+) => {
+  try {
+    const indexedStatus = await pollUntilIndexed(tx);
+    if (indexedStatus) {
+      dispatch(
+        setIndexer({
+          actionOpen: true,
+          actionMessage: "Successfully Indexed",
+        })
+      );
+    } else {
+      dispatch(setInteractError(true));
+    }
+  } catch (err: any) {
+    console.error(err.message);
+  }
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
+};
 
 const getIndexed = async (
   request: LensTransactionStatusRequest
@@ -22,15 +53,15 @@ const getIndexed = async (
 
 const pollUntilIndexed = async (
   request: LensTransactionStatusRequest
-): Promise<boolean | LensTransactionFailureType> => {
+): Promise<boolean> => {
   let count = 0;
-  while (count < 100) {
+  while (count < 5) {
     try {
       const { data } = await getIndexed(request);
       if (data && data.lensTransactionStatus) {
         switch (data.lensTransactionStatus.status) {
           case LensTransactionStatusType.Failed:
-            return data.lensTransactionStatus.reason!;
+            return false;
           case LensTransactionStatusType.Complete:
             return true;
           case LensTransactionStatusType.Processing:
@@ -49,4 +80,4 @@ const pollUntilIndexed = async (
   return false;
 };
 
-export default pollUntilIndexed;
+export default handleIndexCheck;

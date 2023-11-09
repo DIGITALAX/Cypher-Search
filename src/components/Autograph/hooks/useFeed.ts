@@ -23,11 +23,14 @@ const useFeed = () => {
     chain: polygon,
     transport: http(),
   });
+  const lensConnected = useSelector(
+    (state: RootState) => state.app.lensConnectedReducer.profile?.id
+  );
   const lastPostComment = useSelector(
     (state: RootState) => state.app.lastPostCommentReducer
   );
   const lastPostQuote = useSelector(
-    (state: RootState) => state.app.lastPostCommentReducer
+    (state: RootState) => state.app.lastPostQuoteReducer
   );
   const profileFeed = useSelector(
     (state: RootState) => state.app.autographFeedReducer.feed
@@ -57,18 +60,21 @@ const useFeed = () => {
   const getFeed = async () => {
     setFeedLoading(true);
     try {
-      const { data } = await getPublications({
-        limit: LimitType.TwentyFive,
-        cursor: feedCursor,
-        where: {
-          from: profile?.id,
-          publicationTypes: [
-            PublicationType.Post,
-            PublicationType.Mirror,
-            PublicationType.Quote,
-          ],
+      const { data } = await getPublications(
+        {
+          limit: LimitType.TwentyFive,
+          cursor: feedCursor,
+          where: {
+            from: profile?.id,
+            publicationTypes: [
+              PublicationType.Post,
+              PublicationType.Mirror,
+              PublicationType.Quote,
+            ],
+          },
         },
-      });
+        lensConnected
+      );
       dispatch(setAutographFeed(data?.publications?.items as any));
       setFeedCursor(data?.publications?.pageInfo?.next);
       if (
@@ -87,18 +93,21 @@ const useFeed = () => {
     if (!feedCursor || !hasMoreFeed) return;
 
     try {
-      const { data } = await getPublications({
-        limit: LimitType.TwentyFive,
-        cursor: feedCursor,
-        where: {
-          from: profile?.id,
-          publicationTypes: [
-            PublicationType.Post,
-            PublicationType.Mirror,
-            PublicationType.Quote,
-          ],
+      const { data } = await getPublications(
+        {
+          limit: LimitType.TwentyFive,
+          cursor: feedCursor,
+          where: {
+            from: profile?.id,
+            publicationTypes: [
+              PublicationType.Post,
+              PublicationType.Mirror,
+              PublicationType.Quote,
+            ],
+          },
         },
-      });
+        lensConnected
+      );
       dispatch(
         setAutographFeed([
           ...profileFeed,

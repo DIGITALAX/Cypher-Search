@@ -45,7 +45,7 @@ const useBookmarks = () => {
     (state: RootState) => state.app.lastPostCommentReducer
   );
   const lastPostQuote = useSelector(
-    (state: RootState) => state.app.lastPostCommentReducer
+    (state: RootState) => state.app.lastPostQuoteReducer
   );
   const [allBookmarks, setAllBookmarks] = useState<
     (Post | Comment | Quote | Mirror)[]

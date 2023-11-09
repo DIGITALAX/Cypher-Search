@@ -45,8 +45,8 @@ const Publication: FunctionComponent<PublicationProps> = ({
           </div>
         </div>
         {(item?.__typename === "Comment" ||
-          item.__typename === "Quote" ||
-          item.__typename === "Mirror") && (
+          item?.__typename === "Quote" ||
+          item?.__typename === "Mirror") && (
           <div
             className={`relative w-fit h-fit row-start-1 items-center justify-end flex flex-row gap-2 font-bit text-xxs`}
           >

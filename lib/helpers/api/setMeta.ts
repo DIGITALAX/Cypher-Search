@@ -1,15 +1,13 @@
-import { Dispatch } from "react";
-import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
-import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import { omit } from "lodash";
 import LensHubProxy from "../../../abis/LensHubProxy.json";
-import { AnyAction } from "redux";
+import { AnyAction, Dispatch } from "redux";
 import { polygon } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { PublicClient, WalletClient } from "viem";
 import profileMetadata from "../../../graphql/lens/mutations/metadata";
+import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 
 const setMeta = async (
   metadataURI: string,
@@ -44,41 +42,36 @@ const setMeta = async (
         actionMessage: "Indexing Interaction",
       })
     );
-    const result = await pollUntilIndexed({
-      forTxId: broadcastResult?.data?.broadcastOnchain.txId,
-    });
 
-    if (!result) {
-      dispatch(setInteractError(true));
-    }
+    await handleIndexCheck(
+      {
+        forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
+      },
+      dispatch
+    );
   } else {
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "setProfileMetadataURI",
       chain: polygon,
-      args: [
-        typedData?.value.profileId,
-        typedData?.value.metadataURI,
-
-      ],
+      args: [typedData?.value.profileId, typedData?.value.metadataURI],
       account: address,
     });
     const res = await clientWallet.writeContract(request);
-    await publicClient.waitForTransactionReceipt({ hash: res });
+   const tx = await publicClient.waitForTransactionReceipt({ hash: res });
     dispatch(
       setIndexer({
         actionOpen: true,
         actionMessage: "Indexing Interaction",
       })
     );
-    const result = await pollUntilIndexed({
-      forTxHash: res,
-    });
-    if (!result) {
-      dispatch(setInteractError(true));
-      console.error(result);
-    }
+    await handleIndexCheck(
+      {
+        forTxHash: tx.transactionHash,
+      },
+      dispatch
+    );
   }
 
   dispatch(

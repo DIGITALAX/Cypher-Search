@@ -1,8 +1,7 @@
 import { AnyAction, Dispatch } from "redux";
-import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
-import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import reportPost from "../../../graphql/lens/mutations/report";
 import { ReportingReasonInput } from "../../../graphql/generated";
+import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 
 const lensReport = async (
   id: string,
@@ -17,14 +16,12 @@ const lensReport = async (
       additionalComments,
     });
     if (data?.reportPublication.__typename === "RelaySuccess") {
-      const result = await pollUntilIndexed({
-        forTxId: data?.reportPublication?.txId,
-      });
-
-      if (!result) {
-        dispatch(setInteractError(true));
-        console.error(result);
-      }
+      await handleIndexCheck(
+        {
+          forTxId: data?.reportPublication?.txId,
+        },
+        dispatch
+      );
     }
   } catch (err: any) {
     console.error(err.message);
