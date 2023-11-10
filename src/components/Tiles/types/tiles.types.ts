@@ -175,7 +175,9 @@ export type LegendProps = {
   setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
   setImageIndex: (e: SetStateAction<number[]>) => void;
   index: number;
-  setCollectChoice: (e: SetStateAction<{ color: string; size: string }[]>) => void;
+  setCollectChoice: (
+    e: SetStateAction<{ color: string; size: string }[]>
+  ) => void;
   collectChoice: {
     color: string;
     size: string;
@@ -199,7 +201,9 @@ export type LegendProps = {
 export type CollectItemProps = {
   index: number;
   router: NextRouter;
-  setCollectChoice: (e: SetStateAction<{ color: string; size: string }[]>) => void;
+  setCollectChoice: (
+    e: SetStateAction<{ color: string; size: string }[]>
+  ) => void;
   collectChoice: {
     color: string;
     size: string;
@@ -377,6 +381,7 @@ export type ProfileProps = {
   followLoading: boolean[];
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  dispatch: Dispatch<AnyAction>;
 };
 
 export type MicrobrandProps = {
@@ -384,6 +389,7 @@ export type MicrobrandProps = {
   router: NextRouter;
   publication: Profile;
   index: number;
+  dispatch: Dispatch<AnyAction>;
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];

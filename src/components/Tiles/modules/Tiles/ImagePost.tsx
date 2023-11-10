@@ -160,6 +160,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     publication={publication?.by}
                     index={index}
                     setProfileHovers={setProfileHovers}
+                    dispatch={dispatch}
                   />
                 )}
                 <div

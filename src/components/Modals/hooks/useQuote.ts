@@ -11,7 +11,9 @@ import {
 import getEnabledCurrencies from "../../../../graphql/lens/queries/enabledCurrencies";
 import {
   Erc20,
+  FeeFollowModuleSettings,
   LimitType,
+  Profile,
   SimpleCollectOpenActionModuleInput,
 } from "../../../../graphql/generated";
 import { setAvailableCurrencies } from "../../../../redux/reducers/availableCurrenciesSlice";
@@ -20,15 +22,27 @@ import {
   PostCollectGifState,
   setPostCollectGif,
 } from "../../../../redux/reducers/postCollectGifSlice";
+import lensFollow from "../../../../lib/helpers/api/followProfile";
+import { FollowCollectState } from "../../../../redux/reducers/followCollectSlice";
+import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
+import lensCollect from "../../../../lib/helpers/api/collectPost";
+import isApprovedData from "../../../../graphql/lens/mutations/isApproved";
+import approveCurrency from "../../../../graphql/lens/mutations/approve";
+import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
 
 const useQuote = (
   availableCurrencies: Erc20[],
+  lensConnected: Profile | undefined,
   postCollectGif: PostCollectGifState,
+  followCollect: FollowCollectState,
   postBox: PostBoxState,
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined
 ) => {
+  const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
+  const [informationLoading, setInformationLoading] = useState<boolean>(false);
+  const [approved, setApproved] = useState<boolean>(false);
   const [quoteLoading, setQuoteLoading] = useState<boolean[]>([false]);
   const [makeQuote, setMakeQuote] = useState<MakePostComment[]>([
     {
@@ -167,11 +181,160 @@ const useQuote = (
     }
   };
 
+  const checkCurrencyApproved = async () => {
+    setInformationLoading(true);
+    try {
+      const { data } = await isApprovedData({
+        currencies:
+          followCollect?.type === "collect"
+            ? followCollect?.collect?.item?.amount?.asset.contract.address
+            : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
+                ?.amount.asset.contract.address,
+      });
+
+      if (data) {
+        parseInt(data.approvedModuleAllowanceAmount[0].allowance.value) >
+        (followCollect?.type === "collect"
+          ? parseInt(followCollect?.collect?.item?.amount?.value || "")
+          : parseInt(
+              (followCollect?.follower?.followModule as FeeFollowModuleSettings)
+                ?.amount.value || ""
+            ))
+          ? setApproved(true)
+          : setApproved(false);
+      } else {
+        setApproved(false);
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setInformationLoading(false);
+  };
+
+  const approveSpend = async () => {
+    setTransactionLoading(true);
+    try {
+      const { data } = await approveCurrency({
+        allowance: {
+          currency:
+            followCollect?.type === "collect"
+              ? followCollect?.collect?.item?.amount?.asset.contract.address!
+              : (
+                  followCollect?.follower
+                    ?.followModule as FeeFollowModuleSettings
+                )?.amount.asset.contract.address!,
+          value:
+            followCollect?.type === "collect"
+              ? followCollect?.collect?.item?.amount?.value!
+              : (
+                  followCollect?.follower
+                    ?.followModule as FeeFollowModuleSettings
+                )?.amount.value!,
+        },
+        module: {},
+      });
+
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      const res = await clientWallet.sendTransaction({
+        to: data?.generateModuleCurrencyApprovalData?.to as `0x${string}`,
+        account: data?.generateModuleCurrencyApprovalData
+          ?.from as `0x${string}`,
+        value: BigInt(data?.generateModuleCurrencyApprovalData?.data as string),
+      });
+      const tx = await publicClient.waitForTransactionReceipt({ hash: res });
+      await handleIndexCheck(
+        {
+          forTxHash: tx.transactionHash,
+        },
+        dispatch
+      );
+      setApproved(true);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setTransactionLoading(false);
+  };
+
+  const handleCollect = async () => {
+    setTransactionLoading(true);
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensCollect(
+        followCollect?.type === "collect"
+          ? followCollect?.collect?.id
+          : followCollect?.follower?.id,
+        followCollect?.collect?.item?.__typename!,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setTransactionLoading(false);
+  };
+
+  const handleFollow = async () => {
+    setTransactionLoading(true);
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensFollow(
+        followCollect?.type === "collect"
+          ? followCollect?.collect?.id
+          : followCollect?.follower?.id,
+        dispatch,
+        (followCollect?.follower?.followModule as FeeFollowModuleSettings)
+          ?.amount
+          ? {
+              feeFollowModule: {
+                amount: {
+                  currency: (
+                    followCollect?.follower
+                      ?.followModule as FeeFollowModuleSettings
+                  )?.amount.asset.contract.address,
+                  value: (
+                    followCollect?.follower
+                      ?.followModule as FeeFollowModuleSettings
+                  )?.amount.value,
+                },
+              },
+            }
+          : undefined,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
+      await refetchProfile(dispatch, lensConnected?.id);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setTransactionLoading(false);
+  };
+
   useEffect(() => {
     if (availableCurrencies?.length < 1) {
       getCurrencies();
     }
   }, []);
+
+  useEffect(() => {
+    if (followCollect.type) {
+      checkCurrencyApproved();
+    }
+  }, [followCollect.type]);
 
   return {
     quote,
@@ -186,6 +349,12 @@ const useQuote = (
     setOpenMeasure,
     searchGifLoading,
     handleGif,
+    informationLoading,
+    transactionLoading,
+    handleCollect,
+    handleFollow,
+    approveSpend,
+    approved,
   };
 };
 

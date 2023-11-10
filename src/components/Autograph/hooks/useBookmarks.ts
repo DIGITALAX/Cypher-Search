@@ -358,6 +358,7 @@ const useBookmarks = (
       await lensFollow(
         id,
         dispatch,
+        undefined,
         address as `0x${string}`,
         clientWallet,
         publicClient

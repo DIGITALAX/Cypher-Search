@@ -80,6 +80,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           layoutAmount={layoutAmount}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
+          dispatch={dispatch}
         />
       );
 
@@ -95,6 +96,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           layoutAmount={layoutAmount}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
+          dispatch={dispatch}
         />
       );
 

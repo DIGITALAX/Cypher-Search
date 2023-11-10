@@ -4,13 +4,17 @@ import { AnyAction, Dispatch } from "redux";
 import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
 import {
   Erc20,
+  FollowModuleInput,
+  MultirecipientFeeCollectOpenActionSettings,
   Post,
   PrimaryPublication,
+  Profile,
   PublicationReportingFraudSubreason,
   PublicationReportingIllegalSubreason,
   PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
   SimpleCollectOpenActionModuleInput,
+  SimpleCollectOpenActionSettings,
 } from "../../../../graphql/generated";
 import { MainVideoState } from "../../../../redux/reducers/mainVideoSlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
@@ -201,4 +205,26 @@ export type PostCollectGifProps = {
       }
     | undefined;
   searchGifLoading: boolean;
+};
+
+export type FollowCollectProps = {
+  dispatch: Dispatch<AnyAction>;
+  type: string;
+  collect:
+    | {
+        item:
+          | SimpleCollectOpenActionSettings
+          | MultirecipientFeeCollectOpenActionSettings
+          | undefined;
+        stats: number | undefined;
+        id: string;
+      }
+    | undefined;
+  follower: Profile | undefined;
+  handleFollow: () => Promise<void>;
+  handleCollect: () => Promise<void>;
+  approveSpend: () => Promise<void>;
+  transactionLoading: boolean;
+  informationLoading: boolean;
+  approved: boolean;
 };

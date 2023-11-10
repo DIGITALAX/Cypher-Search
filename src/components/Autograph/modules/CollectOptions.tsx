@@ -14,10 +14,10 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative rounded-md flex flex-col gap-5 w-5/6 items-center justify-start max-h-[20rem] overflow-y-scroll`}
+      className={`relative rounded-md flex gap-5 w-full items-center justify-center h-full`}
     >
-      <div className="relative w-full h-fit flex flex-col flex-wrap justify-start items-start gap-3 break-words p-3">
-        <div className="relative flex flex-wrap gap-4 items-start justify-start">
+      <div className="relative w-full h-full flex flex-col flex-wrap justify-start items-center gap-3 break-words p-3">
+        <div className="relative h-full w-full flex flex-wrap gap-4 items-start justify-center">
           {[
             {
               type: "drop",

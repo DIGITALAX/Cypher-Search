@@ -126,6 +126,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                   publication={publication?.by}
                   index={index}
                   setProfileHovers={setProfileHovers}
+                  dispatch={dispatch}
                 />
               )}
             </div>

@@ -1,20 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  CollectOpenActionModuleType,
   FollowModuleInput,
-  MultirecipientFeeCollectModuleInput,
-  SimpleCollectOpenActionModuleInput,
+  SimpleCollectOpenActionSettings,
+  MultirecipientFeeCollectOpenActionSettings,
+  Profile,
 } from "../../graphql/generated";
 
 export interface FollowCollectState {
-  type: "Follow" | "Collect" | undefined;
+  type: "follow" | "collect" | undefined;
   collect?: {
-    collectType: CollectOpenActionModuleType;
-    values:
-      | SimpleCollectOpenActionModuleInput
-      | MultirecipientFeeCollectModuleInput;
+    item:
+      | SimpleCollectOpenActionSettings
+      | MultirecipientFeeCollectOpenActionSettings
+      | undefined;
+    stats: number | undefined;
+    id: string;
   };
-  follower?: FollowModuleInput;
+  follower?: Profile | undefined;
 }
 
 const initialFollowCollectState: FollowCollectState = {

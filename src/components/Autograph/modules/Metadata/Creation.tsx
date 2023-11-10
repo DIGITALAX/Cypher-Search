@@ -139,6 +139,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             publication={item?.profile}
             index={index}
             setProfileHovers={setProfileHovers}
+            dispatch={dispatch}
           />
         )}
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">

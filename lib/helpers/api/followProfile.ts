@@ -8,10 +8,12 @@ import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import { polygon } from "viem/chains";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
+import { FollowModuleRedeemInput } from "../../../graphql/generated";
 
 const lensFollow = async (
   id: string,
   dispatch: Dispatch<AnyAction>,
+  module: FollowModuleRedeemInput | undefined,
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient
@@ -20,6 +22,7 @@ const lensFollow = async (
     follow: [
       {
         profileId: id,
+        followModule: module,
       },
     ],
   });

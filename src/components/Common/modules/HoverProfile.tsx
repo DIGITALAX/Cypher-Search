@@ -3,9 +3,9 @@ import { HoverProfileProps } from "../types/common.types";
 import { usePopper } from "react-popper";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
-import { ImageSet, NftImage } from "../../../../graphql/generated";
 import { AiOutlineLoading } from "react-icons/ai";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
+import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
 
 const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   followLoading,
@@ -16,6 +16,7 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   index,
   setProfileHovers,
   feed,
+  dispatch,
 }): JSX.Element => {
   const [popperElement, setPopperElement] = useState<HTMLElement | null>();
   const popperRef = useRef<HTMLDivElement>(null);
@@ -77,13 +78,28 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
           </div>
           <div className="relative flex flex-row items-center justify-center gap-5">
             <div
-              className={`relative w-7 h-7 flex items-center justify-center cursor-pointer active:scale-95 ${
+              className={`relative w-7 h-7 flex items-center justify-center ${
                 followLoading[index] && "animate-spin"
+              } ${
+                publication?.followModule?.type !== "RevertFollowModule" &&
+                publication?.followModule?.type !== "UnknownFollowModule"
+                  ? "cursor-pointer active:scale-95"
+                  : "opacity-70"
               }`}
               onClick={() =>
-                router.asPath.includes("autograph")
+                publication?.followModule?.type !== "RevertFollowModule" &&
+                publication?.followModule?.type !== "UnknownFollowModule" &&
+                followLoading[index] &&
+                (publication?.followModule?.type === "FeeFollowModule"
+                  ? dispatch(
+                      setFollowCollect({
+                        actionType: "follow",
+                        actionFollower: publication,
+                      })
+                    )
+                  : router.asPath.includes("autograph")
                   ? followProfile(publication?.id, feed)
-                  : followProfile(publication?.id)
+                  : followProfile(publication?.id))
               }
             >
               {followLoading[index] ? (

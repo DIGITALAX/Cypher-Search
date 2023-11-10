@@ -126,6 +126,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 publication={publication?.profile}
                 index={index}
                 setProfileHovers={setProfileHovers}
+                dispatch={dispatch}
               />
             )}
           </div>

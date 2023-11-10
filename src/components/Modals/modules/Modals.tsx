@@ -22,6 +22,7 @@ import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
 import PostCollectGif from "./PostCollectGif";
+import FollowCollect from "./FollowCollect";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -36,6 +37,9 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const mapOpen = useSelector((state: RootState) => state.app.mapReducer);
   const layoutAmount = useSelector(
     (state: RootState) => state.app.layoutSwitchReducer.value
+  );
+  const followCollect = useSelector(
+    (state: RootState) => state.app.followCollectReducer
   );
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
@@ -151,9 +155,17 @@ const Modals: FunctionComponent = (): JSX.Element => {
     collects,
     handleGif,
     searchGifLoading,
+    transactionLoading,
+    informationLoading,
+    handleCollect,
+    handleFollow,
+    approveSpend,
+    approved,
   } = useQuote(
     availableCurrencies,
+    lensConnected,
     postCollectGif,
+    followCollect,
     postBox,
     dispatch,
     publicClient,
@@ -254,6 +266,20 @@ const Modals: FunctionComponent = (): JSX.Element => {
           setReason={setReason}
           handleReportPost={handleReportPost}
           reportLoading={reportLoading}
+        />
+      )}
+      {followCollect?.type && (
+        <FollowCollect
+          dispatch={dispatch}
+          type={followCollect?.type!}
+          collect={followCollect?.collect}
+          follower={followCollect?.follower}
+          handleCollect={handleCollect}
+          handleFollow={handleFollow}
+          informationLoading={informationLoading}
+          transactionLoading={transactionLoading}
+          approved={approved}
+          approveSpend={approveSpend}
         />
       )}
       {postBox?.open && (
