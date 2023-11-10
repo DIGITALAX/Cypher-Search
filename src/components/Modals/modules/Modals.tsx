@@ -21,6 +21,7 @@ import useQuote from "../hooks/useQuote";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
+import PostCollectGif from "./PostCollectGif";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -77,6 +78,9 @@ const Modals: FunctionComponent = (): JSX.Element => {
   );
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer
+  );
+  const postCollectGif = useSelector(
+    (state: RootState) => state.app.postCollectGifReducer
   );
   const filterConstants = useSelector(
     (state: RootState) => state.app.filterConstantsReducer.items
@@ -141,9 +145,21 @@ const Modals: FunctionComponent = (): JSX.Element => {
     quote,
     quoteContentLoading,
     setQuoteContentLoading,
-    gifCollectOpen,
-    setGifCollectOpen,
-  } = useQuote(availableCurrencies, postBox, dispatch, publicClient, address);
+    openMeasure,
+    setOpenMeasure,
+    setCollects,
+    collects,
+    handleGif,
+    searchGifLoading
+
+  } = useQuote(
+    availableCurrencies,
+    postCollectGif,
+    postBox,
+    dispatch,
+    publicClient,
+    address
+  );
   const { handleReportPost, reason, setReason, reportLoading } =
     useReport(dispatch);
   return (
@@ -251,9 +267,23 @@ const Modals: FunctionComponent = (): JSX.Element => {
           postLoading={quoteLoading}
           contentLoading={quoteContentLoading}
           setContentLoading={setQuoteContentLoading}
-          gifCollectOpen={gifCollectOpen}
-          setGifCollectOpen={setGifCollectOpen}
+          postCollectGif={postCollectGif}
+        />
+      )}
+      {postCollectGif?.type && (
+        <PostCollectGif
+          dispatch={dispatch}
+          openMeasure={openMeasure}
+          setOpenMeasure={setOpenMeasure}
           availableCurrencies={availableCurrencies}
+          collects={collects}
+          setCollects={setCollects}
+          type={postCollectGif?.type}
+          id={postCollectGif?.id!}
+          collectTypes={postCollectGif?.collectTypes}
+          handleGif={handleGif}
+          gifs={postCollectGif?.gifs}
+          searchGifLoading={searchGifLoading}
         />
       )}
       {interactError.value && <InteractError dispatch={dispatch} />}

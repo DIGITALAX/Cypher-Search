@@ -71,11 +71,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setCommentContentLoading,
   postContentLoading,
   setPostContentLoading,
-  gifCollectOpen,
-  setGifCollectOpen,
-  gifCollectOpenBookmarks,
-  setGifCollectOpenBookmarks,
-  availableCurrencies
+  postCollectGif,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -92,10 +88,9 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           setMakePost={setMakePost}
           postLoading={postLoading}
           contentLoading={postContentLoading}
+          dispatch={dispatch}
+          postCollectGif={postCollectGif}
           setContentLoading={setPostContentLoading}
-          gifCollectOpen={gifCollectOpen}
-          setGifCollectOpen={setGifCollectOpen}
-          availableCurrencies={availableCurrencies}
         />
       );
 
@@ -130,9 +125,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           commentsOpen={commentsOpen}
           contentLoading={commentContentLoading}
           setContentLoading={setCommentContentLoading}
-          gifCollectOpen={gifCollectOpenBookmarks}
-          setGifCollectOpen={setGifCollectOpenBookmarks}
-          availableCurrencies={availableCurrencies}
+          postCollectGif={postCollectGif}
         />
       );
 

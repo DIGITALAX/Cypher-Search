@@ -37,6 +37,9 @@ const Autograph: NextPage = (): JSX.Element => {
   const profileFeed = useSelector(
     (state: RootState) => state.app.autographFeedReducer.feed
   );
+  const postCollectGif = useSelector(
+    (state: RootState) => state.app.postCollectGifReducer
+  );
   const profile = useSelector(
     (state: RootState) => state.app.autographProfileReducer.profile
   );
@@ -139,10 +142,9 @@ const Autograph: NextPage = (): JSX.Element => {
     makeCommentFeed,
     commentContentLoading,
     setCommentContentLoading,
-    gifCollectOpenFeed,
-    setGifCollectOpenFeed,
   } = useFeed(
     lensConnected,
+    postCollectGif,
     profileFeed,
     profile,
     dispatch,
@@ -192,10 +194,15 @@ const Autograph: NextPage = (): JSX.Element => {
     followUpdateLoading,
     openType,
     setOpenType,
-    currencies,
     currencyOpen,
     setCurrencyOpen,
-  } = useSettings(lensConnected, dispatch, publicClient, address);
+  } = useSettings(
+    lensConnected,
+    availableCurrencies,
+    dispatch,
+    publicClient,
+    address
+  );
   const {
     handleMoreBookmarks,
     openMirrorChoiceBookmark,
@@ -221,10 +228,9 @@ const Autograph: NextPage = (): JSX.Element => {
     commentsBookmarkOpen,
     makeCommentBookmark,
     setMakeCommentBookmark,
-    gifCollectOpenBookmarks,
-    setGifCollectOpenBookmarks,
   } = useBookmarks(
     lensConnected,
+    postCollectGif,
     profileFeed,
     screenDisplay,
     dispatch,
@@ -238,9 +244,7 @@ const Autograph: NextPage = (): JSX.Element => {
     postLoading,
     postContentLoading,
     setPostContentLoading,
-    gifCollectOpen,
-    setGifCollectOpen,
-  } = usePost(dispatch, publicClient, address);
+  } = usePost(dispatch, postCollectGif, publicClient, address);
 
   useEffect(() => {
     if (autograph && !profile) {
@@ -442,7 +446,7 @@ const Autograph: NextPage = (): JSX.Element => {
                 followUpdateLoading={followUpdateLoading}
                 followData={followData}
                 setFollowData={setFollowData}
-                currencies={currencies}
+                currencies={availableCurrencies}
                 handleBookmark={handleBookmarkForBookmark}
                 handleHidePost={handleHidePostForBookmark}
                 handleMoreBookmarks={handleMoreBookmarks}
@@ -475,11 +479,7 @@ const Autograph: NextPage = (): JSX.Element => {
                 setPostContentLoading={setPostContentLoading}
                 postContentLoading={postContentLoading}
                 commentContentLoading={commentContentLoading}
-                gifCollectOpen={gifCollectOpen}
-                setGifCollectOpen={setGifCollectOpen}
-                gifCollectOpenBookmarks={gifCollectOpenBookmarks}
-                setGifCollectOpenBookmarks={setGifCollectOpenBookmarks}
-                availableCurrencies={availableCurrencies}
+                postCollectGif={postCollectGif}
               />
               <Bio profile={profile} dispatch={dispatch} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
@@ -512,8 +512,7 @@ const Autograph: NextPage = (): JSX.Element => {
                   makeComment={makeCommentFeed}
                   contentLoading={postContentLoading}
                   setContentLoading={setPostContentLoading}
-                  gifCollectOpen={gifCollectOpenFeed}
-                  setGifCollectOpen={setGifCollectOpenFeed}
+                  postCollectGif={postCollectGif}
                 />
                 <Gallery
                   mirror={galleryMirror}

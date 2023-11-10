@@ -14,24 +14,17 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import { ChangeEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Common/types/common.types";
+import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 
 export type WebProps = {
   router: NextRouter;
   profile: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
-  availableCurrencies: Erc20[];
   setSettingsData: (e: SetStateAction<ProfileMetadata>) => void;
   settingsData: ProfileMetadata;
-  setGifCollectOpen: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  gifCollectOpen: { gif: boolean; collect: boolean }[];
-  setGifCollectOpenBookmarks: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  gifCollectOpenBookmarks: { gif: boolean; collect: boolean }[];
   handleSettingsUpdate: () => Promise<void>;
   settingsUpdateLoading: boolean;
+  postCollectGif: PostCollectGifState;
   handleShuffleSearch: () => void;
   openConnectModal: (() => void) | undefined;
   openAccountModal: (() => void) | undefined;
@@ -120,19 +113,16 @@ export type WebProps = {
   commentContentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
   postContentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
   setCommentContentLoading: (
     e: SetStateAction<
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
@@ -141,7 +131,6 @@ export type WebProps = {
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
@@ -151,25 +140,18 @@ export type BookmarksProps = {
   bookmarks: (Post | Mirror | Comment | Quote)[];
   bookmarksLoading: boolean;
   hasMoreBookmarks: boolean;
-  availableCurrencies: Erc20[];
-  setGifCollectOpen: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  gifCollectOpen: { gif: boolean; collect: boolean }[];
   commentsOpen: boolean[];
   setContentLoading: (
     e: SetStateAction<
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   contentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
   setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
   makeComment: MakePostComment[];
@@ -200,6 +182,7 @@ export type BookmarksProps = {
   followLoading: boolean[];
   setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
   openMoreOptions: boolean[];
+  postCollectGif: PostCollectGifState;
 };
 
 export enum ScreenDisplay {
@@ -237,15 +220,7 @@ export type ScreenSwitchProps = {
   screenDisplay: ScreenDisplay;
   bookmarks: (Post | Mirror | Comment | Quote)[];
   bookmarksLoading: boolean;
-  setGifCollectOpenBookmarks: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  availableCurrencies: Erc20[];
-  gifCollectOpenBookmarks: { gif: boolean; collect: boolean }[];
-  setGifCollectOpen: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  gifCollectOpen: { gif: boolean; collect: boolean }[];
+  postCollectGif: PostCollectGifState;
   simpleCollect: (id: string, type: string) => Promise<void>;
   handleBookmark: (id: string, index: number) => Promise<void>;
   handleHidePost: (id: string, index: number) => Promise<void>;
@@ -333,28 +308,24 @@ export type ScreenSwitchProps = {
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   postContentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
   setCommentContentLoading: (
     e: SetStateAction<
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   commentContentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
 };
 
@@ -442,23 +413,17 @@ export type FeedProps = {
   comment: (id: string) => Promise<void>;
   availableCurrencies: Erc20[];
   commentsOpen: boolean[];
-  setGifCollectOpen: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  gifCollectOpen: { gif: boolean; collect: boolean }[];
   setContentLoading: (
     e: SetStateAction<
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   contentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
   setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
   makeComment: MakePostComment[];
@@ -485,6 +450,7 @@ export type FeedProps = {
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   dispatch: Dispatch<AnyAction>;
+  postCollectGif: PostCollectGifState;
   handleBookmark: (id: string, index: number) => Promise<void>;
   handleHidePost: (id: string, index: number) => Promise<void>;
 };
@@ -604,11 +570,7 @@ export type PublicationProps = {
   item: Post | Mirror | Quote | Comment;
   index: number;
   disabled?: boolean;
-  setGifCollectOpen?: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  availableCurrencies?: Erc20[];
-  gifCollectOpen?: { gif: boolean; collect: boolean }[];
+  postCollectGif: PostCollectGifState;
   mirror?: (id: string) => Promise<void>;
   like?: (id: string) => Promise<void>;
   comment?: (id: string) => Promise<void>;
@@ -643,61 +605,43 @@ export type PublicationProps = {
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   contentLoading?: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
 };
 
 export interface MakePostComment {
-  collectType: SimpleCollectOpenActionModuleInput | undefined;
   content: string | undefined;
   images: string[];
   videos: string[];
-  gifs: string[];
-  searchedGifs: string[];
-  search: string;
-  collectibleOpen: boolean;
-  collectible: string;
-  award: string;
-  whoCollectsOpen: boolean;
-  creatorAwardOpen: boolean;
-  currencyOpen: boolean;
 }
 
 export type PostCommentProps = {
   makePostComment: MakePostComment;
-  availableCurrencies: Erc20[];
+  postCollectGif: PostCollectGifState;
   setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
   commentPost: ((id: string) => Promise<void>) | (() => Promise<void>);
   commentPostLoading: boolean;
-  id?: string;
+  id: string;
   height: string;
-  top: string;
+  dispatch: Dispatch<AnyAction>;
   imageHeight: string;
   imageWidth: string;
-  gifCollectOpen: { gif: boolean; collect: boolean };
-  setGifCollectOpen: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
   setContentLoading: (
     e: SetStateAction<
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   contentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   };
   index: number;
 };
@@ -705,33 +649,54 @@ export type PostCommentProps = {
 export type ScreenPostProps = {
   makePost: MakePostComment[];
   post: () => Promise<void>;
-  availableCurrencies: Erc20[];
+  dispatch: Dispatch<AnyAction>;
+  postCollectGif: PostCollectGifState;
   setMakePost: (e: SetStateAction<MakePostComment[]>) => void;
   postLoading: boolean[];
-  setGifCollectOpen: (
-    e: SetStateAction<{ gif: boolean; collect: boolean }[]>
-  ) => void;
-  gifCollectOpen: { gif: boolean; collect: boolean }[];
   setContentLoading: (
     e: SetStateAction<
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   contentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
 };
 
 export type CollectOptionsProps = {
-  top: string;
-  makePostComent: MakePostComment;
-  setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
-  index: number;
+  setCollects: (
+    e: SetStateAction<SimpleCollectOpenActionModuleInput | undefined>
+  ) => void;
+  collects: SimpleCollectOpenActionModuleInput | undefined;
+  openMeasure: {
+    searchedGifs: string[];
+    search: string;
+    collectibleOpen: boolean;
+    collectible: string;
+    award: string;
+    whoCollectsOpen: boolean;
+    creatorAwardOpen: boolean;
+    currencyOpen: boolean;
+    editionOpen: boolean;
+    edition: string;
+  };
+  setOpenMeasure: (
+    e: SetStateAction<{
+      searchedGifs: string[];
+      search: string;
+      collectibleOpen: boolean;
+      collectible: string;
+      award: string;
+      whoCollectsOpen: boolean;
+      creatorAwardOpen: boolean;
+      currencyOpen: boolean;
+      editionOpen: boolean;
+      edition: string;
+    }>
+  ) => void;
   availableCurrencies: Erc20[];
 };

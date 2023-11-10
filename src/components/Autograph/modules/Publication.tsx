@@ -42,9 +42,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
   setMakePostComment,
   setContentLoading,
   contentLoading,
-  gifCollectOpen,
-  setGifCollectOpen,
-  availableCurrencies
+  postCollectGif
 }): JSX.Element => {
   return (
     <div className="relative bg-lirio rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza">
@@ -134,13 +132,11 @@ const Publication: FunctionComponent<PublicationProps> = ({
           height="5rem"
           imageHeight="1.25rem"
           imageWidth="1.25rem"
-          top="-10rem"
+          postCollectGif={postCollectGif}
           setContentLoading={setContentLoading!}
           contentLoading={contentLoading?.[index]!}
           index={index}
-          gifCollectOpen={gifCollectOpen?.[index]!}
-          setGifCollectOpen={setGifCollectOpen!}
-          availableCurrencies={availableCurrencies!}
+          dispatch={dispatch}
         />
       )}
     </div>

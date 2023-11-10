@@ -33,9 +33,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   commentsOpen,
   contentLoading,
   setContentLoading,
-  gifCollectOpen,
-  setGifCollectOpen,
-  availableCurrencies
+  postCollectGif,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full pt-4 flex items-center justify-center">
@@ -83,9 +81,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                       data-post-id={item?.id}
                       contentLoading={contentLoading}
                       setContentLoading={setContentLoading}
-                      gifCollectOpen={gifCollectOpen}
-                      setGifCollectOpen={setGifCollectOpen}
-                      availableCurrencies={availableCurrencies}
+                      postCollectGif={postCollectGif}
                     />
                   );
                 }

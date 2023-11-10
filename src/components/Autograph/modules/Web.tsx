@@ -75,11 +75,7 @@ const Web: FunctionComponent<WebProps> = ({
   postContentLoading,
   setCommentContentLoading,
   setPostContentLoading,
-  gifCollectOpen,
-  setGifCollectOpen,
-  setGifCollectOpenBookmarks,
-  gifCollectOpenBookmarks,
-  availableCurrencies,
+  postCollectGif,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -154,7 +150,6 @@ const Web: FunctionComponent<WebProps> = ({
             )}
         </div>
         <ScreenSwitch
-          availableCurrencies={availableCurrencies}
           currencies={currencies}
           setCurrencyOpen={setCurrencyOpen}
           currencyOpen={currencyOpen}
@@ -219,10 +214,7 @@ const Web: FunctionComponent<WebProps> = ({
           setCommentContentLoading={setCommentContentLoading}
           postContentLoading={postContentLoading}
           setPostContentLoading={setPostContentLoading}
-          gifCollectOpen={gifCollectOpen}
-          setGifCollectOpen={setGifCollectOpen}
-          gifCollectOpenBookmarks={gifCollectOpenBookmarks}
-          setGifCollectOpenBookmarks={setGifCollectOpenBookmarks}
+          postCollectGif={postCollectGif}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
