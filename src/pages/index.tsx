@@ -65,6 +65,7 @@ export default function Home() {
     searchLoading,
   } = useSearch(
     filtersOpen,
+    lensConnected,
     searchActive,
     filterConstants,
     filters,
