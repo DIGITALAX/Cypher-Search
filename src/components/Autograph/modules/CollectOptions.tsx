@@ -1,16 +1,20 @@
 import { FunctionComponent } from "react";
 import { CollectOptionsProps } from "../types/autograph.types";
+import { setPostCollectGif } from "../../../../redux/reducers/postCollectGifSlice";
 
 const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
   openMeasure,
   setOpenMeasure,
   availableCurrencies,
-  collects,
-  setCollects,
+  collectTypes,
+  id,
+  dispatch,
+  gifs,
+  type,
 }): JSX.Element => {
   return (
     <div
-      className={`relative bg-black rounded-md flex gap-5 w-fit h-[15rem] p-1 border border-white z-10 overflow-y-auto`}
+      className={`relative rounded-md flex flex-col gap-5 w-5/6 items-center justify-start max-h-[20rem] overflow-y-scroll`}
     >
       <div className="relative w-full h-fit flex flex-col flex-wrap justify-start items-start gap-3 break-words p-3">
         <div className="relative flex flex-wrap gap-4 items-start justify-start">
@@ -38,7 +42,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               title: "Who can collect?",
               dropValues: ["Everyone", "Only Followers"],
               dropOpen: openMeasure.whoCollectsOpen,
-              chosenValue: collects?.followerOnly
+              chosenValue: collectTypes?.[id]?.followerOnly
                 ? "Only Followers"
                 : "Everyone",
               showObject: openMeasure.collectible === "Yes" ? true : false,
@@ -47,11 +51,24 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                   ...prev,
                   whoCollectsOpen: !prev.whoCollectsOpen,
                 })),
-              setValue: (item: string) =>
-                setCollects((prev) => ({
-                  ...prev,
+              setValue: (item: string) => {
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
+
+                newCTs[id] = {
+                  ...(newCTs[id] || {}),
                   followerOnly: item === "Only Followers" ? true : false,
-                })),
+                };
+
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionGifs: gifs,
+                  })
+                );
+              },
             },
             {
               type: "drop",
@@ -74,29 +91,43 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
             {
               type: "input",
               title: "Award amount",
-              chosenValue: collects?.amount?.value || "0",
+              chosenValue: collectTypes?.[id]?.amount?.value || "0",
               showObject: openMeasure.award === "Yes" ? true : false,
-              setValue: (item: string) =>
-                setCollects(
-                  (prev) =>
-                    ({
-                      ...prev,
-                      amount: {
-                        ...prev?.amount!,
-                        value: item,
-                      },
-                    } as any)
-                ),
+              setValue: (item: string) => {
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
+
+                newCTs[id] = {
+                  ...(newCTs[id] || {}),
+                  amount: {
+                    ...(newCTs[id]?.amount || {}),
+                    value: item,
+                  },
+                } as any;
+
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionGifs: gifs,
+                  })
+                );
+              },
             },
             {
               type: "drop",
               title: "Award currency",
               dropValues: availableCurrencies?.map((item) => item.symbol),
-              chosenValue: availableCurrencies?.find((item) => {
-                if (item.contract.address === collects?.amount?.currency) {
-                  return item;
-                }
-              })?.symbol!,
+              chosenValue:
+                availableCurrencies?.find((item) => {
+                  if (
+                    item.contract.address ===
+                    collectTypes?.[id]?.amount?.currency
+                  ) {
+                    return item;
+                  }
+                })?.symbol! || availableCurrencies?.[0]?.symbol,
               dropOpen: openMeasure.currencyOpen,
               showObject: openMeasure.award === "Yes" ? true : false,
               openDropdown: () =>
@@ -104,32 +135,55 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                   ...prev,
                   currencyOpen: !prev.currencyOpen,
                 })),
-              setValue: (item: string) =>
-                setCollects(
-                  (prev) =>
-                    ({
-                      ...prev,
-                      amount: {
-                        ...prev?.amount!,
-                        currency: item,
-                      },
-                    } as any)
-                ),
+              setValue: (item: string) => {
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
+                newCTs[id] = newCTs[id] || {
+                  followerOnly: false,
+                };
+
+                newCTs[id] = {
+                  ...(newCTs[id] || {}),
+                  amount: {
+                    ...(newCTs[id]?.amount || {}),
+                    currency: item,
+                  },
+                } as any;
+
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionGifs: gifs,
+                  })
+                );
+              },
             },
             {
               type: "input",
               title: "Referral?",
-              chosenValue: collects?.amount?.value || "0",
+              chosenValue: String(collectTypes?.[id]?.referralFee) || "0",
               showObject: openMeasure.award === "Yes" ? true : false,
 
-              setValue: (item: string) =>
-                setCollects(
-                  (prev) =>
-                    ({
-                      ...prev,
-                      referralFee: Number(item),
-                    } as any)
-                ),
+              setValue: (item: string) => {
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
+
+                newCTs[id] = {
+                  ...(newCTs[id] || {}),
+                  referralFee: Number(item),
+                } as any;
+
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionGifs: gifs,
+                  })
+                );
+              },
             },
             {
               type: "drop",
@@ -152,39 +206,71 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
             {
               type: "input",
               title: "Edition amount",
-              chosenValue: collects?.collectLimit || "0",
+              chosenValue: collectTypes?.[id]?.collectLimit || "0",
               showObject: openMeasure.edition === "Yes" ? true : false,
-              setValue: (item: string) =>
-                setCollects(
-                  (prev) =>
-                    ({
-                      ...prev,
-                      collectLimit: item,
-                    } as any)
-                ),
-            },
-            //   {
-            //     title: "Time limit to collect?",
-            //     dropValues: ["Yes", "No"],
+              setValue: (item: string) => {
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
 
-            //     openDropdown: () =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectibleOpen: !arr[index].collectibleOpen,
-            //         };
-            //       }),
-            //     setValue: (item) =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectType:
-            //             item === "Yes" ? arr[index].collectType : undefined,
-            //         };
-            //       }),
-            //   },
+                newCTs[id] = {
+                  ...(newCTs[id] || {}),
+                  collectLimit: item,
+                } as any;
+
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionGifs: gifs,
+                  })
+                );
+              },
+            },
+            {
+              type: "drop",
+              title: "24hr time limit?",
+              dropValues: ["Yes", "No"],
+              dropOpen: openMeasure.timeOpen,
+              chosenValue: openMeasure.time,
+              showObject: openMeasure.award === "Yes" ? true : false,
+              openDropdown: () =>
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  timeOpen: !prev.timeOpen,
+                })),
+              setValue: (item: string) => {
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  time: item,
+                }));
+
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
+
+                if (item === "Yes") {
+                  newCTs[id] = {
+                    ...(newCTs[id] || {}),
+                    endsAt: new Date(
+                      new Date().getTime() + 24 * 60 * 60 * 1000
+                    ).getTime(),
+                  } as any;
+                } else {
+                  newCTs[id] = {
+                    ...(newCTs[id] || {}),
+                    endsAt: undefined,
+                  } as any;
+                }
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionGifs: gifs,
+                  })
+                );
+              },
+            },
           ].map(
             (
               item: {

@@ -668,10 +668,19 @@ export type ScreenPostProps = {
 };
 
 export type CollectOptionsProps = {
-  setCollects: (
-    e: SetStateAction<SimpleCollectOpenActionModuleInput | undefined>
-  ) => void;
-  collects: SimpleCollectOpenActionModuleInput | undefined;
+  id: string;
+  type: string
+  dispatch: Dispatch<AnyAction>;
+  collectTypes:
+    | {
+        [key: string]: SimpleCollectOpenActionModuleInput | undefined;
+      }
+    | undefined;
+  gifs:
+    | {
+        [key: string]: string[] | undefined;
+      }
+    | undefined;
   openMeasure: {
     searchedGifs: string[];
     search: string;
@@ -683,6 +692,8 @@ export type CollectOptionsProps = {
     currencyOpen: boolean;
     editionOpen: boolean;
     edition: string;
+    timeOpen: boolean;
+    time: string;
   };
   setOpenMeasure: (
     e: SetStateAction<{
@@ -696,6 +707,8 @@ export type CollectOptionsProps = {
       currencyOpen: boolean;
       editionOpen: boolean;
       edition: string;
+      timeOpen: boolean;
+      time: string;
     }>
   ) => void;
   availableCurrencies: Erc20[];

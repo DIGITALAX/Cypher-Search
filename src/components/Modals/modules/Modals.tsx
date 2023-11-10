@@ -150,8 +150,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
     setCollects,
     collects,
     handleGif,
-    searchGifLoading
-
+    searchGifLoading,
   } = useQuote(
     availableCurrencies,
     postCollectGif,

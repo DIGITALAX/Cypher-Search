@@ -9,6 +9,7 @@ import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import postOnChain from "../../../graphql/lens/mutations/post";
+import cleanCollect from "../cleanCollect";
 
 const lensPost = async (
   contentURI: string,
@@ -18,6 +19,10 @@ const lensPost = async (
   clientWallet: WalletClient,
   publicClient: PublicClient
 ): Promise<void> => {
+  if (collectModuleInput) {
+    collectModuleInput = cleanCollect(collectModuleInput);
+  }
+
   const data = await postOnChain({
     contentURI,
     openActionModules: [

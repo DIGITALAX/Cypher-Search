@@ -8,8 +8,6 @@ import Image from "next/legacy/image";
 
 const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
   dispatch,
-  collects,
-  setCollects,
   type,
   openMeasure,
   setOpenMeasure,
@@ -22,29 +20,25 @@ const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-full md:w-[40vw] h-fit min-h-[27vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
-        <div className="relative w-full h-full flex flex-col gap-3 p-2 items-start justify-center">
+      <div className="relative w-full md:w-[50vw] h-fit min-h-[27vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
+        <div className="relative w-full h-full flex flex-col gap-3 p-2 items-center justify-start">
           <div className="relative w-fit h-fit items-end justify-end ml-auto cursor-pointer flex">
             <ImCross
               color="#FBDB86"
               size={10}
-              onClick={() => {
-                const newTypes = collectTypes || {};
-
-                newTypes[id] = collects;
-
+              onClick={() =>
                 dispatch(
                   setPostCollectGif({
-                    actionCollects: newTypes,
+                    actionCollectTypes: collectTypes,
                     actionGifs: gifs,
                   })
-                );
-              }}
+                )
+              }
             />
           </div>
           {type === "gif" ? (
             <div
-              className={`absolute bg-black rounded-md flex flex-col gap-5 w-4/5 h-[15rem] p-2 border border-white z-10`}
+              className={`relative rounded-md flex flex-col gap-5 w-5/6 p-2 items-center justify-center max-h-[15rem]`}
             >
               <div className="relative w-full h-fit flex flex-row items-center font-aust text-white justify-between text-xs rounded-md gap-2">
                 <input
@@ -92,7 +86,7 @@ const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
                       <div
                         key={index}
                         onClick={() => {
-                          const newGifs = gifs || {};
+                          const newGifs = { ...gifs } || {};
 
                           newGifs[id] = [
                             ...(newGifs?.[id!] || []),
@@ -101,7 +95,7 @@ const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
 
                           dispatch(
                             setPostCollectGif({
-                              actionCollects: collectTypes,
+                              actionCollectTypes: collectTypes,
                               actionGifs: newGifs,
                             })
                           );
@@ -124,9 +118,12 @@ const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
             <CollectOptions
               openMeasure={openMeasure}
               setOpenMeasure={setOpenMeasure}
-              setCollects={setCollects}
-              collects={collects}
+              collectTypes={collectTypes}
+              id={id}
               availableCurrencies={availableCurrencies}
+              dispatch={dispatch}
+              gifs={gifs}
+              type={type!}
             />
           )}
         </div>

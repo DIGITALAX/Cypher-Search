@@ -16,7 +16,10 @@ import {
 } from "../../../../graphql/generated";
 import { setAvailableCurrencies } from "../../../../redux/reducers/availableCurrenciesSlice";
 import { Dispatch } from "redux";
-import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
+import {
+  PostCollectGifState,
+  setPostCollectGif,
+} from "../../../../redux/reducers/postCollectGifSlice";
 
 const useQuote = (
   availableCurrencies: Erc20[],
@@ -47,7 +50,9 @@ const useQuote = (
   ]);
   const [collects, setCollects] = useState<
     SimpleCollectOpenActionModuleInput | undefined
-  >();
+  >({
+    followerOnly: false,
+  });
   const [searchGifLoading, setSearchGifLoading] = useState<boolean>(false);
   const [openMeasure, setOpenMeasure] = useState<{
     searchedGifs: string[];
@@ -60,17 +65,21 @@ const useQuote = (
     currencyOpen: boolean;
     editionOpen: boolean;
     edition: string;
+    timeOpen: boolean;
+    time: string;
   }>({
     searchedGifs: [],
     search: "",
     collectibleOpen: false,
-    collectible: "",
+    collectible: "Yes",
     award: "",
     whoCollectsOpen: false,
     creatorAwardOpen: false,
     currencyOpen: false,
     editionOpen: false,
     edition: "",
+    timeOpen: false,
+    time: "",
   });
 
   const quote = async () => {
@@ -78,7 +87,7 @@ const useQuote = (
       !makeQuote[0]?.content &&
       !makeQuote[0]?.images &&
       !makeQuote[0]?.videos &&
-      postCollectGif.gifs?.[postCollectGif.id!]
+      postCollectGif.gifs?.[postBox?.quote?.id]
     )
       return;
     setQuoteLoading([true]);
@@ -88,7 +97,7 @@ const useQuote = (
         makeQuote[0]?.content,
         makeQuote[0]?.images!,
         makeQuote[0]?.videos!,
-        postCollectGif.gifs?.[postCollectGif.id!]!
+        postCollectGif.gifs?.[postBox?.quote?.id]!
       );
 
       const clientWallet = createWalletClient({
@@ -100,10 +109,20 @@ const useQuote = (
         postBox?.quote?.id,
         contentURI!,
         dispatch,
-        postCollectGif.collectTypes?.[postCollectGif.id!]!,
+        postCollectGif.collectTypes?.[postBox?.quote?.id]!,
         address as `0x${string}`,
         clientWallet,
         publicClient
+      );
+      const gifs = { ...postCollectGif.gifs };
+      delete gifs[postBox?.quote?.id];
+      const cts = { ...postCollectGif.collectTypes };
+      delete cts[postBox?.quote?.id];
+      dispatch(
+        setPostCollectGif({
+          actionCollectType: cts,
+          actionGifs: gifs,
+        })
       );
     } catch (err: any) {
       console.error(err.message);

@@ -6,7 +6,10 @@ import { PublicClient } from "wagmi";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensPost from "../../../../lib/helpers/api/postChain";
 import { Dispatch } from "redux";
-import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
+import {
+  PostCollectGifState,
+  setPostCollectGif,
+} from "../../../../redux/reducers/postCollectGifSlice";
 
 const usePost = (
   dispatch: Dispatch,
@@ -60,10 +63,20 @@ const usePost = (
       await lensPost(
         contentURI!,
         dispatch,
-        postCollectGif.collects?.["post"]!,
+        postCollectGif.collectTypes?.["post"]!,
         address as `0x${string}`,
         clientWallet,
         publicClient
+      );
+      const gifs = { ...postCollectGif.gifs };
+      delete gifs["post"];
+      const cts = { ...postCollectGif.collectTypes };
+      delete cts["post"];
+      dispatch(
+        setPostCollectGif({
+          actionCollectType: cts,
+          actionGifs: gifs,
+        })
       );
     } catch (err: any) {
       console.error(err.message);

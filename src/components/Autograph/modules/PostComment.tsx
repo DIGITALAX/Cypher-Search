@@ -119,6 +119,8 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                     setPostCollectGif({
                       actionType: indexTwo === 2 ? "gif" : "collect",
                       actionId: id,
+                      actionGifs: postCollectGif?.gifs,
+                      actionCollectTypes: postCollectGif?.collectTypes,
                     })
                   )
                 }

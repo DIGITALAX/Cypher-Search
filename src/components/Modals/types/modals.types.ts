@@ -170,6 +170,8 @@ export type PostCollectGifProps = {
     currencyOpen: boolean;
     editionOpen: boolean;
     edition: string;
+    timeOpen: boolean;
+    time: string;
   };
   setOpenMeasure: (
     e: SetStateAction<{
@@ -183,6 +185,8 @@ export type PostCollectGifProps = {
       currencyOpen: boolean;
       editionOpen: boolean;
       edition: string;
+      timeOpen: boolean;
+      time: string;
     }>
   ) => void;
   availableCurrencies: Erc20[];

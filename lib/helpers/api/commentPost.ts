@@ -9,6 +9,7 @@ import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { PublicClient, WalletClient } from "viem";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
+import cleanCollect from "../cleanCollect";
 
 const lensComment = async (
   id: string,
@@ -20,6 +21,9 @@ const lensComment = async (
   publicClient: PublicClient,
   clearComment: () => void
 ): Promise<void> => {
+  if (collectModuleInput) {
+    collectModuleInput = cleanCollect(collectModuleInput);
+  }
   const data = await commentPost({
     commentOn: id,
     contentURI: contentURI,
@@ -93,7 +97,6 @@ const lensComment = async (
       },
       dispatch
     );
-
   }
   dispatch(
     setIndexer({
