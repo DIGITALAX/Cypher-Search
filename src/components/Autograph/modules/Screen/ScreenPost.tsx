@@ -9,9 +9,8 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
   setMakePost,
   contentLoading,
   setContentLoading,
-  gifCollectOpen,
-  setGifCollectOpen,
-  availableCurrencies
+  postCollectGif,
+  dispatch,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full pt-4 flex items-center justify-center">
@@ -33,10 +32,9 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
                 contentLoading={contentLoading[0]}
                 setContentLoading={setContentLoading}
                 index={0}
-                gifCollectOpen={gifCollectOpen[0]}
-                setGifCollectOpen={setGifCollectOpen}
-                top="-2rem"
-                availableCurrencies={availableCurrencies}
+                postCollectGif={postCollectGif}
+                dispatch={dispatch}
+                id="post"
               />
             </div>
           </div>

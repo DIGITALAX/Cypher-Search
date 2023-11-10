@@ -22,9 +22,11 @@ import lensFollow from "../../../../lib/helpers/api/followProfile";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 import { Dispatch } from "redux";
+import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 
 const useBookmarks = (
   lensConnected: Profile | undefined,
+  postCollectGif: PostCollectGifState,
   profileFeed: (Post | Mirror | Quote)[],
   screenDisplay: ScreenDisplay,
   dispatch: Dispatch,
@@ -62,9 +64,6 @@ const useBookmarks = (
   const [bookmarkCursor, setBookmarkCursor] = useState<string>();
   const [hasMoreBookmarks, setHasMoreBookmarks] = useState<boolean>(false);
   const [bookmarksLoading, setBookmarksLoading] = useState<boolean>(false);
-  const [gifCollectOpenBookmarks, setGifCollectOpenBookmarks] = useState<
-    { gif: boolean; collect: boolean }[]
-  >([]);
 
   const getBookmarks = async () => {
     setBookmarksLoading(true);
@@ -129,7 +128,7 @@ const useBookmarks = (
       !makeCommentBookmark[index]?.content &&
       !makeCommentBookmark[index]?.images &&
       !makeCommentBookmark[index]?.videos &&
-      !makeCommentBookmark[index]?.gifs
+      !postCollectGif.gifs?.[id]
     )
       return;
 
@@ -144,7 +143,7 @@ const useBookmarks = (
         makeCommentBookmark[index]?.content,
         makeCommentBookmark[index]?.images,
         makeCommentBookmark[index]?.videos,
-        makeCommentBookmark[index]?.gifs
+        postCollectGif.gifs?.[id]!
       );
 
       const clientWallet = createWalletClient({
@@ -156,7 +155,7 @@ const useBookmarks = (
         id,
         contentURI!,
         dispatch,
-        makeCommentBookmark[index]?.collectType,
+        postCollectGif.collectTypes?.[id],
         address as `0x${string}`,
         clientWallet,
         publicClient,
@@ -177,19 +176,9 @@ const useBookmarks = (
     setMakeCommentBookmark((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = {
-        collectType: undefined,
         content: "",
         images: [],
         videos: [],
-        gifs: [],
-        searchedGifs: [],
-        search: "",
-        collectibleOpen: false,
-        collectible: "",
-        award: "",
-        whoCollectsOpen: false,
-        creatorAwardOpen: false,
-        currencyOpen: false,
       };
       return updatedArray;
     });
@@ -445,8 +434,6 @@ const useBookmarks = (
     commentsBookmarkOpen,
     makeCommentBookmark,
     setMakeCommentBookmark,
-    gifCollectOpenBookmarks,
-    setGifCollectOpenBookmarks,
   };
 };
 

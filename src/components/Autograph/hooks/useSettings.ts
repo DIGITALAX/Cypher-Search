@@ -1,9 +1,8 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { omit } from "lodash";
 import {
   Erc20,
   FeeFollowModuleSettings,
-  LimitType,
   Profile,
   ProfileMetadata,
   RelaySuccess,
@@ -17,7 +16,6 @@ import { PublicClient } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../../../lib/constants";
 import broadcast from "../../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
-import getEnabledCurrencies from "../../../../graphql/lens/queries/enabledCurrencies";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
@@ -25,6 +23,7 @@ import { Dispatch } from "redux";
 
 const useSettings = (
   lensConnected: Profile | undefined,
+  availableCurrencies: Erc20[],
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined
@@ -37,7 +36,6 @@ const useSettings = (
   const [currencyOpen, setCurrencyOpen] = useState<boolean>(false);
   const [pfpImage, setPFPImage] = useState<string>();
   const [coverImage, setCoverImage] = useState<string>();
-  const [currencies, setCurrencies] = useState<Erc20[]>([]);
   const [settingsData, setSettingsData] = useState<ProfileMetadata>({
     __typename: lensConnected?.metadata?.__typename,
     appId: "cypersearch",
@@ -65,7 +63,7 @@ const useSettings = (
         : undefined,
     currency:
       (lensConnected?.followModule as FeeFollowModuleSettings)?.amount?.asset ||
-      currencies?.[0],
+      availableCurrencies?.[0],
   });
 
   const handleImage = async (e: ChangeEvent<HTMLInputElement>, id: string) => {
@@ -232,29 +230,6 @@ const useSettings = (
     setFollowUpdateLoading(false);
   };
 
-  const getCurrencies = async () => {
-    try {
-      const response = await getEnabledCurrencies({
-        limit: LimitType.TwentyFive,
-      });
-      setCurrencies(response?.data?.currencies?.items as Erc20[]);
-      if (!followData?.currency) {
-        setFollowData({
-          ...followData,
-          currency: currencies[0],
-        });
-      }
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  useEffect(() => {
-    if (currencies?.length < 1) {
-      getCurrencies();
-    }
-  }, []);
-
   return {
     handleSettingsUpdate,
     settingsUpdateLoading,
@@ -269,7 +244,7 @@ const useSettings = (
     setFollowData,
     openType,
     setOpenType,
-    currencies,
+
     currencyOpen,
     setCurrencyOpen,
   };

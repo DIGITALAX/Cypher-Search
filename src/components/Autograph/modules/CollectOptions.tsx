@@ -2,18 +2,15 @@ import { FunctionComponent } from "react";
 import { CollectOptionsProps } from "../types/autograph.types";
 
 const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
-  top,
-  setMakePostComment,
-  makePostComent,
-  index,
+  openMeasure,
+  setOpenMeasure,
   availableCurrencies,
+  collects,
+  setCollects,
 }): JSX.Element => {
   return (
     <div
-      className={`absolute bg-black rounded-md flex flex-col gap-5 w-4/5 h-[15rem] p-1 border border-white z-10 overflow-y-none`}
-      style={{
-        top,
-      }}
+      className={`relative bg-black rounded-md flex gap-5 w-fit h-[15rem] p-1 border border-white z-10 overflow-y-auto`}
     >
       <div className="relative w-full h-fit flex flex-col flex-wrap justify-start items-start gap-3 break-words p-3">
         <div className="relative flex flex-wrap gap-4 items-start justify-start">
@@ -22,230 +19,152 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               type: "drop",
               title: "Collectible?",
               dropValues: ["Yes", "No"],
-              dropOpen: makePostComent.collectibleOpen,
-              chosenValue: makePostComent.collectible,
+              dropOpen: openMeasure.collectibleOpen,
+              chosenValue: openMeasure.collectible,
               showObject: true,
               openDropdown: () =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    collectibleOpen: !arr[index].collectibleOpen,
-                  };
-                  return arr;
-                }),
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  collectibleOpen: !prev.collectibleOpen,
+                })),
               setValue: (item: string) =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    collectible: item,
-                  };
-                  return arr;
-                }),
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  collectible: item,
+                })),
             },
             {
               type: "drop",
               title: "Who can collect?",
               dropValues: ["Everyone", "Only Followers"],
-              dropOpen: makePostComent.whoCollectsOpen,
-              chosenValue: makePostComent.collectType?.followerOnly
+              dropOpen: openMeasure.whoCollectsOpen,
+              chosenValue: collects?.followerOnly
                 ? "Only Followers"
                 : "Everyone",
-              showObject: makePostComent.collectible === "Yes" ? true : false,
+              showObject: openMeasure.collectible === "Yes" ? true : false,
               openDropdown: () =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    whoCollectsOpen: !arr[index].whoCollectsOpen,
-                  };
-                  return arr;
-                }),
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  whoCollectsOpen: !prev.whoCollectsOpen,
+                })),
               setValue: (item: string) =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    collectType: {
-                      ...arr[index].collectType,
-                      followerOnly: item === "Only Followers" ? true : false,
-                    },
-                  };
-                  return arr;
-                }),
+                setCollects((prev) => ({
+                  ...prev,
+                  followerOnly: item === "Only Followers" ? true : false,
+                })),
             },
             {
               type: "drop",
               title: "Creator award?",
               dropValues: ["Yes", "No"],
-              dropOpen: makePostComent.creatorAwardOpen,
-              chosenValue: makePostComent.award,
-              showObject: makePostComent.collectible === "Yes" ? true : false,
+              dropOpen: openMeasure.creatorAwardOpen,
+              chosenValue: openMeasure.award,
+              showObject: openMeasure.collectible === "Yes" ? true : false,
               openDropdown: () =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    creatorAwardOpen: !arr[index].creatorAwardOpen,
-                  };
-                  return arr;
-                }),
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  creatorAwardOpen: !prev.creatorAwardOpen,
+                })),
               setValue: (item: string) =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    award: item,
-                  };
-                  return arr;
-                }),
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  award: item,
+                })),
             },
             {
               type: "input",
               title: "Award amount",
-              chosenValue: makePostComent.collectType?.amount?.value || "0",
-              showObject: makePostComent.award === "Yes" ? true : false,
+              chosenValue: collects?.amount?.value || "0",
+              showObject: openMeasure.award === "Yes" ? true : false,
               setValue: (item: string) =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    collectType: {
-                      ...arr[index].collectType,
+                setCollects(
+                  (prev) =>
+                    ({
+                      ...prev,
                       amount: {
-                        ...arr[index].collectType?.amount!,
+                        ...prev?.amount!,
                         value: item,
                       },
-                    } as any,
-                  };
-                  return arr;
-                }),
+                    } as any)
+                ),
             },
             {
               type: "drop",
               title: "Award currency",
-              dropValues: availableCurrencies?.map((item) => item.name),
+              dropValues: availableCurrencies?.map((item) => item.symbol),
               chosenValue: availableCurrencies?.find((item) => {
-                if (
-                  item.contract.address ===
-                  makePostComent.collectType?.amount?.currency
-                ) {
+                if (item.contract.address === collects?.amount?.currency) {
                   return item;
                 }
-              })?.name!,
-              dropOpen: makePostComent.currencyOpen,
-              showObject: makePostComent.award === "Yes" ? true : false,
+              })?.symbol!,
+              dropOpen: openMeasure.currencyOpen,
+              showObject: openMeasure.award === "Yes" ? true : false,
               openDropdown: () =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    currencyOpen: !arr[index].currencyOpen,
-                  };
-                  return arr;
-                }),
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  currencyOpen: !prev.currencyOpen,
+                })),
               setValue: (item: string) =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    collectType: {
-                      ...arr[index].collectType,
+                setCollects(
+                  (prev) =>
+                    ({
+                      ...prev,
                       amount: {
-                        ...arr[index].collectType?.amount!,
+                        ...prev?.amount!,
                         currency: item,
                       },
-                    } as any,
-                  };
-                  return arr;
-                }),
+                    } as any)
+                ),
+            },
+            {
+              type: "input",
+              title: "Referral?",
+              chosenValue: collects?.amount?.value || "0",
+              showObject: openMeasure.award === "Yes" ? true : false,
+
+              setValue: (item: string) =>
+                setCollects(
+                  (prev) =>
+                    ({
+                      ...prev,
+                      referralFee: Number(item),
+                    } as any)
+                ),
             },
             {
               type: "drop",
-              title: "Award currency?",
+              title: "Limited Edition?",
               dropValues: ["Yes", "No"],
-              dropOpen: makePostComent.creatorAwardOpen,
-              chosenValue: makePostComent.award,
-              showObject: makePostComent.collectible === "Yes" ? true : false,
-
+              dropOpen: openMeasure.editionOpen,
+              chosenValue: openMeasure.edition,
+              showObject: openMeasure.award === "Yes" ? true : false,
+              openDropdown: () =>
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  editionOpen: !prev.editionOpen,
+                })),
               setValue: (item: string) =>
-                setMakePostComment((prev) => {
-                  const arr = [...prev];
-                  arr[index] = {
-                    ...arr[index],
-                    award: item,
-                  };
-                  return arr;
-                }),
+                setOpenMeasure((prev) => ({
+                  ...prev,
+                  edition: item,
+                })),
+            },
+            {
+              type: "input",
+              title: "Edition amount",
+              chosenValue: collects?.collectLimit || "0",
+              showObject: openMeasure.edition === "Yes" ? true : false,
+              setValue: (item: string) =>
+                setCollects(
+                  (prev) =>
+                    ({
+                      ...prev,
+                      collectLimit: item,
+                    } as any)
+                ),
             },
             //   {
-            //     title: "Award currency?",
-            //     dropValues: ["Yes", "No"],
-
-            //     openDropdown: () =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectibleOpen: !arr[index].collectibleOpen,
-            //         };
-            //       }),
-            //     setValue: (item) =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectType:
-            //             item === "Yes" ? arr[index].collectType : undefined,
-            //         };
-            //       }),
-            //   },
-            //   {
-            //     title: "Limited edition?",
-            //     dropValues: ["Yes", "No"],
-            //     openDropdown: () =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectibleOpen: !arr[index].collectibleOpen,
-            //         };
-            //       }),
-            //     setValue: (item) =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectType:
-            //             item === "Yes" ? arr[index].collectType : undefined,
-            //         };
-            //       }),
-            //   },
-            //   {
             //     title: "Time limit to collect?",
-            //     dropValues: ["Yes", "No"],
-
-            //     openDropdown: () =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectibleOpen: !arr[index].collectibleOpen,
-            //         };
-            //       }),
-            //     setValue: (item) =>
-            //       setMakePostComment((prev) => {
-            //         const arr = [...prev];
-            //         arr[index] = {
-            //           ...arr[index],
-            //           collectType:
-            //             item === "Yes" ? arr[index].collectType : undefined,
-            //         };
-            //       }),
-            //   },
-            //   {
-            //     title: "Referral fee?",
             //     dropValues: ["Yes", "No"],
 
             //     openDropdown: () =>
@@ -325,7 +244,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                                   className="relative w-full h-8 py-px bg-offBlack items-center justify-center flex text-sol text-sm uppercase font-bit hover:bg-skyBlue hover:text-black cursor-pointer"
                                   onClick={() => {
                                     item.setValue(
-                                      index === 5
+                                      indexTwo === 4
                                         ? availableCurrencies[indexThree]
                                             .contract.address
                                         : value
@@ -345,7 +264,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                 ) : (
                   <div
                     className="relative flex items-center justify-center flex-col w-48 h-fit pb-1.5 gap-2"
-                    key={index}
+                    key={indexTwo}
                   >
                     <div className="relative w-full h-fit flex items-start justify-start font-bit text-white text-sm">
                       {item.title}

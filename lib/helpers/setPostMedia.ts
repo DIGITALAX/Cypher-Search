@@ -10,7 +10,6 @@ const setPostMedia = async (
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void,

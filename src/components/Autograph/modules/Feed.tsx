@@ -32,8 +32,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   commentsOpen,
   contentLoading,
   setContentLoading,
-  gifCollectOpen,
-  setGifCollectOpen,
+  postCollectGif
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -94,8 +93,7 @@ const Feed: FunctionComponent<FeedProps> = ({
                       commentsOpen={commentsOpen}
                       contentLoading={contentLoading}
                       setContentLoading={setContentLoading}
-                      gifCollectOpen={gifCollectOpen}
-                      setGifCollectOpen={setGifCollectOpen}
+                      postCollectGif={postCollectGif}
                     />
                   );
                 }

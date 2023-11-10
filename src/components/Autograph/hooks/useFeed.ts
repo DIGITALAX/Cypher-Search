@@ -21,9 +21,11 @@ import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
 import lensHide from "../../../../lib/helpers/api/hidePost";
 import { MakePostComment } from "../types/autograph.types";
 import { Dispatch } from "redux";
+import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 
 const useFeed = (
   lensConnected: Profile | undefined,
+  postCollectGif: PostCollectGifState,
   profileFeed: (Post | Quote | Mirror)[],
   profile: Profile | undefined,
   dispatch: Dispatch,
@@ -33,17 +35,6 @@ const useFeed = (
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []
   );
-  const [gifCollectOpenFeed, setGifCollectOpenFeed] = useState<
-    {
-      gif: boolean;
-      collect: boolean;
-    }[]
-  >([
-    {
-      gif: false,
-      collect: false,
-    },
-  ]);
   const [openMoreOptions, setOpenMoreOptions] = useState<boolean[]>([]);
   const [hasMoreFeed, setHasMoreFeed] = useState<boolean>(false);
   const [feedLoading, setFeedLoading] = useState<boolean>(false);
@@ -52,7 +43,6 @@ const useFeed = (
     {
       image: boolean;
       video: boolean;
-      gif: boolean;
     }[]
   >([]);
   const [makeCommentFeed, setMakeCommentFeed] = useState<MakePostComment[]>([]);
@@ -148,7 +138,7 @@ const useFeed = (
       !makeCommentFeed[index]?.content &&
       !makeCommentFeed[index]?.images &&
       !makeCommentFeed[index]?.videos &&
-      !makeCommentFeed[index]?.gifs
+      !postCollectGif?.gifs?.[id]
     )
       return;
 
@@ -163,7 +153,7 @@ const useFeed = (
         makeCommentFeed[index]?.content,
         makeCommentFeed[index]?.images!,
         makeCommentFeed[index]?.videos!,
-        makeCommentFeed[index]?.gifs!
+        postCollectGif?.gifs?.[id]!
       );
 
       const clientWallet = createWalletClient({
@@ -175,7 +165,7 @@ const useFeed = (
         id,
         contentURI!,
         dispatch,
-        makeCommentFeed[index]?.collectType,
+        postCollectGif?.collectTypes?.[id],
         address as `0x${string}`,
         clientWallet,
         publicClient,
@@ -196,13 +186,9 @@ const useFeed = (
     setMakeCommentFeed((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = {
-        collectType: undefined,
         content: "",
         images: [],
         videos: [],
-        gifs: [],
-        searchedGifs: [],
-        search: "",
       };
       return updatedArray;
     });
@@ -378,12 +364,6 @@ const useFeed = (
       setOpenMirrorFeedChoice(
         Array.from({ length: profileFeed.length }, () => false)
       );
-      setGifCollectOpenFeed(
-        Array.from({ length: profileFeed.length }, () => ({
-          gif: false,
-          collect: false,
-        }))
-      );
       setMakeCommentFeed(
         Array.from({ length: profileFeed.length }, () => ({
           collectType: undefined,
@@ -425,8 +405,6 @@ const useFeed = (
     setCommentsFeedOpen,
     commentContentLoading,
     setCommentContentLoading,
-    gifCollectOpenFeed,
-    setGifCollectOpenFeed,
   };
 };
 

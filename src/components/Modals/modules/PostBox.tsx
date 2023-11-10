@@ -14,9 +14,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
   postLoading,
   setContentLoading,
   contentLoading,
-  gifCollectOpen,
-  setGifCollectOpen,
-  availableCurrencies,
+  postCollectGif,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -49,10 +47,9 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
                 contentLoading={contentLoading[0]}
                 index={0}
                 setContentLoading={setContentLoading}
-                gifCollectOpen={gifCollectOpen[0]}
-                setGifCollectOpen={setGifCollectOpen}
-                top="-5rem"
-                availableCurrencies={availableCurrencies}
+                dispatch={dispatch}
+                postCollectGif={postCollectGif}
+                id={quote?.id}
               />
             </div>
           </div>

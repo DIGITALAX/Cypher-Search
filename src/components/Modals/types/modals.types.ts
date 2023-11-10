@@ -10,6 +10,7 @@ import {
   PublicationReportingIllegalSubreason,
   PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
+  SimpleCollectOpenActionModuleInput,
 } from "../../../../graphql/generated";
 import { MainVideoState } from "../../../../redux/reducers/mainVideoSlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
@@ -18,6 +19,7 @@ import {
   SortType,
 } from "@/components/Autograph/types/autograph.types";
 import { NextRouter } from "next/router";
+import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
@@ -128,26 +130,71 @@ export type WhoSwitchProps = {
 
 export type PostBoxProps = {
   dispatch: Dispatch<AnyAction>;
+  postCollectGif: PostCollectGifState;
   quote: PrimaryPublication | undefined;
   makePost: MakePostComment[];
   post: () => Promise<void>;
   setMakePost: (e: SetStateAction<MakePostComment[]>) => void;
   postLoading: boolean[];
-  availableCurrencies: Erc20[]
   setContentLoading: (
     e: SetStateAction<
       {
         image: boolean;
         video: boolean;
-        gif: boolean;
       }[]
     >
   ) => void;
   contentLoading: {
     image: boolean;
     video: boolean;
-    gif: boolean;
   }[];
-  setGifCollectOpen: (e: SetStateAction<{ gif: boolean; collect: boolean }[]>) => void;
-  gifCollectOpen: { gif: boolean; collect: boolean }[];
+};
+
+export type PostCollectGifProps = {
+  dispatch: Dispatch<AnyAction>;
+  type: string | undefined;
+  id: string;
+  handleGif: (e: string) => Promise<void>;
+  setCollects: (
+    e: SetStateAction<SimpleCollectOpenActionModuleInput | undefined>
+  ) => void;
+  collects: SimpleCollectOpenActionModuleInput | undefined;
+  openMeasure: {
+    searchedGifs: string[];
+    search: string;
+    collectibleOpen: boolean;
+    collectible: string;
+    award: string;
+    whoCollectsOpen: boolean;
+    creatorAwardOpen: boolean;
+    currencyOpen: boolean;
+    editionOpen: boolean;
+    edition: string;
+  };
+  setOpenMeasure: (
+    e: SetStateAction<{
+      searchedGifs: string[];
+      search: string;
+      collectibleOpen: boolean;
+      collectible: string;
+      award: string;
+      whoCollectsOpen: boolean;
+      creatorAwardOpen: boolean;
+      currencyOpen: boolean;
+      editionOpen: boolean;
+      edition: string;
+    }>
+  ) => void;
+  availableCurrencies: Erc20[];
+  gifs:
+    | {
+        [key: string]: string[];
+      }
+    | undefined;
+  collectTypes:
+    | {
+        [key: string]: SimpleCollectOpenActionModuleInput | undefined;
+      }
+    | undefined;
+  searchGifLoading: boolean;
 };

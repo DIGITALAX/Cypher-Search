@@ -6,9 +6,11 @@ import { PublicClient } from "wagmi";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensPost from "../../../../lib/helpers/api/postChain";
 import { Dispatch } from "redux";
+import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 
 const usePost = (
   dispatch: Dispatch,
+  postCollectGif: PostCollectGifState,
   publicClient: PublicClient,
   address: `0x${string}` | undefined
 ) => {
@@ -17,41 +19,18 @@ const usePost = (
     {
       image: boolean;
       video: boolean;
-      gif: boolean;
     }[]
   >([
     {
       image: false,
       video: false,
-      gif: false,
-    },
-  ]);
-  const [gifCollectOpen, setGifCollectOpen] = useState<
-    {
-      gif: boolean;
-      collect: boolean;
-    }[]
-  >([
-    {
-      gif: false,
-      collect: false,
     },
   ]);
   const [makePost, setMakePost] = useState<MakePostComment[]>([
     {
-      collectType: undefined,
       content: "",
       images: [],
       videos: [],
-      gifs: [],
-      searchedGifs: [],
-      search: "",
-      collectibleOpen: false,
-      collectible: "",
-      award: "",
-      whoCollectsOpen: false,
-      creatorAwardOpen: false,
-      currencyOpen: false,
     },
   ]);
 
@@ -60,7 +39,7 @@ const usePost = (
       !makePost[0]?.content &&
       !makePost[0]?.images &&
       !makePost[0]?.videos &&
-      !makePost[0]?.gifs
+      postCollectGif.gifs?.["post"]!
     )
       return;
     setPostLoading([true]);
@@ -70,7 +49,7 @@ const usePost = (
         makePost[0]?.content,
         makePost[0]?.images!,
         makePost[0]?.videos!,
-        makePost[0]?.gifs!
+        postCollectGif.gifs?.["post"]!
       );
 
       const clientWallet = createWalletClient({
@@ -81,7 +60,7 @@ const usePost = (
       await lensPost(
         contentURI!,
         dispatch,
-        makePost[0]?.collectType,
+        postCollectGif.collects?.["post"]!,
         address as `0x${string}`,
         clientWallet,
         publicClient
@@ -99,8 +78,6 @@ const usePost = (
     post,
     postContentLoading,
     setPostContentLoading,
-    gifCollectOpen,
-    setGifCollectOpen,
   };
 };
 
