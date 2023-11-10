@@ -9,6 +9,7 @@ import {
   Comment,
   Quote,
   Mirror,
+  PublicationType,
 } from "../../../../graphql/generated";
 import cachedProfiles from "../../../../lib/helpers/cachedProfiles";
 import {
@@ -35,13 +36,14 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import buildQuery from "../../../../lib/helpers/buildQuery";
-import getProfiles from "../../../../graphql/lens/queries/profiles";
 import { setCachedProfiles } from "../../../../redux/reducers/cachedProfilesSlice";
 import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
 import { Dispatch } from "redux";
+import getPublications from "../../../../graphql/lens/queries/publications";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
+  lensConnected: Profile | undefined,
   searchActive: boolean,
   filterConstants: FilterValues | undefined,
   filters: Filter,
@@ -472,23 +474,19 @@ const useSearch = (
       } else {
         profileCache = profiles;
       }
-      const profilesToRetrieve: string[] = [];
-      collections?.forEach((obj: Creation) => {
-        if (obj?.profileId) {
-          if (!profileCache[obj?.profileId]) {
-            profilesToRetrieve.push(obj?.profileId);
-          }
-        }
-      });
 
-      const { data } = await getProfiles({
-        where: {
-          profileIds: profilesToRetrieve,
+      const { data } = await getPublications(
+        {
+          where: {
+            publicationIds: collections.map((item) => item.pubId),
+            publicationTypes: [PublicationType.Post],
+          },
         },
-      });
+        lensConnected?.id
+      );
 
-      (data?.profiles?.items as Profile[])?.forEach((profile: Profile) => {
-        profileCache[profile.id] = profile;
+      (data?.publications?.items as Post[])?.forEach((item: Post) => {
+        profileCache[item.by.id] = item.by;
       });
 
       const profileMap = new Map(
@@ -499,6 +497,9 @@ const useSearch = (
         (collection: Creation) => ({
           ...collection,
           profile: profileMap.get(collection?.profileId),
+          publication: data?.publications?.items.find(
+            (item) => item.id === collection.pubId
+          ),
         })
       ) as Creation[];
 

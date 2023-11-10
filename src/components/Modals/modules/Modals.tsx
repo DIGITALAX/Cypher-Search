@@ -101,6 +101,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
     handleResetFilters,
   } = useSearch(
     filtersOpen,
+    lensConnected,
     searchActive,
     filterConstants,
     filters,
