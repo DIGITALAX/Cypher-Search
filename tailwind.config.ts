@@ -74,6 +74,7 @@ const config: Config = {
         110: "32rem",
       },
       zIndex: {
+        1: "1",
         60: "60",
       },
       backgroundImage: {

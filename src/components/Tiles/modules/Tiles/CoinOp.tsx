@@ -93,6 +93,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               publication={publication?.profile}
               index={index}
               setProfileHovers={setProfileHovers}
+              dispatch={dispatch}
             />
           )}
           <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">

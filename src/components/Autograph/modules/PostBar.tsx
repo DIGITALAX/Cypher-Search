@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { AiOutlineLoading } from "react-icons/ai";
-import { Mirror, Post } from "../../../../graphql/generated";
+import { Post } from "../../../../graphql/generated";
 import numeral from "numeral";
 import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
@@ -10,6 +10,7 @@ import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
+import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -247,40 +248,46 @@ const PostBar: FunctionComponent<PostBarProps> = ({
         </div>
         <div
           className={`relative w-5 h-5 items-center justify-center flex ${
-            item?.__typename === "Mirror"
-              ? (item as Mirror)?.mirrorOn?.openActionModules?.[0]
-                  ?.__typename === "SimpleCollectOpenActionSettings" ||
-                (item as Mirror)?.mirrorOn?.openActionModules?.[0]
-                  ?.__typename === "MultirecipientFeeCollectOpenActionSettings"
-              : (item as Post)?.openActionModules?.[0]?.__typename ===
-                  "SimpleCollectOpenActionSettings" ||
-                (item as Post)?.openActionModules?.[0]?.__typename ===
-                  "MultirecipientFeeCollectOpenActionSettings"
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.openActionModules?.[0]?.__typename ===
+              "SimpleCollectOpenActionSettings" ||
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.openActionModules?.[0]?.__typename ===
+              "MultirecipientFeeCollectOpenActionSettings"
               ? "cursor-pointer active:scale-95"
               : "opacity-70"
           } ${interactionsLoading?.simpleCollect && "animate-spin"}`}
-          onClick={() =>
-            !disabled &&
-            !interactionsLoading?.simpleCollect &&
-            (item?.__typename === "Mirror"
-              ? (item as Mirror)?.mirrorOn?.openActionModules?.[0]
-                  ?.__typename === "SimpleCollectOpenActionSettings" ||
-                (item as Mirror)?.mirrorOn?.openActionModules?.[0]
-                  ?.__typename === "MultirecipientFeeCollectOpenActionSettings"
-              : (item as Post)?.openActionModules?.[0]?.__typename ===
-                  "SimpleCollectOpenActionSettings" ||
-                (item as Post)?.openActionModules?.[0]?.__typename ===
-                  "MultirecipientFeeCollectOpenActionSettings") &&
-            simpleCollect!(
-              item?.__typename === "Mirror"
-                ? (item as Mirror)?.mirrorOn?.id
-                : item?.id,
-              item?.__typename === "Mirror"
-                ? (item as Mirror)?.mirrorOn?.openActionModules?.[0]
-                    ?.__typename!
-                : (item as Post)?.openActionModules?.[0]?.__typename!
+          onClick={() => {
+            const pub =
+              item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post);
+            if (
+              disabled ||
+              interactionsLoading?.simpleCollect ||
+              (pub?.openActionModules?.[0]?.__typename !==
+                "SimpleCollectOpenActionSettings" &&
+                pub?.openActionModules?.[0]?.__typename !==
+                  "MultirecipientFeeCollectOpenActionSettings")
             )
-          }
+              return;
+
+            Number(pub?.openActionModules?.[0].amount.value) > 0 ||
+            pub?.openActionModules?.[0].endsAt ||
+            Number(pub.openActionModules?.[0].collectLimit)
+              ? dispatch(
+                  setFollowCollect({
+                    actionType: "collect",
+                    actionCollect: {
+                      id: pub?.id,
+                      stats: pub.stats.countOpenActions,
+                      item: pub?.openActionModules?.[0],
+                    },
+                  })
+                )
+              : simpleCollect!(
+                  pub?.id,
+                  pub?.openActionModules?.[0]?.__typename
+                );
+          }}
         >
           {interactionsLoading?.simpleCollect ? (
             <AiOutlineLoading size={15} color="white" />
@@ -302,6 +309,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             index={index}
             setProfileHovers={setProfileHovers!}
             feed
+            dispatch={dispatch}
           />
         )}
       </div>

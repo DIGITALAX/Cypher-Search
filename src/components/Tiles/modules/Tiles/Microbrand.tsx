@@ -15,6 +15,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   followLoading,
   setProfileHovers,
   profileHovers,
+  dispatch
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
@@ -60,6 +61,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
           <HoverProfile
             router={router}
             index={index}
+            dispatch={dispatch}
             publication={publication}
             followLoading={followLoading}
             followProfile={followProfile}

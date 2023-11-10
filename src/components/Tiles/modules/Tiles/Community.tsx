@@ -157,6 +157,7 @@ const Community: FunctionComponent<CommunityProps> = ({
                       index={index}
                       setProfileHovers={setProfileHovers}
                       feed
+                      dispatch={dispatch}
                     />
                   )}
                   <div className="relative w-fit h-fit text-white font-bit items-center justify-center flex top-px text-xs px-2 py-1">

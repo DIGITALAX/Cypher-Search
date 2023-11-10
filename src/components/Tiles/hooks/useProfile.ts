@@ -47,6 +47,7 @@ const useProfile = (
       await lensFollow(
         id,
         dispatch,
+        undefined,
         address as `0x${string}`,
         clientWallet,
         publicClient

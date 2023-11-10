@@ -80,6 +80,7 @@ export type HoverProfileProps = {
   publication: Profile;
   router: NextRouter;
   index: number;
+  dispatch: Dispatch<AnyAction>;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   feed?: boolean;
 };

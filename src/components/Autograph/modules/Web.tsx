@@ -4,6 +4,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { ScreenDisplay, SortType, WebProps } from "../types/autograph.types";
 import ScreenSwitch from "./ScreenSwitch";
 import { setScreenDisplay } from "../../../../redux/reducers/screenDisplaySlice";
+import Link from "next/link";
 
 const Web: FunctionComponent<WebProps> = ({
   router,
@@ -81,13 +82,16 @@ const Web: FunctionComponent<WebProps> = ({
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
       <div className="relative w-full h-fit flex flex-col items-start justify-start gap-5">
         <div className="relative flex flex-col items-start justify-between w-full h-fit gap-1">
-          <div className="flex absolute items-center justify-start w-16 h-16">
+          <Link
+            href={"/"}
+            className="flex absolute items-center justify-start w-16 h-16 cursor-pointer active:scale-95 z-1"
+          >
             <Image
               layout="fill"
               src={`${INFURA_GATEWAY}/ipfs/QmfHsZ5w3oy2ENHek7prhM1XVVW8oPBGfEPcNy1jm7sWQq`}
               draggable={false}
             />
-          </div>
+          </Link>
           {screenDisplay !== ScreenDisplay.Settings &&
             screenDisplay !== ScreenDisplay.Bookmarks &&
             screenDisplay !== ScreenDisplay.Orders &&

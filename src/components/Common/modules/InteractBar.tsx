@@ -7,6 +7,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { Post } from "../../../../graphql/generated";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
+import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
 
 type SingleArgFunction = (id: string) => Promise<void>;
 type DualArgFunction = (index: number, id: string) => Promise<void>;
@@ -123,22 +124,60 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             key={indexTwo}
           >
             <div
-              className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95"
+              className={`relative w-fit h-fit flex items-center justify-center ${
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.openActionModules?.[0]?.__typename ===
+                  "SimpleCollectOpenActionSettings" ||
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.openActionModules?.[0]?.__typename ===
+                  "MultirecipientFeeCollectOpenActionSettings"
+                  ? "cursor-pointer active:scale-95"
+                  : "opacity-70"
+              }`}
               onClick={() => {
                 if (indexTwo === 0 || image[1] === "Comments") {
                   functions[indexTwo] && functions[indexTwo]!();
                 } else if (indexTwo === 2) {
-                  !loaders[index] &&
-                    functions[indexTwo] &&
-                    functions[indexTwo]!(publication?.id, type);
+                  const pub =
+                    publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post);
+                  if (
+                    loaders[indexTwo] ||
+                    (pub?.openActionModules?.[0]?.__typename !==
+                      "SimpleCollectOpenActionSettings" &&
+                      pub?.openActionModules?.[0]?.__typename !==
+                        "MultirecipientFeeCollectOpenActionSettings")
+                  )
+                    return;
+
+                  Number(pub?.openActionModules?.[0].amount.value) > 0 ||
+                  pub?.openActionModules?.[0].endsAt ||
+                  Number(pub.openActionModules?.[0].collectLimit) 
+                    ? dispatch(
+                        setFollowCollect({
+                          actionType: "collect",
+                          actionCollect: {
+                            id: pub?.id,
+                            stats: pub.stats.countOpenActions,
+                            item: pub?.openActionModules?.[0],
+                          },
+                        })
+                      )
+                    : functions[indexTwo] &&
+                      functions[indexTwo]!(publication?.id, type);
                 } else {
-                  !loaders[index] &&
+                  !loaders[indexTwo] &&
                     functions[indexTwo] &&
                     functions[indexTwo]!(publication?.id);
                 }
               }}
             >
-              {loaders[index] ? (
+              {loaders[indexTwo] ? (
                 <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
                   <AiOutlineLoading size={15} color="white" />
                 </div>
@@ -160,7 +199,8 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             </div>
             <div
               className={`relative w-fit h-fit flex items-center justify-center text-center ${
-               ( stats[indexTwo] > 0 || image[1] === "Comments" ) && "cursor-pointer active:scale-95"
+                (stats[indexTwo] > 0 || image[1] === "Comments") &&
+                "cursor-pointer active:scale-95"
               }`}
               onClick={() => {
                 if (image[1] === "Comments") {

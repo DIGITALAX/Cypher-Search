@@ -16,6 +16,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
   index,
   profileHovers,
   setProfileHovers,
+  dispatch
 }): JSX.Element => {
   const profilePicture = createProfilePicture(publication?.metadata?.picture);
   return (
@@ -73,6 +74,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
             publication={publication}
             index={index}
             setProfileHovers={setProfileHovers}
+            dispatch={dispatch}
           />
         )}
         <div
