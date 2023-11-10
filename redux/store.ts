@@ -9,9 +9,7 @@ import postCollectGifReducer from "./reducers/postCollectGifSlice";
 import mapReducer from "./reducers/mapSlice";
 import reportPubReducer from "./reducers/reportPubSlice";
 import postBoxReducer from "./reducers/postBoxSlice";
-import videoSyncReducer from "./reducers/videoSyncSlice";
 import fullScreenVideoReducer from "./reducers/fullScreenVideoSlice";
-import mainVideoReducer from "./reducers/mainVideoSlice";
 import filtersOpenReducer from "./reducers/filtersOpenSlice";
 import cartAnimReducer from "./reducers/cartAnimSlice";
 import cartItemsReducer from "./reducers/cartItemsSlice";
@@ -23,7 +21,6 @@ import indexerReducer from "./reducers/indexerSlice";
 import profileDisplayReducer from "./reducers/profileDisplaySlice";
 import displaySearchBoxReducer from "./reducers/displaySearchBoxSlice";
 import searchItemsReducer from "./reducers/searchItemsSlice";
-import cachedProfilesReducer from "./reducers/cachedProfilesSlice";
 import filterConstantsReducer from "./reducers/filterConstantsSlice";
 import interactErrorReducer from "./reducers/interactErrorSlice";
 import autographProfileReducer from "./reducers/autographProfileSlice";
@@ -39,9 +36,7 @@ const reducer = combineReducers({
   lensConnectedReducer,
   filterReducer,
   mapReducer,
-  videoSyncReducer,
   fullScreenVideoReducer,
-  mainVideoReducer,
   filtersOpenReducer,
   cartAnimReducer,
   cartItemsReducer,
@@ -50,7 +45,6 @@ const reducer = combineReducers({
   reactBoxReducer,
   interactionsCountReducer,
   searchItemsReducer,
-  cachedProfilesReducer,
   filterConstantsReducer,
   interactErrorReducer,
   autographProfileReducer,

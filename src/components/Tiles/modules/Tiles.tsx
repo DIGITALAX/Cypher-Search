@@ -29,6 +29,14 @@ const Tiles: FunctionComponent<TilesProps> = ({
   followLoading,
   profileHovers,
   setProfileHovers,
+  setVolume,
+  setVolumeOpen,
+  fullScreenVideo,
+  volume,
+  volumeOpen,
+  profileId,
+  heart,
+  setHeart,
 }): JSX.Element => {
   const items = [
     { id: 0, type: "image" },
@@ -83,7 +91,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
         router={router}
         mirror={mirror}
         like={like}
-        collect={simpleCollect}
         interactionsLoading={interactionsLoading}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
@@ -92,6 +99,15 @@ const Tiles: FunctionComponent<TilesProps> = ({
         unfollowProfile={unfollowProfile}
         profileHovers={profileHovers}
         setProfileHovers={setProfileHovers}
+        setVolume={setVolume}
+        setVolumeOpen={setVolumeOpen}
+        simpleCollect={simpleCollect}
+        fullScreenVideo={fullScreenVideo}
+        volume={volume}
+        volumeOpen={volumeOpen}
+        profileId={profileId}
+        setHeart={setHeart}
+        heart={heart}
       />
     );
   };

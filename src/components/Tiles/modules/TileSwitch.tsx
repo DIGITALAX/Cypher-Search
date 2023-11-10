@@ -40,11 +40,8 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   volume,
   volumeOpen,
   setVolumeOpen,
-  videoSync,
-  progressRef,
-  handleVolumeChange,
-  handleSeek,
-  handleHeart,
+  fullScreenVideo,
+  setVolume,
   followLoading,
   unfollowProfile,
   followProfile,
@@ -52,6 +49,8 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   setProfileHovers,
   simpleCollect,
   community,
+  setHeart,
+  heart
 }) => {
   switch (type?.toLowerCase()) {
     case "community":
@@ -210,7 +209,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           followLoading={followLoading}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
-          simpleCollect={simpleCollect}
+          simpleCollect={simpleCollect!}
         />
       );
     case "video":
@@ -220,6 +219,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           setOpenMirrorChoice={setOpenMirrorChoice}
           layoutAmount={layoutAmount}
           dispatch={dispatch}
+          index={index}
           router={router}
           publication={publication}
           mirror={mirror}
@@ -229,16 +229,10 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           volumeOpen={volumeOpen!}
           setVolumeOpen={setVolumeOpen!}
           profileId={profileId!}
-          progressRef={progressRef!}
-          videoSync={videoSync!}
-          handleHeart={handleHeart!}
-          handleSeek={handleSeek!}
-          handleVolumeChange={handleVolumeChange!}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile!}
-          followLoading={followLoading}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
+          fullScreenVideo={fullScreenVideo!}
+          setVolume={setVolume!}
+          setHeart={setHeart!}
+          heart={heart!}
         />
       );
     case "quest":
@@ -268,11 +262,6 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           mirror={mirror}
           like={like}
           interactionsLoading={interactionsLoading?.[index]}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
         />
       );
 

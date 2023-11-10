@@ -1,12 +1,9 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { Ref, SetStateAction } from "react";
+import { MutableRefObject, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
-import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
 import {
   Erc20,
-  FollowModuleInput,
   MultirecipientFeeCollectOpenActionSettings,
-  Post,
   PrimaryPublication,
   Profile,
   PublicationReportingFraudSubreason,
@@ -16,7 +13,6 @@ import {
   SimpleCollectOpenActionModuleInput,
   SimpleCollectOpenActionSettings,
 } from "../../../../graphql/generated";
-import { MainVideoState } from "../../../../redux/reducers/mainVideoSlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import {
   MakePostComment,
@@ -24,6 +20,7 @@ import {
 } from "@/components/Autograph/types/autograph.types";
 import { NextRouter } from "next/router";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
+import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
@@ -53,20 +50,8 @@ export type InteractErrorProps = {
 
 export type FullScreenVideoProps = {
   dispatch: Dispatch<AnyAction>;
-  mainVideo: MainVideoState;
-  videoRef: Ref<HTMLDivElement>;
-  streamRef: Ref<HTMLVideoElement>;
-  wrapperRef: Ref<HTMLDivElement>;
-  dispatchVideos: Post[];
-  videoSync: VideoSyncState;
-  viewer: string;
-  hasMore: boolean;
-  fetchMoreVideos: () => Promise<
-    | { videos: any[]; mirrors: any[]; collects: boolean[]; likes: any[] }
-    | undefined
-  >;
-  videosLoading: boolean;
-  setVideosLoading: (e: SetStateAction<boolean>) => void;
+  fullScreenVideo: FullScreenVideoState;
+  videoRef: MutableRefObject<HTMLElement | null>;
 };
 
 export type ImageLargeProps = {

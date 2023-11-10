@@ -76,20 +76,17 @@ const Autograph: NextPage = (): JSX.Element => {
   const filters = useSelector(
     (state: RootState) => state.app.filterReducer.filter
   );
-  const profiles = useSelector(
-    (state: RootState) => state.app.cachedProfilesReducer.profiles
-  );
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer
   );
 
   const { handleShuffleSearch } = useSearch(
     filtersOpen,
+    lensConnected,
     searchActive,
     filterConstants,
     filters,
     allSearchItems,
-    profiles,
     dispatch
   );
   const { openConnectModal } = useConnectModal();

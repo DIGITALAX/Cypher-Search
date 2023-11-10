@@ -71,9 +71,6 @@ const Modals: FunctionComponent = (): JSX.Element => {
   const fullScreenVideo = useSelector(
     (state: RootState) => state.app.fullScreenVideoReducer
   );
-  const profiles = useSelector(
-    (state: RootState) => state.app.cachedProfilesReducer.profiles
-  );
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
@@ -106,7 +103,6 @@ const Modals: FunctionComponent = (): JSX.Element => {
     filterConstants,
     filters,
     allSearchItems,
-    profiles,
     dispatch
   );
   const {
@@ -162,6 +158,7 @@ const Modals: FunctionComponent = (): JSX.Element => {
     handleFollow,
     approveSpend,
     approved,
+    videoRef,
   } = useQuote(
     availableCurrencies,
     lensConnected,
@@ -176,20 +173,11 @@ const Modals: FunctionComponent = (): JSX.Element => {
     useReport(dispatch);
   return (
     <>
-      {fullScreenVideo?.value && (
+      {fullScreenVideo?.open && (
         <FullScreenVideo
           dispatch={dispatch}
-          mainVideo={mainVideo}
-          streamRef={fullVideoRef}
-          wrapperRef={wrapperRef}
-          dispatchVideos={dispatchVideos}
-          videoSync={videoSync}
+          fullScreenVideo={fullScreenVideo}
           videoRef={videoRef}
-          viewer={viewer}
-          hasMore={hasMore}
-          fetchMoreVideos={fetchMoreVideos}
-          videosLoading={videosLoading}
-          setVideosLoading={setVideosLoading}
         />
       )}
       {mapOpen?.value && <Map dispatch={dispatch} filterValues={filters} />}

@@ -28,6 +28,9 @@ export default function Home() {
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
+  const fullscreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
+  );
   const layoutAmount = useSelector(
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
@@ -42,9 +45,6 @@ export default function Home() {
   );
   const filters = useSelector(
     (state: RootState) => state.app.filterReducer.filter
-  );
-  const profiles = useSelector(
-    (state: RootState) => state.app.cachedProfilesReducer.profiles
   );
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer
@@ -63,6 +63,12 @@ export default function Home() {
     handleShuffleSearch,
     placeholderText,
     searchLoading,
+    volume,
+    volumeOpen,
+    setVolumeOpen,
+    setVolume,
+    heart,
+    setHeart
   } = useSearch(
     filtersOpen,
     lensConnected,
@@ -70,7 +76,6 @@ export default function Home() {
     filterConstants,
     filters,
     allSearchItems,
-    profiles,
     dispatch
   );
   const { openConnectModal } = useConnectModal();
@@ -174,6 +179,14 @@ export default function Home() {
             unfollowProfile={unfollowProfile}
             profileHovers={profileHovers}
             setProfileHovers={setProfileHovers}
+            fullScreenVideo={fullscreenVideo}
+            volume={volume}
+            volumeOpen={volumeOpen}
+            setVolumeOpen={setVolumeOpen}
+            setVolume={setVolume}
+            profileId={lensConnected?.id}
+            heart={heart}
+            setHeart={setHeart}
           />
         )}
       </div>

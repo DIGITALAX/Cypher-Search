@@ -1,6 +1,5 @@
-import { FormEvent, MouseEvent, Ref, SetStateAction } from "react";
+import { FormEvent, MouseEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
-import { VideoSyncState } from "../../../../redux/reducers/videoSyncSlice";
 import {
   Mirror,
   Post,
@@ -10,6 +9,7 @@ import {
 } from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
+import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 
 export interface Creation {
   amount: string;
@@ -66,7 +66,6 @@ export type TilesProps = {
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
-
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
@@ -77,12 +76,22 @@ export type TilesProps = {
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
+  profileId: string;
+  volume: number[];
+  volumeOpen: boolean[];
+  heart: boolean[]
+  setVolume: (e: SetStateAction<number[]>) => void;
+  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
+  setHeart: (e: SetStateAction<boolean[]>) => void;
+  fullScreenVideo: FullScreenVideoState;
 };
 
 export type TileSwitchProps = {
   type: string;
   publication: Publication;
   profileHovers: boolean[];
+  setHeart?: (e: SetStateAction<boolean[]>) => void
+  heart?: boolean[]
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   layoutAmount: number;
   popUpOpen: boolean[];
@@ -100,59 +109,50 @@ export type TileSwitchProps = {
     like: boolean;
     mirror: boolean;
   }[];
+  community?: Community;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   profileId?: string;
-  volume?: number;
-  volumeOpen?: boolean;
-  setVolumeOpen?: (e: SetStateAction<boolean>) => void;
-  videoSync?: VideoSyncState;
-  handleVolumeChange?: (e: SetStateAction<FormEvent>) => void;
-  handleHeart?: () => void;
-  progressRef?: Ref<HTMLDivElement>;
-  handleSeek?: (
-    e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
-  ) => void;
+  volume?: number[];
+  volumeOpen?: boolean[];
+  setVolumeOpen?: (e: SetStateAction<boolean[]>) => void;
+  fullScreenVideo?: FullScreenVideoState;
+  setVolume?: (e: SetStateAction<number[]>) => void;
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
 };
 
 export type ControlsProps = {
-  videoSync: VideoSyncState;
-  volume: number;
+  fullScreenVideo: FullScreenVideoState;
+  volume: number[];
   router: NextRouter;
-  volumeOpen: boolean;
-  setVolumeOpen: (volumeOpen: boolean) => void;
-  handleVolumeChange: (e: SetStateAction<FormEvent>) => void;
-  handleHeart: () => void;
+  volumeOpen: boolean[];
+  index: number
+  setHeart: (e: SetStateAction<boolean[]>) => void;
+  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
+  setVolume: (e: SetStateAction<number[]>) => void;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;
   profileId: string;
-  progressRef: Ref<HTMLDivElement>;
-  handleSeek: (
-    e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
-  ) => void;
   dispatch: Dispatch<AnyAction>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
   };
-  publication: Publication;
+  post: Post | Quote;
 };
 
 export type VideoPostProps = {
-  videoSync: VideoSyncState;
-  volume: number;
-  volumeOpen: boolean;
-  setVolumeOpen: (volumeOpen: boolean) => void;
-  handleVolumeChange: (e: SetStateAction<FormEvent>) => void;
-  handleHeart: () => void;
+  fullScreenVideo: FullScreenVideoState;
+  volume: number[];
+  index: number
+  volumeOpen: boolean[];
+  heart: boolean[]
+  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
+  setHeart: (e: SetStateAction<boolean[]>) => void;
+  setVolume: (e: SetStateAction<number[]>) => void;
   profileId: string;
-  progressRef: Ref<HTMLDivElement>;
-  handleSeek: (
-    e: MouseEvent<HTMLDivElement, MouseEvent<Element, MouseEvent>>
-  ) => void;
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   router: NextRouter;

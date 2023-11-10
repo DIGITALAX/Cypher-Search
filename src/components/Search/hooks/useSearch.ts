@@ -1,4 +1,10 @@
-import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  MouseEvent,
+  useEffect,
+  useState,
+} from "react";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
 import { PLACEHOLDERS } from "../../../../lib/constants";
 import {
@@ -11,7 +17,6 @@ import {
   Mirror,
   PublicationType,
 } from "../../../../graphql/generated";
-import cachedProfiles from "../../../../lib/helpers/cachedProfiles";
 import {
   getTextFilterSearch,
   getTextSearch,
@@ -36,7 +41,6 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import buildQuery from "../../../../lib/helpers/buildQuery";
-import { setCachedProfiles } from "../../../../redux/reducers/cachedProfilesSlice";
 import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
 import { Dispatch } from "redux";
 import getPublications from "../../../../graphql/lens/queries/publications";
@@ -48,11 +52,6 @@ const useSearch = (
   filterConstants: FilterValues | undefined,
   filters: Filter,
   allSearchItems: AllSearchItemsState,
-  profiles:
-    | {
-        [key: string]: Profile;
-      }
-    | undefined,
   dispatch: Dispatch
 ) => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
@@ -74,6 +73,9 @@ const useSearch = (
     token: false,
     fulfiller: false,
   });
+  const [volume, setVolume] = useState<number[]>([]);
+  const [volumeOpen, setVolumeOpen] = useState<boolean[]>([]);
+  const [heart, setHeart] = useState<boolean[]>([]);
 
   const handleSearch = async (
     e?: KeyboardEvent | MouseEvent,
@@ -467,14 +469,6 @@ const useSearch = (
     collections: Creation[]
   ): Promise<Creation[] | undefined> => {
     try {
-      let profileCache: { [key: string]: Profile } = {};
-
-      if (!profiles || typeof profiles !== "object") {
-        profileCache = (await cachedProfiles()) as { [key: string]: Profile };
-      } else {
-        profileCache = profiles;
-      }
-
       const { data } = await getPublications(
         {
           where: {
@@ -485,25 +479,19 @@ const useSearch = (
         lensConnected?.id
       );
 
-      (data?.publications?.items as Post[])?.forEach((item: Post) => {
-        profileCache[item.by.id] = item.by;
-      });
-
-      const profileMap = new Map(
-        Object.entries(profileCache).map(([id, profile]) => [id, profile])
-      );
-
       const newCollections: Creation[] = collections.map(
         (collection: Creation) => ({
           ...collection,
-          profile: profileMap.get(collection?.profileId),
+          profile: (
+            data?.publications?.items.find(
+              (item) => (item as Post).by.id === collection.profileId
+            ) as Post
+          ).by,
           publication: data?.publications?.items.find(
             (item) => item.id === collection.pubId
           ),
         })
       ) as Creation[];
-
-      dispatch(setCachedProfiles(profileCache));
 
       return newCollections;
     } catch (err: any) {
@@ -552,11 +540,12 @@ const useSearch = (
     setFilteredDropDownValues,
     searchLoading,
     handleResetFilters,
-    dispatch,
-    searchActive,
-    filtersOpen,
-    filterConstants,
-    filters,
+    volume,
+    volumeOpen,
+    setVolumeOpen,
+    setVolume,
+    heart,
+    setHeart,
   };
 };
 
