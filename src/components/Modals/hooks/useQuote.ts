@@ -1,5 +1,5 @@
 import { MakePostComment } from "@/components/Autograph/types/autograph.types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import lensQuote from "../../../../lib/helpers/api/quotePost";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import { PublicClient, createWalletClient, custom } from "viem";
@@ -40,6 +40,7 @@ const useQuote = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined
 ) => {
+  const videoRef = useRef<null | HTMLElement>(null);
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
   const [informationLoading, setInformationLoading] = useState<boolean>(false);
   const [approved, setApproved] = useState<boolean>(false);
@@ -355,6 +356,7 @@ const useQuote = (
     handleFollow,
     approveSpend,
     approved,
+    videoRef
   };
 };
 

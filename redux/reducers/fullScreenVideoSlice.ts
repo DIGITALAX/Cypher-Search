@@ -1,11 +1,16 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { Post, Quote } from "../../graphql/generated";
 
 export interface FullScreenVideoState {
-  value: boolean;
+  open?: boolean;
+  currentTime?: { [key: string]: number };
+  duration?: { [key: string]: number };
+  isPlaying?: { [key: string]: boolean };
+  video?: { [key: string]: Post | Quote };
 }
 
 const initialFullScreenVideoState: FullScreenVideoState = {
-  value: false,
+  open: false,
 };
 
 export const fullScreenVideoSlice = createSlice({
@@ -14,9 +19,21 @@ export const fullScreenVideoSlice = createSlice({
   reducers: {
     setFullScreenVideo: (
       state: FullScreenVideoState,
-      action: PayloadAction<boolean>
+      {
+        payload: {
+          actionOpen,
+          actionTime,
+          actionDuration,
+          actionIsPlaying,
+          actionVideo,
+        },
+      }
     ) => {
-      state.value = action.payload;
+      state.open = actionOpen;
+      state.currentTime = actionTime;
+      state.duration = actionDuration;
+      state.isPlaying = actionIsPlaying;
+      state.video = actionVideo;
     },
   },
 });

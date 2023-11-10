@@ -1,35 +1,33 @@
 import Image from "next/legacy/image";
-import { FormEvent, FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
-import { setVideoSync } from "../../../../redux/reducers/videoSyncSlice";
 import { ControlsProps } from "../types/tiles.types";
 import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
 import formatTime from "../../../../lib/helpers/formatTime";
-import { Post } from "../../../../graphql/generated";
 import numeral from "numeral";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
+import handleSeek from "../../../../lib/helpers/handleSeek";
 
 const Controls: FunctionComponent<ControlsProps> = ({
   dispatch,
-  handleSeek,
-  videoSync,
-  handleHeart,
+  fullScreenVideo,
   profileId,
-  progressRef,
   volumeOpen,
   setVolumeOpen,
   volume,
-  handleVolumeChange,
+  setVolume,
   interactionsLoading,
   mirror,
   like,
-  publication,
+  post,
   router,
+  index,
+  setHeart,
 }): JSX.Element => {
   return (
     <div
-      className={`relative h-fit flex w-full gap-3 items-center galaxy:px-2 justify-center flex-col md:flex-row`}
+      className={`relative h-fit flex w-full gap-3 items-center galaxy:px-2 justify-center flex-col md:flex-row flex-wrap`}
     >
       <div
         className={`relative w-fit h-full flex justify-center items-center gap-3`}
@@ -37,7 +35,17 @@ const Controls: FunctionComponent<ControlsProps> = ({
         <div className="relative flex flex-row w-fit h-fit items-center">
           <div
             className="relative w-4 h-4 cursor-pointer flex"
-            onClick={() => dispatch(setFullScreenVideo(true))}
+            onClick={() =>
+              dispatch(
+                setFullScreenVideo({
+                  actionOpen: true,
+                  actionTime: fullScreenVideo?.currentTime,
+                  actionDuration: fullScreenVideo?.duration,
+                  actionIsPlaying: fullScreenVideo?.isPlaying,
+                  actionVideo: post,
+                })
+              )
+            }
           >
             <Image
               src={`${INFURA_GATEWAY}/ipfs/QmVpncAteeF7voaGu1ZV5qP63UpZW2xmiCWVftL1QnL5ja`}
@@ -49,45 +57,58 @@ const Controls: FunctionComponent<ControlsProps> = ({
         </div>
         <div className="relative w-fit h-full flex items-center font-digi text-sm text-white">
           <span className="text-rosa">
-            {formatTime(videoSync?.currentTime)}
+            {formatTime(fullScreenVideo?.currentTime?.[post?.id]!)}
           </span>
-          /<span className="text-light">{formatTime(videoSync?.duration)}</span>
+          /
+          <span className="text-light">
+            {formatTime(fullScreenVideo?.duration?.[post?.id]!)}
+          </span>
         </div>
       </div>
       <div className="relative w-full h-full flex flex-col items-center justify-center">
         <div
           className="relative w-full h-2 bg-white/40 rounded-sm cursor-pointer"
-          ref={progressRef}
-          onClick={(e: any) => handleSeek(e)}
+          onClick={(e: any) => handleSeek(e, index, dispatch)}
         >
           <div
             className="absolute h-full bg-white/80 rounded-sm"
             style={{
-              width: `${(videoSync?.currentTime / videoSync?.duration) * 100}%`,
+              width: `${
+                (fullScreenVideo?.currentTime?.[post?.id]! /
+                  fullScreenVideo?.duration?.[post?.id]!) *
+                100
+              }%`,
             }}
           />
         </div>
       </div>
       <div
-        className={`relative w-fit flex flex-row gap-2 items-center justify-center md:justify-end`}
+        className={`relative w-fit flex flex-row gap-3 items-center justify-center md:justify-end`}
       >
-        <div className="relative flex flex-row w-fit h-fit items-center justify-center">
+        <div className="relative flex flex-row w-fit h-fit items-center justify-center gap-1">
           <div
             className={`cursor-pointer relative w-fit h-fit ${
               interactionsLoading?.like && "animate-spin"
             }`}
-            onClick={
-              profileId
-                ? () => {
-                    handleHeart();
-                    like((publication?.post as Post)?.id);
-                  }
-                : () => handleHeart()
-            }
+            onClick={() => {
+              setHeart((prev) => {
+                const arr = [...prev];
+                arr[index] = true;
+                return arr;
+              });
+              setTimeout(() => {
+                setHeart((prev) => {
+                  const arr = [...prev];
+                  arr[index] = false;
+                  return arr;
+                });
+              }, 3000);
+              profileId && like(post?.id);
+            }}
           >
             {interactionsLoading?.like ? (
               <AiOutlineLoading size={12} color="white" />
-            ) : (publication?.post as Post)?.operations?.hasReacted ? (
+            ) : post?.operations?.hasReacted ? (
               <div className="relative w-3 h-3 flex items-center justify-center">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/Qmc3KCKWRgN8iKwwAPM5pYkAYNeVwWu3moa5RDMDTBV6ZS`}
@@ -109,31 +130,26 @@ const Controls: FunctionComponent<ControlsProps> = ({
           </div>
           <div
             className={`relative w-fit h-fit font-earl text-white text-xs ${
-              (publication?.post as Post)?.stats?.reactions > 0 &&
-              "cursor-pointer active:scale-95"
+              post?.stats?.reactions > 0 && "cursor-pointer active:scale-95"
             }`}
             onClick={() =>
-              (publication?.post as Post)?.stats?.reactions > 0 &&
+              post?.stats?.reactions > 0 &&
               dispatch(
                 setReactBox({
                   actionOpen: true,
-                  actionId: (publication.post as Post)?.id,
+                  actionId: post?.id,
                   actionType: "Likes",
                 })
               )
             }
           >
-            {numeral((publication?.post as Post)?.stats?.reactions).format(
-              "0a"
-            )}
+            {numeral(post?.stats?.reactions).format("0a")}
           </div>
         </div>
-        <div className="relative flex flex-row w-fit h-fit items-center justify-center">
+        <div className="relative flex flex-row w-fit h-fit items-center justify-center gap-1">
           <div
             className={`${profileId && "cursor-pointer"} relative w-fit`}
-            onClick={() =>
-              router.push(`/item/pub/${(publication?.post as Post)?.id}`)
-            }
+            onClick={() => router.push(`/item/pub/${post?.id}`)}
           >
             <div className="relative w-3 h-3 flex items-center justify-center">
               <Image
@@ -146,23 +162,21 @@ const Controls: FunctionComponent<ControlsProps> = ({
           </div>
           <div
             className={`relative w-fit h-fit font-earl text-white text-xs cursor-pointer active:scale-95`}
-            onClick={() =>
-              router.push(`/item/pub/${(publication?.post as Post)?.id}`)
-            }
+            onClick={() => router.push(`/item/pub/${post?.id}`)}
           >
-            {numeral((publication?.post as Post)?.stats?.comments).format("0a")}
+            {numeral(post?.stats?.comments).format("0a")}
           </div>
         </div>
-        <div className="relative flex flex-row w-fit h-fit items-center justify-center">
+        <div className="relative flex flex-row w-fit h-fit items-center justify-center gap-1">
           <div
             className={`${profileId && "cursor-pointer"} relative w-fit ${
               interactionsLoading?.mirror && "animate-spin"
             }`}
-            onClick={() => mirror((publication?.post as Post)?.id)}
+            onClick={() => mirror(post?.id)}
           >
             {interactionsLoading?.mirror ? (
               <AiOutlineLoading size={12} color="white" />
-            ) : (publication?.post as Post)?.operations?.hasMirrored ? (
+            ) : post?.operations?.hasMirrored ? (
               <div className="relative w-3 h-3 flex items-center justify-center">
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/QmcMNSnbKvUfx3B3iHBd9deZCDf7E4J8W6UtyNer3xoMsB`}
@@ -184,39 +198,39 @@ const Controls: FunctionComponent<ControlsProps> = ({
           </div>
           <div
             className={`relative w-fit h-fit font-earl text-white text-xs ${
-              (publication?.post as Post)?.stats?.mirrors > 0 &&
-              "cursor-pointer active:scale-95"
+              post?.stats?.mirrors > 0 && "cursor-pointer active:scale-95"
             }`}
             onClick={() =>
-              (publication?.post as Post)?.stats?.mirrors > 0 &&
+              post?.stats?.mirrors > 0 &&
               dispatch(
                 setReactBox({
                   actionOpen: true,
-                  actionId: (publication.post as Post)?.id,
+                  actionId: post?.id,
                   actionType: "Mirrors",
                 })
               )
             }
           >
-            {numeral((publication?.post as Post)?.stats?.mirrors).format("0a")}
+            {numeral(post?.stats?.mirrors).format("0a")}
           </div>
         </div>
         <div
           className="relative cursor-pointer w-3 h-3 flex items-center justify-center"
           onClick={() =>
             dispatch(
-              setVideoSync({
-                actionHeart: videoSync?.heart,
-                actionDuration: videoSync?.duration,
-                actionCurrentTime: videoSync?.currentTime,
-                actionIsPlaying: videoSync?.isPlaying ? false : true,
+              setFullScreenVideo({
+                actionOpen: true,
+                actionTime: fullScreenVideo?.currentTime,
+                actionDuration: fullScreenVideo?.duration,
+                actionIsPlaying: !fullScreenVideo?.isPlaying,
+                actionVideo: post,
               })
             )
           }
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/${
-              videoSync?.isPlaying
+              fullScreenVideo?.isPlaying
                 ? "Qmbg8t4xoNywhtCexD5Ln5YWvcKMXGahfwyK6UHpR3nBip"
                 : "QmXw52mJFnzYXmoK8eExoHKv7YW9RBVEwSFtfvxXgy7sfp"
             }`}
@@ -226,11 +240,17 @@ const Controls: FunctionComponent<ControlsProps> = ({
         </div>
         <div
           className="relative cursor-pointer w-3 h-3 flex items-center justify-center"
-          onClick={() => setVolumeOpen(!volumeOpen)}
+          onClick={() =>
+            setVolumeOpen((prev) => {
+              const arr = [...prev];
+              arr[index] = !arr[index];
+              return arr;
+            })
+          }
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/${
-              volume === 0
+              volume[index] === 0
                 ? "QmVVzvq68RwGZFi46yKEthuG6PXQf74BaMW4yCrZCkgtzK"
                 : "Qme1i88Yd1x4SJfgrSCFyXp7GELCZRnnPQeFUt6jbfPbqL"
             }`}
@@ -239,15 +259,21 @@ const Controls: FunctionComponent<ControlsProps> = ({
             draggable={false}
           />
         </div>
-        {volumeOpen && (
+        {volumeOpen?.[index] && (
           <input
             className="absolute w-40 h-fit bottom-10"
             type="range"
-            value={volume}
+            value={volume[index]}
             max={1}
             min={0}
             step={0.1}
-            onChange={(e: FormEvent) => handleVolumeChange(e)}
+            onChange={(e) =>
+              setVolume((prev) => {
+                const newArr = [...prev];
+                newArr[index] = parseFloat(e.target.value);
+                return newArr;
+              })
+            }
           />
         )}
       </div>
