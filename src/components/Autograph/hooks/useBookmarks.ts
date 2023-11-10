@@ -22,7 +22,10 @@ import lensFollow from "../../../../lib/helpers/api/followProfile";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 import { Dispatch } from "redux";
-import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
+import {
+  PostCollectGifState,
+  setPostCollectGif,
+} from "../../../../redux/reducers/postCollectGifSlice";
 
 const useBookmarks = (
   lensConnected: Profile | undefined,
@@ -160,6 +163,16 @@ const useBookmarks = (
         clientWallet,
         publicClient,
         () => clearComment(index)
+      );
+      const gifs = { ...postCollectGif.gifs };
+      delete gifs[id];
+      const cts = { ...postCollectGif.collectTypes };
+      delete cts[id];
+      dispatch(
+        setPostCollectGif({
+          actionCollectType: cts,
+          actionGifs: gifs,
+        })
       );
     } catch (err: any) {
       console.error(err.message);

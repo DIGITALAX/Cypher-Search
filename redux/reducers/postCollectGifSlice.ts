@@ -10,7 +10,10 @@ export interface PostCollectGifState {
   gifs?: { [key: string]: string[] };
 }
 
-const initialPostCollectGifState: PostCollectGifState = {};
+const initialPostCollectGifState: PostCollectGifState = {
+  collectTypes: {},
+  gifs: {},
+};
 
 export const postCollectGifSlice = createSlice({
   name: "postCollectGif",
@@ -18,10 +21,11 @@ export const postCollectGifSlice = createSlice({
   reducers: {
     setPostCollectGif: (
       state: PostCollectGifState,
-      { payload: { actionType, actionCollectType, actionGifs } }
+      { payload: { actionType, actionId, actionCollectTypes, actionGifs } }
     ) => {
       state.type = actionType;
-      state.collectTypes = actionCollectType;
+      state.id = actionId;
+      state.collectTypes = actionCollectTypes;
       state.gifs = actionGifs;
     },
   },

@@ -9,6 +9,7 @@ import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
+import cleanCollect from "../cleanCollect";
 
 const lensQuote = async (
   quoteOn: string,
@@ -19,6 +20,10 @@ const lensQuote = async (
   clientWallet: WalletClient,
   publicClient: PublicClient
 ): Promise<void> => {
+  if (collectModuleInput) {
+    collectModuleInput = cleanCollect(collectModuleInput);
+  }
+
   const data = await quotePost({
     contentURI,
     quoteOn,
