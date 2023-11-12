@@ -72,6 +72,11 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   postContentLoading,
   setPostContentLoading,
   postCollectGif,
+  allOrders,
+  setOrderActions,
+  orderActions,
+  ordersLoading,
+  decryptOrder,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -152,7 +157,16 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       );
 
     case ScreenDisplay.Orders:
-      return <Orders />;
+      return (
+        <Orders
+          allOrders={allOrders}
+          decryptOrder={decryptOrder}
+          orderActions={orderActions}
+          ordersLoading={ordersLoading}
+          setOrderActions={setOrderActions}
+          router={router}
+        />
+      );
 
     default:
       return (

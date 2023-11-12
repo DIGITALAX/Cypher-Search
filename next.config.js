@@ -5,6 +5,8 @@ const allowedOrigins = [
   "https://api-v2.lens.dev/",
   "https://chromadin.infura-ipfs.io",
   "https://api.thegraph.com",
+  "https://arweave.net/",
+  "https://gw.ipfs-lens.dev",
 ];
 
 const nextConfig = {

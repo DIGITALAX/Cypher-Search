@@ -18,6 +18,7 @@ import RouterChange from "@/components/Common/modules/RouterChange";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Layout/modules/Footer";
+import { LitNodeClient } from "@lit-protocol/lit-node-client";
 
 const walletTheme = merge(darkTheme(), {
   colors: {
@@ -44,6 +45,7 @@ const wagmiConfig = createConfig({
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -69,6 +71,12 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, [router]);
 
+  useEffect(() => {
+    async () => {
+      await (client as LitNodeClient).connect();
+    };
+  }, []);
+
   if (routerChangeLoading) {
     return <RouterChange />;
   }
@@ -81,8 +89,8 @@ export default function App({ Component, pageProps }: AppProps) {
               router?.asPath?.includes("autograph") ? "bg-black" : "bg-offBlack"
             }`}
           >
-            <Component {...pageProps} />
-            <Modals />
+            <Component {...pageProps} router={router} />
+            <Modals router={router} />
             <Footer handleRewind={handleRewind} />
           </div>
         </Provider>

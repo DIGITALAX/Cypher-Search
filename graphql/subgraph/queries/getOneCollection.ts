@@ -65,6 +65,17 @@ export const COLLECTIONS_RANDOM = `query($origin: String!, $profileId: String!) 
   }
 }`;
 
+const COLLECTION_ORDER = `
+  query($collectionId: String!) {
+    collectionCreateds(where: {collectionId: $collectionId}) {
+      title
+      images
+      origin
+      pubId
+    }
+  }
+`;
+
 export const getOneCollection = async (
   collectionId: string
 ): Promise<FetchResult | void> => {
@@ -100,6 +111,32 @@ export const getOneRandomCollection = async (
     variables: {
       origin,
       profileId,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};
+
+export const getCollectionOrder = async (
+  collectionId: string
+): Promise<FetchResult | void> => {
+  const queryPromise = graphPrintClient.query({
+    query: gql(COLLECTION_ORDER),
+    variables: {
+      collectionId,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
