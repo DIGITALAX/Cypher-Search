@@ -14,7 +14,7 @@ import ReportPub from "./ReportPub";
 import useReport from "../hooks/useReport";
 import Who from "./Who";
 import useWho from "../hooks/useWho";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import useFilterPost from "../hooks/useFilterPost";
 import PostBox from "./PostBox";
 import useQuote from "../hooks/useQuote";
@@ -26,9 +26,10 @@ import FollowCollect from "./FollowCollect";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
-const Modals: FunctionComponent = (): JSX.Element => {
+const Modals: FunctionComponent<{ router: NextRouter }> = ({
+  router,
+}): JSX.Element => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const { address } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,

@@ -47,6 +47,7 @@ const config: Config = {
         hierba: "#03DB6A",
         afilado: "#4E4D4D",
         cereza: "#F28548",
+        humor: "#F7B500"
       },
       fontFamily: {
         bit: "Bitblox",

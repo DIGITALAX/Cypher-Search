@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -23,11 +23,14 @@ import usePost from "@/components/Autograph/hooks/usePost";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
+import useOrders from "@/components/Autograph/hooks/useOrders";
 
-const Autograph: NextPage = (): JSX.Element => {
-  const router = useRouter();
+const Autograph: NextPage<{ router: NextRouter }> = ({
+  router,
+}): JSX.Element => {
   const dispatch = useDispatch();
   const { address } = useAccount();
+  const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(),
@@ -242,6 +245,13 @@ const Autograph: NextPage = (): JSX.Element => {
     postContentLoading,
     setPostContentLoading,
   } = usePost(dispatch, postCollectGif, publicClient, address);
+  const {
+    allOrders,
+    ordersLoading,
+    decryptOrder,
+    setOrderActions,
+    orderActions,
+  } = useOrders(address, client);
 
   useEffect(() => {
     if (autograph && !profile) {
@@ -408,6 +418,11 @@ const Autograph: NextPage = (): JSX.Element => {
               </Head>
               <Web
                 router={router}
+                orderActions={orderActions}
+                ordersLoading={ordersLoading}
+                allOrders={allOrders}
+                decryptOrder={decryptOrder}
+                setOrderActions={setOrderActions}
                 openType={openType}
                 setOpenType={setOpenType}
                 setCurrencyOpen={setCurrencyOpen}

@@ -4,12 +4,12 @@ import {
   EnabledCurrenciesQuery,
   PaginatedOffsetRequest,
 } from "../../generated";
-import { apolloClient } from "../../../lib/lens/client";
+import { authClient } from "../../../lib/lens/client";
 
 const getEnabledCurrencies = async (
   request: PaginatedOffsetRequest
 ): Promise<FetchResult<EnabledCurrenciesQuery>> => {
-  return await apolloClient.query({
+  return await authClient.query({
     query: EnabledCurrenciesDocument,
     variables: {
       request,

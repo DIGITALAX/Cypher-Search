@@ -10,6 +10,7 @@ import {
   SimpleCollectOpenActionModuleInput,
   PrimaryPublication,
 } from "../../../../graphql/generated";
+import { AccessControlConditions } from "@lit-protocol/types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { ChangeEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
@@ -20,6 +21,23 @@ export type WebProps = {
   router: NextRouter;
   profile: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
+  allOrders: Order[];
+  ordersLoading: boolean;
+  orderActions: {
+    decryptLoading: boolean;
+    decrypted: boolean;
+    orderOpen: boolean;
+  }[];
+  setOrderActions: (
+    e: SetStateAction<
+      {
+        decryptLoading: boolean;
+        decrypted: boolean;
+        orderOpen: boolean;
+      }[]
+    >
+  ) => void;
+  decryptOrder: (orderId: string) => void;
   setSettingsData: (e: SetStateAction<ProfileMetadata>) => void;
   settingsData: ProfileMetadata;
   handleSettingsUpdate: () => Promise<void>;
@@ -220,6 +238,23 @@ export type ScreenSwitchProps = {
   screenDisplay: ScreenDisplay;
   bookmarks: (Post | Mirror | Comment | Quote)[];
   bookmarksLoading: boolean;
+  allOrders: Order[];
+  ordersLoading: boolean;
+  orderActions: {
+    decryptLoading: boolean;
+    decrypted: boolean;
+    orderOpen: boolean;
+  }[];
+  setOrderActions: (
+    e: SetStateAction<
+      {
+        decryptLoading: boolean;
+        decrypted: boolean;
+        orderOpen: boolean;
+      }[]
+    >
+  ) => void;
+  decryptOrder: (orderId: string) => void;
   postCollectGif: PostCollectGifState;
   simpleCollect: (id: string, type: string) => Promise<void>;
   handleBookmark: (id: string, index: number) => Promise<void>;
@@ -669,7 +704,7 @@ export type ScreenPostProps = {
 
 export type CollectOptionsProps = {
   id: string;
-  type: string
+  type: string;
   dispatch: Dispatch<AnyAction>;
   collectTypes:
     | {
@@ -713,3 +748,81 @@ export type CollectOptionsProps = {
   ) => void;
   availableCurrencies: Erc20[];
 };
+
+export interface EncryptedDetails {
+  ciphertext: string;
+  dataToEncryptHash: string;
+  accessControlConditions: AccessControlConditions | undefined;
+}
+
+export interface Details {
+  name: string;
+  contact: string;
+  address: string;
+  zip: string;
+  city: string;
+  state: string;
+  country: string;
+  colors: string[];
+  sizes: string[];
+}
+
+export interface Order {
+  orderId: string;
+  totalPrice: string;
+  currency: string;
+  pubId: string;
+  profileId: string;
+  buyer: string;
+  blockTimestamp: string;
+  transactionHash: string;
+  images: string[];
+  names: string[];
+  messages: string[];
+  details: Details | EncryptedDetails | string;
+  subOrders: Sub[];
+  decrypted: boolean;
+}
+
+export type OrdersProps = {
+  allOrders: Order[];
+  ordersLoading: boolean;
+  orderActions: {
+    decryptLoading: boolean;
+    decrypted: boolean;
+    orderOpen: boolean;
+  }[];
+  router: NextRouter;
+  setOrderActions: (
+    e: SetStateAction<
+      {
+        decryptLoading: boolean;
+        decrypted: boolean;
+        orderOpen: boolean;
+      }[]
+    >
+  ) => void;
+  decryptOrder: (orderId: string) => void;
+};
+
+export type SubOrderProps = {
+  item: Sub;
+  router: NextRouter;
+  decrypted: boolean;
+};
+
+export interface Sub {
+  price: string;
+  status: string;
+  collection: {
+    name: string;
+    image: string;
+    origin: string;
+    pubId: string;
+  };
+  isFulfilled: boolean;
+  fulfillerAddress: string;
+  amount: string;
+  color?: string;
+  size?: string;
+}

@@ -1,4 +1,4 @@
-import { FormEvent, MouseEvent, SetStateAction } from "react";
+import { SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Mirror,
@@ -79,7 +79,7 @@ export type TilesProps = {
   profileId: string;
   volume: number[];
   volumeOpen: boolean[];
-  heart: boolean[]
+  heart: boolean[];
   setVolume: (e: SetStateAction<number[]>) => void;
   setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
   setHeart: (e: SetStateAction<boolean[]>) => void;
@@ -90,8 +90,8 @@ export type TileSwitchProps = {
   type: string;
   publication: Publication;
   profileHovers: boolean[];
-  setHeart?: (e: SetStateAction<boolean[]>) => void
-  heart?: boolean[]
+  setHeart?: (e: SetStateAction<boolean[]>) => void;
+  heart?: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   layoutAmount: number;
   popUpOpen: boolean[];
@@ -128,7 +128,7 @@ export type ControlsProps = {
   volume: number[];
   router: NextRouter;
   volumeOpen: boolean[];
-  index: number
+  index: number;
   setHeart: (e: SetStateAction<boolean[]>) => void;
   setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
   setVolume: (e: SetStateAction<number[]>) => void;
@@ -146,9 +146,9 @@ export type ControlsProps = {
 export type VideoPostProps = {
   fullScreenVideo: FullScreenVideoState;
   volume: number[];
-  index: number
+  index: number;
   volumeOpen: boolean[];
-  heart: boolean[]
+  heart: boolean[];
   setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
   setHeart: (e: SetStateAction<boolean[]>) => void;
   setVolume: (e: SetStateAction<number[]>) => void;

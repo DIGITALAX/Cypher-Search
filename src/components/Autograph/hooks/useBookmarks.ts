@@ -418,7 +418,11 @@ const useBookmarks = (
   };
 
   useEffect(() => {
-    if (screenDisplay === ScreenDisplay.Bookmarks && allBookmarks.length < 1) {
+    if (
+      screenDisplay === ScreenDisplay.Bookmarks &&
+      allBookmarks.length < 1 &&
+      address
+    ) {
       getBookmarks();
     }
   }, [screenDisplay]);

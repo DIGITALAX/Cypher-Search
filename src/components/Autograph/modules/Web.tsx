@@ -77,6 +77,11 @@ const Web: FunctionComponent<WebProps> = ({
   setCommentContentLoading,
   setPostContentLoading,
   postCollectGif,
+  decryptOrder,
+  orderActions,
+  ordersLoading,
+  setOrderActions,
+  allOrders,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -219,6 +224,11 @@ const Web: FunctionComponent<WebProps> = ({
           postContentLoading={postContentLoading}
           setPostContentLoading={setPostContentLoading}
           postCollectGif={postCollectGif}
+          decryptOrder={decryptOrder}
+          orderActions={orderActions}
+          ordersLoading={ordersLoading}
+          setOrderActions={setOrderActions}
+          allOrders={allOrders}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (

@@ -6,7 +6,7 @@ import Header from "@/components/Layout/modules/Header";
 import useSignIn from "@/components/Layout/hooks/useSignIn";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import useTiles from "@/components/Tiles/hooks/useTiles";
-import { useRouter } from "next/router";
+import { NextRouter } from "next/router";
 import Head from "next/head";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import useProfile from "@/components/Tiles/hooks/useProfile";
@@ -14,8 +14,7 @@ import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
 
-export default function Home() {
-  const router = useRouter();
+export default function Home({ router }: { router: NextRouter }) {
   const dispatch = useDispatch();
   const { address } = useAccount();
   const publicClient = createPublicClient({
@@ -68,7 +67,7 @@ export default function Home() {
     setVolumeOpen,
     setVolume,
     heart,
-    setHeart
+    setHeart,
   } = useSearch(
     filtersOpen,
     lensConnected,
