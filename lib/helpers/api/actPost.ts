@@ -1,0 +1,97 @@
+import { AnyAction, Dispatch } from "redux";
+import { ActOnOpenActionInput } from "../../../graphql/generated";
+import collectPost from "../../../graphql/lens/mutations/collect";
+import { omit } from "lodash";
+import { WalletClient, PublicClient } from "viem";
+import broadcast from "../../../graphql/lens/mutations/broadcast";
+import handleIndexCheck from "../../../graphql/lens/queries/indexed";
+import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
+import LensHubProxy from "./../../../abis/LensHubProxy.json";
+import { polygon } from "viem/chains";
+import { setIndexer } from "../../../redux/reducers/indexerSlice";
+
+const actPost = async (
+  pubId: string,
+  actOn: ActOnOpenActionInput,
+  dispatch: Dispatch<AnyAction>,
+  address: `0x${string}`,
+  clientWallet: WalletClient,
+  publicClient: PublicClient
+) => {
+  try {
+    const { data } = await collectPost({
+      for: pubId,
+      actOn,
+    });
+
+    const typedData = data?.createActOnOpenActionTypedData.typedData;
+
+    const signature = await clientWallet.signTypedData({
+      domain: omit(typedData?.domain, ["__typename"]),
+      types: omit(typedData?.types, ["__typename"]),
+      primaryType: "Act",
+      message: omit(typedData?.value, ["__typename"]),
+      account: address as `0x${string}`,
+    });
+
+    const broadcastResult = await broadcast({
+      id: data?.createActOnOpenActionTypedData?.id,
+      signature,
+    });
+
+    if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+      await handleIndexCheck(
+        {
+          forTxId: broadcastResult?.data?.broadcastOnchain.txId,
+        },
+        dispatch
+      );
+    } else {
+      const { request } = await publicClient.simulateContract({
+        address: LENS_HUB_PROXY_ADDRESS_MATIC,
+        abi: LensHubProxy,
+        functionName: "act",
+        chain: polygon,
+        args: [
+          {
+            publicationActedProfileId:
+              typedData?.value.publicationActedProfileId,
+            publicationActedId: typedData?.value.publicationActedId,
+            actorProfileId: typedData?.value.actorProfileId,
+            referrerProfileIds: typedData?.value.referrerProfileIds,
+            referrerPubIds: typedData?.value.referrerPubIds,
+            actionModuleAddress: typedData?.value.actionModuleAddress,
+            actionModuleData: typedData?.value.actionModuleData,
+          },
+        ],
+        account: address,
+      });
+      const res = await clientWallet.writeContract(request);
+      const tx = await publicClient.waitForTransactionReceipt({ hash: res });
+
+      dispatch(
+        setIndexer({
+          actionOpen: true,
+          actionMessage: "Indexing Collect",
+        })
+      );
+
+      await handleIndexCheck(
+        {
+          forTxHash: tx.transactionHash,
+        },
+        dispatch
+      );
+    }
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  } catch (err: any) {
+    console.error(err.message);
+  }
+};
+
+export default actPost;
