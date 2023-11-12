@@ -63,7 +63,13 @@ const usePost = (
       await lensPost(
         contentURI!,
         dispatch,
-        postCollectGif.collectTypes?.["post"]!,
+        [
+          {
+            collectOpenAction: {
+              simpleCollectOpenAction: postCollectGif.collectTypes?.["post"]!,
+            },
+          },
+        ],
         address as `0x${string}`,
         clientWallet,
         publicClient

@@ -19,7 +19,7 @@ export interface Creation {
   prompt: string;
   profileId: string;
   profileHandle: string;
-  printType: string;
+  printType: string[];
   prices: string[];
   acceptedTokens: string[];
   owner: string;

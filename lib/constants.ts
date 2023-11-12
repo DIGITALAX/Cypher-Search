@@ -7,6 +7,10 @@ export const LENS_HUB_PROXY_ADDRESS_MUMBAI: `0x${string}` =
   "0xC1E77eE73403B8a7478884915aA599932A677870";
 export const LENS_HUB_PROXY_ADDRESS_MATIC: `0x${string}` =
   "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d";
+export const CHROMADIN_OPEN_ACTION: `0x${string}` = "0x";
+export const LISTENER_OPEN_ACTION: `0x${string}` = "0x";
+export const COIN_OP_OPEN_ACTION: `0x${string}` = "0x";
+export const LEGEND_OPEN_ACTION: `0x${string}` = "0x";
 
 export const PLACEHOLDERS: string[] = [
   "know the creator by name? @ them, we won't judge",
@@ -76,4 +80,11 @@ export const numberToItemTypeMap: { [key: number]: ItemType } = {
   1: ItemType.Chromadin,
   2: ItemType.Legend,
   3: ItemType.Listener,
+};
+
+export const itemTypeToNumber: { [key in ItemType]: string } = {
+  [ItemType.CoinOp]: "0",
+  [ItemType.Chromadin]: "1",
+  [ItemType.Legend]: "2",
+  [ItemType.Listener]: "3",
 };

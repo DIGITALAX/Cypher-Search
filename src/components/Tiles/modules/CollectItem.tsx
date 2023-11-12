@@ -115,18 +115,19 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
           onClick={() => {
             const newItem = {
               ...collectChoice[index - 1],
-              item: item,
+              item,
               amount: Number(item?.amount),
               level: index,
+              // chosenIndexes: item,
               type: ItemType.Legend,
               price: Number(item?.prices[index]),
+              purchased: false,
             };
 
             if (
               cartItems?.some(
                 (value) =>
-                  value?.item?.collectionId === item?.collectionId &&
-                  value.level === index
+                  value?.item?.pubId === item?.pubId && value.level === index
               )
             ) {
               router.push("/checkout");

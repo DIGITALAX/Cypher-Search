@@ -40,10 +40,12 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             type,
             color: "#000000",
             size: "m",
+            purchased: false,
+            chosenIndex: 0
           };
 
           const existingItem = cartItems.find(
-            (item) => item.item.collectionId === cartItem?.collectionId
+            (item) => item.item.pubId === cartItem?.pubId
           );
 
           if (existingItem) {

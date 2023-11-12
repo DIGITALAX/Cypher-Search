@@ -5,6 +5,7 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
 import availableCurrenciesReducer from "./reducers/availableCurrenciesSlice";
+import successCheckoutReducer from "./reducers/successCheckoutSlice";
 import postCollectGifReducer from "./reducers/postCollectGifSlice";
 import mapReducer from "./reducers/mapSlice";
 import reportPubReducer from "./reducers/reportPubSlice";
@@ -58,6 +59,7 @@ const reducer = combineReducers({
   followCollectReducer,
   availableCurrenciesReducer,
   postCollectGifReducer,
+  successCheckoutReducer,
 });
 
 export const store = configureStore({

@@ -13,7 +13,7 @@ const httpLink = new HttpLink({ uri: BASE_URL });
 
 const retryLink = new RetryLink();
 
-let link: any;
+let link: ApolloLink;
 
 link = ApolloLink.from([retryLink, httpLink]);
 

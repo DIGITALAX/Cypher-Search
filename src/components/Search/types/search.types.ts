@@ -58,16 +58,17 @@ export type SearchBarProps = {
 
 export type HeaderProps = {
   dispatch: Dispatch<AnyAction>;
+  includeSearch: boolean;
   router: NextRouter;
-  layoutAmount: number;
-  handleSearch: (
+  layoutAmount?: number;
+  handleSearch?: (
     e: KeyboardEvent | MouseEvent,
     click?: boolean
   ) => Promise<void>;
   searchActive: boolean;
-  searchInput: string;
-  placeholderText: string | undefined;
-  setSearchInput: (e: SetStateAction<string>) => void;
+  searchInput?: string;
+  placeholderText?: string | undefined;
+  setSearchInput?: (e: SetStateAction<string>) => void;
   openConnectModal: (() => void) | undefined;
   openAccountModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
@@ -79,7 +80,7 @@ export type HeaderProps = {
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;
-  handleShuffleSearch: () => void;
+  handleShuffleSearch?: () => void;
   cartItems: CartItem[];
 };
 
@@ -115,7 +116,9 @@ export type ContentSortProps = {
   filterValues: Filter;
   openDropDown: DropDown;
   setOpenDropDown: (e: SetStateAction<DropDown>) => void;
-  setFilteredDropDownValues: (e: SetStateAction<FilterValues | undefined>) => void;
+  setFilteredDropDownValues: (
+    e: SetStateAction<FilterValues | undefined>
+  ) => void;
   filteredDropDownValues: FilterValues;
 };
 
@@ -125,7 +128,9 @@ export type PrerollSortProps = {
   openDropDown: DropDown;
   filterConstants: FilterValues | undefined;
   setOpenDropDown: (e: SetStateAction<DropDown>) => void;
-  setFilteredDropDownValues: (e: SetStateAction<FilterValues | undefined>) => void;
+  setFilteredDropDownValues: (
+    e: SetStateAction<FilterValues | undefined>
+  ) => void;
   filteredDropDownValues: FilterValues;
 };
 
@@ -136,7 +141,9 @@ export type FilterProps = {
   openDropDown: DropDown;
   handleResetFilters: () => void;
   setOpenDropDown: (e: SetStateAction<DropDown>) => void;
-  setFilteredDropDownValues: (e: SetStateAction<FilterValues | undefined>) => void;
+  setFilteredDropDownValues: (
+    e: SetStateAction<FilterValues | undefined>
+  ) => void;
   filteredDropDownValues: FilterValues;
   publication: Publication;
   profileHovers: boolean[];

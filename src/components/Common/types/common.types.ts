@@ -128,8 +128,8 @@ export type NotFoundProps = {
 };
 
 export enum ItemType {
-  Chromadin = "chromadin",
   CoinOp = "coinop",
+  Chromadin = "chromadin",
   Legend = "legend",
   Listener = "listener",
 }
@@ -139,7 +139,10 @@ export type CartItem = {
   color: string;
   size: string;
   price: number;
+  chosenIndex?: number;
+  chosenIndexes?: number[];
   level?: number;
   amount: number;
   type: ItemType;
+  purchased: boolean;
 };

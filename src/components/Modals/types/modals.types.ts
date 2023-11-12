@@ -48,6 +48,12 @@ export type InteractErrorProps = {
   dispatch: Dispatch<AnyAction>;
 };
 
+export type SuccessCheckoutProps = {
+  dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
+  handle: string;
+};
+
 export type FullScreenVideoProps = {
   dispatch: Dispatch<AnyAction>;
   fullScreenVideo: FullScreenVideoState;

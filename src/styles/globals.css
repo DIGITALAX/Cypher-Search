@@ -293,6 +293,17 @@ input[type="number"]::-webkit-outer-spin-button:focus {
   background: linear-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
 }
 
+#success {
+  background: linear-gradient(
+    #fc9cf3,
+    #0ac7ab,
+    #0091ff,
+    #9cceda,
+    #fd99dc,
+    #c5d6e1
+  );
+}
+
 #smoke {
   background: linear-gradient(
     #9acce6,

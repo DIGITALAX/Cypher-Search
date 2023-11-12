@@ -28,6 +28,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   cartListOpen,
   setCartListOpen,
   router,
+  includeSearch,
 }): JSX.Element => {
   return (
     <div
@@ -47,17 +48,19 @@ const Header: FunctionComponent<HeaderProps> = ({
           draggable={false}
         />
       </Link>
-      <SearchBar
-        dispatch={dispatch}
-        handleSearch={handleSearch}
-        searchActive={searchActive}
-        searchInput={searchInput}
-        setSearchInput={setSearchInput}
-        filtersOpen={filtersOpen}
-        handleShuffleSearch={handleShuffleSearch}
-        placeholderText={placeholderText}
-        layoutAmount={layoutAmount}
-      />
+      {includeSearch && (
+        <SearchBar
+          dispatch={dispatch}
+          handleSearch={handleSearch!}
+          searchActive={searchActive}
+          searchInput={searchInput!}
+          setSearchInput={setSearchInput!}
+          filtersOpen={filtersOpen}
+          handleShuffleSearch={handleShuffleSearch!}
+          placeholderText={placeholderText}
+          layoutAmount={layoutAmount!}
+        />
+      )}
       <Accounts
         searchActive={searchActive}
         filtersOpen={filtersOpen}

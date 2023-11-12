@@ -14,7 +14,7 @@ import ReportPub from "./ReportPub";
 import useReport from "../hooks/useReport";
 import Who from "./Who";
 import useWho from "../hooks/useWho";
-import { NextRouter, useRouter } from "next/router";
+import { NextRouter } from "next/router";
 import useFilterPost from "../hooks/useFilterPost";
 import PostBox from "./PostBox";
 import useQuote from "../hooks/useQuote";
@@ -23,6 +23,7 @@ import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
 import PostCollectGif from "./PostCollectGif";
 import FollowCollect from "./FollowCollect";
+import SuccessCheckout from "./SuccessCheckout";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -44,6 +45,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   );
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
+  );
+  const successCheckout = useSelector(
+    (state: RootState) => state.app.successCheckoutReducer
   );
   const profileDisplay = useSelector(
     (state: RootState) => state.app.profileDisplayReducer.value
@@ -302,6 +306,15 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
         />
       )}
       {interactError.value && <InteractError dispatch={dispatch} />}
+      {successCheckout.value && (
+        <SuccessCheckout
+          dispatch={dispatch}
+          router={router}
+          handle={
+            lensConnected?.handle?.suggestedFormatted?.localName?.split("@")[1]!
+          }
+        />
+      )}
       {indexer?.open && <Index message={indexer?.message} />}
     </>
   );

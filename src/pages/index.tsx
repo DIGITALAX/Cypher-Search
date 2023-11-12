@@ -151,8 +151,8 @@ export default function Home({ router }: { router: NextRouter }) {
           cartListOpen={cartListOpen}
           setCartListOpen={setCartListOpen}
           router={router}
+          includeSearch
         />
-
         {searchActive && (
           <Tiles
             layoutAmount={layoutAmount}

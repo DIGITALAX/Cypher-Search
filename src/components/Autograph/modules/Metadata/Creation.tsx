@@ -46,10 +46,12 @@ const Creation: FunctionComponent<CreationProps> = ({
             type: numberToItemTypeMap[Number(item.origin)],
             color: "#000000",
             size: "m",
+            purchased: false,
+            chosenIndex: 0
           };
 
           const existingItem = cartItems.find(
-            (value) => value.item.collectionId === item?.collectionId
+            (value) => value.item.pubId === item?.pubId
           );
 
           if (existingItem) {
