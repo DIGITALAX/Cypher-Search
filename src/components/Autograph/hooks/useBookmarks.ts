@@ -158,7 +158,13 @@ const useBookmarks = (
         id,
         contentURI!,
         dispatch,
-        postCollectGif.collectTypes?.[id],
+        [
+          {
+            collectOpenAction: {
+              simpleCollectOpenAction: postCollectGif.collectTypes?.[id],
+            },
+          },
+        ],
         address as `0x${string}`,
         clientWallet,
         publicClient,

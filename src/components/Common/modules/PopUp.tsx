@@ -4,6 +4,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { PopUpProps } from "../types/common.types";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
+import { PrintType } from "@/components/Tiles/types/tiles.types";
 
 const PopUp: FunctionComponent<PopUpProps> = ({
   router,
@@ -38,10 +39,10 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             price: Number(cartItem.prices?.[0]),
             level,
             type,
-            color: "#000000",
-            size: "m",
+            color: cartItem?.colors?.[0],
+            size: cartItem?.sizes?.[0],
             purchased: false,
-            chosenIndex: 0
+            chosenIndex: 0,
           };
 
           const existingItem = cartItems.find(

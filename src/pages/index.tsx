@@ -33,6 +33,9 @@ export default function Home({ router }: { router: NextRouter }) {
   const layoutAmount = useSelector(
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
+  const oracleData = useSelector(
+    (state: RootState) => state.app.oracleDataReducer.data
+  );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
   );
@@ -86,7 +89,7 @@ export default function Home({ router }: { router: NextRouter }) {
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch);
+  } = useSignIn(dispatch, oracleData);
   const {
     mirror,
     like,

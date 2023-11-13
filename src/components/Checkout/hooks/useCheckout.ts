@@ -1,6 +1,6 @@
 import { Details } from "@/components/Autograph/types/autograph.types";
 import { CartItem } from "@/components/Common/types/common.types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { encryptItems } from "../../../../lib/helpers/encryptItems";
 import {
@@ -12,14 +12,25 @@ import { polygon } from "viem/chains";
 import encodeActData from "../../../../lib/helpers/encodeActData";
 import actPost from "../../../../lib/helpers/api/actPost";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
-import { ACCEPTED_TOKENS_MUMBAI } from "../../../../lib/constants";
+import {
+  ACCEPTED_TOKENS_MUMBAI,
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  LEGEND_OPEN_ACTION,
+  LISTENER_OPEN_ACTION,
+} from "../../../../lib/constants";
 import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSlice";
+import { Profile } from "../../../../graphql/generated";
+import { OracleData } from "../types/checkout.types";
+import { ethers } from "ethers";
 
 const useCheckout = (
   publicClient: PublicClient,
   dispatch: Dispatch<AnyAction>,
   address: `0x${string}` | undefined,
+  lensConnected: Profile | undefined,
   client: LitNodeClient,
+  oracleData: OracleData[],
   cartItems: CartItem[]
 ) => {
   const [details, setDetails] = useState<Details>({
@@ -32,76 +43,70 @@ const useCheckout = (
     country: "",
     colors: [],
     sizes: [],
-    collectionIds: [],
-    collectionAmounts: [],
   });
+  const [groupedByPubId, setGroupedByPubId] = useState<{
+    [key: string]: {
+      colors: string[];
+      sizes: string[];
+      amounts: number[];
+      collectionIds: string[];
+      types: string[];
+      prices: number[];
+      fulfillerAddress: string[];
+    };
+  }>({});
   const [encryptedStrings, setEncryptedStrings] = useState<string[]>([]);
-  const [completedPurchases, setCompletedPurchases] = useState<boolean[]>(
-    Array.from({ length: cartItems?.length }, () => false)
+  const [chooseCartItem, setChooseCartItem] = useState<string>(
+    cartItems?.find(
+      (item) => item?.item?.pubId == Object.keys(groupedByPubId)[0]
+    )?.item?.pubId!
+  );
+  const [isApprovedSpend, setApprovedSpend] = useState<boolean>(false);
+  const [completedPurchases, setCompletedPurchases] = useState<
+    {
+      completed: boolean;
+      open: boolean;
+    }[]
+  >(
+    Array.from({ length: Object.keys(groupedByPubId).length }, () => ({
+      completed: false,
+      open: true,
+    }))
   );
   const [checkoutCurrency, setCheckoutCurrency] = useState<string>(
     ACCEPTED_TOKENS_MUMBAI[1][2]
   );
   const [encryptionLoading, setEncryptionLoading] = useState<boolean>(false);
+  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const [collectPostLoading, setCollectPostLoading] = useState<boolean[]>(
     Array.from({ length: cartItems?.length }, () => false)
   );
 
   const encryptFulfillment = async () => {
-    if (!address) return;
+    if (
+      !address ||
+      details?.address?.trim() === "" ||
+      details?.city?.trim() === "" ||
+      details?.name?.trim() === "" ||
+      details?.state?.trim() === "" ||
+      details?.zip?.trim() === "" ||
+      details?.country?.trim() === ""
+    )
+      return;
     setEncryptionLoading(true);
     try {
       const authSig = await checkAndSignAuthMessage({
         chain: "polygon",
       });
 
-      const groupedByPubId: {
-        [key: string]: {
-          colors: string[];
-          sizes: string[];
-          amounts: number[];
-          collectionIds: string[];
-          types: string[];
-          prices: number[];
-          fulfillerAddress: string[];
-        };
-      } = {};
-      for (const item of cartItems) {
-        const pubId = item.item.pubId;
-
-        if (!groupedByPubId[pubId]) {
-          groupedByPubId[pubId] = {
-            colors: [],
-            sizes: [],
-            amounts: [],
-            collectionIds: [],
-            types: [],
-            prices: [],
-            fulfillerAddress: [],
-          };
-        }
-
-        groupedByPubId[pubId] = {
-          colors: [...groupedByPubId[pubId].colors, item.color],
-          sizes: [...groupedByPubId[pubId].sizes, item.size],
-          amounts: [...groupedByPubId[pubId].amounts, item.amount],
-          collectionIds: [
-            ...groupedByPubId[pubId].collectionIds,
-            item.item.collectionId,
-          ],
-          types: [...groupedByPubId[pubId].types, item.type],
-          prices: [...groupedByPubId[pubId].prices, item.price],
-          fulfillerAddress: [
-            ...groupedByPubId[pubId].fulfillerAddress,
-            item.item.fulfiller,
-          ],
-        };
-      }
       setEncryptedStrings;
       const encryptedItems = await encryptItems(
         client,
         groupedByPubId,
-        details,
+        {
+          ...details,
+          contact: lensConnected?.handle?.suggestedFormatted?.localName!,
+        },
         address,
         authSig
       );
@@ -113,9 +118,11 @@ const useCheckout = (
     setEncryptionLoading(false);
   };
 
-  const collectItem = async (id: string) => {
+  const collectItem = async () => {
     if (encryptedStrings?.length < 1) return;
-    const index = cartItems?.findIndex((item) => item?.item?.pubId === id);
+    const index = cartItems?.findIndex(
+      (item) => item?.item?.pubId === chooseCartItem
+    );
     if (!index || !address) return;
 
     setCollectPostLoading((prev) => {
@@ -156,11 +163,19 @@ const useCheckout = (
 
       setCompletedPurchases((prev) => {
         const arr = [...prev];
-        arr[index] = true;
+        arr[index] = {
+          ...arr[index],
+          completed: true,
+          open: false,
+        };
         return arr;
       });
 
-      if (completedPurchases?.slice(0, -1)?.every((value) => value === true)) {
+      if (
+        completedPurchases
+          ?.slice(0, -1)
+          ?.every((value) => value.completed === true)
+      ) {
         setEncryptedStrings([]);
         setDetails({
           name: "",
@@ -172,8 +187,6 @@ const useCheckout = (
           country: "",
           colors: [],
           sizes: [],
-          collectionIds: [],
-          collectionAmounts: [],
         });
         dispatch(setSuccessCheckout(true));
       }
@@ -188,6 +201,243 @@ const useCheckout = (
     });
   };
 
+  const approveSpend = async () => {
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      const item = cartItems?.find(
+        (item) => item?.item?.pubId === chooseCartItem
+      );
+
+      const { request } = await publicClient.simulateContract({
+        address: checkoutCurrency as `0x${string}`,
+        abi: [
+          checkoutCurrency === "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30"
+            ? {
+                inputs: [
+                  {
+                    internalType: "address",
+                    name: "spender",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "tokens",
+                    type: "uint256",
+                  },
+                ],
+                name: "approve",
+                outputs: [
+                  { internalType: "bool", name: "success", type: "bool" },
+                ],
+                stateMutability: "nonpayable",
+                type: "function",
+              }
+            : checkoutCurrency === "0x3cf7283c025d82390e86d2feb96eda32a393036b"
+            ? {
+                constant: false,
+                inputs: [
+                  { name: "guy", type: "address" },
+                  { name: "wad", type: "uint256" },
+                ],
+                name: "approve",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function",
+              }
+            : {
+                inputs: [
+                  {
+                    internalType: "address",
+                    name: "spender",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "amount",
+                    type: "uint256",
+                  },
+                ],
+                name: "approve",
+                outputs: [
+                  {
+                    internalType: "bool",
+                    name: "",
+                    type: "bool",
+                  },
+                ],
+                stateMutability: "nonpayable",
+                type: "function",
+              },
+        ],
+        functionName: "approve",
+        chain: polygon,
+        args: [
+          item?.type === "chromadin"
+            ? CHROMADIN_OPEN_ACTION
+            : item?.type === "listener"
+            ? LISTENER_OPEN_ACTION
+            : item?.type === "coinop"
+            ? COIN_OP_OPEN_ACTION
+            : LEGEND_OPEN_ACTION,
+          ethers.parseEther(
+            oracleData
+              ?.find(
+                (oracle) =>
+                  oracle.currency ===
+                  ACCEPTED_TOKENS_MUMBAI.find(
+                    (item) => item[2] === checkoutCurrency
+                  )?.[2]
+              )
+              ?.rate?.toString()!
+          ),
+        ],
+        account: address,
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
+      setApprovedSpend(true);
+    } catch (err: any) {
+      console.log(err.message);
+    }
+  };
+
+  const checkApproved = async () => {
+    try {
+      const item = cartItems?.find(
+        (item) => item?.item?.pubId === chooseCartItem
+      );
+
+      const data = await publicClient.readContract({
+        address: ACCEPTED_TOKENS_MUMBAI.filter(
+          (token) => token[2].toLowerCase() === checkoutCurrency?.toLowerCase()
+        )?.[0]?.[1] as `0x${string}`,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "owner",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "spender",
+                type: "address",
+              },
+            ],
+            name: "allowance",
+            outputs: [
+              {
+                internalType: "uint256",
+                name: "",
+                type: "uint256",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+          },
+        ],
+        functionName: "allowance",
+        args: [
+          address as `0x${string}`,
+          item?.type === "chromadin"
+            ? CHROMADIN_OPEN_ACTION
+            : item?.type === "listener"
+            ? LISTENER_OPEN_ACTION
+            : item?.type === "coinop"
+            ? COIN_OP_OPEN_ACTION
+            : LEGEND_OPEN_ACTION,
+        ],
+      });
+
+      if (data && address) {
+        if (
+          Number((data as any)?.toString()) /
+            (checkoutCurrency === "0x07b722856369f6b923e1f276abca58dd3d15243d"
+              ? 10 ** 6
+              : 10 ** 18) >=
+          Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency ===
+                ACCEPTED_TOKENS_MUMBAI.find(
+                  (item) => item[2] === checkoutCurrency
+                )?.[2]
+            )?.rate
+          )
+        ) {
+          setApprovedSpend(true);
+        } else {
+          setApprovedSpend(false);
+        }
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const handleGroupByPubId = () => {
+    const grouped: {
+      [key: string]: {
+        colors: string[];
+        sizes: string[];
+        amounts: number[];
+        collectionIds: string[];
+        types: string[];
+        prices: number[];
+        fulfillerAddress: string[];
+      };
+    } = {};
+    for (const item of cartItems) {
+      const pubId = item.item.pubId;
+
+      if (!grouped[pubId]) {
+        grouped[pubId] = {
+          colors: [],
+          sizes: [],
+          amounts: [],
+          collectionIds: [],
+          types: [],
+          prices: [],
+          fulfillerAddress: [],
+        };
+      }
+
+      grouped[pubId] = {
+        colors: [...grouped[pubId].colors, item.color],
+        sizes: [...grouped[pubId].sizes, item.size],
+        amounts: [...grouped[pubId].amounts, item.amount],
+        collectionIds: [
+          ...grouped[pubId].collectionIds,
+          item.item.collectionId,
+        ],
+        types: [...grouped[pubId].types, item.type],
+        prices: [...grouped[pubId].prices, item.price],
+        fulfillerAddress: [
+          ...grouped[pubId].fulfillerAddress,
+          item.item.fulfiller,
+        ],
+      };
+    }
+
+    setGroupedByPubId(grouped);
+  };
+
+  useEffect(() => {
+    if (lensConnected?.id) {
+      checkApproved();
+    }
+  }, [checkoutCurrency]);
+
+  useEffect(() => {
+    handleGroupByPubId();
+  }, [cartItems]);
+
   return {
     encryptFulfillment,
     collectPostLoading,
@@ -198,6 +448,16 @@ const useCheckout = (
     checkoutCurrency,
     setCheckoutCurrency,
     completedPurchases,
+    openDropdown,
+    setOpenDropdown,
+    encryptedStrings,
+    approveSpend,
+    chooseCartItem,
+    setChooseCartItem,
+    isApprovedSpend,
+    setEncryptedStrings,
+    groupedByPubId,
+    setCompletedPurchases
   };
 };
 

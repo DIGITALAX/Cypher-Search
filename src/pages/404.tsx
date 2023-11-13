@@ -15,6 +15,9 @@ const Custom404: NextPage<{
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
+  const oracleData = useSelector(
+    (state: RootState) => state.app.oracleDataReducer.data
+  );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
   );
@@ -54,7 +57,7 @@ const Custom404: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch);
+  } = useSignIn(dispatch, oracleData);
 
   return (
     <>

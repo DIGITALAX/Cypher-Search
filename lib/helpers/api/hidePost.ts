@@ -1,6 +1,4 @@
 import { AnyAction, Dispatch } from "redux";
-import pollUntilIndexed from "../../../graphql/lens/queries/indexed";
-import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 import hidePost from "../../../graphql/lens/mutations/hide";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 

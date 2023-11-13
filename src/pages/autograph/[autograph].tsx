@@ -35,6 +35,9 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     chain: polygon,
     transport: http(),
   });
+  const oracleData = useSelector(
+    (state: RootState) => state.app.oracleDataReducer.data
+  );
   const { autograph } = router.query;
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
   const profileFeed = useSelector(
@@ -118,7 +121,7 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch);
+  } = useSignIn(dispatch, oracleData);
   const { profileLoading, getProfileData, sortType, setSortType } =
     useAutograph(dispatch);
   const {

@@ -13,6 +13,7 @@ import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
+import { ACCEPTED_TOKENS_MUMBAI } from "../../lib/constants";
 
 const Checkout: NextPage<{
   router: NextRouter;
@@ -29,6 +30,9 @@ const Checkout: NextPage<{
   );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const oracleData = useSelector(
+    (state: RootState) => state.app.oracleDataReducer.data
   );
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
@@ -48,7 +52,7 @@ const Checkout: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch);
+  } = useSignIn(dispatch, oracleData);
   const {
     collectItem,
     collectPostLoading,
@@ -56,7 +60,28 @@ const Checkout: NextPage<{
     encryptionLoading,
     setDetails,
     details,
-  } = useCheckout(publicClient, dispatch, address, client, cartItems);
+    openDropdown,
+    setOpenDropdown,
+    checkoutCurrency,
+    setCheckoutCurrency,
+    encryptedStrings,
+    approveSpend,
+    isApprovedSpend,
+    chooseCartItem,
+    setChooseCartItem,
+    setEncryptedStrings,
+    completedPurchases,
+    groupedByPubId,
+    setCompletedPurchases,
+  } = useCheckout(
+    publicClient,
+    dispatch,
+    address,
+    lensConnected,
+    client,
+    oracleData,
+    cartItems
+  );
 
   return (
     <div
@@ -84,36 +109,46 @@ const Checkout: NextPage<{
         dispatch={dispatch}
         includeSearch={false}
       />
-      <div className="relative w-full h-full flex items-start justify-start flex-col py-2 gap-5 px-6 top-20">
-        <div className="relative w-fit h-fit flex items-center justify-center font-aust text-3xl text-white">
-          Checkout
-        </div>
-        <div className="relative w-96 h-fit flex items-center justify-center break-words font-bit text-white text-xs">
-          Claim your cart. Each Lens collect is unique like you—one by one
-          checkouts give them that personal touch. No batch buys at this time.
-        </div>
-        <div className="relative w-full h-fit flex items-start justify-center flex-row">
-          <Cart
-            collectItem={collectItem}
-            collectPostLoading={collectPostLoading}
-            router={router}
-          />
-          {
-          
-        //   cartItems?.find((item) => item.item.origin !== "1") && 
-          
-          (
-            
-            
-            <Fulfillment
-              details={details}
-              dispatch={dispatch}
-              encryptionLoading={encryptionLoading}
-              encryptFulfillment={encryptFulfillment}
-              setDetails={setDetails}
-            />
+      <div className="relative w-full h-fit flex items-start justify-start flex-row px-4">
+        <Fulfillment
+          setEncryptedStrings={setEncryptedStrings}
+          collectPostLoading={collectPostLoading}
+          details={details}
+          encryptionLoading={encryptionLoading}
+          encryptFulfillment={encryptFulfillment}
+          setDetails={setDetails}
+          openDropdown={openDropdown}
+          setOpenDropdown={setOpenDropdown}
+          encryptedStrings={encryptedStrings}
+          total={cartItems?.reduce((sum, item) => sum + Number(item.price), 0)}
+          checkoutCurrency={checkoutCurrency}
+          rate={Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency ===
+                ACCEPTED_TOKENS_MUMBAI.find(
+                  (item) => item[2] === checkoutCurrency
+                )?.[2]
+            )?.rate
           )}
-        </div>
+          setCheckoutCurrency={setCheckoutCurrency}
+          cartItems={cartItems}
+          collectItem={collectItem}
+          isApprovedSpend={isApprovedSpend}
+          approveSpend={approveSpend}
+          chooseCartItem={chooseCartItem}
+        />
+        <Cart
+          router={router}
+          cartItems={cartItems}
+          chooseCartItem={chooseCartItem}
+          setChooseCartItem={setChooseCartItem}
+          collectPostLoading={collectPostLoading}
+          completedPurchases={completedPurchases}
+          groupedByPubId={groupedByPubId}
+          dispatch={dispatch}
+          setCompletedPurchases={setCompletedPurchases}
+        />
       </div>
     </div>
   );

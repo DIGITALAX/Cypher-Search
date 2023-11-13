@@ -2,7 +2,7 @@ import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
 import commentPost from "../../../graphql/lens/mutations/comment";
-import { SimpleCollectOpenActionModuleInput } from "../../../graphql/generated";
+import { OpenActionModuleInput, InputMaybe } from "../../../graphql/generated";
 import { polygon } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
@@ -15,25 +15,26 @@ const lensComment = async (
   id: string,
   contentURI: string,
   dispatch: Dispatch<AnyAction>,
-  collectModuleInput: SimpleCollectOpenActionModuleInput | undefined,
+  openActionModules: InputMaybe<OpenActionModuleInput[]> | undefined,
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
   clearComment: () => void
 ): Promise<void> => {
-  if (collectModuleInput) {
-    collectModuleInput = cleanCollect(collectModuleInput);
+  if (
+    openActionModules &&
+    openActionModules?.hasOwnProperty("collectOpenAction") &&
+    openActionModules?.[0]?.collectOpenAction?.hasOwnProperty(
+      "simpleCollectOpenAction"
+    )
+  ) {
+    openActionModules = cleanCollect(openActionModules);
   }
+
   const data = await commentPost({
     commentOn: id,
     contentURI: contentURI,
-    openActionModules: [
-      {
-        collectOpenAction: {
-          simpleCollectOpenAction: collectModuleInput,
-        },
-      },
-    ],
+    openActionModules,
   });
 
   const typedData = data?.data?.createOnchainCommentTypedData.typedData;

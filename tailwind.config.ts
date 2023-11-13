@@ -23,7 +23,6 @@ const config: Config = {
         frio: "#132742",
         mar: "#27BBCC",
         amo: "#44D7B6",
-        zana: "#FBDB86",
         mos: "#05A5B7",
         pez: "#81A8F8",
         virg: "#EFEFEF",

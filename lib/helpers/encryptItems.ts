@@ -1,4 +1,3 @@
-import { ItemType } from "@/components/Common/types/common.types";
 import { Details } from "@/components/Autograph/types/autograph.types";
 import { LitNodeClient, encryptString } from "@lit-protocol/lit-node-client";
 import { AuthSig } from "@lit-protocol/types";

@@ -44,10 +44,10 @@ const Creation: FunctionComponent<CreationProps> = ({
             amount: 1,
             price: Number(item.prices?.[0]),
             type: numberToItemTypeMap[Number(item.origin)],
-            color: "#000000",
-            size: "m",
+            color: item?.colors?.[0],
+            size: item?.sizes?.[0],
             purchased: false,
-            chosenIndex: 0
+            chosenIndex: 0,
           };
 
           const existingItem = cartItems.find(
