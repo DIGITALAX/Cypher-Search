@@ -116,9 +116,9 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                                       key={index}
                                       className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-white font-aust text-sm cursor-pointer hover:opacity-80"
                                       onClick={() => {
-                                        if (details?.country !== country) {
-                                          setEncryptedStrings([]);
-                                        }
+                                        // if (details?.country !== country) {
+                                        //   setEncryptedStrings([]);
+                                        // }
                                         setOpenDropdown(false);
                                         setDetails((prev) => ({
                                           ...prev,
@@ -142,12 +142,12 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                           (details as any)?.[item?.title?.toLowerCase()] || ""
                         }
                         onChange={(e) => {
-                          if (
-                            (details as any)?.[item?.title?.toLowerCase()] !==
-                            e.target.value
-                          ) {
-                            setEncryptedStrings([]);
-                          }
+                          // if (
+                          //   (details as any)?.[item?.title?.toLowerCase()] !==
+                          //   e.target.value
+                          // ) {
+                          //   setEncryptedStrings([]);
+                          // }
                           setDetails((prev) => ({
                             ...prev,
                             [item?.title?.toLowerCase()]: e.target.value,

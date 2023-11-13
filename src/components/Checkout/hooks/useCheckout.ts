@@ -23,6 +23,7 @@ import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSl
 import { Profile } from "../../../../graphql/generated";
 import { OracleData } from "../types/checkout.types";
 import { ethers } from "ethers";
+import { setCypherStorageCart } from "../../../../lib/utils";
 
 const useCheckout = (
   publicClient: PublicClient,
@@ -160,6 +161,7 @@ const useCheckout = (
         purchased: true,
       };
       dispatch(setCartItems(newItems));
+      setCypherStorageCart(JSON.stringify(newItems));
 
       setCompletedPurchases((prev) => {
         const arr = [...prev];
@@ -176,6 +178,9 @@ const useCheckout = (
           ?.slice(0, -1)
           ?.every((value) => value.completed === true)
       ) {
+        setGroupedByPubId({});
+        dispatch(setCartItems([]));
+        setCypherStorageCart(JSON.stringify([]));
         setEncryptedStrings([]);
         setDetails({
           name: "",
@@ -457,7 +462,7 @@ const useCheckout = (
     isApprovedSpend,
     setEncryptedStrings,
     groupedByPubId,
-    setCompletedPurchases
+    setCompletedPurchases,
   };
 };
 

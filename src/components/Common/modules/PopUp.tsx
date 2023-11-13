@@ -5,6 +5,7 @@ import { PopUpProps } from "../types/common.types";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { PrintType } from "@/components/Tiles/types/tiles.types";
+import { setCypherStorageCart } from "../../../../lib/utils";
 
 const PopUp: FunctionComponent<PopUpProps> = ({
   router,
@@ -67,8 +68,14 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             }
 
             dispatch(setCartItems(newCartItems));
+            setCypherStorageCart(
+              JSON.stringify(newCartItems)
+            );
           } else {
             dispatch(setCartItems([...cartItems, newItem]));
+            setCypherStorageCart(
+              JSON.stringify([...cartItems, newItem])
+            );
           }
 
           dispatch(setCartAnim(true));

@@ -121,7 +121,7 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData);
+  } = useSignIn(dispatch, oracleData, cartItems);
   const { profileLoading, getProfileData, sortType, setSortType } =
     useAutograph(dispatch);
   const {

@@ -6,6 +6,7 @@ import getProfiles from "../../../../graphql/lens/queries/profiles";
 import generateChallenge from "../../../../graphql/lens/queries/challenge";
 import {
   getAuthenticationToken,
+  getCypherStorageCart,
   isAuthExpired,
   refreshAuth,
   removeAuthenticationToken,
@@ -18,8 +19,14 @@ import { Dispatch } from "redux";
 import { getOracleData } from "../../../../graphql/subgraph/queries/getOracleData";
 import { OracleData } from "@/components/Checkout/types/checkout.types";
 import { setOracleData } from "../../../../redux/reducers/oracleDataSlice";
+import { CartItem } from "@/components/Common/types/common.types";
+import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 
-const useSignIn = (dispatch: Dispatch, oracleData: OracleData[]) => {
+const useSignIn = (
+  dispatch: Dispatch,
+  oracleData: OracleData[],
+  cartItems: CartItem[]
+) => {
   const { isConnected, address } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const [openAccount, setOpenAccount] = useState<boolean>(false);
@@ -107,9 +114,20 @@ const useSignIn = (dispatch: Dispatch, oracleData: OracleData[]) => {
     }
   };
 
+  const refetchCart = () => {
+    const data = getCypherStorageCart();
+    if (data && data?.length > 0) {
+      dispatch(setCartItems(data));
+    }
+  };
+
   useEffect(() => {
     if (!oracleData) {
       handleOracles();
+    }
+
+    if (cartItems?.length < 1) {
+      refetchCart();
     }
   }, []);
 

@@ -52,7 +52,7 @@ const Checkout: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData);
+  } = useSignIn(dispatch, oracleData, cartItems);
   const {
     collectItem,
     collectPostLoading,

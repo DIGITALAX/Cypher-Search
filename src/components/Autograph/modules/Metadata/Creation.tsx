@@ -10,6 +10,7 @@ import InteractBar from "@/components/Common/modules/InteractBar";
 import { setCartItems } from "../../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../../redux/reducers/cartAnimSlice";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
+import { setCypherStorageCart } from "../../../../../lib/utils";
 
 const Creation: FunctionComponent<CreationProps> = ({
   item,
@@ -72,8 +73,10 @@ const Creation: FunctionComponent<CreationProps> = ({
             }
 
             dispatch(setCartItems(newCartItems));
+            setCypherStorageCart(JSON.stringify(newCartItems));
           } else {
             dispatch(setCartItems([...cartItems, newItem]));
+            setCypherStorageCart(JSON.stringify([...cartItems, newItem]));
           }
 
           dispatch(setCartAnim(true));
