@@ -6,6 +6,7 @@ import Bar from "../../Common/modules/Bar";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { ItemType } from "@/components/Common/types/common.types";
+import { setCypherStorageCart } from "../../../../lib/utils";
 
 const CollectItem: FunctionComponent<CollectItemProps> = ({
   index,
@@ -143,8 +144,12 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
                 const newCartItems = [...cartItems];
                 newCartItems.splice(itemIndex, 1);
                 dispatch(setCartItems([...newCartItems, newItem]));
+                setCypherStorageCart(
+                  JSON.stringify([...newCartItems, newItem])
+                );
               } else {
                 dispatch(setCartItems([...cartItems, newItem]));
+                setCypherStorageCart(JSON.stringify([...cartItems, newItem]));
               }
             }
             dispatch(setCartAnim(true));

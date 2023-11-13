@@ -89,7 +89,7 @@ export default function Home({ router }: { router: NextRouter }) {
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData);
+  } = useSignIn(dispatch, oracleData, cartItems);
   const {
     mirror,
     like,

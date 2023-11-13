@@ -5,6 +5,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { ImArrowUp, ImCross } from "react-icons/im";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import lodash from "lodash";
+import { setCypherStorageCart } from "../../../../lib/utils";
 
 const Cart: FunctionComponent<CartProps> = ({
   cartItems,
@@ -71,6 +72,16 @@ const Cart: FunctionComponent<CartProps> = ({
                               ...cartItems.slice(index + 1),
                             ])
                           );
+                          setCypherStorageCart(
+                            JSON.stringify([
+                              ...cartItems.slice(0, index),
+                              {
+                                ...cartItems[index],
+                                amount: cartItems[index].amount + 1,
+                              },
+                              ...cartItems.slice(index + 1),
+                            ])
+                          );
                         }}
                       >
                         <Image
@@ -102,6 +113,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                   ...cartItems.slice(index + 1),
                                 ];
                           dispatch(setCartItems(newCart));
+                          setCypherStorageCart(JSON.stringify(newCart));
                         }}
                       >
                         <Image
@@ -124,6 +136,7 @@ const Cart: FunctionComponent<CartProps> = ({
                           lodash.slice([...cartItems], index + 1)
                         );
                         dispatch(setCartItems(newCart));
+                        setCypherStorageCart(JSON.stringify(newCart));
                       }}
                     >
                       <ImCross color="white" size={10} />
@@ -149,7 +162,18 @@ const Cart: FunctionComponent<CartProps> = ({
                 className={`relative w-96 h-fit flex flex-col items-center justify-center border border-sol rounded-md gap-3 cursor-pointer  ${
                   currentItem?.item?.pubId !== chooseCartItem && "opacity-50"
                 } ${completedPurchases?.[index]?.open && "px-2 py-4"}`}
-                onClick={() => setChooseCartItem(currentItem?.item?.pubId!)}
+                onClick={() =>
+                  completedPurchases?.[index].completed
+                    ? setCompletedPurchases((prev) => {
+                        const arr = [...prev];
+                        arr[index] = {
+                          ...arr[index],
+                          open: false,
+                        };
+                        return arr;
+                      })
+                    : setChooseCartItem(currentItem?.item?.pubId!)
+                }
               >
                 {completedPurchases?.[index]?.open ? (
                   <>
@@ -175,6 +199,7 @@ const Cart: FunctionComponent<CartProps> = ({
                           lodash.slice([...cartItems], index + 1)
                         );
                         dispatch(setCartItems(newCart));
+                        setCypherStorageCart(JSON.stringify(newCart));
                       }}
                     >
                       {completedPurchases?.[index].completed ? (
@@ -235,6 +260,9 @@ const Cart: FunctionComponent<CartProps> = ({
                                       }
 
                                       dispatch(setCartItems(newCartItems));
+                                      setCypherStorageCart(
+                                        JSON.stringify(newCartItems)
+                                      );
                                     }}
                                   >
                                     {size}
@@ -277,6 +305,9 @@ const Cart: FunctionComponent<CartProps> = ({
                                       }
 
                                       dispatch(setCartItems(newCartItems));
+                                      setCypherStorageCart(
+                                        JSON.stringify(newCartItems)
+                                      );
                                     }}
                                     style={{
                                       backgroundColor: color,

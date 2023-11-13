@@ -5,6 +5,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { AccountsProps, CartItem } from "../types/common.types";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
+import { setCypherStorageCart } from "../../../../lib/utils";
 
 const Accounts: FunctionComponent<AccountsProps> = ({
   searchActive,
@@ -153,6 +154,9 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                               item?.item?.collectionId
                           );
                           dispatch(setCartItems(newItems));
+                          setCypherStorageCart(
+                            JSON.stringify(newItems)
+                          );
                         }}
                       >
                         x

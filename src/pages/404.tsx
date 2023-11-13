@@ -57,7 +57,7 @@ const Custom404: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData);
+  } = useSignIn(dispatch, oracleData, cartItems);
 
   return (
     <>
