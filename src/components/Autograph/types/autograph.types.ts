@@ -765,8 +765,6 @@ export interface Details {
   country: string;
   colors: string[];
   sizes: string[];
-  collectionIds: string[];
-  collectionAmounts: string[];
 }
 
 export interface Order {

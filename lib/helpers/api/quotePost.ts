@@ -2,7 +2,7 @@ import quotePost from "../../../graphql/lens/mutations/quote";
 import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
-import { SimpleCollectOpenActionModuleInput } from "../../../graphql/generated";
+import { OpenActionModuleInput, InputMaybe } from "../../../graphql/generated";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { polygon } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
@@ -15,25 +15,25 @@ const lensQuote = async (
   quoteOn: string,
   contentURI: string,
   dispatch: Dispatch<AnyAction>,
-  collectModuleInput: SimpleCollectOpenActionModuleInput | undefined,
+  openActionModules: InputMaybe<OpenActionModuleInput[]> | undefined,
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient
 ): Promise<void> => {
-  if (collectModuleInput) {
-    collectModuleInput = cleanCollect(collectModuleInput);
+  if (
+    openActionModules &&
+    openActionModules?.hasOwnProperty("collectOpenAction") &&
+    openActionModules?.[0]?.collectOpenAction?.hasOwnProperty(
+      "simpleCollectOpenAction"
+    )
+  ) {
+    openActionModules = cleanCollect(openActionModules);
   }
 
   const data = await quotePost({
     contentURI,
     quoteOn,
-    openActionModules: [
-      {
-        collectOpenAction: {
-          simpleCollectOpenAction: collectModuleInput,
-        },
-      },
-    ],
+    openActionModules,
   });
 
   const typedData = data.data?.createOnchainQuoteTypedData?.typedData;

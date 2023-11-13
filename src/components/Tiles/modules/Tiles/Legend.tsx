@@ -98,7 +98,7 @@ const Legend: FunctionComponent<LegendProps> = ({
             </div>
           </div>
           <div className="relative w-fit h-full items-end justify-center flex">
-            <div className="relative w-8 rounded-lg h-72 flex items-end justify-center border-2 border-black bg-zana"></div>
+            <div className="relative w-8 rounded-lg h-72 flex items-end justify-center border-2 border-black bg-sol"></div>
           </div>
         </div>
         <div className="relative w-full h-fit flex flex-col justify-start items-center gap-4 text-black border bg-white/60 p-2 border-black font-dog">

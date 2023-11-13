@@ -124,7 +124,14 @@ const useQuote = (
         postBox?.quote?.id,
         contentURI!,
         dispatch,
-        postCollectGif.collectTypes?.[postBox?.quote?.id]!,
+        [
+          {
+            collectOpenAction: {
+              simpleCollectOpenAction:
+                postCollectGif.collectTypes?.[postBox?.quote?.id]!,
+            },
+          },
+        ],
         address as `0x${string}`,
         clientWallet,
         publicClient
@@ -356,7 +363,7 @@ const useQuote = (
     handleFollow,
     approveSpend,
     approved,
-    videoRef
+    videoRef,
   };
 };
 
