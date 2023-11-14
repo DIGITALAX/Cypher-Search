@@ -459,6 +459,7 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
               </Head>
               <Web
                 router={router}
+                filterConstants={filterConstants}
                 handleMedia={handleMedia}
                 isDesigner={isDesigner}
                 allSales={allSales}

@@ -11,7 +11,7 @@ import { Publication } from "@/components/Tiles/types/tiles.types";
 export interface FilterValues {
   hashtags: string[];
   microbrands: string[][];
-  community: string[];
+  community: string[][];
   access: string[];
   format: PublicationMetadataMainFocusType[];
   dropsSuggested: string[];

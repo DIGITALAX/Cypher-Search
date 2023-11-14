@@ -6,6 +6,7 @@ import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { AccountsProps, CartItem } from "../types/common.types";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { setCypherStorageCart } from "../../../../lib/utils";
+import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 
 const Accounts: FunctionComponent<AccountsProps> = ({
   searchActive,
@@ -88,7 +89,12 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           onClick={() => lensConnected && setOpenAccount(!openAccount)}
         >
           {profilePicture && (
-            <Image src={profilePicture} className="rounded-full" layout="fill" draggable={false} />
+            <Image
+              src={profilePicture}
+              className="rounded-full"
+              layout="fill"
+              draggable={false}
+            />
           )}
         </div>
       </div>
@@ -98,6 +104,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             className="relative w-full h-full flex items-center justify-center border-sol cursor-pointer hover:opacity-80 border-b"
             onClick={() => {
               setOpenAccount(false);
+              dispatch(setFiltersOpen(false));
               router.push(
                 `/autograph/${
                   lensConnected?.handle?.suggestedFormatted?.localName?.split(
@@ -154,9 +161,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                               item?.item?.collectionId
                           );
                           dispatch(setCartItems(newItems));
-                          setCypherStorageCart(
-                            JSON.stringify(newItems)
-                          );
+                          setCypherStorageCart(JSON.stringify(newItems));
                         }}
                       >
                         x

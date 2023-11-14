@@ -1,7 +1,8 @@
 import { FunctionComponent } from "react";
-import { DispatchProps } from "../../types/autograph.types";
+import { DispatchProps, ScreenDisplay } from "../../types/autograph.types";
 import Image from "next/legacy/image";
-import { INFURA_GATEWAY, TAGS } from "../../../../../lib/constants";
+import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import { setScreenDisplay } from "../../../../../redux/reducers/screenDisplaySlice";
 
 const Dispatch: FunctionComponent<DispatchProps> = ({
   collectionDetails,
@@ -11,19 +12,12 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   lensConnected,
   collectionSettings,
   setCollectionSettings,
+  filterConstants,
+  dispatch,
 }): JSX.Element => {
   const microBrands = lensConnected?.metadata?.attributes?.find(
     (item) => item?.key === "microbrandCypher"
   )?.value;
-  console.log(
-    TAGS.some((tag) =>
-      tag
-        .toLowerCase()
-        .includes(
-          collectionDetails?.tags.split(",").pop()?.trim().toLowerCase()!
-        )
-    )
-  );
   return (
     <div className="relative items-center justify-center text-white font-bit w-full h-full overflow-y-none">
       <div className="relative w-full h-full p-4 flex items-start justify-start">
@@ -34,7 +28,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 Collection Title
               </div>
               <input
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-8 w-80"
+                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-80"
                 value={collectionDetails?.title}
                 onChange={(e) =>
                   setCollectionDetails((prev) => ({
@@ -109,16 +103,29 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       <video
                         className="relative rounded-sm w-full h-full flex object-cover"
                         draggable={false}
+                        controls={false}
+                        muted
+                        autoPlay
                       >
                         <source src={collectionDetails?.video} />
                       </video>
                     ) : (
-                      <audio
-                        draggable={false}
-                        className="relative rounded-sm w-full h-full flex"
-                      >
-                        <source src={collectionDetails?.audio} />
-                      </audio>
+                      <>
+                        <Image
+                          layout="fill"
+                          src={collectionDetails?.images?.[0]}
+                          objectFit="cover"
+                          draggable={false}
+                          className="relative rounded-sm w-full h-full flex"
+                        />
+                        <audio
+                          draggable={false}
+                          className="relative rounded-sm w-full h-full flex"
+                          controls={false}
+                        >
+                          <source src={collectionDetails?.audio} />
+                        </audio>
+                      </>
                     ))}
                   <input
                     hidden
@@ -138,12 +145,12 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 </div>
               </label>
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
+            <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
               <div className="relative w-fit h-fit text-sm">
                 Connect Microbrand?
               </div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
-                {microBrands && (
+                {microBrands ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                     <div className="relative w-fit h-fit text-xs">
                       Current Brands:
@@ -170,6 +177,8 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                   microBrands!
                                 )?.[0]?.microbrandCover?.split("ipfs://")?.[1]
                               }`}
+                              className="rounded-full"
+                              objectFit="cover"
                               draggable={false}
                             />
                           </div>
@@ -207,8 +216,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                       }));
                                       setCollectionDetails((prev) => ({
                                         ...prev,
-                                        microbrand: item.microbrand,
-                                        microbrandCover: item.microbrandCover,
+                                        microbrand: item,
                                       }));
                                     }}
                                   >
@@ -224,6 +232,8 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                               "ipfs://"
                                             )?.[1]
                                           }`}
+                                          className="rounded-full"
+                                          objectFit="cover"
                                           draggable={false}
                                         />
                                       </div>
@@ -240,75 +250,37 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       )}
                     </div>
                   </div>
+                ) : (
+                  <div
+                    className="relative text-xs w-fit h-fit flex break-words cursor-pointer"
+                    onClick={() =>
+                      dispatch(setScreenDisplay(ScreenDisplay.Settings))
+                    }
+                  >
+                    Connect a microbrand in settings.
+                  </div>
                 )}
-                <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
-                  <div className="relative w-fit h-fit text-xs">
-                    New Microbrand
-                  </div>
-                  <div className="relative w-full h-fit flex flex-row gap-2">
-                    <label
-                      className="relative border border-white w-8 h-8 cursor-pointer p-px rounded-full"
-                      id="pfp"
-                    >
-                      <div className="relative w-full h-full flex items-center justify-center rounded-full">
-                        {collectionDetails?.microbrandCover && (
-                          <Image
-                            layout="fill"
-                            src={collectionDetails?.microbrandCover}
-                            objectFit="cover"
-                            draggable={false}
-                            className="relative rounded-full w-full h-full flex"
-                          />
-                        )}
-                        <input
-                          hidden
-                          type="file"
-                          accept="image/png"
-                          multiple={false}
-                          onChange={(e) =>
-                            e?.target?.files?.[0] && handleMedia(e, "micro")
-                          }
-                        />
-                      </div>
-                    </label>
-                    <input
-                      value={collectionDetails?.microbrand}
-                      onChange={(e) =>
-                        setCollectionDetails((prev) => ({
-                          ...prev,
-                          microbrand: e.target.value,
-                        }))
-                      }
-                      className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-8 w-40"
-                      style={{
-                        resize: "none",
-                      }}
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
           <div className="relative flex flex-col items-start justify-start gap-4">
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
-              <div className="relative w-fit h-fit text-sm">
-                Add discovery tags
-              </div>
+              <div className="relative w-fit h-fit text-sm">Discovery Tags</div>
               <input
                 value={collectionDetails?.tags}
                 onChange={(e) =>
                   setCollectionDetails((prev) => ({
                     ...prev,
-                    tags: e.target.value,
+                    tags: e.target.value.toLowerCase(),
                   }))
                 }
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-8 w-60 max-w-[15rem]"
+                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60 max-w-[15rem]"
                 style={{
                   resize: "none",
                 }}
               />
               {collectionDetails?.tags.split(",").pop()?.trim() &&
-                TAGS.some((tag) =>
+                filterConstants?.hashtags?.some((tag) =>
                   tag
                     .toLowerCase()
                     .includes(
@@ -321,73 +293,253 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 ) && (
                   <div className="absolute top-14 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
                     <div className="relative w-full max-w-[15rem] h-fit flex flex-col items-center justify-start">
-                      {TAGS.filter((tag) =>
-                        tag.toLowerCase().includes(
-                          collectionDetails?.tags
-                            ?.split(/,\s*|\s+|\s*$/)
-                            ?.pop()
-                            ?.toLowerCase() || ""
+                      {filterConstants?.hashtags
+                        ?.filter((tag) =>
+                          tag.toLowerCase().includes(
+                            collectionDetails?.tags
+                              ?.split(/,\s*|\s+|\s*$/)
+                              ?.pop()
+                              ?.toLowerCase() || ""
+                          )
                         )
-                      ).map((tag: string, index: number) => (
-                        <div
-                          key={index}
-                          className="relative py-1 h-8 w-full flex items-center justify-center text-white border-y border-sol font-aust text-xs cursor-pointer hover:opacity-80"
-                          onClick={() => {
-                            const tagsArray =
-                              collectionDetails.tags.split(/,\s*/);
-                            tagsArray[tagsArray.length - 1] = tag;
-                            const newTags = tagsArray.join(", ") + ", ";
-                            setCollectionDetails((prev) => ({
-                              ...prev,
-                              tags: newTags,
-                            }));
-                          }}
-                        >
-                          <div className="relative w-fit h-fit flex items-center gap-1.5 justify-start">
-                            {tag}
+                        .map((tag: string, index: number) => (
+                          <div
+                            key={index}
+                            className="relative py-1 h-10 w-full flex items-center justify-center text-white border-y border-sol font-aust text-xs cursor-pointer hover:opacity-80"
+                            onClick={() => {
+                              const tagsArray =
+                                collectionDetails.tags.split(/,\s*/);
+                              tagsArray[tagsArray.length - 1] = tag;
+                              const newTags = tagsArray.join(", ") + ", ";
+                              setCollectionDetails((prev) => ({
+                                ...prev,
+                                tags: newTags,
+                              }));
+                            }}
+                          >
+                            <div className="relative w-fit h-fit flex items-center gap-1.5 justify-start">
+                              {tag}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   </div>
                 )}
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
-              <div className="relative w-fit h-fit text-sm">
-                Who can access?
+            <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
+              <div className="relative w-fit h-fit text-sm">Eco-Access</div>
+              <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                <div
+                  className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                  onClick={() =>
+                    setCollectionSettings((prev) => ({
+                      ...prev,
+                      accessOpen: !prev.accessOpen,
+                    }))
+                  }
+                >
+                  <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                    {collectionDetails?.access}
+                  </div>
+                  <div className="relative w-4 h-3 flex items-center justify-center">
+                    <Image
+                      layout="fill"
+                      draggable={false}
+                      src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                    />
+                  </div>
+                </div>
+                {collectionSettings?.accessOpen && (
+                  <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                    <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                      {filterConstants?.access?.map(
+                        (item: string, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                              onClick={() => {
+                                setCollectionSettings((prev) => ({
+                                  ...prev,
+                                  accessOpen: !prev.accessOpen,
+                                }));
+                                const accessArray =
+                                  collectionDetails.access.split(/,\s*/);
+                                accessArray[accessArray.length - 1] = item;
+
+                                setCollectionDetails((prev) => ({
+                                  ...prev,
+                                  access: accessArray.join(", ") + ", ",
+                                }));
+                              }}
+                            >
+                              <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                {item}
+                              </div>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-              <input
-                value={collectionDetails?.access}
-                onChange={(e) =>
-                  setCollectionDetails((prev) => ({
-                    ...prev,
-                    access: e.target.value,
-                  }))
-                }
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-8 w-full"
-                style={{
-                  resize: "none",
-                }}
-              />
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
-              <div className="relative w-fit h-fit text-sm">
-                Which communities can collect?
+            <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
+              <div className="relative w-fit h-fit text-sm">Visibility</div>
+              <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                <div
+                  className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                  onClick={() =>
+                    setCollectionSettings((prev) => ({
+                      ...prev,
+                      visibilityOpen: !prev.visibilityOpen,
+                    }))
+                  }
+                >
+                  <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                    {collectionDetails?.visibility}
+                  </div>
+                  <div className="relative w-4 h-3 flex items-center justify-center">
+                    <Image
+                      layout="fill"
+                      draggable={false}
+                      src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                    />
+                  </div>
+                </div>
+                {collectionSettings?.visibilityOpen && (
+                  <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                    <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                      {[
+                        [
+                          "public",
+                          "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
+                        ],
+                        [
+                          "community",
+                          "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
+                        ],
+                        [
+                          "private",
+                          "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
+                        ],
+                      ]?.map((item: string[], index: number) => {
+                        return (
+                          <div
+                            key={index}
+                            className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                            onClick={() => {
+                              setCollectionSettings((prev) => ({
+                                ...prev,
+                                visibilityOpen: !prev.visibilityOpen,
+                              }));
+
+                              setCollectionDetails((prev) => ({
+                                ...prev,
+                                visibility: item?.[0],
+                              }));
+                            }}
+                          >
+                            <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
+                              <div className="relative flex items-center justify-center w-5 h-5 cursor-pointer">
+                                <Image
+                                  layout="fill"
+                                  src={`${INFURA_GATEWAY}/ipfs/${item?.[1]}`}
+                                  draggable={false}
+                                />
+                              </div>
+                              <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                {item?.[0]}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
-              <input
-                value={collectionDetails?.communities}
-                onChange={(e) =>
-                  setCollectionDetails((prev) => ({
-                    ...prev,
-                    communities: e.target.value,
-                  }))
-                }
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-8 w-full"
-                style={{
-                  resize: "none",
-                }}
-              />
             </div>
+            {collectionDetails?.visibility === "community" && (
+              <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
+                <div className="relative w-fit h-fit text-sm">Communities</div>
+                <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                  <div
+                    className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                    onClick={() =>
+                      setCollectionSettings((prev) => ({
+                        ...prev,
+                        communityOpen: !prev.communityOpen,
+                      }))
+                    }
+                  >
+                    <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                      {collectionDetails?.communities}
+                    </div>
+                    <div className="relative w-4 h-3 flex items-center justify-center">
+                      <Image
+                        layout="fill"
+                        draggable={false}
+                        src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                      />
+                    </div>
+                  </div>
+                  {collectionSettings?.communityOpen && (
+                    <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                      <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                        {filterConstants?.community?.map(
+                          (item: string[], index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                                onClick={() => {
+                                  setCollectionSettings((prev) => ({
+                                    ...prev,
+                                    communityOpen: !prev.communityOpen,
+                                  }));
+                                  const communityArray =
+                                    collectionDetails.communities.split(/,\s*/);
+                                  communityArray[communityArray.length - 1] =
+                                    item?.[0];
+
+                                  setCollectionDetails((prev) => ({
+                                    ...prev,
+                                    communities:
+                                      communityArray.join(", ") + ", ",
+                                  }));
+                                }}
+                              >
+                                <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
+                                  <div
+                                    className="relative flex items-center justify-center rounded-full w-5 h-5 cursor-pointer"
+                                    id="pfp"
+                                  >
+                                    <Image
+                                      layout="fill"
+                                      src={`${INFURA_GATEWAY}/ipfs/${
+                                        item?.[1]?.split("ipfs://")?.[1]
+                                      }`}
+                                      className="rounded-full"
+                                      objectFit="cover"
+                                      draggable={false}
+                                    />
+                                  </div>
+                                  <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                    {item?.[0]}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

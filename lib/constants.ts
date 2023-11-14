@@ -1,4 +1,5 @@
 import { ItemType } from "@/components/Common/types/common.types";
+import { PrintType } from "@/components/Tiles/types/tiles.types";
 
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const BASE_URL: string = "https://api-v2-mumbai.lens.dev/";
@@ -94,6 +95,31 @@ export const itemTypeToNumber: { [key in ItemType]: string } = {
   [ItemType.Listener]: "3",
 };
 
+export const itemStringToNumber: { [key: string]: string } = {
+  ["CoinOp"]: "0",
+  ["Chromadin"]: "1",
+  ["Legend"]: "2",
+  ["Listener"]: "3",
+};
+
+export const printTypeToNumber: { [key in PrintType]: string } = {
+  [PrintType.Sticker]: "0",
+  [PrintType.Poster]: "1",
+  [PrintType.Shirt]: "2",
+  [PrintType.Hoodie]: "3",
+  [PrintType.Sleeve]: "4",
+  [PrintType.Crop]: "5",
+};
+
+export const printStringToNumber: { [key: string]: string } = {
+  ["Sticker"]: "0",
+  ["Poster"]: "1",
+  ["Shirt"]: "2",
+  ["Hoodie"]: "3",
+  ["Sleeve"]: "4",
+  ["Crop"]: "5",
+};
+
 export const COUNTRIES: string[] = [
   "United States",
   "Algeria",
@@ -152,6 +178,7 @@ export const TAGS: string[] = [
   "lofi",
   "bedroom punk",
   "crypto",
+  "Autonomy",
   "retrofuturism",
   "cybernetics",
   "bio punk",
@@ -188,6 +215,7 @@ export const TAGS: string[] = [
   "Ethereal",
   "Futurism",
   "Graffiti",
+  "neo",
   "Holographic",
   "Impressionist",
   "Juxtaposed",

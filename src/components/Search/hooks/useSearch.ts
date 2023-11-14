@@ -6,7 +6,13 @@ import {
   useState,
 } from "react";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
-import { PLACEHOLDERS, numberToItemTypeMap } from "../../../../lib/constants";
+import {
+  PLACEHOLDERS,
+  TAGS,
+  itemStringToNumber,
+  numberToItemTypeMap,
+  printStringToNumber,
+} from "../../../../lib/constants";
 import {
   LimitType,
   Post,
@@ -44,6 +50,13 @@ import buildQuery from "../../../../lib/helpers/buildQuery";
 import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
 import { Dispatch } from "redux";
 import getPublications from "../../../../graphql/lens/queries/publications";
+import { getFilters } from "../../../../graphql/subgraph/queries/getFilters";
+import {
+  aggregateMicrobrands,
+  aggregateSizes,
+  aggregateUniqueValues,
+} from "../../../../lib/helpers/aggregators";
+import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -386,7 +399,9 @@ const useSearch = (
     dispatch(
       setFilter({
         hashtag: getRandomElement(filterConstants?.hashtags!),
-        community: getRandomElement(filterConstants?.community!),
+        community: getRandomElement(
+          filterConstants?.community?.map((item) => item?.[0])!
+        ),
         microbrand: getRandomElement(
           filterConstants?.microbrands?.map((item) => item?.[0])!
         ),
@@ -394,7 +409,9 @@ const useSearch = (
         access: getRandomElement(filterConstants?.access!),
         format: getRandomElement(filterConstants?.format!),
         origin: getRandomElement(
-          filterConstants?.origin?.map((item) => item?.[0])!
+          filterConstants?.origin?.map(
+            (item) => itemStringToNumber[item?.[0]?.toUpperCase()]
+          )!
         ),
         editions: getRandomNumber(1, 10),
         available: true,
@@ -411,12 +428,11 @@ const useSearch = (
           max: getRandomNumber(50, 500),
         },
         token: getRandomElement(filterConstants?.token!),
-        printType: getRandomArrayElement([
-          "sticker",
-          "hoodie",
-          "shirt",
-          "poster",
-        ]),
+        printType: getRandomArrayElement(
+          ["sticker", "hoodie", "sleeve", "crop", "shirt", "poster"]?.map(
+            (item) => printStringToNumber[item.toUpperCase()]
+          )
+        ),
       })
     );
   };
@@ -504,13 +520,65 @@ const useSearch = (
     }
   };
 
+  const getFilterValues = async (): Promise<
+    | {
+        microbrands: string[][];
+        dropsSuggested: string[];
+        hashtags: string[];
+        colors: string[];
+        sizes: {
+          poster: string[];
+          sticker: string[];
+          apparel: string[];
+        };
+        communities: string[][];
+      }
+    | undefined
+  > => {
+    try {
+      const data = await getFilters();
+      const community = await getCommunityShort();
+
+      return {
+        microbrands: aggregateMicrobrands(data?.data?.collectionCreateds),
+        dropsSuggested: aggregateUniqueValues(
+          data?.data?.collectionCreateds,
+          "drop"
+        ),
+        hashtags: aggregateUniqueValues(data?.data?.collectionCreateds, "tags"),
+        colors: aggregateUniqueValues(data?.data?.collectionCreateds, "colors"),
+        sizes: aggregateSizes(data?.data?.collectionCreateds),
+        communities: community?.data?.communityCreateds?.(
+          (item: { name: string; image: string }) => {
+            return [item.name, item.image];
+          }
+        ),
+      };
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   const handleFilterConstants = async () => {
     try {
       const json: FilterValues = (await fetchIpfsJson(
         "QmbnNBG8j2Qv3AAKPK5g2ivMZvdLnDbouqnCnw27nGR8jN"
       )) as any;
-      dispatch(setFilterConstants(json));
-      setFilteredDropDownValues(json);
+
+      const data = await getFilterValues();
+      const filters: FilterValues = {
+        ...json,
+        microbrands: data?.microbrands!,
+        hashtags: [...(data?.hashtags! || []), ...TAGS]?.sort(
+          () => Math.random() - 0.5
+        ),
+        dropsSuggested: data?.dropsSuggested!,
+        colors: data?.colors!,
+        sizes: data?.sizes!,
+        community: data?.communities!,
+      };
+      dispatch(setFilterConstants(filters));
+      setFilteredDropDownValues(filters);
     } catch (err: any) {
       console.error(err.message);
     }

@@ -17,6 +17,7 @@ const COLLECTIONS = `
       microbrandCover
       microbrand
       images
+      mediaType
       fulfillerPercent
       fulfillerBase
       fulfiller

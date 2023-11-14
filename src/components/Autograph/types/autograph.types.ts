@@ -16,11 +16,13 @@ import { ChangeEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
+import { FilterValues } from "@/components/Search/types/search.types";
 
 export type WebProps = {
   router: NextRouter;
   creationLoading: boolean;
   isDesigner: boolean;
+  filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   activeGallery: Creation[] | undefined;
   setCreateCase: (e: SetStateAction<string | undefined>) => void;
@@ -29,12 +31,18 @@ export type WebProps = {
     origin: string;
     media: string;
     microOpen: boolean;
+    communityOpen: boolean;
+    accessOpen: boolean;
+    visibilityOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
       origin: string;
       media: string;
       microOpen: boolean;
+      communityOpen: boolean;
+      accessOpen: boolean;
+      visibilityOpen: boolean;
     }>
   ) => void;
   handleSendMessage: () => Promise<void>;
@@ -66,8 +74,30 @@ export type WebProps = {
     >
   ) => void;
   decryptOrder: (orderId: string) => void;
-  setSettingsData: (e: SetStateAction<ProfileMetadata>) => void;
-  settingsData: ProfileMetadata;
+  setSettingsData: (
+    e: SetStateAction<
+      ProfileMetadata & {
+        microbrands: {
+          microbrand: string;
+          microbrandCover: string;
+        }[];
+        tempMicro: {
+          microbrand: string | undefined;
+          microbrandCover: string | undefined;
+        };
+      }
+    >
+  ) => void;
+  settingsData: ProfileMetadata & {
+    microbrands: {
+      microbrand: string;
+      microbrandCover: string;
+    }[];
+    tempMicro: {
+      microbrand: string | undefined;
+      microbrandCover: string | undefined;
+    };
+  };
   handleSettingsUpdate: () => Promise<void>;
   settingsUpdateLoading: boolean;
   postCollectGif: PostCollectGifState;
@@ -255,6 +285,8 @@ export type BioProps = {
 
 export type GalleryScreenProps = {
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  dispatch: Dispatch<AnyAction>;
+  filterConstants: FilterValues | undefined;
   creationLoading: boolean;
   activeGallery: Creation[] | undefined;
   isDesigner: boolean;
@@ -280,12 +312,18 @@ export type GalleryScreenProps = {
     origin: string;
     media: string;
     microOpen: boolean;
+    communityOpen: boolean;
+    accessOpen: boolean;
+    visibilityOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
       origin: string;
       media: string;
       microOpen: boolean;
+      communityOpen: boolean;
+      accessOpen: boolean;
+      visibilityOpen: boolean;
     }>
   ) => void;
 };
@@ -295,14 +333,22 @@ export type ScreenSwitchProps = {
     origin: string;
     media: string;
     microOpen: boolean;
+    communityOpen: boolean;
+    accessOpen: boolean;
+    visibilityOpen: boolean;
   };
+  lensConnected: Profile | undefined;
   setCollectionSettings: (
     e: SetStateAction<{
       origin: string;
       media: string;
       microOpen: boolean;
+      communityOpen: boolean;
+      accessOpen: boolean;
+      visibilityOpen: boolean;
     }>
   ) => void;
+  filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
@@ -363,8 +409,30 @@ export type ScreenSwitchProps = {
   displayLoading: boolean;
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string) => Promise<void>;
-  setSettingsData: (e: SetStateAction<ProfileMetadata>) => void;
-  settingsData: ProfileMetadata;
+  setSettingsData: (
+    e: SetStateAction<
+      ProfileMetadata & {
+        microbrands: {
+          microbrand: string;
+          microbrandCover: string;
+        }[];
+        tempMicro: {
+          microbrand: string | undefined;
+          microbrandCover: string | undefined;
+        };
+      }
+    >
+  ) => void;
+  settingsData: ProfileMetadata & {
+    microbrands: {
+      microbrand: string;
+      microbrandCover: string;
+    }[];
+    tempMicro: {
+      microbrand: string | undefined;
+      microbrandCover: string | undefined;
+    };
+  };
   handleSettingsUpdate: () => Promise<void>;
   settingsUpdateLoading: boolean;
   interactionsLoading: {
@@ -449,8 +517,30 @@ export type ScreenSwitchProps = {
 };
 
 export type SettingsProps = {
-  setSettingsData: (e: SetStateAction<ProfileMetadata>) => void;
-  settingsData: ProfileMetadata;
+  setSettingsData: (
+    e: SetStateAction<
+      ProfileMetadata & {
+        microbrands: {
+          microbrand: string;
+          microbrandCover: string;
+        }[];
+        tempMicro: {
+          microbrand: string | undefined;
+          microbrandCover: string | undefined;
+        };
+      }
+    >
+  ) => void;
+  settingsData: ProfileMetadata & {
+    microbrands: {
+      microbrand: string;
+      microbrandCover: string;
+    }[];
+    tempMicro: {
+      microbrand: string | undefined;
+      microbrandCover: string | undefined;
+    };
+  };
   handleSettingsUpdate: () => Promise<void>;
   settingsUpdateLoading: boolean;
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
@@ -933,19 +1023,27 @@ export interface Sale {
 export type DispatchProps = {
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  dispatch: Dispatch<AnyAction>;
   type: string;
+  filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   lensConnected: Profile | undefined;
   collectionSettings: {
     origin: string;
     media: string;
     microOpen: boolean;
+    communityOpen: boolean;
+    accessOpen: boolean;
+    visibilityOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
       origin: string;
       media: string;
       microOpen: boolean;
+      communityOpen: boolean;
+      accessOpen: boolean;
+      visibilityOpen: boolean;
     }>
   ) => void;
 };
@@ -963,30 +1061,41 @@ export interface CollectionDetails {
   sizes: string[];
   colors: string[];
   profileHandle: string;
-  microbrandCover: string;
-  microbrand: string;
-  access: string[];
+  microbrand: {
+    microbrand: string;
+    microbrandCover: string;
+  };
+  access: string;
   drop: string;
-  communities: string[];
+  visibility: string;
+  communities: string;
 }
 
 export type SwitchCreateProps = {
   type: string | undefined;
   mediaType: string;
+  dispatch: Dispatch<AnyAction>;
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
   router: NextRouter;
+  filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   collectionSettings: {
     origin: string;
     media: string;
     microOpen: boolean;
+    communityOpen: boolean;
+    accessOpen: boolean;
+    visibilityOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
       origin: string;
       media: string;
       microOpen: boolean;
+      communityOpen: boolean;
+      accessOpen: boolean;
+      visibilityOpen: boolean;
     }>
   ) => void;
   lensConnected: Profile | undefined;
