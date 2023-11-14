@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAccount, useSignMessage } from "wagmi";
+import { useSignMessage } from "wagmi";
 import { setWalletConnected } from "../../../../redux/reducers/walletConnectedSlice";
 import { setLensConnected } from "../../../../redux/reducers/lensConnectedSlice";
 import getProfiles from "../../../../graphql/lens/queries/profiles";
@@ -21,13 +21,19 @@ import { OracleData } from "@/components/Checkout/types/checkout.types";
 import { setOracleData } from "../../../../redux/reducers/oracleDataSlice";
 import { CartItem } from "@/components/Common/types/common.types";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
+import { PublicClient } from "viem";
+import { PRINT_ACCESS_CONTROL } from "../../../../lib/constants";
+import { setIsDesigner } from "../../../../redux/reducers/isDesignerSlice";
 
 const useSignIn = (
+  publicClient: PublicClient,
+  address: `0x${string}` | undefined,
+  isConnected: boolean,
   dispatch: Dispatch,
   oracleData: OracleData[],
-  cartItems: CartItem[]
+  cartItems: CartItem[],
+  lensConnected: Profile | undefined
 ) => {
-  const { isConnected, address } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const [openAccount, setOpenAccount] = useState<boolean>(false);
   const [signInLoading, setSignInLoading] = useState<boolean>(false);
@@ -114,6 +120,23 @@ const useSignIn = (
     }
   };
 
+  const handleIsCreator = async () => {
+    try {
+      const data = await publicClient.readContract({
+        address: PRINT_ACCESS_CONTROL,
+        abi: PrintAccessControlAbi,
+        functionName: "isDesigner",
+        args: [address as `0x${string}`],
+      });
+
+      if (data) {
+        dispatch(setIsDesigner(data as boolean));
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   const refetchCart = () => {
     const data = getCypherStorageCart();
     if (data && data?.length > 0) {
@@ -128,6 +151,10 @@ const useSignIn = (
 
     if (cartItems?.length < 1) {
       refetchCart();
+    }
+
+    if (!lensConnected?.id) {
+      handleIsCreator();
     }
   }, []);
 

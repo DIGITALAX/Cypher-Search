@@ -153,6 +153,7 @@ const useFeed = (
         makeCommentFeed[index]?.content,
         makeCommentFeed[index]?.images!,
         makeCommentFeed[index]?.videos!,
+        [],
         postCollectGif?.gifs?.[id]!
       );
 

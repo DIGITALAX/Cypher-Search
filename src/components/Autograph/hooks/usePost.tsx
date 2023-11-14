@@ -52,6 +52,7 @@ const usePost = (
         makePost[0]?.content,
         makePost[0]?.images!,
         makePost[0]?.videos!,
+        [],
         postCollectGif.gifs?.["post"]!
       );
 

@@ -5,13 +5,21 @@ const uploadPostContent = async (
   contentText: string | undefined,
   images: string[],
   videos: string[],
-  gifs: string[]
+  audio: string[],
+  gifs: string[],
+  title?: string,
+  tags?: string[]
 ): Promise<string | undefined> => {
   let $schema: string,
     mainContentFocus: PublicationMetadataMainFocusType,
     value: object = {};
 
-  if (images.length < 1 && gifs.length < 1 && videos.length < 1) {
+  if (
+    images.length < 1 &&
+    gifs.length < 1 &&
+    videos.length < 1 &&
+    audio?.length < 1
+  ) {
     $schema = "https://json-schemas.lens.dev/publications/text/3.0.0.json";
     mainContentFocus = PublicationMetadataMainFocusType.TextOnly;
   } else {
@@ -19,6 +27,7 @@ const uploadPostContent = async (
       ...videos.map((video) => ({ type: "video/mp4", item: video })),
       ...images.map((image) => ({ type: "image/png", item: image })),
       ...gifs.map((gif) => ({ type: "image/gif", item: gif })),
+      ...audio.map((audio) => ({ type: "audio/mpeg", item: audio })),
     ];
 
     const uploads = await Promise.all(
@@ -37,6 +46,10 @@ const uploadPostContent = async (
       $schema = "https://json-schemas.lens.dev/publications/video/3.0.0.json";
       mainContentFocus = PublicationMetadataMainFocusType.Video;
       value = { video: primaryMedia };
+    } else if (primaryMedia.type === "audio/mpeg") {
+      $schema = "https://json-schemas.lens.dev/publications/audio/3.0.0.json";
+      mainContentFocus = PublicationMetadataMainFocusType.Audio;
+      value = { audio: primaryMedia };
     } else {
       $schema = "https://json-schemas.lens.dev/publications/image/3.0.0.json";
       mainContentFocus = PublicationMetadataMainFocusType.Image;
@@ -56,14 +69,14 @@ const uploadPostContent = async (
         $schema,
         lens: {
           mainContentFocus,
-          title: contentText ? contentText.slice(0, 20) : "",
+          title: title ? title : contentText ? contentText.slice(0, 20) : "",
           content: contentText ? contentText : "",
           appId: "cyphersearch",
           ...value,
           id: uuidv4(),
           hideFromFeed: false,
           locale: "en",
-          tags: ["cypher", "cyphersearch"],
+          tags: [...(tags || []), "cypher", "cyphersearch"],
         },
       }),
     });

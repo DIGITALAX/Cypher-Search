@@ -19,6 +19,32 @@ import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSl
 
 export type WebProps = {
   router: NextRouter;
+  creationLoading: boolean;
+  isDesigner: boolean;
+  handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  activeGallery: Creation[] | undefined;
+  setCreateCase: (e: SetStateAction<string | undefined>) => void;
+  createCase: string | undefined;
+  collectionSettings: {
+    origin: string;
+    media: string;
+    microOpen: boolean;
+  };
+  setCollectionSettings: (
+    e: SetStateAction<{
+      origin: string;
+      media: string;
+      microOpen: boolean;
+    }>
+  ) => void;
+  handleSendMessage: () => Promise<void>;
+  messageLoading: boolean;
+  setMessage: (e: string) => void;
+  message: string;
+  collectionDetails: CollectionDetails;
+  setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  createCollection: () => Promise<void>;
+  createDrop: () => Promise<void>;
   profile: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
   allOrders: Order[];
@@ -28,6 +54,8 @@ export type WebProps = {
     decrypted: boolean;
     orderOpen: boolean;
   }[];
+  allSales: Sale[];
+  salesLoading: boolean;
   setOrderActions: (
     e: SetStateAction<
       {
@@ -210,6 +238,7 @@ export enum ScreenDisplay {
   Bookmarks,
   Post,
   Orders,
+  Sales,
   Settings,
 }
 
@@ -225,16 +254,69 @@ export type BioProps = {
 };
 
 export type GalleryScreenProps = {
+  handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  creationLoading: boolean;
   activeGallery: Creation[] | undefined;
+  isDesigner: boolean;
+  lensConnected: Profile | undefined;
+  handleSendMessage: () => Promise<void>;
+  messageLoading: boolean;
+  setMessage: (e: string) => void;
+  message: string;
   gallery:
     | {
         collected: Creation[];
         created: Creation[];
       }
     | undefined;
+  setCreateCase: (e: SetStateAction<string | undefined>) => void;
+  createCase: string | undefined;
+  collectionDetails: CollectionDetails;
+  setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  createCollection: () => Promise<void>;
+  createDrop: () => Promise<void>;
+  router: NextRouter;
+  collectionSettings: {
+    origin: string;
+    media: string;
+    microOpen: boolean;
+  };
+  setCollectionSettings: (
+    e: SetStateAction<{
+      origin: string;
+      media: string;
+      microOpen: boolean;
+    }>
+  ) => void;
 };
 
 export type ScreenSwitchProps = {
+  collectionSettings: {
+    origin: string;
+    media: string;
+    microOpen: boolean;
+  };
+  setCollectionSettings: (
+    e: SetStateAction<{
+      origin: string;
+      media: string;
+      microOpen: boolean;
+    }>
+  ) => void;
+  handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  creationLoading: boolean;
+  isDesigner: boolean;
+  activeGallery: Creation[] | undefined;
+  handleSendMessage: () => Promise<void>;
+  messageLoading: boolean;
+  setMessage: (e: string) => void;
+  message: string;
+  setCreateCase: (e: SetStateAction<string | undefined>) => void;
+  createCase: string | undefined;
+  collectionDetails: CollectionDetails;
+  setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  createCollection: () => Promise<void>;
+  createDrop: () => Promise<void>;
   screenDisplay: ScreenDisplay;
   bookmarks: (Post | Mirror | Comment | Quote)[];
   bookmarksLoading: boolean;
@@ -254,6 +336,8 @@ export type ScreenSwitchProps = {
       }[]
     >
   ) => void;
+  allSales: Sale[];
+  salesLoading: boolean;
   decryptOrder: (orderId: string) => void;
   postCollectGif: PostCollectGifState;
   simpleCollect: (id: string, type: string) => Promise<void>;
@@ -826,3 +910,94 @@ export interface Sub {
   color?: string;
   size?: string;
 }
+
+export type SalesProps = {
+  allSales: Sale[];
+  salesLoading: boolean;
+  router: NextRouter;
+};
+
+export interface Sale {
+  orderId: string;
+  pubId: string;
+  profileId: string;
+  type: string;
+  transactionHash: string;
+  currency: string;
+  buyer: Profile;
+  price: string;
+  images: string[];
+  blockTimestamp: string;
+}
+
+export type DispatchProps = {
+  collectionDetails: CollectionDetails;
+  setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  type: string;
+  handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  lensConnected: Profile | undefined;
+  collectionSettings: {
+    origin: string;
+    media: string;
+    microOpen: boolean;
+  };
+  setCollectionSettings: (
+    e: SetStateAction<{
+      origin: string;
+      media: string;
+      microOpen: boolean;
+    }>
+  ) => void;
+};
+
+export interface CollectionDetails {
+  title: string;
+  description: string;
+  prices: string[];
+  acceptedTokens: string[];
+  images: string[];
+  video: string;
+  audio: string;
+  tags: string;
+  prompt: string;
+  sizes: string[];
+  colors: string[];
+  profileHandle: string;
+  microbrandCover: string;
+  microbrand: string;
+  access: string[];
+  drop: string;
+  communities: string[];
+}
+
+export type SwitchCreateProps = {
+  type: string | undefined;
+  mediaType: string;
+  collectionDetails: CollectionDetails;
+  setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  router: NextRouter;
+  handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  collectionSettings: {
+    origin: string;
+    media: string;
+    microOpen: boolean;
+  };
+  setCollectionSettings: (
+    e: SetStateAction<{
+      origin: string;
+      media: string;
+      microOpen: boolean;
+    }>
+  ) => void;
+  lensConnected: Profile | undefined;
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined;
+};
+
+export type MediaSwitchProps = {
+  type: string;
+};
