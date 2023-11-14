@@ -100,6 +100,7 @@ const Web: FunctionComponent<WebProps> = ({
   message,
   messageLoading,
   handleMedia,
+  filterConstants,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -177,6 +178,8 @@ const Web: FunctionComponent<WebProps> = ({
         <ScreenSwitch
           handleMedia={handleMedia}
           currencies={currencies}
+          filterConstants={filterConstants}
+          lensConnected={lensConnected}
           setCurrencyOpen={setCurrencyOpen}
           currencyOpen={currencyOpen}
           mirror={mirror}

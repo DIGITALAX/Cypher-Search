@@ -97,6 +97,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   messageLoading,
   handleMedia,
   lensConnected,
+  filterConstants,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -105,9 +106,11 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Gallery:
       return (
         <Gallery
+          dispatch={dispatch}
           handleMedia={handleMedia}
           handleSendMessage={handleSendMessage}
           message={message}
+          filterConstants={filterConstants}
           setMessage={setMessage}
           messageLoading={messageLoading}
           gallery={gallery}

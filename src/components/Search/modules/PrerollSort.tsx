@@ -43,6 +43,8 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             ["hoodie", "QmRMWKP63xaJQsspfnLL9Fhou484LEb2VbTWFyfYsJ1aep"],
             ["poster", "QmPpDcEHfhMr3z2Romz45P7ETV4hZEXRbcorF9sDsDfxyC"],
             ["sticker", "QmUADJfzGsFgp9n4XUZD66inxTCijJ9fwMXeUkjuKjHVzs"],
+            ["sleeve", "QmUADJfzGsFgp9n4XUZD66inxTCijJ9fwMXeUkjuKjHVzs"],
+            ["crop", "QmUADJfzGsFgp9n4XUZD66inxTCijJ9fwMXeUkjuKjHVzs"],
           ].map((image: string[], index: number) => {
             return (
               <div

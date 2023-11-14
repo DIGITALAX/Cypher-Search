@@ -369,6 +369,8 @@ export enum PrintType {
   Poster = "1",
   Shirt = "2",
   Hoodie = "3",
+  Sleeve = "4",
+  Crop = "5"
 }
 
 export type ProfileProps = {

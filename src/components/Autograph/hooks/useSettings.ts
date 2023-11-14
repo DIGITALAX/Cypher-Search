@@ -3,13 +3,14 @@ import { omit } from "lodash";
 import {
   Erc20,
   FeeFollowModuleSettings,
+  MetadataAttributeType,
   Profile,
   ProfileMetadata,
   RelaySuccess,
 } from "../../../../graphql/generated";
 import setFollowModule from "../../../../graphql/lens/mutations/followModule";
 import createSetFollowModule from "../../../../lib/helpers/createSetFollowModule";
-import {  createWalletClient, custom } from "viem";
+import { createWalletClient, custom } from "viem";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
 import { polygon } from "viem/chains";
 import { PublicClient } from "wagmi";
@@ -36,7 +37,18 @@ const useSettings = (
   const [currencyOpen, setCurrencyOpen] = useState<boolean>(false);
   const [pfpImage, setPFPImage] = useState<string>();
   const [coverImage, setCoverImage] = useState<string>();
-  const [settingsData, setSettingsData] = useState<ProfileMetadata>({
+  const [settingsData, setSettingsData] = useState<
+    ProfileMetadata & {
+      microbrands: {
+        microbrand: string;
+        microbrandCover: string;
+      }[];
+      tempMicro: {
+        microbrand: string | undefined;
+        microbrandCover: string | undefined;
+      };
+    }
+  >({
     __typename: lensConnected?.metadata?.__typename,
     appId: "cypersearch",
     attributes: lensConnected?.metadata?.attributes,
@@ -45,6 +57,23 @@ const useSettings = (
     displayName: lensConnected?.metadata?.displayName,
     picture: lensConnected?.metadata?.picture,
     rawURI: lensConnected?.metadata?.rawURI,
+    microbrands: lensConnected?.metadata?.attributes?.[
+      lensConnected?.metadata?.attributes?.findIndex(
+        (item) => item.key === "microbrandsCypher"
+      )
+    ]
+      ? JSON.parse(
+          lensConnected?.metadata?.attributes?.[
+            lensConnected?.metadata?.attributes?.findIndex(
+              (item) => item.key === "microbrandsCypher"
+            )
+          ].value || ""
+        )
+      : [],
+    tempMicro: {
+      microbrand: undefined,
+      microbrandCover: undefined,
+    },
   });
   const [followData, setFollowData] = useState<{
     type: "FreeFollowModule" | "FeeFollowModule" | "RevertFollowModule";
@@ -71,7 +100,15 @@ const useSettings = (
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        if (id == "cover") {
+        if (id === "micro") {
+          setSettingsData((prev) => ({
+            ...prev,
+            tempMicro: {
+              ...prev.tempMicro,
+              microbrandCover: e.target?.result as string,
+            },
+          }));
+        } else if (id == "cover") {
           setCoverImage(e.target?.result as string);
         } else {
           setPFPImage(e.target?.result as string);
@@ -101,8 +138,64 @@ const useSettings = (
         }
       }
 
+      let attributes = [...(settingsData?.attributes || [])];
+
+      const existing = attributes.findIndex(
+        (item) => item.key === "microbrandsCypher"
+      );
+      let itemsToHash: {
+        microbrand: string;
+        microbrandCover: string;
+      }[] = [];
+      if (existing) {
+        await JSON.parse(attributes[existing].value);
+        itemsToHash = [
+          ...settingsData?.microbrands,
+          ...JSON.parse(attributes[existing].value),
+        ].filter(
+          (value, index, array) =>
+            array.findIndex(
+              (v) =>
+                v.microbrand === value.microbrand &&
+                v.microbrandCover === value.microbrandCover
+            ) === index
+        );
+      } else {
+        itemsToHash = settingsData?.microbrands;
+      }
+
+      const promises = itemsToHash?.map(
+        async (item: { microbrand: string; microbrandCover: string }) => {
+          const cover = await fetch("/api/ipfs", {
+            method: "POST",
+            body: item?.microbrandCover,
+          });
+          const coverCID = await cover.json();
+          return {
+            microbrand: item.microbrand,
+            microbrandCover: "ipfs://" + coverCID?.cid,
+          };
+        }
+      );
+
+      await Promise.all(promises);
+
+      if (existing) {
+        attributes[existing].value = JSON.stringify([
+          ...(await JSON.parse(attributes[existing].value)),
+          ...(promises || []),
+        ]);
+      } else {
+        attributes.push({
+          key: "microbrandCypher",
+          value: JSON.stringify(promises || []),
+          type: MetadataAttributeType.Json,
+        });
+      }
+
       const metadata: ProfileMetadata = {
         ...settingsData,
+        attributes,
         picture: hasNewPfpImage
           ? {
               raw: {

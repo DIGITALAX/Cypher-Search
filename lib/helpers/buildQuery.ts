@@ -67,7 +67,13 @@ const buildQuery = (filters: Filter): FilterInput => {
   }
 
   if (filters.printType.length > 0) {
-    query = { ...query, ...buildAndBlock(filters.printType, "printType") };
+    query = {
+      ...query,
+      ...buildAndBlock(
+        filters.printType,
+        "printType"
+      ),
+    };
   }
 
   return query;

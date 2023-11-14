@@ -19,11 +19,14 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   lensConnected,
   collectionSettings,
   setCollectionSettings,
+  filterConstants,
+  dispatch
 }): JSX.Element => {
   switch (type) {
     case "collection":
       return (
         <Dispatch
+          filterConstants={filterConstants}
           collectionDetails={collectionDetails}
           setCollectionDetails={setCollectionDetails}
           type={mediaType}
@@ -31,6 +34,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           lensConnected={lensConnected}
           collectionSettings={collectionSettings}
           setCollectionSettings={setCollectionSettings}
+          dispatch={dispatch}
         />
       );
 

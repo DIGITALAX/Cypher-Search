@@ -102,7 +102,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           }
         }}
       />
-      <DropDown
+      <ImageDropDown
         dropDownValues={filteredDropDownValues?.community}
         title={"Sort By Community"}
         value={filterValues?.community}
@@ -110,7 +110,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           setFilteredDropDownValues({
             ...filteredDropDownValues,
             community: filterConstants!.community.filter((value) =>
-              value
+              value[0]
                 .toLowerCase()
                 ?.includes(
                   (e.target as HTMLInputElement).value

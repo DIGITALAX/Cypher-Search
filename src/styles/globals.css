@@ -81,6 +81,7 @@ body::-webkit-scrollbar-thumb {
 
 div::-webkit-scrollbar {
   width: 0px;
+  height: 0px;
   opacity: 0; /* Initially hide the scrollbar */
 }
 

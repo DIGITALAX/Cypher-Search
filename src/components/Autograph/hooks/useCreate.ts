@@ -24,10 +24,14 @@ const useCreate = (
     media: string;
     origin: string;
     microOpen: boolean;
+    communityOpen: boolean;
+    accessOpen: boolean;
   }>({
     media: "static",
     origin: "chromadin",
     microOpen: false,
+    communityOpen: false,
+    accessOpen: false,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
     {
@@ -40,14 +44,17 @@ const useCreate = (
       audio: "",
       tags: "",
       prompt: "",
+      visibility: "",
       sizes: [],
       colors: [],
       profileHandle: "",
-      microbrandCover: "",
-      microbrand: "",
-      access: [],
+      microbrand: {
+        microbrand: "",
+        microbrandCover: "",
+      },
+      access: "",
       drop: "",
-      communities: [],
+      communities: "",
     }
   );
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
@@ -90,9 +97,19 @@ const useCreate = (
           ?.filter((tag) => tag.trim() !== "")
       );
 
-      await setMicrobrand();
-
-      // const collectionURI = ();
+      const collectionURI = {
+        ...collectionDetails,
+        tags: collectionDetails?.tags
+          ?.split(/,\s*|\s+/)
+          ?.filter((tag) => tag.trim() !== ""),
+        access: collectionDetails?.access
+          ?.split(/,\s*|\s+/)
+          ?.filter((tag) => tag.trim() !== ""),
+        communities: collectionDetails?.communities
+          ?.split(/,\s*|\s+/)
+          ?.filter((tag) => tag.trim() !== ""),
+        mediaType: collectionSettings?.media,
+      };
 
       const clientWallet = createWalletClient({
         chain: polygon,
@@ -151,86 +168,12 @@ const useCreate = (
     setMessageLoading(false);
   };
 
-  const setMicrobrand = async () => {
-    if (!collectionDetails?.microbrand || !collectionDetails?.microbrandCover)
-      return;
-    try {
-      let attributes = [...(lensConnected?.metadata?.attributes || [])];
-
-      const existing = attributes.findIndex(
-        (item) => item.key === "microbrandsCypher"
-      );
-
-      const cover = await fetch("/api/ipfs", {
-        method: "POST",
-        body: collectionDetails?.microbrandCover,
-      });
-      const coverCID = await cover.json();
-
-      if (existing) {
-        attributes[existing].value = JSON.stringify([
-          ...(await JSON.parse(attributes[existing].value)),
-          {
-            microbrand: collectionDetails?.microbrand,
-            microbrandCover: "ipfs://" + coverCID?.cid,
-          },
-        ]);
-      } else {
-        attributes.push({
-          key: "microbrandCypher",
-          value: JSON.stringify([
-            {
-              microbrand: collectionDetails?.microbrand,
-              microbrandCover: "ipfs://" + coverCID?.cid,
-            },
-          ]),
-          type: MetadataAttributeType.Json,
-        });
-      }
-
-      const response = await fetch("/api/ipfs", {
-        method: "POST",
-        body: JSON.stringify({
-          __typename: lensConnected?.metadata?.__typename,
-          appId: "cypersearch",
-          attributes,
-          bio: lensConnected?.metadata?.bio,
-          coverPicture: lensConnected?.metadata?.coverPicture,
-          displayName: lensConnected?.metadata?.displayName,
-          picture: lensConnected?.metadata?.picture,
-          rawURI: lensConnected?.metadata?.rawURI,
-        }),
-      });
-      const responseJSON = await response.json();
-
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-
-      await setMeta(
-        "ipfs://" + responseJSON.cid,
-        dispatch,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
   const handleMedia = async (e: ChangeEvent<HTMLInputElement>, id: string) => {
     const file = e.target?.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        if (id == "micro") {
-          setCollectionDetails((prev) => ({
-            ...prev,
-            microbrandCover: e.target?.result as string,
-          }));
-        } else if (id == "audio") {
+        if (id == "audio") {
           setCollectionDetails((prev) => ({
             ...prev,
             audio: e.target?.result as string,

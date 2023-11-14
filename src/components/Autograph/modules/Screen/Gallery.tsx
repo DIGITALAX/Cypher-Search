@@ -23,6 +23,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   createCase,
   handleMedia,
   lensConnected,
+  filterConstants,
+  dispatch,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
@@ -37,7 +39,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
             <SwitchCreate
               router={router}
               gallery={gallery}
+              dispatch={dispatch}
               type={createCase}
+              filterConstants={filterConstants}
               collectionDetails={collectionDetails}
               setCollectionDetails={setCollectionDetails}
               mediaType={collectionSettings?.media}
@@ -106,9 +110,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
             }`}
           >
             {createCase && (
-              <div className="relative w-full h-fit flex items-start justify-start">
+              <div className="relative w-full h-fit flex items-center justify-center">
                 <div
-                  className="relative w-fit h-fit relative justiy-start items-start font-bit text-xs flex cursor-pointer text-white"
+                  className="relative w-fit h-fit relative justify-center items-center font-bit text-xs flex cursor-pointer text-white"
                   onClick={() => setCreateCase(undefined)}
                 >
                   {`<<<  Back to gallery`}
@@ -118,19 +122,19 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
 
             {!createCase && (
               <>
-                <div className="relative w-full h-10 bg-olor border border-[#DAB275] flex items-center justify-center text-saph font-bit text-lg cursor-pointer active:scale-95">
-                  <div
-                    className="relative w-fit h-fit items-center justify-center flex top-1"
-                    onClick={() => !isDesigner && setCreateCase("collection")}
-                  >
+                <div
+                  className="relative w-full h-10 bg-olor border border-[#DAB275] flex items-center justify-center text-saph font-bit text-lg cursor-pointer active:scale-95"
+                  onClick={() => !isDesigner && setCreateCase("collection")}
+                >
+                  <div className="relative w-fit h-fit items-center justify-center flex top-1">
                     + New Collection
                   </div>
                 </div>
-                <div className="relative w-full h-10 bg-olor border border-[#DAB275] flex items-center justify-center text-saph font-bit text-lg cursor-pointer active:scale-95">
-                  <div
-                    className="relative w-fit h-fit items-center justify-center flex top-1"
-                    onClick={() => !isDesigner && setCreateCase("drop")}
-                  >
+                <div
+                  className="relative w-full h-10 bg-olor border border-[#DAB275] flex items-center justify-center text-saph font-bit text-lg cursor-pointer active:scale-95"
+                  onClick={() => !isDesigner && setCreateCase("drop")}
+                >
+                  <div className="relative w-fit h-fit items-center justify-center flex top-1">
                     + New Drop
                   </div>
                 </div>
