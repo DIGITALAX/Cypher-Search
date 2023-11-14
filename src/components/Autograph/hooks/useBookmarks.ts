@@ -34,7 +34,8 @@ const useBookmarks = (
   screenDisplay: ScreenDisplay,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  pageProfile: Profile | undefined
 ) => {
   const [allBookmarks, setAllBookmarks] = useState<
     (Post | Comment | Quote | Mirror)[]
@@ -146,6 +147,7 @@ const useBookmarks = (
         makeCommentBookmark[index]?.content,
         makeCommentBookmark[index]?.images,
         makeCommentBookmark[index]?.videos,
+        [],
         postCollectGif.gifs?.[id]!
       );
 
@@ -427,7 +429,8 @@ const useBookmarks = (
     if (
       screenDisplay === ScreenDisplay.Bookmarks &&
       allBookmarks.length < 1 &&
-      address
+      address &&
+      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle
     ) {
       getBookmarks();
     }

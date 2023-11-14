@@ -24,12 +24,14 @@ import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import useOrders from "@/components/Autograph/hooks/useOrders";
+import useSales from "@/components/Autograph/hooks/useSales";
+import useCreate from "@/components/Autograph/hooks/useCreate";
 
 const Autograph: NextPage<{ router: NextRouter }> = ({
   router,
 }): JSX.Element => {
   const dispatch = useDispatch();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const publicClient = createPublicClient({
     chain: polygon,
@@ -72,6 +74,9 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
   );
   const profileDisplay = useSelector(
     (state: RootState) => state.app.profileDisplayReducer.value
+  );
+  const isDesigner = useSelector(
+    (state: RootState) => state.app.isDesignerReducer.value
   );
   const screenDisplay = useSelector(
     (state: RootState) => state.app.screenDisplayReducer.value
@@ -121,7 +126,15 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData, cartItems);
+  } = useSignIn(
+    publicClient,
+    address,
+    isConnected,
+    dispatch,
+    oracleData,
+    cartItems,
+    lensConnected
+  );
   const { profileLoading, getProfileData, sortType, setSortType } =
     useAutograph(dispatch);
   const {
@@ -175,6 +188,7 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     getMoreGallery,
     openInteractions,
     setOpenInteractions,
+    activeGallery,
   } = useGallery(
     lensConnected,
     profileDisplay,
@@ -183,6 +197,22 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     publicClient,
     address
   );
+  const {
+    setCollectionDetails,
+    setCreateCase,
+    createCase,
+    collectionDetails,
+    createDrop,
+    createCollection,
+    creationLoading,
+    message,
+    setMessage,
+    handleSendMessage,
+    messageLoading,
+    setCollectionSettings,
+    collectionSettings,
+    handleMedia,
+  } = useCreate(publicClient, address, dispatch, lensConnected);
   const {
     handleSettingsUpdate,
     settingsUpdateLoading,
@@ -238,7 +268,8 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     screenDisplay,
     dispatch,
     publicClient,
-    address
+    address,
+    profile
   );
   const {
     makePost,
@@ -254,7 +285,14 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     decryptOrder,
     setOrderActions,
     orderActions,
-  } = useOrders(address, client);
+  } = useOrders(address, client, lensConnected, profile, screenDisplay);
+  const { salesLoading, allSales } = useSales(
+    address,
+    screenDisplay,
+    isDesigner,
+    lensConnected,
+    profile
+  );
 
   useEffect(() => {
     if (autograph && !profile) {
@@ -421,12 +459,20 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
               </Head>
               <Web
                 router={router}
+                handleMedia={handleMedia}
+                isDesigner={isDesigner}
+                allSales={allSales}
+                salesLoading={salesLoading}
                 orderActions={orderActions}
                 ordersLoading={ordersLoading}
                 allOrders={allOrders}
                 decryptOrder={decryptOrder}
                 setOrderActions={setOrderActions}
                 openType={openType}
+                handleSendMessage={handleSendMessage}
+                message={message}
+                setMessage={setMessage}
+                messageLoading={messageLoading}
                 setOpenType={setOpenType}
                 setCurrencyOpen={setCurrencyOpen}
                 currencyOpen={currencyOpen}
@@ -495,6 +541,16 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
                 postContentLoading={postContentLoading}
                 commentContentLoading={commentContentLoading}
                 postCollectGif={postCollectGif}
+                creationLoading={creationLoading}
+                createDrop={createDrop}
+                createCollection={createCollection}
+                setCollectionDetails={setCollectionDetails}
+                setCreateCase={setCreateCase}
+                createCase={createCase}
+                collectionDetails={collectionDetails}
+                activeGallery={activeGallery}
+                setCollectionSettings={setCollectionSettings}
+                collectionSettings={collectionSettings}
               />
               <Bio profile={profile} dispatch={dispatch} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">

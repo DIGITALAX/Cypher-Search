@@ -112,6 +112,7 @@ const useQuote = (
         makeQuote[0]?.content,
         makeQuote[0]?.images!,
         makeQuote[0]?.videos!,
+        [],
         postCollectGif.gifs?.[postBox?.quote?.id]!
       );
 

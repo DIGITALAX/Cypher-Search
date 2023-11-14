@@ -11,6 +11,11 @@ export const CHROMADIN_OPEN_ACTION: `0x${string}` = "0x";
 export const LISTENER_OPEN_ACTION: `0x${string}` = "0x";
 export const COIN_OP_OPEN_ACTION: `0x${string}` = "0x";
 export const LEGEND_OPEN_ACTION: `0x${string}` = "0x";
+export const PRINT_ACCESS_CONTROL: `0x${string}` = "0x";
+export const DIGITALAX_ADDRESS: `0x${string}` =
+  "0xAA3e5ee4fdC831e5274FE7836c95D670dC2502e6";
+export const ZERO_ADDRESS: `0x${string}` =
+  "0x0000000000000000000000000000000000000000";
 
 export const PLACEHOLDERS: string[] = [
   "know the creator by name? @ them, we won't judge",
@@ -136,4 +141,64 @@ export const COUNTRIES: string[] = [
   "United Kingdom",
   "Venezuela",
   "Vietnam",
+];
+
+export const TAGS: string[] = [
+  "AI",
+  "public domain",
+  "cc0",
+  "cypherpunk",
+  "solarpunk",
+  "lofi",
+  "bedroom punk",
+  "crypto",
+  "retrofuturism",
+  "cybernetics",
+  "bio punk",
+  "digital art",
+  "urban exploration",
+  "ambient",
+  "sustainable",
+  "augmented",
+  "fashion",
+  "abstract expressionism",
+  "street photography",
+  "minimalist landscapes",
+  "digital surrealism",
+  "contemporary sculpture",
+  "vintage fashion",
+  "ceramic artistry",
+  "urban graffiti",
+  "fantasy illustration",
+  "retro pop culture",
+  "artisan crafts",
+  "eco-friendly designs",
+  "watercolor botanicals",
+  "avant-garde film",
+  "jazz age posters",
+  "psychedelic patterns",
+  "geometric tattoos",
+  "steampunk inventions",
+  "gothic architecture",
+  "conceptual installations",
+  "Abstract",
+  "Bohemian",
+  "Cyberpunk",
+  "Deco",
+  "Ethereal",
+  "Futurism",
+  "Graffiti",
+  "Holographic",
+  "Impressionist",
+  "Juxtaposed",
+  "Kinetic",
+  "Luminous",
+  "Minimalist",
+  "Neon",
+  "Organic",
+  "Pixel",
+  "Quirky",
+  "Retro",
+  "Surreal",
+  "Textured",
 ];

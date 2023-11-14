@@ -20,7 +20,7 @@ const Checkout: NextPage<{
   client: LitNodeClient;
 }> = ({ router, client }): JSX.Element => {
   const dispatch = useDispatch();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(),
@@ -52,7 +52,15 @@ const Checkout: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData, cartItems);
+  } = useSignIn(
+    publicClient,
+    address,
+    isConnected,
+    dispatch,
+    oracleData,
+    cartItems,
+    lensConnected
+  );
   const {
     collectItem,
     collectPostLoading,

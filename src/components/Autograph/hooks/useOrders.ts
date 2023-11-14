@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { EncryptedDetails, Order } from "../types/autograph.types";
+import {
+  EncryptedDetails,
+  Order,
+  ScreenDisplay,
+} from "../types/autograph.types";
 import { getOrders } from "../../../../graphql/subgraph/queries/getOrders";
 import {
   LitNodeClient,
@@ -8,10 +12,14 @@ import {
 } from "@lit-protocol/lit-node-client";
 import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 import { getCollectionOrder } from "../../../../graphql/subgraph/queries/getOneCollection";
+import { Profile } from "../../../../graphql/generated";
 
 const useOrders = (
   address: `0x${string}` | undefined,
-  client: LitNodeClient
+  client: LitNodeClient,
+  lensConnected: Profile | undefined,
+  pageProfile: Profile | undefined,
+  screenDisplay: ScreenDisplay
 ) => {
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState<boolean>(false);
@@ -132,7 +140,12 @@ const useOrders = (
   };
 
   useEffect(() => {
-    if (allOrders?.length < 1 && address) {
+    if (
+      allOrders?.length < 1 &&
+      address &&
+      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle &&
+      screenDisplay === ScreenDisplay.Orders
+    ) {
       getAllOrders();
     }
   }, []);

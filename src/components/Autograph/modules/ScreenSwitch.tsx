@@ -7,6 +7,7 @@ import Gallery from "./Screen/Gallery";
 import Bookmarks from "./Screen/Bookmarks";
 import Orders from "./Screen/Orders";
 import ScreenPost from "./Screen/ScreenPost";
+import Sales from "./Screen/Sales";
 
 const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
@@ -77,13 +78,54 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   orderActions,
   ordersLoading,
   decryptOrder,
+  allSales,
+  salesLoading,
+  creationLoading,
+  createDrop,
+  createCollection,
+  setCollectionDetails,
+  setCreateCase,
+  createCase,
+  collectionDetails,
+  activeGallery,
+  collectionSettings,
+  setCollectionSettings,
+  isDesigner,
+  handleSendMessage,
+  setMessage,
+  message,
+  messageLoading,
+  handleMedia,
+  lensConnected,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
       return <Circuits gallery={gallery} />;
 
     case ScreenDisplay.Gallery:
-      return <Gallery gallery={gallery} />;
+      return (
+        <Gallery
+          handleMedia={handleMedia}
+          handleSendMessage={handleSendMessage}
+          message={message}
+          setMessage={setMessage}
+          messageLoading={messageLoading}
+          gallery={gallery}
+          setCollectionDetails={setCollectionDetails}
+          collectionDetails={collectionDetails}
+          createCollection={createCollection}
+          createDrop={createDrop}
+          creationLoading={creationLoading}
+          createCase={createCase}
+          setCreateCase={setCreateCase}
+          activeGallery={activeGallery}
+          router={router}
+          setCollectionSettings={setCollectionSettings}
+          collectionSettings={collectionSettings}
+          isDesigner={isDesigner}
+          lensConnected={lensConnected}
+        />
+      );
 
     case ScreenDisplay.Post:
       return (
@@ -164,6 +206,15 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           orderActions={orderActions}
           ordersLoading={ordersLoading}
           setOrderActions={setOrderActions}
+          router={router}
+        />
+      );
+
+    case ScreenDisplay.Sales:
+      return (
+        <Sales
+          allSales={allSales}
+          salesLoading={salesLoading}
           router={router}
         />
       );

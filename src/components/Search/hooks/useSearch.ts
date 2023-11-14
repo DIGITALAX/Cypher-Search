@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
-import { PLACEHOLDERS } from "../../../../lib/constants";
+import { PLACEHOLDERS, numberToItemTypeMap } from "../../../../lib/constants";
 import {
   LimitType,
   Post,
@@ -472,7 +472,12 @@ const useSearch = (
       const { data } = await getPublications(
         {
           where: {
-            publicationIds: collections.map((item) => item.pubId),
+            publicationIds: collections.map(
+              (item) =>
+                `${numberToItemTypeMap[Number(item?.origin)]}/${
+                  "0x" + Number(item?.pubId)?.toString(16)
+                }-${"0x" + Number(item?.profileId)?.toString(16)}`
+            ),
             publicationTypes: [PublicationType.Post],
           },
         },

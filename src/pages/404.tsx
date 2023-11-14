@@ -7,11 +7,19 @@ import { NextRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { NextPage } from "next";
+import { useAccount } from "wagmi";
+import { createPublicClient, http } from "viem";
+import { polygon } from "viem/chains";
 
 const Custom404: NextPage<{
   router: NextRouter;
 }> = ({ router }): JSX.Element => {
   const dispatch = useDispatch();
+  const { address, isConnected } = useAccount();
+  const publicClient = createPublicClient({
+    chain: polygon,
+    transport: http(),
+  });
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
@@ -57,7 +65,15 @@ const Custom404: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData, cartItems);
+  } = useSignIn(
+    publicClient,
+    address,
+    isConnected,
+    dispatch,
+    oracleData,
+    cartItems,
+    lensConnected
+  );
 
   return (
     <>

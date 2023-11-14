@@ -16,7 +16,7 @@ import { createPublicClient, http } from "viem";
 
 export default function Home({ router }: { router: NextRouter }) {
   const dispatch = useDispatch();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(),
@@ -89,7 +89,15 @@ export default function Home({ router }: { router: NextRouter }) {
     signInLoading,
     cartListOpen,
     setCartListOpen,
-  } = useSignIn(dispatch, oracleData, cartItems);
+  } = useSignIn(
+    publicClient,
+    address,
+    isConnected,
+    dispatch,
+    oracleData,
+    cartItems,
+    lensConnected
+  );
   const {
     mirror,
     like,

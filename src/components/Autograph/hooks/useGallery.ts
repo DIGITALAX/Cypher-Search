@@ -5,7 +5,7 @@ import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlic
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { Display } from "../types/autograph.types";
 import { MetadataAttributeType, Profile } from "../../../../graphql/generated";
-import { createWalletClient, custom , PublicClient} from "viem";
+import { createWalletClient, custom, PublicClient } from "viem";
 import { polygon } from "viem/chains";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
@@ -35,6 +35,7 @@ const useGallery = (
   const [openMirrorGalleryChoice, setOpenMirrorGalleryChoice] = useState<
     boolean[]
   >([]);
+  const [activeGallery, setActiveGallery] = useState<Creation[]>([]);
   const [interactionsDisplayLoading, setInteractionsDisplayLoading] = useState<
     {
       like: boolean;
@@ -99,6 +100,7 @@ const useGallery = (
       // both those they've created and the orders that they've collected
 
       await getDisplayData();
+      setActiveGallery();
     } catch (err: any) {
       console.error(err.message);
     }
@@ -354,6 +356,7 @@ const useGallery = (
     getMoreGallery,
     openInteractions,
     setOpenInteractions,
+    activeGallery,
   };
 };
 

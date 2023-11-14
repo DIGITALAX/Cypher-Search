@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { store } from "./../../redux/store";
 import { Provider } from "react-redux";
 import "@rainbow-me/rainbowkit/styles.css";
+import { XMTPProvider } from "@xmtp/react-sdk";
 import {
   getDefaultWallets,
   RainbowKitProvider,
@@ -83,17 +84,21 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} theme={walletTheme}>
-        <Provider store={store}>
-          <div
-            className={`relative w-full h-auto flex flex-col ${
-              router?.asPath?.includes("autograph") ? "bg-black" : "bg-offBlack"
-            }`}
-          >
-            <Component {...pageProps} router={router} />
-            <Modals router={router} />
-            <Footer handleRewind={handleRewind} />
-          </div>
-        </Provider>
+        <XMTPProvider dbVersion={2}>
+          <Provider store={store}>
+            <div
+              className={`relative w-full h-auto flex flex-col ${
+                router?.asPath?.includes("autograph")
+                  ? "bg-black"
+                  : "bg-offBlack"
+              }`}
+            >
+              <Component {...pageProps} router={router} />
+              <Modals router={router} />
+              <Footer handleRewind={handleRewind} />
+            </div>
+          </Provider>
+        </XMTPProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

@@ -82,6 +82,24 @@ const Web: FunctionComponent<WebProps> = ({
   ordersLoading,
   setOrderActions,
   allOrders,
+  allSales,
+  salesLoading,
+  activeGallery,
+  setCollectionDetails,
+  setCreateCase,
+  createCase,
+  collectionDetails,
+  createDrop,
+  createCollection,
+  creationLoading,
+  collectionSettings,
+  setCollectionSettings,
+  isDesigner,
+  handleSendMessage,
+  setMessage,
+  message,
+  messageLoading,
+  handleMedia,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -97,12 +115,10 @@ const Web: FunctionComponent<WebProps> = ({
               draggable={false}
             />
           </Link>
-          {screenDisplay !== ScreenDisplay.Settings &&
-            screenDisplay !== ScreenDisplay.Bookmarks &&
-            screenDisplay !== ScreenDisplay.Orders &&
-            screenDisplay !== ScreenDisplay.Post && (
-              <div className="relative w-full h-fit gap-6 flex flex-row items-center justify-end">
-                {[
+          {
+            <div className="relative w-full h-16 gap-6 flex flex-row items-center justify-end">
+              {screenDisplay === ScreenDisplay.Display &&
+                [
                   {
                     image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
                     text: "private",
@@ -155,15 +171,21 @@ const Web: FunctionComponent<WebProps> = ({
                     );
                   }
                 )}
-              </div>
-            )}
+            </div>
+          }
         </div>
         <ScreenSwitch
+          handleMedia={handleMedia}
           currencies={currencies}
           setCurrencyOpen={setCurrencyOpen}
           currencyOpen={currencyOpen}
           mirror={mirror}
+          handleSendMessage={handleSendMessage}
+          message={message}
+          setMessage={setMessage}
+          messageLoading={messageLoading}
           openType={openType}
+          isDesigner={isDesigner}
           setOpenType={setOpenType}
           displayLoading={displayLoading}
           handleSetDisplay={handleSetDisplay}
@@ -176,6 +198,8 @@ const Web: FunctionComponent<WebProps> = ({
           dispatch={dispatch}
           gallery={gallery}
           display={display}
+          setCollectionSettings={setCollectionSettings}
+          collectionSettings={collectionSettings}
           setSettingsData={setSettingsData}
           settingsData={settingsData}
           handleSettingsUpdate={handleSettingsUpdate}
@@ -229,6 +253,16 @@ const Web: FunctionComponent<WebProps> = ({
           ordersLoading={ordersLoading}
           setOrderActions={setOrderActions}
           allOrders={allOrders}
+          allSales={allSales}
+          salesLoading={salesLoading}
+          creationLoading={creationLoading}
+          createDrop={createDrop}
+          createCollection={createCollection}
+          setCollectionDetails={setCollectionDetails}
+          collectionDetails={collectionDetails}
+          createCase={createCase}
+          setCreateCase={setCreateCase}
+          activeGallery={activeGallery}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
@@ -283,6 +317,14 @@ const Web: FunctionComponent<WebProps> = ({
               width: "10",
               height: "10",
               type: ScreenDisplay.Orders,
+            },
+            {
+              image: "QmQ8U7cmvoUizxS7tFeWGcUs7f54svfBdxE6aXfTgPbshw",
+              text: "sales",
+              function: () => dispatch(setScreenDisplay(ScreenDisplay.Sales)),
+              width: "10",
+              height: "10",
+              type: ScreenDisplay.Sales,
             },
             {
               image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",
