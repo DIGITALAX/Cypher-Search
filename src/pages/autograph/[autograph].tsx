@@ -64,6 +64,9 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
   const availableCurrencies = useSelector(
     (state: RootState) => state.app.availableCurrenciesReducer.currencies
   );
+  const postSuccess = useSelector(
+    (state: RootState) => state.app.postSuccessReducer.value
+  );
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
@@ -166,7 +169,8 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     profile,
     dispatch,
     publicClient,
-    address
+    address,
+    postSuccess
   );
   const {
     galleryLike,
@@ -196,7 +200,8 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     galleryItems,
     dispatch,
     publicClient,
-    address
+    address,
+    postSuccess
   );
   const {
     setCollectionDetails,

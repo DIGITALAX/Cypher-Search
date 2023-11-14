@@ -30,7 +30,8 @@ const useFeed = (
   profile: Profile | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  postSuccess: string | undefined
 ) => {
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []
@@ -342,6 +343,12 @@ const useFeed = (
       getFeed();
     }
   }, []);
+
+  useEffect(() => {
+    if (postSuccess) {
+      getFeed();
+    }
+  }, [postSuccess]);
 
   useEffect(() => {
     if (profileFeed?.length > 0) {

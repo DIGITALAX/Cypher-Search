@@ -549,8 +549,8 @@ const useSearch = (
         colors: aggregateUniqueValues(data?.data?.collectionCreateds, "colors"),
         sizes: aggregateSizes(data?.data?.collectionCreateds),
         communities: community?.data?.communityCreateds?.(
-          (item: { name: string; image: string }) => {
-            return [item.name, item.image];
+          (item: { name: string; image: string; communityId: string }) => {
+            return [item.name, item.image, item.communityId];
           }
         ),
       };

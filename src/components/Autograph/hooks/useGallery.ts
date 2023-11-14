@@ -22,7 +22,8 @@ const useGallery = (
     | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  postSuccess: string | undefined
 ) => {
   const [interactionsGalleryLoading, setInteractionsGalleryLoading] = useState<
     {
@@ -292,6 +293,12 @@ const useGallery = (
       getGallery();
     }
   }, []);
+
+  useEffect(() => {
+    if (postSuccess) {
+      getGallery();
+    }
+  }, [postSuccess]);
 
   useEffect(() => {
     if (

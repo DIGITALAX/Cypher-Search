@@ -6,6 +6,7 @@ const FILTER = `
     communityCreateds {
         name
         image
+        communityId
       }
   }
 `;
