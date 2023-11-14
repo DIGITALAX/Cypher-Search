@@ -26,6 +26,7 @@ import { polygon } from "viem/chains";
 import useOrders from "@/components/Autograph/hooks/useOrders";
 import useSales from "@/components/Autograph/hooks/useSales";
 import useCreate from "@/components/Autograph/hooks/useCreate";
+import useConversations from "@/components/Autograph/hooks/useConversations";
 
 const Autograph: NextPage<{ router: NextRouter }> = ({
   router,
@@ -205,14 +206,14 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     createDrop,
     createCollection,
     creationLoading,
-    message,
-    setMessage,
-    handleSendMessage,
-    messageLoading,
     setCollectionSettings,
     collectionSettings,
     handleMedia,
+    waveformRef,
+    handlePlayPause,
   } = useCreate(publicClient, address, dispatch, lensConnected);
+  const { message, setMessage, handleSendMessage, messageLoading } =
+    useConversations(address, screenDisplay, lensConnected, profile);
   const {
     handleSettingsUpdate,
     settingsUpdateLoading,
@@ -459,6 +460,8 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
               </Head>
               <Web
                 router={router}
+                waveformRef={waveformRef}
+                handlePlayPause={handlePlayPause}
                 filterConstants={filterConstants}
                 handleMedia={handleMedia}
                 isDesigner={isDesigner}

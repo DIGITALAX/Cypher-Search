@@ -14,13 +14,14 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   setCollectionDetails,
   router,
   gallery,
-  mediaType,
   handleMedia,
   lensConnected,
   collectionSettings,
   setCollectionSettings,
   filterConstants,
-  dispatch
+  dispatch,
+  handlePlayPause,
+  waveformRef,
 }): JSX.Element => {
   switch (type) {
     case "collection":
@@ -29,12 +30,13 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           filterConstants={filterConstants}
           collectionDetails={collectionDetails}
           setCollectionDetails={setCollectionDetails}
-          type={mediaType}
           handleMedia={handleMedia}
           lensConnected={lensConnected}
           collectionSettings={collectionSettings}
           setCollectionSettings={setCollectionSettings}
           dispatch={dispatch}
+          waveformRef={waveformRef}
+          handlePlayPause={handlePlayPause}
         />
       );
 

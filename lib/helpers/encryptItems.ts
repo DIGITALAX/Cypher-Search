@@ -24,7 +24,7 @@ export const encryptItems = async (
 
     for (const [pubId, item] of Object.entries(groupedByPubId)) {
       const uniqueAddresses = new Set<string>();
-      item.fulfillerAddress.forEach((address) => {
+      item.fulfillerAddress?.forEach((address) => {
         if (address) {
           uniqueAddresses.add(address);
         }

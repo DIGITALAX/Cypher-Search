@@ -13,7 +13,7 @@ export const aggregateMicrobrands = (
 ): string[][] => {
   const uniquePairs = new Set<string>();
 
-  collection.forEach((item) => {
+  collection?.forEach((item) => {
     const pair = JSON.stringify([item.microbrand, item.microbrandCover]);
     uniquePairs.add(pair);
   });
@@ -41,7 +41,7 @@ export const aggregateUniqueValues = (
     printType: string;
   }
 ): string[] => {
-  return Array.from(new Set(collection.flatMap((item) => item[key])));
+  return Array.from(new Set(collection?.flatMap((item) => item[key])));
 };
 
 export const aggregateSizes = (
@@ -65,19 +65,19 @@ export const aggregateSizes = (
     apparel: new Set<string>(),
   };
 
-  collection.forEach((item) => {
+  collection?.forEach((item) => {
     switch (item.printType) {
       case PrintType.Sticker:
-        item.sizes.forEach((size) => sizes.sticker.add(size));
+        item.sizes?.forEach((size) => sizes.sticker.add(size));
         break;
       case PrintType.Poster:
-        item.sizes.forEach((size) => sizes.poster.add(size));
+        item.sizes?.forEach((size) => sizes.poster.add(size));
         break;
       case PrintType.Shirt:
       case PrintType.Hoodie:
       case PrintType.Sleeve:
       case PrintType.Crop:
-        item.sizes.forEach((size) => sizes.apparel.add(size));
+        item.sizes?.forEach((size) => sizes.apparel.add(size));
         break;
     }
   });

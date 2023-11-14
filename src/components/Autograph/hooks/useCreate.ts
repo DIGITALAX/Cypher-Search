@@ -1,15 +1,13 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import { CollectionDetails, ScreenDisplay } from "../types/autograph.types";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { CollectionDetails } from "../types/autograph.types";
 import lensPost from "../../../../lib/helpers/api/postChain";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { AnyAction, Dispatch } from "redux";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
-import { Client } from "@xmtp/react-sdk";
-import { DIGITALAX_ADDRESS } from "../../../../lib/constants";
-import { MetadataAttributeType, Profile } from "../../../../graphql/generated";
-import setMeta from "../../../../lib/helpers/api/setMeta";
+import { Profile } from "../../../../graphql/generated";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
+import WaveSurfer from "wavesurfer.js";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -18,26 +16,28 @@ const useCreate = (
   lensConnected: Profile | undefined
 ) => {
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);
-  const [messageLoading, setMessageLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
   const [collectionSettings, setCollectionSettings] = useState<{
     media: string;
     origin: string;
     microOpen: boolean;
     communityOpen: boolean;
     accessOpen: boolean;
+    visibilityOpen: boolean;
+    videoAudio: boolean;
   }>({
     media: "static",
     origin: "chromadin",
     microOpen: false,
     communityOpen: false,
     accessOpen: false,
+    visibilityOpen: false,
+    videoAudio: false,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
     {
       title: "",
       description: "",
-      prices: [],
+      price: "",
       acceptedTokens: [],
       images: [],
       video: "",
@@ -58,6 +58,8 @@ const useCreate = (
     }
   );
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
+  const waveformRef = useRef(null);
+  const wavesurfer = useRef<null | WaveSurfer>(null);
 
   const createDrop = async () => {
     setCreationLoading(true);
@@ -73,8 +75,13 @@ const useCreate = (
     if (
       (collectionDetails.title?.trim() !== "" &&
         collectionDetails.description?.trim() !== "" &&
+        collectionSettings?.media !== "video" &&
         (!collectionDetails.images || collectionDetails.images!.length < 1) &&
-        (!collectionDetails.prices || collectionDetails.prices!.length < 1) &&
+        ((collectionSettings?.media === "audio" &&
+          collectionDetails?.audio == "") ||
+          (collectionSettings?.media === "video" &&
+            collectionDetails?.video == "")) &&
+        collectionDetails.price?.trim() !== "" &&
         (!collectionDetails.acceptedTokens ||
           collectionDetails.acceptedTokens!.length < 1) &&
         collectionDetails.tags?.trim() !== "" &&
@@ -87,10 +94,10 @@ const useCreate = (
     try {
       const postContentURI = await uploadPostContent(
         collectionDetails?.description,
-        collectionDetails.images,
-        [collectionDetails?.video],
+        collectionSettings?.media !== "video" ? collectionDetails.images : [],
+        collectionSettings?.media === "video" ? [collectionDetails?.video] : [],
         [],
-        [collectionDetails?.audio],
+        collectionSettings?.media === "audio" ? [collectionDetails?.audio] : [],
         collectionDetails?.title,
         collectionDetails?.tags
           ?.split(/,\s*|\s+/)
@@ -109,7 +116,10 @@ const useCreate = (
           ?.split(/,\s*|\s+/)
           ?.filter((tag) => tag.trim() !== ""),
         mediaType: collectionSettings?.media,
+        prices: [`${Number(collectionDetails?.price) * 10 ** 18}`],
       };
+
+      // CONVERT PRICE CORRECTLY!
 
       const clientWallet = createWalletClient({
         chain: polygon,
@@ -140,34 +150,6 @@ const useCreate = (
     setCreationLoading(false);
   };
 
-  const handleSendMessage = async () => {
-    setMessageLoading(true);
-    try {
-      const clientWallet = createWalletClient({
-        account: address,
-        chain: polygonMumbai,
-        transport: custom((window as any).ethereum),
-      });
-
-      const client = await Client.create(clientWallet, {
-        env: "production",
-      });
-      const conversation = await client.conversations.newConversation(
-        DIGITALAX_ADDRESS
-      );
-      const data = conversation.send(message);
-      if ((await data).sent) {
-        setMessage("Message sent! We'll be in touch shortly.");
-        setTimeout(() => {
-          setMessage("");
-        }, 6000);
-      }
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    setMessageLoading(false);
-  };
-
   const handleMedia = async (e: ChangeEvent<HTMLInputElement>, id: string) => {
     const file = e.target?.files?.[0];
     if (file) {
@@ -192,7 +174,139 @@ const useCreate = (
       };
       reader.readAsDataURL(file);
     }
+
+    if (id === "video") {
+      const video = document.createElement("video");
+      video.muted = true;
+      video.crossOrigin = "anonymous";
+      video.preload = "auto";
+
+      const value = new Promise((resolve, reject) => {
+        video.addEventListener("error", reject);
+
+        video.addEventListener(
+          "canplay",
+          () => {
+            video.currentTime = 0.99;
+          },
+          { once: true }
+        );
+
+        video.addEventListener(
+          "seeked",
+          () =>
+            resolve(
+              (video as any).mozHasAudio ||
+                Boolean((video as any).webkitAudioDecodedByteCount) ||
+                Boolean((video as any).audioTracks?.length)
+            ),
+          {
+            once: true,
+          }
+        );
+
+        video.src = URL.createObjectURL((e as any).target.files[0]);
+      });
+
+      const hasAudio = await value;
+
+      setCollectionSettings((prev) => ({
+        ...prev,
+        videoAudio: hasAudio as boolean,
+      }));
+    }
   };
+
+  const handlePlayPause = () => {
+    const videoElement = document.getElementById(
+      "videoCollection"
+    ) as HTMLVideoElement;
+
+    if (wavesurfer.current) {
+      if (videoElement && collectionSettings?.media === "video") {
+        if (videoElement.paused) {
+          videoElement.play();
+          wavesurfer.current.play();
+        } else {
+          videoElement.pause();
+          wavesurfer.current.pause();
+        }
+      } else {
+        if (wavesurfer.current.isPlaying()) {
+          wavesurfer.current.pause();
+        } else {
+          wavesurfer.current.play();
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (waveformRef.current) {
+      if (wavesurfer.current) {
+        wavesurfer.current.destroy();
+      }
+
+      wavesurfer.current = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: "violet",
+        progressColor: "white",
+        height: 16,
+      });
+
+      wavesurfer.current.on("seeking", function (seekProgress) {
+        const videoElement = document.getElementById(
+          "videoCollection"
+        ) as HTMLVideoElement;
+        if (videoElement) {
+          videoElement.currentTime = seekProgress;
+        }
+      });
+
+      wavesurfer.current.on("play", function () {
+        const videoElement = document.getElementById(
+          "videoCollection"
+        ) as HTMLVideoElement;
+        if (videoElement) {
+          videoElement.play();
+        }
+      });
+
+      wavesurfer.current.on("pause", function () {
+        const videoElement = document.getElementById(
+          "videoCollection"
+        ) as HTMLVideoElement;
+        if (videoElement) {
+          videoElement.pause();
+        }
+      });
+
+      if (
+        collectionDetails?.audio &&
+        collectionDetails?.audio !== "" &&
+        collectionSettings.media === "audio"
+      ) {
+        wavesurfer.current.load(collectionDetails?.audio);
+      } else if (
+        collectionDetails?.video &&
+        collectionDetails?.video !== "" &&
+        collectionSettings.media === "video"
+      ) {
+        wavesurfer.current.load(collectionDetails?.video);
+      }
+    }
+
+    return () => {
+      wavesurfer.current?.destroy();
+    };
+  }, [
+    collectionDetails?.audio,
+    wavesurfer,
+    collectionDetails?.video,
+    collectionSettings?.media,
+    collectionDetails?.images,
+    waveformRef,
+  ]);
 
   return {
     createCase,
@@ -204,11 +318,9 @@ const useCreate = (
     creationLoading,
     setCollectionSettings,
     collectionSettings,
-    message,
-    setMessage,
-    messageLoading,
-    handleSendMessage,
     handleMedia,
+    handlePlayPause,
+    waveformRef,
   };
 };
 
