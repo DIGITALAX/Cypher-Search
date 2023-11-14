@@ -8,6 +8,7 @@ import Bookmarks from "./Screen/Bookmarks";
 import Orders from "./Screen/Orders";
 import ScreenPost from "./Screen/ScreenPost";
 import Sales from "./Screen/Sales";
+import Messages from "./Screen/Messages";
 
 const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
@@ -98,6 +99,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleMedia,
   lensConnected,
   filterConstants,
+  handlePlayPause,
+  waveformRef,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -108,6 +111,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
         <Gallery
           dispatch={dispatch}
           handleMedia={handleMedia}
+          waveformRef={waveformRef}
+          handlePlayPause={handlePlayPause}
           handleSendMessage={handleSendMessage}
           message={message}
           filterConstants={filterConstants}
@@ -200,6 +205,9 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           currencies={currencies}
         />
       );
+
+    case ScreenDisplay.Messages:
+      return <Messages />;
 
     case ScreenDisplay.Orders:
       return (

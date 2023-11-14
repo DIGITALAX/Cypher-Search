@@ -12,11 +12,12 @@ import {
 } from "../../../../graphql/generated";
 import { AccessControlConditions } from "@lit-protocol/types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import { ChangeEvent, SetStateAction } from "react";
+import { ChangeEvent, MutableRefObject, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
+import WaveSurfer from "wavesurfer.js";
 
 export type WebProps = {
   router: NextRouter;
@@ -34,6 +35,7 @@ export type WebProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
+    videoAudio: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -43,8 +45,11 @@ export type WebProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
+      videoAudio: boolean;
     }>
   ) => void;
+  handlePlayPause: () => void;
+  waveformRef: MutableRefObject<null>;
   handleSendMessage: () => Promise<void>;
   messageLoading: boolean;
   setMessage: (e: string) => void;
@@ -270,6 +275,7 @@ export enum ScreenDisplay {
   Orders,
   Sales,
   Settings,
+  Messages,
 }
 
 export enum SortType {
@@ -315,6 +321,7 @@ export type GalleryScreenProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
+    videoAudio: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -324,8 +331,11 @@ export type GalleryScreenProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
+      videoAudio: boolean;
     }>
   ) => void;
+  handlePlayPause: () => void;
+  waveformRef: MutableRefObject<null>;
 };
 
 export type ScreenSwitchProps = {
@@ -336,6 +346,7 @@ export type ScreenSwitchProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
+    videoAudio: boolean;
   };
   lensConnected: Profile | undefined;
   setCollectionSettings: (
@@ -346,8 +357,11 @@ export type ScreenSwitchProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
+      videoAudio: boolean;
     }>
   ) => void;
+  handlePlayPause: () => void;
+  waveformRef: MutableRefObject<null>;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   creationLoading: boolean;
@@ -1024,7 +1038,6 @@ export type DispatchProps = {
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
   dispatch: Dispatch<AnyAction>;
-  type: string;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   lensConnected: Profile | undefined;
@@ -1035,6 +1048,7 @@ export type DispatchProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
+    videoAudio: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1044,14 +1058,17 @@ export type DispatchProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
+      videoAudio: boolean;
     }>
   ) => void;
+  handlePlayPause: () => void;
+  waveformRef: MutableRefObject<null>;
 };
 
 export interface CollectionDetails {
   title: string;
   description: string;
-  prices: string[];
+  price: string;
   acceptedTokens: string[];
   images: string[];
   video: string;
@@ -1073,7 +1090,6 @@ export interface CollectionDetails {
 
 export type SwitchCreateProps = {
   type: string | undefined;
-  mediaType: string;
   dispatch: Dispatch<AnyAction>;
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
@@ -1087,6 +1103,7 @@ export type SwitchCreateProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
+    videoAudio: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1096,8 +1113,11 @@ export type SwitchCreateProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
+      videoAudio: boolean;
     }>
   ) => void;
+  handlePlayPause: () => void;
+  waveformRef: MutableRefObject<null>;
   lensConnected: Profile | undefined;
   gallery:
     | {

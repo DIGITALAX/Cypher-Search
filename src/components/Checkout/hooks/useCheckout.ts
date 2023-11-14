@@ -307,7 +307,7 @@ const useCheckout = (
       await publicClient.waitForTransactionReceipt({ hash: res });
       setApprovedSpend(true);
     } catch (err: any) {
-      console.log(err.message);
+      console.error(err.message);
     }
   };
 

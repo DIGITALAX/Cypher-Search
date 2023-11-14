@@ -25,6 +25,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   lensConnected,
   filterConstants,
   dispatch,
+  handlePlayPause,
+  waveformRef,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
@@ -37,6 +39,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
             className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[70vh] max-h-[70vh] items-start`}
           >
             <SwitchCreate
+              waveformRef={waveformRef}
+              handlePlayPause={handlePlayPause}
               router={router}
               gallery={gallery}
               dispatch={dispatch}
@@ -44,7 +48,6 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               filterConstants={filterConstants}
               collectionDetails={collectionDetails}
               setCollectionDetails={setCollectionDetails}
-              mediaType={collectionSettings?.media}
               handleMedia={handleMedia}
               lensConnected={lensConnected}
               collectionSettings={collectionSettings}

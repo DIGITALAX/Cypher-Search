@@ -4,6 +4,7 @@ import { setWalletConnected } from "../../../../redux/reducers/walletConnectedSl
 import { setLensConnected } from "../../../../redux/reducers/lensConnectedSlice";
 import getProfiles from "../../../../graphql/lens/queries/profiles";
 import generateChallenge from "../../../../graphql/lens/queries/challenge";
+import PrintAccessControlAbi from "./../../../../abis/PrintAccessControl.json";
 import {
   getAuthenticationToken,
   getCypherStorageCart,

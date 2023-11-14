@@ -18,6 +18,7 @@ const COLLECTIONS = `
       microbrand
       images
       mediaType
+      visibility
       fulfillerPercent
       fulfillerBase
       fulfiller
@@ -38,31 +39,33 @@ const COLLECTIONS = `
 export const COLLECTIONS_RANDOM = `query($origin: String!, $profileId: String!) {
   collectionCreateds(where: {origin: $origin, profileId: $profileId} first: 1) {
     amount
-    title
-    tags
-    pubId
-    prompt
-    profileId
-    profileHandle
-    printType
-    prices
-    owner
-    microbrandCover
-    microbrand
-    images
-    fulfillerPercent
-    fulfillerBase
-    fulfiller
-    designerPercent
-    drop
-    description
-    communities
-    collectionId
-    access
-    unlimited
-    colors
-    sizes
-    origin
+      title
+      tags
+      pubId
+      prompt
+      profileId
+      profileHandle
+      printType
+      prices
+      owner
+      microbrandCover
+      microbrand
+      images
+      mediaType
+      visibility
+      fulfillerPercent
+      fulfillerBase
+      fulfiller
+      designerPercent
+      drop
+      description
+      communities
+      collectionId
+      access
+      unlimited
+      colors
+      sizes
+      origin
   }
 }`;
 

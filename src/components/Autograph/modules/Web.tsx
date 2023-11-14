@@ -101,9 +101,11 @@ const Web: FunctionComponent<WebProps> = ({
   messageLoading,
   handleMedia,
   filterConstants,
+  handlePlayPause,
+  waveformRef,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-[95vh] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
+    <div className="relative w-full h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
       <div className="relative w-full h-fit flex flex-col items-start justify-start gap-5">
         <div className="relative flex flex-col items-start justify-between w-full h-fit gap-1">
           <Link
@@ -178,6 +180,8 @@ const Web: FunctionComponent<WebProps> = ({
         <ScreenSwitch
           handleMedia={handleMedia}
           currencies={currencies}
+          waveformRef={waveformRef}
+          handlePlayPause={handlePlayPause}
           filterConstants={filterConstants}
           lensConnected={lensConnected}
           setCurrencyOpen={setCurrencyOpen}
@@ -337,6 +341,15 @@ const Web: FunctionComponent<WebProps> = ({
               width: "10",
               height: "10",
               type: ScreenDisplay.Settings,
+            },
+            {
+              image: "QmXm26YHs1k1cZuBBXsNB5ifuAdq2db7AmZHSoHYSY6x6c",
+              text: "messages",
+              function: () =>
+                dispatch(setScreenDisplay(ScreenDisplay.Messages)),
+              width: "10",
+              height: "10",
+              type: ScreenDisplay.Messages,
             },
           ].map(
             (
