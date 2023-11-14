@@ -36,7 +36,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[70vh] max-h-[70vh] items-start`}
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center min-h-[70vh] max-h-[70vh] items-start overflow-y-scroll`}
           >
             <SwitchCreate
               waveformRef={waveformRef}
@@ -203,7 +203,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                               }))
                             }
                           >
-                            <div className="relative w-fit h-fit items-center justify-center flex top-1">
+                            <div className="relative w-fit h-fit items-center justify-center flex top-px">
                               {item}
                             </div>
                           </div>
@@ -211,6 +211,22 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                       }
                     )}
                   </div>
+                </div>
+              </div>
+            )}
+            {createCase && (
+              <div
+                className={`relative w-40 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
+                  !creationLoading && "cursor-pointer active:scale-95"
+                }`}
+                onClick={() =>
+                  createCase === "collection"
+                    ? createCollection()
+                    : createDrop()
+                }
+              >
+                <div className="relative w-fit h-fit items-center justify-center flex">
+                  Create
                 </div>
               </div>
             )}

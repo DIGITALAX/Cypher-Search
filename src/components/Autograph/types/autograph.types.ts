@@ -1069,6 +1069,7 @@ export interface CollectionDetails {
   title: string;
   description: string;
   price: string;
+  amount: string;
   acceptedTokens: string[];
   images: string[];
   video: string;

@@ -219,3 +219,10 @@ export type FollowCollectProps = {
   informationLoading: boolean;
   approved: boolean;
 };
+
+export type PostSuccessProps = {
+  dispatch: Dispatch<AnyAction>;
+  type: string;
+  router: NextRouter;
+  pubId: string;
+};

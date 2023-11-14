@@ -5,9 +5,17 @@ import { PublicClient, createWalletClient, custom } from "viem";
 import { AnyAction, Dispatch } from "redux";
 import { polygon } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
-import { Profile } from "../../../../graphql/generated";
+import {
+  LimitType,
+  Profile,
+  PublicationType,
+} from "../../../../graphql/generated";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import WaveSurfer from "wavesurfer.js";
+import { CHROMADIN_OPEN_ACTION, ZERO_ADDRESS } from "../../../../lib/constants";
+import { ethers } from "ethers";
+import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
+import getPublications from "../../../../graphql/lens/queries/publications";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -44,6 +52,7 @@ const useCreate = (
       audio: "",
       tags: "",
       prompt: "",
+      amount: "1",
       visibility: "",
       sizes: [],
       colors: [],
@@ -85,13 +94,15 @@ const useCreate = (
         (!collectionDetails.acceptedTokens ||
           collectionDetails.acceptedTokens!.length < 1) &&
         collectionDetails.tags?.trim() !== "" &&
-        !collectionDetails?.acceptedTokens) ||
+        !collectionDetails?.acceptedTokens &&
+        Number(collectionDetails?.amount) > 0) ||
       !address
     )
       return;
     setCreationLoading(true);
 
     try {
+      const coder = new ethers.AbiCoder();
       const postContentURI = await uploadPostContent(
         collectionDetails?.description,
         collectionSettings?.media !== "video" ? collectionDetails.images : [],
@@ -104,46 +115,125 @@ const useCreate = (
           ?.filter((tag) => tag.trim() !== "")
       );
 
-      const collectionURI = {
-        ...collectionDetails,
-        tags: collectionDetails?.tags
-          ?.split(/,\s*|\s+/)
-          ?.filter((tag) => tag.trim() !== ""),
-        access: collectionDetails?.access
-          ?.split(/,\s*|\s+/)
-          ?.filter((tag) => tag.trim() !== ""),
-        communities: collectionDetails?.communities
-          ?.split(/,\s*|\s+/)
-          ?.filter((tag) => tag.trim() !== ""),
-        mediaType: collectionSettings?.media,
-        prices: [`${Number(collectionDetails?.price) * 10 ** 18}`],
-      };
-
-      // CONVERT PRICE CORRECTLY!
+      const communityIds = collectionDetails?.communities
+        ?.split(/,\s*|\s+/)
+        ?.filter((com) => com.trim() !== "")
+        ?.map((item) => Number(item[2]));
 
       const clientWallet = createWalletClient({
         chain: polygon,
         transport: custom((window as any).ethereum),
       });
+      const { price, microbrand, ...restOfCollectionDetails } =
+        collectionDetails;
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: JSON.stringify({
+          ...restOfCollectionDetails,
+          tags: collectionDetails?.tags
+            ?.split(/,\s*|\s+/)
+            ?.filter((tag) => tag.trim() !== ""),
+          access: collectionDetails?.access
+            ?.split(/,\s*|\s+/)
+            ?.filter((acc) => acc.trim() !== ""),
+          communities: collectionDetails?.communities
+            ?.split(/,\s*|\s+/)
+            ?.filter((com) => com.trim() !== ""),
+          mediaType: collectionSettings?.media,
+          profileHandle:
+            lensConnected?.handle?.suggestedFormatted?.localName?.split(
+              "@"
+            )?.[1],
+          microbrand: collectionDetails?.microbrand?.microbrand,
+          microbrandCover: collectionDetails?.microbrand?.microbrandCover,
+        }),
+      });
+      const contentURI = await response.json();
 
-      // await lensPost(
-      //   contentURI,
-      //   dispatch,
-      //   [
-      //    { unknownOpenAction: {
-      //         address: ,
-      //         data: ,
-
-      //       }}
-      //   ],
-      //   address,
-      //   clientWallet,
-      //   publicClient
-      // );
+      await lensPost(
+        postContentURI!,
+        dispatch,
+        [
+          {
+            unknownOpenAction: {
+              address: CHROMADIN_OPEN_ACTION,
+              data: coder.encode(
+                [
+                  "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, uint256 amount, bool unlimited, address creatorAddress)",
+                ],
+                [
+                  {
+                    prices: [`${Number(collectionDetails?.price) * 10 ** 18}`],
+                    communityIds,
+                    acceptedTokens: collectionDetails?.acceptedTokens,
+                    uri: "ipfs://" + contentURI?.cid,
+                    fulfiller: ZERO_ADDRESS,
+                    amount: Number(collectionDetails?.amount),
+                    unlimited: false,
+                    creatorAddress: address,
+                  },
+                ]
+              ),
+            },
+          },
+        ],
+        address,
+        clientWallet,
+        publicClient
+      );
 
       await refetchProfile(dispatch, lensConnected?.id);
 
-      // REFETCH COLLECTIONS AND ALL POSTS TOO!!!
+      const { data } = await getPublications(
+        {
+          limit: LimitType.Ten,
+          where: {
+            from: lensConnected?.id,
+            publicationTypes: [PublicationType.Post],
+          },
+        },
+        true
+      );
+
+      dispatch(
+        setPostSuccess({
+          actionValue: "collection",
+          actionPubId: data?.publications?.items?.[0]?.id,
+        })
+      );
+
+      setCollectionDetails({
+        title: "",
+        description: "",
+        price: "",
+        acceptedTokens: [],
+        images: [],
+        video: "",
+        audio: "",
+        tags: "",
+        prompt: "",
+        amount: "",
+        visibility: "",
+        sizes: [],
+        colors: [],
+        profileHandle: "",
+        microbrand: {
+          microbrand: "",
+          microbrandCover: "",
+        },
+        access: "",
+        drop: "",
+        communities: "",
+      });
+      setCollectionSettings({
+        media: "static",
+        origin: "chromadin",
+        microOpen: false,
+        communityOpen: false,
+        accessOpen: false,
+        visibilityOpen: false,
+        videoAudio: false,
+      });
     } catch (err: any) {
       console.error(err.message);
     }

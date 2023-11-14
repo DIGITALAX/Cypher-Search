@@ -24,6 +24,7 @@ import { useAccount } from "wagmi";
 import PostCollectGif from "./PostCollectGif";
 import FollowCollect from "./FollowCollect";
 import SuccessCheckout from "./SuccessCheckout";
+import PostSuccess from "./PostSuccess";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -81,6 +82,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const postSuccess = useSelector(
+    (state: RootState) => state.app.postSuccessReducer
   );
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer
@@ -305,14 +309,22 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           searchGifLoading={searchGifLoading}
         />
       )}
-      {interactError.value && <InteractError dispatch={dispatch} />}
-      {successCheckout.value && (
+      {interactError?.value && <InteractError dispatch={dispatch} />}
+      {successCheckout?.value && (
         <SuccessCheckout
           dispatch={dispatch}
           router={router}
           handle={
             lensConnected?.handle?.suggestedFormatted?.localName?.split("@")[1]!
           }
+        />
+      )}
+      {postSuccess?.value && (
+        <PostSuccess
+          router={router}
+          type={postSuccess?.value!}
+          dispatch={dispatch}
+          pubId={postSuccess?.pubId!}
         />
       )}
       {indexer?.open && <Index message={indexer?.message} />}

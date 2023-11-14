@@ -5,6 +5,7 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
 import availableCurrenciesReducer from "./reducers/availableCurrenciesSlice";
+import postSuccessReducer from "./reducers/postSuccessSlice";
 import isDesignerReducer from "./reducers/isDesignerSlice";
 import oracleDataReducer from "./reducers/oracleDataSlice";
 import successCheckoutReducer from "./reducers/successCheckoutSlice";
@@ -63,7 +64,8 @@ const reducer = combineReducers({
   postCollectGifReducer,
   successCheckoutReducer,
   oracleDataReducer,
-  isDesignerReducer
+  isDesignerReducer,
+  postSuccessReducer,
 });
 
 export const store = configureStore({

@@ -26,7 +26,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   )?.value;
 
   return (
-    <div className="relative items-center justify-center text-white font-bit w-full h-full overflow-y-none">
+    <div className="relative items-center justify-center text-white font-bit w-full h-full overflow-y-auto">
       <div className="relative w-full h-full p-4 flex items-start justify-start">
         <div className="relative flex flex-wrap items-start justify-start w-full h-full font-aust text-white gap-4">
           <div className="relative flex flex-col items-start justify-start gap-4">
@@ -376,7 +376,26 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 )}
               </div>
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
+            <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
+              <div className="relative w-fit h-fit flex text-white font-aust text-sm">
+                Amount
+              </div>
+              <input
+                type="number"
+                value={collectionDetails?.amount}
+                onChange={(e) =>
+                  setCollectionDetails((prev) => ({
+                    ...prev,
+                    amount: e.target.value,
+                  }))
+                }
+                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60 max-w-[15rem]"
+                style={{
+                  resize: "none",
+                }}
+              />
+            </div>
+            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 relative">
               <div className="relative w-fit h-fit text-sm">Discovery Tags</div>
               <input
                 value={collectionDetails?.tags}
@@ -403,7 +422,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         .toLowerCase()!
                     )
                 ) && (
-                  <div className="absolute top-14 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                  <div className="absolute top-16 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
                     <div className="relative w-full max-w-[15rem] h-fit flex flex-col items-center justify-start">
                       {filterConstants?.hashtags
                         ?.filter((tag) =>
