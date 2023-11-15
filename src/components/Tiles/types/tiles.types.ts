@@ -18,6 +18,7 @@ export interface Creation {
   pubId: string;
   prompt: string;
   profileId: string;
+  mediaTypes: string[];
   profileHandle: string;
   printType: string;
   prices: string[];
@@ -26,6 +27,8 @@ export interface Creation {
   microbrandCover: string;
   microbrand: string;
   images: string[];
+  video: string;
+  audio: string;
   fulfillerPercent: string;
   fulfillerBase: string;
   fulfiller: string;
@@ -34,7 +37,8 @@ export interface Creation {
   description: string;
   communities: string[];
   collectionId: string;
-  access: number;
+  access: string[];
+  visibility: string;
   unlimited: boolean;
   colors: string[];
   sizes: string[];
@@ -370,7 +374,7 @@ export enum PrintType {
   Shirt = "2",
   Hoodie = "3",
   Sleeve = "4",
-  Crop = "5"
+  Crop = "5",
 }
 
 export type ProfileProps = {

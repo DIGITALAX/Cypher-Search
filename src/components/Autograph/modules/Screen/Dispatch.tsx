@@ -9,9 +9,8 @@ import {
   ACCEPTED_TOKENS_MUMBAI,
   INFURA_GATEWAY,
 } from "../../../../../lib/constants";
-import { HiOutlinePlayPause } from "react-icons/hi2";
-import { BsCloudUpload } from "react-icons/bs";
 import { setScreenDisplay } from "../../../../../redux/reducers/screenDisplaySlice";
+import Waveform from "./Waveform";
 
 const Dispatch: FunctionComponent<DispatchProps> = ({
   collectionDetails,
@@ -22,7 +21,6 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   setCollectionSettings,
   filterConstants,
   dispatch,
-  waveformRef,
   handlePlayPause,
   allDrops,
   setCreateCase,
@@ -108,7 +106,17 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     collectionSettings?.media === "static" ? (
                       <Image
                         layout="fill"
-                        src={collectionDetails?.images?.[0]?.media}
+                        src={
+                          collectionDetails?.images?.[0]?.media?.includes(
+                            "ipfs://"
+                          )
+                            ? `${INFURA_GATEWAY}/ipfs/${
+                                collectionDetails?.images?.[0]?.media?.split(
+                                  "ipfs://"
+                                )?.[1]
+                              }`
+                            : collectionDetails?.images?.[0]?.media
+                        }
                         objectFit="cover"
                         draggable={false}
                         className="relative rounded-sm w-full h-full flex"
@@ -119,7 +127,17 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                           collectionDetails?.images?.[0] && (
                             <Image
                               layout="fill"
-                              src={collectionDetails?.images?.[0]?.media}
+                              src={
+                                collectionDetails?.images?.[0]?.media?.includes(
+                                  "ipfs://"
+                                )
+                                  ? `${INFURA_GATEWAY}/ipfs/${
+                                      collectionDetails?.images?.[0]?.media?.split(
+                                        "ipfs://"
+                                      )?.[1]
+                                    }`
+                                  : collectionDetails?.images?.[0]?.media
+                              }
                               objectFit="cover"
                               draggable={false}
                               className="relative rounded-sm w-full h-full flex"
@@ -137,7 +155,17 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             loop
                             key={collectionDetails?.video}
                           >
-                            <source src={collectionDetails?.video} />
+                            <source
+                              src={
+                                collectionDetails?.video?.includes("ipfs://")
+                                  ? `${INFURA_GATEWAY}/ipfs/${
+                                      collectionDetails?.video?.split(
+                                        "ipfs://"
+                                      )?.[1]
+                                    }`
+                                  : collectionDetails?.video
+                              }
+                            />
                           </video>
                         )}
                       </>
@@ -167,36 +195,23 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   collectionSettings?.videoAudio ||
                   collectionSettings?.media === "audio") &&
                   collectionSettings?.media !== "static" && (
-                    <div className="absolute right-0 bottom-0 w-full h-10 flex flex-row gap-1.5 items-center justify-between bg-offBlack px-1 border border-white">
-                      <div
-                        className="relative flex w-fit h-fit items-center justify-center flex cursor-pointer active:scale-95"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePlayPause();
-                        }}
-                      >
-                        <HiOutlinePlayPause color="white" size={15} />
-                      </div>
-                      <div
-                        className="relative w-full h-fit justify-center items-center cursor-pointer"
-                        ref={waveformRef}
-                      />
-                      {collectionSettings?.media === "audio" && (
-                        <label className="relative flex justify-end items-end cursor-pointer active:scale-95">
-                          <BsCloudUpload size={15} />
-                          <input
-                            hidden
-                            type="file"
-                            accept={"audio/mpeg"}
-                            multiple={false}
-                            onChange={(e) => {
-                              e.preventDefault();
-                              e?.target?.files?.[0] && handleMedia(e, "audio");
-                            }}
-                          />
-                        </label>
-                      )}
-                    </div>
+                    <Waveform
+                      handlePlayPause={handlePlayPause}
+                      handleMedia={async (e) => {
+                        e.preventDefault();
+                        e?.target?.files?.[0] &&
+                          (await handleMedia(e, "audio"));
+                      }}
+                      type={collectionSettings?.media}
+                      video={collectionDetails?.video}
+                      audio={collectionDetails?.audio}
+                      upload
+                      keyValue={
+                        collectionDetails?.audio
+                          ? collectionDetails?.audio
+                          : collectionDetails?.video
+                      }
+                    />
                   )}
               </div>
             </div>

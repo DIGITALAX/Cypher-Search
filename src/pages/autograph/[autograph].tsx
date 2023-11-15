@@ -234,9 +234,12 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setCollectionSettings,
     collectionSettings,
     handleMedia,
-    waveformRef,
     handlePlayPause,
-  } = useCreate(publicClient, address, dispatch, lensConnected, setDropDetails);
+    editCollection,
+    deleteCollection,
+    allCollections,
+    collectionLoading
+  } = useCreate(publicClient, address, dispatch, lensConnected, setDropDetails, screenDisplay, profile);
   const {
     handleSendMessage,
     sendMessageLoading,
@@ -503,12 +506,15 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
               </Head>
               <Web
+                allCollections={allCollections}
                 searchCollection={searchCollection}
                 setSearchCollection={setSearchCollection}
                 sendMessageLoading={sendMessageLoading}
                 setSearchedProfiles={setSearchedProfiles}
                 setUserSearch={setUserSearch}
                 router={router}
+                editCollection={editCollection}
+                deleteCollection={deleteCollection}
                 conversationsLoading={conversationsLoading}
                 client={xmtpClient}
                 currentMessage={currentMessage}
@@ -523,7 +529,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 setSelectedUser={setSelectedUser}
                 dropDetails={dropDetails}
                 setDropDetails={setDropDetails}
-                waveformRef={waveformRef}
                 handlePlayPause={handlePlayPause}
                 filterConstants={filterConstants}
                 handleMedia={handleMedia}

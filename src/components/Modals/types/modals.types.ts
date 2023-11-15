@@ -226,4 +226,5 @@ export type PostSuccessProps = {
   router: NextRouter;
   pubId: string;
   handle: string;
+  successType: string;
 };

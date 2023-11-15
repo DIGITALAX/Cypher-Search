@@ -1,0 +1,439 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nftCreatorAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_printDesignDataAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_printAccessControlAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "AddressNotAdmin",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AddressNotDesigner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AddressNotMarket",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidUpdate",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "acceptedTokens",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "prices",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "communityIds",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "string",
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "fulfiller",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "creator",
+            "type": "address"
+          },
+          {
+            "internalType": "enum PrintLibrary.PrintType",
+            "name": "printType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum PrintLibrary.Origin",
+            "name": "origin",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pubId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "profileId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dropId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "unlimited",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct PrintLibrary.MintParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "name": "createCollection",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_uri",
+        "type": "string"
+      }
+    ],
+    "name": "createDrop",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "marketCreator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nftCreator",
+    "outputs": [
+      {
+        "internalType": "contract NFTCreator",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "printAccessControl",
+    "outputs": [
+      {
+        "internalType": "contract PrintAccessControl",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "printDesignData",
+    "outputs": [
+      {
+        "internalType": "contract PrintDesignData",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_collectionIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_amounts",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_chosenIndexes",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "address",
+        "name": "_purchaserAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_chosenCurrency",
+        "type": "address"
+      }
+    ],
+    "name": "purchaseAndMintToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_collectionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeCollection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_dropId",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeDrop",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newMarketCreatorAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setMarketCreatorAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newNFTCreatorAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setNFTCreatorAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newPrintAccessControlAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setPrintAccessControlAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newPrintDesignDataAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setPrintDesignDataAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_collectionId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "acceptedTokens",
+            "type": "address[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "prices",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "communityIds",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "string",
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "fulfiller",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "creator",
+            "type": "address"
+          },
+          {
+            "internalType": "enum PrintLibrary.PrintType",
+            "name": "printType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "enum PrintLibrary.Origin",
+            "name": "origin",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pubId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "profileId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dropId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "unlimited",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct PrintLibrary.MintParams",
+        "name": "_params",
+        "type": "tuple"
+      }
+    ],
+    "name": "updateCollection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_collectionIds",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "string",
+        "name": "_uri",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_dropId",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateDrop",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

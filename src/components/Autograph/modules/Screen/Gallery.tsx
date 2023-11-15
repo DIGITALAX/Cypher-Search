@@ -7,7 +7,6 @@ import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 
 const Gallery: FunctionComponent<GalleryScreenProps> = ({
-  gallery,
   setCollectionDetails,
   collectionDetails,
   createDrop,
@@ -28,7 +27,6 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   filterConstants,
   dispatch,
   handlePlayPause,
-  waveformRef,
   dropDetails,
   setDropDetails,
   allDrops,
@@ -38,6 +36,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   setSearchCollection,
   editDrop,
   deleteDrop,
+  editCollection,
+  deleteCollection,
+  allCollections,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
@@ -48,12 +49,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
         >
           <div
             className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center min-h-[70vh] max-h-[70vh] overflow-y-scroll ${
-              (!createCase &&
-                [...(gallery?.collected || []), ...(gallery?.created || [])]
-                  ?.length < 0) ||
-              (createCase === "drop" &&
-                gallery?.collected &&
-                gallery?.collected?.length > 0)
+              (!createCase && allCollections?.length < 0) ||
+              (createCase === "drop" && allDrops?.length > 0)
                 ? "items-start"
                 : "items-center"
             }`}
@@ -64,10 +61,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               dropsLoading={dropsLoading}
               allDrops={allDrops}
               setDropDetails={setDropDetails}
-              waveformRef={waveformRef}
               handlePlayPause={handlePlayPause}
               router={router}
-              gallery={gallery}
+              allCollections={allCollections}
               dispatch={dispatch}
               type={createCase}
               filterConstants={filterConstants}
@@ -305,14 +301,14 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                             }
                           />
                         </div>
-                        {gallery?.created?.filter((item) =>
+                        {allCollections?.filter((item) =>
                           item?.title
                             ?.toLowerCase()
                             ?.includes(searchCollection?.toLowerCase())
                         ) && (
                           <div className="absolute w-full max-h-[10rem] h-fit flex overflow-y-scroll bg-offBlack z-1 border border-white rounded-md">
                             <div className="relative w-full h-fit flex flex-col ">
-                              {gallery?.created
+                              {allCollections
                                 ?.filter((item) =>
                                   item?.title
                                     ?.toLowerCase()
@@ -366,7 +362,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                                   objectFit="cover"
                                   layout="fill"
                                   src={`${INFURA_GATEWAY}/ipfs/${
-                                    gallery?.created
+                                    allCollections
                                       ?.find(
                                         (value) => value.collectionId == item
                                       )
@@ -383,17 +379,19 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                 </div>
               </div>
             )}
-            {(createCase === "collection" ||
+            {((createCase === "collection" &&
+              collectionDetails?.collectionId == "") ||
               (createCase === "drop" && dropDetails?.dropId == "")) && (
               <div
                 className={`relative w-40 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
-                  !creationLoading &&
-                  !createDropLoading &&
-                  "cursor-pointer active:scale-95"
+                  (createCase === "collection"
+                    ? !creationLoading
+                    : !createDropLoading) && "cursor-pointer active:scale-95"
                 }`}
                 onClick={() =>
-                  !creationLoading &&
-                  !createDropLoading &&
+                  (createCase === "collection"
+                    ? !creationLoading
+                    : !createDropLoading) &&
                   (createCase === "collection"
                     ? createCollection()
                     : createDrop())
@@ -401,10 +399,16 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               >
                 <div
                   className={`relative w-fit h-fit items-center justify-center flex ${
-                    (creationLoading || createDropLoading) && "animate-spin"
+                    (createCase === "collection"
+                      ? creationLoading
+                      : createDropLoading) && "animate-spin"
                   }`}
                 >
-                  {creationLoading || createDropLoading ? (
+                  {(
+                    createCase === "collection"
+                      ? creationLoading
+                      : createDropLoading
+                  ) ? (
                     <AiOutlineLoading color="white" size={15} />
                   ) : (
                     "Create"
@@ -412,20 +416,37 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                 </div>
               </div>
             )}
-            {createCase === "drop" && dropDetails?.dropId != "" && (
+            {((createCase === "drop" && dropDetails?.dropId != "") ||
+              (createCase === "collection" &&
+                collectionDetails?.collectionId !== "")) && (
               <div className="relative w-fit h-fit flex flex-row gap-2 items-center justify-center">
                 <div
                   className={`relative w-28 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
-                    !createDropLoading && "cursor-pointer active:scale-95"
+                    (createCase === "collection"
+                      ? !creationLoading
+                      : !createDropLoading) && "cursor-pointer active:scale-95"
                   }`}
-                  onClick={() => editDrop()}
+                  onClick={() =>
+                    (createCase === "collection"
+                      ? !creationLoading
+                      : !createDropLoading) &&
+                    (createCase === "collection"
+                      ? editCollection()
+                      : editDrop())
+                  }
                 >
                   <div
                     className={`relative w-fit h-fit items-center justify-center flex ${
-                      createDropLoading && "animate-spin"
+                      (createCase === "collection"
+                        ? creationLoading
+                        : createDropLoading) && "animate-spin"
                     }`}
                   >
-                    {createDropLoading ? (
+                    {(
+                      createCase === "collection"
+                        ? creationLoading
+                        : createDropLoading
+                    ) ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
                       "Edit"
@@ -434,16 +455,31 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                 </div>
                 <div
                   className={`relative w-28 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
-                    !createDropLoading && "cursor-pointer active:scale-95"
+                    (createCase === "collection"
+                      ? !creationLoading
+                      : !createDropLoading) && "cursor-pointer active:scale-95"
                   }`}
-                  onClick={() => deleteDrop()}
+                  onClick={() =>
+                    (createCase === "collection"
+                      ? !creationLoading
+                      : !createDropLoading) &&
+                    (createCase === "collection"
+                      ? deleteCollection()
+                      : deleteDrop())
+                  }
                 >
                   <div
                     className={`relative w-fit h-fit items-center justify-center flex ${
-                      createDropLoading && "animate-spin"
+                      (createCase === "collection"
+                        ? creationLoading
+                        : createDropLoading) && "animate-spin"
                     }`}
                   >
-                    {createDropLoading ? (
+                    {(
+                      createCase === "collection"
+                        ? creationLoading
+                        : createDropLoading
+                    ) ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
                       "Delete"

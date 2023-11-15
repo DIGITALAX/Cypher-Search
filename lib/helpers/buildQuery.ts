@@ -30,8 +30,29 @@ const buildQuery = (filters: Filter): FilterInput => {
     query = { ...query, ...buildAndBlock(values, "access") };
   }
 
+  if (filters.format) {
+    const values = splitString(filters?.format);
+    query = { ...query, ...buildAndBlock(values, "format") };
+  }
+
   if (filters.drop) {
-    const values = splitString(filters.drop);
+    const values = Array.from(
+      new Set(
+        splitString(filters.drop)
+          .map((item) => item.trim())
+          .flatMap((item) =>
+            item === "IMAGE"
+              ? ["image/png", "image/gif"]
+              : item === "VIDEO"
+              ? ["video/mp4"]
+              : item === "AUDIO"
+              ? ["audio/mpeg"]
+              : item === "LIVESTREAM"
+              ? ["video/mp4"]
+              : []
+          )
+      )
+    );
     query = { ...query, ...buildAndBlock(values, "drop") };
   }
 
@@ -69,10 +90,7 @@ const buildQuery = (filters: Filter): FilterInput => {
   if (filters.printType.length > 0) {
     query = {
       ...query,
-      ...buildAndBlock(
-        filters.printType,
-        "printType"
-      ),
+      ...buildAndBlock(filters.printType, "printType"),
     };
   }
 

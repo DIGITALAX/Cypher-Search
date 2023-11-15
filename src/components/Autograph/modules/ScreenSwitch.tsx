@@ -19,7 +19,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setOpenMirrorChoice,
   interactionsLoading,
   sortType,
-  gallery,
   display,
   setSearchedProfiles,
   settingsData,
@@ -101,7 +100,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   lensConnected,
   filterConstants,
   handlePlayPause,
-  waveformRef,
   dropDetails,
   setDropDetails,
   createDropLoading,
@@ -124,6 +122,9 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setSearchCollection,
   deleteDrop,
   editDrop,
+  editCollection,
+  deleteCollection,
+  allCollections,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -132,9 +133,12 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Gallery:
       return (
         <Gallery
+          allCollections={allCollections}
           editDrop={editDrop}
           deleteDrop={deleteDrop}
           dispatch={dispatch}
+          editCollection={editCollection}
+          deleteCollection={deleteCollection}
           searchCollection={searchCollection}
           setSearchCollection={setSearchCollection}
           dropsLoading={dropsLoading}
@@ -143,14 +147,12 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           dropDetails={dropDetails}
           setDropDetails={setDropDetails}
           handleMedia={handleMedia}
-          waveformRef={waveformRef}
           handlePlayPause={handlePlayPause}
           handleSendMessage={handleSendMessage}
           digiMessage={digiMessage}
           setDigiMessage={setDigiMessage}
           filterConstants={filterConstants}
           digiMessageLoading={digiMessageLoading}
-          gallery={gallery}
           setCollectionDetails={setCollectionDetails}
           collectionDetails={collectionDetails}
           createCollection={createCollection}
