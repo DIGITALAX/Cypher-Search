@@ -63,7 +63,9 @@ const setPostMedia = async (
       };
       return arr;
     });
+    let types: string[] = [];
     const imageReaders = Array.from(e.target.files).map((file) => {
+      types.push(file.type);
       return new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -78,7 +80,13 @@ const setPostMedia = async (
         const arr = [...prev];
         arr[index] = {
           ...arr[index],
-          images: [...prev[index].images, ...newImages] as string[],
+          images: [
+            ...prev[index].images,
+            ...newImages.map((item, index) => ({
+              media: item,
+              type: types[index],
+            })),
+          ],
         };
         return arr;
       });

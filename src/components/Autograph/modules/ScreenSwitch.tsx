@@ -14,12 +14,14 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   screenDisplay,
   mirror,
   like,
+  sendMessageLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
   interactionsLoading,
   sortType,
   gallery,
   display,
+  setSearchedProfiles,
   settingsData,
   setSettingsData,
   handleSettingsUpdate,
@@ -93,31 +95,54 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setCollectionSettings,
   isDesigner,
   handleSendMessage,
-  setMessage,
-  message,
-  messageLoading,
+  digiMessage,
+  setDigiMessage,
+  digiMessageLoading,
   handleMedia,
   lensConnected,
   filterConstants,
   handlePlayPause,
   waveformRef,
+  dropDetails,
+  setDropDetails,
+  createDropLoading,
+  allDrops,
+  dropsLoading,
+  conversations,
+  messages,
+  client,
+  conversationsLoading,
+  handleConversations,
+  searchedProfiles,
+  selectedUser,
+  setSelectedUser,
+  handleSearchUser,
+  userSearch,
+  currentMessage,
+  setCurrentMessage,
+  setUserSearch,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
-      return <Circuits gallery={gallery} />;
+      return <Circuits />;
 
     case ScreenDisplay.Gallery:
       return (
         <Gallery
           dispatch={dispatch}
+          dropsLoading={dropsLoading}
+          allDrops={allDrops}
+          createDropLoading={createDropLoading}
+          dropDetails={dropDetails}
+          setDropDetails={setDropDetails}
           handleMedia={handleMedia}
           waveformRef={waveformRef}
           handlePlayPause={handlePlayPause}
           handleSendMessage={handleSendMessage}
-          message={message}
+          digiMessage={digiMessage}
+          setDigiMessage={setDigiMessage}
           filterConstants={filterConstants}
-          setMessage={setMessage}
-          messageLoading={messageLoading}
+          digiMessageLoading={digiMessageLoading}
           gallery={gallery}
           setCollectionDetails={setCollectionDetails}
           collectionDetails={collectionDetails}
@@ -207,7 +232,26 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       );
 
     case ScreenDisplay.Messages:
-      return <Messages />;
+      return (
+        <Messages
+          sendMessageLoading={sendMessageLoading}
+          setUserSearch={setUserSearch}
+          selectedUser={selectedUser}
+          handleSearchUser={handleSearchUser}
+          searchedProfiles={searchedProfiles}
+          userSearch={userSearch}
+          setSelectedUser={setSelectedUser}
+          conversations={conversations}
+          messages={messages}
+          handleConversations={handleConversations}
+          client={client}
+          conversationsLoading={conversationsLoading}
+          currentMessage={currentMessage}
+          setCurrentMessage={setCurrentMessage}
+          setSearchedProfiles={setSearchedProfiles}
+          handleSendMessage={handleSendMessage}
+        />
+      );
 
     case ScreenDisplay.Orders:
       return (

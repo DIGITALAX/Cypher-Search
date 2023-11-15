@@ -17,13 +17,35 @@ import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
-import WaveSurfer from "wavesurfer.js";
+import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
 
 export type WebProps = {
   router: NextRouter;
   creationLoading: boolean;
   isDesigner: boolean;
   filterConstants: FilterValues | undefined;
+  setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
+  dropDetails: {
+    collectionIds: string[];
+    title: string;
+    cover: string;
+    dropId: string;
+  };
+  sendMessageLoading: boolean;
+  handleConversations: () => Promise<void>;
+  client: Client | undefined;
+  conversationsLoading: boolean;
+  dropsLoading: boolean;
+  allDrops: Drop[];
+  createDropLoading: boolean;
+  setDropDetails: (
+    e: SetStateAction<{
+      collectionIds: string[];
+      title: string;
+      cover: string;
+      dropId: string;
+    }>
+  ) => void;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   activeGallery: Creation[] | undefined;
   setCreateCase: (e: SetStateAction<string | undefined>) => void;
@@ -50,12 +72,41 @@ export type WebProps = {
   ) => void;
   handlePlayPause: () => void;
   waveformRef: MutableRefObject<null>;
-  handleSendMessage: () => Promise<void>;
-  messageLoading: boolean;
-  setMessage: (e: string) => void;
-  message: string;
+  handleSendMessage: (digitalax?: boolean) => Promise<void>;
+  digiMessageLoading: boolean;
+  setDigiMessage: (e: string) => void;
+  digiMessage: string;
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  currentMessage: string;
+  setCurrentMessage: (e: SetStateAction<string>) => void;
+  conversations: (Conversation & {
+    profileImage: string;
+    profileHandle: string;
+    preview: DecodedMessage;
+  })[];
+  messages: DecodedMessage[];
+  selectedUser:
+    | {
+        address: string;
+        handle: string;
+        image: string;
+      }
+    | undefined;
+  handleSearchUser: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+  searchedProfiles: Profile[];
+  userSearch: string;
+  setUserSearch: (e: SetStateAction<string>) => void;
+  setSelectedUser: (
+    e: SetStateAction<
+      | {
+          address: string;
+          handle: string;
+          image: string;
+        }
+      | undefined
+    >
+  ) => void;
   createCollection: () => Promise<void>;
   createDrop: () => Promise<void>;
   profile: Profile | undefined;
@@ -291,16 +342,34 @@ export type BioProps = {
 
 export type GalleryScreenProps = {
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  dropDetails: {
+    collectionIds: string[];
+    title: string;
+    cover: string;
+    dropId: string;
+  };
+
+  setDropDetails: (
+    e: SetStateAction<{
+      collectionIds: string[];
+      title: string;
+      cover: string;
+      dropId: string;
+    }>
+  ) => void;
+  dropsLoading: boolean;
+  allDrops: Drop[];
+  createDropLoading: boolean;
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
   creationLoading: boolean;
   activeGallery: Creation[] | undefined;
   isDesigner: boolean;
   lensConnected: Profile | undefined;
-  handleSendMessage: () => Promise<void>;
-  messageLoading: boolean;
-  setMessage: (e: string) => void;
-  message: string;
+  handleSendMessage: (digitalax?: boolean) => Promise<void>;
+  digiMessageLoading: boolean;
+  setDigiMessage: (e: string) => void;
+  digiMessage: string;
   gallery:
     | {
         collected: Creation[];
@@ -339,6 +408,57 @@ export type GalleryScreenProps = {
 };
 
 export type ScreenSwitchProps = {
+  dropsLoading: boolean;
+  setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
+  allDrops: Drop[];
+  createDropLoading: boolean;
+  sendMessageLoading: boolean;
+  dropDetails: {
+    collectionIds: string[];
+    title: string;
+    cover: string;
+    dropId: string;
+  };
+  selectedUser:
+    | {
+        address: string;
+        handle: string;
+        image: string;
+      }
+    | undefined;
+  handleSearchUser: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+  searchedProfiles: Profile[];
+  userSearch: string;
+  setUserSearch: (e: SetStateAction<string>) => void;
+  setSelectedUser: (
+    e: SetStateAction<
+      | {
+          address: string;
+          handle: string;
+          image: string;
+        }
+      | undefined
+    >
+  ) => void;
+  handleConversations: () => Promise<void>;
+  client: Client | undefined;
+  conversationsLoading: boolean;
+  currentMessage: string;
+  setCurrentMessage: (e: SetStateAction<string>) => void;
+  conversations: (Conversation & {
+    profileImage: string;
+    profileHandle: string;
+    preview: DecodedMessage;
+  })[];
+  messages: DecodedMessage[];
+  setDropDetails: (
+    e: SetStateAction<{
+      collectionIds: string[];
+      title: string;
+      cover: string;
+      dropId: string;
+    }>
+  ) => void;
   collectionSettings: {
     origin: string;
     media: string;
@@ -367,10 +487,10 @@ export type ScreenSwitchProps = {
   creationLoading: boolean;
   isDesigner: boolean;
   activeGallery: Creation[] | undefined;
-  handleSendMessage: () => Promise<void>;
-  messageLoading: boolean;
-  setMessage: (e: string) => void;
-  message: string;
+  handleSendMessage: (digitalax?: boolean) => Promise<void>;
+  digiMessageLoading: boolean;
+  setDigiMessage: (e: string) => void;
+  digiMessage: string;
   setCreateCase: (e: SetStateAction<string | undefined>) => void;
   createCase: string | undefined;
   collectionDetails: CollectionDetails;
@@ -712,15 +832,6 @@ export type GalleryProps = {
   setOpenInteractions: (e: SetStateAction<boolean[]>) => void;
 };
 
-export type CircuitsProps = {
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined;
-};
-
 export type CreationProps = {
   item: Creation;
   index: number;
@@ -839,7 +950,10 @@ export type PublicationProps = {
 
 export interface MakePostComment {
   content: string | undefined;
-  images: string[];
+  images: {
+    media: string;
+    type: string;
+  }[];
   videos: string[];
 }
 
@@ -1071,7 +1185,7 @@ export interface CollectionDetails {
   price: string;
   amount: string;
   acceptedTokens: string[];
-  images: string[];
+  images: { media: string; type: string }[];
   video: string;
   audio: string;
   tags: string;
@@ -1089,11 +1203,65 @@ export interface CollectionDetails {
   communities: string;
 }
 
+export type MessagesProps = {
+  conversations: (Conversation & {
+    profileImage: string;
+    profileHandle: string;
+    preview: DecodedMessage;
+  })[];
+  sendMessageLoading: boolean;
+  handleSendMessage: () => Promise<void>;
+  setUserSearch: (e: SetStateAction<string>) => void;
+  setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
+  currentMessage: string;
+  setCurrentMessage: (e: SetStateAction<string>) => void;
+  selectedUser:
+    | {
+        address: string;
+        handle: string;
+        image: string;
+      }
+    | undefined;
+  handleSearchUser: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+  searchedProfiles: Profile[];
+  userSearch: string;
+  setSelectedUser: (
+    e: SetStateAction<
+      | {
+          address: string;
+          handle: string;
+          image: string;
+        }
+      | undefined
+    >
+  ) => void;
+  messages: DecodedMessage[];
+  handleConversations: () => Promise<void>;
+  client: Client | undefined;
+  conversationsLoading: boolean;
+};
+
 export type SwitchCreateProps = {
   type: string | undefined;
   dispatch: Dispatch<AnyAction>;
   collectionDetails: CollectionDetails;
+  dropDetails: {
+    collectionIds: string[];
+    title: string;
+    cover: string;
+    dropId: string;
+  };
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  dropsLoading: boolean;
+  allDrops: Drop[];
+  setDropDetails: (
+    e: SetStateAction<{
+      collectionIds: string[];
+      title: string;
+      cover: string;
+      dropId: string;
+    }>
+  ) => void;
   router: NextRouter;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
@@ -1130,4 +1298,54 @@ export type SwitchCreateProps = {
 
 export type MediaSwitchProps = {
   type: string;
+};
+
+export type DropProps = {
+  router: NextRouter;
+  allDrops: Drop[];
+  handle: string;
+  dropDetails: {
+    collectionIds: string[];
+    title: string;
+    cover: string;
+    dropId: string;
+  };
+  gallery:
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined;
+  setDropDetails: (
+    e: SetStateAction<{
+      collectionIds: string[];
+      title: string;
+      cover: string;
+      dropId: string;
+    }>
+  ) => void;
+  dropsLoading: boolean;
+};
+
+export interface Drop {
+  creator: string;
+  title: string;
+  cover: string;
+  dropId: string;
+  collectionIds: string[];
+}
+
+export type NewConversationProps = {
+  messages: DecodedMessage[];
+  currentMessage: string;
+  setCurrentMessage: (e: SetStateAction<string>) => void;
+  handleSendMessage: () => Promise<void>;
+  sendMessageLoading: boolean;
+  selectedUser:
+    | {
+        address: string;
+        handle: string;
+        image: string;
+      }
+    | undefined;
 };

@@ -93,7 +93,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   : "bg-offBlack"
               }`}
             >
-              <Component {...pageProps} router={router} />
+              <Component {...pageProps} router={router} client={client} />
               <Modals router={router} />
               <Footer handleRewind={handleRewind} />
             </div>

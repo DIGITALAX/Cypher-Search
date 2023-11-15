@@ -10,6 +10,7 @@ const Web: FunctionComponent<WebProps> = ({
   router,
   handleShuffleSearch,
   openConnectModal,
+  sendMessageLoading,
   handleLensConnect,
   lensConnected,
   walletConnected,
@@ -33,6 +34,7 @@ const Web: FunctionComponent<WebProps> = ({
   coverImage,
   handleImage,
   pfpImage,
+  setSearchedProfiles,
   dispatch,
   displayLoading,
   handleSetDisplay,
@@ -96,13 +98,31 @@ const Web: FunctionComponent<WebProps> = ({
   setCollectionSettings,
   isDesigner,
   handleSendMessage,
-  setMessage,
-  message,
-  messageLoading,
+  setDigiMessage,
+  digiMessage,
+  digiMessageLoading,
   handleMedia,
   filterConstants,
   handlePlayPause,
   waveformRef,
+  dropDetails,
+  setDropDetails,
+  createDropLoading,
+  dropsLoading,
+  allDrops,
+  conversations,
+  messages,
+  client,
+  conversationsLoading,
+  handleConversations,
+  searchedProfiles,
+  selectedUser,
+  setSelectedUser,
+  handleSearchUser,
+  userSearch,
+  currentMessage,
+  setCurrentMessage,
+  setUserSearch,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -178,9 +198,29 @@ const Web: FunctionComponent<WebProps> = ({
           }
         </div>
         <ScreenSwitch
+          setUserSearch={setUserSearch}
+          currentMessage={currentMessage}
+          setCurrentMessage={setCurrentMessage}
+          selectedUser={selectedUser}
+          sendMessageLoading={sendMessageLoading}
+          handleSearchUser={handleSearchUser}
+          searchedProfiles={searchedProfiles}
+          userSearch={userSearch}
+          setSelectedUser={setSelectedUser}
+          conversationsLoading={conversationsLoading}
+          client={client}
+          handleConversations={handleConversations}
+          createDropLoading={createDropLoading}
+          dropsLoading={dropsLoading}
+          allDrops={allDrops}
+          conversations={conversations}
+          messages={messages}
+          dropDetails={dropDetails}
+          setDropDetails={setDropDetails}
           handleMedia={handleMedia}
           currencies={currencies}
           waveformRef={waveformRef}
+          setSearchedProfiles={setSearchedProfiles}
           handlePlayPause={handlePlayPause}
           filterConstants={filterConstants}
           lensConnected={lensConnected}
@@ -188,9 +228,9 @@ const Web: FunctionComponent<WebProps> = ({
           currencyOpen={currencyOpen}
           mirror={mirror}
           handleSendMessage={handleSendMessage}
-          message={message}
-          setMessage={setMessage}
-          messageLoading={messageLoading}
+          digiMessage={digiMessage}
+          setDigiMessage={setDigiMessage}
+          digiMessageLoading={digiMessageLoading}
           openType={openType}
           isDesigner={isDesigner}
           setOpenType={setOpenType}

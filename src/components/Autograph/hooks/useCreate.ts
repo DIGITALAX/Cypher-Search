@@ -1,4 +1,10 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { CollectionDetails } from "../types/autograph.types";
 import lensPost from "../../../../lib/helpers/api/postChain";
 import { PublicClient, createWalletClient, custom } from "viem";
@@ -21,7 +27,15 @@ const useCreate = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   dispatch: Dispatch<AnyAction>,
-  lensConnected: Profile | undefined
+  lensConnected: Profile | undefined,
+  setDropDetails: (
+    e: SetStateAction<{
+      collectionIds: string[];
+      title: string;
+      cover: string;
+      dropId: string;
+    }>
+  ) => void
 ) => {
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);
   const [collectionSettings, setCollectionSettings] = useState<{
@@ -46,7 +60,10 @@ const useCreate = (
       title: "",
       description: "",
       price: "",
-      acceptedTokens: [],
+      acceptedTokens: [
+        "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
+        "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
+      ],
       images: [],
       video: "",
       audio: "",
@@ -69,16 +86,6 @@ const useCreate = (
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
   const waveformRef = useRef(null);
   const wavesurfer = useRef<null | WaveSurfer>(null);
-
-  const createDrop = async () => {
-    setCreationLoading(true);
-    try {
-    } catch (err: any) {
-      console.error(err.message);
-    }
-
-    setCreationLoading(false);
-  };
 
   const createCollection = async () => {
     if (
@@ -206,7 +213,10 @@ const useCreate = (
         title: "",
         description: "",
         price: "",
-        acceptedTokens: [],
+        acceptedTokens: [
+          "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
+          "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
+        ],
         images: [],
         video: "",
         audio: "",
@@ -255,10 +265,20 @@ const useCreate = (
             ...prev,
             video: e.target?.result as string,
           }));
+        } else if (id == "drop") {
+          setDropDetails((prev) => ({
+            ...prev,
+            cover: e.target?.result as string,
+          }));
         } else {
           setCollectionDetails((prev) => ({
             ...prev,
-            images: [e.target?.result as string],
+            images: [
+              {
+                media: e.target?.result as string,
+                type: file.type,
+              },
+            ],
           }));
         }
       };
@@ -403,7 +423,6 @@ const useCreate = (
     setCollectionDetails,
     setCreateCase,
     collectionDetails,
-    createDrop,
     createCollection,
     creationLoading,
     setCollectionSettings,

@@ -325,6 +325,11 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           type={postSuccess?.value!}
           dispatch={dispatch}
           pubId={postSuccess?.pubId!}
+          handle={
+            lensConnected?.handle?.suggestedFormatted?.localName?.split(
+              "@"
+            )?.[1]!
+          }
         />
       )}
       {indexer?.open && <Index message={indexer?.message} />}

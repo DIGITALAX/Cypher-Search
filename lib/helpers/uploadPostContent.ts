@@ -3,7 +3,10 @@ import { PublicationMetadataMainFocusType } from "../../graphql/generated";
 
 const uploadPostContent = async (
   contentText: string | undefined,
-  images: string[],
+  images: {
+    media: string;
+    type: string;
+  }[],
   videos: string[],
   audio: string[],
   gifs: string[],
@@ -23,10 +26,27 @@ const uploadPostContent = async (
     $schema = "https://json-schemas.lens.dev/publications/text/3.0.0.json";
     mainContentFocus = PublicationMetadataMainFocusType.TextOnly;
   } else {
+    const cleanedGifs = images?.map((item) => {
+      if (item.type !== "image/png") {
+        return item.media;
+      }
+    });
+    const cleanedImages = images?.map((item) => {
+      if (item.type !== "image/gif") {
+        return item.media;
+      }
+    });
+
     const mediaWithKeys = [
       ...videos.map((video) => ({ type: "video/mp4", item: video })),
-      ...images.map((image) => ({ type: "image/png", item: image })),
-      ...gifs.map((gif) => ({ type: "image/gif", item: gif })),
+      ...cleanedImages.map((image) => ({
+        type: "image/png",
+        item: image,
+      })),
+      ...[...gifs, ...cleanedGifs].map((gif) => ({
+        type: "image/gif",
+        item: gif,
+      })),
       ...audio.map((audio) => ({ type: "audio/mpeg", item: audio })),
     ];
 

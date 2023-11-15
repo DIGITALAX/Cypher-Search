@@ -27,13 +27,15 @@ import useOrders from "@/components/Autograph/hooks/useOrders";
 import useSales from "@/components/Autograph/hooks/useSales";
 import useCreate from "@/components/Autograph/hooks/useCreate";
 import useConversations from "@/components/Autograph/hooks/useConversations";
+import useDrop from "@/components/Autograph/hooks/useDrop";
+import { LitNodeClient } from "@lit-protocol/lit-node-client";
 
-const Autograph: NextPage<{ router: NextRouter }> = ({
+const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   router,
+  client,
 }): JSX.Element => {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
-  const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(),
@@ -204,11 +206,18 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     postSuccess
   );
   const {
+    createDrop,
+    dropDetails,
+    setDropDetails,
+    dropsLoading,
+    allDrops,
+    createDropLoading,
+  } = useDrop(lensConnected, screenDisplay, dispatch, address, profile);
+  const {
     setCollectionDetails,
     setCreateCase,
     createCase,
     collectionDetails,
-    createDrop,
     createCollection,
     creationLoading,
     setCollectionSettings,
@@ -216,9 +225,28 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
     handleMedia,
     waveformRef,
     handlePlayPause,
-  } = useCreate(publicClient, address, dispatch, lensConnected);
-  const { message, setMessage, handleSendMessage, messageLoading } =
-    useConversations(address, screenDisplay, lensConnected, profile);
+  } = useCreate(publicClient, address, dispatch, lensConnected, setDropDetails);
+  const {
+    handleSendMessage,
+    sendMessageLoading,
+    setDigiMessage,
+    digiMessage,
+    digiMessageLoading,
+    conversations,
+    messages,
+    handleConversations,
+    conversationsLoading,
+    client: xmtpClient,
+    selectedUser,
+    handleSearchUser,
+    searchedProfiles,
+    userSearch,
+    setSelectedUser,
+    currentMessage,
+    setCurrentMessage,
+    setUserSearch,
+    setSearchedProfiles,
+  } = useConversations(address, screenDisplay, lensConnected, profile);
   const {
     handleSettingsUpdate,
     settingsUpdateLoading,
@@ -464,7 +492,24 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
                 />
               </Head>
               <Web
+                sendMessageLoading={sendMessageLoading}
+                setSearchedProfiles={setSearchedProfiles}
+                setUserSearch={setUserSearch}
                 router={router}
+                conversationsLoading={conversationsLoading}
+                client={xmtpClient}
+                currentMessage={currentMessage}
+                setCurrentMessage={setCurrentMessage}
+                handleConversations={handleConversations}
+                conversations={conversations}
+                messages={messages}
+                selectedUser={selectedUser}
+                handleSearchUser={handleSearchUser}
+                searchedProfiles={searchedProfiles}
+                userSearch={userSearch}
+                setSelectedUser={setSelectedUser}
+                dropDetails={dropDetails}
+                setDropDetails={setDropDetails}
                 waveformRef={waveformRef}
                 handlePlayPause={handlePlayPause}
                 filterConstants={filterConstants}
@@ -479,9 +524,9 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
                 setOrderActions={setOrderActions}
                 openType={openType}
                 handleSendMessage={handleSendMessage}
-                message={message}
-                setMessage={setMessage}
-                messageLoading={messageLoading}
+                digiMessage={digiMessage}
+                setDigiMessage={setDigiMessage}
+                digiMessageLoading={digiMessageLoading}
                 setOpenType={setOpenType}
                 setCurrencyOpen={setCurrencyOpen}
                 currencyOpen={currencyOpen}
@@ -560,6 +605,9 @@ const Autograph: NextPage<{ router: NextRouter }> = ({
                 activeGallery={activeGallery}
                 setCollectionSettings={setCollectionSettings}
                 collectionSettings={collectionSettings}
+                dropsLoading={dropsLoading}
+                allDrops={allDrops}
+                createDropLoading={createDropLoading}
               />
               <Bio profile={profile} dispatch={dispatch} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
