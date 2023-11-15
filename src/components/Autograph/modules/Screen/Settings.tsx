@@ -57,7 +57,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   <input
                     hidden
                     type="file"
-                    accept="image/png"
+                    accept="image/png, image/gif"
                     multiple={false}
                     onChange={(e) =>
                       e?.target?.files?.[0] && handleImage(e, "cover")
@@ -83,7 +83,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     <input
                       hidden
                       type="file"
-                      accept="image/png"
+                      accept="image/png, image/gif"
                       multiple={false}
                       onChange={(e) =>
                         e?.target?.files?.[0] && handleImage(e, "pfp")
@@ -234,7 +234,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                       <input
                         hidden
                         type="file"
-                        accept="image/png"
+                        accept="image/png, image/gif"
                         multiple={false}
                         onChange={(e) =>
                           e?.target?.files?.[0] && handleImage(e, "micro")

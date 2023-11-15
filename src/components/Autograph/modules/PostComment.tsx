@@ -91,7 +91,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                 <input
                   hidden
                   type="file"
-                  accept={indexTwo === 0 ? "image/png" : "video/mp4"}
+                  accept={indexTwo === 0 ? "image/png, image/gif" : "video/mp4"}
                   multiple={true}
                   onChange={(e) =>
                     e?.target?.files?.[0] &&
@@ -171,7 +171,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
               })),
               ...makePostComment?.images.map((image) => ({
                 type: "image",
-                item: image,
+                item: image.media,
               })),
               ...(postCollectGif?.gifs?.[id!] || []).map((gif) => ({
                 type: "gif",

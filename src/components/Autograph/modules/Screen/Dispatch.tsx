@@ -87,10 +87,10 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               <div className="relative w-fit h-fit text-sm">
                 Artwork{" "}
                 {collectionSettings?.media === "static"
-                  ? "(png or gif)"
+                  ? "(png / gif)"
                   : collectionSettings?.media === "video"
                   ? "(mp4)"
-                  : "(mp3)"}
+                  : "(png / gif + mp3)"}
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center">
                 <label
@@ -102,7 +102,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     collectionSettings?.media === "static" ? (
                       <Image
                         layout="fill"
-                        src={collectionDetails?.images?.[0]}
+                        src={collectionDetails?.images?.[0]?.media}
                         objectFit="cover"
                         draggable={false}
                         className="relative rounded-sm w-full h-full flex"
@@ -113,7 +113,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                           collectionDetails?.images?.[0] && (
                             <Image
                               layout="fill"
-                              src={collectionDetails?.images?.[0]}
+                              src={collectionDetails?.images?.[0]?.media}
                               objectFit="cover"
                               draggable={false}
                               className="relative rounded-sm w-full h-full flex"
@@ -142,7 +142,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       accept={
                         collectionSettings?.media === "video"
                           ? "video/mp4"
-                          : "image/png"
+                          : "image/png, image/gif"
                       }
                       multiple={false}
                       onChange={(e) =>

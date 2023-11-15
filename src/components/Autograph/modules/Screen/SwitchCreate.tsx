@@ -7,6 +7,7 @@ import {
   numberToItemTypeMap,
 } from "../../../../../lib/constants";
 import { Creation } from "@/components/Tiles/types/tiles.types";
+import Drop from "./Drop";
 
 const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   type,
@@ -22,6 +23,10 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   dispatch,
   handlePlayPause,
   waveformRef,
+  setDropDetails,
+  dropsLoading,
+  allDrops,
+  dropDetails,
 }): JSX.Element => {
   switch (type) {
     case "collection":
@@ -41,7 +46,26 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
       );
 
     case "drop":
-      return <div></div>;
+      return (
+        /* allDrops?.length > 0 ? ( */ <Drop
+          handle={
+            lensConnected?.handle?.suggestedFormatted?.localName?.split(
+              "@"
+            )?.[1]!
+          }
+          dropDetails={dropDetails}
+          dropsLoading={dropsLoading}
+          allDrops={allDrops}
+          router={router}
+          gallery={gallery}
+          setDropDetails={setDropDetails}
+        />
+      );
+    // ) : (
+    //   <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
+    //     Create a collection before adding it to a drop.
+    //   </div>
+    // );
 
     default:
       return [...(gallery?.collected || []), ...(gallery?.created || [])]
@@ -83,8 +107,8 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                     onClick={() =>
                       router.push(
                         `/item/${numberToItemTypeMap[Number(item?.origin)]}/${
-                          "0x" + Number(item?.pubId)?.toString(16)
-                        }-${"0x" + Number(item?.profileId)?.toString(16)}`
+                          item?.publication?.id
+                        }`
                       )
                     }
                   >
@@ -100,7 +124,9 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           </div>
         </div>
       ) : (
-        <div></div>
+        <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
+          Nothing to see here yet. Create products for the market!
+        </div>
       );
   }
 };

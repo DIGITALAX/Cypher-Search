@@ -2,6 +2,8 @@ import { FunctionComponent } from "react";
 import { GalleryScreenProps } from "../../types/autograph.types";
 import { AiOutlineLoading } from "react-icons/ai";
 import SwitchCreate from "./SwitchCreate";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../../../lib/constants";
 
 const Gallery: FunctionComponent<GalleryScreenProps> = ({
   activeGallery,
@@ -16,9 +18,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   setCollectionSettings,
   isDesigner,
   handleSendMessage,
-  messageLoading,
-  setMessage,
-  message,
+  digiMessage,
+  setDigiMessage,
+  digiMessageLoading,
   setCreateCase,
   createCase,
   handleMedia,
@@ -27,6 +29,11 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   dispatch,
   handlePlayPause,
   waveformRef,
+  dropDetails,
+  setDropDetails,
+  allDrops,
+  createDropLoading,
+  dropsLoading,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
@@ -36,9 +43,22 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center min-h-[70vh] max-h-[70vh] items-start overflow-y-scroll`}
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center min-h-[70vh] max-h-[70vh] overflow-y-scroll ${
+              (!createCase &&
+                [...(gallery?.collected || []), ...(gallery?.created || [])]
+                  ?.length < 0) ||
+              (createCase === "drop" &&
+                gallery?.collected &&
+                gallery?.collected?.length > 0)
+                ? "items-start"
+                : "items-center"
+            }`}
           >
             <SwitchCreate
+              dropDetails={dropDetails}
+              dropsLoading={dropsLoading}
+              allDrops={allDrops}
+              setDropDetails={setDropDetails}
               waveformRef={waveformRef}
               handlePlayPause={handlePlayPause}
               router={router}
@@ -61,10 +81,12 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
         id="mar"
       >
         <div className="relative w-full min-h-[70vh] max-h-[70vh] h-full flex flex-col bg-piloto gap-6 items-center justify-start p-3">
-          <div className="font-bit text-white text-xs text-center flex w-4/5 h-fit relative">
-            Fine-Tune Your gallery, with Art, collectibles, and rare gems that
-            are more than they seem.
-          </div>
+          {!createCase && (
+            <div className="font-bit text-white text-xs text-center flex w-4/5 h-fit relative">
+              Fine-Tune Your gallery, with Art, collectibles, and rare gems that
+              are more than they seem.
+            </div>
+          )}
           {isDesigner && (
             <div className="relative w-full h-fit flex items-center justify-center flex-col gap-1">
               <div className="relative w-fit h-fit flex items-center justify-center text-center font-bit text-white text-sm">
@@ -72,32 +94,32 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               </div>
               <textarea
                 className={`relative w-full p-1 bg-offBlack border border-white rounded-md h-32 font-bit text-xs flex items-center justify-center ${
-                  message === "Message sent! We'll be in touch shortly."
+                  digiMessage === "Message sent! We'll be in touch shortly."
                     ? "text-sol"
                     : "text-white"
                 }`}
                 style={{ resize: "none" }}
-                onChange={(e) => setMessage(e.target.value)}
-                value={message}
+                onChange={(e) => setDigiMessage(e.target.value)}
+                value={digiMessage}
               ></textarea>
               <div
                 className={`relative w-full h-fit justify-end items-end flex ${
-                  message === "Message sent! We'll be in touch shortly." &&
+                  digiMessage === "Message sent! We'll be in touch shortly." &&
                   "opacity-50"
                 }`}
               >
                 <div
                   className={`"relative w-20 h-7 border border-white rounded-md text-white font-aust text-sm flex items-center justify-center ${
-                    !messageLoading && "cursor-pointer"
+                    !digiMessageLoading && "cursor-pointer"
                   }`}
-                  onClick={() => !messageLoading && handleSendMessage()}
+                  onClick={() => !digiMessageLoading && handleSendMessage(true)}
                 >
                   <div
                     className={`relative w-fit h-fit items-center justify-center flex ${
-                      messageLoading && "animate-spin"
+                      digiMessageLoading && "animate-spin"
                     }`}
                   >
-                    {messageLoading ? (
+                    {digiMessageLoading ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
                       "Send"
@@ -214,19 +236,106 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                 </div>
               </div>
             )}
+            {createCase === "drop" && (
+              <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
+                <div className="relative w-full h-fit flex flex-col items-center justify-start gap-4">
+                  <div className="relative w-fit h-fit flex items-center justify-center flex-col gap-2">
+                    <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 font-aust text-white">
+                      <div className="relative w-fit h-fit text-sm">
+                        Drop Title
+                      </div>
+                      <input
+                        className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60"
+                        value={dropDetails?.title}
+                        onChange={(e) =>
+                          setDropDetails((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <label
+                      className="relative border border-white w-60 h-60 rounded-sm cursor-pointer p-px"
+                      id="pfp"
+                    >
+                      <div className="relative w-full h-full flex items-center justify-center rounded-sm">
+                        {dropDetails?.cover && (
+                          <Image
+                            layout="fill"
+                            src={dropDetails?.cover}
+                            objectFit="cover"
+                            draggable={false}
+                            className="relative rounded-sm w-full h-full flex"
+                          />
+                        )}
+                        <input
+                          hidden
+                          type="file"
+                          accept={"image/png, image/gif"}
+                          multiple={false}
+                          onChange={(e) =>
+                            e?.target?.files?.[0] && handleMedia(e, "drop")
+                          }
+                        />
+                      </div>
+                    </label>
+                  </div>
+                  <div className="relative w-60 overflow-x-scroll h-fit flex items-center justify-start">
+                    <div className="relative w-fit h-fit flex justify-start items-center flex-row gap-2">
+                      {dropDetails?.collectionIds?.map(
+                        (item: string, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className="relative w-10 h-10 rounded-sm border border-white"
+                            >
+                              <Image
+                                className="relative w-full h-full rounded-sm flex"
+                                objectFit="cover"
+                                layout="fill"
+                                src={`${INFURA_GATEWAY}/ipfs/${
+                                  gallery?.created
+                                    ?.find(
+                                      (value) => value.collectionId == item
+                                    )
+                                    ?.images?.[0]?.split("ipsf://")?.[1]
+                                }`}
+                              />
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             {createCase && (
               <div
                 className={`relative w-40 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
-                  !creationLoading && "cursor-pointer active:scale-95"
+                  !creationLoading &&
+                  !createDropLoading &&
+                  "cursor-pointer active:scale-95"
                 }`}
                 onClick={() =>
-                  createCase === "collection"
+                  !creationLoading &&
+                  !createDropLoading &&
+                  (createCase === "collection"
                     ? createCollection()
-                    : createDrop()
+                    : createDrop())
                 }
               >
-                <div className="relative w-fit h-fit items-center justify-center flex">
-                  Create
+                <div
+                  className={`relative w-fit h-fit items-center justify-center flex ${
+                    creationLoading || (createDropLoading && "animate-spin")
+                  }`}
+                >
+                  {creationLoading || createDropLoading ? (
+                    <AiOutlineLoading color="white" size={15} />
+                  ) : (
+                    "Create"
+                  )}
                 </div>
               </div>
             )}

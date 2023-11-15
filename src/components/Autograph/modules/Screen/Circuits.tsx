@@ -1,67 +1,27 @@
 import { FunctionComponent } from "react";
-import { CircuitsProps } from "../../types/autograph.types";
-import { Creation } from "@/components/Tiles/types/tiles.types";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
-import Image from "next/legacy/image";
 
-const Circuits: FunctionComponent<CircuitsProps> = ({
-  gallery,
-}): JSX.Element => {
+const Circuits: FunctionComponent = (): JSX.Element => {
   return (
     <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
-      {[...(gallery?.collected || []), ...(gallery?.created || [])]?.length >
-      0 ? (
+      <div className="relative flex w-4/5 h-fit items-start justify-center rounded-sm">
         <div
-          className="relative w-4/5 h-full overflow-x-scroll flex justify-start items-start"
-          id="prerollScroll"
+          className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
+          id="pfp"
         >
           <div
-            className={`relative w-fit h-fit grid gap-5 justify-start items-start`}
-            style={{
-              gridTemplateColumns: `repeat(${
-                [...(gallery?.collected || []), ...(gallery?.created || [])]
-                  ?.length < 4
-                  ? 4
-                  : Math.ceil(
-                      [
-                        ...(gallery?.collected || []),
-                        ...(gallery?.created || []),
-                      ]?.length / 2
-                    )
-              }, minmax(0, 1fr))`,
-              gridTemplateRows: `repeat(${
-                [...(gallery?.collected || []), ...(gallery?.created || [])]
-                  ?.length < 4
-                  ? 1
-                  : 2
-              }, auto)`,
-            }}
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center min-h-[70vh] max-h-[70vh] overflow-y-scroll items-center`}
           >
-            {[...(gallery?.collected || []), ...(gallery?.created || [])]
-              ?.sort(() => Math.random() - 0.5)
-              .map((item: Creation, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative w-60 h-60 rounded-sm p-px cursor-pointer"
-                    id="pfp"
-                  >
-                    <div className="relative w-full h-full">
-                      <Image
-                        layout="fill"
-                        src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
+              Circuits Coming Soon.
+            </div>
           </div>
         </div>
-      ) : (
-        <div className="relative items-center justify-center text-white font-bit w-full h-full"></div>
-      )}
-      <div className="relative flex gap-3 w-80 h-[65vh] p-px rounded-md" id="mar">
-        <div className="relative w-full h-full bg-piloto flex flex-col gap-7 rounded-md p-3 items-center justify-start">
+      </div>
+      <div
+        className="relative flex w-80 h-full p-px flex-col items-start justify-start"
+        id="mar"
+      >
+        <div className="relative w-full min-h-[70vh] max-h-[70vh] h-full flex flex-col bg-piloto gap-6 items-center justify-start p-3">
           <div className="font-bit text-white text-xs text-center flex w-4/5 h-fit relative">
             Share what you’ve collected or created. Keep each item open, super
             stealth mode, or find that cryptic balance in the force. The choice
