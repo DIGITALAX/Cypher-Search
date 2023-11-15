@@ -212,7 +212,18 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     dropsLoading,
     allDrops,
     createDropLoading,
-  } = useDrop(lensConnected, screenDisplay, dispatch, address, profile);
+    searchCollection,
+    setSearchCollection,
+    editDrop,
+    deleteDrop,
+  } = useDrop(
+    lensConnected,
+    screenDisplay,
+    publicClient,
+    dispatch,
+    address,
+    profile
+  );
   const {
     setCollectionDetails,
     setCreateCase,
@@ -492,6 +503,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
               </Head>
               <Web
+                searchCollection={searchCollection}
+                setSearchCollection={setSearchCollection}
                 sendMessageLoading={sendMessageLoading}
                 setSearchedProfiles={setSearchedProfiles}
                 setUserSearch={setUserSearch}
@@ -602,7 +615,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 setCreateCase={setCreateCase}
                 createCase={createCase}
                 collectionDetails={collectionDetails}
-                activeGallery={activeGallery}
+                editDrop={editDrop}
+                deleteDrop={deleteDrop}
                 setCollectionSettings={setCollectionSettings}
                 collectionSettings={collectionSettings}
                 dropsLoading={dropsLoading}

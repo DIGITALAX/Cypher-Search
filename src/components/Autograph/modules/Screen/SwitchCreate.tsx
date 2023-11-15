@@ -27,11 +27,13 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   dropsLoading,
   allDrops,
   dropDetails,
+  setCreateCase
 }): JSX.Element => {
   switch (type) {
     case "collection":
       return (
         <Dispatch
+          allDrops={allDrops}
           filterConstants={filterConstants}
           collectionDetails={collectionDetails}
           setCollectionDetails={setCollectionDetails}
@@ -42,6 +44,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           dispatch={dispatch}
           waveformRef={waveformRef}
           handlePlayPause={handlePlayPause}
+          setCreateCase={setCreateCase}
         />
       );
 
@@ -57,7 +60,6 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           dropsLoading={dropsLoading}
           allDrops={allDrops}
           router={router}
-          gallery={gallery}
           setDropDetails={setDropDetails}
         />
       );

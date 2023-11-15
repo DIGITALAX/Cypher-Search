@@ -46,6 +46,7 @@ const useCreate = (
     accessOpen: boolean;
     visibilityOpen: boolean;
     videoAudio: boolean;
+    dropOpen: boolean;
   }>({
     media: "static",
     origin: "chromadin",
@@ -54,6 +55,7 @@ const useCreate = (
     accessOpen: false,
     visibilityOpen: false,
     videoAudio: false,
+    dropOpen: false,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
     {
@@ -89,20 +91,20 @@ const useCreate = (
 
   const createCollection = async () => {
     if (
-      (collectionDetails.title?.trim() !== "" &&
-        collectionDetails.description?.trim() !== "" &&
-        collectionSettings?.media !== "video" &&
-        (!collectionDetails.images || collectionDetails.images!.length < 1) &&
-        ((collectionSettings?.media === "audio" &&
-          collectionDetails?.audio == "") ||
-          (collectionSettings?.media === "video" &&
-            collectionDetails?.video == "")) &&
-        collectionDetails.price?.trim() !== "" &&
-        (!collectionDetails.acceptedTokens ||
-          collectionDetails.acceptedTokens!.length < 1) &&
-        collectionDetails.tags?.trim() !== "" &&
-        !collectionDetails?.acceptedTokens &&
-        Number(collectionDetails?.amount) > 0) ||
+      collectionDetails?.drop?.trim() == "" ||
+      collectionDetails.title?.trim() == "" ||
+      collectionDetails.description?.trim() == "" ||
+      (collectionSettings?.media == "static" &&
+        (!collectionDetails.images || collectionDetails.images!.length < 1)) ||
+      (collectionSettings?.media === "audio" &&
+        collectionDetails?.audio == "") ||
+      (collectionSettings?.media === "video" &&
+        collectionDetails?.video == "") ||
+      collectionDetails.price?.trim() == "" ||
+      !collectionDetails.acceptedTokens ||
+      collectionDetails.acceptedTokens!.length < 1 ||
+      collectionDetails.tags?.trim() == "" ||
+      Number(collectionDetails?.amount) < 0 ||
       !address
     )
       return;
@@ -131,7 +133,7 @@ const useCreate = (
         chain: polygon,
         transport: custom((window as any).ethereum),
       });
-      const { price, microbrand, ...restOfCollectionDetails } =
+      const { price, microbrand, drop, ...restOfCollectionDetails } =
         collectionDetails;
       const response = await fetch("/api/ipfs", {
         method: "POST",
@@ -166,7 +168,7 @@ const useCreate = (
               address: CHROMADIN_OPEN_ACTION,
               data: coder.encode(
                 [
-                  "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, uint256 amount, bool unlimited, address creatorAddress)",
+                  "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, uint256 amount, uint256 dropId, bool unlimited, address creatorAddress)",
                 ],
                 [
                   {
@@ -176,6 +178,7 @@ const useCreate = (
                     uri: "ipfs://" + contentURI?.cid,
                     fulfiller: ZERO_ADDRESS,
                     amount: Number(collectionDetails?.amount),
+                    dropId: Number(collectionDetails?.drop),
                     unlimited: false,
                     creatorAddress: address,
                   },
@@ -243,6 +246,7 @@ const useCreate = (
         accessOpen: false,
         visibilityOpen: false,
         videoAudio: false,
+        dropOpen: false,
       });
     } catch (err: any) {
       console.error(err.message);

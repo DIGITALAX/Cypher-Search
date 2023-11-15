@@ -13,6 +13,7 @@ export const LISTENER_OPEN_ACTION: `0x${string}` = "0x";
 export const COIN_OP_OPEN_ACTION: `0x${string}` = "0x";
 export const LEGEND_OPEN_ACTION: `0x${string}` = "0x";
 export const PRINT_ACCESS_CONTROL: `0x${string}` = "0x";
+export const COLLECTION_CREATOR: `0x${string}` = "0x";
 export const DIGITALAX_ADDRESS: `0x${string}` =
   "0xAA3e5ee4fdC831e5274FE7836c95D670dC2502e6";
 export const ZERO_ADDRESS: `0x${string}` =

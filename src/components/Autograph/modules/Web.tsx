@@ -86,7 +86,6 @@ const Web: FunctionComponent<WebProps> = ({
   allOrders,
   allSales,
   salesLoading,
-  activeGallery,
   setCollectionDetails,
   setCreateCase,
   createCase,
@@ -123,6 +122,10 @@ const Web: FunctionComponent<WebProps> = ({
   currentMessage,
   setCurrentMessage,
   setUserSearch,
+  searchCollection,
+  setSearchCollection,
+  editDrop,
+  deleteDrop,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -198,6 +201,10 @@ const Web: FunctionComponent<WebProps> = ({
           }
         </div>
         <ScreenSwitch
+          editDrop={editDrop}
+          deleteDrop={deleteDrop}
+          searchCollection={searchCollection}
+          setSearchCollection={setSearchCollection}
           setUserSearch={setUserSearch}
           currentMessage={currentMessage}
           setCurrentMessage={setCurrentMessage}
@@ -309,7 +316,6 @@ const Web: FunctionComponent<WebProps> = ({
           collectionDetails={collectionDetails}
           createCase={createCase}
           setCreateCase={setCreateCase}
-          activeGallery={activeGallery}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (

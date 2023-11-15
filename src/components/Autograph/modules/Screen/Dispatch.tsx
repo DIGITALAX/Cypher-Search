@@ -1,5 +1,9 @@
 import { FunctionComponent } from "react";
-import { DispatchProps, ScreenDisplay } from "../../types/autograph.types";
+import {
+  DispatchProps,
+  Drop,
+  ScreenDisplay,
+} from "../../types/autograph.types";
 import Image from "next/legacy/image";
 import {
   ACCEPTED_TOKENS_MUMBAI,
@@ -20,6 +24,8 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   dispatch,
   waveformRef,
   handlePlayPause,
+  allDrops,
+  setCreateCase,
 }): JSX.Element => {
   const microBrands = lensConnected?.metadata?.attributes?.find(
     (item) => item?.key === "microbrandCypher"
@@ -222,9 +228,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             <Image
                               layout="fill"
                               src={`${INFURA_GATEWAY}/ipfs/${
-                                JSON.parse(
-                                  microBrands!
-                                )?.[0]?.microbrandCover?.split("ipfs://")?.[1]
+                                collectionDetails?.microbrand?.microbrandCover?.split(
+                                  "ipfs://"
+                                )?.[1]
                               }`}
                               className="rounded-full"
                               objectFit="cover"
@@ -232,7 +238,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             />
                           </div>
                           <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
-                            {JSON.parse(microBrands!)?.[0]?.microbrand}
+                            {collectionDetails?.microbrand?.microbrand}
                           </div>
                         </div>
                         <div className="relative w-4 h-3 flex items-center justify-center">
@@ -307,6 +313,84 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     }
                   >
                     Connect a microbrand in settings.
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
+              <div className="relative w-fit h-fit text-sm">Select Drop</div>
+              <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
+                {allDrops?.length < 1 ? (
+                  <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
+                    <div className="relative w-fit h-fit text-xs">
+                      Available Drops:
+                    </div>
+                    <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                      <div
+                        className={`relative h-10 flex flex-row justify-between p-2 w-40 items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack`}
+                        onClick={() =>
+                          setCollectionSettings((prev) => ({
+                            ...prev,
+                            dropOpen: !prev.dropOpen,
+                          }))
+                        }
+                      >
+                        <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
+                          <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
+                            {
+                              allDrops?.find(
+                                (item) =>
+                                  item.dropId === collectionDetails?.drop
+                              )?.title
+                            }
+                          </div>
+                        </div>
+                        <div className="relative w-4 h-3 flex items-center justify-center">
+                          <Image
+                            layout="fill"
+                            draggable={false}
+                            src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                          />
+                        </div>
+                      </div>
+                      {collectionSettings?.dropOpen && (
+                        <div className="absolute top-10 bg-offBlack z-10 w-40 max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                          <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                            {allDrops?.map((item: Drop, index: number) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust text-sm cursor-pointer hover:opacity-80"
+                                  onClick={() => {
+                                    setCollectionSettings((prev) => ({
+                                      ...prev,
+                                      dropOpen: !prev.dropOpen,
+                                    }));
+                                    setCollectionDetails((prev) => ({
+                                      ...prev,
+                                      drop: item.dropId,
+                                    }));
+                                  }}
+                                >
+                                  <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
+                                    <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
+                                      {item?.title}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="relative text-xs w-fit h-fit flex break-words cursor-pointer"
+                    onClick={() => setCreateCase("drop")}
+                  >
+                    Create a Drop before continuing.
                   </div>
                 )}
               </div>
