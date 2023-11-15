@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface PostSuccessState {
   value: string | undefined;
   pubId: string | undefined;
+  type: string | undefined;
 }
 
 const initialPostSuccessState: PostSuccessState = {
   value: undefined,
   pubId: undefined,
+  type: undefined,
 };
 
 export const postSuccessSlice = createSlice({
@@ -16,10 +18,11 @@ export const postSuccessSlice = createSlice({
   reducers: {
     setPostSuccess: (
       state: PostSuccessState,
-      { payload: { actionValue, actionPubId } }
+      { payload: { actionValue, actionPubId, actionType } }
     ) => {
       state.value = actionValue;
       state.pubId = actionPubId;
+      state.type = actionType;
     },
   },
 });

@@ -85,13 +85,7 @@ const useDrop = (
       });
       const res = await clientWallet.writeContract(request);
       await publicClient.waitForTransactionReceipt({ hash: res });
-      dispatch(
-        setPostSuccess({
-          actionValue: "drop",
-          actionPubId: dropDetails?.title,
-        })
-      );
-      await getAllDrops();
+      await cleanDrop("updated");
     } catch (err: any) {
       console.error(err.message);
     }
@@ -117,13 +111,7 @@ const useDrop = (
       });
       const res = await clientWallet.writeContract(request);
       await publicClient.waitForTransactionReceipt({ hash: res });
-      dispatch(
-        setPostSuccess({
-          actionValue: "drop",
-          actionPubId: dropDetails?.title,
-        })
-      );
-      await getAllDrops();
+      await cleanDrop("deleted");
     } catch (err: any) {
       console.error(err.message);
     }
@@ -157,18 +145,33 @@ const useDrop = (
       });
       const res = await clientWallet.writeContract(request);
       await publicClient.waitForTransactionReceipt({ hash: res });
+      await cleanDrop("created");
+    } catch (err: any) {
+      console.error(err.message);
+    }
+
+    setCreateDropLoading(false);
+  };
+
+  const cleanDrop = async (actionType: string) => {
+    try {
+      setDropDetails({
+        collectionIds: [],
+        title: "",
+        cover: "",
+        dropId: "",
+      });
       dispatch(
         setPostSuccess({
           actionValue: "drop",
           actionPubId: dropDetails?.title,
+          actionType,
         })
       );
       await getAllDrops();
     } catch (err: any) {
       console.error(err.message);
     }
-
-    setCreateDropLoading(false);
   };
 
   useEffect(() => {

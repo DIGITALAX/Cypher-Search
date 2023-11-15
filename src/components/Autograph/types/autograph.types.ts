@@ -18,13 +18,17 @@ import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
 import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
+import WaveSurfer from "wavesurfer.js";
 
 export type WebProps = {
   router: NextRouter;
   editDrop: () => Promise<void>;
   deleteDrop: () => Promise<void>;
+  editCollection: () => Promise<void>;
+  deleteCollection: () => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
+  allCollections: Creation[];
   filterConstants: FilterValues | undefined;
   setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
   dropDetails: {
@@ -75,8 +79,11 @@ export type WebProps = {
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: () => void;
-  waveformRef: MutableRefObject<null>;
+  handlePlayPause: (
+    key: string,
+    wavesurfer: MutableRefObject<WaveSurfer | null>,
+    type: string
+  ) => void;
   handleSendMessage: (digitalax?: boolean) => Promise<void>;
   digiMessageLoading: boolean;
   setDigiMessage: (e: string) => void;
@@ -353,6 +360,9 @@ export type GalleryScreenProps = {
     cover: string;
     dropId: string;
   };
+  allCollections: Creation[];
+  editCollection: () => Promise<void>;
+  deleteCollection: () => Promise<void>;
   editDrop: () => Promise<void>;
   deleteDrop: () => Promise<void>;
   searchCollection: string;
@@ -377,12 +387,6 @@ export type GalleryScreenProps = {
   digiMessageLoading: boolean;
   setDigiMessage: (e: string) => void;
   digiMessage: string;
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined;
   setCreateCase: (e: SetStateAction<string | undefined>) => void;
   createCase: string | undefined;
   collectionDetails: CollectionDetails;
@@ -412,8 +416,11 @@ export type GalleryScreenProps = {
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: () => void;
-  waveformRef: MutableRefObject<null>;
+  handlePlayPause: (
+    key: string,
+    wavesurfer: MutableRefObject<WaveSurfer | null>,
+    type: string
+  ) => void;
 };
 
 export type ScreenSwitchProps = {
@@ -422,6 +429,9 @@ export type ScreenSwitchProps = {
   setSearchCollection: (e: SetStateAction<string>) => void;
   setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
   allDrops: Drop[];
+  allCollections: Creation[];
+  editCollection: () => Promise<void>;
+  deleteCollection: () => Promise<void>;
   editDrop: () => Promise<void>;
   deleteDrop: () => Promise<void>;
   createDropLoading: boolean;
@@ -495,8 +505,11 @@ export type ScreenSwitchProps = {
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: () => void;
-  waveformRef: MutableRefObject<null>;
+  handlePlayPause: (
+    key: string,
+    wavesurfer: MutableRefObject<WaveSurfer | null>,
+    type: string
+  ) => void;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   creationLoading: boolean;
@@ -596,12 +609,6 @@ export type ScreenSwitchProps = {
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   sortType: SortType;
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined;
   display: Display | undefined;
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   coverImage: string | undefined;
@@ -1193,15 +1200,21 @@ export type DispatchProps = {
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: () => void;
-  waveformRef: MutableRefObject<null>;
+  handlePlayPause: (
+    key: string,
+    wavesurfer: MutableRefObject<WaveSurfer | null>,
+    type: string
+  ) => void;
 };
 
 export interface CollectionDetails {
   title: string;
   description: string;
+  collectionId: string;
   price: string;
   amount: string;
+  profileId: string;
+  pubId: string;
   acceptedTokens: string[];
   images: { media: string; type: string }[];
   video: string;
@@ -1273,6 +1286,7 @@ export type SwitchCreateProps = {
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
   dropsLoading: boolean;
   allDrops: Drop[];
+  allCollections: Creation[];
   setDropDetails: (
     e: SetStateAction<{
       collectionIds: string[];
@@ -1306,15 +1320,12 @@ export type SwitchCreateProps = {
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: () => void;
-  waveformRef: MutableRefObject<null>;
+  handlePlayPause: (
+    key: string,
+    wavesurfer: MutableRefObject<WaveSurfer | null>,
+    type: string
+  ) => void;
   lensConnected: Profile | undefined;
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined;
 };
 
 export type MediaSwitchProps = {
@@ -1363,4 +1374,18 @@ export type NewConversationProps = {
         image: string;
       }
     | undefined;
+};
+
+export type WaveFormProps = {
+  keyValue: string;
+  audio: string;
+  video: string;
+  type: string;
+  handlePlayPause: (
+    key: string,
+    wavesurfer: MutableRefObject<WaveSurfer | null>,
+    type: string
+  ) => void;
+  upload?: boolean;
+  handleMedia?: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 };

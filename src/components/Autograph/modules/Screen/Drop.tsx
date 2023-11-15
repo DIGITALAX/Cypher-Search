@@ -10,7 +10,7 @@ const Drop: FunctionComponent<DropProps> = ({
   dropDetails,
   handle,
 }): JSX.Element => {
-  return (
+  return allDrops?.length > 0 ? (
     <div
       className="relative w-4/5 h-full overflow-x-scroll flex justify-start items-start"
       id="prerollScroll"
@@ -76,6 +76,10 @@ const Drop: FunctionComponent<DropProps> = ({
             })}
         </div>
       </div>
+    </div>
+  ) : (
+    <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
+      Create a new Drop.
     </div>
   );
 };

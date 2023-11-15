@@ -325,6 +325,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           type={postSuccess?.value!}
           dispatch={dispatch}
           pubId={postSuccess?.pubId!}
+          successType={postSuccess?.type!}
           handle={
             lensConnected?.handle?.suggestedFormatted?.localName?.split(
               "@"

@@ -1,10 +1,9 @@
 import { FetchResult, gql } from "@apollo/client";
 import { graphPrintClient } from "../../../lib/graph/client";
-import { FilterInput } from "@/components/Tiles/types/tiles.types";
 
 const COLLECTIONS = `
-  query($where: FilterInput, $first: Int, $skip: Int) {
-    collectionCreateds(where: $where, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
+  query($creator: String!) {
+    collectionCreateds(where: {creator: $creator}) {
       amount
       title
       tags
@@ -14,8 +13,8 @@ const COLLECTIONS = `
       profileHandle
       printType
       prices
-      mediaTypes
       owner
+      mediaTypes
       microbrandCover
       microbrand
       images
@@ -36,17 +35,13 @@ const COLLECTIONS = `
   }
 `;
 
-export const getAllCollections = async (
-  where: FilterInput,
-  first: number,
-  skip: number
+export const getCollections = async (
+  creator: string
 ): Promise<FetchResult | void> => {
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS),
     variables: {
-      where,
-      first,
-      skip,
+      creator,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

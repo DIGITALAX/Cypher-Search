@@ -25,8 +25,8 @@ const Web: FunctionComponent<WebProps> = ({
   openMirrorChoice,
   setOpenMirrorChoice,
   profile,
-  gallery,
   display,
+  allCollections,
   handleSettingsUpdate,
   settingsUpdateLoading,
   settingsData,
@@ -103,7 +103,6 @@ const Web: FunctionComponent<WebProps> = ({
   handleMedia,
   filterConstants,
   handlePlayPause,
-  waveformRef,
   dropDetails,
   setDropDetails,
   createDropLoading,
@@ -126,6 +125,8 @@ const Web: FunctionComponent<WebProps> = ({
   setSearchCollection,
   editDrop,
   deleteDrop,
+  editCollection,
+  deleteCollection,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -220,13 +221,14 @@ const Web: FunctionComponent<WebProps> = ({
           createDropLoading={createDropLoading}
           dropsLoading={dropsLoading}
           allDrops={allDrops}
+          editCollection={editCollection}
+          deleteCollection={deleteCollection}
           conversations={conversations}
           messages={messages}
           dropDetails={dropDetails}
           setDropDetails={setDropDetails}
           handleMedia={handleMedia}
           currencies={currencies}
-          waveformRef={waveformRef}
           setSearchedProfiles={setSearchedProfiles}
           handlePlayPause={handlePlayPause}
           filterConstants={filterConstants}
@@ -250,7 +252,7 @@ const Web: FunctionComponent<WebProps> = ({
           like={like}
           interactionsLoading={interactionsLoading}
           dispatch={dispatch}
-          gallery={gallery}
+          allCollections={allCollections}
           display={display}
           setCollectionSettings={setCollectionSettings}
           collectionSettings={collectionSettings}

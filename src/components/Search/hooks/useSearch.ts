@@ -511,6 +511,24 @@ const useSearch = (
           publication: data?.publications?.items.find(
             (item) => item.id === collection.pubId
           ),
+          sizes: (collection?.sizes as any)
+            ?.split(",")
+            .map((word: string) => word.trim()),
+          colors: (collection?.colors as any)
+            ?.split(",")
+            .map((word: string) => word.trim()),
+          mediaTypes: (collection?.mediaTypes as any)
+            ?.split(",")
+            .map((word: string) => word.trim()),
+          access: (collection?.access as any)
+            ?.split(",")
+            .map((word: string) => word.trim()),
+          communities: (collection?.communities as any)
+            ?.split(",")
+            .map((word: string) => word.trim()),
+          tags: (collection?.tags as any)
+            ?.split(",")
+            .map((word: string) => word.trim()),
         })
       ) as Creation[];
 

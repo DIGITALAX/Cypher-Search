@@ -8,13 +8,13 @@ import {
 } from "../../../../../lib/constants";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import Drop from "./Drop";
+import Waveform from "./Waveform";
 
 const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   type,
   collectionDetails,
   setCollectionDetails,
   router,
-  gallery,
   handleMedia,
   lensConnected,
   collectionSettings,
@@ -22,12 +22,12 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   filterConstants,
   dispatch,
   handlePlayPause,
-  waveformRef,
   setDropDetails,
   dropsLoading,
   allDrops,
   dropDetails,
-  setCreateCase
+  setCreateCase,
+  allCollections,
 }): JSX.Element => {
   switch (type) {
     case "collection":
@@ -42,7 +42,6 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           collectionSettings={collectionSettings}
           setCollectionSettings={setCollectionSettings}
           dispatch={dispatch}
-          waveformRef={waveformRef}
           handlePlayPause={handlePlayPause}
           setCreateCase={setCreateCase}
         />
@@ -50,7 +49,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
 
     case "drop":
       return (
-        /* allDrops?.length > 0 ? ( */ <Drop
+        <Drop
           handle={
             lensConnected?.handle?.suggestedFormatted?.localName?.split(
               "@"
@@ -63,66 +62,137 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           setDropDetails={setDropDetails}
         />
       );
-    // ) : (
-    //   <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
-    //     Create a collection before adding it to a drop.
-    //   </div>
-    // );
 
     default:
-      return [...(gallery?.collected || []), ...(gallery?.created || [])]
-        ?.length > 0 ? (
+      return allCollections?.length > 0 ? (
         <div
           className="relative w-4/5 h-full overflow-x-scroll flex justify-start items-start"
           id="prerollScroll"
         >
-          <div
-            className={`relative w-fit h-fit grid gap-5 justify-start items-start`}
-            style={{
-              gridTemplateColumns: `repeat(${
-                [...(gallery?.collected || []), ...(gallery?.created || [])]
-                  ?.length < 4
-                  ? 4
-                  : Math.ceil(
-                      [
-                        ...(gallery?.collected || []),
-                        ...(gallery?.created || []),
-                      ]?.length / 2
-                    )
-              }, minmax(0, 1fr))`,
-              gridTemplateRows: `repeat(${
-                [...(gallery?.collected || []), ...(gallery?.created || [])]
-                  ?.length < 4
-                  ? 1
-                  : 2
-              }, auto)`,
-            }}
-          >
-            {[...(gallery?.collected || []), ...(gallery?.created || [])]
-              ?.sort(() => Math.random() - 0.5)
-              .map((item: Creation, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative w-60 h-60 rounded-sm p-px cursor-pointer"
-                    id="pfp"
-                    onClick={() =>
-                      router.push(
-                        `/item/${numberToItemTypeMap[Number(item?.origin)]}/${
-                          item?.publication?.id
-                        }`
-                      )
-                    }
-                  >
-                    <div className="relative w-full h-full">
-                      <Image
-                        layout="fill"
-                        src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
-                      />
+          <div className="relative w-full h-full flex items-start justify-start">
+            <div
+              className={`relative w-full h-fit flex flex-wrap gap-6 items-start justify-start`}
+            >
+              {allCollections
+                ?.sort(() => Math.random() - 0.5)
+                .map((item: Creation, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-60 h-60 rounded-sm p-px cursor-pointer"
+                      id="pfp"
+                      onClick={() => {
+                        setCreateCase("collection");
+                        setCollectionSettings((prev) => ({
+                          ...prev,
+                          origin: "chromadin",
+                          media: item?.audio
+                            ? "audio"
+                            : item?.video
+                            ? "video"
+                            : "static",
+                        }));
+                        setCollectionDetails({
+                          title: item?.title,
+                          profileId: item?.profileId,
+                          pubId: item?.pubId,
+                          description: item?.description,
+                          collectionId: item?.collectionId,
+                          price: item?.prices?.[0],
+                          acceptedTokens: item?.acceptedTokens,
+                          images: [
+                            {
+                              media: item?.images?.[0],
+                              type: item?.mediaTypes?.[0],
+                            },
+                          ],
+                          video: item?.video,
+                          audio: item?.audio,
+                          tags: item?.tags.join(", "),
+                          prompt: item?.prompt,
+                          amount: item?.amount,
+                          visibility: item?.visibility,
+                          sizes: item?.sizes,
+                          colors: item?.colors,
+                          profileHandle: item?.profileHandle,
+                          microbrand: {
+                            microbrand: item?.microbrand,
+                            microbrandCover: item?.microbrandCover,
+                          },
+                          access: item?.access?.join(", "),
+                          drop: item?.drop,
+                          communities: item?.communities?.join(", "),
+                        });
+                      }}
+                    >
+                      <div className="relative w-full h-full flex">
+                        {item?.audio === "audio" || item?.images?.[0] ? (
+                          item?.images?.[0] && (
+                            <Image
+                              layout="fill"
+                              src={`${INFURA_GATEWAY}/ipfs/${
+                                item?.images?.[0]?.split("ipfs://")?.[1]
+                              }`}
+                              objectFit="cover"
+                              draggable={false}
+                              className="relative rounded-sm w-full h-full flex"
+                            />
+                          )
+                        ) : (
+                          <video
+                            className="relative rounded-sm w-full h-full flex object-cover"
+                            id="itemCollection"
+                            draggable={false}
+                            controls={false}
+                            muted
+                            // autoPlay
+                            playsInline
+                            loop
+                            key={item?.video}
+                          >
+                            <source
+                              src={`${INFURA_GATEWAY}/ipfs/${
+                                item?.video?.split("ipfs://")?.[1]
+                              }`}
+                            />
+                          </video>
+                        )}
+                        {item?.audio && (
+                          <Waveform
+                            handlePlayPause={handlePlayPause}
+                            audio={item?.audio}
+                            type={"audio"}
+                            keyValue={item?.audio}
+                            video={item?.video}
+                          />
+                        )}
+                      </div>
+                      <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
+                        <div
+                          className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
+                          title="Go to Collection"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(
+                              `/item/${
+                                numberToItemTypeMap[Number(item?.origin)]
+                              }/${Number(item?.profileId)?.toString(
+                                16
+                              )}-${Number(item?.pubId)?.toString(16)}`
+                            );
+                          }}
+                        >
+                          <Image
+                            draggable={false}
+                            layout="fill"
+                            src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+            </div>
           </div>
         </div>
       ) : (

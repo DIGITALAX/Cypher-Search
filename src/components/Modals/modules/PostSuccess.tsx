@@ -10,7 +10,8 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
   type,
   router,
   pubId,
-  handle
+  handle,
+  successType,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -25,6 +26,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
                   setPostSuccess({
                     actionValue: undefined,
                     actionPubId: undefined,
+                    actionType: undefined,
                   })
                 )
               }
@@ -32,7 +34,13 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
-              Your {type === "collection" ? "Collection" : "Drop"} is Live!
+              Your {type === "collection" ? "Collection" : "Drop"} is{" "}
+              {successType === "created"
+                ? "Live"
+                : successType === "deleted"
+                ? "Deleted"
+                : "Updated"}
+              !
             </div>
             <div
               className="relative w-2/3 h-52 flex items-center justify-center rounded-sm p-px cursor-pointer active:scale-95"
@@ -41,6 +49,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
                   setPostSuccess({
                     actionValue: undefined,
                     actionPubId: undefined,
+                    actionType: undefined,
                   })
                 );
                 router.push(

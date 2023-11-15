@@ -1,11 +1,12 @@
 import {
   ChangeEvent,
+  MutableRefObject,
   SetStateAction,
   useEffect,
   useRef,
   useState,
 } from "react";
-import { CollectionDetails } from "../types/autograph.types";
+import { CollectionDetails, ScreenDisplay } from "../types/autograph.types";
 import lensPost from "../../../../lib/helpers/api/postChain";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { AnyAction, Dispatch } from "redux";
@@ -18,10 +19,18 @@ import {
 } from "../../../../graphql/generated";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import WaveSurfer from "wavesurfer.js";
-import { CHROMADIN_OPEN_ACTION, ZERO_ADDRESS } from "../../../../lib/constants";
+import {
+  CHROMADIN_OPEN_ACTION,
+  COLLECTION_CREATOR,
+  INFURA_GATEWAY,
+  ZERO_ADDRESS,
+} from "../../../../lib/constants";
 import { ethers } from "ethers";
 import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
+import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
 import getPublications from "../../../../graphql/lens/queries/publications";
+import { Creation } from "@/components/Tiles/types/tiles.types";
+import { getCollections } from "../../../../graphql/subgraph/queries/getCollections";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -35,9 +44,13 @@ const useCreate = (
       cover: string;
       dropId: string;
     }>
-  ) => void
+  ) => void,
+  screenDisplay: ScreenDisplay,
+  pageProfile: Profile | undefined
 ) => {
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);
+  const [collectionLoading, setCollectingLoading] = useState<boolean>(false);
+  const [allCollections, setAllCollections] = useState<Creation[]>([]);
   const [collectionSettings, setCollectionSettings] = useState<{
     media: string;
     origin: string;
@@ -61,11 +74,14 @@ const useCreate = (
     {
       title: "",
       description: "",
+      collectionId: "",
       price: "",
       acceptedTokens: [
         "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
         "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
       ],
+      profileId: "",
+      pubId: "",
       images: [],
       video: "",
       audio: "",
@@ -86,8 +102,34 @@ const useCreate = (
     }
   );
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
-  const waveformRef = useRef(null);
-  const wavesurfer = useRef<null | WaveSurfer>(null);
+
+  const getAllCollections = async () => {
+    setCollectingLoading(true);
+    try {
+      const data = await getCollections(address!);
+      data?.data?.collectionCreateds?.map((collection: any) => ({
+        ...collection,
+        sizes: collection?.sizes?.split(",").map((word: string) => word.trim()),
+        colors: collection?.colors
+          ?.split(",")
+          .map((word: string) => word.trim()),
+        mediaTypes: collection?.mediaTypes
+          ?.split(",")
+          .map((word: string) => word.trim()),
+        access: collection?.access
+          ?.split(",")
+          .map((word: string) => word.trim()),
+        communities: collection?.communities
+          ?.split(",")
+          .map((word: string) => word.trim()),
+        tags: collection?.tags?.split(",").map((word: string) => word.trim()),
+      }));
+      setAllCollections(data?.data?.collectionCreateds || []);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setCollectingLoading(false);
+  };
 
   const createCollection = async () => {
     if (
@@ -133,31 +175,8 @@ const useCreate = (
         chain: polygon,
         transport: custom((window as any).ethereum),
       });
-      const { price, microbrand, drop, ...restOfCollectionDetails } =
-        collectionDetails;
-      const response = await fetch("/api/ipfs", {
-        method: "POST",
-        body: JSON.stringify({
-          ...restOfCollectionDetails,
-          tags: collectionDetails?.tags
-            ?.split(/,\s*|\s+/)
-            ?.filter((tag) => tag.trim() !== ""),
-          access: collectionDetails?.access
-            ?.split(/,\s*|\s+/)
-            ?.filter((acc) => acc.trim() !== ""),
-          communities: collectionDetails?.communities
-            ?.split(/,\s*|\s+/)
-            ?.filter((com) => com.trim() !== ""),
-          mediaType: collectionSettings?.media,
-          profileHandle:
-            lensConnected?.handle?.suggestedFormatted?.localName?.split(
-              "@"
-            )?.[1],
-          microbrand: collectionDetails?.microbrand?.microbrand,
-          microbrandCover: collectionDetails?.microbrand?.microbrandCover,
-        }),
-      });
-      const contentURI = await response.json();
+
+      const contentURI = await getURI();
 
       await lensPost(
         postContentURI!,
@@ -175,7 +194,7 @@ const useCreate = (
                     prices: [`${Number(collectionDetails?.price) * 10 ** 18}`],
                     communityIds,
                     acceptedTokens: collectionDetails?.acceptedTokens,
-                    uri: "ipfs://" + contentURI?.cid,
+                    uri: contentURI,
                     fulfiller: ZERO_ADDRESS,
                     amount: Number(collectionDetails?.amount),
                     dropId: Number(collectionDetails?.drop),
@@ -205,22 +224,109 @@ const useCreate = (
         true
       );
 
-      dispatch(
-        setPostSuccess({
-          actionValue: "collection",
-          actionPubId: data?.publications?.items?.[0]?.id,
-        })
-      );
+      await cleanCollection("created", data?.publications?.items?.[0]?.id);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setCreationLoading(false);
+  };
 
+  const editCollection = async () => {
+    setCreationLoading(true);
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const communityIds = collectionDetails?.communities
+        ?.split(/,\s*|\s+/)
+        ?.filter((com) => com.trim() !== "")
+        ?.map((item) => Number(item[2]));
+
+      const contentURI = await getURI();
+
+      const { request } = await publicClient.simulateContract({
+        address: COLLECTION_CREATOR,
+        abi: CollectionCreatorAbi,
+        functionName: "updateCollection",
+        chain: polygon,
+        args: [
+          Number(collectionDetails?.collectionId),
+          {
+            acceptedTokens: collectionDetails?.acceptedTokens,
+            prices: [`${Number(collectionDetails?.price) * 10 ** 18}`],
+            communityIds,
+            uri: contentURI,
+            fulfiller: ZERO_ADDRESS,
+            creator: address,
+            printType: 6,
+            origin: 1,
+            amount: Number(collectionDetails?.amount),
+            pubId: Number(collectionDetails?.pubId),
+            profileId: Number(collectionDetails?.profileId),
+            dropId: Number(collectionDetails?.drop),
+            unlimited: false,
+          },
+        ],
+        account: address,
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
+      await cleanCollection(
+        "updated",
+        `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
+          collectionDetails?.pubId
+        )?.toString(16)}`
+      );
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setCreationLoading(false);
+  };
+
+  const deleteCollection = async () => {
+    setCreationLoading(true);
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      const { request } = await publicClient.simulateContract({
+        address: COLLECTION_CREATOR,
+        abi: CollectionCreatorAbi,
+        functionName: "removeDrop",
+        chain: polygon,
+        args: [Number(collectionDetails?.collectionId)],
+        account: address,
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
+      await cleanCollection(
+        "deleted",
+        `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
+          collectionDetails?.pubId
+        )?.toString(16)}`
+      );
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setCreationLoading(false);
+  };
+
+  const cleanCollection = async (actionType: string, actionPubId: string) => {
+    try {
       setCollectionDetails({
         title: "",
         description: "",
+        collectionId: "",
         price: "",
         acceptedTokens: [
           "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
           "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
         ],
         images: [],
+        profileId: "",
+        pubId: "",
         video: "",
         audio: "",
         tags: "",
@@ -248,10 +354,17 @@ const useCreate = (
         videoAudio: false,
         dropOpen: false,
       });
+      dispatch(
+        setPostSuccess({
+          actionValue: "coll",
+          actionPubId,
+          actionType,
+        })
+      );
+      await getAllCollections();
     } catch (err: any) {
       console.error(err.message);
     }
-    setCreationLoading(false);
   };
 
   const handleMedia = async (e: ChangeEvent<HTMLInputElement>, id: string) => {
@@ -331,13 +444,15 @@ const useCreate = (
     }
   };
 
-  const handlePlayPause = () => {
-    const videoElement = document.getElementById(
-      "videoCollection"
-    ) as HTMLVideoElement;
+  const handlePlayPause = (
+    key: string,
+    wavesurfer: MutableRefObject<WaveSurfer | null>,
+    type: string
+  ) => {
+    const videoElement = document.getElementById(key) as HTMLVideoElement;
 
     if (wavesurfer.current) {
-      if (videoElement && collectionSettings?.media === "video") {
+      if (videoElement && type === "video") {
         if (videoElement.paused) {
           videoElement.play();
           wavesurfer.current.play();
@@ -355,72 +470,56 @@ const useCreate = (
     }
   };
 
-  useEffect(() => {
-    if (waveformRef.current) {
-      if (wavesurfer.current) {
-        wavesurfer.current.destroy();
-      }
-
-      wavesurfer.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: "violet",
-        progressColor: "white",
-        height: 16,
+  const getURI = async (): Promise<string | undefined> => {
+    try {
+      const {
+        price,
+        microbrand,
+        drop,
+        collectionId,
+        profileId,
+        pubId,
+        ...restOfCollectionDetails
+      } = collectionDetails;
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: JSON.stringify({
+          ...restOfCollectionDetails,
+          tags: collectionDetails?.tags
+            ?.split(/,\s*|\s+/)
+            ?.filter((tag) => tag.trim() !== ""),
+          access: collectionDetails?.access
+            ?.split(/,\s*|\s+/)
+            ?.filter((acc) => acc.trim() !== ""),
+          communities: collectionDetails?.communities
+            ?.split(/,\s*|\s+/)
+            ?.filter((com) => com.trim() !== ""),
+          mediaTypes: [collectionSettings?.media],
+          profileHandle:
+            lensConnected?.handle?.suggestedFormatted?.localName?.split(
+              "@"
+            )?.[1],
+          microbrand: collectionDetails?.microbrand?.microbrand,
+          microbrandCover: collectionDetails?.microbrand?.microbrandCover,
+        }),
       });
-
-      wavesurfer.current.on("seeking", function (seekProgress) {
-        const videoElement = document.getElementById(
-          "videoCollection"
-        ) as HTMLVideoElement;
-        if (videoElement) {
-          videoElement.currentTime = seekProgress;
-        }
-      });
-
-      wavesurfer.current.on("play", function () {
-        const videoElement = document.getElementById(
-          "videoCollection"
-        ) as HTMLVideoElement;
-        if (videoElement) {
-          videoElement.play();
-        }
-      });
-
-      wavesurfer.current.on("pause", function () {
-        const videoElement = document.getElementById(
-          "videoCollection"
-        ) as HTMLVideoElement;
-        if (videoElement) {
-          videoElement.pause();
-        }
-      });
-
-      if (
-        collectionDetails?.audio &&
-        collectionDetails?.audio !== "" &&
-        collectionSettings.media === "audio"
-      ) {
-        wavesurfer.current.load(collectionDetails?.audio);
-      } else if (
-        collectionDetails?.video &&
-        collectionDetails?.video !== "" &&
-        collectionSettings.media === "video"
-      ) {
-        wavesurfer.current.load(collectionDetails?.video);
-      }
+      const res = await response.json();
+      return "ipfs://" + res?.cid;
+    } catch (err: any) {
+      console.error(err.message);
     }
+  };
 
-    return () => {
-      wavesurfer.current?.destroy();
-    };
-  }, [
-    collectionDetails?.audio,
-    wavesurfer,
-    collectionDetails?.video,
-    collectionSettings?.media,
-    collectionDetails?.images,
-    waveformRef,
-  ]);
+  useEffect(() => {
+    if (
+      screenDisplay === ScreenDisplay.Gallery &&
+      allCollections?.length < 1 &&
+      address &&
+      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle
+    ) {
+      getAllCollections();
+    }
+  }, []);
 
   return {
     createCase,
@@ -433,7 +532,10 @@ const useCreate = (
     collectionSettings,
     handleMedia,
     handlePlayPause,
-    waveformRef,
+    editCollection,
+    deleteCollection,
+    allCollections,
+    collectionLoading,
   };
 };
 

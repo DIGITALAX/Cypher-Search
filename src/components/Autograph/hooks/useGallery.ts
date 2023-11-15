@@ -98,7 +98,7 @@ const useGallery = (
   const getGallery = async () => {
     setGalleryLoading(true);
     try {
-      // both those they've created and the orders that they've collected
+      // both those they've created and the orders that they've collected needs to be different from profile because is without owning??
 
       await getDisplayData();
       setActiveGallery();

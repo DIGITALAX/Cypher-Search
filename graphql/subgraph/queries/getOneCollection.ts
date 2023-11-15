@@ -17,7 +17,7 @@ const COLLECTIONS = `
       microbrandCover
       microbrand
       images
-      mediaType
+      mediaTypes
       visibility
       fulfillerPercent
       fulfillerBase
@@ -51,7 +51,7 @@ export const COLLECTIONS_RANDOM = `query($origin: String!, $profileId: String!) 
       microbrandCover
       microbrand
       images
-      mediaType
+      mediaTypes
       visibility
       fulfillerPercent
       fulfillerBase
