@@ -90,7 +90,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setCreateCase,
   createCase,
   collectionDetails,
-  activeGallery,
   collectionSettings,
   setCollectionSettings,
   isDesigner,
@@ -121,6 +120,10 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   currentMessage,
   setCurrentMessage,
   setUserSearch,
+  searchCollection,
+  setSearchCollection,
+  deleteDrop,
+  editDrop,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -129,7 +132,11 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Gallery:
       return (
         <Gallery
+          editDrop={editDrop}
+          deleteDrop={deleteDrop}
           dispatch={dispatch}
+          searchCollection={searchCollection}
+          setSearchCollection={setSearchCollection}
           dropsLoading={dropsLoading}
           allDrops={allDrops}
           createDropLoading={createDropLoading}
@@ -151,7 +158,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           creationLoading={creationLoading}
           createCase={createCase}
           setCreateCase={setCreateCase}
-          activeGallery={activeGallery}
           router={router}
           setCollectionSettings={setCollectionSettings}
           collectionSettings={collectionSettings}

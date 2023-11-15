@@ -21,6 +21,8 @@ import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
 
 export type WebProps = {
   router: NextRouter;
+  editDrop: () => Promise<void>;
+  deleteDrop: () => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
   filterConstants: FilterValues | undefined;
@@ -46,8 +48,9 @@ export type WebProps = {
       dropId: string;
     }>
   ) => void;
+  searchCollection: string;
+  setSearchCollection: (e: SetStateAction<string>) => void;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
-  activeGallery: Creation[] | undefined;
   setCreateCase: (e: SetStateAction<string | undefined>) => void;
   createCase: string | undefined;
   collectionSettings: {
@@ -58,6 +61,7 @@ export type WebProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     videoAudio: boolean;
+    dropOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -68,6 +72,7 @@ export type WebProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       videoAudio: boolean;
+      dropOpen: boolean;
     }>
   ) => void;
   handlePlayPause: () => void;
@@ -348,7 +353,10 @@ export type GalleryScreenProps = {
     cover: string;
     dropId: string;
   };
-
+  editDrop: () => Promise<void>;
+  deleteDrop: () => Promise<void>;
+  searchCollection: string;
+  setSearchCollection: (e: SetStateAction<string>) => void;
   setDropDetails: (
     e: SetStateAction<{
       collectionIds: string[];
@@ -363,7 +371,6 @@ export type GalleryScreenProps = {
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
   creationLoading: boolean;
-  activeGallery: Creation[] | undefined;
   isDesigner: boolean;
   lensConnected: Profile | undefined;
   handleSendMessage: (digitalax?: boolean) => Promise<void>;
@@ -391,6 +398,7 @@ export type GalleryScreenProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     videoAudio: boolean;
+    dropOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -401,6 +409,7 @@ export type GalleryScreenProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       videoAudio: boolean;
+      dropOpen: boolean;
     }>
   ) => void;
   handlePlayPause: () => void;
@@ -409,8 +418,12 @@ export type GalleryScreenProps = {
 
 export type ScreenSwitchProps = {
   dropsLoading: boolean;
+  searchCollection: string;
+  setSearchCollection: (e: SetStateAction<string>) => void;
   setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
   allDrops: Drop[];
+  editDrop: () => Promise<void>;
+  deleteDrop: () => Promise<void>;
   createDropLoading: boolean;
   sendMessageLoading: boolean;
   dropDetails: {
@@ -467,6 +480,7 @@ export type ScreenSwitchProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     videoAudio: boolean;
+    dropOpen: boolean;
   };
   lensConnected: Profile | undefined;
   setCollectionSettings: (
@@ -478,6 +492,7 @@ export type ScreenSwitchProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       videoAudio: boolean;
+      dropOpen: boolean;
     }>
   ) => void;
   handlePlayPause: () => void;
@@ -486,7 +501,6 @@ export type ScreenSwitchProps = {
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
-  activeGallery: Creation[] | undefined;
   handleSendMessage: (digitalax?: boolean) => Promise<void>;
   digiMessageLoading: boolean;
   setDigiMessage: (e: string) => void;
@@ -1151,9 +1165,11 @@ export interface Sale {
 export type DispatchProps = {
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
+  allDrops: Drop[];
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  setCreateCase: (e: SetStateAction<string | undefined>) => void;
   lensConnected: Profile | undefined;
   collectionSettings: {
     origin: string;
@@ -1163,6 +1179,7 @@ export type DispatchProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     videoAudio: boolean;
+    dropOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1173,6 +1190,7 @@ export type DispatchProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       videoAudio: boolean;
+      dropOpen: boolean;
     }>
   ) => void;
   handlePlayPause: () => void;
@@ -1245,6 +1263,7 @@ export type SwitchCreateProps = {
   type: string | undefined;
   dispatch: Dispatch<AnyAction>;
   collectionDetails: CollectionDetails;
+  setCreateCase: (e: SetStateAction<string | undefined>) => void;
   dropDetails: {
     collectionIds: string[];
     title: string;
@@ -1273,6 +1292,7 @@ export type SwitchCreateProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     videoAudio: boolean;
+    dropOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1283,6 +1303,7 @@ export type SwitchCreateProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       videoAudio: boolean;
+      dropOpen: boolean;
     }>
   ) => void;
   handlePlayPause: () => void;
@@ -1310,12 +1331,6 @@ export type DropProps = {
     cover: string;
     dropId: string;
   };
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined;
   setDropDetails: (
     e: SetStateAction<{
       collectionIds: string[];

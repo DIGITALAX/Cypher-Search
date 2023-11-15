@@ -4,9 +4,9 @@ import { AiOutlineLoading } from "react-icons/ai";
 import SwitchCreate from "./SwitchCreate";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import { Creation } from "@/components/Tiles/types/tiles.types";
 
 const Gallery: FunctionComponent<GalleryScreenProps> = ({
-  activeGallery,
   gallery,
   setCollectionDetails,
   collectionDetails,
@@ -34,6 +34,10 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   allDrops,
   createDropLoading,
   dropsLoading,
+  searchCollection,
+  setSearchCollection,
+  editDrop,
+  deleteDrop,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
@@ -55,6 +59,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
             }`}
           >
             <SwitchCreate
+              setCreateCase={setCreateCase}
               dropDetails={dropDetails}
               dropsLoading={dropsLoading}
               allDrops={allDrops}
@@ -263,7 +268,13 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         {dropDetails?.cover && (
                           <Image
                             layout="fill"
-                            src={dropDetails?.cover}
+                            src={
+                              dropDetails?.cover?.includes("ipfs://")
+                                ? `${INFURA_GATEWAY}/ipfs/${
+                                    dropDetails?.cover?.split("ipfs://")?.[1]
+                                  }`
+                                : dropDetails?.cover
+                            }
                             objectFit="cover"
                             draggable={false}
                             className="relative rounded-sm w-full h-full flex"
@@ -280,38 +291,100 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         />
                       </div>
                     </label>
-                  </div>
-                  <div className="relative w-60 overflow-x-scroll h-fit flex items-center justify-start">
-                    <div className="relative w-fit h-fit flex justify-start items-center flex-row gap-2">
-                      {dropDetails?.collectionIds?.map(
-                        (item: string, index: number) => {
-                          return (
-                            <div
-                              key={index}
-                              className="relative w-10 h-10 rounded-sm border border-white"
-                            >
-                              <Image
-                                className="relative w-full h-full rounded-sm flex"
-                                objectFit="cover"
-                                layout="fill"
-                                src={`${INFURA_GATEWAY}/ipfs/${
-                                  gallery?.created
-                                    ?.find(
-                                      (value) => value.collectionId == item
-                                    )
-                                    ?.images?.[0]?.split("ipsf://")?.[1]
-                                }`}
-                              />
+                    {dropDetails?.dropId !== "" && (
+                      <>
+                        <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 font-aust text-white">
+                          <div className="relative w-fit h-fit text-sm">
+                            Add Collections
+                          </div>
+                          <input
+                            className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60"
+                            value={searchCollection}
+                            onChange={(e) =>
+                              setSearchCollection(e.target.value)
+                            }
+                          />
+                        </div>
+                        {gallery?.created?.filter((item) =>
+                          item?.title
+                            ?.toLowerCase()
+                            ?.includes(searchCollection?.toLowerCase())
+                        ) && (
+                          <div className="absolute w-full max-h-[10rem] h-fit flex overflow-y-scroll bg-offBlack z-1 border border-white rounded-md">
+                            <div className="relative w-full h-fit flex flex-col ">
+                              {gallery?.created
+                                ?.filter((item) =>
+                                  item?.title
+                                    ?.toLowerCase()
+                                    ?.includes(searchCollection?.toLowerCase())
+                                )
+                                ?.map((item: Creation, index: number) => {
+                                  return (
+                                    <div
+                                      key={index}
+                                      className="relative px-2 py-1 text-center flex justify-center items-center hover:opacity-70 cursor-pointer active:scale-95"
+                                      onClick={() => {
+                                        if (
+                                          !dropDetails?.collectionIds?.find(
+                                            (value) =>
+                                              item.collectionId === value
+                                          )
+                                        ) {
+                                          setSearchCollection("");
+                                          setDropDetails((prev) => ({
+                                            ...prev,
+                                            collectionIds: [
+                                              ...prev.collectionIds,
+                                              item.collectionId,
+                                            ],
+                                          }));
+                                        }
+                                      }}
+                                    >
+                                      <div className="relative w-fit h-fit flex items-center justify-center text-white font-aust text-xs">
+                                        {item?.title}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
                             </div>
-                          );
-                        }
-                      )}
+                          </div>
+                        )}
+                      </>
+                    )}
+                    <div className="relative w-60 overflow-x-scroll h-fit flex items-center justify-start">
+                      <div className="relative w-fit h-fit flex justify-start items-center flex-row gap-2">
+                        {dropDetails?.collectionIds?.map(
+                          (item: string, index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                className="relative w-10 h-10 rounded-sm border border-white"
+                              >
+                                <Image
+                                  className="relative w-full h-full rounded-sm flex"
+                                  objectFit="cover"
+                                  layout="fill"
+                                  src={`${INFURA_GATEWAY}/ipfs/${
+                                    gallery?.created
+                                      ?.find(
+                                        (value) => value.collectionId == item
+                                      )
+                                      ?.images?.[0]?.split("ipsf://")?.[1]
+                                  }`}
+                                />
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             )}
-            {createCase && (
+            {(createCase === "collection" ||
+              (createCase === "drop" && dropDetails?.dropId == "")) && (
               <div
                 className={`relative w-40 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
                   !creationLoading &&
@@ -328,7 +401,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               >
                 <div
                   className={`relative w-fit h-fit items-center justify-center flex ${
-                    creationLoading || (createDropLoading && "animate-spin")
+                    (creationLoading || createDropLoading) && "animate-spin"
                   }`}
                 >
                   {creationLoading || createDropLoading ? (
@@ -336,6 +409,46 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                   ) : (
                     "Create"
                   )}
+                </div>
+              </div>
+            )}
+            {createCase === "drop" && dropDetails?.dropId != "" && (
+              <div className="relative w-fit h-fit flex flex-row gap-2 items-center justify-center">
+                <div
+                  className={`relative w-28 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
+                    !createDropLoading && "cursor-pointer active:scale-95"
+                  }`}
+                  onClick={() => editDrop()}
+                >
+                  <div
+                    className={`relative w-fit h-fit items-center justify-center flex ${
+                      createDropLoading && "animate-spin"
+                    }`}
+                  >
+                    {createDropLoading ? (
+                      <AiOutlineLoading color="white" size={15} />
+                    ) : (
+                      "Edit"
+                    )}
+                  </div>
+                </div>
+                <div
+                  className={`relative w-28 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
+                    !createDropLoading && "cursor-pointer active:scale-95"
+                  }`}
+                  onClick={() => deleteDrop()}
+                >
+                  <div
+                    className={`relative w-fit h-fit items-center justify-center flex ${
+                      createDropLoading && "animate-spin"
+                    }`}
+                  >
+                    {createDropLoading ? (
+                      <AiOutlineLoading color="white" size={15} />
+                    ) : (
+                      "Delete"
+                    )}
+                  </div>
                 </div>
               </div>
             )}

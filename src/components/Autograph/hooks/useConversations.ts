@@ -159,6 +159,7 @@ const useConversations = (
 
   const handleChangeConversation = async () => {
     try {
+      if (!selectedUser) return;
       setCurrentMessage("");
       if (await client?.canMessage(selectedUser?.address!)) {
         const conversation = await client!.conversations?.newConversation(
