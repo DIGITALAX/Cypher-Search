@@ -34,6 +34,7 @@ const COLLECTIONS = `
       colors
       sizes
       origin
+      blockTimestamp
     }
   }
 `;
@@ -71,6 +72,7 @@ const COLLECTIONS_PAGINATED = `
       colors
       sizes
       origin
+      blockTimestamp
     }
   }
 `;

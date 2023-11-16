@@ -48,6 +48,7 @@ export interface Creation {
   origin: string;
   profile: Profile;
   publication: Post | undefined;
+  blockTimestamp: string
 }
 
 export interface Publication {
@@ -378,6 +379,7 @@ export enum PrintType {
   Hoodie = "3",
   Sleeve = "4",
   Crop = "5",
+  NFTOnly = "6"
 }
 
 export type ProfileProps = {
@@ -410,12 +412,14 @@ export interface FilterInput {
   access_contains?: String;
   communities_contains?: String;
   description_contains?: String;
-  drop_contains?: String;
+  dropTitle_contains?: String;
   microbrand_contains?: String;
   printType_contains?: String;
   prompt_contains?: String;
   tags_contains?: String;
   title_contains?: String;
+  visibility_contains?: String
+  mediaTypes_contains?: String
   unlimited?: Boolean;
   amount_gte?: String;
   amount_lte?: String;

@@ -31,14 +31,9 @@ const buildQuery = (filters: Filter): FilterInput => {
   }
 
   if (filters.format) {
-    const values = splitString(filters?.format);
-    query = { ...query, ...buildAndBlock(values, "format") };
-  }
-
-  if (filters.drop) {
     const values = Array.from(
       new Set(
-        splitString(filters.drop)
+        splitString(filters.format)
           .map((item) => item.trim())
           .flatMap((item) =>
             item === "IMAGE"
@@ -53,7 +48,11 @@ const buildQuery = (filters: Filter): FilterInput => {
           )
       )
     );
-    query = { ...query, ...buildAndBlock(values, "drop") };
+    query = { ...query, ...buildAndBlock(values, "format") };
+  }
+
+  if (filters.drop) {
+    query = { ...query, ...buildAndBlock([filters?.drop], "dropTitle") };
   }
 
   if (filters.editions !== undefined) {

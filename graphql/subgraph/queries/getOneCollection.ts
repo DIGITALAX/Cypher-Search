@@ -35,6 +35,7 @@ const COLLECTION = `
       colors
       sizes
       origin
+      blockTimestamp
     }
   }
 `;
@@ -72,6 +73,7 @@ export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
       colors
       sizes
       origin
+      blockTimestamp
   }
 }`;
 
