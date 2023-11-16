@@ -8,13 +8,20 @@ export const LENS_HUB_PROXY_ADDRESS_MUMBAI: `0x${string}` =
   "0xC1E77eE73403B8a7478884915aA599932A677870";
 export const LENS_HUB_PROXY_ADDRESS_MATIC: `0x${string}` =
   "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d";
-export const NFT_CREATOR_ADDRESS: `0x${string}` = "0x";
-export const CHROMADIN_OPEN_ACTION: `0x${string}` = "0x";
-export const LISTENER_OPEN_ACTION: `0x${string}` = "0x";
-export const COIN_OP_OPEN_ACTION: `0x${string}` = "0x";
-export const LEGEND_OPEN_ACTION: `0x${string}` = "0x";
-export const PRINT_ACCESS_CONTROL: `0x${string}` = "0x";
-export const COLLECTION_CREATOR: `0x${string}` = "0x";
+export const NFT_CREATOR_ADDRESS: `0x${string}` =
+  "0x3Bb3157F4af00BA61A562A0Ffe9cBfd07388d2b1";
+export const CHROMADIN_OPEN_ACTION: `0x${string}` =
+  "0x616BBd3F1d09349a9cd32C05621FE04572539A41";
+export const LISTENER_OPEN_ACTION: `0x${string}` =
+  "0xeA2B9375910dd3032b514Daefd8061f545aa62B3";
+export const COIN_OP_OPEN_ACTION: `0x${string}` =
+  "0x6A1878895AE23375f678dE7E9582F03Aa33c8A80";
+export const LEGEND_OPEN_ACTION: `0x${string}` =
+  "0xb998D9FdE369327B23f471416070d4E70315B30D";
+export const PRINT_ACCESS_CONTROL: `0x${string}` =
+  "0xCF96CeeB6745a9374A8391ED51aF02CddFFacAf4";
+export const COLLECTION_CREATOR: `0x${string}` =
+  "0x15448744C11Ee4C8974018B7e7183435187E0Fa1";
 export const DIGITALAX_ADDRESS: `0x${string}` =
   "0xAA3e5ee4fdC831e5274FE7836c95D670dC2502e6";
 export const ZERO_ADDRESS: `0x${string}` =

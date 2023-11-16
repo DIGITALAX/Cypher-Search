@@ -23,7 +23,10 @@ const COLLECTIONS = `
       fulfillerBase
       fulfiller
       designerPercent
-      drop
+      dropId
+      dropCollectionIds
+      dropCover
+      dropTitle
       description
       communities
       collectionId

@@ -4,7 +4,6 @@ import { ImCross } from "react-icons/im";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { setDisplaySearchBox } from "../../../../redux/reducers/displaySearchBoxSlice";
-import { Creation } from "@/components/Tiles/types/tiles.types";
 
 const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
   dispatch,
@@ -16,6 +15,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
   handleItemSelect,
   numberIndex,
   selectedItem,
+  galleryLoading,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -35,7 +35,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
               }
             />
           </div>
-          <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3">
+          <div className="relative w-full h-fit items-center justify-start flex flex-col gap-3">
             <div className="relative w-2/3 h-fit flex flex-col gap-2 items-center justify-center">
               <div className="relative font font-bit text-white text-sm">
                 Search Collected & Created
@@ -51,34 +51,58 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                 />
               </div>
             </div>
-            <div className="relative w-2/3 h-72 flex items-center justify-center overflow-y-scroll">
-              <div className="relative flex flex-row flex-wrap items-start justify-start gap-2">
-                {(sortedGallery?.length > 0
-                  ? sortedGallery
-                  : [...(gallery?.collected || []), ...(gallery?.created || [])]
-                )
-                  ?.sort(() => Math.random() - 0.5)
-                  ?.map((item: Creation, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className={`relative w-20 h-20 rounded-sm p-px cursor-pointer ${
-                          item?.collectionId === selectedItem?.collectionId
-                        }`}
-                        id="pfp"
-                        onClick={() =>
-                          handleItemSelect(item, sortType, numberIndex)
+            <div className="relative w-2/3 h-72 flex items-start justify-center overflow-y-scroll">
+              <div className="relative w-full h-fit flex flex-row flex-wrap items-start justify-center gap-2">
+                {galleryLoading
+                  ? Array.from({ length: 20 })?.map((_, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className={`relative w-20 h-20 rounded-sm p-px flex animate-pulse items-center justify-center`}
+                          id="pfp"
+                        ></div>
+                      );
+                    })
+                  : (sortedGallery && sortedGallery?.length > 0
+                      ? sortedGallery
+                      : [
+                          ...(gallery?.collected || []),
+                          ...(gallery?.created || []),
+                        ]
+                    )
+                      ?.sort(() => Math.random() - 0.5)
+                      ?.map(
+                        (
+                          item: {
+                            collectionId: string;
+                            images: string[];
+                            title: string;
+                          },
+                          index: number
+                        ) => {
+                          return (
+                            <div
+                              key={index}
+                              className={`relative w-20 h-20 rounded-sm p-px flex cursor-pointer ${
+                                item?.collectionId ===
+                                selectedItem?.collectionId
+                              }`}
+                              id="pfp"
+                              onClick={() =>
+                                handleItemSelect(item, sortType, numberIndex)
+                              }
+                            >
+                              <div className="relative w-full h-full rounded-sm">
+                                <Image
+                                  layout="fill"
+                                  src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
+                                  className="rounded-sm"
+                                />
+                              </div>
+                            </div>
+                          );
                         }
-                      >
-                        <div className="relative w-full h-full">
-                          <Image
-                            layout="fill"
-                            src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                      )}
               </div>
             </div>
           </div>

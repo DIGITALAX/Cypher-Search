@@ -7,7 +7,6 @@ import filterReducer from "./reducers/filterSlice";
 import availableCurrenciesReducer from "./reducers/availableCurrenciesSlice";
 import profileDisplayReducer from "./reducers/profileDisplaySlice";
 import postSuccessReducer from "./reducers/postSuccessSlice";
-import galleryItemsReducer from "./reducers/galleryItemsSlice";
 import isDesignerReducer from "./reducers/isDesignerSlice";
 import oracleDataReducer from "./reducers/oracleDataSlice";
 import successCheckoutReducer from "./reducers/successCheckoutSlice";
@@ -60,7 +59,6 @@ const reducer = combineReducers({
   oracleDataReducer,
   isDesignerReducer,
   postSuccessReducer,
-  galleryItemsReducer,
   profileDisplayReducer,
 });
 

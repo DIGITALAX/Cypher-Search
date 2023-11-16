@@ -1,9 +1,9 @@
 import { FetchResult, gql } from "@apollo/client";
 import { graphPrintClient } from "../../../lib/graph/client";
 
-const COLLECTIONS = `
+const COLLECTION = `
   query($collectionId: String!) {
-    collectionCreateds(where: {collectionId: $collectionId}) {
+    collectionCreateds(where: {collectionId: $collectionId}, first: 1) {
       amount
       title
       tags
@@ -23,7 +23,10 @@ const COLLECTIONS = `
       fulfillerBase
       fulfiller
       designerPercent
-      drop
+      dropId
+      dropCollectionIds
+      dropCover
+      dropTitle
       description
       communities
       collectionId
@@ -36,7 +39,7 @@ const COLLECTIONS = `
   }
 `;
 
-export const COLLECTIONS_RANDOM = `query($origin: String!, $profileId: String!) {
+export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
   collectionCreateds(where: {origin: $origin, profileId: $profileId} first: 1) {
     amount
       title
@@ -57,7 +60,10 @@ export const COLLECTIONS_RANDOM = `query($origin: String!, $profileId: String!) 
       fulfillerBase
       fulfiller
       designerPercent
-      drop
+      dropId
+      dropCollectionIds
+      dropCover
+      dropTitle
       description
       communities
       collectionId
@@ -71,7 +77,7 @@ export const COLLECTIONS_RANDOM = `query($origin: String!, $profileId: String!) 
 
 const COLLECTION_ORDER = `
   query($collectionId: String!) {
-    collectionCreateds(where: {collectionId: $collectionId}) {
+    collectionCreateds(where: {collectionId: $collectionId}, first: 1) {
       title
       images
       origin
@@ -80,11 +86,21 @@ const COLLECTION_ORDER = `
   }
 `;
 
+const COLLECTION_QUICK = `
+  query($collectionId: String!) {
+    collectionCreateds(where: {collectionId: $collectionId}, first: 1) {
+      title
+      images
+      collectionId
+    }
+  }
+`;
+
 export const getOneCollection = async (
   collectionId: string
 ): Promise<FetchResult | void> => {
   const queryPromise = graphPrintClient.query({
-    query: gql(COLLECTIONS),
+    query: gql(COLLECTION),
     variables: {
       collectionId,
     },
@@ -111,7 +127,7 @@ export const getOneRandomCollection = async (
   profileId: string
 ): Promise<FetchResult | void> => {
   const queryPromise = graphPrintClient.query({
-    query: gql(COLLECTIONS_RANDOM),
+    query: gql(COLLECTION_RANDOM),
     variables: {
       origin,
       profileId,
@@ -139,6 +155,32 @@ export const getCollectionOrder = async (
 ): Promise<FetchResult | void> => {
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION_ORDER),
+    variables: {
+      collectionId,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};
+
+export const getOneCollectionQuick = async (
+  collectionId: string
+): Promise<FetchResult | void> => {
+  const queryPromise = graphPrintClient.query({
+    query: gql(COLLECTION_QUICK),
     variables: {
       collectionId,
     },

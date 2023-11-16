@@ -666,6 +666,7 @@ export type ScreenSwitchProps = {
 };
 
 export type SettingsProps = {
+  isDesigner: boolean;
   setSettingsData: (
     e: SetStateAction<
       ProfileMetadata & {

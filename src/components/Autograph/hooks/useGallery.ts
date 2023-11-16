@@ -3,14 +3,13 @@ import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import { Display } from "../types/autograph.types";
+import { Display, SortType } from "../types/autograph.types";
 import { MetadataAttributeType, Profile } from "../../../../graphql/generated";
 import { createWalletClient, custom, PublicClient } from "viem";
 import { polygon } from "viem/chains";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { Dispatch } from "redux";
-import { setGalleryItems } from "../../../../redux/reducers/galleryItemsSlice";
 import { getCollectionsPaginated } from "../../../../graphql/subgraph/queries/getCollections";
 import { getOrdersPaginated } from "../../../../graphql/subgraph/queries/getOrders";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
@@ -19,18 +18,13 @@ import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCol
 const useGallery = (
   lensConnected: Profile | undefined,
   profileDisplay: Display | undefined,
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   postSuccess: string | undefined,
   pageProfile: Profile | undefined
 ) => {
+  const [sortType, setSortType] = useState<SortType>(SortType.Public);
   const [interactionsGalleryLoading, setInteractionsGalleryLoading] = useState<
     {
       like: boolean;
@@ -39,6 +33,13 @@ const useGallery = (
       hide: boolean;
     }[]
   >([]);
+  const [gallery, setGallery] = useState<
+    | {
+        collected: Creation[];
+        created: Creation[];
+      }
+    | undefined
+  >();
   const [cursorInfo, setCursorInfo] = useState<{
     collected: number;
     created: number;
@@ -121,18 +122,19 @@ const useGallery = (
         cursorInfo.created
       );
 
-      let collected: Creation[];
+      let collected: Creation[] = [];
 
-      const collData = collectedData?.data?.orderCreateds?.map(
-        (item: { subOrderCollectionIds: string[] }) => {
-          item.subOrderCollectionIds?.map(async (item: string) => {
-            const res = await getOneCollection(item);
-            collected.push(res?.data?.collectionCreateds?.[0]);
-          });
-        }
-      );
+      const collData = [
+        ...(collectedData?.data?.orderCreateds || []),
+        ...(collectedData?.data?.nFTOnlyOrderCreateds || []),
+      ]?.map((item: { subOrderCollectionIds: string[] }) => {
+        item?.subOrderCollectionIds?.map(async (item: string) => {
+          const res = await getOneCollection(item);
+          collected.push(res?.data?.collectionCreateds?.[0]);
+        });
+      });
 
-      collected = await Promise.all(collData);
+      await Promise.all(collData);
 
       const created =
         (await handleCollectionProfilesAndPublications(
@@ -151,12 +153,10 @@ const useGallery = (
       });
 
       await getDisplayData([...(created || []), ...(collected || [])]);
-      dispatch(
-        setGalleryItems({
-          collected,
-          created,
-        })
-      );
+      setGallery({
+        collected,
+        created,
+      });
     } catch (err: any) {
       console.error(err.message);
     }
@@ -177,16 +177,17 @@ const useGallery = (
           cursorInfo.collected
         );
 
-        const collData = collectedData?.data?.orderCreateds?.map(
-          (item: { subOrderCollectionIds: string[] }) => {
-            item.subOrderCollectionIds?.map(async (item: string) => {
-              const res = await getOneCollection(item);
-              collected.push(res?.data?.collectionCreateds?.[0]);
-            });
-          }
-        );
+        const collData = [
+          ...(collectedData?.data?.orderCreateds || []),
+          ...(collectedData?.data?.nFTOnlyOrderCreateds || []),
+        ]?.map((item: { subOrderCollectionIds: string[] }) => {
+          item?.subOrderCollectionIds?.map(async (item: string) => {
+            const res = await getOneCollection(item);
+            collected.push(res?.data?.collectionCreateds?.[0]);
+          });
+        });
 
-        collected = await Promise.all(collData);
+        await Promise.all(collData);
 
         collected =
           (await handleCollectionProfilesAndPublications(
@@ -213,12 +214,10 @@ const useGallery = (
         created: cursorInfo?.created + 25,
       });
 
-      dispatch(
-        setGalleryItems({
-          collected,
-          created,
-        })
-      );
+      setGallery({
+        collected,
+        created,
+      });
     } catch (err: any) {
       console.error(err.message);
     }
@@ -392,6 +391,19 @@ const useGallery = (
     });
   };
 
+  const filterSort = () => {
+    switch (sortType) {
+      case SortType.Community:
+        break;
+
+      case SortType.Private:
+        break;
+
+      case SortType.Public:
+        break;
+    }
+  };
+
   useEffect(() => {
     if (
       gallery?.collected &&
@@ -451,6 +463,10 @@ const useGallery = (
     }
   }, [gallery?.collected?.length, gallery?.created?.length]);
 
+  useEffect(() => {
+    filterSort();
+  }, [sortType]);
+
   return {
     interactionsGalleryLoading,
     galleryMirror,
@@ -472,6 +488,9 @@ const useGallery = (
     getMoreGallery,
     openInteractions,
     setOpenInteractions,
+    sortType,
+    setSortType,
+    gallery,
   };
 };
 

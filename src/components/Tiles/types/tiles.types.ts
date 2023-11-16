@@ -33,7 +33,10 @@ export interface Creation {
   fulfillerBase: string;
   fulfiller: string;
   designerPercent: string;
-  drop: string;
+  dropId: string;
+  dropCover: string;
+  dropCollectionIds: string[];
+  dropTitle: string;
   description: string;
   communities: string[];
   collectionId: string;

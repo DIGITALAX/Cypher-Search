@@ -22,7 +22,10 @@ const COLLECTIONS = `
       fulfillerBase
       fulfiller
       designerPercent
-      drop
+      dropId
+      dropCollectionIds
+      dropCover
+      dropTitle
       description
       communities
       collectionId
@@ -56,7 +59,10 @@ const COLLECTIONS_PAGINATED = `
       fulfillerBase
       fulfiller
       designerPercent
-      drop
+      dropId
+      dropCollectionIds
+      dropCover
+      dropTitle
       description
       communities
       collectionId
@@ -65,6 +71,16 @@ const COLLECTIONS_PAGINATED = `
       colors
       sizes
       origin
+    }
+  }
+`;
+
+const COLLECTIONS_QUICK = `
+  query($creator: String!, $first: Int, $skip: Int) {
+    collectionCreateds(where: {creator: $creator}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
+      title
+      images
+      collectionId
     }
   }
 `;
@@ -106,6 +122,32 @@ export const getCollectionsPaginated = async (
       creator,
       first,
       skip,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};
+
+export const getCollectionsQuick = async (
+  creator: string
+): Promise<FetchResult | void> => {
+  const queryPromise = graphPrintClient.query({
+    query: gql(COLLECTIONS_QUICK),
+    variables: {
+      creator,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
