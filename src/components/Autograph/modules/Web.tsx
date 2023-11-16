@@ -321,7 +321,7 @@ const Web: FunctionComponent<WebProps> = ({
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
-        <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-5">
+        <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-4">
           {[
             {
               image: "QmRozkh6CWW9u3ATqcMKr4w4LUEd4h1vNN4Gon3zsrtCA4",

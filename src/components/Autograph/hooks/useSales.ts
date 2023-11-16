@@ -20,8 +20,15 @@ const useSales = (
     try {
       const data = await getSalesHistory(address);
 
-      if (data && data?.data?.orderCreateds?.length > 0) {
-        const promises = data?.data?.orderCreateds?.map(async (item: any) => {
+      if (
+        data &&
+        (data?.data?.orderCreateds?.length > 0 ||
+          data?.data?.nFTOnlyOrderCreateds?.length > 0)
+      ) {
+        const promises = [
+          ...(data?.data?.orderCreateds || []),
+          ...(data?.data?.nFTOnlyOrderCreateds || []),
+        ]?.map(async (item: any) => {
           const buyer = await getDefaultProfile({
             for: item?.buyer,
           });

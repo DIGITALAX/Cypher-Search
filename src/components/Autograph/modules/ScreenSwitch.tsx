@@ -220,6 +220,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Settings:
       return (
         <Settings
+          isDesigner={isDesigner}
           settingsData={settingsData}
           setSettingsData={setSettingsData}
           handleSettingsUpdate={handleSettingsUpdate}

@@ -24,6 +24,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
   currencies,
   setCurrencyOpen,
   currencyOpen,
+  isDesigner,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -212,146 +213,148 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
-                <div className="relative font font-bit text-white text-sm">
-                  Connected Microbrands
-                </div>
-                <div className="relative w-full h-fit flex flex-row gap-2">
-                  <label
-                    className="relative border border-white w-10 h-10 cursor-pointer p-px rounded-full flex items-center justify-center"
-                    id="pfp"
-                  >
-                    <div className="relative w-full h-full flex items-center justify-center rounded-full">
-                      {settingsData?.tempMicro?.microbrandCover && (
-                        <Image
-                          layout="fill"
-                          src={settingsData?.tempMicro?.microbrandCover}
-                          objectFit="cover"
-                          draggable={false}
-                          className="relative rounded-full w-full h-full flex"
-                        />
-                      )}
-                      <input
-                        hidden
-                        type="file"
-                        accept="image/png, image/gif"
-                        multiple={false}
-                        onChange={(e) =>
-                          e?.target?.files?.[0] && handleImage(e, "micro")
-                        }
-                      />
-                    </div>
-                  </label>
-                  <input
-                    value={settingsData?.tempMicro?.microbrand || ""}
-                    onChange={(e) =>
-                      setSettingsData((prev) => ({
-                        ...prev,
-                        tempMicro: {
-                          ...prev.tempMicro,
-                          microbrand: e.target.value,
-                        },
-                      }))
-                    }
-                    className="relative p-1 text-xs bg-piloto border border-white text-white font-bit rounded-sm h-10 w-40"
-                    style={{
-                      resize: "none",
-                    }}
-                  />
-                  <div
-                    className={`relative w-fit px-1.5 py-1 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm text-xs ${
-                      settingsData.tempMicro?.microbrand &&
-                      settingsData.tempMicro?.microbrandCover &&
-                      "cursor-pointer active:scale-95"
-                    }`}
-                    onClick={() =>
-                      settingsData.tempMicro?.microbrand &&
-                      settingsData.tempMicro?.microbrandCover &&
-                      setSettingsData((prev) => ({
-                        ...prev,
-                        microbrands: [
-                          ...prev.microbrands,
-                          prev.tempMicro as {
-                            microbrand: string;
-                            microbrandCover: string;
-                          },
-                        ],
-                        tempMicro: {
-                          microbrand: undefined,
-                          microbrandCover: undefined,
-                        },
-                      }))
-                    }
-                  >
-                    <div
-                      className={`top-px relative w-fit h-fit flex items-center justify-center text-center`}
+              {isDesigner && (
+                <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
+                  <div className="relative font font-bit text-white text-sm">
+                    Connected Microbrands
+                  </div>
+                  <div className="relative w-full h-fit flex flex-row gap-2">
+                    <label
+                      className="relative border border-white w-10 h-10 cursor-pointer p-px rounded-full flex items-center justify-center"
+                      id="pfp"
                     >
-                      Add Micro
+                      <div className="relative w-full h-full flex items-center justify-center rounded-full">
+                        {settingsData?.tempMicro?.microbrandCover && (
+                          <Image
+                            layout="fill"
+                            src={settingsData?.tempMicro?.microbrandCover}
+                            objectFit="cover"
+                            draggable={false}
+                            className="relative rounded-full w-full h-full flex"
+                          />
+                        )}
+                        <input
+                          hidden
+                          type="file"
+                          accept="image/png, image/gif"
+                          multiple={false}
+                          onChange={(e) =>
+                            e?.target?.files?.[0] && handleImage(e, "micro")
+                          }
+                        />
+                      </div>
+                    </label>
+                    <input
+                      value={settingsData?.tempMicro?.microbrand || ""}
+                      onChange={(e) =>
+                        setSettingsData((prev) => ({
+                          ...prev,
+                          tempMicro: {
+                            ...prev.tempMicro,
+                            microbrand: e.target.value,
+                          },
+                        }))
+                      }
+                      className="relative p-1 text-xs bg-piloto border border-white text-white font-bit rounded-sm h-10 w-40"
+                      style={{
+                        resize: "none",
+                      }}
+                    />
+                    <div
+                      className={`relative w-fit px-1.5 py-1 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm text-xs ${
+                        settingsData.tempMicro?.microbrand &&
+                        settingsData.tempMicro?.microbrandCover &&
+                        "cursor-pointer active:scale-95"
+                      }`}
+                      onClick={() =>
+                        settingsData.tempMicro?.microbrand &&
+                        settingsData.tempMicro?.microbrandCover &&
+                        setSettingsData((prev) => ({
+                          ...prev,
+                          microbrands: [
+                            ...prev.microbrands,
+                            prev.tempMicro as {
+                              microbrand: string;
+                              microbrandCover: string;
+                            },
+                          ],
+                          tempMicro: {
+                            microbrand: undefined,
+                            microbrandCover: undefined,
+                          },
+                        }))
+                      }
+                    >
+                      <div
+                        className={`top-px relative w-fit h-fit flex items-center justify-center text-center`}
+                      >
+                        Add Micro
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="relative w-full h-fit flex flex-wrap items-center justify-start gap-3">
-                  {settingsData?.microbrands?.map(
-                    (
-                      item: { microbrand: string; microbrandCover: string },
-                      index: number
-                    ) => {
-                      return (
-                        <div
-                          className="relative w-fit h-10 flex flex-row gap-2 justify-between items-center px-3 py-1.5 bg-piloto border border-white"
-                          key={index}
-                        >
+                  <div className="relative w-full h-fit flex flex-wrap items-center justify-start gap-3">
+                    {settingsData?.microbrands?.map(
+                      (
+                        item: { microbrand: string; microbrandCover: string },
+                        index: number
+                      ) => {
+                        return (
                           <div
-                            id="pfp"
-                            className="relative w-6 h-6 flex items-center justify-center rounded-full"
+                            className="relative w-fit h-10 flex flex-row gap-2 justify-between items-center px-3 py-1.5 bg-piloto border border-white"
+                            key={index}
                           >
-                            <Image
-                              layout="fill"
-                              src={
-                                item?.microbrandCover?.includes("ipfs://")
-                                  ? `${INFURA_GATEWAY}/ipfs/${
-                                      item?.microbrandCover?.split(
-                                        "ipfs://"
-                                      )?.[1]
-                                    }`
-                                  : item?.microbrandCover
+                            <div
+                              id="pfp"
+                              className="relative w-6 h-6 flex items-center justify-center rounded-full"
+                            >
+                              <Image
+                                layout="fill"
+                                src={
+                                  item?.microbrandCover?.includes("ipfs://")
+                                    ? `${INFURA_GATEWAY}/ipfs/${
+                                        item?.microbrandCover?.split(
+                                          "ipfs://"
+                                        )?.[1]
+                                      }`
+                                    : item?.microbrandCover
+                                }
+                                objectFit="cover"
+                                draggable={false}
+                                className="relative rounded-full w-full h-full flex"
+                              />
+                            </div>
+                            <div className="relative w-fit h-fit text-white font-aust text-xs flex items-center justify-center">
+                              {item?.microbrand?.toUpperCase()}
+                            </div>
+                            <div
+                              className="ml-auto justify-end items-center w-fit h-fit flex cursor-pointer active:scale-95"
+                              onClick={() =>
+                                setSettingsData((prev) => {
+                                  const arr = {
+                                    ...prev,
+                                  };
+
+                                  const index = arr.microbrands.findIndex(
+                                    (value) =>
+                                      item.microbrandCover ===
+                                        value.microbrandCover &&
+                                      item.microbrand === value.microbrand
+                                  );
+
+                                  delete arr.microbrands[index];
+                                  return arr;
+                                })
                               }
-                              objectFit="cover"
-                              draggable={false}
-                              className="relative rounded-full w-full h-full flex"
-                            />
+                            >
+                              <ImCross color="white" size={10} />
+                            </div>
                           </div>
-                          <div className="relative w-fit h-fit text-white font-aust text-xs flex items-center justify-center">
-                            {item?.microbrand?.toUpperCase()}
-                          </div>
-                          <div
-                            className="ml-auto justify-end items-center w-fit h-fit flex cursor-pointer active:scale-95"
-                            onClick={() =>
-                              setSettingsData((prev) => {
-                                const arr = {
-                                  ...prev,
-                                };
-
-                                const index = arr.microbrands.findIndex(
-                                  (value) =>
-                                    item.microbrandCover ===
-                                      value.microbrandCover &&
-                                    item.microbrand === value.microbrand
-                                );
-
-                                delete arr.microbrands[index];
-                                return arr;
-                              })
-                            }
-                          >
-                            <ImCross color="white" size={10} />
-                          </div>
-                        </div>
-                      );
-                    }
-                  )}
+                        );
+                      }
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="relative w-full h-fit flex justify-end items-center">
                 <div

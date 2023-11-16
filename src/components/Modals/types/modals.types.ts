@@ -29,18 +29,35 @@ export type MapProps = {
 
 export type DisplaySearchProps = {
   dispatch: Dispatch<AnyAction>;
+  galleryLoading: boolean
   gallery:
     | {
-        collected: Creation[];
-        created: Creation[];
+        collected:  {
+          collectionId: string;
+          images: string[];
+          title: string;
+        }[];
+        created:  {
+          collectionId: string;
+          images: string[];
+          title: string;
+        }[];
       }
     | undefined;
   sortType: SortType;
   itemSearch: string;
   setItemSearch: (e: SetStateAction<string>) => void;
-  sortedGallery: Creation[];
+  sortedGallery:  {
+    collectionId: string;
+    images: string[];
+    title: string;
+  }[] | undefined;
   selectedItem: Creation | undefined;
-  handleItemSelect: (item: Creation, type: SortType, value: number) => void;
+  handleItemSelect: (item:  {
+    collectionId: string;
+    images: string[];
+    title: string;
+  }, type: SortType, value: number) => void;
   numberIndex: number;
 };
 

@@ -75,9 +75,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   const isDesigner = useSelector(
     (state: RootState) => state.app.isDesignerReducer.value
   );
-  const gallery = useSelector(
-    (state: RootState) => state.app.galleryItemsReducer.items
-  );
   const screenDisplay = useSelector(
     (state: RootState) => state.app.screenDisplayReducer.value
   );
@@ -91,8 +88,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     (state: RootState) => state.app.searchItemsReducer
   );
 
-  const { profileLoading, getProfileData, sortType, setSortType, profile } =
-    useAutograph();
+  const { profileLoading, getProfileData, profile } = useAutograph();
   const { handleShuffleSearch } = useSearch(
     filtersOpen,
     lensConnected,
@@ -172,10 +168,12 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     getMoreGallery,
     openInteractions,
     setOpenInteractions,
+    sortType,
+    setSortType,
+    gallery,
   } = useGallery(
     lensConnected,
     profileDisplay,
-    gallery,
     dispatch,
     publicClient,
     address,

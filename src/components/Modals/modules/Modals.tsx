@@ -58,9 +58,6 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     (state: RootState) => state.app.lensConnectedReducer?.profile
   );
   const indexer = useSelector((state: RootState) => state.app.indexerReducer);
-  const galleryItems = useSelector(
-    (state: RootState) => state.app.galleryItemsReducer.items
-  );
   const reportReason = useSelector(
     (state: RootState) => state.app.reportPubReducer
   );
@@ -120,7 +117,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     setItemSearch,
     selectedItem,
     sortedGallery,
-  } = useDisplaySearch(profileDisplay, dispatch);
+    gallery,
+    galleryLoading,
+  } = useDisplaySearch(profileDisplay, dispatch, address, displaySearch?.value);
   const {
     dataLoading,
     reactors,
@@ -247,7 +246,8 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
         <DisplaySearch
           dispatch={dispatch}
           sortType={displaySearch?.type!}
-          gallery={galleryItems}
+          gallery={gallery}
+          galleryLoading={galleryLoading}
           handleItemSelect={handleItemSelect}
           selectedItem={selectedItem}
           setItemSearch={setItemSearch}
