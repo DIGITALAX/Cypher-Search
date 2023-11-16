@@ -122,7 +122,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setSearchCollection,
   deleteDrop,
   editDrop,
-  editCollection,
   deleteCollection,
   allCollections,
 }): JSX.Element => {
@@ -137,7 +136,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           editDrop={editDrop}
           deleteDrop={deleteDrop}
           dispatch={dispatch}
-          editCollection={editCollection}
           deleteCollection={deleteCollection}
           searchCollection={searchCollection}
           setSearchCollection={setSearchCollection}

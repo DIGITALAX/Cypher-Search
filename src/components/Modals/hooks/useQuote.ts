@@ -123,7 +123,7 @@ const useQuote = (
 
       await lensQuote(
         postBox?.quote?.id,
-        contentURI!,
+        contentURI?.string!,
         dispatch,
         [
           {

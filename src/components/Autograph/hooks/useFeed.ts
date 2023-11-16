@@ -165,7 +165,7 @@ const useFeed = (
 
       await lensComment(
         id,
-        contentURI!,
+        contentURI?.string!,
         dispatch,
         [
           {

@@ -125,7 +125,6 @@ const Web: FunctionComponent<WebProps> = ({
   setSearchCollection,
   editDrop,
   deleteDrop,
-  editCollection,
   deleteCollection,
 }): JSX.Element => {
   return (
@@ -221,7 +220,6 @@ const Web: FunctionComponent<WebProps> = ({
           createDropLoading={createDropLoading}
           dropsLoading={dropsLoading}
           allDrops={allDrops}
-          editCollection={editCollection}
           deleteCollection={deleteCollection}
           conversations={conversations}
           messages={messages}

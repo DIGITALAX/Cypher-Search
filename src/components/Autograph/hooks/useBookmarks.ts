@@ -158,7 +158,7 @@ const useBookmarks = (
 
       await lensComment(
         id,
-        contentURI!,
+        contentURI?.string!,
         dispatch,
         [
           {

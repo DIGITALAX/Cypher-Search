@@ -62,7 +62,7 @@ const usePost = (
       });
 
       await lensPost(
-        contentURI!,
+        contentURI?.string!,
         dispatch,
         [
           {
