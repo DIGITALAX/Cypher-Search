@@ -82,41 +82,60 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           next={getMoreGallery}
           className="w-full h-fit items-start justify-between flex flex-row flex-wrap gap-8"
         >
-          {Array.from({ length: 20 })?.map(
-            (item: CreationType, index: number) => {
-              return (
-                <Creation
-                  dispatch={dispatch}
-                  cartItems={cartItems}
-                  key={index}
-                  followProfile={followProfile}
-                  unfollowProfile={unfollowProfile}
-                  followLoading={followLoading}
-                  profileHovers={profileHovers}
-                  setProfileHovers={setProfileHovers}
-                  
-                  mirror={mirror}
-                  like={like}
-                  openMirrorChoice={openMirrorChoice}
-                  setOpenMirrorChoice={setOpenMirrorChoice}
-                  interactionsLoading={interactionsLoading?.[index]}
-                  router={router}
-                  item={item}
-                  index={index}
-                  created={
-                    gallery?.created?.find(
-                      (value) => item.pubId === value.pubId
-                    )
-                      ? true
-                      : false
-                  }
-                  openInteractions={openInteractions}
-                  setOpenInteractions={setOpenInteractions}
-                  
-                />
-              );
-            }
-          )}
+          {
+            // selectedOption === 'NEWEST'
+            // ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => Number( b.blockTimestamp) - Number(a.blockTimestamp))
+            // : selectedOption === 'OLDEST'
+            // ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => Number(a.blockTimestamp )-Number( b.blockTimestamp))
+            // : selectedOption === 'CREATED'
+            // ? [...(gallery?.created || []), ...(gallery?.collected || [])]
+            // : selectedOption === 'COLLECTED'
+            // ? [...(gallery?.collected || []), ...(gallery?.created || [])] :
+            // selectedOption === "PRINT TYPE" ? Object.values(
+            //   [...(gallery?.collected || []), ...(gallery?.created || [])].reduce((acc: Record<string, any>, item) => {
+            //     const printType = item.printType || '6';
+            //     acc[printType] = acc[printType] || [];
+            //     acc[printType].push(item);
+            //     return acc;
+            //   }, {})
+            // ).flat()
+            //  : selectedOption === "PRICE LOWEST" ?
+            // [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => (Number(a.prices?.[0]) || 0) - (Number(b.prices?.[0]) || 0)) : [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => (Number(b.prices?.[0]) || 0) - (Number(a.prices?.[0]) || 0))
+
+            Array.from({ length: 20 })?.map(
+              (item: CreationType, index: number) => {
+                return (
+                  <Creation
+                    dispatch={dispatch}
+                    cartItems={cartItems}
+                    key={index}
+                    followProfile={followProfile}
+                    unfollowProfile={unfollowProfile}
+                    followLoading={followLoading}
+                    profileHovers={profileHovers}
+                    setProfileHovers={setProfileHovers}
+                    mirror={mirror}
+                    like={like}
+                    openMirrorChoice={openMirrorChoice}
+                    setOpenMirrorChoice={setOpenMirrorChoice}
+                    interactionsLoading={interactionsLoading?.[index]}
+                    router={router}
+                    item={item}
+                    index={index}
+                    created={
+                      gallery?.created?.find(
+                        (value) => item.pubId === value.pubId
+                      )
+                        ? true
+                        : false
+                    }
+                    openInteractions={openInteractions}
+                    setOpenInteractions={setOpenInteractions}
+                  />
+                );
+              }
+            )
+          }
         </InfiniteScroll>
       </div>
       <div className="relative flex-grow flex items-end justify-center w-full h-[55rem]">

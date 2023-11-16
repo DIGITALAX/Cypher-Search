@@ -35,6 +35,7 @@ const COLLECTIONS = `
       colors
       sizes
       origin
+      blockTimestamp
     }
   }
 `;

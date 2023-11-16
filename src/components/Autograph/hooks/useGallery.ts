@@ -391,19 +391,6 @@ const useGallery = (
     });
   };
 
-  const filterSort = () => {
-    switch (sortType) {
-      case SortType.Community:
-        break;
-
-      case SortType.Private:
-        break;
-
-      case SortType.Public:
-        break;
-    }
-  };
-
   useEffect(() => {
     if (
       gallery?.collected &&
@@ -462,10 +449,6 @@ const useGallery = (
       );
     }
   }, [gallery?.collected?.length, gallery?.created?.length]);
-
-  useEffect(() => {
-    filterSort();
-  }, [sortType]);
 
   return {
     interactionsGalleryLoading,
