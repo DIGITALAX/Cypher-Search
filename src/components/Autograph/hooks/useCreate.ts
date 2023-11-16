@@ -7,8 +7,15 @@ import {
   useState,
 } from "react";
 import { CollectionDetails, ScreenDisplay } from "../types/autograph.types";
+import { erc721OwnershipCondition } from "@lens-protocol/metadata";
 import lensPost from "../../../../lib/helpers/api/postChain";
-import { PublicClient, createWalletClient, custom } from "viem";
+import {
+  Address,
+  PublicClient,
+  WalletClient,
+  createWalletClient,
+  custom,
+} from "viem";
 import { AnyAction, Dispatch } from "redux";
 import { polygon } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
@@ -22,7 +29,7 @@ import WaveSurfer from "wavesurfer.js";
 import {
   CHROMADIN_OPEN_ACTION,
   COLLECTION_CREATOR,
-  INFURA_GATEWAY,
+  NFT_CREATOR_ADDRESS,
   ZERO_ADDRESS,
 } from "../../../../lib/constants";
 import { ethers } from "ethers";
@@ -31,6 +38,14 @@ import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { getCollections } from "../../../../graphql/subgraph/queries/getCollections";
+import lensHide from "../../../../lib/helpers/api/hidePost";
+import { LensClient, production } from "@lens-protocol/client/gated";
+import {
+  LitNodeClient,
+  checkAndSignAuthMessage,
+  encryptString,
+} from "@lit-protocol/lit-node-client";
+import { AccessControlConditions } from "@lit-protocol/types";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -46,8 +61,10 @@ const useCreate = (
     }>
   ) => void,
   screenDisplay: ScreenDisplay,
-  pageProfile: Profile | undefined
+  pageProfile: Profile | undefined,
+  client: LitNodeClient
 ) => {
+  const coder = new ethers.AbiCoder();
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);
   const [collectionLoading, setCollectingLoading] = useState<boolean>(false);
   const [allCollections, setAllCollections] = useState<Creation[]>([]);
@@ -131,7 +148,7 @@ const useCreate = (
     setCollectingLoading(false);
   };
 
-  const createCollection = async () => {
+  const createCollection = async (edit?: boolean) => {
     if (
       collectionDetails?.drop?.trim() == "" ||
       collectionDetails.title?.trim() == "" ||
@@ -153,7 +170,6 @@ const useCreate = (
     setCreationLoading(true);
 
     try {
-      const coder = new ethers.AbiCoder();
       const postContentURI = await uploadPostContent(
         collectionDetails?.description,
         collectionSettings?.media !== "video" ? collectionDetails.images : [],
@@ -163,7 +179,8 @@ const useCreate = (
         collectionDetails?.title,
         collectionDetails?.tags
           ?.split(/,\s*|\s+/)
-          ?.filter((tag) => tag.trim() !== "")
+          ?.filter((tag) => tag.trim() !== ""),
+        collectionDetails?.visibility === "private" ? true : false
       );
 
       const communityIds = collectionDetails?.communities
@@ -176,10 +193,39 @@ const useCreate = (
         transport: custom((window as any).ethereum),
       });
 
-      const contentURI = await getURI();
+      const contentURI = await getURI(
+        collectionDetails?.visibility === "private" ? true : false
+      );
+
+      if (edit) {
+        await lensHide(
+          `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
+            collectionDetails?.pubId
+          )?.toString(16)}`,
+          dispatch
+        );
+        const { request } = await publicClient.simulateContract({
+          address: COLLECTION_CREATOR,
+          abi: CollectionCreatorAbi,
+          functionName: "removeCollection",
+          chain: polygon,
+          args: [Number(collectionDetails?.collectionId)],
+          account: address,
+        });
+        const res = await clientWallet.writeContract(request);
+        await publicClient.waitForTransactionReceipt({ hash: res });
+      }
+
+      let uri: string = postContentURI?.string!;
+      if (collectionDetails?.visibility === "private") {
+        uri = (await handleEncrypt(
+          clientWallet,
+          postContentURI?.object!
+        )) as string;
+      }
 
       await lensPost(
-        postContentURI!,
+        uri,
         dispatch,
         [
           {
@@ -187,7 +233,7 @@ const useCreate = (
               address: CHROMADIN_OPEN_ACTION,
               data: coder.encode(
                 [
-                  "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, uint256 amount, uint256 dropId, bool unlimited, address creatorAddress)",
+                  "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, address creatorAddress, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
                 ],
                 [
                   {
@@ -196,10 +242,14 @@ const useCreate = (
                     acceptedTokens: collectionDetails?.acceptedTokens,
                     uri: contentURI,
                     fulfiller: ZERO_ADDRESS,
+                    creatorAddress: address,
                     amount: Number(collectionDetails?.amount),
                     dropId: Number(collectionDetails?.drop),
                     unlimited: false,
-                    creatorAddress: address,
+                    encrypted:
+                      collectionDetails?.visibility === "private"
+                        ? true
+                        : false,
                   },
                 ]
               ),
@@ -224,59 +274,9 @@ const useCreate = (
         true
       );
 
-      await cleanCollection("created", data?.publications?.items?.[0]?.id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    setCreationLoading(false);
-  };
-
-  const editCollection = async () => {
-    setCreationLoading(true);
-    try {
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
-      });
-      const communityIds = collectionDetails?.communities
-        ?.split(/,\s*|\s+/)
-        ?.filter((com) => com.trim() !== "")
-        ?.map((item) => Number(item[2]));
-
-      const contentURI = await getURI();
-
-      const { request } = await publicClient.simulateContract({
-        address: COLLECTION_CREATOR,
-        abi: CollectionCreatorAbi,
-        functionName: "updateCollection",
-        chain: polygon,
-        args: [
-          Number(collectionDetails?.collectionId),
-          {
-            acceptedTokens: collectionDetails?.acceptedTokens,
-            prices: [`${Number(collectionDetails?.price) * 10 ** 18}`],
-            communityIds,
-            uri: contentURI,
-            fulfiller: ZERO_ADDRESS,
-            creator: address,
-            printType: 6,
-            origin: 1,
-            amount: Number(collectionDetails?.amount),
-            pubId: Number(collectionDetails?.pubId),
-            profileId: Number(collectionDetails?.profileId),
-            dropId: Number(collectionDetails?.drop),
-            unlimited: false,
-          },
-        ],
-        account: address,
-      });
-      const res = await clientWallet.writeContract(request);
-      await publicClient.waitForTransactionReceipt({ hash: res });
       await cleanCollection(
-        "updated",
-        `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
-          collectionDetails?.pubId
-        )?.toString(16)}`
+        edit ? "updated" : "created",
+        data?.publications?.items?.[0]?.id
       );
     } catch (err: any) {
       console.error(err.message);
@@ -291,10 +291,18 @@ const useCreate = (
         chain: polygon,
         transport: custom((window as any).ethereum),
       });
+
+      await lensHide(
+        `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
+          collectionDetails?.pubId
+        )?.toString(16)}`,
+        dispatch
+      );
+
       const { request } = await publicClient.simulateContract({
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
-        functionName: "removeDrop",
+        functionName: "removeCollection",
         chain: polygon,
         args: [Number(collectionDetails?.collectionId)],
         account: address,
@@ -470,7 +478,7 @@ const useCreate = (
     }
   };
 
-  const getURI = async (): Promise<string | undefined> => {
+  const getURI = async (encrypted: boolean): Promise<string | undefined> => {
     try {
       const {
         price,
@@ -481,30 +489,130 @@ const useCreate = (
         pubId,
         ...restOfCollectionDetails
       } = collectionDetails;
+
+      let toHash: Object = {
+        ...restOfCollectionDetails,
+        tags: collectionDetails?.tags
+          ?.split(/,\s*|\s+/)
+          ?.filter((tag) => tag.trim() !== ""),
+        access: collectionDetails?.access
+          ?.split(/,\s*|\s+/)
+          ?.filter((acc) => acc.trim() !== ""),
+        communities: collectionDetails?.communities
+          ?.split(/,\s*|\s+/)
+          ?.filter((com) => com.trim() !== ""),
+        mediaTypes: [collectionSettings?.media],
+        profileHandle:
+          lensConnected?.handle?.suggestedFormatted?.localName?.split("@")?.[1],
+        microbrand: collectionDetails?.microbrand?.microbrand,
+        microbrandCover: collectionDetails?.microbrand?.microbrandCover,
+      };
+
+      if (encrypted) {
+        const authSig = await checkAndSignAuthMessage({
+          chain: "polygon",
+        });
+
+        const accessControlConditions = [
+          {
+            contractAddress: "",
+            standardContractType: "",
+            chain: "polygon",
+            method: "",
+            parameters: [":userAddress"],
+            returnValueTest: {
+              comparator: "=",
+              value: address,
+            },
+          },
+          {
+            operator: "or",
+          },
+          {
+            contractAddress: NFT_CREATOR_ADDRESS,
+            standardContractType: "ERC721",
+            chain: 137,
+            method: "balanceOf",
+            parameters: [":userAddress"],
+            returnValueTest: {
+              comparator: ">",
+              value: "0",
+            },
+          },
+        ];
+        const { ciphertext, dataToEncryptHash } = await encryptString(
+          {
+            accessControlConditions:
+              accessControlConditions as AccessControlConditions,
+            authSig,
+            chain: "polygon",
+            dataToEncrypt: JSON.stringify(toHash),
+          },
+          client!
+        );
+
+        toHash = {
+          ciphertext,
+          dataToEncryptHash,
+          accessControlConditions,
+        };
+      }
+
       const response = await fetch("/api/ipfs", {
         method: "POST",
-        body: JSON.stringify({
-          ...restOfCollectionDetails,
-          tags: collectionDetails?.tags
-            ?.split(/,\s*|\s+/)
-            ?.filter((tag) => tag.trim() !== ""),
-          access: collectionDetails?.access
-            ?.split(/,\s*|\s+/)
-            ?.filter((acc) => acc.trim() !== ""),
-          communities: collectionDetails?.communities
-            ?.split(/,\s*|\s+/)
-            ?.filter((com) => com.trim() !== ""),
-          mediaTypes: [collectionSettings?.media],
-          profileHandle:
-            lensConnected?.handle?.suggestedFormatted?.localName?.split(
-              "@"
-            )?.[1],
-          microbrand: collectionDetails?.microbrand?.microbrand,
-          microbrandCover: collectionDetails?.microbrand?.microbrandCover,
-        }),
+        body: JSON.stringify(toHash),
       });
       const res = await response.json();
       return "ipfs://" + res?.cid;
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const handleEncrypt = async (
+    clientWallet: WalletClient,
+    postContentURI: Object
+  ): Promise<string | undefined> => {
+    try {
+      const client = new LensClient({
+        environment: production,
+
+        authentication: {
+          domain: "cyphersearch",
+          uri: "https://cyphersearch.digitalax.xyz",
+        },
+        signer: {
+          ...clientWallet,
+          getAddress: async (): Promise<Address> => {
+            const addresses = await clientWallet.getAddresses();
+            return addresses?.[0] ?? "default-address-or-null";
+          },
+
+          signMessage: async (message: string): Promise<string> => {
+            const account = (await clientWallet.getAddresses())?.[0];
+            if (!account) {
+              throw new Error("No account found for signing");
+            }
+            return clientWallet.signMessage({ account, message });
+          },
+        },
+      });
+
+      const result = await client.gated.encryptPublicationMetadata(
+        postContentURI as any,
+        erc721OwnershipCondition({
+          contract: { address: NFT_CREATOR_ADDRESS, chainId: 137 },
+        })
+      );
+
+      if (!result.isFailure()) {
+        const response = await fetch("/api/ipfs", {
+          method: "POST",
+          body: result?.value,
+        });
+        const responseJSON = await response.json();
+        return responseJSON?.cid;
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -532,7 +640,6 @@ const useCreate = (
     collectionSettings,
     handleMedia,
     handlePlayPause,
-    editCollection,
     deleteCollection,
     allCollections,
     collectionLoading,

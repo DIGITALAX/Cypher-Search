@@ -36,7 +36,6 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   setSearchCollection,
   editDrop,
   deleteDrop,
-  editCollection,
   deleteCollection,
   allCollections,
 }): JSX.Element => {
@@ -173,35 +172,39 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     Choose Origin
                   </div>
                   <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
-                    {["chromadin", "coinop", "legend", "the dial"]?.map(
-                      (item: string, index: number) => {
-                        return (
-                          <div
-                            key={index}
-                            className={`relative w-40 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
-                              item === collectionSettings?.origin
-                                ? "border-2"
-                                : "border"
-                            } ${
-                              index !== 0
-                                ? "opacity-50"
-                                : "cursor-pointer active:scale-95"
-                            }`}
-                            onClick={() =>
-                              index === 0 &&
-                              setCollectionSettings((prev) => ({
-                                ...prev,
-                                origin: item,
-                              }))
-                            }
-                          >
-                            <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                              {item}
-                            </div>
+                    {[
+                      "chromadin",
+                      "coinop",
+                      "autograph quarterly",
+                      "legend",
+                      "the dial",
+                    ]?.map((item: string, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
+                            item === collectionSettings?.origin
+                              ? "border-2"
+                              : "border"
+                          } ${
+                            index !== 0
+                              ? "opacity-50"
+                              : "cursor-pointer active:scale-95"
+                          }`}
+                          onClick={() =>
+                            index === 0 &&
+                            setCollectionSettings((prev) => ({
+                              ...prev,
+                              origin: item,
+                            }))
+                          }
+                        >
+                          <div className="relative w-fit h-fit items-center justify-center flex top-1">
+                            {item}
                           </div>
-                        );
-                      }
-                    )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
@@ -214,7 +217,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         return (
                           <div
                             key={index}
-                            className={`relative w-40 h-8 bg-[#DAB275] border-olor flex items-center cursor-pointer active:scale-95 justify-center text-white font-bit text-sm ${
+                            className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center cursor-pointer active:scale-95 justify-center text-white font-bit text-sm ${
                               collectionSettings?.media === item
                                 ? "border-2"
                                 : "border"
@@ -383,7 +386,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               collectionDetails?.collectionId == "") ||
               (createCase === "drop" && dropDetails?.dropId == "")) && (
               <div
-                className={`relative w-40 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
+                className={`relative w-44 h-8 bg-piloto border-white border flex items-center justify-center text-white font-aust text-sm ${
                   (createCase === "collection"
                     ? !creationLoading
                     : !createDropLoading) && "cursor-pointer active:scale-95"
@@ -431,7 +434,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                       ? !creationLoading
                       : !createDropLoading) &&
                     (createCase === "collection"
-                      ? editCollection()
+                      ? createCollection(true)
                       : editDrop())
                   }
                 >

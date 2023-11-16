@@ -235,7 +235,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     collectionSettings,
     handleMedia,
     handlePlayPause,
-    editCollection,
     deleteCollection,
     allCollections,
     collectionLoading
@@ -513,7 +512,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 setSearchedProfiles={setSearchedProfiles}
                 setUserSearch={setUserSearch}
                 router={router}
-                editCollection={editCollection}
                 deleteCollection={deleteCollection}
                 conversationsLoading={conversationsLoading}
                 client={xmtpClient}

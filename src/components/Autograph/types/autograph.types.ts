@@ -24,7 +24,6 @@ export type WebProps = {
   router: NextRouter;
   editDrop: () => Promise<void>;
   deleteDrop: () => Promise<void>;
-  editCollection: () => Promise<void>;
   deleteCollection: () => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
@@ -119,7 +118,7 @@ export type WebProps = {
       | undefined
     >
   ) => void;
-  createCollection: () => Promise<void>;
+  createCollection: (edit?: boolean) => Promise<void>;
   createDrop: () => Promise<void>;
   profile: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
@@ -361,7 +360,6 @@ export type GalleryScreenProps = {
     dropId: string;
   };
   allCollections: Creation[];
-  editCollection: () => Promise<void>;
   deleteCollection: () => Promise<void>;
   editDrop: () => Promise<void>;
   deleteDrop: () => Promise<void>;
@@ -391,7 +389,7 @@ export type GalleryScreenProps = {
   createCase: string | undefined;
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
-  createCollection: () => Promise<void>;
+  createCollection: (edit?: boolean) => Promise<void>;
   createDrop: () => Promise<void>;
   router: NextRouter;
   collectionSettings: {
@@ -430,7 +428,6 @@ export type ScreenSwitchProps = {
   setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
   allDrops: Drop[];
   allCollections: Creation[];
-  editCollection: () => Promise<void>;
   deleteCollection: () => Promise<void>;
   editDrop: () => Promise<void>;
   deleteDrop: () => Promise<void>;
@@ -522,7 +519,7 @@ export type ScreenSwitchProps = {
   createCase: string | undefined;
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
-  createCollection: () => Promise<void>;
+  createCollection: (edit?: boolean) => Promise<void>;
   createDrop: () => Promise<void>;
   screenDisplay: ScreenDisplay;
   bookmarks: (Post | Mirror | Comment | Quote)[];

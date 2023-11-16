@@ -11,8 +11,9 @@ const uploadPostContent = async (
   audio: string[],
   gifs: string[],
   title?: string,
-  tags?: string[]
-): Promise<string | undefined> => {
+  tags?: string[],
+  skipUpload?: boolean
+): Promise<{ string: string; object: Object } | undefined> => {
   let $schema: string,
     mainContentFocus: PublicationMetadataMainFocusType,
     value: object = {};
@@ -83,9 +84,32 @@ const uploadPostContent = async (
   }
 
   try {
-    const response = await fetch("/api/ipfs", {
-      method: "POST",
-      body: JSON.stringify({
+    let cid: string = "";
+    if (!skipUpload) {
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: JSON.stringify({
+          $schema,
+          lens: {
+            mainContentFocus,
+            title: title ? title : contentText ? contentText.slice(0, 20) : "",
+            content: contentText ? contentText : "",
+            appId: "cyphersearch",
+            ...value,
+            id: uuidv4(),
+            hideFromFeed: false,
+            locale: "en",
+            tags: [...(tags || []), "cypher", "cyphersearch"],
+          },
+        }),
+      });
+      let responseJSON = await response.json();
+      cid = responseJSON?.cid;
+    }
+
+    return {
+      string: "ipfs://" + cid,
+      object: {
         $schema,
         lens: {
           mainContentFocus,
@@ -98,12 +122,8 @@ const uploadPostContent = async (
           locale: "en",
           tags: [...(tags || []), "cypher", "cyphersearch"],
         },
-      }),
-    });
-    if (response.status === 200) {
-      let responseJSON = await response.json();
-      return "ipfs://" + responseJSON.cid;
-    }
+      },
+    };
   } catch (err: any) {
     console.error(err.message);
   }
