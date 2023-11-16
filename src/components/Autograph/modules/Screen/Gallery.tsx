@@ -38,6 +38,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   deleteDrop,
   deleteCollection,
   allCollections,
+  collectionLoading,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
@@ -48,8 +49,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
         >
           <div
             className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center min-h-[70vh] max-h-[70vh] overflow-y-scroll ${
-              (!createCase && allCollections?.length < 0) ||
-              (createCase === "drop" && allDrops?.length > 0)
+              (!createCase &&
+                (allCollections?.length < 0 || collectionLoading)) ||
+              (createCase === "drop" && (allDrops?.length > 0 || dropsLoading))
                 ? "items-start"
                 : "items-center"
             }`}
@@ -58,6 +60,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               setCreateCase={setCreateCase}
               dropDetails={dropDetails}
               dropsLoading={dropsLoading}
+              collectionLoading={collectionLoading}
               allDrops={allDrops}
               setDropDetails={setDropDetails}
               handlePlayPause={handlePlayPause}

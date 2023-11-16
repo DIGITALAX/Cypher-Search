@@ -27,6 +27,7 @@ export type WebProps = {
   deleteCollection: () => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
+  collectionLoading: boolean;
   allCollections: Creation[];
   filterConstants: FilterValues | undefined;
   setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
@@ -189,12 +190,6 @@ export type WebProps = {
   displayLoading: boolean;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined;
   display: Display | undefined;
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   coverImage: string | undefined;
@@ -374,6 +369,7 @@ export type GalleryScreenProps = {
     }>
   ) => void;
   dropsLoading: boolean;
+  collectionLoading: boolean;
   allDrops: Drop[];
   createDropLoading: boolean;
   dispatch: Dispatch<AnyAction>;
@@ -423,6 +419,7 @@ export type GalleryScreenProps = {
 
 export type ScreenSwitchProps = {
   dropsLoading: boolean;
+  collectionLoading: boolean;
   searchCollection: string;
   setSearchCollection: (e: SetStateAction<string>) => void;
   setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
@@ -1282,6 +1279,7 @@ export type SwitchCreateProps = {
   };
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
   dropsLoading: boolean;
+  collectionLoading: boolean;
   allDrops: Drop[];
   allCollections: Creation[];
   setDropDetails: (

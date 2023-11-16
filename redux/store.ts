@@ -5,7 +5,9 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
 import availableCurrenciesReducer from "./reducers/availableCurrenciesSlice";
+import profileDisplayReducer from "./reducers/profileDisplaySlice";
 import postSuccessReducer from "./reducers/postSuccessSlice";
+import galleryItemsReducer from "./reducers/galleryItemsSlice";
 import isDesignerReducer from "./reducers/isDesignerSlice";
 import oracleDataReducer from "./reducers/oracleDataSlice";
 import successCheckoutReducer from "./reducers/successCheckoutSlice";
@@ -22,14 +24,10 @@ import layoutSwitchReducer from "./reducers/layoutSwitchSlice";
 import reactBoxReducer from "./reducers/reactBoxSlice";
 import interactionsCountReducer from "./reducers/interactionsCountSlice";
 import indexerReducer from "./reducers/indexerSlice";
-import profileDisplayReducer from "./reducers/profileDisplaySlice";
 import displaySearchBoxReducer from "./reducers/displaySearchBoxSlice";
 import searchItemsReducer from "./reducers/searchItemsSlice";
 import filterConstantsReducer from "./reducers/filterConstantsSlice";
 import interactErrorReducer from "./reducers/interactErrorSlice";
-import autographProfileReducer from "./reducers/autographProfileSlice";
-import galleryItemsReducer from "./reducers/galleryItemsSlice";
-import autographFeedReducer from "./reducers/autographFeedSlice";
 import screenDisplayReducer from "./reducers/screenDisplaySlice";
 import followCollectReducer from "./reducers/followCollectSlice";
 
@@ -51,11 +49,7 @@ const reducer = combineReducers({
   searchItemsReducer,
   filterConstantsReducer,
   interactErrorReducer,
-  autographProfileReducer,
   displaySearchBoxReducer,
-  galleryItemsReducer,
-  profileDisplayReducer,
-  autographFeedReducer,
   indexerReducer,
   postBoxReducer,
   screenDisplayReducer,
@@ -66,6 +60,8 @@ const reducer = combineReducers({
   oracleDataReducer,
   isDesignerReducer,
   postSuccessReducer,
+  galleryItemsReducer,
+  profileDisplayReducer,
 });
 
 export const store = configureStore({

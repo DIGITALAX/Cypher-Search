@@ -2,10 +2,9 @@ import { useState } from "react";
 import getProfile from "../../../../graphql/lens/queries/profile";
 import { SortType } from "../types/autograph.types";
 import { Profile } from "../../../../graphql/generated";
-import { setAutographProfile } from "../../../../redux/reducers/autographProfileSlice";
-import { Dispatch } from "redux";
 
-const useAutograph = (dispatch: Dispatch) => {
+const useAutograph = () => {
+  const [profile, setProfile] = useState<Profile | undefined>();
   const [profileLoading, setProfileLoading] = useState<boolean>(false);
   const [sortType, setSortType] = useState<SortType>(SortType.Public);
 
@@ -21,7 +20,7 @@ const useAutograph = (dispatch: Dispatch) => {
         setProfileLoading(false);
         return;
       }
-      dispatch(setAutographProfile(data?.profile as Profile));
+      setProfile(data?.profile as Profile);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -33,6 +32,7 @@ const useAutograph = (dispatch: Dispatch) => {
     getProfileData,
     sortType,
     setSortType,
+    profile,
   };
 };
 

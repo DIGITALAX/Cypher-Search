@@ -126,6 +126,7 @@ const Web: FunctionComponent<WebProps> = ({
   editDrop,
   deleteDrop,
   deleteCollection,
+  collectionLoading
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
@@ -219,6 +220,7 @@ const Web: FunctionComponent<WebProps> = ({
           handleConversations={handleConversations}
           createDropLoading={createDropLoading}
           dropsLoading={dropsLoading}
+          collectionLoading={collectionLoading}
           allDrops={allDrops}
           deleteCollection={deleteCollection}
           conversations={conversations}

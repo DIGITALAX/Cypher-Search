@@ -66,7 +66,7 @@ const useCreate = (
 ) => {
   const coder = new ethers.AbiCoder();
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);
-  const [collectionLoading, setCollectingLoading] = useState<boolean>(false);
+  const [collectionLoading, setCollectionLoading] = useState<boolean>(false);
   const [allCollections, setAllCollections] = useState<Creation[]>([]);
   const [collectionSettings, setCollectionSettings] = useState<{
     media: string;
@@ -121,7 +121,7 @@ const useCreate = (
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
 
   const getAllCollections = async () => {
-    setCollectingLoading(true);
+    setCollectionLoading(true);
     try {
       const data = await getCollections(address!);
       data?.data?.collectionCreateds?.map((collection: any) => ({
@@ -145,7 +145,7 @@ const useCreate = (
     } catch (err: any) {
       console.error(err.message);
     }
-    setCollectingLoading(false);
+    setCollectionLoading(false);
   };
 
   const createCollection = async (edit?: boolean) => {

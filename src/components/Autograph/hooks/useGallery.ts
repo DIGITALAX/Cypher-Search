@@ -10,6 +10,11 @@ import { polygon } from "viem/chains";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { Dispatch } from "redux";
+import { setGalleryItems } from "../../../../redux/reducers/galleryItemsSlice";
+import { getCollectionsPaginated } from "../../../../graphql/subgraph/queries/getCollections";
+import { getOrdersPaginated } from "../../../../graphql/subgraph/queries/getOrders";
+import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
+import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
 
 const useGallery = (
   lensConnected: Profile | undefined,
@@ -23,7 +28,8 @@ const useGallery = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  postSuccess: string | undefined
+  postSuccess: string | undefined,
+  pageProfile: Profile | undefined
 ) => {
   const [interactionsGalleryLoading, setInteractionsGalleryLoading] = useState<
     {
@@ -33,10 +39,16 @@ const useGallery = (
       hide: boolean;
     }[]
   >([]);
+  const [cursorInfo, setCursorInfo] = useState<{
+    collected: number;
+    created: number;
+  }>({
+    collected: 0,
+    created: 0,
+  });
   const [openMirrorGalleryChoice, setOpenMirrorGalleryChoice] = useState<
     boolean[]
   >([]);
-  const [activeGallery, setActiveGallery] = useState<Creation[]>([]);
   const [interactionsDisplayLoading, setInteractionsDisplayLoading] = useState<
     {
       like: boolean;
@@ -98,10 +110,53 @@ const useGallery = (
   const getGallery = async () => {
     setGalleryLoading(true);
     try {
-      // both those they've created and the orders that they've collected needs to be different from profile because is without owning??
+      const collectedData = await getOrdersPaginated(
+        pageProfile?.ownedBy?.address,
+        25,
+        cursorInfo.collected
+      );
+      const createdData = await getCollectionsPaginated(
+        pageProfile?.ownedBy?.address,
+        25,
+        cursorInfo.created
+      );
 
-      await getDisplayData();
-      setActiveGallery();
+      let collected: Creation[];
+
+      const collData = collectedData?.data?.orderCreateds?.map(
+        (item: { subOrderCollectionIds: string[] }) => {
+          item.subOrderCollectionIds?.map(async (item: string) => {
+            const res = await getOneCollection(item);
+            collected.push(res?.data?.collectionCreateds?.[0]);
+          });
+        }
+      );
+
+      collected = await Promise.all(collData);
+
+      const created =
+        (await handleCollectionProfilesAndPublications(
+          createdData?.data?.collectionCreateds,
+          lensConnected?.id
+        )) || [];
+      collected =
+        (await handleCollectionProfilesAndPublications(
+          collected,
+          lensConnected?.id
+        )) || [];
+
+      setCursorInfo({
+        collected: cursorInfo?.collected + 25,
+        created: cursorInfo?.created + 25,
+      });
+
+      await getDisplayData([...(created || []), ...(collected || [])]);
+      dispatch(
+        setGalleryItems({
+          collected,
+          created,
+        })
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -110,6 +165,60 @@ const useGallery = (
 
   const getMoreGallery = async () => {
     try {
+      let collected: Creation[] = [],
+        created: Creation[] = [];
+      if (
+        gallery?.collected &&
+        gallery?.collected?.length >= cursorInfo?.collected
+      ) {
+        const collectedData = await getOrdersPaginated(
+          pageProfile?.ownedBy?.address,
+          25,
+          cursorInfo.collected
+        );
+
+        const collData = collectedData?.data?.orderCreateds?.map(
+          (item: { subOrderCollectionIds: string[] }) => {
+            item.subOrderCollectionIds?.map(async (item: string) => {
+              const res = await getOneCollection(item);
+              collected.push(res?.data?.collectionCreateds?.[0]);
+            });
+          }
+        );
+
+        collected = await Promise.all(collData);
+
+        collected =
+          (await handleCollectionProfilesAndPublications(
+            collected,
+            lensConnected?.id
+          )) || [];
+      }
+
+      if (gallery?.created && gallery?.created?.length >= cursorInfo?.created) {
+        const createdData = await getCollectionsPaginated(
+          pageProfile?.ownedBy?.address,
+          25,
+          cursorInfo.created
+        );
+        created =
+          (await handleCollectionProfilesAndPublications(
+            createdData?.data?.collectionCreateds,
+            lensConnected?.id
+          )) || [];
+      }
+
+      setCursorInfo({
+        collected: cursorInfo?.collected + 25,
+        created: cursorInfo?.created + 25,
+      });
+
+      dispatch(
+        setGalleryItems({
+          collected,
+          created,
+        })
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -363,7 +472,6 @@ const useGallery = (
     getMoreGallery,
     openInteractions,
     setOpenInteractions,
-    activeGallery,
   };
 };
 

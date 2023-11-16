@@ -13,7 +13,6 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import getPublications from "../../../../graphql/lens/queries/publications";
-import { setAutographFeed } from "../../../../redux/reducers/autographFeedSlice";
 import { polygon } from "viem/chains";
 import { createWalletClient, custom } from "viem";
 import { PublicClient } from "wagmi";
@@ -26,7 +25,6 @@ import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSl
 const useFeed = (
   lensConnected: Profile | undefined,
   postCollectGif: PostCollectGifState,
-  profileFeed: (Post | Quote | Mirror)[],
   profile: Profile | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
@@ -37,6 +35,7 @@ const useFeed = (
     []
   );
   const [openMoreOptions, setOpenMoreOptions] = useState<boolean[]>([]);
+  const [profileFeed, setProfileFeed] = useState<(Post | Quote | Mirror)[]>([])
   const [hasMoreFeed, setHasMoreFeed] = useState<boolean>(false);
   const [feedLoading, setFeedLoading] = useState<boolean>(false);
   const [commentsFeedOpen, setCommentsFeedOpen] = useState<boolean[]>([]);
@@ -77,7 +76,7 @@ const useFeed = (
         },
         lensConnected?.id
       );
-      dispatch(setAutographFeed(data?.publications?.items as any));
+      setProfileFeed(data?.publications?.items as any);
       setFeedCursor(data?.publications?.pageInfo?.next);
       if (
         data?.publications?.items &&
@@ -110,12 +109,12 @@ const useFeed = (
         },
         lensConnected?.id
       );
-      dispatch(
-        setAutographFeed([
-          ...profileFeed,
-          ...((data?.publications?.items || []) as any),
-        ])
-      );
+
+      setProfileFeed([
+        ...profileFeed,
+        ...((data?.publications?.items || []) as any),
+      ]);
+
       setFeedCursor(data?.publications?.pageInfo?.next);
       if (
         data?.publications?.items &&
@@ -419,6 +418,7 @@ const useFeed = (
     setCommentsFeedOpen,
     commentContentLoading,
     setCommentContentLoading,
+    profileFeed
   };
 };
 

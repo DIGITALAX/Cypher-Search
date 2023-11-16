@@ -1,5 +1,4 @@
 import {
-  ChangeEvent,
   KeyboardEvent,
   MouseEvent,
   useEffect,
@@ -10,7 +9,6 @@ import {
   PLACEHOLDERS,
   TAGS,
   itemStringToNumber,
-  numberToItemTypeMap,
   printStringToNumber,
 } from "../../../../lib/constants";
 import {
@@ -21,7 +19,6 @@ import {
   Comment,
   Quote,
   Mirror,
-  PublicationType,
 } from "../../../../graphql/generated";
 import {
   getTextFilterSearch,
@@ -49,7 +46,6 @@ import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCo
 import buildQuery from "../../../../lib/helpers/buildQuery";
 import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
 import { Dispatch } from "redux";
-import getPublications from "../../../../graphql/lens/queries/publications";
 import { getFilters } from "../../../../graphql/subgraph/queries/getFilters";
 import {
   aggregateMicrobrands,
@@ -57,6 +53,7 @@ import {
   aggregateUniqueValues,
 } from "../../../../lib/helpers/aggregators";
 import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
+import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -117,7 +114,8 @@ const useSearch = (
 
           if (searchItems?.data.cyphersearch?.length > 0)
             collections = await handleCollectionProfilesAndPublications(
-              searchItems?.data.cyphersearch
+              searchItems?.data.cyphersearch,
+              lensConnected
             );
         } else {
           collections = await filterSearch(0);
@@ -259,7 +257,8 @@ const useSearch = (
 
       if (collections?.length > 0)
         collections = await handleCollectionProfilesAndPublications(
-          collections
+          collections,
+          lensConnected
         );
 
       return collections || [];
@@ -289,7 +288,8 @@ const useSearch = (
           );
           if (searchItems?.data.cyphersearch?.length > 0)
             collections = await handleCollectionProfilesAndPublications(
-              searchItems?.data.cyphersearch
+              searchItems?.data.cyphersearch,
+              lensConnected
             );
         }
 
@@ -479,63 +479,6 @@ const useSearch = (
       token: false,
       fulfiller: false,
     });
-  };
-
-  const handleCollectionProfilesAndPublications = async (
-    collections: Creation[]
-  ): Promise<Creation[] | undefined> => {
-    try {
-      const { data } = await getPublications(
-        {
-          where: {
-            publicationIds: collections.map(
-              (item) =>
-                `${numberToItemTypeMap[Number(item?.origin)]}/${
-                  "0x" + Number(item?.pubId)?.toString(16)
-                }-${"0x" + Number(item?.profileId)?.toString(16)}`
-            ),
-            publicationTypes: [PublicationType.Post],
-          },
-        },
-        lensConnected?.id
-      );
-
-      const newCollections: Creation[] = collections.map(
-        (collection: Creation) => ({
-          ...collection,
-          profile: (
-            data?.publications?.items.find(
-              (item) => (item as Post).by.id === collection.profileId
-            ) as Post
-          ).by,
-          publication: data?.publications?.items.find(
-            (item) => item.id === collection.pubId
-          ),
-          sizes: (collection?.sizes as any)
-            ?.split(",")
-            .map((word: string) => word.trim()),
-          colors: (collection?.colors as any)
-            ?.split(",")
-            .map((word: string) => word.trim()),
-          mediaTypes: (collection?.mediaTypes as any)
-            ?.split(",")
-            .map((word: string) => word.trim()),
-          access: (collection?.access as any)
-            ?.split(",")
-            .map((word: string) => word.trim()),
-          communities: (collection?.communities as any)
-            ?.split(",")
-            .map((word: string) => word.trim()),
-          tags: (collection?.tags as any)
-            ?.split(",")
-            .map((word: string) => word.trim()),
-        })
-      ) as Creation[];
-
-      return newCollections;
-    } catch (err: any) {
-      console.error(err.message);
-    }
   };
 
   const getFilterValues = async (): Promise<

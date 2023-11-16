@@ -124,6 +124,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   editDrop,
   deleteCollection,
   allCollections,
+  collectionLoading,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -140,6 +141,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           searchCollection={searchCollection}
           setSearchCollection={setSearchCollection}
           dropsLoading={dropsLoading}
+          collectionLoading={collectionLoading}
           allDrops={allDrops}
           createDropLoading={createDropLoading}
           dropDetails={dropDetails}
