@@ -28,6 +28,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   dropDetails,
   setCreateCase,
   allCollections,
+  collectionLoading,
 }): JSX.Element => {
   switch (type) {
     case "collection":
@@ -64,7 +65,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
       );
 
     default:
-      return allCollections?.length > 0 ? (
+      return allCollections?.length > 0 || collectionLoading ? (
         <div
           className="relative w-4/5 h-full overflow-x-scroll flex justify-start items-start"
           id="prerollScroll"
@@ -73,125 +74,135 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
             <div
               className={`relative w-full h-fit flex flex-wrap gap-6 items-start justify-start`}
             >
-              {allCollections
-                ?.sort(() => Math.random() - 0.5)
-                .map((item: Creation, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className="relative w-60 h-60 rounded-sm p-px cursor-pointer"
-                      id="pfp"
-                      onClick={() => {
-                        setCreateCase("collection");
-                        setCollectionSettings((prev) => ({
-                          ...prev,
-                          origin: "chromadin",
-                          media: item?.audio
-                            ? "audio"
-                            : item?.video
-                            ? "video"
-                            : "static",
-                        }));
-                        setCollectionDetails({
-                          title: item?.title,
-                          profileId: item?.profileId,
-                          pubId: item?.pubId,
-                          description: item?.description,
-                          collectionId: item?.collectionId,
-                          price: item?.prices?.[0],
-                          acceptedTokens: item?.acceptedTokens,
-                          images: [
-                            {
-                              media: item?.images?.[0],
-                              type: item?.mediaTypes?.[0],
-                            },
-                          ],
-                          video: item?.video,
-                          audio: item?.audio,
-                          tags: item?.tags.join(", "),
-                          prompt: item?.prompt,
-                          amount: item?.amount,
-                          visibility: item?.visibility,
-                          sizes: item?.sizes,
-                          colors: item?.colors,
-                          profileHandle: item?.profileHandle,
-                          microbrand: {
-                            microbrand: item?.microbrand,
-                            microbrandCover: item?.microbrandCover,
-                          },
-                          access: item?.access?.join(", "),
-                          drop: item?.drop,
-                          communities: item?.communities?.join(", "),
-                        });
-                      }}
-                    >
-                      <div className="relative w-full h-full flex">
-                        {item?.audio === "audio" || item?.images?.[0] ? (
-                          item?.images?.[0] && (
-                            <Image
-                              layout="fill"
-                              src={`${INFURA_GATEWAY}/ipfs/${
-                                item?.images?.[0]?.split("ipfs://")?.[1]
-                              }`}
-                              objectFit="cover"
-                              draggable={false}
-                              className="relative rounded-sm w-full h-full flex"
-                            />
-                          )
-                        ) : (
-                          <video
-                            className="relative rounded-sm w-full h-full flex object-cover"
-                            id="itemCollection"
-                            draggable={false}
-                            controls={false}
-                            muted
-                            // autoPlay
-                            playsInline
-                            loop
-                            key={item?.video}
-                          >
-                            <source
-                              src={`${INFURA_GATEWAY}/ipfs/${
-                                item?.video?.split("ipfs://")?.[1]
-                              }`}
-                            />
-                          </video>
-                        )}
-                        {item?.audio && (
-                          <Waveform
-                            handlePlayPause={handlePlayPause}
-                            audio={item?.audio}
-                            type={"audio"}
-                            keyValue={item?.audio}
-                            video={item?.video}
-                          />
-                        )}
-                      </div>
-                      <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
+              {collectionLoading
+                ? Array.from({ length: 20 })?.map((_, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`relative w-40 h-40 rounded-sm p-px animate-pulse`}
+                        id="pfp"
+                      ></div>
+                    );
+                  })
+                : allCollections
+                    ?.sort(() => Math.random() - 0.5)
+                    .map((item: Creation, index: number) => {
+                      return (
                         <div
-                          className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
-                          title="Go to Collection"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(
-                              `/item/${
-                                numberToItemTypeMap[Number(item?.origin)]
-                              }/${Number(item?.profileId)?.toString(
-                                16
-                              )}-${Number(item?.pubId)?.toString(16)}`
-                            );
+                          key={index}
+                          className="relative w-40 h-40 rounded-sm p-px cursor-pointer"
+                          id="pfp"
+                          onClick={() => {
+                            setCreateCase("collection");
+                            setCollectionSettings((prev) => ({
+                              ...prev,
+                              origin: "chromadin",
+                              media: item?.audio
+                                ? "audio"
+                                : item?.video
+                                ? "video"
+                                : "static",
+                            }));
+                            setCollectionDetails({
+                              title: item?.title,
+                              profileId: item?.profileId,
+                              pubId: item?.pubId,
+                              description: item?.description,
+                              collectionId: item?.collectionId,
+                              price: item?.prices?.[0],
+                              acceptedTokens: item?.acceptedTokens,
+                              images: [
+                                {
+                                  media: item?.images?.[0],
+                                  type: item?.mediaTypes?.[0],
+                                },
+                              ],
+                              video: item?.video,
+                              audio: item?.audio,
+                              tags: item?.tags.join(", "),
+                              prompt: item?.prompt,
+                              amount: item?.amount,
+                              visibility: item?.visibility,
+                              sizes: item?.sizes,
+                              colors: item?.colors,
+                              profileHandle: item?.profileHandle,
+                              microbrand: {
+                                microbrand: item?.microbrand,
+                                microbrandCover: item?.microbrandCover,
+                              },
+                              access: item?.access?.join(", "),
+                              drop: item?.drop,
+                              communities: item?.communities?.join(", "),
+                            });
                           }}
                         >
-                          <Image
-                            draggable={false}
-                            layout="fill"
-                            src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
-                          />
+                          <div className="relative w-full h-full flex">
+                            {item?.audio === "audio" || item?.images?.[0] ? (
+                              item?.images?.[0] && (
+                                <Image
+                                  layout="fill"
+                                  src={`${INFURA_GATEWAY}/ipfs/${
+                                    item?.images?.[0]?.split("ipfs://")?.[1]
+                                  }`}
+                                  objectFit="cover"
+                                  draggable={false}
+                                  className="relative rounded-sm w-full h-full flex"
+                                />
+                              )
+                            ) : (
+                              <video
+                                className="relative rounded-sm w-full h-full flex object-cover"
+                                id="itemCollection"
+                                draggable={false}
+                                controls={false}
+                                muted
+                                // autoPlay
+                                playsInline
+                                loop
+                                key={item?.video}
+                              >
+                                <source
+                                  src={`${INFURA_GATEWAY}/ipfs/${
+                                    item?.video?.split("ipfs://")?.[1]
+                                  }`}
+                                />
+                              </video>
+                            )}
+                            {item?.audio && (
+                              <Waveform
+                                handlePlayPause={handlePlayPause}
+                                audio={item?.audio}
+                                type={"audio"}
+                                keyValue={item?.audio}
+                                video={item?.video}
+                              />
+                            )}
+                          </div>
+                          <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
+                            <div
+                              className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
+                              title="Go to Collection"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(
+                                  `/item/${
+                                    numberToItemTypeMap[Number(item?.origin)]
+                                  }/${Number(item?.profileId)?.toString(
+                                    16
+                                  )}-${Number(item?.pubId)?.toString(16)}`
+                                );
+                              }}
+                            >
+                              <Image
+                                draggable={false}
+                                layout="fill"
+                                src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
             </div>
           </div>
         </div>

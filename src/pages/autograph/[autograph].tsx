@@ -40,22 +40,16 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     chain: polygon,
     transport: http(),
   });
-  const oracleData = useSelector(
-    (state: RootState) => state.app.oracleDataReducer.data
-  );
   const { autograph } = router.query;
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
-  const profileFeed = useSelector(
-    (state: RootState) => state.app.autographFeedReducer.feed
-  );
   const postCollectGif = useSelector(
     (state: RootState) => state.app.postCollectGifReducer
   );
-  const profile = useSelector(
-    (state: RootState) => state.app.autographProfileReducer.profile
+  const oracleData = useSelector(
+    (state: RootState) => state.app.oracleDataReducer.data
   );
-  const galleryItems = useSelector(
-    (state: RootState) => state.app.galleryItemsReducer.items
+  const profileDisplay = useSelector(
+    (state: RootState) => state.app.profileDisplayReducer?.value
   );
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
@@ -78,11 +72,11 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
-  const profileDisplay = useSelector(
-    (state: RootState) => state.app.profileDisplayReducer.value
-  );
   const isDesigner = useSelector(
     (state: RootState) => state.app.isDesignerReducer.value
+  );
+  const gallery = useSelector(
+    (state: RootState) => state.app.galleryItemsReducer.items
   );
   const screenDisplay = useSelector(
     (state: RootState) => state.app.screenDisplayReducer.value
@@ -97,6 +91,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     (state: RootState) => state.app.searchItemsReducer
   );
 
+  const { profileLoading, getProfileData, sortType, setSortType, profile } =
+    useAutograph();
   const { handleShuffleSearch } = useSearch(
     filtersOpen,
     lensConnected,
@@ -108,23 +104,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
-  const {
-    followProfile,
-    unfollowProfile,
-    feedFollowLoading,
-    galleryFollowLoading,
-    feedProfileHovers,
-    setFeedProfileHovers,
-    galleryProfileHovers,
-    setGalleryProfileHovers,
-  } = useProfile(
-    profileFeed,
-    galleryItems,
-    lensConnected,
-    dispatch,
-    publicClient,
-    address
-  );
   const {
     handleLensConnect,
     openAccount,
@@ -141,8 +120,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     cartItems,
     lensConnected
   );
-  const { profileLoading, getProfileData, sortType, setSortType } =
-    useAutograph(dispatch);
   const {
     feedLoading,
     interactionsFeedLoading,
@@ -164,10 +141,10 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     makeCommentFeed,
     commentContentLoading,
     setCommentContentLoading,
+    profileFeed,
   } = useFeed(
     lensConnected,
     postCollectGif,
-    profileFeed,
     profile,
     dispatch,
     publicClient,
@@ -195,15 +172,32 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     getMoreGallery,
     openInteractions,
     setOpenInteractions,
-    activeGallery,
   } = useGallery(
     lensConnected,
     profileDisplay,
-    galleryItems,
+    gallery,
     dispatch,
     publicClient,
     address,
-    postSuccess
+    postSuccess,
+    profile
+  );
+  const {
+    followProfile,
+    unfollowProfile,
+    feedFollowLoading,
+    galleryFollowLoading,
+    feedProfileHovers,
+    setFeedProfileHovers,
+    galleryProfileHovers,
+    setGalleryProfileHovers,
+  } = useProfile(
+    profileFeed,
+    gallery,
+    lensConnected,
+    dispatch,
+    publicClient,
+    address
   );
   const {
     createDrop,
@@ -237,8 +231,17 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     handlePlayPause,
     deleteCollection,
     allCollections,
-    collectionLoading
-  } = useCreate(publicClient, address, dispatch, lensConnected, setDropDetails, screenDisplay, profile);
+    collectionLoading,
+  } = useCreate(
+    publicClient,
+    address,
+    dispatch,
+    lensConnected,
+    setDropDetails,
+    screenDisplay,
+    profile,
+    client
+  );
   const {
     handleSendMessage,
     sendMessageLoading,
@@ -385,7 +388,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
             >
               <Head>
                 <title>
-                  Chromadin | {profile?.handle?.localName?.toUpperCase()}
+                  Cypher | {profile?.handle?.localName?.toUpperCase()}
                 </title>
                 <meta
                   name="og:url"
@@ -403,9 +406,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 <meta
                   name="og:image"
                   content={
-                    !galleryItems?.created[0]?.images?.[0]
+                    !gallery?.created[0]?.images?.[0]
                       ? "https://chromadin.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${galleryItems?.created[0]?.images?.[0]?.split(
+                      : `https://chromadin.infura-ipfs.io/ipfs/${gallery?.created[0]?.images?.[0]?.split(
                           "ipfs://"
                         )}`
                   }
@@ -564,7 +567,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 like={displayLike}
                 interactionsLoading={interactionsDisplayLoading}
                 profile={profile}
-                gallery={galleryItems}
                 display={profileDisplay}
                 handleSettingsUpdate={handleSettingsUpdate}
                 settingsUpdateLoading={settingsUpdateLoading}
@@ -623,6 +625,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 setCollectionSettings={setCollectionSettings}
                 collectionSettings={collectionSettings}
                 dropsLoading={dropsLoading}
+                collectionLoading={collectionLoading}
                 allDrops={allDrops}
                 createDropLoading={createDropLoading}
               />
@@ -665,7 +668,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   openMirrorChoice={openMirrorGalleryChoice}
                   setOpenMirrorChoice={setOpenMirrorGalleryChoice}
                   interactionsLoading={interactionsGalleryLoading}
-                  gallery={galleryItems}
+                  gallery={gallery}
                   cartItems={cartItems}
                   optionsOpen={optionsOpen}
                   setOptionsOpen={setOptionsOpen}

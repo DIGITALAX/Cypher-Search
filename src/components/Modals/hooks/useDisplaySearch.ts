@@ -4,8 +4,8 @@ import {
 } from "@/components/Autograph/types/autograph.types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { useState } from "react";
-import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
 import { Dispatch } from "redux";
+import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
 
 const useDisplaySearch = (
   profileDisplay: Display | undefined,
