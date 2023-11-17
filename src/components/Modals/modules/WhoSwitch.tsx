@@ -22,7 +22,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
       return (
         <div className="relative w-full h-[60vh] flex flex-col overflow-y-scroll">
           <InfiniteScroll
-            dataLength={16}
+            dataLength={quoters?.length}
             loader={<></>}
             hasMore={hasMore}
             next={showMore}

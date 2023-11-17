@@ -118,8 +118,6 @@ export const itemTypeToString: { [key in ItemType]: string } = {
   [ItemType.Listener]: "listener",
 };
 
-
-
 export const printTypeToNumber: { [key in PrintType]: string } = {
   [PrintType.Sticker]: "0",
   [PrintType.Poster]: "1",
@@ -128,6 +126,16 @@ export const printTypeToNumber: { [key in PrintType]: string } = {
   [PrintType.Sleeve]: "4",
   [PrintType.Crop]: "5",
   [PrintType.NFTOnly]: "6",
+};
+
+export const numberToPrintType: { [key in number]: PrintType } = {
+  0: PrintType.Sticker,
+  1: PrintType.Poster,
+  2: PrintType.Shirt,
+  3: PrintType.Hoodie,
+  4: PrintType.Sleeve,
+  5: PrintType.Crop,
+  6: PrintType.NFTOnly,
 };
 
 export const printStringToNumber: { [key: string]: string } = {

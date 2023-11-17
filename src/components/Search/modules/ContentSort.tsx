@@ -43,7 +43,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            hashtags: filterConstants!.hashtags.filter((value) =>
+            hashtags: filterConstants!.hashtags?.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -64,18 +64,18 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             })
           );
 
-          if (!openDropDown.hashtag) {
+          if (!openDropDown?.hashtag) {
             setOpenDropDown({
               ...openDropDown,
               hashtag: true,
             });
           }
         }}
-        openDropDown={openDropDown.hashtag}
+        openDropDown={openDropDown?.hashtag}
         setOpenDropDown={() => {
           setOpenDropDown({
             ...openDropDown,
-            hashtag: !openDropDown.hashtag,
+            hashtag: !openDropDown?.hashtag,
           });
         }}
         onDropDownChoose={(value: string) => {
@@ -109,7 +109,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            community: filterConstants!.community.filter((value) =>
+            community: filterConstants!.community?.filter((value) =>
               value[0]
                 .toLowerCase()
                 ?.includes(
@@ -130,25 +130,25 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             })
           );
 
-          if (!openDropDown.community) {
+          if (!openDropDown?.community) {
             setOpenDropDown({
               ...openDropDown,
               community: true,
             });
           }
         }}
-        openDropDown={openDropDown.community}
+        openDropDown={openDropDown?.community}
         setOpenDropDown={() => {
           setOpenDropDown({
             ...openDropDown,
-            community: !openDropDown.community,
+            community: !openDropDown?.community,
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues.community.includes(value)) {
-            const allValues = filterValues.community.split(",");
+          if (!filterValues?.community.includes(value)) {
+            const allValues = filterValues?.community.split(",");
             const isPartialEntry =
-              allValues[allValues.length - 1].trim() !== "";
+              allValues[allValues?.length - 1].trim() !== "";
 
             let newValues: string;
 
@@ -196,33 +196,33 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             })
           );
 
-          if (!openDropDown.microbrand) {
+          if (!openDropDown?.microbrand) {
             setOpenDropDown({
               ...openDropDown,
               microbrand: true,
             });
           }
         }}
-        openDropDown={openDropDown.microbrand}
+        openDropDown={openDropDown?.microbrand}
         setOpenDropDown={() => {
           setOpenDropDown({
             ...openDropDown,
-            microbrand: !openDropDown.microbrand,
+            microbrand: !openDropDown?.microbrand,
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues.microbrand.includes(value)) {
-            const allValues = filterValues.microbrand.split(",");
+          if (!filterValues?.microbrand?.includes(value)) {
+            const allValues = filterValues?.microbrand?.split(",");
             const isPartialEntry =
-              allValues[allValues.length - 1].trim() !== "";
+              allValues[allValues?.length - 1].trim() !== "";
 
             let newValues: string;
 
             if (isPartialEntry) {
-              allValues[allValues.length - 1] = ` ${value},`;
-              newValues = allValues.join(", ").trim();
+              allValues[allValues?.length - 1] = ` ${value},`;
+              newValues = allValues?.join(", ")?.trim();
             } else {
-              newValues = filterValues.microbrand + ` ${value},`;
+              newValues = filterValues?.microbrand + ` ${value},`;
             }
 
             dispatch(
@@ -274,7 +274,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           onChange={(e: ChangeEvent) => {
             setFilteredDropDownValues({
               ...filteredDropDownValues,
-              origin: filterConstants!.origin.filter((value) =>
+              origin: filterConstants!.origin?.filter((value) =>
                 value[0]
                   .toLowerCase()
                   ?.includes(
@@ -296,33 +296,33 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               })
             );
 
-            if (!openDropDown.origin) {
+            if (!openDropDown?.origin) {
               setOpenDropDown({
                 ...openDropDown,
                 origin: true,
               });
             }
           }}
-          openDropDown={openDropDown.origin}
+          openDropDown={openDropDown?.origin}
           setOpenDropDown={() => {
             setOpenDropDown({
               ...openDropDown,
-              origin: !openDropDown.origin,
+              origin: !openDropDown?.origin,
             });
           }}
           onDropDownChoose={(value: string) => {
-            if (!filterValues.origin.includes(value)) {
-              const allValues = filterValues.origin.split(",");
+            if (!filterValues?.origin?.includes(value)) {
+              const allValues = filterValues?.origin?.split(",");
               const isPartialEntry =
-                allValues[allValues.length - 1].trim() !== "";
+                allValues[allValues?.length - 1].trim() !== "";
 
               let newValues: string;
 
               if (isPartialEntry) {
-                allValues[allValues.length - 1] = ` ${value},`;
-                newValues = allValues.join(", ").trim();
+                allValues[allValues?.length - 1] = ` ${value},`;
+                newValues = allValues?.join(", ")?.trim();
               } else {
-                newValues = filterValues.origin + ` ${value},`;
+                newValues = filterValues?.origin + ` ${value},`;
               }
 
               dispatch(
@@ -342,7 +342,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            format: filterConstants!.format.filter((value) =>
+            format: filterConstants!.format?.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -363,33 +363,33 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             })
           );
 
-          if (!openDropDown.format) {
+          if (!openDropDown?.format) {
             setOpenDropDown({
               ...openDropDown,
               format: true,
             });
           }
         }}
-        openDropDown={openDropDown.format}
+        openDropDown={openDropDown?.format}
         setOpenDropDown={() => {
           setOpenDropDown({
             ...openDropDown,
-            format: !openDropDown.format,
+            format: !openDropDown?.format,
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues.format.includes(value)) {
-            const allValues = filterValues.format.split(",");
+          if (!filterValues?.format?.includes(value)) {
+            const allValues = filterValues?.format.split(",");
             const isPartialEntry =
-              allValues[allValues.length - 1].trim() !== "";
+              allValues[allValues?.length - 1].trim() !== "";
 
             let newValues: string;
 
             if (isPartialEntry) {
-              allValues[allValues.length - 1] = ` ${value},`;
-              newValues = allValues.join(", ").trim();
+              allValues[allValues?.length - 1] = ` ${value},`;
+              newValues = allValues?.join(", ")?.trim();
             } else {
-              newValues = filterValues.format + ` ${value},`;
+              newValues = filterValues?.format + ` ${value},`;
             }
 
             dispatch(
@@ -429,33 +429,33 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             })
           );
 
-          if (!openDropDown.catalog) {
+          if (!openDropDown?.catalog) {
             setOpenDropDown({
               ...openDropDown,
               catalog: true,
             });
           }
         }}
-        openDropDown={openDropDown.catalog}
+        openDropDown={openDropDown?.catalog}
         setOpenDropDown={() => {
           setOpenDropDown({
             ...openDropDown,
-            catalog: !openDropDown.catalog,
+            catalog: !openDropDown?.catalog,
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues.catalog.includes(value)) {
-            const allValues = filterValues.catalog.split(",");
+          if (!filterValues?.catalog?.includes(value)) {
+            const allValues = filterValues?.catalog?.split(",");
             const isPartialEntry =
-              allValues[allValues.length - 1].trim() !== "";
+              allValues[allValues?.length - 1]?.trim() !== "";
 
             let newValues: string;
 
             if (isPartialEntry) {
-              allValues[allValues.length - 1] = ` ${value},`;
-              newValues = allValues.join(", ").trim();
+              allValues[allValues?.length - 1] = ` ${value},`;
+              newValues = allValues?.join(", ")?.trim();
             } else {
-              newValues = filterValues.catalog + ` ${value},`;
+              newValues = filterValues?.catalog + ` ${value},`;
             }
 
             dispatch(
@@ -474,7 +474,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            access: filterConstants!.access.filter((value) =>
+            access: filterConstants!.access?.filter((value) =>
               value
                 .toLowerCase()
                 ?.includes(
@@ -495,33 +495,33 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             })
           );
 
-          if (!openDropDown.access) {
+          if (!openDropDown?.access) {
             setOpenDropDown({
               ...openDropDown,
               access: true,
             });
           }
         }}
-        openDropDown={openDropDown.access}
+        openDropDown={openDropDown?.access}
         setOpenDropDown={() => {
           setOpenDropDown({
             ...openDropDown,
-            access: !openDropDown.access,
+            access: !openDropDown?.access,
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues.access?.includes(value)) {
-            const allValues = filterValues.access.split(",");
+          if (!filterValues?.access?.includes(value)) {
+            const allValues = filterValues?.access?.split(",");
             const isPartialEntry =
-              allValues[allValues.length - 1].trim() !== "";
+              allValues[allValues?.length - 1].trim() !== "";
 
             let newValues: string;
 
             if (isPartialEntry) {
-              allValues[allValues.length - 1] = ` ${value},`;
-              newValues = allValues.join(", ").trim();
+              allValues[allValues?.length - 1] = ` ${value},`;
+              newValues = allValues?.join(", ")?.trim();
             } else {
-              newValues = filterValues.access + ` ${value},`;
+              newValues = filterValues?.access + ` ${value},`;
             }
 
             dispatch(

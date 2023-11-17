@@ -9,12 +9,17 @@ export const aggregateMicrobrands = (
     colors: string[];
     sizes: string[];
     printType: string;
+    profileId: string;
   }[]
 ): string[][] => {
   const uniquePairs = new Set<string>();
 
   collection?.forEach((item) => {
-    const pair = JSON.stringify([item.microbrand, item.microbrandCover]);
+    const pair = JSON.stringify([
+      item.microbrand,
+      item.microbrandCover,
+      item.profileId,
+    ]);
     uniquePairs.add(pair);
   });
 

@@ -51,7 +51,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
       <TileLoader layoutAmount={layoutAmount} key={index} />
     ) : (
       <TileSwitch
-        key={index}
         type={data?.type}
         publication={data}
         cartItems={cartItems}

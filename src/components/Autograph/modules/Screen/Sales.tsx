@@ -22,17 +22,17 @@ const Sales: FunctionComponent<SalesProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[70vh] max-h-[70vh] ${
-              allSales?.length > 0 ? "items-start" : "items-center"
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[35rem] max-h-[35rem] ${
+              (salesLoading || allSales?.length > 0) ? "items-start" : "items-center"
             }`}
           >
             {salesLoading ? (
-              <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start">
+              <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start animate-pulse">
                 {Array.from({ length: 10 })?.map((_, index: number) => {
                   return (
                     <div
                       key={index}
-                      className="relative w-full animate-pulse h-44 flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack gap-3"
+                      className="relative w-1/2 h-44 flex flex-col items-center justify-start border border-humor rounded-sm  bg-offBlack gap-3"
                       id="staticLoad"
                     ></div>
                   );

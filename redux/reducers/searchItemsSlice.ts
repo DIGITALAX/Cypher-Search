@@ -6,6 +6,7 @@ export interface AllSearchItemsState {
   lensPubCursor?: string;
   lensProfileCursor?: string;
   graphCursor?: number;
+  communityCursor?: number;
   hasMore: boolean;
 }
 

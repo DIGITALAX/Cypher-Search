@@ -131,7 +131,10 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                                 microbrandCover: item?.microbrandCover,
                               },
                               access: item?.access?.join(", "),
-                              drop: item?.drop,
+                              dropTitle: item?.dropTitle,
+                              dropCover: item?.dropCover,
+                              dropCollectionIds: item?.dropCollectionIds,
+                              dropId: item?.dropId,
                               communities: item?.communities?.join(", "),
                             });
                           }}

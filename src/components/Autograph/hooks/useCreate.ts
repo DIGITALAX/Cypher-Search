@@ -114,7 +114,10 @@ const useCreate = (
         microbrandCover: "",
       },
       access: "",
-      drop: "",
+      dropId: "",
+      dropTitle: "",
+      dropCover: "",
+      dropCollectionIds: [],
       communities: "",
     }
   );
@@ -150,7 +153,7 @@ const useCreate = (
 
   const createCollection = async (edit?: boolean) => {
     if (
-      collectionDetails?.drop?.trim() == "" ||
+      collectionDetails?.dropId?.trim() == "" ||
       collectionDetails.title?.trim() == "" ||
       collectionDetails.description?.trim() == "" ||
       (collectionSettings?.media == "static" &&
@@ -244,7 +247,7 @@ const useCreate = (
                     fulfiller: ZERO_ADDRESS,
                     creatorAddress: address,
                     amount: Number(collectionDetails?.amount),
-                    dropId: Number(collectionDetails?.drop),
+                    dropId: Number(collectionDetails?.dropId),
                     unlimited: false,
                     encrypted:
                       collectionDetails?.visibility === "private"
@@ -349,7 +352,10 @@ const useCreate = (
           microbrandCover: "",
         },
         access: "",
-        drop: "",
+        dropId: "",
+        dropTitle: "",
+        dropCover: "",
+        dropCollectionIds: [],
         communities: "",
       });
       setCollectionSettings({
@@ -483,7 +489,10 @@ const useCreate = (
       const {
         price,
         microbrand,
-        drop,
+        dropId,
+        dropCollectionIds,
+        dropCover,
+        dropTitle,
         collectionId,
         profileId,
         pubId,

@@ -177,7 +177,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     sortType,
     setSortType,
     gallery,
-    cursorInfo
+    cursorInfo,
   } = useGallery(
     lensConnected,
     profileDisplay,
@@ -629,7 +629,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 allDrops={allDrops}
                 createDropLoading={createDropLoading}
               />
-              <Bio profile={profile} dispatch={dispatch} />
+              <Bio profile={profile} dispatch={dispatch} router={router} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
                 <Feed
                   comment={feedComment}

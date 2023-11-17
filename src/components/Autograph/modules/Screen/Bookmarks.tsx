@@ -42,62 +42,76 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[70vh] max-h-[70vh]">
-            <InfiniteScroll
-              next={handleMoreBookmarks}
-              hasMore={hasMoreBookmarks}
-              dataLength={bookmarksLoading ? 20 : bookmarks?.length}
-              loader={<></>}
-              className="w-fit h-fit items-center justify-start flex flex-col gap-10"
-            >
-              {bookmarksLoading
-                ? Array.from({ length: 20 })?.map((_, index: number) => {
+          <div
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center overflow-y-scroll min-h-[35rem] max-h-[35rem] ${
+              !bookmarksLoading && bookmarks?.length == 0
+                ? "items-center"
+                : "items-start"
+            }`}
+          >
+            {bookmarksLoading ? (
+              <div className="relative flex flex-col gap-2 items-start justify-center animate-pulse">
+                {Array.from({ length: 20 })?.map((_, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative bg-lirio rounded-sm h-96 w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza"
+                      id="staticLoad"
+                    ></div>
+                  );
+                })}
+              </div>
+            ) : bookmarks?.length > 0 ? (
+              <InfiniteScroll
+                next={handleMoreBookmarks}
+                hasMore={hasMoreBookmarks}
+                dataLength={bookmarksLoading ? 20 : bookmarks?.length}
+                loader={<></>}
+                className="w-fit h-fit items-center justify-start flex flex-col gap-10"
+              >
+                {bookmarks?.map(
+                  (item: Post | Mirror | Quote | Comment, index: number) => {
                     return (
-                      <div
+                      <Publication
+                        index={index}
+                        item={item}
                         key={index}
-                        className="relative bg-lirio rounded-sm h-96 w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza animate-pulse"
-                        id="staticLoad"
-                      ></div>
+                        dispatch={dispatch}
+                        router={router}
+                        mirror={mirror}
+                        like={like}
+                        comment={comment}
+                        setMakePostComment={setMakeComment}
+                        makeComment={makeComment}
+                        setCommentsOpen={setCommentsOpen}
+                        commentsOpen={commentsOpen}
+                        interactionsLoading={interactionsLoading}
+                        profileHovers={profileHovers}
+                        setProfileHovers={setProfileHovers}
+                        openMirrorChoice={openMirrorChoice}
+                        setOpenMirrorChoice={setOpenMirrorChoice}
+                        simpleCollect={simpleCollect}
+                        followLoading={followLoading}
+                        followProfile={followProfile}
+                        unfollowProfile={unfollowProfile}
+                        setOpenMoreOptions={setOpenMoreOptions}
+                        openMoreOptions={openMoreOptions}
+                        handleBookmark={handleBookmark}
+                        handleHidePost={handleHidePost}
+                        data-post-id={item?.id}
+                        contentLoading={contentLoading}
+                        setContentLoading={setContentLoading}
+                        postCollectGif={postCollectGif}
+                      />
                     );
-                  })
-                : bookmarks?.map(
-                    (item: Post | Mirror | Quote | Comment, index: number) => {
-                      return (
-                        <Publication
-                          index={index}
-                          item={item}
-                          key={index}
-                          dispatch={dispatch}
-                          router={router}
-                          mirror={mirror}
-                          like={like}
-                          comment={comment}
-                          setMakePostComment={setMakeComment}
-                          makeComment={makeComment}
-                          setCommentsOpen={setCommentsOpen}
-                          commentsOpen={commentsOpen}
-                          interactionsLoading={interactionsLoading}
-                          profileHovers={profileHovers}
-                          setProfileHovers={setProfileHovers}
-                          openMirrorChoice={openMirrorChoice}
-                          setOpenMirrorChoice={setOpenMirrorChoice}
-                          simpleCollect={simpleCollect}
-                          followLoading={followLoading}
-                          followProfile={followProfile}
-                          unfollowProfile={unfollowProfile}
-                          setOpenMoreOptions={setOpenMoreOptions}
-                          openMoreOptions={openMoreOptions}
-                          handleBookmark={handleBookmark}
-                          handleHidePost={handleHidePost}
-                          data-post-id={item?.id}
-                          contentLoading={contentLoading}
-                          setContentLoading={setContentLoading}
-                          postCollectGif={postCollectGif}
-                        />
-                      );
-                    }
-                  )}
-            </InfiniteScroll>
+                  }
+                )}
+              </InfiniteScroll>
+            ) : (
+              <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
+                {`Your bookmarked posts will appear here :)`}
+              </div>
+            )}
           </div>
         </div>
       </div>

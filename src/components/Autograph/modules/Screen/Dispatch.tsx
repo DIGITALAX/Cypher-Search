@@ -355,7 +355,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             {
                               allDrops?.find(
                                 (item) =>
-                                  item.dropId === collectionDetails?.drop
+                                  item.dropId === collectionDetails?.dropId
                               )?.title
                             }
                           </div>

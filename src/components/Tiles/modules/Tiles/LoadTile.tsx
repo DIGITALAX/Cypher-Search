@@ -4,7 +4,6 @@ import { LoadTileProps } from "../../types/tiles.types";
 const LoadTile: FunctionComponent<LoadTileProps> = ({ index }): JSX.Element => {
   return (
     <div
-      key={index}
       className="relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4"
     >
       <div className="relative flex flex-col h-fit w-full border border-white">

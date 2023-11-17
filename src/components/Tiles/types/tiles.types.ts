@@ -11,6 +11,7 @@ import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
+import { Origin } from "@/components/Search/types/search.types";
 
 export interface Creation {
   amount: string;
@@ -53,7 +54,7 @@ export interface Creation {
 }
 
 export interface Publication {
-  post?: Post | Comment | Quote | Mirror | Profile | Creation;
+  post?: Post | Comment | Quote | Mirror | Profile | Creation | Community;
   type: string;
   publishedOn?: string;
 }
@@ -101,7 +102,6 @@ export type TileSwitchProps = {
   type: string;
   publication: Publication;
   profileHovers: boolean[];
-  key: number;
   setHeart?: (e: SetStateAction<boolean[]>) => void;
   heart?: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
@@ -121,7 +121,6 @@ export type TileSwitchProps = {
     like: boolean;
     mirror: boolean;
   }[];
-  community?: Community;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   profileId?: string;
@@ -438,16 +437,16 @@ export enum ERC20Tokens {
 
 export interface Community {
   name: string;
-  subtopic: string;
+  subTopic: string;
   description: string;
+  cover: string;
   sample: Creation[];
   steward: Profile;
   validPrintTypes: PrintType[];
-  validTokens: Creation[];
-  tokens: {
-    token: ERC20Tokens;
-    amount: string;
-  }[];
+  validCreators: Profile[];
+  validOrigins: Origin[];
+  valid20Tokens: string[];
+  valid20Thresholds: string[];
   members: Profile[];
 }
 

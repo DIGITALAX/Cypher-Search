@@ -33,7 +33,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll min-h-[70vh] max-h-[70vh]">
+          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll min-h-[35rem] max-h-[35rem]">
             <div className="relative w-full h-fit flex items-center justify-start bg-cover flex-col rounded-sm gap-5">
               <label
                 className="relative w-full h-40 rounded-sm cursor-pointer p-px"

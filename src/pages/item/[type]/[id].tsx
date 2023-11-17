@@ -17,7 +17,7 @@ import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import NotFound from "@/components/Common/modules/NotFound";
 import { RootState } from "../../../../redux/store";
 import SwitchType from "@/components/Items/modules/SwitchType";
-import useItem from "@/components/Items/hooks/useChromadin";
+import useItem from "@/components/Items/hooks/useItem";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import {
   Mirror,
@@ -70,7 +70,12 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
   const { address, isConnected } = useAccount();
-  const { itemLoading, itemData } = useItem(type as string);
+  const { itemLoading, itemData } = useItem(
+    type as string,
+    id as string,
+    filterConstants,
+    lensConnected
+  );
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
     id as string,
     type === "chromadin" || type === "coinop"
