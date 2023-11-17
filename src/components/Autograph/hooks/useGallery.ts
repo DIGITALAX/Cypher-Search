@@ -43,9 +43,11 @@ const useGallery = (
   const [cursorInfo, setCursorInfo] = useState<{
     collected: number;
     created: number;
+    hasMore: boolean;
   }>({
     collected: 0,
     created: 0,
+    hasMore: true,
   });
   const [openMirrorGalleryChoice, setOpenMirrorGalleryChoice] = useState<
     boolean[]
@@ -150,6 +152,8 @@ const useGallery = (
       setCursorInfo({
         collected: cursorInfo?.collected + 25,
         created: cursorInfo?.created + 25,
+        hasMore:
+          collected?.length == 25 || created?.length == 25 ? true : false,
       });
 
       await getDisplayData([...(created || []), ...(collected || [])]);
@@ -164,6 +168,7 @@ const useGallery = (
   };
 
   const getMoreGallery = async () => {
+    if (!cursorInfo?.hasMore) return;
     try {
       let collected: Creation[] = [],
         created: Creation[] = [];
@@ -212,11 +217,13 @@ const useGallery = (
       setCursorInfo({
         collected: cursorInfo?.collected + 25,
         created: cursorInfo?.created + 25,
+        hasMore:
+          collected?.length == 25 || created?.length == 25 ? true : false,
       });
 
       setGallery({
-        collected,
-        created,
+        collected: [...(gallery?.collected || []), ...collected],
+        created: [...(gallery?.created || []), ...created],
       });
     } catch (err: any) {
       console.error(err.message);
@@ -474,6 +481,7 @@ const useGallery = (
     sortType,
     setSortType,
     gallery,
+    cursorInfo,
   };
 };
 

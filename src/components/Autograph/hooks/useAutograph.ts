@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getProfile from "../../../../graphql/lens/queries/profile";
 import { Profile } from "../../../../graphql/generated";
 
-const useAutograph = () => {
+const useAutograph = (autograph: string | undefined) => {
   const [profile, setProfile] = useState<Profile | undefined>();
   const [profileLoading, setProfileLoading] = useState<boolean>(false);
 
@@ -24,6 +24,11 @@ const useAutograph = () => {
     setProfileLoading(false);
   };
 
+  useEffect(() => {
+    if (autograph && !profile) {
+      getProfileData(autograph as string);
+    }
+  }, [autograph]);
 
   return {
     profileLoading,

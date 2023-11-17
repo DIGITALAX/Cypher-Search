@@ -52,48 +52,6 @@ const useWho = (
     setDataLoading(false);
   };
 
-  // const showComments = async () => {
-  //   if (!reactBox.id) return;
-  //   setDataLoading(true);
-
-  //   try {
-  //     const data = await getPublications(
-  //       {
-  //         limit: LimitType.Ten,
-
-  //         where: {
-  //           publicationTypes: [PublicationType.Comment],
-  //           commentOn: {
-  //             id: reactBox.id,
-  //             ranking: {
-  //               filter: CommentRankingFilterType.Relevant,
-  //             },
-  //           },
-  //         },
-  //       },
-  //       lensConnected
-  //     );
-
-  //     if (
-  //       !data?.data?.publications?.items ||
-  //       data?.data?.publications?.items?.length < 1
-  //     ) {
-  //       setHasMore(false);
-  //       setDataLoading(false);
-  //       return;
-  //     } else if (data?.data?.publications?.items?.length === 10) {
-  //       setHasMore(true);
-  //     }
-
-  //     setReactors(data?.data?.publications?.items);
-  //     setPageInfo(data.data?.publications.pageInfo.next);
-  //   } catch (err: any) {
-  //     console.error(err.message);
-  //   }
-
-  //   setDataLoading(false);
-  // };
-
   const showMirrorQuotes = async () => {
     if (!reactBox.id) return;
 
@@ -351,42 +309,6 @@ const useWho = (
       console.error(err.message);
     }
   };
-
-  // const showMoreComments = async () => {
-  //   if (!pageInfo || !hasMore) return;
-
-  //   try {
-  //     const data = await getPublications(
-  //       {
-  //         limit: LimitType.Ten,
-  //         cursor: pageInfo,
-  //         where: {
-  //           publicationTypes: [PublicationType.Comment],
-  //           commentOn: {
-  //             id: reactBox?.id,
-  //             ranking: { filter: CommentRankingFilterType.Relevant },
-  //           },
-  //         },
-  //       },
-  //       lensConnected
-  //     );
-
-  //     if (
-  //       !data?.data?.publications?.items ||
-  //       data?.data?.publications?.items?.length < 1
-  //     ) {
-  //       setHasMore(false);
-  //       return;
-  //     } else if (data?.data?.publications?.items?.length === 10) {
-  //       setHasMore(true);
-  //     }
-
-  //     setReactors([...reactors, ...(data?.data?.publications?.items || [])]);
-  //     setPageInfo(data.data?.publications.pageInfo.next);
-  //   } catch (err: any) {
-  //     console.error(err.message);
-  //   }
-  // };
 
   const showMoreQuoteMirrors = async () => {
     if ((!pageInfo || !hasMore) && (!pageInfoQuote || !hasMoreQuote)) return;

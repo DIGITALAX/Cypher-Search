@@ -25,6 +25,7 @@ import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { PublicClient } from "viem";
 import { PRINT_ACCESS_CONTROL } from "../../../../lib/constants";
 import { setIsDesigner } from "../../../../redux/reducers/isDesignerSlice";
+import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 
 const useSignIn = (
   publicClient: PublicClient,
@@ -33,7 +34,8 @@ const useSignIn = (
   dispatch: Dispatch,
   oracleData: OracleData[],
   cartItems: CartItem[],
-  lensConnected: Profile | undefined
+  lensConnected: Profile | undefined,
+  cartAnim: boolean
 ) => {
   const { signMessageAsync } = useSignMessage();
   const [openAccount, setOpenAccount] = useState<boolean>(false);
@@ -158,6 +160,14 @@ const useSignIn = (
       handleIsCreator();
     }
   }, []);
+
+  useEffect(() => {
+    if (cartAnim) {
+      setTimeout(() => {
+        dispatch(setCartAnim(false));
+      }, 1000);
+    }
+  }, [cartAnim]);
 
   return {
     handleLensConnect,

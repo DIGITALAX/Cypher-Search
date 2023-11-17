@@ -12,8 +12,6 @@ import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
-import { useEffect } from "react";
-import { setCartAnim } from "../../redux/reducers/cartAnimSlice";
 
 export default function Home({ router }: { router: NextRouter }) {
   const dispatch = useDispatch();
@@ -68,13 +66,13 @@ export default function Home({ router }: { router: NextRouter }) {
     setSearchInput,
     handleShuffleSearch,
     placeholderText,
-    searchLoading,
     volume,
     volumeOpen,
     setVolumeOpen,
     setVolume,
     heart,
     setHeart,
+    loaders,
   } = useSearch(
     filtersOpen,
     lensConnected,
@@ -101,7 +99,8 @@ export default function Home({ router }: { router: NextRouter }) {
     dispatch,
     oracleData,
     cartItems,
-    lensConnected
+    lensConnected,
+    cartAnim
   );
   const {
     mirror,
@@ -135,13 +134,6 @@ export default function Home({ router }: { router: NextRouter }) {
     address
   );
 
-  useEffect(() => {
-    if (cartAnim) {
-      setTimeout(() => {
-        dispatch(setCartAnim(false));
-      }, 1000);
-    }
-  }, [cartAnim]);
   return (
     <div
       className={`relative w-full flex flex-col items-center justify-center sm:h-screen`}
@@ -194,6 +186,7 @@ export default function Home({ router }: { router: NextRouter }) {
             apparel={apparel}
             setApparel={setApparel}
             dispatch={dispatch}
+            moreSearchLoading={loaders?.moreSearchLoading}
             router={router}
             cartItems={cartItems}
             mirror={mirror}
@@ -202,7 +195,7 @@ export default function Home({ router }: { router: NextRouter }) {
             interactionsLoading={interactionsLoading}
             setOpenMirrorChoice={setOpenMirrorChoice}
             openMirrorChoice={openMirrorChoice}
-            searchLoading={searchLoading}
+            searchLoading={loaders?.searchLoading}
             followLoading={followLoading}
             followProfile={followProfile}
             unfollowProfile={unfollowProfile}

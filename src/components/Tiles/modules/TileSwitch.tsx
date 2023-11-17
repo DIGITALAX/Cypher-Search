@@ -18,6 +18,7 @@ import {
   Quote,
 } from "../../../../graphql/generated";
 import Community from "./Tiles/Community";
+import LoadTile from "./Tiles/LoadTile";
 
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
@@ -50,9 +51,13 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   simpleCollect,
   community,
   setHeart,
-  heart
+  heart,
+  key,
 }) => {
   switch (type?.toLowerCase()) {
+    case "loader":
+      return <LoadTile index={key} key={key} />;
+
     case "community":
       return (
         <Community
@@ -65,6 +70,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           index={index}
           router={router}
           dispatch={dispatch}
+          key={key}
         />
       );
 
@@ -81,6 +87,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           dispatch={dispatch}
+          key={key}
         />
       );
 
@@ -97,6 +104,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           dispatch={dispatch}
+          key={key}
         />
       );
 
@@ -119,6 +127,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           unfollowProfile={unfollowProfile}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
+          key={key}
         />
       );
     case "listener":
@@ -142,6 +151,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           followLoading={followLoading}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
+          key={key}
         />
       );
     case "chromadin":
@@ -167,6 +177,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           followLoading={followLoading}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
+          key={key}
         />
       );
     case "coinop":
@@ -190,6 +201,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           followLoading={followLoading}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
+          key={key}
         />
       );
     case "text":
@@ -211,6 +223,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           simpleCollect={simpleCollect!}
+          key={key}
         />
       );
     case "video":
@@ -234,6 +247,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           setVolume={setVolume!}
           setHeart={setHeart!}
           heart={heart!}
+          key={key}
         />
       );
     case "quest":
@@ -247,6 +261,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           followLoading={followLoading}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
+          key={key}
         />
       );
     case "legend":
@@ -263,6 +278,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           mirror={mirror}
           like={like}
           interactionsLoading={interactionsLoading?.[index]}
+          key={key}
         />
       );
 

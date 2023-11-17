@@ -28,7 +28,19 @@ const Orders: FunctionComponent<OrdersProps> = ({
               allOrders?.length > 0 ? "items-start" : "items-center"
             }`}
           >
-            {allOrders?.length > 0 ? (
+            {ordersLoading ? (
+              <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start">
+                {Array.from({ length: 10 })?.map((_, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-full h-24 flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack gap-3 animate-pulse"
+                      id="staticLoad"
+                    ></div>
+                  );
+                })}
+              </div>
+            ) : allOrders?.length > 0 ? (
               <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start">
                 {allOrders?.map((order: Order, index: number) => {
                   return (
@@ -110,7 +122,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                 src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
                               />
                             </div>
-                            {Array.from({ length: 2 })
+                            {order?.images
                               ?.slice(0, 2)
                               ?.map((image: string, index: number) => {
                                 return (

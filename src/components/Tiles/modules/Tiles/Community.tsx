@@ -15,7 +15,7 @@ const Community: FunctionComponent<CommunityProps> = ({
   unfollowProfile,
   followProfile,
   followLoading,
-  dispatch
+  dispatch,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol bg-black gap-4 p-2">
@@ -42,42 +42,40 @@ const Community: FunctionComponent<CommunityProps> = ({
         </div>
         <div className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3">
           <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
-            {Array.from({ length: 20 })?.map(
-              (member: Profile, index: number) => {
-                const profilePicture = createProfilePicture(
-                  member?.metadata?.picture
-                );
-                return (
+            {community?.members?.map((member: Profile, index: number) => {
+              const profilePicture = createProfilePicture(
+                member?.metadata?.picture
+              );
+              return (
+                <div
+                  key={index}
+                  className="relative w-14 h-14 rounded-full border border-white p-1 flex items-center justify-center cursor-pointer"
+                  onClick={() =>
+                    router.push(
+                      `/autograph/${
+                        member?.handle?.suggestedFormatted?.localName?.split(
+                          "@"
+                        )[1]
+                      }`
+                    )
+                  }
+                >
                   <div
-                    key={index}
-                    className="relative w-14 h-14 rounded-full border border-white p-1 flex items-center justify-center cursor-pointer"
-                    onClick={() =>
-                      router.push(
-                        `/autograph/${
-                          member?.handle?.suggestedFormatted?.localName?.split(
-                            "@"
-                          )[1]
-                        }`
-                      )
-                    }
+                    className="relative w-full h-full rounded-full flex items-center justify-center"
+                    id="pfp"
                   >
-                    <div
-                      className="relative w-full h-full rounded-full flex items-center justify-center"
-                      id="pfp"
-                    >
-                      {profilePicture && (
-                        <Image
-                          className="rounded-full"
-                          layout="fill"
-                          objectFit="cover"
-                          src={profilePicture}
-                        />
-                      )}
-                    </div>
+                    {profilePicture && (
+                      <Image
+                        className="rounded-full"
+                        layout="fill"
+                        objectFit="cover"
+                        src={profilePicture}
+                      />
+                    )}
                   </div>
-                );
-              }
-            )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -109,7 +107,7 @@ const Community: FunctionComponent<CommunityProps> = ({
       </div>
       <div className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3">
         <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
-          {Array.from({ length: 4 }).map((item: Creation, index: number) => {
+          {community?.validTokens?.map((item: Creation, index: number) => {
             const profilePicture = createProfilePicture(
               item?.profile?.metadata?.picture
             );

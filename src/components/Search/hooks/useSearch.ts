@@ -61,7 +61,13 @@ const useSearch = (
   dispatch: Dispatch,
   router: NextRouter
 ) => {
-  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+  const [loaders, setLoaders] = useState<{
+    searchLoading: boolean;
+    moreSearchLoading: boolean;
+  }>({
+    searchLoading: false,
+    moreSearchLoading: false,
+  });
   const [searchInput, setSearchInput] = useState<string>("");
   const [placeholderText, setPlaceholderText] = useState<string>();
   const [filteredDropDownValues, setFilteredDropDownValues] = useState<
@@ -88,7 +94,13 @@ const useSearch = (
     e?: KeyboardEvent | MouseEvent,
     click?: boolean
   ) => {
-    setSearchLoading(true);
+    setLoaders((prev) => ({
+      ...prev,
+      searchLoading: true,
+    }));
+    if (router?.asPath !== "/") {
+      await router.push("/");
+    }
     if (!searchActive) {
       dispatch(setSearchActive(true));
     }
@@ -222,12 +234,21 @@ const useSearch = (
             profiles?.length == 25 ? profileCursor : undefined,
           actionLensPubCursor:
             publications?.length == 25 ? pubCursor : undefined,
+          actionHasMore:
+            collections?.length == 25 ||
+            publications?.length == 25 ||
+            profiles?.length == 25
+              ? true
+              : false,
         })
       );
     } catch (err: any) {
       console.error(err.message);
     }
-    setSearchLoading(false);
+    setLoaders((prev) => ({
+      ...prev,
+      searchLoading: false,
+    }));
   };
 
   const filterSearch = async (
@@ -264,7 +285,11 @@ const useSearch = (
   };
 
   const handleMoreSearch = async () => {
-    setSearchLoading(true);
+    if (!allSearchItems?.hasMore) return;
+    setLoaders((prev) => ({
+      ...prev,
+      moreSearchLoading: true,
+    }));
     if (!searchActive) {
       dispatch(setSearchActive(true));
     }
@@ -408,11 +433,21 @@ const useSearch = (
             : undefined,
           actionLensProfileCursor: profileCursor,
           actionLensPubCursor: pubCursor,
+          actionHasMore:
+            collections?.length == 25 ||
+            publications?.length == 25 ||
+            profiles?.length == 25
+              ? true
+              : false,
         })
       );
     } catch (err: any) {
       console.error(err.message);
     }
+    setLoaders((prev) => ({
+      ...prev,
+      moreSearchLoading: false,
+    }));
   };
 
   const handleShuffleSearch = () => {
@@ -592,7 +627,6 @@ const useSearch = (
     placeholderText,
     filteredDropDownValues,
     setFilteredDropDownValues,
-    searchLoading,
     handleResetFilters,
     volume,
     volumeOpen,
@@ -600,6 +634,7 @@ const useSearch = (
     setVolume,
     heart,
     setHeart,
+    loaders,
   };
 };
 

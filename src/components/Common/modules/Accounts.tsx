@@ -29,7 +29,6 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   auto,
   cartAnim,
 }): JSX.Element => {
-  console.log({ cartAnim });
   const profilePicture = createProfilePicture(lensConnected?.metadata?.picture);
 
   return (

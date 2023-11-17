@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { TilesProps } from "../types/tiles.types";
+import { Publication, TilesProps } from "../types/tiles.types";
 import TileSwitch from "./TileSwitch";
 import { Masonry } from "masonic";
 import TileLoader from "@/components/Common/modules/TileLoader";
@@ -37,50 +37,23 @@ const Tiles: FunctionComponent<TilesProps> = ({
   profileId,
   heart,
   setHeart,
-  searchItems
+  searchItems,
+  moreSearchLoading,
 }): JSX.Element => {
-  const items = [
-    { id: 0, type: "image" },
-    { id: 1, type: "video" },
-    { id: 3, type: "chromadin" },
-    { id: 3, type: "community" },
-    { id: 16, type: "profile" },
-    { id: 17, type: "microbrand" },
-    { id: 3, type: "community" },
-    { id: 2, type: "quest" },
-    { id: 4, type: "coinop" },
-    { id: 5, type: "quest" },
-    { id: 6, type: "legend" },
-    { id: 6, type: "listener" },
-    { id: 6, type: "listener" },
-    { id: 7, type: "quest" },
-    { id: 8, type: "chromadin" },
-    { id: 9, type: "video" },
-    { id: 10, type: "text" },
-    { id: 11, type: "text" },
-    { id: 12, type: "coinop" },
-    { id: 13, type: "image" },
-    { id: 14, type: "coinop" },
-    { id: 15, type: "legend" },
-  ];
-
   const renderTile = ({
     index,
     data,
   }: {
     index: number;
-    data: {
-      id: string;
-      type: string;
-    };
+    data: Publication;
   }) => {
     return searchLoading ? (
       <TileLoader layoutAmount={layoutAmount} key={index} />
     ) : (
       <TileSwitch
         key={index}
-        type={data.type}
-        publication={searchItems?.items?.[index]!}
+        type={data?.type}
+        publication={data}
         cartItems={cartItems}
         layoutAmount={layoutAmount}
         popUpOpen={popUpOpen}
@@ -115,22 +88,36 @@ const Tiles: FunctionComponent<TilesProps> = ({
 
   return (
     <div
-      className={`relative w-full h-fit overflow-y-scroll pb-6 px-4 ${
+      className={`relative w-full min-h-screen h-fit overflow-y-scroll pb-6 px-4 ${
         searchActive || filtersOpen ? "pt-52 sm:pt-24" : "pt-24"
       }`}
     >
       <InfiniteScroll
-        dataLength={16}
-        loader={<TileLoader layoutAmount={layoutAmount} />}
-        hasMore={true}
+        dataLength={
+          (searchItems?.items || [])?.length + (moreSearchLoading ? 20 : 0)
+        }
+        loader={<></>}
+        hasMore={searchItems?.hasMore || false}
         next={handleMoreSearch}
         className={`w-full h-full items-start justify-center ${
           searchActive && "fadeTiles"
         }`}
       >
         <Masonry
-          key={0}
-          items={items}
+          key={
+            (searchItems?.items || [])?.length + (moreSearchLoading ? 20 : 0)
+          }
+          items={
+            moreSearchLoading
+              ? [
+                  ...(searchItems?.items || []),
+                  ...Array.from({ length: 20 }, (_) => ({
+                    id: Math.random(),
+                    type: "loader",
+                  })),
+                ]
+              : searchItems?.items || []
+          }
           render={renderTile}
           columnGutter={50}
           maxColumnCount={layoutAmount}

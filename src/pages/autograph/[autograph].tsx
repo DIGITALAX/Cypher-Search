@@ -92,7 +92,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     (state: RootState) => state.app.searchItemsReducer
   );
 
-  const { profileLoading, getProfileData, profile } = useAutograph();
+  const { profileLoading, profile } = useAutograph(autograph as string);
   const { handleShuffleSearch } = useSearch(
     filtersOpen,
     lensConnected,
@@ -119,7 +119,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     dispatch,
     oracleData,
     cartItems,
-    lensConnected
+    lensConnected,
+    cartAnim
   );
   const {
     feedLoading,
@@ -176,6 +177,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     sortType,
     setSortType,
     gallery,
+    cursorInfo
   } = useGallery(
     lensConnected,
     profileDisplay,
@@ -348,26 +350,12 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   );
 
   useEffect(() => {
-    if (autograph && !profile) {
-      getProfileData(autograph as string);
-    }
-  }, [autograph]);
-
-  useEffect(() => {
     setTimeout(() => {
       if (!profileLoading && !feedLoading && !galleryLoading) {
         setGlobalLoading(false);
       }
     }, 1000);
   }, [profileLoading]);
-
-  useEffect(() => {
-    if (cartAnim) {
-      setTimeout(() => {
-        dispatch(setCartAnim(false));
-      }, 1000);
-    }
-  }, [cartAnim]);
 
   if (!profileLoading && !globalLoading && !feedLoading && !galleryLoading) {
     return (
@@ -404,7 +392,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 </title>
                 <meta
                   name="og:url"
-                  content={`https://chromadin.xyz/autograph/${
+                  content={`https://cypher.digitalax.xyz/autograph/${
                     profile?.handle?.suggestedFormatted?.localName?.split(
                       "@"
                     )[1]
@@ -419,7 +407,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   name="og:image"
                   content={
                     !gallery?.created[0]?.images?.[0]
-                      ? "https://chromadin.xyz/card.png/"
+                      ? "https://cypher.digitalax.xyz/card.png/"
                       : `https://chromadin.infura-ipfs.io/ipfs/${gallery?.created[0]?.images?.[0]?.split(
                           "ipfs://"
                         )}`
@@ -431,7 +419,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 <meta name="twitter:creator" content="@digitalax" />
                 <meta
                   name="twitter:image"
-                  content={`https://chromadin.xyz/autograph/${
+                  content={`https://cypher.digitalax.xyz/autograph/${
                     profile?.handle?.suggestedFormatted?.localName?.split(
                       "@"
                     )[1]
@@ -439,7 +427,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
                 <meta
                   name="twitter:url"
-                  content={`https://chromadin.xyz/autograph/${
+                  content={`https://cypher.digitalax.xyz/autograph/${
                     profile?.handle?.suggestedFormatted?.localName?.split(
                       "@"
                     )[1]
@@ -675,6 +663,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   postCollectGif={postCollectGif}
                 />
                 <Gallery
+                  hasMoreGallery={cursorInfo?.hasMore}
                   lensConnected={lensConnected}
                   mirror={galleryMirror}
                   like={galleryLike}

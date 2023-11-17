@@ -5,15 +5,7 @@ import { Masonry } from "masonic";
 const TileLoader: FunctionComponent<TileLoaderProps> = ({
   layoutAmount,
 }): JSX.Element => {
-  const renderTile = ({
-    index,
-    data,
-  }: {
-    index: number;
-    data: {
-      id: string;
-    };
-  }) => {
+  const renderTile = ({ index }: { index: number }) => {
     return (
       <div
         key={index}
