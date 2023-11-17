@@ -9,10 +9,11 @@ import useTiles from "@/components/Tiles/hooks/useTiles";
 import { NextRouter } from "next/router";
 import Head from "next/head";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
-import useProfile from "@/components/Tiles/hooks/useProfile";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
+import { useEffect } from "react";
+import { setCartAnim } from "../../redux/reducers/cartAnimSlice";
 
 export default function Home({ router }: { router: NextRouter }) {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export default function Home({ router }: { router: NextRouter }) {
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
-  const fullscreenVideo = useSelector(
+  const fullScreenVideo = useSelector(
     (state: RootState) => state.app.fullScreenVideoReducer
   );
   const layoutAmount = useSelector(
@@ -35,6 +36,9 @@ export default function Home({ router }: { router: NextRouter }) {
   );
   const oracleData = useSelector(
     (state: RootState) => state.app.oracleDataReducer.data
+  );
+  const cartAnim = useSelector(
+    (state: RootState) => state.app.cartAnimReducer.value
   );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
@@ -78,7 +82,8 @@ export default function Home({ router }: { router: NextRouter }) {
     filterConstants,
     filters,
     allSearchItems,
-    dispatch
+    dispatch,
+    router
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -113,24 +118,36 @@ export default function Home({ router }: { router: NextRouter }) {
     address
   );
   const {
+    setPopUpOpen,
+    popUpOpen,
+    apparel,
+    setApparel,
+    profileHovers,
+    setProfileHovers,
     followLoading,
     followProfile,
     unfollowProfile,
-    profileHovers,
-    setProfileHovers,
-  } = useProfile(
+  } = useTiles(
     allSearchItems.items,
     lensConnected,
     dispatch,
     publicClient,
     address
   );
-  const { setPopUpOpen, popUpOpen, apparel, setApparel } = useTiles();
+
+  useEffect(() => {
+    if (cartAnim) {
+      setTimeout(() => {
+        dispatch(setCartAnim(false))
+      }, 1000)
+    }
+  }, [cartAnim])
   return (
     <div
-      className={`relative w-full flex flex-col items-center justify-center ${
-        searchActive ? "h-full" : "h-[150vh] sm:h-screen"
-      }`}
+      className={`relative w-full flex flex-col items-center justify-center sm:h-screen`}
+      style={{
+        height: searchActive ? "100%" : "calc(105vh - 10rem)",
+      }}
     >
       <Head>
         <title>Cyper Search</title>
@@ -141,6 +158,7 @@ export default function Home({ router }: { router: NextRouter }) {
         id="results"
       >
         <Header
+          cartAnim={cartAnim}
           handleSearch={handleSearch}
           searchActive={searchActive}
           searchInput={searchInput}
@@ -189,7 +207,7 @@ export default function Home({ router }: { router: NextRouter }) {
             unfollowProfile={unfollowProfile}
             profileHovers={profileHovers}
             setProfileHovers={setProfileHovers}
-            fullScreenVideo={fullscreenVideo}
+            fullScreenVideo={fullScreenVideo}
             volume={volume}
             volumeOpen={volumeOpen}
             setVolumeOpen={setVolumeOpen}

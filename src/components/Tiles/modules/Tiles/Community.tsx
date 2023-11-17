@@ -15,6 +15,7 @@ const Community: FunctionComponent<CommunityProps> = ({
   unfollowProfile,
   followProfile,
   followLoading,
+  dispatch
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol bg-black gap-4 p-2">

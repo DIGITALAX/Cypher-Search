@@ -158,8 +158,8 @@ const Bio: FunctionComponent<BioProps> = ({
                   className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
                 >
                   <div className="relative text-white text-xs font-bit w-fit h-fit">
-                    Recent <br />
-                    Action
+                    Quests <br />
+                    Soon
                   </div>
                   <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
                     <div className="relative w-14 h-14 flex items-center justify-center">

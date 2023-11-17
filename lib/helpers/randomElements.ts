@@ -1,6 +1,6 @@
 export const getRandomElement = (arr: string[]): string => {
   const numberOfElements = Math.floor(Math.random() * 4) + 1;
-  const tempArr = [...arr];
+  const tempArr = [...(arr || [])];
   const selectedElements: string[] = [];
   for (let i = 0; i < numberOfElements; i++) {
     const randomIndex = Math.floor(Math.random() * tempArr.length);

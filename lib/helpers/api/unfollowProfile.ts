@@ -14,8 +14,7 @@ const lensUnfollow = async (
   dispatch: Dispatch<AnyAction>,
   address: `0x${string}`,
   clientWallet: WalletClient,
-  publicClient: PublicClient,
-  clearFollow: () => void
+  publicClient: PublicClient
 ): Promise<void> => {
   const { data } = await unfollow({
     unfollow: [id],
@@ -63,7 +62,6 @@ const lensUnfollow = async (
       account: address,
     });
     const res = await clientWallet.writeContract(request);
-    clearFollow();
     const tx = await publicClient.waitForTransactionReceipt({ hash: res });
 
     await handleIndexCheck(

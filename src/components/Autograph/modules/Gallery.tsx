@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { GalleryProps } from "../types/autograph.types";
+import { Drop, GalleryProps } from "../types/autograph.types";
 import Image from "next/legacy/image";
 import { GALLERY_OPTIONS, INFURA_GATEWAY } from "../../../../lib/constants";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -28,9 +28,11 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   setOpenInteractions,
   dispatch,
   cartItems,
+  allDrops,
+  lensConnected,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-col gap-4 items-center justify-start flex-grow">
+    <div className="relative w-full h-full flex flex-col gap-10 items-start justify-start flex-grow">
       <div className="relative w-full justify-end flex items-center h-fit">
         <div className="relative w-[16rem] h-fit flex items-center justify-between flex p-2 border border-afilado rounded-md gap-3 font-bit">
           <div className="relative w-fit h-fit flex items-center justify-center text-white text-md top-px">
@@ -138,9 +140,9 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           }
         </InfiniteScroll>
       </div>
-      <div className="relative flex-grow flex items-end justify-center w-full h-[55rem]">
+      <div className="relative flex-grow flex justify-center w-full h-[55rem]">
         <div
-          className="relative w-full h-[50rem] bottom-0 flex items-end justify-center"
+          className="absolute w-full h-[50rem] bottom-0 flex items-end justify-center"
           draggable={false}
         >
           <Image
@@ -150,6 +152,59 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           />
           <div className="absolute w-full h-full bg-black opacity-[85%]"></div>
         </div>
+        {
+          // allDrops && allDrops?.length > 0 &&
+          <div className="relative w-[45rem] h-fit flex items-center justify-start overflow-x-scroll">
+            <div className="relative w-fit h-fit flex items-center justify-start gap-4">
+              {Array.from({ length: 20 })?.map((item: Drop, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative h-80 w-80 rounded-sm flex items-center justify-center cursor-pointer hover:opacity-80 p-3 bg-offBlack"
+                  >
+                    <div
+                      className="relative w-full h-full flex items-center justify-center"
+                      id="staticLoad"
+                    >
+                      <div className="relative w-full h-full flex">
+                        <Image
+                          src={`${INFURA_GATEWAY}/ipfs/${
+                            item?.cover?.split("ipfs://")?.[1]
+                          }`}
+                          className="rounded-sm"
+                          objectFit="cover"
+                          layout="fill"
+                        />
+                      </div>
+                      <div className="absolute bottom-0 right-0 w-full h-6 bg-black flex items-center justify-end px-1">
+                        <div
+                          className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
+                          title="Go to Drop"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(
+                              `/autograph/${
+                                lensConnected?.handle?.suggestedFormatted?.localName?.split(
+                                  "@"
+                                )?.[1]
+                              }/drop/${item.title}`
+                            );
+                          }}
+                        >
+                          <Image
+                            draggable={false}
+                            layout="fill"
+                            src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        }
       </div>
     </div>
   );

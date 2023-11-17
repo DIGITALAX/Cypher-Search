@@ -37,6 +37,9 @@ const Checkout: NextPage<{
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
   );
+  const cartAnim = useSelector(
+    (state: RootState) => state.app.cartAnimReducer.value
+  );
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
@@ -100,6 +103,7 @@ const Checkout: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header
+        cartAnim={cartAnim}
         searchActive={searchActive}
         filtersOpen={filtersOpen?.value}
         lensConnected={lensConnected}

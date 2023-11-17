@@ -37,7 +37,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
           const newItem = {
             item: cartItem,
             amount: 1,
-            price: Number(cartItem.prices?.[0]),
+            price: Number(cartItem?.prices?.[0]),
             level,
             type,
             color: cartItem?.colors?.[0],
@@ -47,35 +47,31 @@ const PopUp: FunctionComponent<PopUpProps> = ({
           };
 
           const existingItem = cartItems.find(
-            (item) => item.item.pubId === cartItem?.pubId
+            (item) => item?.item?.pubId === cartItem?.pubId
           );
 
           if (existingItem) {
-            const newCartItems = [...cartItems];
-            const itemIndex = newCartItems.indexOf(existingItem);
+            const newCartItems = [...(cartItems || [])];
+            const itemIndex = newCartItems?.indexOf(existingItem);
 
             if (
-              existingItem.color === newItem.color &&
-              existingItem.size === newItem.size
+              existingItem?.color === newItem?.color &&
+              existingItem?.size === newItem?.size
             ) {
               newCartItems[itemIndex] = {
-                ...existingItem,
-                amount: existingItem.amount + 1,
+                ...(existingItem || {}),
+                amount: existingItem?.amount + 1,
               };
             } else {
-              newCartItems.splice(itemIndex, 1);
-              newCartItems.push(newItem);
+              newCartItems?.splice(itemIndex, 1);
+              newCartItems?.push(newItem);
             }
 
             dispatch(setCartItems(newCartItems));
-            setCypherStorageCart(
-              JSON.stringify(newCartItems)
-            );
+            setCypherStorageCart(JSON.stringify(newCartItems));
           } else {
             dispatch(setCartItems([...cartItems, newItem]));
-            setCypherStorageCart(
-              JSON.stringify([...cartItems, newItem])
-            );
+            setCypherStorageCart(JSON.stringify([...cartItems, newItem]));
           }
 
           dispatch(setCartAnim(true));
@@ -90,7 +86,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
       </div>
       <div
         className="relative flex w-8 h-8 items-center justify-center rounded-full cursor-pointer active:scale-95 hover:opacity-70"
-        onClick={() => router.push(`/${type}/${cartItem?.pubId}`)}
+        onClick={() => router.push(`/item/${type}/${cartItem?.pubId}`)}
         title="View Item"
       >
         <Image

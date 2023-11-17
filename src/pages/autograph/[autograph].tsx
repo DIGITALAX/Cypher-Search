@@ -29,6 +29,7 @@ import useCreate from "@/components/Autograph/hooks/useCreate";
 import useConversations from "@/components/Autograph/hooks/useConversations";
 import useDrop from "@/components/Autograph/hooks/useDrop";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
+import { setCartAnim } from "../../../redux/reducers/cartAnimSlice";
 
 const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   router,
@@ -53,6 +54,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   );
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
+  );
+  const cartAnim = useSelector(
+    (state: RootState) => state.app.cartAnimReducer.value
   );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
@@ -96,7 +100,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     filterConstants,
     filters,
     allSearchItems,
-    dispatch
+    dispatch,
+    router
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -214,7 +219,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     publicClient,
     dispatch,
     address,
-    profile
+    isDesigner
   );
   const {
     setCollectionDetails,
@@ -356,11 +361,20 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     }, 1000);
   }, [profileLoading]);
 
+  useEffect(() => {
+    if (cartAnim) {
+      setTimeout(() => {
+        dispatch(setCartAnim(false));
+      }, 1000);
+    }
+  }, [cartAnim]);
+
   if (!profileLoading && !globalLoading && !feedLoading && !galleryLoading) {
     return (
       <>
         {!profile ? (
           <NotFound
+            cartAnim={cartAnim}
             router={router}
             searchActive={searchActive}
             filtersOpen={filtersOpen.value}
@@ -661,6 +675,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   postCollectGif={postCollectGif}
                 />
                 <Gallery
+                  lensConnected={lensConnected}
                   mirror={galleryMirror}
                   like={galleryLike}
                   openMirrorChoice={openMirrorGalleryChoice}
@@ -682,6 +697,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   openInteractions={openInteractions}
                   setOpenInteractions={setOpenInteractions}
                   dispatch={dispatch}
+                  allDrops={allDrops}
                 />
               </div>
             </div>

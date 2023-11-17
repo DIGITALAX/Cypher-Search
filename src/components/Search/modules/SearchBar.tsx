@@ -1,4 +1,4 @@
-import { FunctionComponent, KeyboardEvent, MouseEvent } from "react";
+import { FunctionComponent, KeyboardEvent } from "react";
 import { SearchBarProps } from "../types/search.types";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
@@ -15,6 +15,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
   placeholderText,
   dispatch,
   layoutAmount,
+  router,
 }): JSX.Element => {
   return (
     <div
@@ -66,7 +67,10 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
         <div className="relative w-fit h-fit flex flex-row gap-2 items-center justify-center">
           <div
             className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
-            onClick={() => dispatch(setFiltersOpen(!filtersOpen))}
+            onClick={() => {
+              if (router.asPath !== "/" && filtersOpen) router.push("/");
+              dispatch(setFiltersOpen(!filtersOpen));
+            }}
           >
             <Image
               src={`${INFURA_GATEWAY}/ipfs/QmdAeKBRKxgPrnpQzFbXtvnRZ8pUU3DkFMQnBKosYFJhX1`}

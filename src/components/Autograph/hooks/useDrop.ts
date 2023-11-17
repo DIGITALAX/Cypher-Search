@@ -15,7 +15,7 @@ const useDrop = (
   publicClient: PublicClient,
   dispatch: Dispatch,
   address: `0x${string}` | undefined,
-  pageProfile: Profile | undefined
+  isDesigner: boolean
 ) => {
   const [dropsLoading, setDropsLoading] = useState<boolean>(false);
   const [createDropLoading, setCreateDropLoading] = useState<boolean>(false);
@@ -179,7 +179,7 @@ const useDrop = (
       screenDisplay === ScreenDisplay.Gallery &&
       allDrops?.length < 1 &&
       address &&
-      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle
+      isDesigner
     ) {
       getAllDrops();
     }

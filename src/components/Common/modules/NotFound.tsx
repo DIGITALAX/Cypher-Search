@@ -22,6 +22,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   openAccountModal,
   dispatch,
   handleShuffleSearch,
+  cartAnim
 }): JSX.Element => {
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center">
@@ -67,6 +68,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
           openAccountModal={openAccountModal}
           dispatch={dispatch}
           auto
+          cartAnim={cartAnim}
         />
       </div>
     </div>

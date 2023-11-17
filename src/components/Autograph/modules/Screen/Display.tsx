@@ -22,7 +22,7 @@ const Display: FunctionComponent<DisplayProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col w-full h-full items-start justify-start gap-3">
-      <div className="relative flex flex-row gap-5 w-full h-[68vh] items-start justify-center">
+      <div className="relative flex flex-row gap-5 w-full h-[35rem] items-start justify-center">
         <div
           className="relative w-full h-full p-px flex items-center justify-center"
           id="pfp"

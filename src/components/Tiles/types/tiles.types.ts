@@ -48,7 +48,7 @@ export interface Creation {
   origin: string;
   profile: Profile;
   publication: Post | undefined;
-  blockTimestamp: string
+  blockTimestamp: string;
 }
 
 export interface Publication {
@@ -379,7 +379,7 @@ export enum PrintType {
   Hoodie = "3",
   Sleeve = "4",
   Crop = "5",
-  NFTOnly = "6"
+  NFTOnly = "6",
 }
 
 export type ProfileProps = {
@@ -418,8 +418,8 @@ export interface FilterInput {
   prompt_contains?: String;
   tags_contains?: String;
   title_contains?: String;
-  visibility_contains?: String
-  mediaTypes_contains?: String
+  visibility_contains?: String;
+  mediaTypes_contains?: String;
   unlimited?: Boolean;
   amount_gte?: String;
   amount_lte?: String;
@@ -454,6 +454,7 @@ export type CommunityProps = {
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
+  dispatch: Dispatch<AnyAction>;
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
