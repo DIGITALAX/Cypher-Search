@@ -33,7 +33,7 @@ const Messages: FunctionComponent<MessagesProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm min-h-[70vh] max-h-[70vh] justify-center overflow-hidden ${
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm min-h-[35rem] max-h-[35rem] justify-center overflow-hidden ${
               client ? "items-start" : "items-center"
             }`}
           >

@@ -24,17 +24,17 @@ const Orders: FunctionComponent<OrdersProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[70vh] max-h-[70vh] ${
-              allOrders?.length > 0 ? "items-start" : "items-center"
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[35rem] max-h-[35rem] ${
+             (ordersLoading || allOrders?.length > 0) ? "items-start" : "items-center"
             }`}
           >
             {ordersLoading ? (
-              <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start">
+              <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start animate-pulse overflow-y-scroll">
                 {Array.from({ length: 10 })?.map((_, index: number) => {
                   return (
                     <div
                       key={index}
-                      className="relative w-full h-24 flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack gap-3 animate-pulse"
+                      className="relative w-1/2 h-40 flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack gap-3"
                       id="staticLoad"
                     ></div>
                   );

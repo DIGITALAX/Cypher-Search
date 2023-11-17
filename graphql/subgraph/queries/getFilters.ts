@@ -11,6 +11,7 @@ const FILTER = `
         colors
         sizes
         printType
+        profileId
       }
   }
 `;

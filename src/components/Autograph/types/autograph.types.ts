@@ -344,6 +344,7 @@ export enum SortType {
 export type BioProps = {
   profile: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
 };
 
 export type GalleryScreenProps = {
@@ -1227,7 +1228,10 @@ export interface CollectionDetails {
     microbrandCover: string;
   };
   access: string;
-  drop: string;
+  dropTitle: string;
+  dropCover: string;
+  dropId: string;
+  dropCollectionIds: string[];
   visibility: string;
   communities: string;
 }

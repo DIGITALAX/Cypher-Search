@@ -62,7 +62,8 @@ const Checkout: NextPage<{
     dispatch,
     oracleData,
     cartItems,
-    lensConnected
+    lensConnected,
+    cartAnim
   );
   const {
     collectItem,

@@ -192,7 +192,7 @@ const useSearch = (
       if (filters?.microbrand) {
         const data = await getMicrobrands({
           where: {
-            profileIds: [filterConstants?.microbrands?.map((item) => item[2])],
+            profileIds: [filterConstants?.microbrands?.map((item) => item[3])],
           },
         });
 
@@ -386,7 +386,7 @@ const useSearch = (
       if (filters?.microbrand) {
         const data = await getMicrobrands({
           where: {
-            profileIds: [filterConstants?.microbrands?.map((item) => item[2])],
+            profileIds: [filterConstants?.microbrands?.map((item) => item[3])],
           },
         });
 
@@ -565,8 +565,8 @@ const useSearch = (
         colors: aggregateUniqueValues(data?.data?.collectionCreateds, "colors"),
         sizes: aggregateSizes(data?.data?.collectionCreateds),
         communities: community?.data?.communityCreateds?.(
-          (item: { name: string; image: string; communityId: string }) => {
-            return [item.name, item.image, item.communityId];
+          (item: { name: string; cover: string; communityId: string }) => {
+            return [item.name, item.cover, item.communityId];
           }
         ),
       };

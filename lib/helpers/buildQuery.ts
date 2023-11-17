@@ -55,8 +55,13 @@ const buildQuery = (filters: Filter): FilterInput => {
     query = { ...query, ...buildAndBlock([filters?.drop], "dropTitle") };
   }
 
-  if (filters.editions !== undefined) {
+  if (filters?.editions !== undefined) {
     query.editions = filters.editions;
+  }
+
+  if (filters?.community) {
+    const values = splitString(filters?.community);
+    query = { ...query, ...buildAndBlock(values, "communities") };
   }
 
   if (filters.size.apparel.length > 0) {

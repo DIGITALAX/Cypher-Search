@@ -21,19 +21,18 @@ const Community: FunctionComponent<CommunityProps> = ({
     <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol bg-black gap-4 p-2">
       <div className="relative w-fit h-fit gap-1 flex items-center justify-center flex-col">
         <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit text-xl">
-          COMMUNITY NAME
+        {community?.name}
         </div>
         <div className="absolute top-1 w-fit h-fit flex items-center justify-center text-sol opacity-50 font-bit text-xl">
-          COMMUNITY NAME
+          {community?.name}
         </div>
         <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit text-xs">
-          subtopic
+          {community?.subTopic}
         </div>
       </div>
       <div className="relative w-4/5 h-20  p-2 text-white text-center font-bit text-sm border border-[#1B4986] bg-fuego">
         <div className="relative w-full h-full flex items-start justify-center overflow-y-scroll">
-          dd dfsgfsdgfdsg dsfgsdfg sdgsdfgdsfg dfsgsdf dsfgdsfgdsfgs dfsgdsfg
-          dsfgsdf dfsgsdf dfsgs dsfgsdg sdfgsdfg dsfg sdfgsdf
+          {community?.description}
         </div>
       </div>
       <div className="relative w-full h-fit flex flex-row gap-4 justify-between items-center">
@@ -107,7 +106,7 @@ const Community: FunctionComponent<CommunityProps> = ({
       </div>
       <div className="relative w-full h-fit flex items-center justify-start overflow-x-scroll py-3">
         <div className="relative w-fit h-fit flex items-center justify-start flex-row gap-3">
-          {community?.validTokens?.map((item: Creation, index: number) => {
+          {community?.sample?.map((item: Creation, index: number) => {
             const profilePicture = createProfilePicture(
               item?.profile?.metadata?.picture
             );

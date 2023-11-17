@@ -129,7 +129,7 @@ const Web: FunctionComponent<WebProps> = ({
   collectionLoading
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20">
+    <div className="relative w-full min-h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20 h-fit">
       <div className="relative w-full h-fit flex flex-col items-start justify-start gap-5">
         <div className="relative flex flex-col items-start justify-between w-full h-fit gap-1">
           <Link
@@ -328,7 +328,7 @@ const Web: FunctionComponent<WebProps> = ({
               text: "display",
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Display)),
               width: "10",
-              height: "10",
+              height: "9",
               type: ScreenDisplay.Display,
             },
             {
@@ -349,12 +349,12 @@ const Web: FunctionComponent<WebProps> = ({
               type: ScreenDisplay.Circuits,
             },
             {
-              image: "QmPh734pzjY3evPPgY9tvXNMyg7EFah6cc4L2R6U9p2gff",
+              image: "QmaRcPqtKii9T6FZzFekRvaPHMMLzZzQi37KxkMxLW72so",
               text: "bookmarks",
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Bookmarks)),
-              width: "12",
-              height: "12",
+              width: "8",
+              height: "10",
               type: ScreenDisplay.Bookmarks,
             },
             {

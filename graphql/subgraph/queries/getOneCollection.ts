@@ -98,6 +98,45 @@ const COLLECTION_QUICK = `
   }
 `;
 
+const COLLECTION_TITLE = `
+  query($title: String!) {
+    collectionCreateds(where: {title: $title}, first: 1) {
+      amount
+      title
+      tags
+      pubId
+      prompt
+      profileId
+      profileHandle
+      printType
+      prices
+      owner
+      microbrandCover
+      microbrand
+      images
+      mediaTypes
+      visibility
+      fulfillerPercent
+      fulfillerBase
+      fulfiller
+      designerPercent
+      dropId
+      dropCollectionIds
+      dropCover
+      dropTitle
+      description
+      communities
+      collectionId
+      access
+      unlimited
+      colors
+      sizes
+      origin
+      blockTimestamp
+    }
+  }
+`;
+
 export const getOneCollection = async (
   collectionId: string
 ): Promise<FetchResult | void> => {
@@ -185,6 +224,32 @@ export const getOneCollectionQuick = async (
     query: gql(COLLECTION_QUICK),
     variables: {
       collectionId,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};
+
+export const getOneCollectionTitle = async (
+  title: string
+): Promise<FetchResult | void> => {
+  const queryPromise = graphPrintClient.query({
+    query: gql(COLLECTION_TITLE),
+    variables: {
+      title,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

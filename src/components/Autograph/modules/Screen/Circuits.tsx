@@ -9,7 +9,7 @@ const Circuits: FunctionComponent = (): JSX.Element => {
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center min-h-[70vh] max-h-[70vh] overflow-y-scroll items-center`}
+            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center min-h-[35rem] max-h-[35rem] overflow-y-scroll items-center`}
           >
             <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
               Circuits Coming Soon.
@@ -21,7 +21,7 @@ const Circuits: FunctionComponent = (): JSX.Element => {
         className="relative flex w-80 h-full p-px flex-col items-start justify-start"
         id="mar"
       >
-        <div className="relative w-full min-h-[70vh] max-h-[70vh] h-full flex flex-col bg-piloto gap-6 items-center justify-start p-3">
+        <div className="relative w-full min-h-[35rem] max-h-[35rem] h-full flex flex-col bg-piloto gap-6 items-center justify-start p-3">
           <div className="font-bit text-white text-xs text-center flex w-4/5 h-fit relative">
             Share what you’ve collected or created. Keep each item open, super
             stealth mode, or find that cryptic balance in the force. The choice

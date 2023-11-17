@@ -3,6 +3,9 @@ import Chromadin from "./Chromadin";
 import CoinOp from "./CoinOp";
 import { SwitchTypeProps } from "../types/item.types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
+import Publication from "./Publication";
+import Community from "./Community";
+import Microbrand from "./Microbrand";
 
 const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   type,
@@ -18,10 +21,13 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
       return <CoinOp itemData={itemData.post as Creation} />;
 
     case "pub":
-      return <></>
+      return <Publication />
 
     case "community":
-      return <></>
+      return <Community />
+
+    case "microbrand":
+      return <Microbrand />
   }
 };
 
