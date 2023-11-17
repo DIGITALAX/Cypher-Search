@@ -187,7 +187,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                                 lensConnected?.handle?.suggestedFormatted?.localName?.split(
                                   "@"
                                 )?.[1]
-                              }/drop/${item.title}`
+                              }/drop/${item?.title}`
                             );
                           }}
                         >

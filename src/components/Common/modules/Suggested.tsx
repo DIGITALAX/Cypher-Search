@@ -50,6 +50,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   setPopUpOpen,
   apparel,
   cartAnim,
+  searchItems,
 }) => {
   return (
     <div
@@ -83,6 +84,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
       />
       {component}
       <Tiles
+        searchItems={searchItems}
         layoutAmount={layoutAmount!}
         filtersOpen={filtersOpen}
         searchActive={true}

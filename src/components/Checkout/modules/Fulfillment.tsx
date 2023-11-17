@@ -83,7 +83,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                     }`}
                   >
                     <div className="relative w-fit h-fit flex text-white font-aust text-base">
-                      {item.title}
+                      {item?.title}
                     </div>
                     {item?.drop ? (
                       <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">

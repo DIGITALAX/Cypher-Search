@@ -57,7 +57,7 @@ const useSearch = (
   searchActive: boolean,
   filterConstants: FilterValues | undefined,
   filters: Filter,
-  allSearchItems: AllSearchItemsState,
+  allSearchItems: AllSearchItemsState | undefined,
   dispatch: Dispatch,
   router: NextRouter
 ) => {
@@ -118,8 +118,7 @@ const useSearch = (
           collections = await filterSearch(0);
         }
         query = searchInput;
-      }
-      {
+      } else {
         collections = await filterSearch(0);
         if (!searchInput) {
           query = filters?.hashtag || filters?.community;
@@ -274,7 +273,8 @@ const useSearch = (
       profiles: Profile[] | undefined = [],
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
       pubCursor: string | undefined,
-      profileCursor: string | undefined;
+      profileCursor: string | undefined,
+      microbrands: Profile[] = [];
     try {
       if (filterEmpty(filters) && searchInput) {
         if (allSearchItems?.graphCursor) {
@@ -358,25 +358,48 @@ const useSearch = (
         }
       }
 
+      if (filters?.microbrand) {
+        const data = await getMicrobrands({
+          where: {
+            profileIds: [filterConstants?.microbrands?.map((item) => item[2])],
+          },
+        });
+
+        microbrands = (data?.data?.profiles?.items?.map((item, index) => ({
+          ...item,
+          microbandCover: filterConstants?.microbrands[index][1],
+          microbrandName: filterConstants?.microbrands[index][0],
+        })) || []) as any;
+      }
+
       dispatch(
         setAllSearchItems({
           actionItems: [
-            ...(collections?.map((item) => ({
-              post: item,
-              type: item.origin,
-            })) || []),
-            ...(profiles?.map((item) => ({
-              post: item,
-              type: "Profile",
-            })) || []),
-            ...(publications?.map((item) => ({
-              post: item,
-              publishedOn: item?.publishedOn,
-              type:
-                item?.__typename !== "Mirror"
-                  ? (item as Post | Comment | Quote)?.metadata?.__typename
-                  : item?.mirrorOn?.metadata?.__typename,
-            })) || []),
+            ...allSearchItems?.items!,
+            ...[
+              ...(collections?.map((item) => ({
+                post: item,
+                type: item.origin,
+              })) || []),
+              ...[
+                ...(profiles?.map((item) => ({
+                  post: item,
+                  type: "Profile",
+                })) || []),
+                ...(microbrands?.map((item) => ({
+                  post: item,
+                  type: "Microbrand",
+                })) || []),
+              ],
+              ...(publications?.map((item) => ({
+                post: item,
+                publishedOn: item?.publishedOn,
+                type:
+                  item?.__typename !== "Mirror"
+                    ? (item as Post | Comment | Quote)?.metadata?.__typename
+                    : item?.mirrorOn?.metadata?.__typename,
+              })) || []),
+            ],
           ]?.sort(() => Math.random() - 0.5),
           actionGraphCursor: allSearchItems?.graphCursor
             ? collections?.length == allSearchItems?.graphCursor + 25

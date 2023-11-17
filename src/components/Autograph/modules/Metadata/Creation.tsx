@@ -44,28 +44,28 @@ const Creation: FunctionComponent<CreationProps> = ({
             item,
             amount: 1,
             price: Number(item.prices?.[0]),
-            type: numberToItemTypeMap[Number(item.origin)],
+            type: numberToItemTypeMap[Number(item?.origin)],
             color: item?.colors?.[0],
             size: item?.sizes?.[0],
             purchased: false,
             chosenIndex: 0,
           };
 
-          const existingItem = cartItems.find(
-            (value) => value.item.pubId === item?.pubId
+          const existingItem = cartItems?.find(
+            (value) => value?.item?.pubId === item?.pubId
           );
 
           if (existingItem) {
             const newCartItems = [...cartItems];
-            const itemIndex = newCartItems.indexOf(existingItem);
+            const itemIndex = newCartItems?.indexOf(existingItem);
 
             if (
-              existingItem.color === newItem.color &&
-              existingItem.size === newItem.size
+              existingItem?.color === newItem?.color &&
+              existingItem?.size === newItem?.size
             ) {
               newCartItems[itemIndex] = {
                 ...existingItem,
-                amount: existingItem.amount + 1,
+                amount: existingItem?.amount + 1,
               };
             } else {
               newCartItems.splice(itemIndex, 1);

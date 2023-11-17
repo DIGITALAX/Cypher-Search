@@ -293,7 +293,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                     key={indexTwo}
                   >
                     <div className="relative w-full h-fit flex items-start justify-start font-bit text-white text-sm">
-                      {item.title}
+                      {item?.title}
                     </div>
                     <div
                       className="relative w-full h-12 p-px rounded-sm flex flex-row items-center justify-center font-bit text-sol text-center"
@@ -353,7 +353,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                     key={indexTwo}
                   >
                     <div className="relative w-full h-fit flex items-start justify-start font-bit text-white text-sm">
-                      {item.title}
+                      {item?.title}
                     </div>
                     <div
                       className="relative w-full h-12 p-px rounded-sm flex flex-row items-center justify-center font-bit text-sol text-center"

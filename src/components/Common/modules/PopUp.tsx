@@ -46,7 +46,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             chosenIndex: 0,
           };
 
-          const existingItem = cartItems.find(
+          const existingItem = cartItems?.find(
             (item) => item?.item?.pubId === cartItem?.pubId
           );
 

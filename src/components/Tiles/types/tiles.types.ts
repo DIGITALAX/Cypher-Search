@@ -10,6 +10,7 @@ import {
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
+import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 
 export interface Creation {
   amount: string;
@@ -64,6 +65,7 @@ export type TilesProps = {
   searchLoading: boolean;
   searchActive: boolean;
   filtersOpen: boolean;
+  searchItems: AllSearchItemsState | undefined
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
