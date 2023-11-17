@@ -1,9 +1,4 @@
-import {
-  KeyboardEvent,
-  MouseEvent,
-  useEffect,
-  useState,
-} from "react";
+import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
 import {
   PLACEHOLDERS,
@@ -54,6 +49,7 @@ import {
 } from "../../../../lib/helpers/aggregators";
 import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
+import { NextRouter } from "next/router";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -62,7 +58,8 @@ const useSearch = (
   filterConstants: FilterValues | undefined,
   filters: Filter,
   allSearchItems: AllSearchItemsState,
-  dispatch: Dispatch
+  dispatch: Dispatch,
+  router: NextRouter
 ) => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
@@ -556,7 +553,7 @@ const useSearch = (
   }, []);
 
   useEffect(() => {
-    if (!filtersOpen.value && !filterEmpty(filters)) {
+    if (!filtersOpen.value && !filterEmpty(filters) && router?.asPath === "/") {
       handleSearch();
     }
   }, [filtersOpen.value]);

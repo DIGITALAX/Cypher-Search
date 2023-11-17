@@ -327,9 +327,9 @@ input[type="number"]::-webkit-outer-spin-button:focus {
   );
 }
 
-#cart {
+#cartAnim {
   transform: scale(1.1);
-  animation: shake 0.5s ease;
+  animation: shake 1s ease;
 }
 @keyframes shake {
   0% {

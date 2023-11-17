@@ -55,7 +55,15 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
           <div className="relative flex flex-col gap-2 flex items-center justify-center w-fit h-fit">
             <div
               className="relative flex flex-row w-10 h-10 items-center justify-start rounded-full border border-offWhite cursor-pointer"
-              onClick={() => router.push(`/item/quest/${publication?.handle}`)}
+              onClick={() =>
+                router.push(
+                  `/item/quest/${
+                    publication?.handle?.suggestedFormatted?.localName?.split(
+                      "@"
+                    )?.[1]
+                  }`
+                )
+              }
             >
               {profilePicture && (
                 <Image
@@ -69,10 +77,10 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
             </div>
             <div className="relative w-fit h-fit flex flex-col items-center justify-center font-bit text-xxs">
               <div className="relative flex w-fit h-fit break-words items-center justify-center text-pez">
-                Emma-Jane
+                {publication?.handle?.localName}
               </div>
               <div className="relative flex w-fit h-fit break-words items-center justify-center text-tee text-white">
-                @emmajane1313
+                {publication?.handle?.suggestedFormatted?.localName}
               </div>
             </div>
           </div>

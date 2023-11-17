@@ -54,7 +54,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
                 );
                 router.push(
                   type === "collection"
-                    ? `/autograph/item/${pubId}`
+                    ? `/item/pub/${pubId}`
                     : `/autograph/${handle}/drop/${pubId}`
                 );
               }}

@@ -10,6 +10,8 @@ import { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
+import { useEffect } from "react";
+import { setCartAnim } from "../../redux/reducers/cartAnimSlice";
 
 const Custom404: NextPage<{
   router: NextRouter;
@@ -22,6 +24,9 @@ const Custom404: NextPage<{
   });
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
+  );
+  const cartAnim = useSelector(
+    (state: RootState) => state.app.cartAnimReducer.value
   );
   const oracleData = useSelector(
     (state: RootState) => state.app.oracleDataReducer.data
@@ -56,7 +61,8 @@ const Custom404: NextPage<{
     filterConstants,
     filters,
     allSearchItems,
-    dispatch
+    dispatch,
+    router
   );
   const {
     handleLensConnect,
@@ -75,6 +81,14 @@ const Custom404: NextPage<{
     lensConnected
   );
 
+  useEffect(() => {
+    if (cartAnim) {
+      setTimeout(() => {
+        dispatch(setCartAnim(false))
+      }, 1000)
+    }
+  }, [cartAnim])
+
   return (
     <>
       <Head>
@@ -83,6 +97,7 @@ const Custom404: NextPage<{
       </Head>
       <NotFound
         router={router}
+        cartAnim={cartAnim}
         searchActive={searchActive}
         filtersOpen={filtersOpen.value}
         lensConnected={lensConnected}

@@ -97,7 +97,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             className="relative w-7 h-7 items-center justify-center flex cursor-pointer"
             onClick={() =>
               router.push(
-                `item/${numberToItemTypeMap[Number(item.origin)]}/${
+                `/item/${numberToItemTypeMap[Number(item?.origin)]}/${
                   item?.pubId
                 }`
               )
@@ -177,7 +177,7 @@ const Creation: FunctionComponent<CreationProps> = ({
               interactionsLoading={interactionsLoading}
               index={index}
               type={undefined}
-              publication={item.publication}
+              publication={item?.publication}
               hideCollect
               router={router}
             />

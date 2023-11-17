@@ -15,6 +15,11 @@ import { useEffect, useState } from "react";
 import useAutograph from "@/components/Autograph/hooks/useAutograph";
 import useSuggested from "@/components/Common/hooks/useSuggested";
 import useDrop from "@/components/Drop/hooks/useDrop";
+import Suggested from "@/components/Common/modules/Suggested";
+import DropMain from "@/components/Drop/modules/DropMain";
+import useTiles from "@/components/Tiles/hooks/useTiles";
+import useInteractions from "@/components/Tiles/hooks/useInteractions";
+import { setCartAnim } from "../../../../../redux/reducers/cartAnimSlice";
 
 const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
@@ -48,18 +53,45 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const filters = useSelector(
     (state: RootState) => state.app.filterReducer.filter
   );
+  const cartAnim = useSelector(
+    (state: RootState) => state.app.cartAnimReducer.value
+  );
+  const interactionsCount = useSelector(
+    (state: RootState) => state.app.interactionsCountReducer
+  );
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer
   );
+  const fullScreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
+  );
+  const layoutAmount = useSelector(
+    (state: RootState) => state.app.layoutSwitchReducer.value
+  );
   const { address, isConnected } = useAccount();
-  const { handleShuffleSearch } = useSearch(
+  const {
+    handleSearch,
+    handleMoreSearch,
+    searchInput,
+    setSearchInput,
+    handleShuffleSearch,
+    placeholderText,
+    searchLoading,
+    volume,
+    volumeOpen,
+    setVolumeOpen,
+    setVolume,
+    heart,
+    setHeart,
+  } = useSearch(
     filtersOpen,
     lensConnected,
     searchActive,
     filterConstants,
     filters,
     allSearchItems,
-    dispatch
+    dispatch,
+    router
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -80,9 +112,40 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     cartItems,
     lensConnected
   );
+  const {
+    mirror,
+    like,
+    collect,
+    interactionsLoading,
+    setOpenMirrorChoice,
+    openMirrorChoice,
+  } = useInteractions(
+    allSearchItems.items,
+    interactionsCount,
+    dispatch,
+    publicClient,
+    address
+  );
   const { dropLoading, dropItem, collections } = useDrop(
     drop as string,
     profile
+  );
+  const {
+    setPopUpOpen,
+    popUpOpen,
+    apparel,
+    setApparel,
+    profileHovers,
+    setProfileHovers,
+    followLoading,
+    followProfile,
+    unfollowProfile,
+  } = useTiles(
+    allSearchItems.items,
+    lensConnected,
+    dispatch,
+    publicClient,
+    address
   );
   const { getMoreSuggested, suggestedLoading, suggestedFeed } = useSuggested();
 
@@ -100,11 +163,20 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     }, 1000);
   }, [profileLoading]);
 
+  useEffect(() => {
+    if (cartAnim) {
+      setTimeout(() => {
+        dispatch(setCartAnim(false));
+      }, 1000);
+    }
+  }, [cartAnim]);
+
   if (!profileLoading && !globalLoading && !dropLoading) {
     return (
       <>
         {!profile || collections?.length < 1 ? (
           <NotFound
+            cartAnim={cartAnim}
             router={router}
             searchActive={searchActive}
             filtersOpen={filtersOpen.value}
@@ -125,7 +197,10 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
         ) : (
           profile &&
           collections?.length > 0 && (
-            <div>
+            <div
+              className="relative flex flex-col w-full h-full flex-grow"
+              id="results"
+            >
               <Head>
                 <title>
                   {(drop as string)?.toUpperCase()} |{" "}
@@ -248,6 +323,56 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   type="font/ttf"
                 />
               </Head>
+              <Suggested
+                cartAnim={cartAnim}
+                component={<DropMain />}
+                handleSearch={handleSearch}
+                searchInput={searchInput}
+                setSearchInput={setSearchInput}
+                openConnectModal={openConnectModal}
+                handleLensConnect={handleLensConnect}
+                openAccountModal={openAccountModal}
+                lensConnected={lensConnected}
+                walletConnected={walletConnected}
+                openAccount={openAccount}
+                setOpenAccount={setOpenAccount}
+                signInLoading={signInLoading}
+                filtersOpen={filtersOpen?.value}
+                handleShuffleSearch={handleShuffleSearch}
+                placeholderText={placeholderText}
+                dispatch={dispatch}
+                layoutAmount={layoutAmount}
+                cartItems={cartItems}
+                cartListOpen={cartListOpen}
+                setCartListOpen={setCartListOpen}
+                router={router}
+                includeSearch
+                handleMoreSearch={handleMoreSearch}
+                popUpOpen={popUpOpen}
+                setPopUpOpen={setPopUpOpen}
+                apparel={apparel}
+                setApparel={setApparel}
+                mirror={mirror}
+                like={like}
+                simpleCollect={collect}
+                interactionsLoading={interactionsLoading}
+                setOpenMirrorChoice={setOpenMirrorChoice}
+                openMirrorChoice={openMirrorChoice}
+                searchLoading={searchLoading}
+                followLoading={followLoading}
+                followProfile={followProfile}
+                unfollowProfile={unfollowProfile}
+                profileHovers={profileHovers}
+                setProfileHovers={setProfileHovers}
+                fullScreenVideo={fullScreenVideo}
+                volume={volume}
+                volumeOpen={volumeOpen}
+                setVolumeOpen={setVolumeOpen}
+                setVolume={setVolume}
+                profileId={lensConnected?.id}
+                heart={heart}
+                setHeart={setHeart}
+              />
             </div>
           )
         )}

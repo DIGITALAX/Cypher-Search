@@ -48,6 +48,7 @@ export type SearchBarProps = {
   ) => Promise<void>;
   searchActive: boolean;
   searchInput: string;
+  router: NextRouter;
   setSearchInput: (e: SetStateAction<string>) => void;
   filtersOpen: boolean;
   handleShuffleSearch: () => void;
@@ -61,6 +62,7 @@ export type HeaderProps = {
   includeSearch: boolean;
   router: NextRouter;
   layoutAmount?: number;
+  cartAnim: boolean;
   handleSearch?: (
     e: KeyboardEvent | MouseEvent,
     click?: boolean

@@ -13,7 +13,7 @@ const Footer: FunctionComponent<FooterProps> = ({
       className={`relative bottom-0 w-full h-fit flex w-full`}
     >
       <div className="relative grid auto-rows-auto grid-flow-row w-full h-full pt-12">
-        <div className="relative row-start-4 w-full h-full text-midWhite pt-10">
+        <div className="relative row-start-4 w-full h-full text-midWhite">
           <div className="relative grid auto-cols-auto grid-flow-col h-full w-full">
             <div className="col-start-1 h-full w-full relative pt-6">
               <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto">

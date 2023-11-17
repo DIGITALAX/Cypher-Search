@@ -36,7 +36,7 @@ const handleIndexCheck = async (
         actionMessage: undefined,
       })
     );
-  }, 3000);
+  }, 1000);
 };
 
 const getIndexed = async (

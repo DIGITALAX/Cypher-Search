@@ -411,7 +411,6 @@ const useBookmarks = (
         address as `0x${string}`,
         clientWallet,
         publicClient,
-        clearFollow
       );
       await refetchProfile(dispatch, lensConnected?.id);
     } catch (err: any) {

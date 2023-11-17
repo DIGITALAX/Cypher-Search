@@ -29,6 +29,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   setCartListOpen,
   router,
   includeSearch,
+  cartAnim
 }): JSX.Element => {
   return (
     <div
@@ -59,9 +60,11 @@ const Header: FunctionComponent<HeaderProps> = ({
           handleShuffleSearch={handleShuffleSearch!}
           placeholderText={placeholderText}
           layoutAmount={layoutAmount!}
+          router={router}
         />
       )}
       <Accounts
+        cartAnim={cartAnim}
         searchActive={searchActive}
         filtersOpen={filtersOpen}
         lensConnected={lensConnected}

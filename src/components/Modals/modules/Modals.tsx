@@ -109,7 +109,8 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     filterConstants,
     filters,
     allSearchItems,
-    dispatch
+    dispatch,
+    router
   );
   const {
     handleItemSelect,

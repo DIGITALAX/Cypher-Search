@@ -821,7 +821,9 @@ export type GalleryProps = {
         created: Creation[];
       }
     | undefined;
+  allDrops: Drop[] | undefined;
   cartItems: CartItem[];
+  lensConnected: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
   mirror: (id: string) => Promise<void>;
   like: (id: string) => Promise<void>;

@@ -128,21 +128,21 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
             if (
               cartItems?.some(
                 (value) =>
-                  value?.item?.pubId === item?.pubId && value.level === index
+                  value?.item?.pubId === item?.pubId && value?.level === index
               )
             ) {
               router.push("/checkout");
             } else {
-              const itemIndex = cartItems.findIndex(
-                (cartItem) => cartItem.item.collectionId === item?.collectionId
+              const itemIndex = cartItems?.findIndex(
+                (cartItem) => cartItem?.item?.collectionId === item?.collectionId
               );
               if (
                 cartItems?.some(
-                  (value) => value.item.collectionId === item?.collectionId
+                  (value) => value?.item?.collectionId === item?.collectionId
                 )
               ) {
-                const newCartItems = [...cartItems];
-                newCartItems.splice(itemIndex, 1);
+                const newCartItems = [...(cartItems || [])];
+                newCartItems?.splice(itemIndex, 1);
                 dispatch(setCartItems([...newCartItems, newItem]));
                 setCypherStorageCart(
                   JSON.stringify([...newCartItems, newItem])
@@ -157,8 +157,8 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
         >
           {cartItems?.some(
             (value) =>
-              value.item.collectionId === item?.collectionId &&
-              value.level === index
+              value?.item?.collectionId === item?.collectionId &&
+              value?.level === index
           )
             ? "Go to Cart"
             : "Choose Level"}

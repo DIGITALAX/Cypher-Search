@@ -61,9 +61,10 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           followLoading={followLoading}
           followProfile={followProfile}
           unfollowProfile={unfollowProfile}
-          community={community}
+          community={community!}
           index={index}
           router={router}
+          dispatch={dispatch}
         />
       );
 

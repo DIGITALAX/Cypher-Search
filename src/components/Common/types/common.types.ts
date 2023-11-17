@@ -8,7 +8,8 @@ import {
   Quote,
 } from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import { SetStateAction } from "react";
+import { KeyboardEvent, MouseEvent, ReactNode, SetStateAction } from "react";
+import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 
 export type BarProps = {
   title: string;
@@ -92,6 +93,7 @@ export type TileLoaderProps = {
 export type AccountsProps = {
   router: NextRouter;
   searchActive: boolean;
+  cartAnim: boolean;
   openConnectModal: (() => void) | undefined;
   openAccountModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
@@ -111,6 +113,7 @@ export type AccountsProps = {
 export type NotFoundProps = {
   router: NextRouter;
   searchActive: boolean;
+  cartAnim: boolean;
   openConnectModal: (() => void) | undefined;
   openAccountModal: (() => void) | undefined;
   handleLensConnect: () => Promise<void>;
@@ -145,4 +148,61 @@ export type CartItem = {
   amount: number;
   type: ItemType;
   purchased: boolean;
+};
+
+export type SuggestedProps = {
+  dispatch: Dispatch<AnyAction>;
+  includeSearch: boolean;
+  router: NextRouter;
+  cartAnim: boolean;
+  layoutAmount?: number;
+  handleSearch?: (
+    e: KeyboardEvent | MouseEvent,
+    click?: boolean
+  ) => Promise<void>;
+  searchInput?: string;
+  placeholderText?: string | undefined;
+  setSearchInput?: (e: SetStateAction<string>) => void;
+  openConnectModal: (() => void) | undefined;
+  openAccountModal: (() => void) | undefined;
+  handleLensConnect: () => Promise<void>;
+  cartListOpen: boolean;
+  setCartListOpen: (e: SetStateAction<boolean>) => void;
+  lensConnected: Profile | undefined;
+  walletConnected: boolean;
+  setOpenAccount: (e: SetStateAction<boolean>) => void;
+  openAccount: boolean;
+  signInLoading: boolean;
+  filtersOpen: boolean;
+  handleShuffleSearch?: () => void;
+  cartItems: CartItem[];
+  handleMoreSearch: () => Promise<void>;
+  profileHovers: boolean[];
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  searchLoading: boolean;
+  popUpOpen: boolean[];
+  setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
+  apparel: boolean[];
+  setApparel: (e: SetStateAction<boolean[]>) => void;
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  simpleCollect: (id: string, type: string) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+  }[];
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  openMirrorChoice: boolean[];
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileId: string;
+  volume: number[];
+  volumeOpen: boolean[];
+  heart: boolean[];
+  setVolume: (e: SetStateAction<number[]>) => void;
+  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
+  setHeart: (e: SetStateAction<boolean[]>) => void;
+  fullScreenVideo: FullScreenVideoState;
+  component: ReactNode;
 };
