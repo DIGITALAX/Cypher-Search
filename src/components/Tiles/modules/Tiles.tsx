@@ -37,6 +37,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   profileId,
   heart,
   setHeart,
+  searchItems
 }): JSX.Element => {
   const items = [
     { id: 0, type: "image" },
@@ -79,7 +80,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
       <TileSwitch
         key={index}
         type={data.type}
-        publication={""}
+        publication={searchItems?.items?.[index]!}
         cartItems={cartItems}
         layoutAmount={layoutAmount}
         popUpOpen={popUpOpen}

@@ -50,10 +50,10 @@ const Drop: FunctionComponent<DropProps> = ({
                               dropId: "",
                             })
                           : setDropDetails({
-                              collectionIds: item.collectionIds,
-                              cover: item.cover,
-                              title: item.title,
-                              dropId: item.dropId,
+                              collectionIds: item?.collectionIds,
+                              cover: item?.cover,
+                              title: item?.title,
+                              dropId: item?.dropId,
                             })
                       }
                     >
@@ -73,7 +73,7 @@ const Drop: FunctionComponent<DropProps> = ({
                           onClick={(e) => {
                             e.stopPropagation();
                             router.push(
-                              `/autograph/${handle}/drop/${item.title}`
+                              `/autograph/${handle}/drop/${item?.title}`
                             );
                           }}
                         >

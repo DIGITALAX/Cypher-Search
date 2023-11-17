@@ -207,7 +207,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                             onClick={() => {
                               const allItems = [...cartItems];
 
-                              const cartIndex = cartItems.findIndex(
+                              const cartIndex = cartItems?.findIndex(
                                 (value: CartItem) =>
                                   value?.item?.collectionId ===
                                   item?.item?.collectionId

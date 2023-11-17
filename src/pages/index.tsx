@@ -138,10 +138,10 @@ export default function Home({ router }: { router: NextRouter }) {
   useEffect(() => {
     if (cartAnim) {
       setTimeout(() => {
-        dispatch(setCartAnim(false))
-      }, 1000)
+        dispatch(setCartAnim(false));
+      }, 1000);
     }
-  }, [cartAnim])
+  }, [cartAnim]);
   return (
     <div
       className={`relative w-full flex flex-col items-center justify-center sm:h-screen`}
@@ -184,6 +184,7 @@ export default function Home({ router }: { router: NextRouter }) {
         />
         {searchActive && (
           <Tiles
+            searchItems={allSearchItems}
             layoutAmount={layoutAmount}
             filtersOpen={filtersOpen?.value}
             searchActive={searchActive}

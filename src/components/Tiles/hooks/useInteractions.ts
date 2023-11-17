@@ -14,7 +14,7 @@ import { Dispatch } from "redux";
 
 const useInteractions = (
   allSearchItems: Publication[],
-  interactionsCount: InteractionsCountState,
+  interactionsCount: InteractionsCountState | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined
@@ -29,8 +29,8 @@ const useInteractions = (
   >([]);
 
   const like = async (id: string) => {
-    const index = allSearchItems.findIndex(
-      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+    const index = allSearchItems?.findIndex(
+      (pub) => (pub?.post as Post | Comment | Mirror | Quote)?.id === id
     );
     if (index === -1) {
       return;
@@ -47,18 +47,18 @@ const useInteractions = (
 
       dispatch(
         setInteractionsCount({
-          actionLikes: interactionsCount.likes.map((obj, ind) =>
+          actionLikes: interactionsCount?.likes?.map((obj, ind) =>
             ind === index ? obj + 1 : obj
           ),
-          actionMirrors: interactionsCount.mirrors,
-          actionQuotes: interactionsCount.quotes,
-          actionCollects: interactionsCount.collects,
-          actionComments: interactionsCount.comments,
-          actionHasLiked: interactionsCount.hasLiked.map((obj, ind) =>
+          actionMirrors: interactionsCount?.mirrors,
+          actionQuotes: interactionsCount?.quotes,
+          actionCollects: interactionsCount?.collects,
+          actionComments: interactionsCount?.comments,
+          actionHasLiked: interactionsCount?.hasLiked?.map((obj, ind) =>
             ind === index ? true : obj
           ),
-          actionHasMirrored: interactionsCount.hasMirrored,
-          actionHasCollected: interactionsCount.hasCollected,
+          actionHasMirrored: interactionsCount?.hasMirrored,
+          actionHasCollected: interactionsCount?.hasCollected,
         })
       );
     } catch (err: any) {
@@ -73,8 +73,8 @@ const useInteractions = (
   };
 
   const collect = async (id: string, type: string) => {
-    const index = allSearchItems.findIndex(
-      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+    const index = allSearchItems?.findIndex(
+      (pub) => (pub?.post as Post | Comment | Mirror | Quote)?.id === id
     );
     if (index === -1) {
       return;
@@ -103,16 +103,16 @@ const useInteractions = (
 
       dispatch(
         setInteractionsCount({
-          actionLikes: interactionsCount.likes,
-          actionMirrors: interactionsCount.mirrors,
-          actionQuotes: interactionsCount.quotes,
-          actionCollects: interactionsCount.collects.map((obj, ind) =>
+          actionLikes: interactionsCount?.likes,
+          actionMirrors: interactionsCount?.mirrors,
+          actionQuotes: interactionsCount?.quotes,
+          actionCollects: interactionsCount?.collects?.map((obj, ind) =>
             ind === index ? obj + 1 : obj
           ),
-          actionComments: interactionsCount.comments,
-          actionHasLiked: interactionsCount.hasLiked,
-          actionHasMirrored: interactionsCount.hasMirrored,
-          actionHasCollected: interactionsCount.hasCollected.map((obj, ind) =>
+          actionComments: interactionsCount?.comments,
+          actionHasLiked: interactionsCount?.hasLiked,
+          actionHasMirrored: interactionsCount?.hasMirrored,
+          actionHasCollected: interactionsCount?.hasCollected?.map((obj, ind) =>
             ind === index ? true : obj
           ),
         })
@@ -129,7 +129,7 @@ const useInteractions = (
   };
 
   const mirror = async (id: string) => {
-    const index = allSearchItems.findIndex(
+    const index = allSearchItems?.findIndex(
       (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
     );
     if (index === -1) {
@@ -157,18 +157,18 @@ const useInteractions = (
 
       dispatch(
         setInteractionsCount({
-          actionLikes: interactionsCount.likes,
-          actionMirrors: interactionsCount.mirrors.map((obj, ind) =>
+          actionLikes: interactionsCount?.likes,
+          actionMirrors: interactionsCount?.mirrors?.map((obj, ind) =>
             ind === index ? obj + 1 : obj
           ),
-          actionQuotes: interactionsCount.quotes,
-          actionCollects: interactionsCount.collects,
-          actionComments: interactionsCount.comments,
-          actionHasLiked: interactionsCount.hasLiked,
-          actionHasMirrored: interactionsCount.hasMirrored.map((obj, ind) =>
+          actionQuotes: interactionsCount?.quotes,
+          actionCollects: interactionsCount?.collects,
+          actionComments: interactionsCount?.comments,
+          actionHasLiked: interactionsCount?.hasLiked,
+          actionHasMirrored: interactionsCount?.hasMirrored?.map((obj, ind) =>
             ind === index ? true : obj
           ),
-          actionHasCollected: interactionsCount.hasCollected,
+          actionHasCollected: interactionsCount?.hasCollected,
         })
       );
     } catch (err: any) {
@@ -182,12 +182,12 @@ const useInteractions = (
   };
 
   useEffect(() => {
-    if (allSearchItems.length > 0) {
+    if (allSearchItems?.length > 0) {
       setOpenMirrorChoice(
-        Array.from({ length: allSearchItems.length }, () => false)
+        Array.from({ length: allSearchItems?.length }, () => false)
       );
       setInteractionsLoading(
-        Array.from({ length: allSearchItems.length }, () => ({
+        Array.from({ length: allSearchItems?.length }, () => ({
           like: false,
           mirror: false,
           quote: false,
@@ -195,7 +195,7 @@ const useInteractions = (
         }))
       );
     }
-  }, [allSearchItems.length]);
+  }, [allSearchItems?.length]);
 
   return {
     mirror,

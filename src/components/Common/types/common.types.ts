@@ -10,6 +10,7 @@ import {
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { KeyboardEvent, MouseEvent, ReactNode, SetStateAction } from "react";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
+import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 
 export type BarProps = {
   title: string;
@@ -153,6 +154,7 @@ export type CartItem = {
 export type SuggestedProps = {
   dispatch: Dispatch<AnyAction>;
   includeSearch: boolean;
+  searchItems: AllSearchItemsState | undefined;
   router: NextRouter;
   cartAnim: boolean;
   layoutAmount?: number;

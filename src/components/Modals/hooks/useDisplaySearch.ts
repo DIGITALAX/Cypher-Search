@@ -71,7 +71,7 @@ const useDisplaySearch = (
     setSortedGallery(
       [...(gallery?.collected || []), ...(gallery?.created || [])]?.filter(
         (item: { collectionId: string; images: string[]; title: string }) =>
-          item.title?.includes(itemSearch)
+          item?.title?.includes(itemSearch)
       )
     );
   };

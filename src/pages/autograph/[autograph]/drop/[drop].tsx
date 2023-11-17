@@ -59,9 +59,6 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const interactionsCount = useSelector(
     (state: RootState) => state.app.interactionsCountReducer
   );
-  const allSearchItems = useSelector(
-    (state: RootState) => state.app.searchItemsReducer
-  );
   const fullScreenVideo = useSelector(
     (state: RootState) => state.app.fullScreenVideoReducer
   );
@@ -69,14 +66,16 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
   const { address, isConnected } = useAccount();
+  const { getMoreSuggested, suggestedLoading, suggestedFeed } = useSuggested(
+    drop as string,
+    autograph as string
+  );
   const {
     handleSearch,
-    handleMoreSearch,
     searchInput,
     setSearchInput,
     handleShuffleSearch,
     placeholderText,
-    searchLoading,
     volume,
     volumeOpen,
     setVolumeOpen,
@@ -89,7 +88,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     searchActive,
     filterConstants,
     filters,
-    allSearchItems,
+    suggestedFeed,
     dispatch,
     router
   );
@@ -120,7 +119,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     setOpenMirrorChoice,
     openMirrorChoice,
   } = useInteractions(
-    allSearchItems.items,
+    suggestedFeed?.items || [],
     interactionsCount,
     dispatch,
     publicClient,
@@ -141,13 +140,12 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     followProfile,
     unfollowProfile,
   } = useTiles(
-    allSearchItems.items,
+    suggestedFeed?.items || [],
     lensConnected,
     dispatch,
     publicClient,
     address
   );
-  const { getMoreSuggested, suggestedLoading, suggestedFeed } = useSuggested();
 
   useEffect(() => {
     if (autograph && !profile) {
@@ -174,208 +172,219 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   if (!profileLoading && !globalLoading && !dropLoading) {
     return (
       <>
-        {!profile || collections?.length < 1 ? (
-          <NotFound
-            cartAnim={cartAnim}
-            router={router}
-            searchActive={searchActive}
-            filtersOpen={filtersOpen.value}
-            lensConnected={lensConnected}
-            walletConnected={walletConnected}
-            handleLensConnect={handleLensConnect}
-            openConnectModal={openConnectModal}
-            setOpenAccount={setOpenAccount}
-            cartItems={cartItems}
-            openAccount={openAccount}
-            cartListOpen={cartListOpen}
-            signInLoading={signInLoading}
-            setCartListOpen={setCartListOpen}
-            openAccountModal={openAccountModal}
-            dispatch={dispatch}
-            handleShuffleSearch={handleShuffleSearch}
-          />
-        ) : (
-          profile &&
-          collections?.length > 0 && (
-            <div
-              className="relative flex flex-col w-full h-full flex-grow"
-              id="results"
-            >
-              <Head>
-                <title>
-                  {(drop as string)?.toUpperCase()} |{" "}
-                  {profile?.handle?.localName?.toUpperCase()}
-                </title>
-                <meta
-                  name="og:url"
-                  content={`https://chromadin.xyz/autograph/${
-                    profile?.handle?.suggestedFormatted?.localName?.split(
-                      "@"
-                    )[1]
-                  }`}
-                />
-                <meta
-                  name="og:title"
-                  content={profile?.handle?.localName?.toUpperCase()}
-                />
-                <meta name="og:description" content={profile?.metadata?.bio} />
-                <meta
-                  name="og:image"
-                  content={
-                    !dropItem?.cover
-                      ? "https://chromadin.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.cover?.split(
-                          "ipfs://"
-                        )}`
-                  }
-                />
-                <meta name="twitter:card" content="summary" />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:site" content="@digitalax" />
-                <meta name="twitter:creator" content="@digitalax" />
-                <meta
-                  name="twitter:image"
-                  content={`https://chromadin.xyz/autograph/${
-                    profile?.handle?.suggestedFormatted?.localName?.split(
-                      "@"
-                    )[1]
-                  }`}
-                />
-                <meta
-                  name="twitter:url"
-                  content={`https://chromadin.xyz/autograph/${
-                    profile?.handle?.suggestedFormatted?.localName?.split(
-                      "@"
-                    )[1]
-                  }`}
-                />
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link
-                  rel="canonical"
-                  href={"https://cypher.digitalax.xyz/card.png/"}
-                />
-                <link
-                  rel="preconnect"
-                  href="https://fonts.gstatic.com"
-                  crossOrigin="anonymous"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/ArcadeClassic.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/DSDigi.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/EarlsRevenge.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Geometria.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/ClashDisplay.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/DosisRegular.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/EconomicaBold.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/EconomicaRegular.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Manaspc.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-              </Head>
-              <Suggested
-                cartAnim={cartAnim}
-                component={<DropMain />}
-                handleSearch={handleSearch}
-                searchInput={searchInput}
-                setSearchInput={setSearchInput}
-                openConnectModal={openConnectModal}
-                handleLensConnect={handleLensConnect}
-                openAccountModal={openAccountModal}
-                lensConnected={lensConnected}
-                walletConnected={walletConnected}
-                openAccount={openAccount}
-                setOpenAccount={setOpenAccount}
-                signInLoading={signInLoading}
-                filtersOpen={filtersOpen?.value}
-                handleShuffleSearch={handleShuffleSearch}
-                placeholderText={placeholderText}
-                dispatch={dispatch}
-                layoutAmount={layoutAmount}
-                cartItems={cartItems}
-                cartListOpen={cartListOpen}
-                setCartListOpen={setCartListOpen}
-                router={router}
-                includeSearch
-                handleMoreSearch={handleMoreSearch}
-                popUpOpen={popUpOpen}
-                setPopUpOpen={setPopUpOpen}
-                apparel={apparel}
-                setApparel={setApparel}
-                mirror={mirror}
-                like={like}
-                simpleCollect={collect}
-                interactionsLoading={interactionsLoading}
-                setOpenMirrorChoice={setOpenMirrorChoice}
-                openMirrorChoice={openMirrorChoice}
-                searchLoading={searchLoading}
-                followLoading={followLoading}
-                followProfile={followProfile}
-                unfollowProfile={unfollowProfile}
-                profileHovers={profileHovers}
-                setProfileHovers={setProfileHovers}
-                fullScreenVideo={fullScreenVideo}
-                volume={volume}
-                volumeOpen={volumeOpen}
-                setVolumeOpen={setVolumeOpen}
-                setVolume={setVolume}
-                profileId={lensConnected?.id}
-                heart={heart}
-                setHeart={setHeart}
+        {
+          // !profile || collections?.length < 1 ? (
+          //   <NotFound
+          //     cartAnim={cartAnim}
+          //     router={router}
+          //     searchActive={searchActive}
+          //     filtersOpen={filtersOpen.value}
+          //     lensConnected={lensConnected}
+          //     walletConnected={walletConnected}
+          //     handleLensConnect={handleLensConnect}
+          //     openConnectModal={openConnectModal}
+          //     setOpenAccount={setOpenAccount}
+          //     cartItems={cartItems}
+          //     openAccount={openAccount}
+          //     cartListOpen={cartListOpen}
+          //     signInLoading={signInLoading}
+          //     setCartListOpen={setCartListOpen}
+          //     openAccountModal={openAccountModal}
+          //     dispatch={dispatch}
+          //     handleShuffleSearch={handleShuffleSearch}
+          //   />
+          // ) :
+          // (
+          //   profile &&
+          //   collections?.length > 0 &&
+          //   (
+          <div
+            className="relative flex flex-col w-full h-full flex-grow"
+            id="results"
+          >
+            <Head>
+              <title>
+                {(drop as string)?.toUpperCase()} |{" "}
+                {profile?.handle?.localName?.toUpperCase()}
+              </title>
+              <meta
+                name="og:url"
+                content={`https://chromadin.xyz/autograph/${
+                  profile?.handle?.suggestedFormatted?.localName?.split("@")[1]
+                }`}
               />
-            </div>
-          )
-        )}
+              <meta
+                name="og:title"
+                content={profile?.handle?.localName?.toUpperCase()}
+              />
+              <meta name="og:description" content={profile?.metadata?.bio} />
+              <meta
+                name="og:image"
+                content={
+                  !dropItem?.cover
+                    ? "https://chromadin.xyz/card.png/"
+                    : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.cover?.split(
+                        "ipfs://"
+                      )}`
+                }
+              />
+              <meta name="twitter:card" content="summary" />
+              <meta name="twitter:card" content="summary_large_image" />
+              <meta name="twitter:site" content="@digitalax" />
+              <meta name="twitter:creator" content="@digitalax" />
+              <meta
+                name="twitter:image"
+                content={`https://chromadin.xyz/autograph/${
+                  profile?.handle?.suggestedFormatted?.localName?.split("@")[1]
+                }`}
+              />
+              <meta
+                name="twitter:url"
+                content={`https://chromadin.xyz/autograph/${
+                  profile?.handle?.suggestedFormatted?.localName?.split("@")[1]
+                }`}
+              />
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link
+                rel="canonical"
+                href={"https://cypher.digitalax.xyz/card.png/"}
+              />
+              <link
+                rel="preconnect"
+                href="https://fonts.gstatic.com"
+                crossOrigin="anonymous"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/ArcadeClassic.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/DSDigi.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/EarlsRevenge.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/Geometria.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/ClashDisplay.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/DosisRegular.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/EconomicaBold.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/EconomicaRegular.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+              <link
+                rel="preload"
+                href="https://cypher.digitalax.xyz/fonts/Manaspc.ttf"
+                as="font"
+                crossOrigin="anonymous"
+                type="font/ttf"
+              />
+            </Head>
+            <Suggested
+              searchItems={suggestedFeed}
+              cartAnim={cartAnim}
+              component={
+                <DropMain
+                  collections={collections}
+                  handle={
+                    profile?.handle?.suggestedFormatted?.localName?.split(
+                      "@"
+                    )?.[1]!
+                  }
+                  router={router}
+                  dispatch={dispatch}
+                  cartItems={cartItems}
+                />
+              }
+              handleSearch={handleSearch}
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
+              openConnectModal={openConnectModal}
+              handleLensConnect={handleLensConnect}
+              openAccountModal={openAccountModal}
+              lensConnected={lensConnected}
+              walletConnected={walletConnected}
+              openAccount={openAccount}
+              setOpenAccount={setOpenAccount}
+              signInLoading={signInLoading}
+              filtersOpen={filtersOpen?.value}
+              handleShuffleSearch={handleShuffleSearch}
+              placeholderText={placeholderText}
+              dispatch={dispatch}
+              layoutAmount={layoutAmount}
+              cartItems={cartItems}
+              cartListOpen={cartListOpen}
+              setCartListOpen={setCartListOpen}
+              router={router}
+              includeSearch
+              handleMoreSearch={getMoreSuggested}
+              popUpOpen={popUpOpen}
+              setPopUpOpen={setPopUpOpen}
+              apparel={apparel}
+              setApparel={setApparel}
+              mirror={mirror}
+              like={like}
+              simpleCollect={collect}
+              interactionsLoading={interactionsLoading}
+              setOpenMirrorChoice={setOpenMirrorChoice}
+              openMirrorChoice={openMirrorChoice}
+              searchLoading={suggestedLoading}
+              followLoading={followLoading}
+              followProfile={followProfile}
+              unfollowProfile={unfollowProfile}
+              profileHovers={profileHovers}
+              setProfileHovers={setProfileHovers}
+              fullScreenVideo={fullScreenVideo}
+              volume={volume}
+              volumeOpen={volumeOpen}
+              setVolumeOpen={setVolumeOpen}
+              setVolume={setVolume}
+              profileId={lensConnected?.id}
+              heart={heart}
+              setHeart={setHeart}
+            />
+          </div>
+          //   )
+          // )
+        }
       </>
     );
   }
