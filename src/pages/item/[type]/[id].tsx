@@ -9,23 +9,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
-import { RootState } from "../../../../../redux/store";
 import { useEffect, useState } from "react";
-import useAutograph from "@/components/Autograph/hooks/useAutograph";
 import useSuggested from "@/components/Common/hooks/useSuggested";
-import useDrop from "@/components/Drop/hooks/useDrop";
 import Suggested from "@/components/Common/modules/Suggested";
-import DropMain from "@/components/Drop/modules/DropMain";
 import useTiles from "@/components/Tiles/hooks/useTiles";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import NotFound from "@/components/Common/modules/NotFound";
+import { RootState } from "../../../../redux/store";
+import SwitchType from "@/components/Items/modules/SwitchType";
+import useItem from "@/components/Items/hooks/useChromadin";
+import { Creation } from "@/components/Tiles/types/tiles.types";
+import {
+  Mirror,
+  Post,
+  TextOnlyMetadataV3,
+} from "../../../../graphql/generated";
 
-const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
+const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(),
   });
-  const { autograph, drop } = router.query;
+  const { type, id } = router.query;
   const dispatch = useDispatch();
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
   const lensConnected = useSelector(
@@ -65,10 +70,14 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
   const { address, isConnected } = useAccount();
-  const { profileLoading, profile } = useAutograph(autograph as string);
+  const { itemLoading, itemData } = useItem(type as string);
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
-    drop as string,
-    profile,
+    id as string,
+    type === "chromadin" || type === "coinop"
+      ? (itemData?.post as Creation)?.profile
+      : (itemData?.post as Mirror)?.__typename === "Mirror"
+      ? (itemData?.post as Mirror)?.mirrorOn?.by
+      : (itemData?.post as Post)?.by,
     lensConnected
   );
   const {
@@ -126,10 +135,6 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address
   );
-  const { dropLoading, dropItem, collections } = useDrop(
-    drop as string,
-    profile
-  );
   const {
     setPopUpOpen,
     popUpOpen,
@@ -147,19 +152,18 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address
   );
-
   useEffect(() => {
     setTimeout(() => {
-      if (!profileLoading && !dropLoading) {
+      if (!itemLoading) {
         setGlobalLoading(false);
       }
     }, 1000);
-  }, [profileLoading]);
+  }, [itemLoading]);
 
-  if (!profileLoading && !globalLoading && !dropLoading) {
+  if (!globalLoading && !itemLoading) {
     return (
       <>
-        {!profile || collections?.length < 1 ? (
+        {!itemData ? (
           <NotFound
             cartAnim={cartAnim}
             router={router}
@@ -180,39 +184,41 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
             handleShuffleSearch={handleShuffleSearch}
           />
         ) : (
-          profile &&
-          collections?.length > 0 && (
+          itemData && (
             <div
               className="relative flex flex-col w-full h-full flex-grow"
               id="results"
             >
               <Head>
                 <title>
-                  {(drop as string)?.toUpperCase()} |{" "}
-                  {profile?.handle?.localName?.toUpperCase()}
+                  {(type as string)?.toUpperCase()} |{" "}
+                  {(id as string)?.toUpperCase()}
                 </title>
                 <meta
                   name="og:url"
-                  content={`https://cypher.digitalax.xyz/autograph/${
-                    profile?.handle?.suggestedFormatted?.localName?.split(
-                      "@"
-                    )[1]
-                  }`}
+                  content={"https://cypher.digitalax.xyz/card.png/"}
                 />
+                <meta name="og:title" content={(id as string)?.toUpperCase()} />
                 <meta
-                  name="og:title"
-                  content={profile?.handle?.localName?.toUpperCase()}
+                  name="og:description"
+                  content={
+                    itemData?.type === "chromadin" ||
+                    itemData?.type === "coinop"
+                      ? (itemData.post as Creation)?.description
+                      : (itemData?.post as Mirror)?.__typename === "Mirror"
+                      ? (
+                          (itemData?.post as Mirror)?.mirrorOn
+                            ?.metadata as TextOnlyMetadataV3
+                        )?.content
+                      : (
+                          (itemData?.post as Post)
+                            ?.metadata as TextOnlyMetadataV3
+                        )?.content
+                  }
                 />
-                <meta name="og:description" content={profile?.metadata?.bio} />
                 <meta
                   name="og:image"
-                  content={
-                    !dropItem?.cover
-                      ? "https://cypher.digitalax.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.cover?.split(
-                          "ipfs://"
-                        )}`
-                  }
+                  content={"https://cypher.digitalax.xyz/card.png/"}
                 />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:card" content="summary_large_image" />
@@ -220,21 +226,11 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 <meta name="twitter:creator" content="@digitalax" />
                 <meta
                   name="twitter:image"
-                  content={
-                    !dropItem?.cover
-                      ? "https://cypher.digitalax.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.cover?.split(
-                          "ipfs://"
-                        )}`
-                  }
+                  content={`https://cypher.digitalax.xyz/item/${type}/${id}`}
                 />
                 <meta
                   name="twitter:url"
-                  content={`https://cypher.digitalax.xyz/autograph/${
-                    profile?.handle?.suggestedFormatted?.localName?.split(
-                      "@"
-                    )[1]
-                  }`}
+                  content={`https://cypher.digitalax.xyz/item/${type}/${id}`}
                 />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
@@ -315,16 +311,11 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 searchItems={suggestedFeed}
                 cartAnim={cartAnim}
                 component={
-                  <DropMain
-                    collections={collections}
-                    handle={
-                      profile?.handle?.suggestedFormatted?.localName?.split(
-                        "@"
-                      )?.[1]!
-                    }
-                    router={router}
+                  <SwitchType
                     dispatch={dispatch}
-                    cartItems={cartItems}
+                    router={router}
+                    itemData={itemData}
+                    type={type as string}
                   />
                 }
                 handleSearch={handleSearch}
@@ -360,7 +351,6 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 setOpenMirrorChoice={setOpenMirrorChoice}
                 openMirrorChoice={openMirrorChoice}
                 searchLoading={loaders?.suggestedLoading}
-                hasMore={suggestedFeed?.hasMore || false}
                 followLoading={followLoading}
                 followProfile={followProfile}
                 unfollowProfile={unfollowProfile}
@@ -385,4 +375,4 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   return <RouterChange />;
 };
 
-export default Drop;
+export default Item;

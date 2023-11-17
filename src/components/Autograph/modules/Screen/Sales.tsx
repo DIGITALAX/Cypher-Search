@@ -26,7 +26,19 @@ const Sales: FunctionComponent<SalesProps> = ({
               allSales?.length > 0 ? "items-start" : "items-center"
             }`}
           >
-            {allSales?.length > 0 ? (
+            {salesLoading ? (
+              <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start">
+                {Array.from({ length: 10 })?.map((_, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-full animate-pulse h-44 flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack gap-3"
+                      id="staticLoad"
+                    ></div>
+                  );
+                })}
+              </div>
+            ) : allSales?.length > 0 ? (
               <div className="relative w-full h-fit flex flex-col gap-5 items-center justify-start">
                 {allSales?.map((sale: Sale, index: number) => {
                   const profilePicture = createProfilePicture(
@@ -105,37 +117,33 @@ const Sales: FunctionComponent<SalesProps> = ({
                           </div>
                         </div>
                         <div className="relative w-fit h-fit flex flex-row flex items-center justify-center gap-3">
-                          {
-                            // sale?.images
-                            Array.from({ length: 2 })
-                              ?.slice(0, 2)
-                              ?.map((image: string, index: number) => {
-                                return (
-                                  <div
-                                    className="relative w-40 h-40 rounded-md border border-white flex items-center cursor-pointer justify-center"
-                                    key={index}
-                                    onClick={() =>
-                                      router.push(
-                                        `/item/${
-                                          numberToItemTypeMap[
-                                            Number(sale?.type)
-                                          ]
-                                        }/${sale?.pubId}`
-                                      )
-                                    }
-                                  >
-                                    <Image
-                                      layout="fill"
-                                      objectFit="cover"
-                                      src={`${INFURA_GATEWAY}/ipfs/${
-                                        image?.split("ipfs://")?.[1]
-                                      }`}
-                                      className="rounded-md"
-                                    />
-                                  </div>
-                                );
-                              })
-                          }
+                          {sale?.images
+
+                            ?.slice(0, 2)
+                            ?.map((image: string, index: number) => {
+                              return (
+                                <div
+                                  className="relative w-40 h-40 rounded-md border border-white flex items-center cursor-pointer justify-center"
+                                  key={index}
+                                  onClick={() =>
+                                    router.push(
+                                      `/item/${
+                                        numberToItemTypeMap[Number(sale?.type)]
+                                      }/${sale?.pubId}`
+                                    )
+                                  }
+                                >
+                                  <Image
+                                    layout="fill"
+                                    objectFit="cover"
+                                    src={`${INFURA_GATEWAY}/ipfs/${
+                                      image?.split("ipfs://")?.[1]
+                                    }`}
+                                    className="rounded-md"
+                                  />
+                                </div>
+                              );
+                            })}
                         </div>
                       </div>
                     </div>

@@ -30,6 +30,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   cartItems,
   allDrops,
   lensConnected,
+  hasMoreGallery
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col gap-10 items-start justify-start flex-grow">
@@ -78,66 +79,79 @@ const Gallery: FunctionComponent<GalleryProps> = ({
       </div>
       <div className="relative w-full h-[145rem] flex items-start justify-center overflow-y-scroll">
         <InfiniteScroll
-          dataLength={16}
+          dataLength={
+            [...(gallery?.collected || []), ...(gallery?.created || [])]?.length
+          }
           loader={<></>}
-          hasMore={true}
+          hasMore={hasMoreGallery}
           next={getMoreGallery}
           className="w-full h-fit items-start justify-between flex flex-row flex-wrap gap-8"
         >
-          {
-            // selectedOption === 'NEWEST'
-            // ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => Number( b.blockTimestamp) - Number(a.blockTimestamp))
-            // : selectedOption === 'OLDEST'
-            // ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => Number(a.blockTimestamp )-Number( b.blockTimestamp))
-            // : selectedOption === 'CREATED'
-            // ? [...(gallery?.created || []), ...(gallery?.collected || [])]
-            // : selectedOption === 'COLLECTED'
-            // ? [...(gallery?.collected || []), ...(gallery?.created || [])] :
-            // selectedOption === "PRINT TYPE" ? Object.values(
-            //   [...(gallery?.collected || []), ...(gallery?.created || [])].reduce((acc: Record<string, any>, item) => {
-            //     const printType = item.printType || '6';
-            //     acc[printType] = acc[printType] || [];
-            //     acc[printType].push(item);
-            //     return acc;
-            //   }, {})
-            // ).flat()
-            //  : selectedOption === "PRICE LOWEST" ?
-            // [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => (Number(a.prices?.[0]) || 0) - (Number(b.prices?.[0]) || 0)) : [...(gallery?.collected || []), ...(gallery?.created || [])].sort((a, b) => (Number(b.prices?.[0]) || 0) - (Number(a.prices?.[0]) || 0))
-
-            Array.from({ length: 20 })?.map(
-              (item: CreationType, index: number) => {
-                return (
-                  <Creation
-                    dispatch={dispatch}
-                    cartItems={cartItems}
-                    key={index}
-                    followProfile={followProfile}
-                    unfollowProfile={unfollowProfile}
-                    followLoading={followLoading}
-                    profileHovers={profileHovers}
-                    setProfileHovers={setProfileHovers}
-                    mirror={mirror}
-                    like={like}
-                    openMirrorChoice={openMirrorChoice}
-                    setOpenMirrorChoice={setOpenMirrorChoice}
-                    interactionsLoading={interactionsLoading?.[index]}
-                    router={router}
-                    item={item}
-                    index={index}
-                    created={
-                      gallery?.created?.find(
-                        (value) => item.pubId === value.pubId
-                      )
-                        ? true
-                        : false
-                    }
-                    openInteractions={openInteractions}
-                    setOpenInteractions={setOpenInteractions}
-                  />
-                );
-              }
-            )
-          }
+          {selectedOption === "NEWEST"
+            ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort(
+                (a, b) => Number(b.blockTimestamp) - Number(a.blockTimestamp)
+              )
+            : selectedOption === "OLDEST"
+            ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort(
+                (a, b) => Number(a.blockTimestamp) - Number(b.blockTimestamp)
+              )
+            : selectedOption === "CREATED"
+            ? [...(gallery?.created || []), ...(gallery?.collected || [])]
+            : selectedOption === "COLLECTED"
+            ? [...(gallery?.collected || []), ...(gallery?.created || [])]
+            : selectedOption === "PRINT TYPE"
+            ? Object.values(
+                [
+                  ...(gallery?.collected || []),
+                  ...(gallery?.created || []),
+                ].reduce((acc: Record<string, any>, item) => {
+                  const printType = item.printType || "6";
+                  acc[printType] = acc[printType] || [];
+                  acc[printType].push(item);
+                  return acc;
+                }, {})
+              ).flat()
+            : selectedOption === "PRICE LOWEST"
+            ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort(
+                (a, b) =>
+                  (Number(a.prices?.[0]) || 0) - (Number(b.prices?.[0]) || 0)
+              )
+            : [...(gallery?.collected || []), ...(gallery?.created || [])]
+                .sort(
+                  (a, b) =>
+                    (Number(b.prices?.[0]) || 0) - (Number(a.prices?.[0]) || 0)
+                )
+                ?.map((item: CreationType, index: number) => {
+                  return (
+                    <Creation
+                      dispatch={dispatch}
+                      cartItems={cartItems}
+                      key={index}
+                      followProfile={followProfile}
+                      unfollowProfile={unfollowProfile}
+                      followLoading={followLoading}
+                      profileHovers={profileHovers}
+                      setProfileHovers={setProfileHovers}
+                      mirror={mirror}
+                      like={like}
+                      openMirrorChoice={openMirrorChoice}
+                      setOpenMirrorChoice={setOpenMirrorChoice}
+                      interactionsLoading={interactionsLoading?.[index]}
+                      router={router}
+                      item={item}
+                      index={index}
+                      created={
+                        gallery?.created?.find(
+                          (value) => item.pubId === value.pubId
+                        )
+                          ? true
+                          : false
+                      }
+                      openInteractions={openInteractions}
+                      setOpenInteractions={setOpenInteractions}
+                    />
+                  );
+                })}
         </InfiniteScroll>
       </div>
       <div className="relative flex-grow flex justify-center w-full h-[55rem]">
@@ -152,11 +166,10 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           />
           <div className="absolute w-full h-full bg-black opacity-[85%]"></div>
         </div>
-        {
-          // allDrops && allDrops?.length > 0 &&
+        {allDrops && allDrops?.length > 0 && (
           <div className="relative w-[45rem] h-fit flex items-center justify-start overflow-x-scroll">
             <div className="relative w-fit h-fit flex items-center justify-start gap-4">
-              {Array.from({ length: 20 })?.map((item: Drop, index: number) => {
+              {allDrops?.map((item: Drop, index: number) => {
                 return (
                   <div
                     key={index}
@@ -204,7 +217,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
               })}
             </div>
           </div>
-        }
+        )}
       </div>
     </div>
   );

@@ -32,7 +32,8 @@ const Feed: FunctionComponent<FeedProps> = ({
   commentsOpen,
   contentLoading,
   setContentLoading,
-  postCollectGif
+  postCollectGif,
+  
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -55,13 +56,13 @@ const Feed: FunctionComponent<FeedProps> = ({
             id="feed"
           >
             <InfiniteScroll
-              dataLength={16}
+              dataLength={profileFeed?.length}
               loader={<></>}
               hasMore={hasMoreFeed}
               next={getMoreFeed}
               className="w-fit h-fit items-start justify-start flex flex-col gap-10"
             >
-              {Array.from({ length: 20 })?.map(
+              {profileFeed?.map(
                 (item: Post | Quote | Mirror, index: number) => {
                   return (
                     <Publication

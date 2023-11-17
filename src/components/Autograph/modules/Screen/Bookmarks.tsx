@@ -46,46 +46,57 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
             <InfiniteScroll
               next={handleMoreBookmarks}
               hasMore={hasMoreBookmarks}
-              dataLength={20}
+              dataLength={bookmarksLoading ? 20 : bookmarks?.length}
               loader={<></>}
               className="w-fit h-fit items-center justify-start flex flex-col gap-10"
             >
-              {Array.from({ length: 10 }).map(
-                (item: Post | Mirror | Quote | Comment, index: number) => {
-                  return (
-                    <Publication
-                      index={index}
-                      item={item}
-                      key={index}
-                      dispatch={dispatch}
-                      router={router}
-                      mirror={mirror}
-                      like={like}
-                      setMakePostComment={setMakeComment}
-                      makeComment={makeComment}
-                      setCommentsOpen={setCommentsOpen}
-                      commentsOpen={commentsOpen}
-                      interactionsLoading={interactionsLoading}
-                      profileHovers={profileHovers}
-                      setProfileHovers={setProfileHovers}
-                      openMirrorChoice={openMirrorChoice}
-                      setOpenMirrorChoice={setOpenMirrorChoice}
-                      simpleCollect={simpleCollect}
-                      followLoading={followLoading}
-                      followProfile={followProfile}
-                      unfollowProfile={unfollowProfile}
-                      setOpenMoreOptions={setOpenMoreOptions}
-                      openMoreOptions={openMoreOptions}
-                      handleBookmark={handleBookmark}
-                      handleHidePost={handleHidePost}
-                      data-post-id={item?.id}
-                      contentLoading={contentLoading}
-                      setContentLoading={setContentLoading}
-                      postCollectGif={postCollectGif}
-                    />
-                  );
-                }
-              )}
+              {bookmarksLoading
+                ? Array.from({ length: 20 })?.map((_, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className="relative bg-lirio rounded-sm h-96 w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza animate-pulse"
+                        id="staticLoad"
+                      ></div>
+                    );
+                  })
+                : bookmarks?.map(
+                    (item: Post | Mirror | Quote | Comment, index: number) => {
+                      return (
+                        <Publication
+                          index={index}
+                          item={item}
+                          key={index}
+                          dispatch={dispatch}
+                          router={router}
+                          mirror={mirror}
+                          like={like}
+                          comment={comment}
+                          setMakePostComment={setMakeComment}
+                          makeComment={makeComment}
+                          setCommentsOpen={setCommentsOpen}
+                          commentsOpen={commentsOpen}
+                          interactionsLoading={interactionsLoading}
+                          profileHovers={profileHovers}
+                          setProfileHovers={setProfileHovers}
+                          openMirrorChoice={openMirrorChoice}
+                          setOpenMirrorChoice={setOpenMirrorChoice}
+                          simpleCollect={simpleCollect}
+                          followLoading={followLoading}
+                          followProfile={followProfile}
+                          unfollowProfile={unfollowProfile}
+                          setOpenMoreOptions={setOpenMoreOptions}
+                          openMoreOptions={openMoreOptions}
+                          handleBookmark={handleBookmark}
+                          handleHidePost={handleHidePost}
+                          data-post-id={item?.id}
+                          contentLoading={contentLoading}
+                          setContentLoading={setContentLoading}
+                          postCollectGif={postCollectGif}
+                        />
+                      );
+                    }
+                  )}
             </InfiniteScroll>
           </div>
         </div>

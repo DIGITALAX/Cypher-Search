@@ -821,6 +821,7 @@ export type GalleryProps = {
         created: Creation[];
       }
     | undefined;
+  hasMoreGallery: boolean;
   allDrops: Drop[] | undefined;
   cartItems: CartItem[];
   lensConnected: Profile | undefined;
@@ -922,7 +923,7 @@ export type PublicationProps = {
   item: Post | Mirror | Quote | Comment;
   index: number;
   disabled?: boolean;
-  postCollectGif: PostCollectGifState;
+  postCollectGif?: PostCollectGifState;
   mirror?: (id: string) => Promise<void>;
   like?: (id: string) => Promise<void>;
   comment?: (id: string) => Promise<void>;

@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import {  Profile, Quote } from "../../../../graphql/generated";
+import { Profile, Quote } from "../../../../graphql/generated";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Image from "next/legacy/image";
@@ -28,7 +28,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
             next={showMore}
             className="w-fit h-fit items-start justify-start flex flex-col gap-10"
           >
-            {Array.from({ length: 20 })?.map((item: Quote, index: number) => {
+            {quoters?.map((item: Quote, index: number) => {
               return (
                 <Publication
                   index={index}

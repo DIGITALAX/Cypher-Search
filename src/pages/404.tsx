@@ -10,8 +10,6 @@ import { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
-import { useEffect } from "react";
-import { setCartAnim } from "../../redux/reducers/cartAnimSlice";
 
 const Custom404: NextPage<{
   router: NextRouter;
@@ -78,16 +76,9 @@ const Custom404: NextPage<{
     dispatch,
     oracleData,
     cartItems,
-    lensConnected
+    lensConnected,
+    cartAnim
   );
-
-  useEffect(() => {
-    if (cartAnim) {
-      setTimeout(() => {
-        dispatch(setCartAnim(false))
-      }, 1000)
-    }
-  }, [cartAnim])
 
   return (
     <>

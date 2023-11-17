@@ -15,17 +15,26 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 
 const useSuggested = (
-  drop: string | undefined,
+  routerPath: string | undefined,
   pageProfile: Profile | undefined,
   lensConnected: Profile | undefined
 ) => {
-  const [suggestedLoading, setSuggestedLoading] = useState<boolean>(false);
+  const [loaders, setLoaders] = useState<{
+    suggestedLoading: boolean;
+    moreSuggestedLoading: boolean;
+  }>({
+    suggestedLoading: false,
+    moreSuggestedLoading: false,
+  });
   const [suggestedFeed, setSuggestedFeed] = useState<
     AllSearchItemsState | undefined
   >();
 
   const getSuggestedItems = async () => {
-    setSuggestedLoading(true);
+    setLoaders((prev) => ({
+      ...prev,
+      suggestedLoading: true,
+    }));
     let collections: Creation[] = [],
       publications: (Post | Comment | Quote | Mirror)[] = [],
       pubCursor: string | undefined;
@@ -80,21 +89,32 @@ const useSuggested = (
         graphCursor: collections?.length == 25 ? 25 : undefined,
         lensProfileCursor: undefined,
         lensPubCursor: publications?.length == 25 ? pubCursor : undefined,
+        hasMore:
+          collections?.length == 25 || publications?.length == 25
+            ? true
+            : false,
       });
     } catch (err: any) {
       console.error(err.message);
     }
-    setSuggestedLoading(false);
+    setLoaders((prev) => ({
+      ...prev,
+      suggestedLoading: false,
+    }));
   };
 
   const getMoreSuggested = async () => {
-    setSuggestedLoading(true);
+    if (!suggestedFeed?.hasMore) return;
+    setLoaders((prev) => ({
+      ...prev,
+      moreSuggestedLoading: true,
+    }));
     let collections: Creation[] = [],
       publications: (Post | Comment | Quote | Mirror)[] = [],
       pubCursor: string | undefined;
     try {
       const searchItems = await getTextSearch(
-        drop as string,
+        pageProfile?.handle?.localName!,
         25,
         suggestedFeed?.graphCursor!
       );
@@ -147,18 +167,25 @@ const useSuggested = (
         graphCursor: collections?.length == 25 ? 25 : undefined,
         lensProfileCursor: undefined,
         lensPubCursor: publications?.length == 25 ? pubCursor : undefined,
+        hasMore:
+          collections?.length == 25 && publications?.length == 25
+            ? true
+            : false,
       });
     } catch (err: any) {
       console.error(err.message);
     }
-    setSuggestedLoading(false);
+    setLoaders((prev) => ({
+      ...prev,
+      moreSuggestedLoading: false,
+    }));
   };
 
   useEffect(() => {
     if (
       suggestedFeed?.items &&
       suggestedFeed?.items?.length < 1 &&
-      drop &&
+      routerPath &&
       pageProfile?.id
     ) {
       getSuggestedItems();
@@ -167,8 +194,8 @@ const useSuggested = (
 
   return {
     getMoreSuggested,
-    suggestedLoading,
     suggestedFeed,
+    loaders,
   };
 };
 

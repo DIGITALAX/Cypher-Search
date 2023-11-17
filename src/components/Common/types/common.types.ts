@@ -154,6 +154,7 @@ export type CartItem = {
 export type SuggestedProps = {
   dispatch: Dispatch<AnyAction>;
   includeSearch: boolean;
+  moreSearchLoading: boolean;
   searchItems: AllSearchItemsState | undefined;
   router: NextRouter;
   cartAnim: boolean;

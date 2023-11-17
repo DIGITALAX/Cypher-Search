@@ -579,7 +579,7 @@ const useCreate = (
 
         authentication: {
           domain: "cyphersearch",
-          uri: "https://cyphersearch.digitalax.xyz",
+          uri: "https://cypher.digitalax.xyz",
         },
         signer: {
           ...clientWallet,

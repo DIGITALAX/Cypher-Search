@@ -63,9 +63,10 @@ export type TilesProps = {
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   searchLoading: boolean;
+  moreSearchLoading: boolean;
   searchActive: boolean;
   filtersOpen: boolean;
-  searchItems: AllSearchItemsState | undefined
+  searchItems: AllSearchItemsState | undefined;
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
@@ -100,6 +101,7 @@ export type TileSwitchProps = {
   type: string;
   publication: Publication;
   profileHovers: boolean[];
+  key: number;
   setHeart?: (e: SetStateAction<boolean[]>) => void;
   heart?: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
@@ -459,4 +461,8 @@ export type CommunityProps = {
   dispatch: Dispatch<AnyAction>;
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+};
+
+export type LoadTileProps = {
+  index: number;
 };
