@@ -461,7 +461,11 @@ const useSearch = (
           filterConstants?.microbrands?.map((item) => item?.[0])!
         ),
         catalog: getRandomElement(filterConstants?.catalog!),
-        access: getRandomElement(filterConstants?.access!),
+        access: getRandomElement(
+          filterConstants?.origin?.map(
+            (item) => itemStringToNumber[item?.[0]?.toUpperCase()]
+          )!
+        ),
         format: getRandomElement(filterConstants?.format!),
         origin: getRandomElement(
           filterConstants?.origin?.map(
@@ -578,7 +582,7 @@ const useSearch = (
   const handleFilterConstants = async () => {
     try {
       const json: FilterValues = (await fetchIpfsJson(
-        "QmbnNBG8j2Qv3AAKPK5g2ivMZvdLnDbouqnCnw27nGR8jN"
+        "QmR5RwqvyMvRbkGr4zFizeSoBp6SoBFjyyskq2u6c7dMKA"
       )) as any;
 
       const data = await getFilterValues();

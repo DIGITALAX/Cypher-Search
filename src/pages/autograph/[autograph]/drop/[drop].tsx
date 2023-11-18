@@ -360,7 +360,6 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 setOpenMirrorChoice={setOpenMirrorChoice}
                 openMirrorChoice={openMirrorChoice}
                 searchLoading={loaders?.suggestedLoading}
-                hasMore={suggestedFeed?.hasMore || false}
                 followLoading={followLoading}
                 followProfile={followProfile}
                 unfollowProfile={unfollowProfile}

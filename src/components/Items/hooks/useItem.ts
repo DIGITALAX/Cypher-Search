@@ -20,19 +20,43 @@ import { getCollectionsPaginated } from "../../../../graphql/subgraph/queries/ge
 import { getCommunityName } from "../../../../graphql/subgraph/queries/getCommunities";
 import getProfiles from "../../../../graphql/lens/queries/profiles";
 import {
+  ACCEPTED_TOKENS_MUMBAI,
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  LEGEND_OPEN_ACTION,
+  LISTENER_OPEN_ACTION,
   numberToItemTypeMap,
   numberToPrintType,
 } from "../../../../lib/constants";
+import { PurchaseDetails } from "../types/item.types";
+import { OracleData } from "@/components/Checkout/types/checkout.types";
+import { CartItem } from "@/components/Common/types/common.types";
+import { PublicClient, createWalletClient, custom } from "viem";
+import { ethers } from "ethers";
+import { polygon } from "viem/chains";
 
 const useItem = (
   type: string,
   id: string,
   filterConstants: FilterValues | undefined,
-  lensConnected: Profile | undefined
+  lensConnected: Profile | undefined,
+  oracleData: OracleData[],
+  address: `0x${string}` | undefined,
+  cartItems: CartItem[],
+  publicClient: PublicClient
 ) => {
+  const [instantLoading, setInstantLoading] = useState<boolean>(false);
   const [itemLoading, setItemLoading] = useState<boolean>(false);
   const [itemData, setItemData] = useState<Publication>();
+  const [isApprovedSpend, setIsApprovedSpend] = useState<boolean>(false);
   const [relatedCollections, setRelatedCollections] = useState<Creation[]>([]);
+  const [purchaseDetails, setPurchaseDetails] = useState<PurchaseDetails>({
+    color: "",
+    currency: "",
+    size: "",
+    price: "",
+    imageIndex: 0,
+  });
 
   const getItemData = async () => {
     setItemLoading(true);
@@ -55,6 +79,13 @@ const useItem = (
                 }
               : pub,
             type,
+          });
+          setPurchaseDetails({
+            color: collection?.colors?.[0],
+            currency: collection?.acceptedTokens?.[0],
+            size: collection?.sizes?.[0],
+            price: collection?.prices?.[0],
+            imageIndex: 0,
           });
           break;
 
@@ -223,6 +254,209 @@ const useItem = (
     }
   };
 
+  const handleInstantPurchase = async () => {
+    setInstantLoading(true);
+    try {
+    } catch (err: any) {
+      console.error(err.messgae);
+    }
+    setInstantLoading(false);
+  };
+
+  const approveSpend = async () => {
+    setInstantLoading(true);
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      const item = cartItems?.find(
+        (item) =>
+          item?.item?.pubId === (itemData?.post as Creation).publication?.id
+      );
+
+      const { request } = await publicClient.simulateContract({
+        address: purchaseDetails?.currency as `0x${string}`,
+        abi: [
+          purchaseDetails?.currency ===
+          "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30"
+            ? {
+                inputs: [
+                  {
+                    internalType: "address",
+                    name: "spender",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "tokens",
+                    type: "uint256",
+                  },
+                ],
+                name: "approve",
+                outputs: [
+                  { internalType: "bool", name: "success", type: "bool" },
+                ],
+                stateMutability: "nonpayable",
+                type: "function",
+              }
+            : purchaseDetails?.currency ===
+              "0x3cf7283c025d82390e86d2feb96eda32a393036b"
+            ? {
+                constant: false,
+                inputs: [
+                  { name: "guy", type: "address" },
+                  { name: "wad", type: "uint256" },
+                ],
+                name: "approve",
+                outputs: [{ name: "", type: "bool" }],
+                payable: false,
+                stateMutability: "nonpayable",
+                type: "function",
+              }
+            : {
+                inputs: [
+                  {
+                    internalType: "address",
+                    name: "spender",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "amount",
+                    type: "uint256",
+                  },
+                ],
+                name: "approve",
+                outputs: [
+                  {
+                    internalType: "bool",
+                    name: "",
+                    type: "bool",
+                  },
+                ],
+                stateMutability: "nonpayable",
+                type: "function",
+              },
+        ],
+        functionName: "approve",
+        chain: polygon,
+        args: [
+          item?.type === "chromadin"
+            ? CHROMADIN_OPEN_ACTION
+            : item?.type === "listener"
+            ? LISTENER_OPEN_ACTION
+            : item?.type === "coinop"
+            ? COIN_OP_OPEN_ACTION
+            : LEGEND_OPEN_ACTION,
+          ethers.parseEther(
+            oracleData
+              ?.find(
+                (oracle) =>
+                  oracle.currency ===
+                  ACCEPTED_TOKENS_MUMBAI.find(
+                    (item) => item[2] === purchaseDetails?.currency
+                  )?.[2]
+              )
+              ?.rate?.toString()!
+          ),
+        ],
+        account: address,
+      });
+      const res = await clientWallet.writeContract(request);
+      await publicClient.waitForTransactionReceipt({ hash: res });
+      setIsApprovedSpend(true);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setInstantLoading(false);
+  };
+
+  const checkApproved = async () => {
+    try {
+      const item = cartItems?.find(
+        (item) =>
+          item?.item?.pubId === (itemData?.post as Creation).publication?.id
+      );
+
+      const data = await publicClient.readContract({
+        address: ACCEPTED_TOKENS_MUMBAI.filter(
+          (token) =>
+            token[2].toLowerCase() === purchaseDetails?.currency?.toLowerCase()
+        )?.[0]?.[1] as `0x${string}`,
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "owner",
+                type: "address",
+              },
+              {
+                internalType: "address",
+                name: "spender",
+                type: "address",
+              },
+            ],
+            name: "allowance",
+            outputs: [
+              {
+                internalType: "uint256",
+                name: "",
+                type: "uint256",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+          },
+        ],
+        functionName: "allowance",
+        args: [
+          address as `0x${string}`,
+          type === "chromadin"
+            ? CHROMADIN_OPEN_ACTION
+            : item?.type === "listener"
+            ? LISTENER_OPEN_ACTION
+            : item?.type === "coinop"
+            ? COIN_OP_OPEN_ACTION
+            : LEGEND_OPEN_ACTION,
+        ],
+      });
+
+      if (data && address) {
+        if (
+          Number((data as any)?.toString()) /
+            (purchaseDetails?.currency ===
+            "0x07b722856369f6b923e1f276abca58dd3d15243d"
+              ? 10 ** 6
+              : 10 ** 18) >=
+          Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency ===
+                ACCEPTED_TOKENS_MUMBAI.find(
+                  (item) => item[2] === purchaseDetails?.currency
+                )?.[2]
+            )?.rate
+          )
+        ) {
+          setIsApprovedSpend(true);
+        } else {
+          setIsApprovedSpend(false);
+        }
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (lensConnected?.id) {
+      checkApproved();
+    }
+  }, [purchaseDetails?.currency]);
+
   useEffect(() => {
     if (type) {
       getItemData();
@@ -232,6 +466,13 @@ const useItem = (
   return {
     itemLoading,
     itemData,
+    purchaseDetails,
+    setPurchaseDetails,
+    handleInstantPurchase,
+    instantLoading,
+    approveSpend,
+    isApprovedSpend,
+    relatedCollections,
   };
 };
 

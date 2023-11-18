@@ -81,7 +81,6 @@ const Checkout: NextPage<{
     isApprovedSpend,
     chooseCartItem,
     setChooseCartItem,
-    setEncryptedStrings,
     completedPurchases,
     groupedByPubId,
     setCompletedPurchases,
@@ -124,7 +123,6 @@ const Checkout: NextPage<{
       />
       <div className="relative w-full h-fit flex items-start justify-start flex-row px-4">
         <Fulfillment
-          setEncryptedStrings={setEncryptedStrings}
           collectPostLoading={collectPostLoading}
           details={details}
           encryptionLoading={encryptionLoading}

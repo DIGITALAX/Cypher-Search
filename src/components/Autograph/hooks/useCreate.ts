@@ -75,7 +75,6 @@ const useCreate = (
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
-    videoAudio: boolean;
     dropOpen: boolean;
   }>({
     media: "static",
@@ -84,7 +83,6 @@ const useCreate = (
     communityOpen: false,
     accessOpen: false,
     visibilityOpen: false,
-    videoAudio: false,
     dropOpen: false,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
@@ -365,7 +363,6 @@ const useCreate = (
         communityOpen: false,
         accessOpen: false,
         visibilityOpen: false,
-        videoAudio: false,
         dropOpen: false,
       });
       dispatch(
@@ -414,73 +411,6 @@ const useCreate = (
         }
       };
       reader.readAsDataURL(file);
-    }
-
-    if (id === "video") {
-      const video = document.createElement("video");
-      video.muted = true;
-      video.crossOrigin = "anonymous";
-      video.preload = "auto";
-
-      const value = new Promise((resolve, reject) => {
-        video.addEventListener("error", reject);
-
-        video.addEventListener(
-          "canplay",
-          () => {
-            video.currentTime = 0.99;
-          },
-          { once: true }
-        );
-
-        video.addEventListener(
-          "seeked",
-          () =>
-            resolve(
-              (video as any).mozHasAudio ||
-                Boolean((video as any).webkitAudioDecodedByteCount) ||
-                Boolean((video as any).audioTracks?.length)
-            ),
-          {
-            once: true,
-          }
-        );
-
-        video.src = URL.createObjectURL((e as any).target.files[0]);
-      });
-
-      const hasAudio = await value;
-
-      setCollectionSettings((prev) => ({
-        ...prev,
-        videoAudio: hasAudio as boolean,
-      }));
-    }
-  };
-
-  const handlePlayPause = (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
-  ) => {
-    const videoElement = document.getElementById(key) as HTMLVideoElement;
-
-    if (wavesurfer.current) {
-      if (videoElement && type === "video") {
-        if (videoElement.paused) {
-          videoElement.play();
-          wavesurfer.current.play();
-        } else {
-          videoElement.pause();
-          wavesurfer.current.pause();
-        }
-      } else {
-        if (wavesurfer.current.isPlaying()) {
-          wavesurfer.current.pause();
-        } else {
-          wavesurfer.current.play();
-        }
-      }
     }
   };
 
@@ -648,7 +578,6 @@ const useCreate = (
     setCollectionSettings,
     collectionSettings,
     handleMedia,
-    handlePlayPause,
     deleteCollection,
     allCollections,
     collectionLoading,

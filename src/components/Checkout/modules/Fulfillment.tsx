@@ -25,7 +25,6 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   approveSpend,
   collectItem,
   chooseCartItem,
-  setEncryptedStrings,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit relative flex items-start justify-start p-2 flex-col gap-6">

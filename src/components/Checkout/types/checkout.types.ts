@@ -8,7 +8,6 @@ export type FulfillmentProps = {
   details: Details;
   encryptionLoading: boolean;
   encryptFulfillment: () => Promise<void>;
-  setEncryptedStrings: (e: SetStateAction<string[]>) => void;
   setDetails: (e: SetStateAction<Details>) => void;
   openDropdown: boolean;
   setOpenDropdown: (e: SetStateAction<boolean>) => void;

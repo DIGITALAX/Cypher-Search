@@ -26,7 +26,6 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   lensConnected,
   filterConstants,
   dispatch,
-  handlePlayPause,
   dropDetails,
   setDropDetails,
   allDrops,
@@ -63,7 +62,6 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               collectionLoading={collectionLoading}
               allDrops={allDrops}
               setDropDetails={setDropDetails}
-              handlePlayPause={handlePlayPause}
               router={router}
               allCollections={allCollections}
               dispatch={dispatch}

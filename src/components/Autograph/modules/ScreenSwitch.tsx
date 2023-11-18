@@ -99,7 +99,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleMedia,
   lensConnected,
   filterConstants,
-  handlePlayPause,
   dropDetails,
   setDropDetails,
   createDropLoading,
@@ -147,7 +146,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           dropDetails={dropDetails}
           setDropDetails={setDropDetails}
           handleMedia={handleMedia}
-          handlePlayPause={handlePlayPause}
           handleSendMessage={handleSendMessage}
           digiMessage={digiMessage}
           setDigiMessage={setDigiMessage}

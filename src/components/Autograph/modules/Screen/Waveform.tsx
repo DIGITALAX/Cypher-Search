@@ -4,13 +4,13 @@ import { HiOutlinePlayPause } from "react-icons/hi2";
 import WaveSurfer from "wavesurfer.js";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { WaveFormProps } from "../../types/autograph.types";
+import handlePlayPause from "../../../../../lib/helpers/handlePlayPause";
 
 const Waveform: FunctionComponent<WaveFormProps> = ({
   keyValue,
   type,
   audio,
   video,
-  handlePlayPause,
   upload,
   handleMedia,
 }): JSX.Element => {

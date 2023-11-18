@@ -19,6 +19,7 @@ const COLLECTION = `
       images
       mediaTypes
       visibility
+      soldTokens
       fulfillerPercent
       fulfillerBase
       fulfiller
@@ -68,6 +69,7 @@ export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
       description
       communities
       collectionId
+      soldTokens
       access
       unlimited
       colors
@@ -110,6 +112,7 @@ const COLLECTION_TITLE = `
       profileHandle
       printType
       prices
+      soldTokens
       owner
       microbrandCover
       microbrand

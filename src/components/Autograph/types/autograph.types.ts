@@ -64,7 +64,6 @@ export type WebProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
-    videoAudio: boolean;
     dropOpen: boolean;
   };
   setCollectionSettings: (
@@ -75,15 +74,10 @@ export type WebProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
-      videoAudio: boolean;
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
-  ) => void;
+
   handleSendMessage: (digitalax?: boolean) => Promise<void>;
   digiMessageLoading: boolean;
   setDigiMessage: (e: string) => void;
@@ -396,7 +390,6 @@ export type GalleryScreenProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
-    videoAudio: boolean;
     dropOpen: boolean;
   };
   setCollectionSettings: (
@@ -407,14 +400,8 @@ export type GalleryScreenProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
-      videoAudio: boolean;
       dropOpen: boolean;
     }>
-  ) => void;
-  handlePlayPause: (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
   ) => void;
 };
 
@@ -484,7 +471,6 @@ export type ScreenSwitchProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
-    videoAudio: boolean;
     dropOpen: boolean;
   };
   lensConnected: Profile | undefined;
@@ -496,15 +482,10 @@ export type ScreenSwitchProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
-      videoAudio: boolean;
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
-  ) => void;
+
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
   creationLoading: boolean;
@@ -1184,7 +1165,6 @@ export type DispatchProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
-    videoAudio: boolean;
     dropOpen: boolean;
   };
   setCollectionSettings: (
@@ -1195,14 +1175,8 @@ export type DispatchProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
-      videoAudio: boolean;
       dropOpen: boolean;
     }>
-  ) => void;
-  handlePlayPause: (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
   ) => void;
 };
 
@@ -1308,7 +1282,6 @@ export type SwitchCreateProps = {
     communityOpen: boolean;
     accessOpen: boolean;
     visibilityOpen: boolean;
-    videoAudio: boolean;
     dropOpen: boolean;
   };
   setCollectionSettings: (
@@ -1319,15 +1292,10 @@ export type SwitchCreateProps = {
       communityOpen: boolean;
       accessOpen: boolean;
       visibilityOpen: boolean;
-      videoAudio: boolean;
       dropOpen: boolean;
     }>
   ) => void;
-  handlePlayPause: (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
-  ) => void;
+
   lensConnected: Profile | undefined;
 };
 
@@ -1384,11 +1352,6 @@ export type WaveFormProps = {
   audio: string;
   video: string;
   type: string;
-  handlePlayPause: (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
-  ) => void;
   upload?: boolean;
   handleMedia?: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
 };

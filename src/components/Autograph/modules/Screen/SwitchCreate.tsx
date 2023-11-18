@@ -21,7 +21,6 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   setCollectionSettings,
   filterConstants,
   dispatch,
-  handlePlayPause,
   setDropDetails,
   dropsLoading,
   allDrops,
@@ -43,7 +42,6 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           collectionSettings={collectionSettings}
           setCollectionSettings={setCollectionSettings}
           dispatch={dispatch}
-          handlePlayPause={handlePlayPause}
           setCreateCase={setCreateCase}
         />
       );
@@ -173,10 +171,9 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             )}
                             {item?.audio && (
                               <Waveform
-                                handlePlayPause={handlePlayPause}
                                 audio={item?.audio}
                                 type={"audio"}
-                                keyValue={item?.audio}
+                                keyValue={item?.audio || item?.video}
                                 video={item?.video}
                               />
                             )}

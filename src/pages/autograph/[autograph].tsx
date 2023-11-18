@@ -233,7 +233,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setCollectionSettings,
     collectionSettings,
     handleMedia,
-    handlePlayPause,
     deleteCollection,
     allCollections,
     collectionLoading,
@@ -530,7 +529,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 setSelectedUser={setSelectedUser}
                 dropDetails={dropDetails}
                 setDropDetails={setDropDetails}
-                handlePlayPause={handlePlayPause}
                 filterConstants={filterConstants}
                 handleMedia={handleMedia}
                 isDesigner={isDesigner}

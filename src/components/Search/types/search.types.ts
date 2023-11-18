@@ -12,7 +12,7 @@ export interface FilterValues {
   hashtags: string[];
   microbrands: string[][];
   community: string[][];
-  access: string[];
+  access: string[][];
   format: PublicationMetadataMainFocusType[];
   dropsSuggested: string[];
   origin: string[][];
