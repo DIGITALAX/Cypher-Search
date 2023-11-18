@@ -112,10 +112,10 @@ export const itemStringToNumber: { [key: string]: string } = {
 };
 
 export const itemStringToType: { [key: string]: ItemType } = {
-  ["CoinOp"]: ItemType.CoinOp,
-  ["Chromadin"]: ItemType.Chromadin,
-  ["Legend"]: ItemType.Legend,
-  ["Listener"]: ItemType.Listener,
+  ["coinop"]: ItemType.CoinOp,
+  ["chromadin"]: ItemType.Chromadin,
+  ["legend"]: ItemType.Legend,
+  ["listener"]: ItemType.Listener,
 };
 
 

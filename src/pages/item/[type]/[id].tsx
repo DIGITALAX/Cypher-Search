@@ -79,6 +79,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     instantLoading,
     approveSpend,
     isApprovedSpend,
+    relatedCollections,
   } = useItem(
     type as string,
     id as string,
@@ -341,6 +342,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   instantLoading={instantLoading}
                   approveSpend={approveSpend}
                   isApprovedSpend={isApprovedSpend}
+                  relatedCollections={relatedCollections}
+                  lensConnected={lensConnected}
                 />
               }
               handleSearch={handleSearch}

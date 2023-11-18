@@ -1,7 +1,11 @@
 import { FunctionComponent } from "react";
 import { ChromadinProps } from "../types/item.types";
 import Image from "next/legacy/image";
-import { INFURA_GATEWAY, itemStringToType } from "../../../../lib/constants";
+import {
+  ACCEPTED_TOKENS_MUMBAI,
+  INFURA_GATEWAY,
+  itemStringToType,
+} from "../../../../lib/constants";
 import Waveform from "@/components/Autograph/modules/Screen/Waveform";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -23,14 +27,15 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   dispatch,
   approveSpend,
   handleInstantPurchase,
+  lensConnected,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.profile?.metadata?.picture
   );
   return (
-    <div className="relative w-full h-[50rem] flex items-center justify-center flex-row pt-32 px-12 gap-7">
+    <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-row pt-32 px-12 gap-7 h-fit">
       <div className="relative w-full h-full flex items-center justify-center">
-        <div className="relative p-3 bg-black flex items-center justify-center w-[40rem] h-full">
+        <div className="relative p-3 bg-black flex items-center justify-center w-[40rem] h-[37rem]">
           <div className="flex items-center justify-center w-full h-full bg-amo/30">
             {itemData?.images?.length > 1 && (
               <div className="absolute left-5 top-5 w-fit h-fit flex flex-row items-center justify-center gap-1.5">
@@ -173,30 +178,26 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           </div>
           <div className="relative w-full h-fit flex font-bit text-xxs text-white">
             <div className="relative w-1/2 h-fit flex flex-wrap items-end justify-end ml-auto gap-3">
-              {
-                //   itemData?.tags
-
-                Array.from({ length: 4 })?.map((tag: string, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className="relative w-fit h-fit px-2 py-1 rounded-full flex items-center justify-center text-center"
-                      style={{
-                        backgroundColor:
-                          index % 3 === 0
-                            ? "#078fd6"
-                            : index % 4 === 0
-                            ? "#FFDCFF"
-                            : "#81A8F8",
-                      }}
-                    >
-                      <div className="relative w-fit h-fit flex top-px">
-                        new tag{tag}
-                      </div>
+              {itemData?.tags?.map((tag: string, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative w-fit h-fit px-2 py-1 rounded-full flex items-center justify-center text-center"
+                    style={{
+                      backgroundColor:
+                        index % 3 === 0
+                          ? "#078fd6"
+                          : index % 4 === 0
+                          ? "#FFDCFF"
+                          : "#81A8F8",
+                    }}
+                  >
+                    <div className="relative w-fit h-fit flex top-px">
+                      new tag{tag}
                     </div>
-                  );
-                })
-              }
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="relative w-fit h-fit max-h-[7rem] flex items-start justify-end overflow-y-scroll">
@@ -260,11 +261,11 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             </div>
             <div className="relative flex flex-row gap-3 items-center justify-center">
               {itemData?.acceptedTokens?.map(
-                (item: string[], indexTwo: number) => {
+                (item: string, indexTwo: number) => {
                   return (
                     <div
                       className={`relative w-fit h-fit rounded-full flex items-center cursor-pointer active:scale-95 ${
-                        purchaseDetails?.currency === item[1]
+                        purchaseDetails?.currency === item
                           ? "opacity-50"
                           : "opacity-100"
                       }`}
@@ -272,12 +273,16 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                       onClick={() =>
                         setPurchaseDetails((prev) => ({
                           ...prev,
-                          currency: item?.[2],
+                          currency: item,
                         }))
                       }
                     >
                       <Image
-                        src={`${INFURA_GATEWAY}/ipfs/${item[0]}`}
+                        src={`${INFURA_GATEWAY}/ipfs/${
+                          ACCEPTED_TOKENS_MUMBAI?.find(
+                            (value) => value[2] == item
+                          )?.[0]
+                        }`}
                         className="flex"
                         draggable={false}
                         width={30}
@@ -299,32 +304,27 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   Color
                 </div>
                 <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
-                  {
-                    //   itemData?.colors?
-                    Array.from({ length: 4 })?.map(
-                      (item: string, index: number) => {
-                        return (
-                          <div
-                            key={index}
-                            className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer active:scale-95 border ${
-                              item === purchaseDetails?.color
-                                ? "border-black opacity-100"
-                                : "border-white opacity-70"
-                            }`}
-                            style={{
-                              backgroundColor: item,
-                            }}
-                            onClick={() =>
-                              setPurchaseDetails((prev) => ({
-                                ...prev,
-                                color: item,
-                              }))
-                            }
-                          ></div>
-                        );
-                      }
-                    )
-                  }
+                  {itemData?.colors?.map((item: string, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer active:scale-95 border ${
+                          item === purchaseDetails?.color
+                            ? "border-black opacity-100"
+                            : "border-white opacity-70"
+                        }`}
+                        style={{
+                          backgroundColor: item,
+                        }}
+                        onClick={() =>
+                          setPurchaseDetails((prev) => ({
+                            ...prev,
+                            color: item,
+                          }))
+                        }
+                      ></div>
+                    );
+                  })}
                 </div>
               </div>
               <div className="relative flex items-end justify-end items-center justify-center h-fit w-fit flex-col gap-1.5 ml-auto">
@@ -332,33 +332,28 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   Size
                 </div>
                 <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
-                  {
-                    //   itemData?.sizes?
-                    Array.from({ length: 4 })?.map(
-                      (item: string, index: number) => {
-                        return (
-                          <div
-                            key={index}
-                            className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
-                              item === purchaseDetails?.color
-                                ? "border-black opacity-100"
-                                : "border-white opacity-70"
-                            }`}
-                            onClick={() =>
-                              setPurchaseDetails((prev) => ({
-                                ...prev,
-                                size: item,
-                              }))
-                            }
-                          >
-                            <div className="relative w-fit h-fit flex items-center justify-center top-px">
-                              {item}
-                            </div>
-                          </div>
-                        );
-                      }
-                    )
-                  }
+                  {itemData?.sizes?.map((item: string, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
+                          item === purchaseDetails?.color
+                            ? "border-black opacity-100"
+                            : "border-white opacity-70"
+                        }`}
+                        onClick={() =>
+                          setPurchaseDetails((prev) => ({
+                            ...prev,
+                            size: item,
+                          }))
+                        }
+                      >
+                        <div className="relative w-fit h-fit flex items-center justify-center top-px">
+                          {item}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -367,8 +362,13 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         <div className="relative w-fit h-fit flex items-center justify-center flex-row gap-6 justify-end items-end">
           {type == "chromadin" && (
             <div
-              className="relative w-36 text-sm h-10 rounded-sm flex items-center justify-center border border-white text-black font-bit bg-sol px-2 py-1 cursor-pointer active:scale-95"
+              className={`relative w-36 text-sm h-10 rounded-sm flex items-center justify-center border border-white text-black font-bit bg-sol px-2 py-1 ${
+                !lensConnected?.id
+                  ? "opacity-70"
+                  : "cursor-pointer active:scale-95"
+              }`}
               onClick={() =>
+                lensConnected?.id &&
                 !instantLoading &&
                 (isApprovedSpend ? handleInstantPurchase() : approveSpend())
               }
@@ -381,6 +381,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               >
                 {instantLoading ? (
                   <AiOutlineLoading size={15} color="white" />
+                ) : !lensConnected?.id ? (
+                  "Connect"
                 ) : !isApprovedSpend ? (
                   "Approve Spend"
                 ) : (

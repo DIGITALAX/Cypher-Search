@@ -21,6 +21,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   instantLoading,
   approveSpend,
   isApprovedSpend,
+  lensConnected,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -41,6 +42,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
           instantLoading={instantLoading}
           approveSpend={approveSpend}
           isApprovedSpend={isApprovedSpend}
+          lensConnected={lensConnected}
         />
       );
 

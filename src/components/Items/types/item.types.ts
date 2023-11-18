@@ -5,6 +5,7 @@ import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { NextRouter } from "next/router";
 import { SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
+import { Profile } from "../../../../graphql/generated";
 
 export type SwitchTypeProps = {
   itemData: Publication;
@@ -21,6 +22,7 @@ export type SwitchTypeProps = {
   approveSpend: () => Promise<void>;
   handleInstantPurchase: () => Promise<void>;
   relatedCollections: Creation[] | undefined;
+  lensConnected: Profile | undefined;
 };
 
 export type ChromadinProps = {
@@ -37,6 +39,7 @@ export type ChromadinProps = {
   setPurchaseDetails: (e: SetStateAction<PurchaseDetails>) => void;
   approveSpend: () => Promise<void>;
   handleInstantPurchase: () => Promise<void>;
+  lensConnected: Profile | undefined;
 };
 
 export interface PurchaseDetails {
