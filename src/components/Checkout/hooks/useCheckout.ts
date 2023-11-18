@@ -460,7 +460,6 @@ const useCheckout = (
     chooseCartItem,
     setChooseCartItem,
     isApprovedSpend,
-    setEncryptedStrings,
     groupedByPubId,
     setCompletedPurchases,
   };

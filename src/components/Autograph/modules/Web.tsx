@@ -102,7 +102,6 @@ const Web: FunctionComponent<WebProps> = ({
   digiMessageLoading,
   handleMedia,
   filterConstants,
-  handlePlayPause,
   dropDetails,
   setDropDetails,
   createDropLoading,
@@ -230,7 +229,6 @@ const Web: FunctionComponent<WebProps> = ({
           handleMedia={handleMedia}
           currencies={currencies}
           setSearchedProfiles={setSearchedProfiles}
-          handlePlayPause={handlePlayPause}
           filterConstants={filterConstants}
           lensConnected={lensConnected}
           setCurrencyOpen={setCurrencyOpen}

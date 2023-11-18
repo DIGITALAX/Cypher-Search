@@ -34,6 +34,7 @@ const COLLECTIONS = `
       colors
       sizes
       origin
+      soldTokens
       blockTimestamp
     }
   }
@@ -54,6 +55,7 @@ const COLLECTIONS_PAGINATED = `
       owner
       mediaTypes
       microbrandCover
+      soldTokens
       microbrand
       images
       fulfillerPercent

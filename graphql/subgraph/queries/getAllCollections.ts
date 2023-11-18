@@ -19,6 +19,7 @@ const COLLECTIONS = `
       microbrandCover
       microbrand
       images
+      soldTokens
       fulfillerPercent
       fulfillerBase
       fulfiller

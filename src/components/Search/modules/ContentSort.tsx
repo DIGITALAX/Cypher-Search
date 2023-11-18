@@ -467,15 +467,15 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           }
         }}
       />
-      <DropDown
+      <ImageDropDown
         dropDownValues={filteredDropDownValues?.access}
         title={"Sort By Access Eco Scale"}
         value={filterValues?.access}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
-            access: filterConstants!.access?.filter((value) =>
-              value
+            microbrands: filterConstants!.access.filter((value) =>
+              value[0]
                 .toLowerCase()
                 ?.includes(
                   (e.target as HTMLInputElement).value

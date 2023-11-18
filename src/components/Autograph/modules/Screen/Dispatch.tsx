@@ -21,7 +21,6 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   setCollectionSettings,
   filterConstants,
   dispatch,
-  handlePlayPause,
   allDrops,
   setCreateCase,
 }): JSX.Element => {
@@ -192,11 +191,10 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   </div>
                 </label>
                 {(collectionDetails?.audio ||
-                  collectionSettings?.videoAudio ||
+                  collectionSettings?.media === "video" ||
                   collectionSettings?.media === "audio") &&
                   collectionSettings?.media !== "static" && (
                     <Waveform
-                      handlePlayPause={handlePlayPause}
                       handleMedia={async (e) => {
                         e.preventDefault();
                         e?.target?.files?.[0] &&
@@ -207,9 +205,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       audio={collectionDetails?.audio}
                       upload
                       keyValue={
-                        collectionDetails?.audio
-                          ? collectionDetails?.audio
-                          : collectionDetails?.video
+                        collectionDetails?.audio || collectionDetails?.video
                       }
                     />
                   )}

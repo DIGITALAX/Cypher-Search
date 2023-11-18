@@ -31,6 +31,7 @@ export interface Creation {
   images: string[];
   video: string;
   audio: string;
+  soldTokens: string[];
   fulfillerPercent: string;
   fulfillerBase: string;
   fulfiller: string;
