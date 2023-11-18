@@ -145,7 +145,7 @@ const useCheckout = (
       );
 
       await actPost(
-        cartItems[index]?.item?.pubId,
+        cartItems[index]?.item?.publication?.id,
         {
           unknownOpenAction,
         },

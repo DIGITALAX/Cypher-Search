@@ -22,9 +22,7 @@ import getProfiles from "../../../../graphql/lens/queries/profiles";
 import {
   ACCEPTED_TOKENS_MUMBAI,
   CHROMADIN_OPEN_ACTION,
-  COIN_OP_OPEN_ACTION,
-  LEGEND_OPEN_ACTION,
-  LISTENER_OPEN_ACTION,
+  itemStringToType,
   numberToItemTypeMap,
   numberToPrintType,
 } from "../../../../lib/constants";
@@ -34,6 +32,10 @@ import { CartItem } from "@/components/Common/types/common.types";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { ethers } from "ethers";
 import { polygon } from "viem/chains";
+import encodeActData from "../../../../lib/helpers/encodeActData";
+import actPost from "../../../../lib/helpers/api/actPost";
+import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSlice";
+import { AnyAction, Dispatch } from "redux";
 
 const useItem = (
   type: string,
@@ -43,7 +45,8 @@ const useItem = (
   oracleData: OracleData[],
   address: `0x${string}` | undefined,
   cartItems: CartItem[],
-  publicClient: PublicClient
+  publicClient: PublicClient,
+  dispatch: Dispatch<AnyAction>
 ) => {
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
   const [itemLoading, setItemLoading] = useState<boolean>(false);
@@ -257,6 +260,40 @@ const useItem = (
   const handleInstantPurchase = async () => {
     setInstantLoading(true);
     try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      const unknownOpenAction = encodeActData(
+        {
+          item: itemData?.post as Creation,
+          color: purchaseDetails?.color,
+          size: purchaseDetails?.size,
+          price: Number(purchaseDetails?.price),
+          chosenIndex: 0,
+          chosenIndexes: [],
+          amount: 1,
+          type: itemStringToType[type.toLowerCase().trim()],
+          purchased: false,
+        },
+        "",
+        address!,
+        purchaseDetails?.currency as `0x${string}`
+      );
+
+      await actPost(
+        (itemData?.post as Creation)?.publication?.id,
+        {
+          unknownOpenAction,
+        },
+        dispatch,
+        address!,
+        clientWallet,
+        publicClient
+      );
+
+      dispatch(setSuccessCheckout(true));
     } catch (err: any) {
       console.error(err.messgae);
     }
@@ -343,13 +380,7 @@ const useItem = (
         functionName: "approve",
         chain: polygon,
         args: [
-          item?.type === "chromadin"
-            ? CHROMADIN_OPEN_ACTION
-            : item?.type === "listener"
-            ? LISTENER_OPEN_ACTION
-            : item?.type === "coinop"
-            ? COIN_OP_OPEN_ACTION
-            : LEGEND_OPEN_ACTION,
+          CHROMADIN_OPEN_ACTION,
           ethers.parseEther(
             oracleData
               ?.find(
@@ -412,16 +443,7 @@ const useItem = (
           },
         ],
         functionName: "allowance",
-        args: [
-          address as `0x${string}`,
-          type === "chromadin"
-            ? CHROMADIN_OPEN_ACTION
-            : item?.type === "listener"
-            ? LISTENER_OPEN_ACTION
-            : item?.type === "coinop"
-            ? COIN_OP_OPEN_ACTION
-            : LEGEND_OPEN_ACTION,
-        ],
+        args: [address as `0x${string}`, CHROMADIN_OPEN_ACTION],
       });
 
       if (data && address) {
