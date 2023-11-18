@@ -35,7 +35,7 @@ const useFeed = (
     []
   );
   const [openMoreOptions, setOpenMoreOptions] = useState<boolean[]>([]);
-  const [profileFeed, setProfileFeed] = useState<(Post | Quote | Mirror)[]>([])
+  const [profileFeed, setProfileFeed] = useState<(Post | Quote | Mirror)[]>([]);
   const [hasMoreFeed, setHasMoreFeed] = useState<boolean>(false);
   const [feedLoading, setFeedLoading] = useState<boolean>(false);
   const [commentsFeedOpen, setCommentsFeedOpen] = useState<boolean[]>([]);
@@ -418,7 +418,7 @@ const useFeed = (
     setCommentsFeedOpen,
     commentContentLoading,
     setCommentContentLoading,
-    profileFeed
+    profileFeed,
   };
 };
 

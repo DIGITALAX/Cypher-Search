@@ -906,9 +906,15 @@ export type PublicationProps = {
   index: number;
   disabled?: boolean;
   postCollectGif?: PostCollectGifState;
-  mirror?: (id: string) => Promise<void>;
-  like?: (id: string) => Promise<void>;
-  comment?: (id: string) => Promise<void>;
+  mirror?:
+    | ((id: string) => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
+  like?:
+    | ((id: string) => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
+  comment?:
+    | ((id: string) => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
   commentsOpen?: boolean[];
   setCommentsOpen?: (e: SetStateAction<boolean[]>) => void;
   makeComment?: MakePostComment[];
@@ -962,7 +968,10 @@ export type PostCommentProps = {
   makePostComment: MakePostComment;
   postCollectGif: PostCollectGifState;
   setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
-  commentPost: ((id: string) => Promise<void>) | (() => Promise<void>);
+  commentPost:
+    | ((id: string) => Promise<void>)
+    | (() => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
   commentPostLoading: boolean;
   id: string;
   height: string;

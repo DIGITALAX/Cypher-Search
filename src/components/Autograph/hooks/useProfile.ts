@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Post, Mirror, Quote, Profile } from "../../../../graphql/generated";
+import {
+  Post,
+  Mirror,
+  Quote,
+  Profile,
+  Comment,
+} from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
@@ -9,7 +15,7 @@ import { Dispatch } from "redux";
 import { createWalletClient, custom, PublicClient } from "viem";
 
 const useProfile = (
-  profileFeed: (Post | Quote | Mirror)[],
+  profileFeed: (Post | Quote | Mirror | Comment)[],
   galleryItems:
     | {
         collected: Creation[];
@@ -136,7 +142,7 @@ const useProfile = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient,
+        publicClient
       );
       await refetchProfile(dispatch, lensConnected?.id);
     } catch (err: any) {
