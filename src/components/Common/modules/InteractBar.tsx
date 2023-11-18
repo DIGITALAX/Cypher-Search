@@ -10,7 +10,9 @@ import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
 
 type SingleArgFunction = (id: string) => Promise<void>;
-type DualArgFunction = (index: number, id: string) => Promise<void>;
+type DualArgFunction =
+  | ((index: number, id: string) => Promise<void>)
+  | ((id: string, main: boolean) => Promise<void>);
 
 function isSingleArgFunction(
   func: SingleArgFunction | DualArgFunction
@@ -32,6 +34,8 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   hideCollect,
   dispatch,
   router,
+  comment,
+  main,
 }): JSX.Element => {
   return (
     <div
@@ -61,7 +65,9 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                   return choices;
                 }),
               like,
-              () => router.push(`/item/pub/${publication?.id}`),
+              comment
+                ? () => comment()
+                : () => router.push(`/item/pub/${publication?.id}`),
             ]
           : [
               () =>
@@ -72,7 +78,9 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 }),
               like,
               simpleCollect,
-              () => router.push(`/item/pub/${publication?.id}`),
+              comment
+                ? () => comment()
+                : () => router.push(`/item/pub/${publication?.id}`),
             ];
         const loaders = hideCollect
           ? [interactionsLoading?.like]
@@ -157,7 +165,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
 
                   Number(pub?.openActionModules?.[0].amount.value) > 0 ||
                   pub?.openActionModules?.[0].endsAt ||
-                  Number(pub.openActionModules?.[0].collectLimit) 
+                  Number(pub.openActionModules?.[0].collectLimit)
                     ? dispatch(
                         setFollowCollect({
                           actionType: "collect",
@@ -231,6 +239,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             const functions: (
               | ((id: string) => Promise<void>)
               | ((index: number, id: string) => Promise<void>)
+              | ((id: string, main: boolean) => Promise<void>)
               | (() => void)
             )[] = [
               mirror,
@@ -253,10 +262,18 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                     functions[indexTwo] as
                       | ((id: string) => Promise<void>)
                       | ((index: number, id: string) => Promise<void>)
+                      | ((id: string, main: boolean) => Promise<void>)
                   )
                     ? (functions[indexTwo] as (id: string) => Promise<void>)(
                         publication?.id
                       )
+                    : router.asPath.includes("item")
+                    ? (
+                        functions[indexTwo] as (
+                          id: string,
+                          main: boolean
+                        ) => Promise<void>
+                      )(publication?.id, main!)
                     : (
                         functions[indexTwo] as (
                           index: number,

@@ -24,6 +24,8 @@ import {
   Post,
   TextOnlyMetadataV3,
 } from "../../../../graphql/generated";
+import useComment from "@/components/Items/hooks/useComment";
+import useProfile from "@/components/Autograph/hooks/useProfile";
 
 const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
@@ -44,6 +46,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   );
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
+  );
+  const postCollectGif = useSelector(
+    (state: RootState) => state.app.postCollectGifReducer
   );
   const oracleData = useSelector(
     (state: RootState) => state.app.oracleDataReducer.data
@@ -88,7 +93,51 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     oracleData,
     address,
     cartItems,
-    publicClient
+    publicClient,
+    dispatch
+  );
+  const {
+    handleMoreComments,
+    allComments,
+    allCommentsLoading,
+    hasMoreComments,
+    mainMakeComment,
+    setMainMakeComment,
+    setMainContentLoading,
+    mainContentLoading,
+    comment,
+    makeComment,
+    setMakeComment,
+    setCommentsOpen,
+    commentsOpen,
+    interactionsItemsLoading,
+    openItemMirrorChoice,
+    setOpenItemMirrorChoice,
+    simpleCollect,
+    setOpenMoreOptions,
+    openMoreOptions,
+    handleBookmark,
+    handleHidePost,
+    contentLoading,
+    setContentLoading,
+    commentSwitch,
+    setCommentSwitch,
+    mainInteractionsLoading,
+    setMainOpenMirrorChoice,
+    openMainMirrorChoice,
+    mirror: mirrorItem,
+    like: likeItem,
+  } = useComment(
+    address,
+    publicClient,
+    type === "chromadin" || type === "coinop"
+      ? (itemData?.post as Creation)?.publication?.id
+      : (itemData?.post as Mirror)?.__typename === "Mirror"
+      ? (itemData?.post as Mirror)?.mirrorOn?.id
+      : (itemData?.post as Post)?.id,
+    lensConnected,
+    dispatch,
+    postCollectGif
   );
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
     id as string,
@@ -150,6 +199,23 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   } = useInteractions(
     suggestedFeed?.items || [],
     interactionsCount,
+    dispatch,
+    publicClient,
+    address
+  );
+  const {
+    followProfile: followItemProfile,
+    unfollowProfile: unfollowItemProfile,
+    feedFollowLoading: itemFollowLoading,
+    feedProfileHovers: itemProfileHovers,
+    setFeedProfileHovers: setItemProfileHovers,
+  } = useProfile(
+    allComments,
+    {
+      collected: [],
+      created: [],
+    },
+    lensConnected,
     dispatch,
     publicClient,
     address
@@ -329,9 +395,12 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
               cartAnim={cartAnim}
               component={
                 <SwitchType
+                  handleMoreComments={handleMoreComments}
+                  allCommentsLoading={allCommentsLoading}
+                  hasMoreComments={hasMoreComments}
                   dispatch={dispatch}
                   router={router}
-                  itemData={itemData}
+                  itemData={itemData!}
                   type={type as string}
                   filterConstants={filterConstants}
                   cartItems={cartItems}
@@ -344,6 +413,39 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   isApprovedSpend={isApprovedSpend}
                   relatedCollections={relatedCollections}
                   lensConnected={lensConnected}
+                  mirror={mirrorItem}
+                  like={likeItem}
+                  mainInteractionsLoading={mainInteractionsLoading}
+                  openMainMirrorChoice={openMainMirrorChoice}
+                  setMainOpenMirrorChoice={setMainOpenMirrorChoice}
+                  allComments={allComments}
+                  commentSwitch={commentSwitch}
+                  setCommentSwitch={setCommentSwitch}
+                  mainMakeComment={mainMakeComment!}
+                  setMainMakeComment={setMainMakeComment}
+                  postCollectGif={postCollectGif}
+                  setMainContentLoading={setMainContentLoading}
+                  mainContentLoading={mainContentLoading}
+                  comment={comment}
+                  setMakeComment={setMakeComment}
+                  makeComment={makeComment}
+                  setCommentsOpen={setCommentsOpen}
+                  commentsOpen={commentsOpen}
+                  interactionsLoading={interactionsItemsLoading}
+                  profileHovers={itemProfileHovers}
+                  setProfileHovers={setItemProfileHovers}
+                  openMirrorChoice={openItemMirrorChoice}
+                  setOpenMirrorChoice={setOpenItemMirrorChoice}
+                  simpleCollect={simpleCollect}
+                  followLoading={itemFollowLoading}
+                  followProfile={followItemProfile}
+                  unfollowProfile={unfollowItemProfile}
+                  setOpenMoreOptions={setOpenMoreOptions}
+                  openMoreOptions={openMoreOptions}
+                  handleBookmark={handleBookmark}
+                  handleHidePost={handleHidePost}
+                  contentLoading={contentLoading}
+                  setContentLoading={setContentLoading}
                 />
               }
               handleSearch={handleSearch}

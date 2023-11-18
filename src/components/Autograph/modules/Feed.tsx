@@ -33,7 +33,6 @@ const Feed: FunctionComponent<FeedProps> = ({
   contentLoading,
   setContentLoading,
   postCollectGif,
-  
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">

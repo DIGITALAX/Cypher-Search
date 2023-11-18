@@ -47,15 +47,19 @@ export type InteractBarProps = {
   col?: boolean;
   layoutAmount?: number;
   index: number;
+  comment?: () => void;
   hideCollect?: boolean;
+  main?: boolean;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   mirror:
     | ((id: string) => Promise<void>)
-    | ((index: number, id: string) => Promise<void>);
+    | ((index: number, id: string) => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
   like:
     | ((id: string) => Promise<void>)
-    | ((index: number, id: string) => Promise<void>);
+    | ((index: number, id: string) => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
   simpleCollect:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>)

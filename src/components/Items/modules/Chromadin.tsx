@@ -12,6 +12,11 @@ import { AiOutlineLoading } from "react-icons/ai";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
+import InteractBar from "@/components/Common/modules/InteractBar";
+import PostComment from "@/components/Autograph/modules/PostComment";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Mirror, Post, Quote, Comment } from "../../../../graphql/generated";
+import Publication from "@/components/Autograph/modules/Publication";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   itemData,
@@ -28,6 +33,42 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   approveSpend,
   handleInstantPurchase,
   lensConnected,
+  mirror,
+  like,
+  interactionsLoading,
+  openMirrorChoice,
+  setOpenMirrorChoice,
+  commentSwitch,
+  setCommentSwitch,
+  allComments,
+  makeComment,
+  setCommentsOpen,
+  commentsOpen,
+  comment,
+  handleMoreComments,
+  allCommentsLoading,
+  hasMoreComments,
+  profileHovers,
+  setProfileHovers,
+  simpleCollect,
+  unfollowProfile,
+  followProfile,
+  postCollectGif,
+  setOpenMoreOptions,
+  setContentLoading,
+  contentLoading,
+  handleHidePost,
+  openMoreOptions,
+  setMakeComment,
+  handleBookmark,
+  followLoading,
+  mainContentLoading,
+  mainInteractionsLoading,
+  openMainMirrorChoice,
+  setMainOpenMirrorChoice,
+  mainMakeComment,
+  setMainMakeComment,
+  setMainContentLoading,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.profile?.metadata?.picture
@@ -35,83 +76,183 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   return (
     <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-row pt-32 px-12 gap-7 h-fit">
       <div className="relative w-full h-full flex items-center justify-center">
-        <div className="relative p-3 bg-black flex items-center justify-center w-[40rem] h-[37rem]">
-          <div className="flex items-center justify-center w-full h-full bg-amo/30">
-            {itemData?.images?.length > 1 && (
-              <div className="absolute left-5 top-5 w-fit h-fit flex flex-row items-center justify-center gap-1.5">
-                <div
-                  className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
-                  onClick={() =>
-                    setPurchaseDetails((prev) => ({
-                      ...prev,
-                      imageIndex:
-                        prev.imageIndex + 1 > itemData?.images?.length
-                          ? 0
-                          : prev.imageIndex + 1,
-                    }))
-                  }
-                >
-                  <Image
-                    src={`${INFURA_GATEWAY}/ipfs/Qma3jm41B4zYQBxag5sJSmfZ45GNykVb8TX9cE3syLafz2`}
-                    layout="fill"
-                    draggable={false}
-                  />
+        <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] h-full">
+          <InteractBar
+            mirror={mirror}
+            like={like}
+            interactionsLoading={mainInteractionsLoading?.[0]}
+            publication={itemData?.publication}
+            openMirrorChoice={openMainMirrorChoice}
+            setOpenMirrorChoice={setMainOpenMirrorChoice}
+            simpleCollect={undefined}
+            index={0}
+            type={undefined}
+            hideCollect={true}
+            dispatch={dispatch}
+            router={router}
+            comment={() => setCommentSwitch(!commentSwitch)}
+            main={true}
+          />
+          <div
+            className={`relative p-3 bg-black flex items-center justify-center w-full h-[37rem] ${
+              commentSwitch && "overflow-y-scroll"
+            }`}
+          >
+            {commentSwitch ? (
+              allCommentsLoading ? (
+                <div className="">
+                  <div></div>
                 </div>
-                <div
-                  className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
-                  onClick={() =>
-                    setPurchaseDetails((prev) => ({
-                      ...prev,
-                      imageIndex:
-                        prev.imageIndex - 1 == 0 ? prev.imageIndex - 1 : 0,
-                    }))
-                  }
-                >
-                  <Image
-                    src={`${INFURA_GATEWAY}/ipfs/QmcBVNVZWGBDcAxF4i564uSNGZrUvzhu5DKkXESvhY45m6`}
-                    layout="fill"
-                    draggable={false}
+              ) : allComments?.length > 0 ? (
+                <>
+                  <PostComment
+                    index={0}
+                    makePostComment={mainMakeComment?.[0]}
+                    setMakePostComment={setMainMakeComment!}
+                    commentPost={comment!}
+                    id={itemData?.publication?.id}
+                    commentPostLoading={mainInteractionsLoading[0]?.comment!}
+                    height="5rem"
+                    imageHeight="1.25rem"
+                    imageWidth="1.25rem"
+                    postCollectGif={postCollectGif!}
+                    setContentLoading={setMainContentLoading!}
+                    contentLoading={mainContentLoading?.[0]!}
+                    dispatch={dispatch}
                   />
+                  <InfiniteScroll
+                    next={handleMoreComments}
+                    hasMore={hasMoreComments}
+                    dataLength={allComments?.length}
+                    loader={<></>}
+                    className="w-fit h-fit items-center justify-start flex flex-col gap-10"
+                  >
+                    {allComments?.map(
+                      (
+                        item: Post | Mirror | Quote | Comment,
+                        index: number
+                      ) => {
+                        return (
+                          <Publication
+                            index={index}
+                            item={item}
+                            key={index}
+                            dispatch={dispatch}
+                            router={router}
+                            mirror={mirror}
+                            like={like}
+                            comment={comment}
+                            setMakePostComment={setMakeComment}
+                            makeComment={makeComment}
+                            setCommentsOpen={setCommentsOpen}
+                            commentsOpen={commentsOpen}
+                            interactionsLoading={interactionsLoading}
+                            profileHovers={profileHovers}
+                            setProfileHovers={setProfileHovers}
+                            openMirrorChoice={openMirrorChoice}
+                            setOpenMirrorChoice={setOpenMirrorChoice}
+                            simpleCollect={simpleCollect}
+                            followLoading={followLoading}
+                            followProfile={followProfile}
+                            unfollowProfile={unfollowProfile}
+                            setOpenMoreOptions={setOpenMoreOptions}
+                            openMoreOptions={openMoreOptions}
+                            handleBookmark={handleBookmark}
+                            handleHidePost={handleHidePost}
+                            data-post-id={item?.id}
+                            contentLoading={contentLoading}
+                            setContentLoading={setContentLoading}
+                            postCollectGif={postCollectGif}
+                          />
+                        );
+                      }
+                    )}
+                  </InfiniteScroll>
+                </>
+              ) : (
+                <div className="relative w-fit h-fit items-center justify-center flex text-white font-bit break-words">
+                  No comments yet. Make one?
                 </div>
-              </div>
-            )}
-            <div
-              title={type}
-              className="w-5 h-5 absolute right-5 top-5 rounded-full flex border border-white"
-            >
-              <Image
-                src={`${INFURA_GATEWAY}/ipfs/${
-                  filterConstants?.origin?.map(
-                    (item) => item[0]?.toLowerCase()?.trim() === type
-                  )?.[1]
-                }`}
-                layout="fill"
-                draggable={false}
-                objectFit="cover"
-                className="rounded-full"
-              />
-            </div>
-            {itemData?.video ? (
-              <video className="object-cover flex items-center justify-center">
-                <source src={`${INFURA_GATEWAY}/ipfs/${itemData?.video}`} />{" "}
-              </video>
-            ) : (
-              itemData?.images?.[0] && (
-                <Image
-                  layout="fill"
-                  objectFit="contain"
-                  draggable={false}
-                  src={`${INFURA_GATEWAY}/ipfs/${itemData?.images?.[0]}`}
-                />
               )
-            )}
-            {(itemData?.video || itemData?.audio) && (
-              <Waveform
-                audio={itemData?.audio}
-                type={"audio"}
-                keyValue={itemData?.audio || itemData?.video}
-                video={itemData?.video}
-              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full bg-amo/30">
+                {itemData?.images?.length > 1 && (
+                  <div className="absolute left-5 top-5 w-fit h-fit flex flex-row items-center justify-center gap-1.5">
+                    <div
+                      className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
+                      onClick={() =>
+                        setPurchaseDetails((prev) => ({
+                          ...prev,
+                          imageIndex:
+                            prev.imageIndex + 1 > itemData?.images?.length
+                              ? 0
+                              : prev.imageIndex + 1,
+                        }))
+                      }
+                    >
+                      <Image
+                        src={`${INFURA_GATEWAY}/ipfs/Qma3jm41B4zYQBxag5sJSmfZ45GNykVb8TX9cE3syLafz2`}
+                        layout="fill"
+                        draggable={false}
+                      />
+                    </div>
+                    <div
+                      className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
+                      onClick={() =>
+                        setPurchaseDetails((prev) => ({
+                          ...prev,
+                          imageIndex:
+                            prev.imageIndex - 1 == 0 ? prev.imageIndex - 1 : 0,
+                        }))
+                      }
+                    >
+                      <Image
+                        src={`${INFURA_GATEWAY}/ipfs/QmcBVNVZWGBDcAxF4i564uSNGZrUvzhu5DKkXESvhY45m6`}
+                        layout="fill"
+                        draggable={false}
+                      />
+                    </div>
+                  </div>
+                )}
+                <div
+                  title={type}
+                  className="w-5 h-5 absolute right-5 top-5 rounded-full flex border border-white"
+                >
+                  <Image
+                    src={`${INFURA_GATEWAY}/ipfs/${
+                      filterConstants?.origin?.map(
+                        (item) => item[0]?.toLowerCase()?.trim() === type
+                      )?.[1]
+                    }`}
+                    layout="fill"
+                    draggable={false}
+                    objectFit="cover"
+                    className="rounded-full"
+                  />
+                </div>
+                {itemData?.video ? (
+                  <video className="object-cover flex items-center justify-center">
+                    <source src={`${INFURA_GATEWAY}/ipfs/${itemData?.video}`} />{" "}
+                  </video>
+                ) : (
+                  itemData?.images?.[0] && (
+                    <Image
+                      layout="fill"
+                      objectFit="contain"
+                      draggable={false}
+                      src={`${INFURA_GATEWAY}/ipfs/${itemData?.images?.[0]}`}
+                    />
+                  )
+                )}
+                {(itemData?.video || itemData?.audio) && (
+                  <Waveform
+                    audio={itemData?.audio}
+                    type={"audio"}
+                    keyValue={itemData?.audio || itemData?.video}
+                    video={itemData?.video}
+                  />
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -200,11 +341,6 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               })}
             </div>
           </div>
-          <div className="relative w-fit h-fit max-h-[7rem] flex items-start justify-end overflow-y-scroll">
-            <div className="relative w-3/4 h-fit flex items-start justify-end mr-0 text-right font-aust text-white break-words text-xs">
-              {itemData?.title}
-            </div>
-          </div>
           <div className="relative justify-end items-end flex w-1/2 h-fit flex flex-row ml-auto gap-3">
             {filterConstants?.access
               ?.filter((item: string[]) => itemData?.access?.includes(item[0]))
@@ -284,7 +420,6 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               )}
             </div>
           </div>
-
           {type === "coinop" && (
             <div className="relative w-fit h-fit flex flex-row gap-6 items-end justify-end text-white font-bit text-xxs pt-4">
               <div className="relative flex items-end w-fit h-fit justify-end items-center justify-center flex-col gap-1.5 ml-auto">
