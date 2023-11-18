@@ -119,7 +119,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
       <div className="relative w-full h-full flex items-end justify-start ml-auto flex-col gap-12">
         <div className="relative w-full h-full flex items-end justify-start ml-auto flex-col gap-4">
           <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-words text-5xl mt-0">
-            {itemData?.title}title
+            {itemData?.title}
           </div>
           <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-center justify-center">
             <div className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end font-aust text-white break-words text-sm cursor-pointer">
@@ -141,7 +141,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 )}
               </div>
               <div className="relative w-fit h-fit items-center justify-center flex">
-                @emma{itemData?.profileHandle}
+                {itemData?.profileHandle}
               </div>
             </div>
             {itemData?.microbrandCover && (
@@ -193,7 +193,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     }}
                   >
                     <div className="relative w-fit h-fit flex top-px">
-                      new tag{tag}
+                      {tag}
                     </div>
                   </div>
                 );
@@ -202,22 +202,12 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           </div>
           <div className="relative w-fit h-fit max-h-[7rem] flex items-start justify-end overflow-y-scroll">
             <div className="relative w-3/4 h-fit flex items-start justify-end mr-0 text-right font-aust text-white break-words text-xs">
-              {itemData?.title}description description description description
-              description description sdf description description description
-              description description description description desdfasdfscription
-              description description description description description fsafd
-              descrisadfasdfption description description description
-              description description description description description
-              description description description descripsdfsaftion description
-              description description dfasdf description description sdfasf
-              description description description description description dfasdf
-              description description description description description
-              description description
+              {itemData?.title}
             </div>
           </div>
           <div className="relative justify-end items-end flex w-1/2 h-fit flex flex-row ml-auto gap-3">
             {filterConstants?.access
-              // ?.filter((item: string[]) => itemData?.access?.includes(item[0]))
+              ?.filter((item: string[]) => itemData?.access?.includes(item[0]))
               ?.map((item: string[], index: number) => {
                 return (
                   <div
@@ -295,9 +285,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             </div>
           </div>
 
-          {
-            //   type === "coinop" &&
-
+          {type === "coinop" && (
             <div className="relative w-fit h-fit flex flex-row gap-6 items-end justify-end text-white font-bit text-xxs pt-4">
               <div className="relative flex items-end w-fit h-fit justify-end items-center justify-center flex-col gap-1.5 ml-auto">
                 <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
@@ -357,7 +345,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 </div>
               </div>
             </div>
-          }
+          )}
         </div>
         <div className="relative w-fit h-fit flex items-center justify-center flex-row gap-6 justify-end items-end">
           {type == "chromadin" && (
