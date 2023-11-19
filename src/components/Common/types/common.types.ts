@@ -47,6 +47,7 @@ export type InteractBarProps = {
   col?: boolean;
   layoutAmount?: number;
   index: number;
+  hideComment?: boolean;
   comment?: () => void;
   hideCollect?: boolean;
   main?: boolean;
@@ -68,27 +69,33 @@ export type InteractBarProps = {
     like: boolean;
     mirror: boolean;
     simpleCollect?: boolean;
+    hide?: boolean;
+    bookmark?: boolean;
   };
   type: string | undefined;
   publication: Post | Mirror | Quote | Comment | undefined;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  showOthers?: boolean;
+  handleHidePost?: (id: string, index: number) => Promise<void>;
+  handleBookmark?: (id: string, index: number) => Promise<void>;
 };
 
 export type HoverProfileProps = {
   followLoading: boolean[];
   unfollowProfile:
     | ((id: string) => Promise<void>)
-    | ((id: string, feed?: boolean) => Promise<void>);
+    | ((id: string, feed?: boolean, main?: boolean) => Promise<void>);
   followProfile:
     | ((id: string) => Promise<void>)
-    | ((id: string, feed?: boolean) => Promise<void>);
+    | ((id: string, feed?: boolean, main?: boolean) => Promise<void>);
   publication: Profile;
   router: NextRouter;
   index: number;
   dispatch: Dispatch<AnyAction>;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   feed?: boolean;
+  main?: boolean;
 };
 
 export type TileLoaderProps = {

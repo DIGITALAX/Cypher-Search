@@ -26,7 +26,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
   interactionsLoading,
   index,
   heart,
-  setHeart
+  setHeart,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4">
@@ -45,7 +45,14 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
               draggable={false}
             />
           )}
-          <video>
+          <video
+            draggable={false}
+            controls={false}
+            muted
+            // autoPlay
+            playsInline
+            loop
+          >
             <source src={``} />
           </video>
         </div>

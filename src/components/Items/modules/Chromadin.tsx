@@ -92,86 +92,102 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             router={router}
             comment={() => setCommentSwitch(!commentSwitch)}
             main={true}
+            handleBookmark={handleBookmark}
+            handleHidePost={handleHidePost}
+            showOthers={true}
           />
           <div
-            className={`relative p-3 bg-black flex items-center justify-center w-full h-[37rem] ${
-              commentSwitch && "overflow-y-scroll"
-            }`}
+            className={`relative p-3 bg-black flex justify-center w-full h-[37rem] ${
+              commentSwitch ? "items-start" : "items-center"
+            } ${allCommentsLoading && "overflow-y-scroll"}`}
           >
             {commentSwitch ? (
               allCommentsLoading ? (
-                <div className="">
-                  <div></div>
+                <div className="relative w-full h-fit flex items-center justify-start gap-3 flex-col">
+                  {Array.from({ length: 10 }).map((_, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className="w-3/4 h-40 border border-white rounded-sm flex"
+                        id="staticLoad"
+                      ></div>
+                    );
+                  })}
                 </div>
-              ) : allComments?.length > 0 ? (
-                <>
+              ) : (
+                <div className="relative w-5/6 h-fit flex flex-col gap-10 justify-start items-center">
                   <PostComment
                     index={0}
                     makePostComment={mainMakeComment?.[0]}
-                    setMakePostComment={setMainMakeComment!}
-                    commentPost={comment!}
+                    setMakePostComment={setMainMakeComment}
+                    commentPost={comment}
                     id={itemData?.publication?.id}
-                    commentPostLoading={mainInteractionsLoading[0]?.comment!}
-                    height="5rem"
+                    commentPostLoading={mainInteractionsLoading[0]?.comment}
+                    height="8rem"
                     imageHeight="1.25rem"
                     imageWidth="1.25rem"
-                    postCollectGif={postCollectGif!}
-                    setContentLoading={setMainContentLoading!}
-                    contentLoading={mainContentLoading?.[0]!}
+                    postCollectGif={postCollectGif}
+                    setContentLoading={setMainContentLoading}
+                    contentLoading={mainContentLoading?.[0]}
                     dispatch={dispatch}
+                    main={true}
                   />
-                  <InfiniteScroll
-                    next={handleMoreComments}
-                    hasMore={hasMoreComments}
-                    dataLength={allComments?.length}
-                    loader={<></>}
-                    className="w-fit h-fit items-center justify-start flex flex-col gap-10"
-                  >
-                    {allComments?.map(
-                      (
-                        item: Post | Mirror | Quote | Comment,
-                        index: number
-                      ) => {
-                        return (
-                          <Publication
-                            index={index}
-                            item={item}
-                            key={index}
-                            dispatch={dispatch}
-                            router={router}
-                            mirror={mirror}
-                            like={like}
-                            comment={comment}
-                            setMakePostComment={setMakeComment}
-                            makeComment={makeComment}
-                            setCommentsOpen={setCommentsOpen}
-                            commentsOpen={commentsOpen}
-                            interactionsLoading={interactionsLoading}
-                            profileHovers={profileHovers}
-                            setProfileHovers={setProfileHovers}
-                            openMirrorChoice={openMirrorChoice}
-                            setOpenMirrorChoice={setOpenMirrorChoice}
-                            simpleCollect={simpleCollect}
-                            followLoading={followLoading}
-                            followProfile={followProfile}
-                            unfollowProfile={unfollowProfile}
-                            setOpenMoreOptions={setOpenMoreOptions}
-                            openMoreOptions={openMoreOptions}
-                            handleBookmark={handleBookmark}
-                            handleHidePost={handleHidePost}
-                            data-post-id={item?.id}
-                            contentLoading={contentLoading}
-                            setContentLoading={setContentLoading}
-                            postCollectGif={postCollectGif}
-                          />
-                        );
-                      }
-                    )}
-                  </InfiniteScroll>
-                </>
-              ) : (
-                <div className="relative w-fit h-fit items-center justify-center flex text-white font-bit break-words">
-                  No comments yet. Make one?
+                  {allComments?.length > 0 ? (
+                    <div className="relative w-full h-fit flex items-start justify-center overflow-y-scroll">
+                      <InfiniteScroll
+                        next={handleMoreComments}
+                        hasMore={hasMoreComments}
+                        dataLength={allComments?.length}
+                        loader={<></>}
+                        className="w-fit h-fit items-center justify-start flex flex-col gap-10"
+                      >
+                        {allComments?.map(
+                          (
+                            item: Post | Mirror | Quote | Comment,
+                            index: number
+                          ) => {
+                            return (
+                              <Publication
+                                index={index}
+                                item={item}
+                                key={index}
+                                dispatch={dispatch}
+                                router={router}
+                                mirror={mirror}
+                                like={like}
+                                comment={comment}
+                                setMakePostComment={setMakeComment}
+                                makeComment={makeComment}
+                                setCommentsOpen={setCommentsOpen}
+                                commentsOpen={commentsOpen}
+                                interactionsLoading={interactionsLoading}
+                                profileHovers={profileHovers}
+                                setProfileHovers={setProfileHovers}
+                                openMirrorChoice={openMirrorChoice}
+                                setOpenMirrorChoice={setOpenMirrorChoice}
+                                simpleCollect={simpleCollect}
+                                followLoading={followLoading}
+                                followProfile={followProfile}
+                                unfollowProfile={unfollowProfile}
+                                setOpenMoreOptions={setOpenMoreOptions}
+                                openMoreOptions={openMoreOptions}
+                                handleBookmark={handleBookmark}
+                                handleHidePost={handleHidePost}
+                                data-post-id={item?.id}
+                                contentLoading={contentLoading}
+                                setContentLoading={setContentLoading}
+                                postCollectGif={postCollectGif}
+                              />
+                            );
+                          }
+                        )}
+                      </InfiniteScroll>
+                    </div>
+                  ) : (
+                    <div className="relative w-fit h-fit items-center justify-center flex text-white font-bit break-words">
+                      No comments yet. Make one?
+                    </div>
+                  )}
                 </div>
               )
             ) : (
@@ -232,7 +248,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 </div>
                 {itemData?.video ? (
                   <video className="object-cover flex items-center justify-center">
-                    <source src={`${INFURA_GATEWAY}/ipfs/${itemData?.video}`} />{" "}
+                    <source src={`${INFURA_GATEWAY}/ipfs/${itemData?.video}`} />
                   </video>
                 ) : (
                   itemData?.images?.[0] && (

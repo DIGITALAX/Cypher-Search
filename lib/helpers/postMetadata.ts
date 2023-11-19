@@ -35,43 +35,62 @@ export const metadataMedia = (
   | {
       url: string;
       type: "Image" | "Video" | "Audio";
+      cover?: string;
     }
   | undefined => {
-  switch (media.__typename) {
+  switch (media?.__typename) {
     case "PublicationMetadataMediaAudio":
       return {
-        url: media.audio.optimized?.uri
-          ? media.audio.optimized?.uri
-          : media.audio?.raw?.uri?.includes("ipfs://")
+        url: media?.audio?.optimized?.uri
+          ? media?.audio?.optimized?.uri
+          : media?.audio?.raw?.uri?.includes("ipfs://")
           ? `${INFURA_GATEWAY}/ipfs/${
-              media.audio?.raw?.uri?.split("ipfs://")[1]
+              media?.audio?.raw?.uri?.split("ipfs://")[1]
             }`
-          : media.audio?.raw?.uri,
+          : media?.audio?.raw?.uri,
         type: "Audio",
+        cover: media?.cover?.optimized?.uri
+          ? media?.cover?.optimized?.uri
+          : media?.cover?.raw?.uri
+          ? media?.cover?.raw?.uri?.includes("ipfs://")
+            ? `${INFURA_GATEWAY}/ipfs/${
+                media?.cover?.raw?.uri?.split("ipfs://")[1]
+              }`
+            : media?.cover?.raw?.uri
+          : "QmNW7axzePWYgpqXS31FG93fsYJrHjpC1QTPyGmz3nCMmi",
       };
 
     case "PublicationMetadataMediaImage":
       return {
-        url: media.image.optimized?.uri
-          ? media.image.optimized?.uri
-          : media.image?.raw?.uri?.includes("ipfs://")
+        url: media?.image?.optimized?.uri
+          ? media?.image?.optimized?.uri
+          : media?.image?.raw?.uri?.includes("ipfs://")
           ? `${INFURA_GATEWAY}/ipfs/${
               media.image?.raw?.uri?.split("ipfs://")[1]
             }`
-          : media.image?.raw?.uri,
+          : media?.image?.raw?.uri,
         type: "Image",
       };
 
     case "PublicationMetadataMediaVideo":
       return {
-        url: media.video.optimized?.uri
-          ? media.video.optimized?.uri
-          : media.video?.raw?.uri?.includes("ipfs://")
+        url: media?.video?.optimized?.uri
+          ? media?.video?.optimized?.uri
+          : media?.video?.raw?.uri?.includes("ipfs://")
           ? `${INFURA_GATEWAY}/ipfs/${
-              media.video?.raw?.uri?.split("ipfs://")[1]
+              media?.video?.raw?.uri?.split("ipfs://")[1]
             }`
-          : media.video?.raw?.uri,
+          : media?.video?.raw?.uri,
         type: "Video",
+        cover: media?.cover?.optimized?.uri
+          ? media?.cover?.optimized?.uri
+          : media?.cover?.raw?.uri
+          ? media?.cover?.raw?.uri?.includes("ipfs://")
+            ? `${INFURA_GATEWAY}/ipfs/${
+                media?.cover?.raw?.uri?.split("ipfs://")[1]
+              }`
+            : media?.cover?.raw?.uri
+          : "QmNW7axzePWYgpqXS31FG93fsYJrHjpC1QTPyGmz3nCMmi",
       };
   }
 };

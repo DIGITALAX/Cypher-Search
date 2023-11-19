@@ -1,14 +1,22 @@
 import { FunctionComponent } from "react";
-import { PostProps } from "../types/autograph.types";
-import { Post, Quote } from "../../../../graphql/generated";
+import { PostSwitchProps } from "../types/autograph.types";
+import {
+  ArticleMetadataV3,
+  ImageMetadataV3,
+  Post,
+  Quote,
+  StoryMetadataV3,
+  TextOnlyMetadataV3,
+} from "../../../../graphql/generated";
 import Text from "./Metadata/Text";
-import Image from "./Metadata/Image";
-import Video from "./Metadata/Video";
-import Audio from "./Metadata/Audio";
-import Mint from "./Metadata/Mint";
-import General from "./Metadata/General";
+import Media from "./Metadata/Media";
 
-const PostSwitch: FunctionComponent<PostProps> = ({ item }): JSX.Element => {
+const PostSwitch: FunctionComponent<PostSwitchProps> = ({
+  item,
+  dispatch,
+  router,
+  index,
+}): JSX.Element => {
   switch (
     item?.__typename === "Mirror"
       ? item?.mirrorOn?.metadata?.__typename
@@ -19,69 +27,58 @@ const PostSwitch: FunctionComponent<PostProps> = ({ item }): JSX.Element => {
     case "StoryMetadataV3":
       return (
         <Text
+          dispatch={dispatch}
+          router={router}
+          index={index}
           metadata={
-            item?.__typename === "Mirror"
+            (item?.__typename === "Mirror"
               ? item?.mirrorOn?.metadata
-              : (item as Post)?.metadata
+              : (item as Post)?.metadata) as
+              | ArticleMetadataV3
+              | StoryMetadataV3
+              | TextOnlyMetadataV3
           }
           quote={
             item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
           }
+          mirror={item?.__typename === "Mirror" ? item : undefined}
           type={item?.__typename!}
-        />
-      );
-
-    case "ImageMetadataV3":
-      return (
-        <Image
-          metadata={
+          id={
             item?.__typename === "Mirror"
-              ? item?.mirrorOn?.metadata
-              : (item as Post)?.metadata
+              ? item?.mirrorOn?.id
+              : (item as Post)?.id
           }
-          quote={
-            item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
-          }
-          type={item?.__typename!}
-        />
-      );
-
-    case "LiveStreamMetadataV3":
-    case "VideoMetadataV3":
-      return (
-        <Video
-          metadata={
-            item?.__typename === "Mirror"
-              ? item?.mirrorOn?.metadata
-              : (item as Post)?.metadata
-          }
-          quote={
-            item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
-          }
-          type={item?.__typename!}
         />
       );
 
     case "AudioMetadataV3":
+    case "VideoMetadataV3":
+    case "ImageMetadataV3":
       return (
-        <Audio
+        <Media
           metadata={
-            item?.__typename === "Mirror"
+            (item?.__typename === "Mirror"
               ? item?.mirrorOn?.metadata
-              : (item as Post)?.metadata
+              : (item as Post)?.metadata) as ImageMetadataV3
           }
           quote={
             item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
           }
+          mirror={item?.__typename === "Mirror" ? item : undefined}
           type={item?.__typename!}
+          id={
+            item?.__typename === "Mirror"
+              ? item?.mirrorOn?.id
+              : (item as Post)?.id
+          }
+          dispatch={dispatch}
+          router={router}
+          index={index}
         />
       );
 
-    case "MintMetadataV3":
-      return <Mint metadata={item} type={item?.__typename!} />;
-
     default:
-      return <Text item={item} />;
+      return <></>;
   }
 };
 

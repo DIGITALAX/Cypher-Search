@@ -473,8 +473,8 @@ textarea::-webkit-outer-spin-button:focus {
 #fadedQuote {
   -webkit-mask-image: linear-gradient(
     to bottom,
-    #1f2937 0%,
-    #1f2937 50%,
+    #151316 0%,
+    #131313 70%,
     transparent 95%
   );
   mask-image: linear-gradient(

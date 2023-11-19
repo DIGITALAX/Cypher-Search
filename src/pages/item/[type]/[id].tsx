@@ -209,6 +209,11 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     feedFollowLoading: itemFollowLoading,
     feedProfileHovers: itemProfileHovers,
     setFeedProfileHovers: setItemProfileHovers,
+    mainFollowLoading,
+    mainProfileHovers,
+    setMainProfileHovers,
+    openMainMoreOptions,
+    setMainOpenMoreOptions,
   } = useProfile(
     allComments,
     {
@@ -395,6 +400,11 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
               cartAnim={cartAnim}
               component={
                 <SwitchType
+                  followMainLoading={mainFollowLoading}
+                  mainProfileHovers={mainProfileHovers}
+                  setMainProfileHovers={setMainProfileHovers}
+                  openMainMoreOptions={openMainMoreOptions}
+                  setMainOpenMoreOptions={setMainOpenMoreOptions}
                   handleMoreComments={handleMoreComments}
                   allCommentsLoading={allCommentsLoading}
                   hasMoreComments={hasMoreComments}

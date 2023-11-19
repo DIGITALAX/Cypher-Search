@@ -41,7 +41,7 @@ const setPostMedia = async (
         const arr = [...prev];
         arr[index] = {
           ...arr[index],
-          videos: [...prev[index].videos, ...newVideos] as string[],
+          videos: [...prev[index]?.videos, ...newVideos] as string[],
         };
         return arr;
       });
@@ -81,10 +81,10 @@ const setPostMedia = async (
         arr[index] = {
           ...arr[index],
           images: [
-            ...prev[index].images,
-            ...newImages.map((item, index) => ({
+            ...prev[index]?.images,
+            ...newImages?.map((item, index) => ({
               media: item,
-              type: types[index],
+              type: types?.[index],
             })),
           ],
         };

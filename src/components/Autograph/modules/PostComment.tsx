@@ -21,6 +21,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
   index,
   dispatch,
   postCollectGif,
+  main,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-2">
@@ -141,7 +142,11 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
             }`}
             onClick={() =>
               !commentPostLoading &&
-              (id ? commentPost!(id) : (commentPost as () => Promise<void>)())
+              (main
+                ? commentPost(id, main)
+                : id
+                ? (commentPost as (id: string) => Promise<void>)!(id)
+                : (commentPost as () => Promise<void>)())
             }
           >
             <div
@@ -160,8 +165,8 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
       </div>
       {((postCollectGif?.gifs?.[id!] &&
         postCollectGif?.gifs?.[id!]?.length > 0) ||
-        makePostComment.images.length > 0 ||
-        makePostComment.videos.length > 0) && (
+        makePostComment?.images?.length > 0 ||
+        makePostComment?.videos?.length > 0) && (
         <div className="relative w-full h-fit flex overflow-x-scroll justify-start items-start pt-4">
           <div className="relative gap-4 items-center justify-start flex flex-row">
             {[
@@ -169,9 +174,9 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                 type: "video",
                 item: video,
               })),
-              ...makePostComment?.images.map((image) => ({
+              ...makePostComment?.images?.map((image) => ({
                 type: "image",
-                item: image.media,
+                item: image?.media,
               })),
               ...(postCollectGif?.gifs?.[id!] || []).map((gif) => ({
                 type: "gif",
@@ -183,11 +188,11 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                   type: string;
                   item: string;
                 },
-                index: number
+                indexTwo: number
               ) => {
                 return (
                   <div
-                    key={index}
+                    key={indexTwo}
                     className="relative w-40 h-40 rounded-md flex items-center justify-center border border-white"
                   >
                     {media.type !== "video" ? (
@@ -195,26 +200,29 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                         layout="fill"
                         objectFit="cover"
                         className="rounded-md"
-                        src={media.item}
+                        src={media?.item}
                         draggable={false}
                       />
                     ) : (
                       <video
-                        muted
-                        autoPlay
-                        className="object-cover w-full h-full flex items-center justify-center rounded-md"
                         draggable={false}
+                        controls={false}
+                        muted
+                        // autoPlay
+                        playsInline
+                        loop
+                        className="object-cover w-full h-full flex items-center justify-center rounded-md"
                       >
-                        <source src={media.item} />
+                        <source src={media?.item} />
                       </video>
                     )}
                     <div
                       className="absolute w-5 h-5 bg-black p-px -right-2 -top-2 bg-black rounded-full cursor-pointer flex items-center justify-center border border-white"
                       onClick={() => {
-                        if (media.type === "gif") {
+                        if (media?.type === "gif") {
                           const newGifs = { ...postCollectGif.gifs };
                           newGifs[id] = newGifs[id].filter(
-                            (gif) => gif !== media.item
+                            (gif) => gif !== media?.item
                           );
                           dispatch(
                             setPostCollectGif({
@@ -227,18 +235,18 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                             const arr = [...prev];
                             arr[index] = {
                               ...arr[index],
-                              videos:
-                                media.type === "video"
-                                  ? prev[index].videos.filter(
-                                      (_, i) => i !== index
-                                    )
-                                  : prev[index].videos,
                               images:
                                 media.type === "image"
-                                  ? prev[index].images.filter(
-                                      (_, i) => i !== index
+                                  ? (arr[index]?.images ?? []).filter(
+                                      (_, i) => i !== indexTwo
                                     )
-                                  : prev[index].images,
+                                  : arr[index]?.images,
+                              videos:
+                                media.type === "video"
+                                  ? (arr[index]?.videos ?? []).filter(
+                                      (_, i) => i !== indexTwo
+                                    )
+                                  : arr[index]?.videos,
                             };
                             return arr;
                           });

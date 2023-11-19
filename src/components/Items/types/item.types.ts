@@ -5,7 +5,13 @@ import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { NextRouter } from "next/router";
 import { SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
-import { Profile, Comment } from "../../../../graphql/generated";
+import {
+  Profile,
+  Comment,
+  Post,
+  Quote,
+  Mirror,
+} from "../../../../graphql/generated";
 import { MakePostComment } from "@/components/Autograph/types/autograph.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 
@@ -31,6 +37,9 @@ export type SwitchTypeProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+    simpleCollect: boolean;
+    hide: boolean;
   }[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
@@ -74,10 +83,6 @@ export type SwitchTypeProps = {
   handleHidePost: (id: string, index: number) => Promise<void>;
   handleBookmark: (id: string, index: number) => Promise<void>;
   setMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
-  mainContentLoading: {
-    image: boolean;
-    video: boolean;
-  }[];
   openMainMirrorChoice: boolean[];
   setMainOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   mainMakeComment: MakePostComment[];
@@ -90,8 +95,17 @@ export type SwitchTypeProps = {
       }[]
     >
   ) => void;
+  mainContentLoading: {
+    image: boolean;
+    video: boolean;
+  }[];
   commentsOpen: boolean[];
   setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
+  mainProfileHovers: boolean[];
+  setMainProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  followMainLoading: boolean[];
+  setMainOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
+  openMainMoreOptions: boolean[];
 };
 
 export type ChromadinProps = {
@@ -118,6 +132,9 @@ export type ChromadinProps = {
     like: boolean;
     mirror: boolean;
     comment: boolean;
+    bookmark: boolean;
+    simpleCollect: boolean;
+    hide: boolean;
   }[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
@@ -185,3 +202,76 @@ export interface PurchaseDetails {
   color: string;
   imageIndex: number;
 }
+
+export type PublicationProps = {
+  router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
+  allComments: Comment[];
+  allCommentsLoading: boolean;
+  followLoading: boolean[];
+  setMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
+  itemData: Post | Mirror | Quote | Comment;
+  mainMakeComment: MakePostComment[];
+  postCollectGif: PostCollectGifState;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    comment: boolean;
+    simpleCollect: boolean;
+    bookmark: boolean;
+    hide: boolean;
+  }[];
+  setMainMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
+  setMainContentLoading: (
+    e: SetStateAction<
+      {
+        image: boolean;
+        video: boolean;
+      }[]
+    >
+  ) => void;
+  mainContentLoading: {
+    image: boolean;
+    video: boolean;
+  }[];
+  comment: (id: string, main: boolean) => Promise<void>;
+  mirror: (id: string, main: boolean) => Promise<void>;
+  like: (id: string, main: boolean) => Promise<void>;
+  handleMoreComments: () => Promise<void>;
+  hasMoreComments: boolean;
+  mainInteractionsLoading:
+    | {
+        like: boolean;
+        mirror: boolean;
+        comment: boolean;
+        simpleCollect: boolean;
+        bookmark: boolean;
+        hide: boolean;
+      }[]
+    | undefined;
+  mainProfileHovers: boolean[];
+  setMainProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  openMainMirrorChoice: boolean[];
+  setMainOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  simpleCollect: (id: string, type: string, main: boolean) => Promise<void>;
+  followMainLoading: boolean[];
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  setMainOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
+  openMainMoreOptions: boolean[];
+  handleBookmark: (id: string, index: number, main: boolean) => Promise<void>;
+  handleHidePost: (id: string, index: number, main: boolean) => Promise<void>;
+  profileHovers: boolean[];
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
+  commentsOpen: boolean[];
+  openMirrorChoice: boolean[];
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
+  openMoreOptions: boolean[];
+  contentLoading: { image: boolean; video: boolean }[];
+  setContentLoading: (
+    e: SetStateAction<{ image: boolean; video: boolean }[]>
+  ) => void;
+  makeComment: MakePostComment[];
+};

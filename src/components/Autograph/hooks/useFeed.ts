@@ -379,19 +379,9 @@ const useFeed = (
       );
       setMakeCommentFeed(
         Array.from({ length: profileFeed.length }, () => ({
-          collectType: undefined,
           content: "",
           images: [],
           videos: [],
-          gifs: [],
-          searchedGifs: [],
-          search: "",
-          collectibleOpen: false,
-          collectible: "",
-          award: "",
-          whoCollectsOpen: false,
-          creatorAwardOpen: false,
-          currencyOpen: false,
         }))
       );
     }
