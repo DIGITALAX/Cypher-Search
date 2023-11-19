@@ -10,7 +10,7 @@ import { AnyAction, Dispatch } from "redux";
 import lensHide from "../../../../lib/helpers/api/hidePost";
 import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
-import { polygon } from "viem/chains";
+import { polygon , polygonMumbai} from "viem/chains";
 import { PublicClient, createWalletClient, custom } from "viem";
 import lensComment from "../../../../lib/helpers/api/commentPost";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
@@ -210,7 +210,7 @@ const useComment = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -283,7 +283,7 @@ const useComment = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -388,7 +388,7 @@ const useComment = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(

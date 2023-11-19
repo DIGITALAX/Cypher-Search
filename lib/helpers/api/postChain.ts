@@ -3,7 +3,7 @@ import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
 import { OpenActionModuleInput, InputMaybe } from "../../../graphql/generated";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
@@ -67,7 +67,7 @@ const lensPost = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "post",
-      chain: polygon,
+      chain: polygonMumbai,
       args: [
         {
           profileId: typedData?.value.profileId,

@@ -11,7 +11,7 @@ import useSignIn from "@/components/Layout/hooks/useSignIn";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import { useAccount } from "wagmi";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { createPublicClient, http } from "viem";
 import { ACCEPTED_TOKENS_MUMBAI } from "../../lib/constants";
 
@@ -22,7 +22,7 @@ const Checkout: NextPage<{
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(),
   });
   const walletConnected = useSelector(

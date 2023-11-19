@@ -17,7 +17,7 @@ import {
   custom,
 } from "viem";
 import { AnyAction, Dispatch } from "redux";
-import { polygon } from "viem/chains";
+import { polygon , polygonMumbai} from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import {
   LimitType,
@@ -25,7 +25,6 @@ import {
   PublicationType,
 } from "../../../../graphql/generated";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
-import WaveSurfer from "wavesurfer.js";
 import {
   CHROMADIN_OPEN_ACTION,
   COLLECTION_CREATOR,
@@ -193,7 +192,7 @@ const useCreate = (
         ?.map((item) => Number(item[2]));
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -212,7 +211,7 @@ const useCreate = (
           address: COLLECTION_CREATOR,
           abi: CollectionCreatorAbi,
           functionName: "removeCollection",
-          chain: polygon,
+          chain: polygonMumbai,
           args: [Number(collectionDetails?.collectionId)],
           account: address,
         });
@@ -292,7 +291,7 @@ const useCreate = (
     setCreationLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -307,7 +306,7 @@ const useCreate = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "removeCollection",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [Number(collectionDetails?.collectionId)],
         account: address,
       });
@@ -459,7 +458,7 @@ const useCreate = (
           {
             contractAddress: "",
             standardContractType: "",
-            chain: "polygon",
+            chain: "polygonMumbai",
             method: "",
             parameters: [":userAddress"],
             returnValueTest: {
@@ -487,7 +486,7 @@ const useCreate = (
             accessControlConditions:
               accessControlConditions as AccessControlConditions,
             authSig,
-            chain: "polygon",
+            chain: "polygonMumbai",
             dataToEncrypt: JSON.stringify(toHash),
           },
           client!

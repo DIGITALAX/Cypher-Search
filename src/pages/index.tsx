@@ -10,14 +10,14 @@ import { NextRouter } from "next/router";
 import Head from "next/head";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import { useAccount } from "wagmi";
-import { polygon } from "viem/chains";
+import { polygon , polygonMumbai} from "viem/chains";
 import { createPublicClient, http } from "viem";
 
 export default function Home({ router }: { router: NextRouter }) {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(),
   });
   const walletConnected = useSelector(

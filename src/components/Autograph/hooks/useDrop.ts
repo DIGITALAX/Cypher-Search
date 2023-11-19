@@ -5,7 +5,7 @@ import { Dispatch } from "redux";
 import { getDrops } from "../../../../graphql/subgraph/queries/getDrops";
 import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon } from "viem/chains";
+import { polygon , polygonMumbai} from "viem/chains";
 import { COLLECTION_CREATOR, INFURA_GATEWAY } from "../../../../lib/constants";
 import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
 
@@ -48,7 +48,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -75,7 +75,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "updateDrop",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
           dropDetails?.collectionIds?.map((item) => Number(item)),
           "ipfs://" + dropURI,
@@ -97,7 +97,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -105,7 +105,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "removeDrop",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [Number(dropDetails?.dropId)],
         account: address,
       });
@@ -123,7 +123,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       const response = await fetch("/api/ipfs", {
@@ -139,7 +139,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "createDrop",
-        chain: polygon,
+        chain: polygonMumbai,
         args: ["ipfs://" + dropURI],
         account: address,
       });

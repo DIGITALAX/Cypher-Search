@@ -9,7 +9,7 @@ import { RootState } from "../../redux/store";
 import { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 
 const Custom404: NextPage<{
   router: NextRouter;
@@ -17,7 +17,7 @@ const Custom404: NextPage<{
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(),
   });
   const lensConnected = useSelector(

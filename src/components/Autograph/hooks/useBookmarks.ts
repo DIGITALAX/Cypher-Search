@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createWalletClient, custom, PublicClient } from "viem";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensComment from "../../../../lib/helpers/api/commentPost";
 import lensLike from "../../../../lib/helpers/api/likePost";
@@ -152,7 +152,7 @@ const useBookmarks = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -223,7 +223,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -282,7 +282,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -359,7 +359,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -401,7 +401,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -410,7 +410,7 @@ const useBookmarks = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient,
+        publicClient
       );
       await refetchProfile(dispatch, lensConnected?.id);
     } catch (err: any) {

@@ -8,7 +8,7 @@ import {
   checkAndSignAuthMessage,
 } from "@lit-protocol/lit-node-client";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import encodeActData from "../../../../lib/helpers/encodeActData";
 import actPost from "../../../../lib/helpers/api/actPost";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
@@ -97,7 +97,7 @@ const useCheckout = (
     setEncryptionLoading(true);
     try {
       const authSig = await checkAndSignAuthMessage({
-        chain: "polygon",
+        chain: "polygonMumbai",
       });
 
       setEncryptedStrings;
@@ -133,7 +133,7 @@ const useCheckout = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -209,7 +209,7 @@ const useCheckout = (
   const approveSpend = async () => {
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -280,7 +280,7 @@ const useCheckout = (
               },
         ],
         functionName: "approve",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
           item?.type === "chromadin"
             ? CHROMADIN_OPEN_ACTION

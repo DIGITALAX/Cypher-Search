@@ -31,7 +31,7 @@ import { OracleData } from "@/components/Checkout/types/checkout.types";
 import { CartItem } from "@/components/Common/types/common.types";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { ethers } from "ethers";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import encodeActData from "../../../../lib/helpers/encodeActData";
 import actPost from "../../../../lib/helpers/api/actPost";
 import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSlice";
@@ -280,7 +280,7 @@ const useItem = (
     setInstantLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -323,7 +323,7 @@ const useItem = (
     setInstantLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -397,7 +397,7 @@ const useItem = (
               },
         ],
         functionName: "approve",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
           CHROMADIN_OPEN_ACTION,
           ethers.parseEther(
