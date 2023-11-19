@@ -18,6 +18,8 @@ import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSl
 import { MakePostComment } from "@/components/Autograph/types/autograph.types";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
+import { NextRouter } from "next/router";
+import { Creation } from "@/components/Tiles/types/tiles.types";
 
 const useComment = (
   address: `0x${string}` | undefined,
@@ -25,7 +27,9 @@ const useComment = (
   pubId: string,
   lensConnected: Profile | undefined,
   dispatch: Dispatch<AnyAction>,
-  postCollectGif: PostCollectGifState
+  postCollectGif: PostCollectGifState,
+  router: NextRouter,
+  collections: Creation[] | undefined
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);
@@ -33,6 +37,7 @@ const useComment = (
   const [openItemMirrorChoice, setOpenItemMirrorChoice] = useState<boolean[]>(
     []
   );
+  const [openInteractions, setOpenInteractions] = useState<boolean[]>([]);
   const [openMainMirrorChoice, setMainOpenMirrorChoice] = useState<boolean[]>([
     false,
   ]);
@@ -228,7 +233,7 @@ const useComment = (
     });
   };
 
-  const comment = async (id: string, main: boolean) => {
+  const comment = async (id: string, main?: boolean) => {
     let content: string | undefined,
       images:
         | {
@@ -266,7 +271,7 @@ const useComment = (
       videos = mainMakeComment[0]?.videos!;
     }
 
-    handleLoaders(true, main, index, "comment");
+    handleLoaders(true, main!, index, "comment");
 
     try {
       const contentURI = await uploadPostContent(
@@ -296,13 +301,13 @@ const useComment = (
         address as `0x${string}`,
         clientWallet,
         publicClient,
-        () => clearComment(index, main)
+        () => clearComment(index, main!)
       );
     } catch (err: any) {
       console.error(err.message);
     }
 
-    handleLoaders(false, main, index, "comment");
+    handleLoaders(false, main!, index, "comment");
   };
 
   const handleLoaders = (
@@ -375,11 +380,11 @@ const useComment = (
     }
   };
 
-  const mirror = async (id: string, main: boolean) => {
+  const mirror = async (id: string, main?: boolean) => {
     const index = main
       ? undefined
       : allComments?.findIndex((pub) => pub.id === id);
-    handleLoaders(true, main, index, "mirror");
+    handleLoaders(true, main!, index, "mirror");
 
     try {
       const clientWallet = createWalletClient({
@@ -397,14 +402,14 @@ const useComment = (
       console.error(err.message);
     }
 
-    handleLoaders(false, main, index, "mirror");
+    handleLoaders(false, main!, index, "mirror");
   };
 
-  const like = async (id: string, main: boolean) => {
+  const like = async (id: string, main?: boolean) => {
     const index = main
       ? undefined
       : allComments?.findIndex((pub) => pub.id === id);
-    handleLoaders(false, main, index, "like");
+    handleLoaders(false, main!, index, "like");
 
     try {
       await lensLike(id, dispatch);
@@ -412,49 +417,75 @@ const useComment = (
       console.error(err.message);
     }
 
-    handleLoaders(false, main, index, "like");
+    handleLoaders(false, main!, index, "like");
   };
 
   useEffect(() => {
-    if (allComments?.length < 1 && commentSwitch && pubId) {
+    if (
+      allComments?.length < 1 &&
+      commentSwitch &&
+      pubId &&
+      !router?.asPath?.includes("microbrand")
+    ) {
       getComments();
     }
   }, [pubId]);
 
   useEffect(() => {
-    if (allComments?.length > 0) {
+    if (allComments?.length > 0 || (collections && collections?.length > 0)) {
       setInteractionsItemsLoading(
-        Array.from({ length: allComments.length }, () => ({
-          like: false,
-          mirror: false,
-          comment: false,
-          simpleCollect: false,
-          bookmark: false,
-          hide: false,
-        }))
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => ({
+            like: false,
+            mirror: false,
+            comment: false,
+            simpleCollect: false,
+            bookmark: false,
+            hide: false,
+          })
+        )
       );
       setOpenMoreOptions(
-        Array.from({ length: allComments.length }, () => false)
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => false
+        )
       );
       setContentLoading(
-        Array.from({ length: allComments.length }, () => ({
-          image: false,
-          video: false,
-          gif: false,
-        }))
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => ({
+            image: false,
+            video: false,
+            gif: false,
+          })
+        )
       );
       setOpenItemMirrorChoice(
-        Array.from({ length: allComments.length }, () => false)
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => false
+        )
       );
       setMakeComment(
-        Array.from({ length: allComments.length }, () => ({
-          content: "",
-          images: [],
-          videos: [],
-        }))
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => ({
+            content: "",
+            images: [],
+            videos: [],
+          })
+        )
+      );
+      setOpenInteractions(
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => false
+        )
       );
     }
-  }, [allComments?.length]);
+  }, [allComments?.length, collections?.length]);
 
   return {
     mainMakeComment,
@@ -487,6 +518,8 @@ const useComment = (
     mainInteractionsLoading,
     mirror,
     like,
+    openInteractions,
+    setOpenInteractions,
   };
 };
 

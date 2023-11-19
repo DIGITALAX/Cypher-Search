@@ -84,7 +84,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     instantLoading,
     approveSpend,
     isApprovedSpend,
-    relatedCollections,
+    relatedData,
   } = useItem(
     type as string,
     id as string,
@@ -127,6 +127,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     openMainMirrorChoice,
     mirror: mirrorItem,
     like: likeItem,
+    setOpenInteractions,
+    openInteractions,
   } = useComment(
     address,
     publicClient,
@@ -137,7 +139,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
       : (itemData?.post as Post)?.id,
     lensConnected,
     dispatch,
-    postCollectGif
+    postCollectGif,
+    router,
+    relatedData?.collections
   );
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
     id as string,
@@ -215,7 +219,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     openMainMoreOptions,
     setMainOpenMoreOptions,
   } = useProfile(
-    allComments,
+    relatedData?.collections ? relatedData?.collections : allComments,
     {
       collected: [],
       created: [],
@@ -421,7 +425,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   instantLoading={instantLoading}
                   approveSpend={approveSpend}
                   isApprovedSpend={isApprovedSpend}
-                  relatedCollections={relatedCollections}
+                  relatedData={relatedData}
                   lensConnected={lensConnected}
                   mirror={mirrorItem}
                   like={likeItem}
@@ -456,6 +460,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   handleHidePost={handleHidePost}
                   contentLoading={contentLoading}
                   setContentLoading={setContentLoading}
+                  openInteractions={openInteractions}
+                  setOpenInteractions={setOpenInteractions}
                 />
               }
               handleSearch={handleSearch}

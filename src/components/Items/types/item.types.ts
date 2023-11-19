@@ -29,10 +29,18 @@ export type SwitchTypeProps = {
   setPurchaseDetails: (e: SetStateAction<PurchaseDetails>) => void;
   approveSpend: () => Promise<void>;
   handleInstantPurchase: () => Promise<void>;
-  relatedCollections: Creation[] | undefined;
+  relatedData:
+    | {
+        collections: Creation[];
+        microbrand: {
+          microbrand: string;
+          microbrandCover: string;
+        };
+      }
+    | undefined;
   lensConnected: Profile | undefined;
-  mirror: (id: string, main: boolean) => Promise<void>;
-  like: (id: string, main: boolean) => Promise<void>;
+  mirror: (id: string, main?: boolean) => Promise<void>;
+  like: (id: string, main?: boolean) => Promise<void>;
   mainInteractionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -106,6 +114,8 @@ export type SwitchTypeProps = {
   followMainLoading: boolean[];
   setMainOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
   openMainMoreOptions: boolean[];
+  setOpenInteractions: (e: SetStateAction<boolean[]>) => void;
+  openInteractions: boolean[];
 };
 
 export type ChromadinProps = {
@@ -274,4 +284,37 @@ export type PublicationProps = {
     e: SetStateAction<{ image: boolean; video: boolean }[]>
   ) => void;
   makeComment: MakePostComment[];
+};
+
+export type MicrobrandProps = {
+  router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
+  itemData: Profile;
+  relatedData:
+    | {
+        collections: Creation[];
+        microbrand: {
+          microbrand: string;
+          microbrandCover: string;
+        };
+      }
+    | undefined;
+  cartItems: CartItem[];
+  mirror: (id: string) => Promise<void>;
+  like: (id: string) => Promise<void>;
+  openMirrorChoice: boolean[];
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    bookmark: boolean;
+    hide: boolean;
+  }[];
+  openInteractions: boolean[];
+  setOpenInteractions: (e: SetStateAction<boolean[]>) => void;
+  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string) => Promise<void>;
+  followLoading: boolean[];
+  profileHovers: boolean[];
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };

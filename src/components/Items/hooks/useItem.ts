@@ -52,7 +52,13 @@ const useItem = (
   const [itemLoading, setItemLoading] = useState<boolean>(false);
   const [itemData, setItemData] = useState<Publication>();
   const [isApprovedSpend, setIsApprovedSpend] = useState<boolean>(false);
-  const [relatedCollections, setRelatedCollections] = useState<Creation[]>([]);
+  const [relatedData, setRelatedData] = useState<{
+    collections: Creation[];
+    microbrand: {
+      microbrand: string;
+      microbrandCover: string;
+    };
+  }>();
   const [purchaseDetails, setPurchaseDetails] = useState<PurchaseDetails>({
     color: "",
     currency: "",
@@ -99,7 +105,20 @@ const useItem = (
             post: profile,
             type,
           });
-          setRelatedCollections(collections || []);
+          const item =
+            profile?.metadata?.attributes?.[
+              profile?.metadata?.attributes?.findIndex(
+                (item) => item.key === "microbrandsCypher"
+              )
+            ].value;
+
+          if (item) {
+            setRelatedData({
+              collections: collections || [],
+              microbrand: await JSON.parse(item),
+            });
+          }
+
           break;
 
         case "community":
@@ -485,7 +504,6 @@ const useItem = (
     }
   }, []);
 
-
   return {
     itemLoading,
     itemData,
@@ -495,7 +513,7 @@ const useItem = (
     instantLoading,
     approveSpend,
     isApprovedSpend,
-    relatedCollections,
+    relatedData,
   };
 };
 
