@@ -72,6 +72,7 @@ const useFeed = (
               PublicationType.Mirror,
               PublicationType.Quote,
             ],
+            
           },
         },
         lensConnected?.id
