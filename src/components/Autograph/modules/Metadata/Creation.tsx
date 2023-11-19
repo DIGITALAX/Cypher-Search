@@ -83,13 +83,15 @@ const Creation: FunctionComponent<CreationProps> = ({
         }}
         id="staticLoad"
       >
-        <Image
-          layout="fill"
-          src={`${INFURA_GATEWAY}/ipfs/QmUwGmmpAkBB6aVMq2s9oLcuJ4rsSUKjdyWepYVYGxVEKy`}
-          draggable={false}
-          className="rounded-md"
-          objectFit="cover"
-        />
+        {item?.images?.[0] && (
+          <Image
+            layout="fill"
+            src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
+            draggable={false}
+            className="rounded-md"
+            objectFit="cover"
+          />
+        )}
       </div>
       <div className="relative flex w-full h-fit flex flex-row justify-between gap-2">
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">

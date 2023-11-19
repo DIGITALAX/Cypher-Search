@@ -15,7 +15,7 @@ import { Dispatch } from "redux";
 import { createWalletClient, custom, PublicClient } from "viem";
 
 const useProfile = (
-  profileFeed: (Post | Quote | Mirror | Comment)[],
+  profileFeed: (Post | Quote | Mirror | Comment)[] | Creation[],
   galleryItems:
     | {
         collected: Creation[];

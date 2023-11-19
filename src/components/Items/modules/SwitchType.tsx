@@ -5,7 +5,13 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import Pub from "./Pub";
 import Community from "./Community";
 import Microbrand from "./Microbrand";
-import { Mirror, Post, Comment, Quote } from "../../../../graphql/generated";
+import {
+  Mirror,
+  Post,
+  Comment,
+  Quote,
+  Profile,
+} from "../../../../graphql/generated";
 
 const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   type,
@@ -17,7 +23,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   setPurchaseDetails,
   purchaseDetails,
   oracleData,
-  relatedCollections,
+  relatedData,
   handleInstantPurchase,
   instantLoading,
   approveSpend,
@@ -64,6 +70,8 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   followMainLoading,
   setMainOpenMoreOptions,
   openMainMoreOptions,
+  setOpenInteractions,
+  openInteractions,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -176,7 +184,27 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
       return <Community />;
 
     case "microbrand":
-      return <Microbrand />;
+      return (
+        <Microbrand
+          relatedData={relatedData}
+          itemData={itemData?.post as Profile}
+          router={router}
+          dispatch={dispatch}
+          cartItems={cartItems}
+          mirror={mirror}
+          like={like}
+          followLoading={followLoading}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          openMirrorChoice={openMirrorChoice}
+          setOpenInteractions={setOpenInteractions}
+          openInteractions={openInteractions}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          setProfileHovers={setProfileHovers}
+          profileHovers={profileHovers}
+          interactionsLoading={interactionsLoading}
+        />
+      );
   }
 };
 
