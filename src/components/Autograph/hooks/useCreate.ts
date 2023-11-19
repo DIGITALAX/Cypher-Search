@@ -178,9 +178,12 @@ const useCreate = (
         [],
         collectionSettings?.media === "audio" ? [collectionDetails?.audio] : [],
         collectionDetails?.title,
-        collectionDetails?.tags
-          ?.split(/,\s*|\s+/)
-          ?.filter((tag) => tag.trim() !== ""),
+        [
+          ...collectionDetails?.tags
+            ?.split(/,\s*|\s+/)
+            ?.filter((tag) => tag.trim() !== ""),
+          "MintedWithLoveOnCypherChromadin",
+        ],
         collectionDetails?.visibility === "private" ? true : false
       );
 

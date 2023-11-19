@@ -2,7 +2,11 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { AiOutlineLoading } from "react-icons/ai";
-import { Post } from "../../../../graphql/generated";
+import {
+  ImageMetadataV3,
+  Post,
+  PublicationMetadataMediaImage,
+} from "../../../../graphql/generated";
 import numeral from "numeral";
 import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
@@ -356,6 +360,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   ],
             ].filter(Boolean) as string[][]
           ).map((image: string[], indexTwo: number) => {
+            const meta =
+              item?.__typename == "Mirror" ? item?.mirrorOn : (item as Post);
             const functions = [
               handleHidePost,
               handleBookmark,
@@ -366,7 +372,32 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     actionFor: item?.id,
                   })
                 ),
-              () => router.push(`/item/pub/${item?.id}`),
+              () =>
+                meta?.metadata?.tags?.includes(
+                  "MintedWithLoveOnCypherChromadin"
+                )
+                  ? router.push(
+                      `/item/chromadin/${
+                        (meta?.metadata as ImageMetadataV3)?.title
+                      }`
+                    )
+                  : meta?.metadata?.tags?.includes(
+                      "MintedWithLoveOnCypherCoinOp"
+                    )
+                  ? router.push(
+                      `/item/coinop/${
+                        (meta?.metadata as ImageMetadataV3)?.title
+                      }`
+                    )
+                  : meta?.metadata?.tags?.includes(
+                      "MintedWithLoveOnCypherListener"
+                    )
+                  ? router.push(
+                      `/item/listener/${
+                        (meta?.metadata as ImageMetadataV3)?.title
+                      }`
+                    )
+                  : router.push(`/item/pub/${item?.id}`),
             ];
 
             const loaders = [
