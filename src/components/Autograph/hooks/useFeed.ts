@@ -13,7 +13,7 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import getPublications from "../../../../graphql/lens/queries/publications";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { createWalletClient, custom } from "viem";
 import { PublicClient } from "wagmi";
 import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
@@ -159,7 +159,7 @@ const useFeed = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -245,7 +245,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -281,7 +281,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(

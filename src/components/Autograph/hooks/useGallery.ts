@@ -6,7 +6,7 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import { Display, SortType } from "../types/autograph.types";
 import { MetadataAttributeType, Profile } from "../../../../graphql/generated";
 import { createWalletClient, custom, PublicClient } from "viem";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { Dispatch } from "redux";
@@ -265,7 +265,7 @@ const useGallery = (
       const responseJSON = await response.json();
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -327,7 +327,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -377,7 +377,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(

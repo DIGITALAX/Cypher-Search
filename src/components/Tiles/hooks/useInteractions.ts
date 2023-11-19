@@ -8,7 +8,7 @@ import lensCollect from "../../../../lib/helpers/api/collectPost";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { Publication } from "../types/tiles.types";
 import { Dispatch } from "redux";
 
@@ -88,7 +88,7 @@ const useInteractions = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -144,7 +144,7 @@ const useInteractions = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(

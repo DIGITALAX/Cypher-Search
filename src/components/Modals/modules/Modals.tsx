@@ -19,7 +19,7 @@ import useFilterPost from "../hooks/useFilterPost";
 import PostBox from "./PostBox";
 import useQuote from "../hooks/useQuote";
 import { createPublicClient, http } from "viem";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { useAccount } from "wagmi";
 import PostCollectGif from "./PostCollectGif";
 import FollowCollect from "./FollowCollect";
@@ -34,7 +34,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   const dispatch = useDispatch();
   const { address } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(),
   });
   const mapOpen = useSelector((state: RootState) => state.app.mapReducer);

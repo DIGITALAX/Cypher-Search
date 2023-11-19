@@ -22,14 +22,13 @@ import useBookmarks from "@/components/Autograph/hooks/useBookmarks";
 import usePost from "@/components/Autograph/hooks/usePost";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
-import { polygon } from "viem/chains";
+import { polygon , polygonMumbai} from "viem/chains";
 import useOrders from "@/components/Autograph/hooks/useOrders";
 import useSales from "@/components/Autograph/hooks/useSales";
 import useCreate from "@/components/Autograph/hooks/useCreate";
 import useConversations from "@/components/Autograph/hooks/useConversations";
 import useDrop from "@/components/Autograph/hooks/useDrop";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
-import { setCartAnim } from "../../../redux/reducers/cartAnimSlice";
 
 const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   router,
@@ -38,7 +37,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(),
   });
   const { autograph } = router.query;

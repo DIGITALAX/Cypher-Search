@@ -7,7 +7,7 @@ import broadcast from "../../../graphql/lens/mutations/broadcast";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
-import { polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 
 const actPost = async (
@@ -51,7 +51,7 @@ const actPost = async (
         address: LENS_HUB_PROXY_ADDRESS_MATIC,
         abi: LensHubProxy,
         functionName: "act",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
           {
             publicationActedProfileId:

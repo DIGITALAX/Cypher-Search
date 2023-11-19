@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { DecodedMessage, Client, Conversation } from "@xmtp/react-sdk";
 import { DIGITALAX_ADDRESS } from "../../../../lib/constants";
 import { createWalletClient, custom } from "viem";
-import { polygonMumbai } from "viem/chains";
+import { polygonMumbai, polygon } from "viem/chains";
 import { ScreenDisplay } from "../types/autograph.types";
 import { LimitType, Profile } from "../../../../graphql/generated";
 import { init, fetchQuery } from "@airstack/airstack-react";
