@@ -9,10 +9,17 @@ import {
   Erc20,
   SimpleCollectOpenActionModuleInput,
   PrimaryPublication,
+  ArticleMetadataV3,
+  StoryMetadataV3,
+  TextOnlyMetadataV3,
+  ImageMetadataV3,
+  LiveStreamMetadataV3,
+  VideoMetadataV3,
+  AudioMetadataV3,
 } from "../../../../graphql/generated";
 import { AccessControlConditions } from "@lit-protocol/types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import { ChangeEvent, MutableRefObject, SetStateAction } from "react";
+import { ChangeEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
@@ -743,10 +750,6 @@ export interface Display {
   };
 }
 
-export type PostProps = {
-  item: Post | Quote | Mirror | Comment;
-};
-
 export type FeedProps = {
   profileFeed: (Post | Quote | Mirror)[];
   mirror: (id: string) => Promise<void>;
@@ -863,11 +866,18 @@ export type CreationProps = {
 
 export type PostBarProps = {
   index: number;
-  mirror?: (id: string) => Promise<void>;
-  like?: (id: string) => Promise<void>;
-  simpleCollect?: (id: string, type: string) => Promise<void>;
-  handleBookmark?: (id: string, index: number) => Promise<void>;
-  handleHidePost?: (id: string, index: number) => Promise<void>;
+  main: boolean | undefined;
+  mirror?:
+    | ((id: string) => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
+  like?:
+    | ((id: string) => Promise<void>)
+    | ((id: string, main: boolean) => Promise<void>);
+  simpleCollect?:
+    | ((id: string, type: string) => Promise<void>)
+    | ((id: string, type: string, main: boolean) => Promise<void>);
+  handleBookmark?: (id: string, index: number, main: boolean) => Promise<void>;
+  handleHidePost?: (id: string, index: number, main: boolean) => Promise<void>;
   item: Post | Quote | Mirror | Comment;
   setOpenMirrorChoice?: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice?: boolean[];
@@ -894,11 +904,21 @@ export type PostBarProps = {
 };
 
 export type TextProps = {
-  item: Post | Quote | Mirror | Comment;
+  mirror: Mirror | undefined;
+  quote: Comment | Post | Quote | undefined;
+  type: string;
+  id: string;
+  dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
+  index: number;
+  metadata: ArticleMetadataV3 | StoryMetadataV3 | TextOnlyMetadataV3;
 };
 
 export type PostQuoteProps = {
   quote: PrimaryPublication;
+  dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
+  index: number;
 };
 
 export type PublicationProps = {
@@ -906,6 +926,7 @@ export type PublicationProps = {
   index: number;
   disabled?: boolean;
   postCollectGif?: PostCollectGifState;
+  main?: boolean;
   mirror?:
     | ((id: string) => Promise<void>)
     | ((id: string, main: boolean) => Promise<void>);
@@ -921,7 +942,9 @@ export type PublicationProps = {
   setMakePostComment?: (e: SetStateAction<MakePostComment[]>) => void;
   openMoreOptions?: boolean[];
   setOpenMoreOptions?: (e: SetStateAction<boolean[]>) => void;
-  simpleCollect?: (id: string, type: string) => Promise<void>;
+  simpleCollect?:
+    | ((id: string, type: string) => Promise<void>)
+    | ((id: string, type: string, main: boolean) => Promise<void>);
   interactionsLoading?: {
     like: boolean;
     mirror: boolean;
@@ -939,8 +962,8 @@ export type PublicationProps = {
   profileHovers?: boolean[];
   setProfileHovers?: (e: SetStateAction<boolean[]>) => void;
   dispatch: Dispatch<AnyAction>;
-  handleBookmark?: (id: string, index: number) => Promise<void>;
-  handleHidePost?: (id: string, index: number) => Promise<void>;
+  handleBookmark?: (id: string, index: number, main: boolean) => Promise<void>;
+  handleHidePost?: (id: string, index: number, main: boolean) => Promise<void>;
   setContentLoading?: (
     e: SetStateAction<
       {
@@ -968,6 +991,7 @@ export type PostCommentProps = {
   makePostComment: MakePostComment;
   postCollectGif: PostCollectGifState;
   setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
+  main: boolean | undefined;
   commentPost:
     | ((id: string) => Promise<void>)
     | (() => Promise<void>)
@@ -1363,4 +1387,22 @@ export type WaveFormProps = {
   type: string;
   upload?: boolean;
   handleMedia?: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+};
+
+export type PostSwitchProps = {
+  dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
+  index: number;
+  item: Post | Quote | Mirror | Comment;
+};
+
+export type ImageProps = {
+  mirror: Mirror | undefined;
+  quote: Comment | Post | Quote | undefined;
+  type: string;
+  id: string;
+  dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
+  index: number;
+  metadata: ImageMetadataV3 | VideoMetadataV3 | AudioMetadataV3;
 };

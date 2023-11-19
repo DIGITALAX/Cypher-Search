@@ -35,8 +35,13 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
                 />
               ) : (
                 <video
-                  controls
                   className="rounded-md absolute w-full h-full object-contain"
+                  draggable={false}
+                  controls={false}
+                  muted
+                  // autoPlay
+                  playsInline
+                  loop
                 >
                   <source
                     src={`${INFURA_GATEWAY}/ipfs/${mainImage}`}

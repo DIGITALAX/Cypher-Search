@@ -2,14 +2,25 @@ import { FunctionComponent } from "react";
 import { TextProps } from "../../types/autograph.types";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
-import { Quote } from "../../../../../graphql/generated";
+import { Post, Quote, Comment } from "../../../../../graphql/generated";
+import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
+import Publication from "../Publication";
 
-const Text: FunctionComponent<TextProps> = ({ item }): JSX.Element => {
+const Text: FunctionComponent<TextProps> = ({
+  metadata,
+  type,
+  id,
+  quote,
+  mirror,
+  index,
+  dispatch,
+  router,
+}): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col justify-start items-center gap-3">
-      {(item?.__typename === "Mirror" || item?.__typename === "Quote") && (
+      {(type === "Mirror" || type === "Quote") && (
         <div className="flex relative w-full h-fit items-center justify-end">
-          {item?.__typename === "Mirror" ? (
+          {type === "Mirror" ? (
             <div className="relative flex flex-row gap-1.5 items-center justify-center text-white font-earl text-sm">
               <div className="relative flex items-center justify-center w-5 h-4">
                 <Image
@@ -22,7 +33,7 @@ const Text: FunctionComponent<TextProps> = ({ item }): JSX.Element => {
                 Mirrored By
               </div>
               <div className="relative flex items-center justify-center w-fit h-fit">
-                {item?.by?.handle?.localName}
+                {mirror?.by?.handle?.localName}
               </div>
             </div>
           ) : (
@@ -37,13 +48,9 @@ const Text: FunctionComponent<TextProps> = ({ item }): JSX.Element => {
               <div className="relative flex items-center justify-center w-fit h-fit">
                 Quote Remix
               </div>
-              {(item as Quote)?.quoteOn?.metadata?.marketplace?.name && (
+              {quote?.metadata?.marketplace?.name && (
                 <div className="relative flex items-center justify-center w-fit h-fit">
-                  On{" "}
-                  {(item as Quote)?.quoteOn?.metadata?.marketplace?.name?.slice(
-                    0,
-                    8
-                  ) + "..."}
+                  On {quote?.metadata?.marketplace?.name?.slice(0, 8) + "..."}
                 </div>
               )}
             </div>
@@ -51,31 +58,27 @@ const Text: FunctionComponent<TextProps> = ({ item }): JSX.Element => {
         </div>
       )}
       <div
-        className="relative w-full h-full bg-black font-aust text-white text-left item-start justify-start break-words flex overflow-y-scroll p-2 text-sm whitespace-preline"
-        // dangerouslySetInnerHTML={{
-        //   __html: descriptionRegex(
-        //     item?.__typename === "Mirror"
-        //       ? item?.mirrorOn?.metadata?.marketplace?.description
-        //       : (item as Post)?.metadata?.marketplace?.description
-        //   ),
-        // }}
-      >
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui
-        blanditiis praesentium voluptatum deleniti atque corrupti quos dolores
-        et quas molestias excepturi sint occaecati cupiditate non provident,
-        similique sunt in culpa qui officia deserunt mollitia animi, id est
-        laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
-        distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-        cumque nihil impedit quo minus id quod maxime placeat facere possimus,
-        omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet
-        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque
-        earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-        voluptatibus maiores alias consequatur aut perferendis doloribus
-        asperiores repellat.
-      </div>
-      {item?.__typename === "Quote" && (
-        <div className="relative w-full h-fit"></div>
+        className={`relative w-full h-fit max-h-[20rem] font-aust text-white text-left item-start justify-start break-words flex overflow-y-scroll p-3 text-sm whitespace-preline ${
+          metadata?.__typename !== "TextOnlyMetadataV3" &&
+          metadata?.content?.length > 200
+            ? "bg-black"
+            : "bg-oscuro"
+        }`}
+        dangerouslySetInnerHTML={{
+          __html: descriptionRegex(metadata?.content),
+        }}
+      ></div>
+      {type === "Quote" && (
+        <div className="relative w-full h-fit">
+          <Publication
+            index={index}
+            item={quote as Comment | Post | Quote}
+            router={router}
+            disabled={true}
+            dispatch={dispatch}
+            data-post-id={id}
+          />
+        </div>
       )}
     </div>
   );

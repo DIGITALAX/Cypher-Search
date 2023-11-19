@@ -2,9 +2,10 @@ import { FunctionComponent } from "react";
 import Chromadin from "./Chromadin";
 import { SwitchTypeProps } from "../types/item.types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import Publication from "./Publication";
+import Pub from "./Pub";
 import Community from "./Community";
 import Microbrand from "./Microbrand";
+import { Mirror, Post, Comment, Quote } from "../../../../graphql/generated";
 
 const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   type,
@@ -58,6 +59,11 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   makeComment,
   setCommentsOpen,
   commentsOpen,
+  mainProfileHovers,
+  setMainProfileHovers,
+  followMainLoading,
+  setMainOpenMoreOptions,
+  openMainMoreOptions,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -119,7 +125,52 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
       );
 
     case "pub":
-      return <Publication />;
+      return (
+        <Pub
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+          followLoading={followLoading}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          allComments={allComments}
+          allCommentsLoading={allCommentsLoading}
+          router={router}
+          dispatch={dispatch}
+          itemData={itemData?.post as Post | Mirror | Quote | Comment}
+          setMainMakeComment={setMainMakeComment}
+          mainMakeComment={mainMakeComment}
+          postCollectGif={postCollectGif}
+          mirror={mirror}
+          like={like}
+          comment={comment}
+          handleMoreComments={handleMoreComments}
+          hasMoreComments={hasMoreComments}
+          mainInteractionsLoading={mainInteractionsLoading}
+          mainProfileHovers={mainProfileHovers}
+          setMainProfileHovers={setMainProfileHovers}
+          openMainMirrorChoice={openMainMirrorChoice}
+          setMainOpenMirrorChoice={setMainOpenMirrorChoice}
+          simpleCollect={simpleCollect}
+          followMainLoading={followMainLoading}
+          setMainOpenMoreOptions={setMainOpenMoreOptions}
+          openMainMoreOptions={openMainMoreOptions}
+          handleBookmark={handleBookmark}
+          handleHidePost={handleHidePost}
+          setMainContentLoading={setMainContentLoading}
+          mainContentLoading={mainContentLoading}
+          openMirrorChoice={openMirrorChoice}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          setOpenMoreOptions={setOpenMoreOptions}
+          openMoreOptions={openMoreOptions}
+          contentLoading={contentLoading}
+          setContentLoading={setContentLoading}
+          setMakeComment={setMakeComment}
+          makeComment={makeComment}
+          setCommentsOpen={setCommentsOpen}
+          commentsOpen={commentsOpen}
+          interactionsLoading={interactionsLoading}
+        />
+      );
 
     case "community":
       return <Community />;

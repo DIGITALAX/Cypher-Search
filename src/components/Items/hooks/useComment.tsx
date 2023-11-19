@@ -57,7 +57,13 @@ const useComment = (
     },
   ]);
   const [makeComment, setMakeComment] = useState<MakePostComment[]>([]);
-  const [mainMakeComment, setMainMakeComment] = useState<MakePostComment[]>([]);
+  const [mainMakeComment, setMainMakeComment] = useState<MakePostComment[]>([
+    {
+      content: "",
+      images: [],
+      videos: [],
+    },
+  ]);
   const [interactionsItemsLoading, setInteractionsItemsLoading] = useState<
     {
       like: boolean;
@@ -414,6 +420,41 @@ const useComment = (
       getComments();
     }
   }, [pubId]);
+
+  useEffect(() => {
+    if (allComments?.length > 0) {
+      setInteractionsItemsLoading(
+        Array.from({ length: allComments.length }, () => ({
+          like: false,
+          mirror: false,
+          comment: false,
+          simpleCollect: false,
+          bookmark: false,
+          hide: false,
+        }))
+      );
+      setOpenMoreOptions(
+        Array.from({ length: allComments.length }, () => false)
+      );
+      setContentLoading(
+        Array.from({ length: allComments.length }, () => ({
+          image: false,
+          video: false,
+          gif: false,
+        }))
+      );
+      setOpenItemMirrorChoice(
+        Array.from({ length: allComments.length }, () => false)
+      );
+      setMakeComment(
+        Array.from({ length: allComments.length }, () => ({
+          content: "",
+          images: [],
+          videos: [],
+        }))
+      );
+    }
+  }, [allComments?.length]);
 
   return {
     mainMakeComment,

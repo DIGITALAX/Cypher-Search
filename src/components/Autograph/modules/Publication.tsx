@@ -42,7 +42,8 @@ const Publication: FunctionComponent<PublicationProps> = ({
   setMakePostComment,
   setContentLoading,
   contentLoading,
-  postCollectGif
+  postCollectGif,
+  main,
 }): JSX.Element => {
   return (
     <div className="relative bg-lirio rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza">
@@ -96,8 +97,20 @@ const Publication: FunctionComponent<PublicationProps> = ({
           </div>
         )}
       </div>
-      <PostSwitch item={item} />
-      {item?.__typename === "Quote" && <PostQuote quote={item?.quoteOn} />}
+      <PostSwitch
+        item={item}
+        dispatch={dispatch}
+        router={router}
+        index={index}
+      />
+      {item?.__typename === "Quote" && (
+        <PostQuote
+          quote={item?.quoteOn}
+          dispatch={dispatch}
+          router={router}
+          index={index}
+        />
+      )}
       <PostBar
         index={index}
         item={item}
@@ -121,6 +134,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
         disabled={disabled}
         setCommentsOpen={setCommentsOpen!}
         commentsOpen={commentsOpen!}
+        main={main}
       />
       {commentsOpen?.[index] && (
         <PostComment
@@ -137,6 +151,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
           contentLoading={contentLoading?.[index]!}
           index={index}
           dispatch={dispatch}
+          main={main}
         />
       )}
     </div>

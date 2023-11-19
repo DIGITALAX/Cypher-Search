@@ -35,37 +35,34 @@ const useProfile = (
   const [galleryFollowLoading, setGalleryFollowLoading] = useState<boolean[]>(
     []
   );
+  const [mainFollowLoading, setMainFollowLoading] = useState<boolean[]>([
+    false,
+  ]);
+  const [mainProfileHovers, setMainProfileHovers] = useState<boolean[]>([
+    false,
+  ]);
+  const [openMainMoreOptions, setMainOpenMoreOptions] = useState<boolean[]>([
+    false,
+  ]);
 
-  const followProfile = async (id: string, feed?: boolean) => {
-    const index = (
-      feed
-        ? profileFeed
-        : [...(galleryItems?.collected || []), ...(galleryItems?.created || [])]
-    )?.findIndex(
-      (pub) =>
-        (feed
-          ? (pub as Post | Quote | Mirror).__typename === "Mirror"
-            ? (pub as Mirror).mirrorOn.id
-            : (pub as Post | Quote).id
-          : (pub as Creation)?.pubId) === id
-    );
-    if (index === -1) {
-      return;
-    }
-
-    if (feed) {
-      setFeedFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = true;
-        return updatedArray;
-      });
-    } else {
-      setGalleryFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = true;
-        return updatedArray;
-      });
-    }
+  const followProfile = async (id: string, feed?: boolean, main?: boolean) => {
+    const index = main
+      ? undefined
+      : (feed
+          ? profileFeed
+          : [
+              ...(galleryItems?.collected || []),
+              ...(galleryItems?.created || []),
+            ]
+        )?.findIndex(
+          (pub) =>
+            (feed
+              ? (pub as Post | Quote | Mirror).__typename === "Mirror"
+                ? (pub as Mirror).mirrorOn.id
+                : (pub as Post | Quote).id
+              : (pub as Creation)?.pubId) === id
+        );
+    handleLoaders(true, main!, feed!, index);
 
     try {
       const clientWallet = createWalletClient({
@@ -85,22 +82,14 @@ const useProfile = (
     } catch (err: any) {
       console.error(err.message);
     }
-    if (feed) {
-      setFeedFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = false;
-        return updatedArray;
-      });
-    } else {
-      setGalleryFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = false;
-        return updatedArray;
-      });
-    }
+    handleLoaders(false, main!, feed!, index);
   };
 
-  const unfollowProfile = async (id: string, feed?: boolean) => {
+  const unfollowProfile = async (
+    id: string,
+    feed?: boolean,
+    main?: boolean
+  ) => {
     const index = (
       feed
         ? profileFeed
@@ -113,23 +102,7 @@ const useProfile = (
             : (pub as Post | Quote).id
           : (pub as Creation)?.pubId) === id
     );
-    if (index === -1) {
-      return;
-    }
-
-    if (feed) {
-      setFeedFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = true;
-        return updatedArray;
-      });
-    } else {
-      setGalleryFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = true;
-        return updatedArray;
-      });
-    }
+    handleLoaders(true, main!, feed!, index);
 
     try {
       const clientWallet = createWalletClient({
@@ -148,18 +121,48 @@ const useProfile = (
     } catch (err: any) {
       console.error(err.message);
     }
-    if (feed) {
-      setFeedFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = false;
-        return updatedArray;
-      });
+
+    handleLoaders(false, main!, feed!, index);
+  };
+
+  const handleLoaders = (
+    start: boolean,
+    main: boolean,
+    feed: boolean,
+    index: number | undefined
+  ) => {
+    if (start) {
+      if (main) {
+        setMainFollowLoading([true]);
+      } else if (feed) {
+        setFeedFollowLoading((prev) => {
+          const updatedArray = [...prev];
+          updatedArray[index!] = true;
+          return updatedArray;
+        });
+      } else {
+        setGalleryFollowLoading((prev) => {
+          const updatedArray = [...prev];
+          updatedArray[index!] = true;
+          return updatedArray;
+        });
+      }
     } else {
-      setGalleryFollowLoading((prev) => {
-        const updatedArray = [...prev];
-        updatedArray[index] = false;
-        return updatedArray;
-      });
+      if (main) {
+        setMainFollowLoading([false]);
+      } else if (feed) {
+        setFeedFollowLoading((prev) => {
+          const updatedArray = [...prev];
+          updatedArray[index!] = false;
+          return updatedArray;
+        });
+      } else {
+        setGalleryFollowLoading((prev) => {
+          const updatedArray = [...prev];
+          updatedArray[index!] = false;
+          return updatedArray;
+        });
+      }
     }
   };
 
@@ -216,6 +219,11 @@ const useProfile = (
     galleryProfileHovers,
     setGalleryProfileHovers,
     dispatch,
+    mainFollowLoading,
+    mainProfileHovers,
+    setMainProfileHovers,
+    openMainMoreOptions,
+    setMainOpenMoreOptions,
   };
 };
 

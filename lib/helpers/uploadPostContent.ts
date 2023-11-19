@@ -39,6 +39,7 @@ const uploadPostContent = async (
     });
 
     const mediaWithKeys = [
+      ...audio.map((audio) => ({ type: "audio/mpeg", item: audio })),
       ...videos.map((video) => ({ type: "video/mp4", item: video })),
       ...cleanedImages.map((image) => ({
         type: "image/png",
@@ -48,7 +49,6 @@ const uploadPostContent = async (
         type: "image/gif",
         item: gif,
       })),
-      ...audio.map((audio) => ({ type: "audio/mpeg", item: audio })),
     ];
 
     const uploads = await Promise.all(
@@ -62,15 +62,29 @@ const uploadPostContent = async (
       })
     );
 
+    const firstImage = uploads.find(
+      (img) => img.type === "image/png" || img.type === "image/gif"
+    );
+
     const primaryMedia = uploads[0];
     if (primaryMedia.type === "video/mp4") {
       $schema = "https://json-schemas.lens.dev/publications/video/3.0.0.json";
       mainContentFocus = PublicationMetadataMainFocusType.Video;
-      value = { video: primaryMedia };
+      value = {
+        video: {
+          ...primaryMedia,
+          cover: firstImage ? firstImage : undefined,
+        },
+      };
     } else if (primaryMedia.type === "audio/mpeg") {
       $schema = "https://json-schemas.lens.dev/publications/audio/3.0.0.json";
       mainContentFocus = PublicationMetadataMainFocusType.Audio;
-      value = { audio: primaryMedia };
+      value = {
+        audio: {
+          ...primaryMedia,
+          cover: firstImage ? firstImage : undefined,
+        },
+      };
     } else {
       $schema = "https://json-schemas.lens.dev/publications/image/3.0.0.json";
       mainContentFocus = PublicationMetadataMainFocusType.Image;

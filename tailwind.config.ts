@@ -29,6 +29,7 @@ const config: Config = {
         lima: "#CAED00",
         viol: "#D07BF7",
         fondo: "#1A08F1",
+        oscuro: "#0D35CA",
         naran: "#FF9147",
         amar: "#FFD86D",
         geren: "#A9E7FF",

@@ -35,6 +35,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   disabled,
   commentsOpen,
   setCommentsOpen,
+  main,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
@@ -93,7 +94,14 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     );
                     router.push(`/item/pub/${item?.id}`);
                   } else {
-                    functions[indexTwo] && functions[indexTwo]!(item?.id);
+                    functions[indexTwo] &&
+                      (main
+                        ? functions[indexTwo]!(item?.id, main)
+                        : (
+                            functions[indexTwo]! as (
+                              id: string
+                            ) => Promise<void>
+                          )(item?.id));
                   }
                 }}
               >
@@ -157,6 +165,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             const functions: (
               | ((id: string) => Promise<void>)
               | ((index: number, id: string) => Promise<void>)
+              | ((id: string, main: boolean) => Promise<void>)
               | (() => void)
             )[] = [
               mirror!,
@@ -184,9 +193,16 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     router.push(`/item/pub/${item?.id}`);
                   } else {
                     !loaders[index] &&
-                      (functions[indexTwo] as (id: string) => Promise<void>)(
-                        item?.id
-                      );
+                      (main
+                        ? (
+                            functions[indexTwo] as (
+                              id: string,
+                              main: boolean
+                            ) => Promise<void>
+                          )(item?.id, main)
+                        : (
+                            functions[indexTwo] as (id: string) => Promise<void>
+                          )(item?.id));
                   }
                 }}
               >
@@ -227,7 +243,13 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           <Image
             layout="fill"
             draggable={false}
-            src={`${INFURA_GATEWAY}/ipfs/QmTQYdbL5iJkzMAwHh52SWvzopssTEEV5dRaENNrJgmesH`}
+            src={`${INFURA_GATEWAY}/ipfs/${
+              index % 2 == 0 ||
+              (item?.__typename === "Mirror" ? item.mirrorOn : (item as Post))
+                .metadata.__typename !== "ImageMetadataV3"
+                ? "QmNpvEkdHfhFViALNCedoF3WLTngxXG67XnPYaeaFCsA49"
+                : "QmTQYdbL5iJkzMAwHh52SWvzopssTEEV5dRaENNrJgmesH"
+            }`}
           />
         </div>
         <div
@@ -283,7 +305,13 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     },
                   })
                 )
-              : simpleCollect!(
+              : main
+              ? simpleCollect!(
+                  pub?.id,
+                  pub?.openActionModules?.[0]?.__typename,
+                  main
+                )
+              : (simpleCollect! as (id: string, type: string) => Promise<void>)(
                   pub?.id,
                   pub?.openActionModules?.[0]?.__typename
                 );
@@ -315,12 +343,19 @@ const PostBar: FunctionComponent<PostBarProps> = ({
       </div>
       {openMoreOptions?.[index] && (
         <div className="absolute w-fit h-fit flex flex-row gap-4 p-1 items-center justify-center bg-lirio/80 rounded-sm right-2 -top-10 border border-white">
-          {[
-            ["Hide Post", "QmUcaryzjgiLn34eXTPAZxmtfzWgTsUSeaim3yHnsmcnxx"],
-            ["Bookmark", "QmUHAMRX6fenDM6Eyt36N8839b8xbiMDkN9Wb8DXKY2aZC"],
-            ["Report Post", "QmRNwdrGa977LxHPbBv8KEAHBEEidKUiPtn4r6SmxDZHkd"],
-            ["View Post", "QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht"],
-          ].map((image: string[], indexTwo: number) => {
+          {(
+            [
+              ["Hide Post", "QmUcaryzjgiLn34eXTPAZxmtfzWgTsUSeaim3yHnsmcnxx"],
+              ["Bookmark", "QmUHAMRX6fenDM6Eyt36N8839b8xbiMDkN9Wb8DXKY2aZC"],
+              ["Report Post", "QmRNwdrGa977LxHPbBv8KEAHBEEidKUiPtn4r6SmxDZHkd"],
+              router.asPath.includes("item") || main
+                ? null
+                : [
+                    "View Post",
+                    "QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht",
+                  ],
+            ].filter(Boolean) as string[][]
+          ).map((image: string[], indexTwo: number) => {
             const functions = [
               handleHidePost,
               handleBookmark,
@@ -346,10 +381,20 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 onClick={() => {
                   if (disabled) return;
                   if (indexTwo !== 3 && indexTwo !== 2) {
-                    !loaders[index] &&
-                      (functions[indexTwo] as (id: string) => Promise<void>)(
-                        item?.id
-                      );
+                    !loaders[index] && main
+                      ? (
+                          functions[indexTwo] as (
+                            id: string,
+                            index: number,
+                            main: boolean
+                          ) => Promise<void>
+                        )(item?.id, index, main)
+                      : (
+                          functions[indexTwo] as (
+                            id: string,
+                            index: number
+                          ) => Promise<void>
+                        )(item?.id, index);
                   } else {
                     (functions[indexTwo] as () => void)();
                   }
