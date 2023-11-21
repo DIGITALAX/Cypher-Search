@@ -11,7 +11,7 @@ const handleCollectionProfilesAndPublications = async (
     const { data } = await getPublications(
       {
         where: {
-          publicationIds: collections.map(
+          publicationIds: (collections || [])?.map(
             (item) =>
               `${numberToItemTypeMap[Number(item?.origin)]}/${
                 "0x" + Number(item?.pubId)?.toString(16)
@@ -23,7 +23,7 @@ const handleCollectionProfilesAndPublications = async (
       lens?.id
     );
 
-    const newCollections: Creation[] = collections.map(
+    const newCollections: Creation[] = (collections || [])?.map(
       (collection: Creation) => ({
         ...collection,
         profile: (

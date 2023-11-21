@@ -17,7 +17,7 @@ import {
   custom,
 } from "viem";
 import { AnyAction, Dispatch } from "redux";
-import { polygon , polygonMumbai} from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import {
   LimitType,
@@ -45,6 +45,7 @@ import {
   encryptString,
 } from "@lit-protocol/lit-node-client";
 import { AccessControlConditions } from "@lit-protocol/types";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -171,12 +172,14 @@ const useCreate = (
 
     try {
       const postContentURI = await uploadPostContent(
-        collectionDetails?.description,
+        collectionDetails?.description?.trim() == ""
+          ? " "
+          : collectionDetails?.description,
         collectionSettings?.media !== "video" ? collectionDetails.images : [],
         collectionSettings?.media === "video" ? [collectionDetails?.video] : [],
         [],
         collectionSettings?.media === "audio" ? [collectionDetails?.audio] : [],
-        collectionDetails?.title,
+        collectionDetails?.title?.trim() == "" ? " " : collectionDetails?.title,
         [
           ...collectionDetails?.tags
             ?.split(/,\s*|\s+/)
@@ -192,7 +195,7 @@ const useCreate = (
         ?.map((item) => Number(item[2]));
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -211,7 +214,7 @@ const useCreate = (
           address: COLLECTION_CREATOR,
           abi: CollectionCreatorAbi,
           functionName: "removeCollection",
-          chain: polygonMumbai,
+          chain: polygon,
           args: [Number(collectionDetails?.collectionId)],
           account: address,
         });
@@ -264,7 +267,7 @@ const useCreate = (
         publicClient
       );
 
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
 
       const { data } = await getPublications(
         {
@@ -282,6 +285,7 @@ const useCreate = (
         data?.publications?.items?.[0]?.id
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setCreationLoading(false);
@@ -291,7 +295,7 @@ const useCreate = (
     setCreationLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -306,7 +310,7 @@ const useCreate = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "removeCollection",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [Number(collectionDetails?.collectionId)],
         account: address,
       });
@@ -319,6 +323,7 @@ const useCreate = (
         )?.toString(16)}`
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setCreationLoading(false);
@@ -458,7 +463,7 @@ const useCreate = (
           {
             contractAddress: "",
             standardContractType: "",
-            chain: "polygonMumbai",
+            chain: "polygon",
             method: "",
             parameters: [":userAddress"],
             returnValueTest: {
@@ -486,7 +491,7 @@ const useCreate = (
             accessControlConditions:
               accessControlConditions as AccessControlConditions,
             authSig,
-            chain: "polygonMumbai",
+            chain: "polygon",
             dataToEncrypt: JSON.stringify(toHash),
           },
           client!

@@ -14,7 +14,7 @@ const Web: FunctionComponent<WebProps> = ({
   handleLensConnect,
   lensConnected,
   walletConnected,
-  openAccountModal,
+  handleLogout,
   screenDisplay,
   sortType,
   setSortType,
@@ -125,7 +125,9 @@ const Web: FunctionComponent<WebProps> = ({
   editDrop,
   deleteDrop,
   deleteCollection,
-  collectionLoading
+  collectionLoading,
+  handleDecrypt,
+  decryptLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full min-h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20 h-fit">
@@ -203,6 +205,7 @@ const Web: FunctionComponent<WebProps> = ({
         <ScreenSwitch
           editDrop={editDrop}
           deleteDrop={deleteDrop}
+          handleMedia={handleMedia}
           searchCollection={searchCollection}
           setSearchCollection={setSearchCollection}
           setUserSearch={setUserSearch}
@@ -226,7 +229,6 @@ const Web: FunctionComponent<WebProps> = ({
           messages={messages}
           dropDetails={dropDetails}
           setDropDetails={setDropDetails}
-          handleMedia={handleMedia}
           currencies={currencies}
           setSearchedProfiles={setSearchedProfiles}
           filterConstants={filterConstants}
@@ -288,6 +290,8 @@ const Web: FunctionComponent<WebProps> = ({
           likeBookmark={likeBookmark}
           interactionsLoadingBookmark={interactionsLoadingBookmark}
           bookmarks={bookmarks}
+          handleDecrypt={handleDecrypt}
+          decryptLoading={decryptLoading}
           bookmarksLoading={bookmarksLoading}
           router={router}
           unfollowProfile={unfollowProfile}
@@ -338,7 +342,7 @@ const Web: FunctionComponent<WebProps> = ({
               type: ScreenDisplay.Gallery,
             },
             {
-              image: "QmT4sotWefLeZzT772BQX4hoDJDTjhm3NUQh12nzuaYe53",
+              image: "QmTTtDqqjwxYbz3rvfGuyB3fz8YQj27qEVdJLHRYkFg4D9",
               text: "circuits",
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Circuits)),
@@ -456,16 +460,23 @@ const Web: FunctionComponent<WebProps> = ({
                 ? openConnectModal!
                 : walletConnected && !lensConnected?.id
                 ? () => handleLensConnect()
-                : openAccountModal!,
-              width: "10",
-              height: "10",
+                : () => handleLogout(),
+              width: "7",
+              height: "7",
             },
             {
               image: "QmP7ESx5WEVSxyvKvsWBCWYhpWJytVt2Eozr6wqMnyb3M5",
               text: "home",
-              function: () => router.push("/"),
-              width: "10",
-              height: "8",
+              function: () =>
+                router.push(
+                  `/autograph/${
+                    lensConnected?.handle?.suggestedFormatted?.localName?.split(
+                      "@"
+                    )?.[1]
+                  }`
+                ),
+              width: "9",
+              height: "7",
             },
             {
               image: "QmYbjMNQAVuQSWNNQ5AKbQtt4Dxw2ax4SvLNwKhCNDniL2",
@@ -474,8 +485,8 @@ const Web: FunctionComponent<WebProps> = ({
                 handleShuffleSearch();
                 router.push("/");
               },
-              width: "10",
-              height: "10",
+              width: "8",
+              height: "8",
             },
           ].map(
             (

@@ -14,21 +14,21 @@ const handleIndexCheck = async (
   tx: LensTransactionStatusRequest,
   dispatch: Dispatch<AnyAction>
 ) => {
-  try {
-    const indexedStatus = await pollUntilIndexed(tx);
-    if (indexedStatus) {
-      dispatch(
-        setIndexer({
-          actionOpen: true,
-          actionMessage: "Successfully Indexed",
-        })
-      );
-    } else {
-      dispatch(setInteractError(true));
-    }
-  } catch (err: any) {
-    console.error(err.message);
+  // try {
+  const indexedStatus = await pollUntilIndexed(tx);
+  if (indexedStatus) {
+    dispatch(
+      setIndexer({
+        actionOpen: true,
+        actionMessage: "Successfully Indexed",
+      })
+    );
+  } else {
+    dispatch(setInteractError(true));
   }
+  // } catch (err: any) {
+  //   console.error(err.message);
+  // }
   setTimeout(() => {
     dispatch(
       setIndexer({
@@ -62,10 +62,10 @@ const pollUntilIndexed = async (
         switch (data.lensTransactionStatus.status) {
           case LensTransactionStatusType.Failed:
             return false;
+          case LensTransactionStatusType.OptimisticallyUpdated:
           case LensTransactionStatusType.Complete:
             return true;
           case LensTransactionStatusType.Processing:
-          case LensTransactionStatusType.OptimisticallyUpdated:
             count += 1;
             await new Promise((resolve) => setTimeout(resolve, 6000));
             break;
@@ -74,7 +74,10 @@ const pollUntilIndexed = async (
         }
       }
     } catch (err: any) {
+      count += 1;
       console.error(err.message);
+      continue;
+     
     }
   }
   return false;

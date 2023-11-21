@@ -33,6 +33,7 @@ const InteractError: FunctionComponent<InteractErrorProps> = ({
                   layout="fill"
                   src={`${INFURA_GATEWAY}/ipfs/QmXgdgSRWVLkCQhY2a28PP9ch1d9UqUCis1ms3UZdbxELS`}
                   draggable={false}
+                  objectFit="cover"
                 />
               </div>
             </div>

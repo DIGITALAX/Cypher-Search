@@ -72,7 +72,7 @@ export type HeaderProps = {
   placeholderText?: string | undefined;
   setSearchInput?: (e: SetStateAction<string>) => void;
   openConnectModal: (() => void) | undefined;
-  openAccountModal: (() => void) | undefined;
+  handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
@@ -141,6 +141,7 @@ export type FilterProps = {
   filterConstants: FilterValues | undefined;
   filterValues: Filter;
   openDropDown: DropDown;
+  lensConnected: Profile | undefined;
   handleResetFilters: () => void;
   setOpenDropDown: (e: SetStateAction<DropDown>) => void;
   setFilteredDropDownValues: (
@@ -158,7 +159,7 @@ export type FilterProps = {
   router: NextRouter;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;

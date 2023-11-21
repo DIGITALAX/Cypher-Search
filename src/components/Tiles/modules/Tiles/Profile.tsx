@@ -16,25 +16,28 @@ const Profile: FunctionComponent<ProfileProps> = ({
   index,
   profileHovers,
   setProfileHovers,
-  dispatch
+  dispatch,
+  lensConnected,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(publication?.metadata?.picture);
+  const cover = createProfilePicture(publication?.metadata?.coverPicture);
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
+    <div className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4" id={publication?.ownedBy?.address}>
       <div className="relative p-2 rounded-sm border border-pez w-full h-20 flex-row gap-6 items-center justify-start flex">
-        <div className="absolute w-full h-full opacity-70 flex top-0 left-0">
-          <Image
-            layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/${
-              publication?.metadata?.coverPicture?.raw?.uri?.split("ipfs://")[1]
-            }`}
-            objectFit="cover"
-            className="rounded-sm"
-            draggable={false}
-          />
+        <div className="absolute w-full h-full opacity-20 flex top-0 left-0" id="preroll">
+          {cover && (
+            <Image
+              layout="fill"
+              src={cover}
+              objectFit="cover"
+              className="rounded-sm"
+              draggable={false}
+            />
+          )}
         </div>
         <div
           className="relative flex flex-row gap-4 w-10 h-10 items-center justify-start rounded-full border border-offWhite cursor-pointer"
+          id="pfp"
           onClick={() => {
             setProfileHovers((prev) => {
               const updatedArray = [...prev];
@@ -75,6 +78,8 @@ const Profile: FunctionComponent<ProfileProps> = ({
             index={index}
             setProfileHovers={setProfileHovers}
             dispatch={dispatch}
+            lensConnected={lensConnected}
+            parentId={publication?.ownedBy?.address}
           />
         )}
         <div
@@ -82,10 +87,10 @@ const Profile: FunctionComponent<ProfileProps> = ({
             layoutAmount === 4 ? "text-xs" : "text-sm"
           }`}
         >
-          @hiro.lens
+          {publication?.handle?.suggestedFormatted?.localName}
         </div>
       </div>
-      <Stats />
+      <Stats dispatch={dispatch} profile={publication} />
     </div>
   );
 };

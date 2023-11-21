@@ -36,6 +36,8 @@ import encodeActData from "../../../../lib/helpers/encodeActData";
 import actPost from "../../../../lib/helpers/api/actPost";
 import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSlice";
 import { AnyAction, Dispatch } from "redux";
+import { NextRouter } from "next/router";
+import { decryptPost } from "../../../../lib/helpers/decryptPost";
 
 const useItem = (
   type: string,
@@ -46,11 +48,13 @@ const useItem = (
   address: `0x${string}` | undefined,
   cartItems: CartItem[],
   publicClient: PublicClient,
-  dispatch: Dispatch<AnyAction>
+  dispatch: Dispatch<AnyAction>,
+  router: NextRouter
 ) => {
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
   const [itemLoading, setItemLoading] = useState<boolean>(false);
   const [itemData, setItemData] = useState<Publication>();
+  const [decryptLoading, setDecryptLoading] = useState<boolean>(false);
   const [isApprovedSpend, setIsApprovedSpend] = useState<boolean>(false);
   const [relatedData, setRelatedData] = useState<{
     collections: Creation[];
@@ -84,9 +88,15 @@ const useItem = (
               ? {
                   ...collection,
                   profile: pub?.by,
-                  publication: pub,
+                  publication: {
+                    ...pub,
+                    decrypted: undefined,
+                  },
                 }
-              : pub,
+              : {
+                  ...pub,
+                  decrypted: undefined,
+                },
             type,
           });
           setPurchaseDetails({
@@ -138,9 +148,12 @@ const useItem = (
   const getIdProfile = async (): Promise<Profile | undefined> => {
     try {
       const item = filterConstants?.microbrands?.find((item) => item[1] === id);
-      const data = await getProfile({
-        forProfileId: item?.[3],
-      });
+      const data = await getProfile(
+        {
+          forProfileId: item?.[3],
+        },
+        lensConnected?.id
+      );
 
       return data?.data?.profile as Profile;
     } catch (err: any) {
@@ -182,17 +195,23 @@ const useItem = (
 
       if (data?.data?.communityCreateds) {
         data?.data?.communityCreateds?.map(async (item: any) => {
-          const members = await getProfiles({
-            where: {
-              profileIds: item.members,
+          const members = await getProfiles(
+            {
+              where: {
+                profileIds: item.members,
+              },
             },
-          });
+            lensConnected?.id
+          );
 
-          const creators = await getProfiles({
-            where: {
-              profileIds: item.validCreators,
+          const creators = await getProfiles(
+            {
+              where: {
+                profileIds: item.validCreators,
+              },
             },
-          });
+            lensConnected?.id
+          );
 
           const items = (item.validCreators as string[])
             .sort(() => 0.5 - Math.random())
@@ -202,9 +221,12 @@ const useItem = (
             return await getIdCollections(item);
           });
 
-          const steward = await getProfile({
-            forProfileId: item.steward,
-          });
+          const steward = await getProfile(
+            {
+              forProfileId: item.steward,
+            },
+            lensConnected?.id
+          );
 
           return {
             ...item,
@@ -266,9 +288,12 @@ const useItem = (
     Post | Mirror | Comment | Quote | undefined | null
   > => {
     try {
-      const { data } = await getPublication({
-        forId: id,
-      });
+      const { data } = await getPublication(
+        {
+          forId: id,
+        },
+        lensConnected?.id
+      );
 
       return data?.publication as Post | Mirror | Comment | Quote;
     } catch (err: any) {
@@ -280,7 +305,7 @@ const useItem = (
     setInstantLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -319,11 +344,26 @@ const useItem = (
     setInstantLoading(false);
   };
 
+  const handleDecrypt = async (post: Post | Quote | Comment) => {
+    setDecryptLoading(true);
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await decryptPost(post, clientWallet, dispatch, setItemData, true);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setDecryptLoading(false);
+  };
+
   const approveSpend = async () => {
     setInstantLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -397,7 +437,7 @@ const useItem = (
               },
         ],
         functionName: "approve",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [
           CHROMADIN_OPEN_ACTION,
           ethers.parseEther(
@@ -493,7 +533,12 @@ const useItem = (
   };
 
   useEffect(() => {
-    if (lensConnected?.id) {
+    if (
+      lensConnected?.id &&
+      (router.asPath.includes("chromadin") ||
+        router.asPath.includes("listener") ||
+        router.asPath.includes("coinop"))
+    ) {
       checkApproved();
     }
   }, [purchaseDetails?.currency]);
@@ -502,7 +547,7 @@ const useItem = (
     if (type) {
       getItemData();
     }
-  }, []);
+  }, [type, lensConnected?.id]);
 
   return {
     itemLoading,
@@ -514,6 +559,8 @@ const useItem = (
     approveSpend,
     isApprovedSpend,
     relatedData,
+    decryptLoading,
+    handleDecrypt,
   };
 };
 

@@ -23,7 +23,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   cartListOpen,
   setCartListOpen,
   openConnectModal,
-  openAccountModal,
+  handleLogout,
   handleSearch,
   handleMoreSearch,
   searchInput,
@@ -66,7 +66,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
         setSearchInput={setSearchInput}
         openConnectModal={openConnectModal}
         handleLensConnect={handleLensConnect}
-        openAccountModal={openAccountModal}
+        handleLogout={handleLogout}
         lensConnected={lensConnected}
         walletConnected={walletConnected}
         openAccount={openAccount}
@@ -118,6 +118,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
         profileId={lensConnected?.id}
         heart={heart}
         setHeart={setHeart}
+        lensConnected={lensConnected}
       />
     </div>
   );

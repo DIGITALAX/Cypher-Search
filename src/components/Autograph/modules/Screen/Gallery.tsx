@@ -88,7 +88,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               are more than they seem.
             </div>
           )}
-          {isDesigner && (
+          {!isDesigner && (
             <div className="relative w-full h-fit flex items-center justify-center flex-col gap-1">
               <div className="relative w-fit h-fit flex items-center justify-center text-center font-bit text-white text-sm">
                 Interested to mint? Send us a message!
@@ -150,7 +150,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               <>
                 <div
                   className="relative w-full h-10 bg-olor border border-[#DAB275] flex items-center justify-center text-saph font-bit text-lg cursor-pointer active:scale-95"
-                  onClick={() => !isDesigner && setCreateCase("collection")}
+                  onClick={() => isDesigner && setCreateCase("collection")}
                 >
                   <div className="relative w-fit h-fit items-center justify-center flex top-1">
                     + New Collection
@@ -158,7 +158,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                 </div>
                 <div
                   className="relative w-full h-10 bg-olor border border-[#DAB275] flex items-center justify-center text-saph font-bit text-lg cursor-pointer active:scale-95"
-                  onClick={() => !isDesigner && setCreateCase("drop")}
+                  onClick={() => isDesigner && setCreateCase("drop")}
                 >
                   <div className="relative w-fit h-fit items-center justify-center flex top-1">
                     + New Drop

@@ -124,6 +124,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   deleteCollection,
   allCollections,
   collectionLoading,
+  handleDecrypt,
+  decryptLoading,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -183,7 +185,10 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Bookmarks:
       return (
         <Bookmarks
+          handleDecrypt={handleDecrypt}
+          decryptLoading={decryptLoading}
           bookmarks={bookmarks}
+          lensConnected={lensConnected}
           bookmarksLoading={bookmarksLoading}
           simpleCollect={simpleCollect}
           mirror={mirrorBookmark}

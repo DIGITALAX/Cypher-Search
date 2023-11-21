@@ -11,6 +11,7 @@ import { PublicClient, createWalletClient, custom } from "viem";
 import { polygon, polygonMumbai } from "viem/chains";
 import { Publication } from "../types/tiles.types";
 import { Dispatch } from "redux";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useInteractions = (
   allSearchItems: Publication[],
@@ -28,7 +29,7 @@ const useInteractions = (
     }[]
   >([]);
 
-  const like = async (id: string) => {
+  const like = async (id: string, hasReacted: boolean) => {
     const index = allSearchItems?.findIndex(
       (pub) => (pub?.post as Post | Comment | Mirror | Quote)?.id === id
     );
@@ -43,7 +44,7 @@ const useInteractions = (
     });
 
     try {
-      await lensLike(id, dispatch);
+      await lensLike(id, dispatch, hasReacted);
 
       dispatch(
         setInteractionsCount({
@@ -62,6 +63,7 @@ const useInteractions = (
         })
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -88,7 +90,7 @@ const useInteractions = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -118,6 +120,7 @@ const useInteractions = (
         })
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -144,7 +147,7 @@ const useInteractions = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -172,6 +175,7 @@ const useInteractions = (
         })
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setInteractionsLoading((prev) => {

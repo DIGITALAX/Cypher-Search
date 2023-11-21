@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { DecodedMessage, Client, Conversation } from "@xmtp/react-sdk";
 import { DIGITALAX_ADDRESS } from "../../../../lib/constants";
 import { createWalletClient, custom } from "viem";
-import { polygonMumbai, polygon } from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { ScreenDisplay } from "../types/autograph.types";
 import { LimitType, Profile } from "../../../../graphql/generated";
 import { init, fetchQuery } from "@airstack/airstack-react";
@@ -49,7 +49,7 @@ const useConversations = (
       const profileSearch = await searchProfiles({
         limit: LimitType.TwentyFive,
         query: e.target.value,
-      });
+      }, lensConnected?.id);
 
       setSearchedProfiles(
         (profileSearch?.data?.searchProfiles?.items?.filter(
@@ -88,12 +88,13 @@ const useConversations = (
     try {
       const clientWallet = createWalletClient({
         account: address,
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
       const client = await Client.create(clientWallet, {
         env: "production",
+        
       });
       setClient(client);
 

@@ -6,6 +6,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import setPostMedia from "../../../../lib/helpers/setPostMedia";
 import { ImCross } from "react-icons/im";
 import { setPostCollectGif } from "../../../../redux/reducers/postCollectGifSlice";
+import Waveform from "./Screen/Waveform";
 
 const PostComment: FunctionComponent<PostCommentProps> = ({
   commentPost,
@@ -204,17 +205,26 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                         draggable={false}
                       />
                     ) : (
-                      <video
-                        draggable={false}
-                        controls={false}
-                        muted
-                        // autoPlay
-                        playsInline
-                        loop
-                        className="object-cover w-full h-full flex items-center justify-center rounded-md"
-                      >
-                        <source src={media?.item} />
-                      </video>
+                      <>
+                        <video
+                          draggable={false}
+                          controls={false}
+                          muted
+                          // autoPlay
+                          id={media?.item}
+                          playsInline
+                          loop
+                          className="object-cover w-full h-full flex items-center justify-center rounded-md"
+                        >
+                          <source src={media?.item} />
+                        </video>
+                        <Waveform
+                          keyValue={media?.item}
+                          audio={media?.item}
+                          video={media?.item}
+                          type="video"
+                        />
+                      </>
                     )}
                     <div
                       className="absolute w-5 h-5 bg-black p-px -right-2 -top-2 bg-black rounded-full cursor-pointer flex items-center justify-center border border-white"

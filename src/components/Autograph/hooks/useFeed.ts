@@ -6,6 +6,7 @@ import {
   Profile,
   PublicationType,
   Quote,
+  Comment,
 } from "../../../../graphql/generated";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensComment from "../../../../lib/helpers/api/commentPost";
@@ -21,6 +22,8 @@ import lensHide from "../../../../lib/helpers/api/hidePost";
 import { MakePostComment } from "../types/autograph.types";
 import { Dispatch } from "redux";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { decryptPost } from "../../../../lib/helpers/decryptPost";
 
 const useFeed = (
   lensConnected: Profile | undefined,
@@ -35,7 +38,12 @@ const useFeed = (
     []
   );
   const [openMoreOptions, setOpenMoreOptions] = useState<boolean[]>([]);
-  const [profileFeed, setProfileFeed] = useState<(Post | Quote | Mirror)[]>([]);
+  const [profileFeed, setProfileFeed] = useState<
+    ((Post | Quote | Mirror) & {
+      decrypted: any;
+    })[]
+  >([]);
+  const [decryptLoading, setDecryptLoading] = useState<boolean[]>([]);
   const [hasMoreFeed, setHasMoreFeed] = useState<boolean>(false);
   const [feedLoading, setFeedLoading] = useState<boolean>(false);
   const [commentsFeedOpen, setCommentsFeedOpen] = useState<boolean[]>([]);
@@ -72,12 +80,16 @@ const useFeed = (
               PublicationType.Mirror,
               PublicationType.Quote,
             ],
-            
           },
         },
         lensConnected?.id
       );
-      setProfileFeed(data?.publications?.items as any);
+
+      setProfileFeed(
+        data?.publications?.items as ((Post | Quote | Mirror) & {
+          decrypted: any;
+        })[]
+      );
       setFeedCursor(data?.publications?.pageInfo?.next);
       if (
         data?.publications?.items &&
@@ -151,15 +163,17 @@ const useFeed = (
 
     try {
       const contentURI = await uploadPostContent(
-        makeCommentFeed[index]?.content,
-        makeCommentFeed[index]?.images!,
-        makeCommentFeed[index]?.videos!,
+        makeCommentFeed[index]?.content?.trim() == ""
+          ? " "
+          : makeCommentFeed[index]?.content,
+        makeCommentFeed[index]?.images || [],
+        makeCommentFeed[index]?.videos || [],
         [],
         postCollectGif?.gifs?.[id]!
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -167,19 +181,22 @@ const useFeed = (
         id,
         contentURI?.string!,
         dispatch,
-        [
-          {
-            collectOpenAction: {
-              simpleCollectOpenAction: postCollectGif?.collectTypes?.[id],
-            },
-          },
-        ],
+        postCollectGif?.collectTypes?.[id]
+          ? [
+              {
+                collectOpenAction: {
+                  simpleCollectOpenAction: postCollectGif?.collectTypes?.[id],
+                },
+              },
+            ]
+          : undefined,
         address as `0x${string}`,
         clientWallet,
         publicClient,
         () => clearComment(index)
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -207,7 +224,7 @@ const useFeed = (
     });
   };
 
-  const feedLike = async (id: string) => {
+  const feedLike = async (id: string, hasReacted: boolean) => {
     const index = profileFeed?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
@@ -219,8 +236,9 @@ const useFeed = (
     });
 
     try {
-      await lensLike(id, dispatch);
+      await lensLike(id, dispatch, hasReacted);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -245,7 +263,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -258,6 +276,7 @@ const useFeed = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -281,7 +300,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -292,6 +311,7 @@ const useFeed = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -311,6 +331,7 @@ const useFeed = (
     try {
       await lensHide(id, dispatch);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setInteractionsFeedLoading((prev) => {
@@ -329,6 +350,7 @@ const useFeed = (
     try {
       await lensBookmark(on, dispatch);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setInteractionsFeedLoading((prev) => {
@@ -338,11 +360,38 @@ const useFeed = (
     });
   };
 
+  const handleDecrypt = async (post: Post | Quote | Comment) => {
+    const index = profileFeed?.findIndex((item) => (item.id = post.id));
+    if (index == -1) {
+      return;
+    }
+    setDecryptLoading((prev) => {
+      const arr = [...prev];
+      arr[index] = true;
+      return arr;
+    });
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await decryptPost(post, clientWallet, dispatch, setProfileFeed, false);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setDecryptLoading((prev) => {
+      const arr = [...prev];
+      arr[index] = false;
+      return arr;
+    });
+  };
+
   useEffect(() => {
-    if (profileFeed?.length < 1) {
+    if (profileFeed?.length < 1 && profile?.id) {
       getFeed();
     }
-  }, []);
+  }, [profile?.id, lensConnected?.id]);
 
   useEffect(() => {
     if (postSuccess) {
@@ -363,6 +412,9 @@ const useFeed = (
         }))
       );
       setOpenMoreOptions(
+        Array.from({ length: profileFeed.length }, () => false)
+      );
+      setDecryptLoading(
         Array.from({ length: profileFeed.length }, () => false)
       );
       setCommentsFeedOpen(
@@ -410,6 +462,8 @@ const useFeed = (
     commentContentLoading,
     setCommentContentLoading,
     profileFeed,
+    handleDecrypt,
+    decryptLoading,
   };
 };
 

@@ -24,9 +24,10 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   followProfile,
   unfollowProfile,
   simpleCollect,
+  lensConnected
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
+    <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4" id={publication?.id}>
       {layoutAmount === 4 ? (
         <>
           <div
@@ -161,6 +162,8 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     index={index}
                     setProfileHovers={setProfileHovers}
                     dispatch={dispatch}
+                    lensConnected={lensConnected}
+                    parentId={publication?.id}
                   />
                 )}
                 <div
@@ -240,15 +243,15 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     publication?.__typename === "Mirror"
                       ? !publication?.mirrorOn.operations?.actedOn &&
                         (publication?.mirrorOn?.openActionModules?.[0]
-                          .__typename === "SimpleCollectOpenActionSettings" ||
+                          ?.__typename === "SimpleCollectOpenActionSettings" ||
                           publication?.mirrorOn?.openActionModules?.[0]
-                            .__typename ===
+                            ?.__typename ===
                             "MultirecipientFeeCollectOpenActionSettings")
                       : !(publication as Post)?.operations?.actedOn &&
                         ((publication as Post)?.openActionModules?.[0]
-                          .__typename !== "SimpleCollectOpenActionSettings" ||
+                          ?.__typename !== "SimpleCollectOpenActionSettings" ||
                           (publication as Post)?.openActionModules?.[0]
-                            .__typename ===
+                            ?.__typename ===
                             "MultirecipientFeeCollectOpenActionSettings")
                   )
                     ? (simpleCollect as

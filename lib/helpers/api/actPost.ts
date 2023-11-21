@@ -39,7 +39,7 @@ const actPost = async (
       signature,
     });
 
-    if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+    if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
       await handleIndexCheck(
         {
           forTxId: broadcastResult?.data?.broadcastOnchain.txId,
@@ -51,7 +51,7 @@ const actPost = async (
         address: LENS_HUB_PROXY_ADDRESS_MATIC,
         abi: LensHubProxy,
         functionName: "act",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [
           {
             publicationActedProfileId:

@@ -9,7 +9,8 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
   quote,
   dispatch,
   router,
-  index,
+  pink,
+  disabled,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(quote?.by?.metadata?.picture);
   return (
@@ -17,16 +18,30 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
       className="relative w-full h-60 overflow-y-hidden px-5 py-1 flex items-start justify-center"
       id="fadedQuote"
     >
-      <div className="relative w-full h-full p-2 flex items-center justify-start flex-col from-offBlack to-black bg-gradient-to-r rounded-md gap-5 cursor-pointer">
+      <div
+        className={`relative w-full h-full p-2 flex items-center justify-start flex-col ${
+          pink ? "from-lirio" : "from-offBlack cursor-pointer"
+        } to-black bg-gradient-to-r rounded-md gap-5`}
+        onClick={(e) => {
+          e.stopPropagation();
+          !pink && router.push(`/item/pub/${quote?.id}`);
+        }}
+      >
         <div className="relative w-full h-fit flex flex-row items-center justify-center gap-2 px-1">
           <div className="relative w-fit h-fit flex items-center justify-center gap-1 mr-auto">
             <div className="relative w-fit h-fit flex items-center justify-center">
               <div
-                className="relative flex items-center justify-center rounded-full w-5 h-5 cursor-pointer"
+                className="relative flex items-center justify-center rounded-full w-5 h-5"
                 id="pfp"
               >
                 {profilePicture && (
-                  <Image layout="fill" src={profilePicture} draggable={false} />
+                  <Image
+                    layout="fill"
+                    src={profilePicture}
+                    draggable={false}
+                    className="rounded-full"
+                    objectFit="cover"
+                  />
                 )}
               </div>
             </div>
@@ -55,8 +70,7 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
           <PostSwitch
             item={quote}
             dispatch={dispatch}
-            router={router}
-            index={index}
+            disabled={disabled}
           />
         </div>
       </div>

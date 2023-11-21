@@ -97,6 +97,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                                   layout="fill"
                                   src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
                                   className="rounded-sm"
+                                  objectFit="cover"
                                 />
                               </div>
                             </div>

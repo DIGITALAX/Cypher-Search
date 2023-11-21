@@ -28,7 +28,13 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
             <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto px-4">
               {!type?.includes("video") ? (
                 <Image
-                  src={`${INFURA_GATEWAY}/ipfs/${mainImage}`}
+                  src={
+                    mainImage?.includes("ipfs://")
+                      ? `${INFURA_GATEWAY}/ipfs/${
+                          mainImage?.split("ipfs://")?.[1]
+                        }`
+                      : mainImage
+                  }
                   layout="fill"
                   objectFit="contain"
                   draggable={false}
@@ -44,7 +50,13 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
                   loop
                 >
                   <source
-                    src={`${INFURA_GATEWAY}/ipfs/${mainImage}`}
+                    src={
+                      mainImage?.includes("ipfs://")
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            mainImage?.split("ipfs://")?.[1]
+                          }`
+                        : mainImage
+                    }
                     type="video/mp4"
                   />
                 </video>

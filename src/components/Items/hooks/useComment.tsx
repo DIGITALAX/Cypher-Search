@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
-import {
-  Comment,
-  CommentRankingFilterType,
-  LimitType,
-  Profile,
-} from "../../../../graphql/generated";
+import { Comment, LimitType, Profile } from "../../../../graphql/generated";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { AnyAction, Dispatch } from "redux";
 import lensHide from "../../../../lib/helpers/api/hidePost";
 import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
-import { polygon , polygonMumbai} from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { PublicClient, createWalletClient, custom } from "viem";
 import lensComment from "../../../../lib/helpers/api/commentPost";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
@@ -20,6 +15,7 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import { NextRouter } from "next/router";
 import { Creation } from "@/components/Tiles/types/tiles.types";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useComment = (
   address: `0x${string}` | undefined,
@@ -33,7 +29,11 @@ const useComment = (
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);
-  const [allComments, setAllComments] = useState<Comment[]>([]);
+  const [allComments, setAllComments] = useState<
+    (Comment & {
+      decrypted: any;
+    })[]
+  >([]);
   const [openItemMirrorChoice, setOpenItemMirrorChoice] = useState<boolean[]>(
     []
   );
@@ -108,16 +108,20 @@ const useComment = (
           where: {
             commentOn: {
               id: pubId,
-              ranking: {
-                filter: CommentRankingFilterType.Relevant,
-              },
+              // ranking: {
+              //   filter: CommentRankingFilterType.Relevant,
+              // },
             },
           },
           limit: LimitType.Ten,
         },
         lensConnected?.id
       );
-      setAllComments((data?.data?.publications?.items || []) as Comment[]);
+      setAllComments(
+        (data?.data?.publications?.items || []) as (Comment & {
+          decrypted: any;
+        })[]
+      );
       setCommentCursor(data?.data?.publications?.pageInfo?.next);
       if (data?.data?.publications?.items?.length != 10) {
         setHasMoreComments(false);
@@ -137,9 +141,9 @@ const useComment = (
           where: {
             commentOn: {
               id: pubId,
-              ranking: {
-                filter: CommentRankingFilterType.Relevant,
-              },
+              // ranking: {
+              //   filter: CommentRankingFilterType.Relevant,
+              // },
             },
           },
           limit: LimitType.Ten,
@@ -149,7 +153,9 @@ const useComment = (
       );
       setAllComments([
         ...allComments,
-        ...((data?.data?.publications?.items || []) as Comment[]),
+        ...((data?.data?.publications?.items || []) as (Comment & {
+          decrypted: any;
+        })[]),
       ]);
       setCommentCursor(data?.data?.publications?.pageInfo?.next);
       if (data?.data?.publications?.items?.length != 10) {
@@ -169,6 +175,7 @@ const useComment = (
     try {
       await lensHide(id, dispatch);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setInteractionsItemsLoading((prev) => {
@@ -187,6 +194,7 @@ const useComment = (
     try {
       await lensBookmark(on, dispatch);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setInteractionsItemsLoading((prev) => {
@@ -196,21 +204,29 @@ const useComment = (
     });
   };
 
-  const simpleCollect = async (id: string, type: string) => {
-    const index = allComments?.findIndex((pub) => pub.id === id);
-    if (index === -1) {
-      return;
-    }
+  const simpleCollect = async (id: string, type: string, main: boolean) => {
+    if (main) {
+      setMainInteractionsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[0] = { ...updatedArray[0], simpleCollect: true };
+        return updatedArray;
+      });
+    } else {
+      const index = allComments?.findIndex((pub) => pub.id === id);
+      if (index === -1) {
+        return;
+      }
 
-    setInteractionsItemsLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], simpleCollect: true };
-      return updatedArray;
-    });
+      setInteractionsItemsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index] = { ...updatedArray[index], simpleCollect: true };
+        return updatedArray;
+      });
+    }
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -223,14 +239,28 @@ const useComment = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
-    setInteractionsItemsLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], simpleCollect: false };
-      return updatedArray;
-    });
+    if (main) {
+      setMainInteractionsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[0] = { ...updatedArray[0], simpleCollect: false };
+        return updatedArray;
+      });
+    } else {
+      const index = allComments?.findIndex((pub) => pub.id === id);
+      if (index === -1) {
+        return;
+      }
+
+      setInteractionsItemsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index] = { ...updatedArray[index], simpleCollect: false };
+        return updatedArray;
+      });
+    }
   };
 
   const comment = async (id: string, main?: boolean) => {
@@ -275,15 +305,15 @@ const useComment = (
 
     try {
       const contentURI = await uploadPostContent(
-        content,
-        images,
-        videos,
+        content?.trim() == "" ? " " : content,
+        images || [],
+        videos || [],
         [],
-        postCollectGif?.gifs?.[id]!
+        postCollectGif?.gifs?.[id] || []
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -291,19 +321,22 @@ const useComment = (
         id,
         contentURI?.string!,
         dispatch,
-        [
-          {
-            collectOpenAction: {
-              simpleCollectOpenAction: postCollectGif?.collectTypes?.[id],
-            },
-          },
-        ],
+        postCollectGif?.collectTypes?.[id]
+          ? [
+              {
+                collectOpenAction: {
+                  simpleCollectOpenAction: postCollectGif?.collectTypes?.[id],
+                },
+              },
+            ]
+          : undefined,
         address as `0x${string}`,
         clientWallet,
         publicClient,
         () => clearComment(index, main!)
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -388,7 +421,7 @@ const useComment = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -399,21 +432,23 @@ const useComment = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
     handleLoaders(false, main!, index, "mirror");
   };
 
-  const like = async (id: string, main?: boolean) => {
+  const like = async (id: string, hasReacted: boolean, main?: boolean) => {
     const index = main
       ? undefined
       : allComments?.findIndex((pub) => pub.id === id);
     handleLoaders(false, main!, index, "like");
 
     try {
-      await lensLike(id, dispatch);
+      await lensLike(id, dispatch, hasReacted);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -422,14 +457,18 @@ const useComment = (
 
   useEffect(() => {
     if (
-      allComments?.length < 1 &&
-      commentSwitch &&
-      pubId &&
-      !router?.asPath?.includes("microbrand")
+      (allComments?.length < 1 &&
+        pubId &&
+        !router?.asPath?.includes("microbrand")) ||
+      (allComments?.length < 1 &&
+        pubId &&
+        (router.asPath?.includes("coinop") ||
+          router.asPath?.includes("listener") ||
+          (router.asPath?.includes("chromadin") && commentSwitch)))
     ) {
       getComments();
     }
-  }, [pubId]);
+  }, [pubId, lensConnected?.id]);
 
   useEffect(() => {
     if (allComments?.length > 0 || (collections && collections?.length > 0)) {
@@ -479,6 +518,12 @@ const useComment = (
         )
       );
       setOpenInteractions(
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => false
+        )
+      );
+      setCommentsOpen(
         Array.from(
           { length: (collections ? collections : allComments).length },
           () => false

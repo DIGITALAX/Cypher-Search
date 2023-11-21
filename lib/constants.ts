@@ -2,7 +2,7 @@ import { ItemType } from "@/components/Common/types/common.types";
 import { PrintType } from "@/components/Tiles/types/tiles.types";
 
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
-export const BASE_URL: string = "https://api-v2-mumbai.lens.dev/";
+export const BASE_URL: string = "https://api-v2.lens.dev/";
 export const DIGITALAX_PROFILE_ID_LENS: string = "0x012d";
 export const LENS_HUB_PROXY_ADDRESS_MUMBAI: `0x${string}` =
   "0xC1E77eE73403B8a7478884915aA599932A677870";

@@ -35,7 +35,7 @@ const lensMirror = async (
     signature,
   });
 
-  if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+  if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
     dispatch(
       setIndexer({
         actionOpen: true,
@@ -53,7 +53,7 @@ const lensMirror = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "mirror",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [
         {
           profileId: typedData?.value.profileId,
@@ -82,12 +82,14 @@ const lensMirror = async (
       dispatch
     );
   }
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
 };
 
 export default lensMirror;

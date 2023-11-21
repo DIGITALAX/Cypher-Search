@@ -1,16 +1,17 @@
 import { FetchResult } from "@apollo/client";
-import { authClient } from "../../../lib/lens/client";
+import { authClient, apolloClient } from "../../../lib/lens/client";
 import {
+  DefaultProfileDocument,
   DefaultProfileRequest,
-  GetDefaultProfileDocument,
-  GetDefaultProfileQuery,
+  DefaultProfileQuery,
 } from "../../generated";
 
 const getDefaultProfile = async (
-  request: DefaultProfileRequest
-): Promise<FetchResult<GetDefaultProfileQuery>> => {
-  return await authClient.query({
-    query: GetDefaultProfileDocument,
+  request: DefaultProfileRequest,
+  connected: boolean
+): Promise<FetchResult<DefaultProfileQuery>> => {
+  return await (connected ? apolloClient : authClient).query({
+    query: DefaultProfileDocument,
     variables: {
       request,
     },

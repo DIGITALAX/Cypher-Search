@@ -1,5 +1,5 @@
 import { FetchResult } from "@apollo/client";
-import { authClient } from "../../../lib/lens/client";
+import { apolloClient } from "../../../lib/lens/client";
 import {
   AddPublicationBookmarkDocument,
   AddPublicationBookmarkMutation,
@@ -9,7 +9,7 @@ import {
 const bookmark = async (
   request: PublicationBookmarkRequest
 ): Promise<FetchResult<AddPublicationBookmarkMutation>> => {
-  return await authClient.mutate({
+  return await apolloClient.mutate({
     mutation: AddPublicationBookmarkDocument,
     variables: {
       request: request,

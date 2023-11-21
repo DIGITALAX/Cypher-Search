@@ -12,7 +12,6 @@ const Header: FunctionComponent<HeaderProps> = ({
   searchInput,
   setSearchInput,
   openConnectModal,
-  openAccountModal,
   handleLensConnect,
   walletConnected,
   lensConnected,
@@ -29,7 +28,8 @@ const Header: FunctionComponent<HeaderProps> = ({
   setCartListOpen,
   router,
   includeSearch,
-  cartAnim
+  cartAnim,
+  handleLogout,
 }): JSX.Element => {
   return (
     <div
@@ -78,7 +78,7 @@ const Header: FunctionComponent<HeaderProps> = ({
         signInLoading={signInLoading}
         setCartListOpen={setCartListOpen}
         router={router}
-        openAccountModal={openAccountModal}
+        handleLogout={handleLogout}
         dispatch={dispatch}
       />
     </div>

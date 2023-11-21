@@ -44,7 +44,7 @@ const lensCollect = async (
     signature,
   });
 
-  if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+  if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
     await handleIndexCheck(
       {
         forTxId: broadcastResult?.data?.broadcastOnchain.txId,
@@ -56,7 +56,7 @@ const lensCollect = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "act",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [
         {
           publicationActedProfileId: typedData?.value.publicationActedProfileId,
@@ -86,12 +86,14 @@ const lensCollect = async (
       dispatch
     );
   }
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
 };
 
 export default lensCollect;

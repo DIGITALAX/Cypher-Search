@@ -15,10 +15,11 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   followLoading,
   setProfileHovers,
   profileHovers,
-  dispatch
+  dispatch,
+  lensConnected
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
+    <div className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4" id={publication?.txHash}>
       <div className="relative p-px rounded-sm border border-pez w-full h-20 flex-row gap-6 items-center justify-start flex bg-white">
         <div className="relative w-full h-full opacity-70 flex">
           <Image
@@ -67,6 +68,8 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
             followProfile={followProfile}
             unfollowProfile={unfollowProfile}
             setProfileHovers={setProfileHovers}
+            lensConnected={lensConnected}
+            parentId={publication?.txHash}
           />
         )}
         <div
@@ -78,7 +81,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
           yawp11
         </div>
       </div>
-      <Stats />
+      <Stats dispatch={dispatch} profile={publication} />
     </div>
   );
 };

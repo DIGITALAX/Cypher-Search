@@ -39,6 +39,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   setHeart,
   searchItems,
   moreSearchLoading,
+  lensConnected
 }): JSX.Element => {
   const renderTile = ({
     index,
@@ -52,6 +53,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
     ) : (
       <TileSwitch
         type={data?.type}
+        lensConnected={lensConnected}
         publication={data}
         cartItems={cartItems}
         layoutAmount={layoutAmount}
@@ -98,9 +100,12 @@ const Tiles: FunctionComponent<TilesProps> = ({
         loader={<></>}
         hasMore={searchItems?.hasMore || false}
         next={handleMoreSearch}
-        className={`w-full h-full items-start justify-center ${
+        className={`w-full h-screen items-start justify-center ${
           searchActive && "fadeTiles"
         }`}
+        style={{
+          height: "100vh"
+        }}
       >
         <Masonry
           key={

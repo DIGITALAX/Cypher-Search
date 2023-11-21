@@ -31,6 +31,7 @@ const Filters: FunctionComponent<FilterProps> = ({
   followLoading,
   profileHovers,
   setProfileHovers,
+  lensConnected
 }): JSX.Element => {
   return (
     <div
@@ -42,6 +43,7 @@ const Filters: FunctionComponent<FilterProps> = ({
           type={
             ["chromadin", "coinop", "listener"][Math.floor(Math.random() * 3)]
           }
+          lensConnected={lensConnected}
           publication={publication}
           layoutAmount={layoutAmount}
           popUpOpen={popUpOpen}

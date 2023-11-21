@@ -16,11 +16,12 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
   hasMore,
   mirrorQuote,
   dispatch,
+  lensConnected,
 }): JSX.Element => {
   switch (type) {
     case "Quote":
       return (
-        <div className="relative w-full h-[60vh] flex flex-col overflow-y-scroll">
+        <div className="relative w-full h-full flex flex-col overflow-y-scroll">
           <InfiniteScroll
             dataLength={quoters?.length}
             loader={<></>}
@@ -28,18 +29,26 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
             next={showMore}
             className="w-fit h-fit items-start justify-start flex flex-col gap-10"
           >
-            {quoters?.map((item: Quote, index: number) => {
-              return (
-                <Publication
-                  index={index}
-                  item={item}
-                  router={router}
-                  disabled={true}
-                  dispatch={dispatch}
-                  data-post-id={item?.id}
-                />
-              );
-            })}
+            {quoters?.map(
+              (
+                item: Quote & {
+                  decrypted: any;
+                },
+                index: number
+              ) => {
+                return (
+                  <Publication
+                    lensConnected={lensConnected}
+                    index={index}
+                    item={item}
+                    router={router}
+                    disabled={true}
+                    dispatch={dispatch}
+                    data-post-id={item?.id}
+                  />
+                );
+              }
+            )}
           </InfiniteScroll>
         </div>
       );
@@ -48,7 +57,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
       return (
         <>
           {reactors?.length > 0 && !mirrorQuote ? (
-            <div className="relative w-full h-fit flex flex-col">
+            <div className="relative w-full h-full flex flex-col">
               <InfiniteScroll
                 hasMore={hasMore}
                 dataLength={reactors?.length}
@@ -57,37 +66,37 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                 height={"10rem"}
                 className="relative w-full h-fit flex flex-col px-4 gap-2 overflow-y-scroll"
               >
-                {reactors?.map((account: any, index: number) => {
-                  const reacter: Profile =
-                    type === "Likes" ||
-                    type === "Acts" ||
-                    type === "Followers" ||
-                    type === "Following"
-                      ? account.profile
-                      : account;
+                {reactors?.map((reactor: any, index: number) => {
+                  const account =
+                    type === "Likes"
+                      ? reactor?.profile
+                      : type === "Mirrors"
+                      ? reactor?.by
+                      : reactor;
 
                   const profileImage = createProfilePicture(
-                    reacter?.metadata?.picture
+                    account?.metadata?.picture
                   );
 
                   return (
                     <div
                       key={index}
-                      className="relative w-full h-fit p-2 drop-shadow-lg flex flex-row bg-gradient-to-r from-offBlack via-gray-600 to-black auto-cols-auto rounded-lg border border-black top-px font-bit text-white cursor-pointer"
+                      className="relative w-full h-fit p-2 flex flex-row rounded-lg border border-black items-center justify-start font-bit text-white cursor-pointer"
+                      id="preroll"
                       onClick={() =>
                         router.push(
                           `/autograph/${
-                            reacter?.handle?.suggestedFormatted?.localName?.split(
+                            account?.handle?.suggestedFormatted?.localName?.split(
                               "@"
                             )[1]
                           }`
                         )
                       }
                     >
-                      <div className="relative w-fit h-fit flex flex-row gap-6">
+                      <div className="relative w-fit h-fit flex flex-row gap-3 items-center justify-center">
                         <div
-                          className="relative w-6 h-6 rounded-full col-start-1"
-                          id="crt"
+                          className="relative w-6 h-6 rounded-full border border-white items-center justify-center"
+                          id="pfp"
                         >
                           {profileImage && (
                             <Image
@@ -102,9 +111,9 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                         </div>
                         <div
                           id="handle"
-                          className="relative w-fit h-fit justify-center flex"
+                          className="relative w-fit h-fit justify-center items-center flex top-px text-xs"
                         >
-                          {reacter?.handle?.suggestedFormatted?.localName}
+                          {account?.handle?.suggestedFormatted?.localName}
                         </div>
                       </div>
                     </div>
@@ -115,7 +124,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
           ) : (
             quoters.length > 0 &&
             mirrorQuote && (
-              <div className="relative w-full h-fit flex flex-col">
+              <div className="relative w-full h-full flex flex-col">
                 <InfiniteScroll
                   hasMore={hasMoreQuote}
                   dataLength={quoters?.length}
@@ -124,28 +133,29 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                   height={"10rem"}
                   className="relative w-full h-fit flex flex-col px-4 gap-2 overflow-y-scroll"
                 >
-                  {quoters?.map((quoter: Profile, index: number) => {
+                  {quoters?.map((quoter: any, index: number) => {
                     const profileImage = createProfilePicture(
-                      quoter?.metadata?.picture
+                      quoter?.by?.metadata?.picture
                     );
                     return (
                       <div
                         key={index}
-                        className="relative w-full h-fit p-2 drop-shadow-lg flex flex-row bg-gradient-to-r from-offBlack via-gray-600 to-black auto-cols-auto rounded-lg border border-black top-px font-bit text-white cursor-pointer"
+                        className="relative w-full h-fit p-2 flex flex-row rounded-lg border border-black items-center justify-start font-bit text-white cursor-pointer"
+                        id="preroll"
                         onClick={() =>
                           router.push(
                             `/autograph/${
-                              quoter?.handle?.suggestedFormatted?.localName?.split(
+                              quoter?.by?.handle?.suggestedFormatted?.localName?.split(
                                 "@"
                               )[1]
                             }`
                           )
                         }
                       >
-                        <div className="relative w-fit h-fit flex flex-row gap-6">
+                        <div className="relative w-fit h-fit flex flex-row gap-3 items-center justify-center">
                           <div
-                            className="relative w-6 h-6 rounded-full col-start-1"
-                            id="crt"
+                            className="relative w-6 h-6 rounded-full border border-white items-center justify-center"
+                            id="pfp"
                           >
                             {profileImage && (
                               <Image
@@ -160,9 +170,9 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                           </div>
                           <div
                             id="handle"
-                            className="relative w-fit h-fit justify-center flex"
+                            className="relative w-fit h-fit justify-center items-center flex top-px text-xs"
                           >
-                            {quoter?.handle?.suggestedFormatted?.localName}
+                            {quoter?.by?.handle?.suggestedFormatted?.localName}
                           </div>
                         </div>
                       </div>

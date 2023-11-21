@@ -26,7 +26,7 @@ const lensFollow = async (
       },
     ],
   });
-
+  
   const typedData = data?.createFollowTypedData?.typedData;
 
   const signature = await clientWallet.signTypedData({
@@ -42,7 +42,7 @@ const lensFollow = async (
     signature,
   });
 
-  if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+  if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
     dispatch(
       setIndexer({
         actionOpen: true,
@@ -61,7 +61,7 @@ const lensFollow = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "follow",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [
         typedData?.value?.followerProfileId,
         typedData?.value?.idsOfProfilesToFollow,
@@ -86,12 +86,14 @@ const lensFollow = async (
     );
   }
 
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
 };
 
 export default lensFollow;

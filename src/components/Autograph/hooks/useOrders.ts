@@ -103,7 +103,7 @@ const useOrders = (
       }
 
       const authSig = await checkAndSignAuthMessage({
-        chain: "polygonMumbai",
+        chain: "polygon",
       });
 
       const decryptedString = await decryptToString(
@@ -114,7 +114,7 @@ const useOrders = (
           ciphertext: (order?.details as EncryptedDetails).ciphertext,
           dataToEncryptHash: (order?.details as EncryptedDetails)
             .dataToEncryptHash,
-          chain: "polygonMumbai",
+          chain: "polygon",
         },
         client
       );

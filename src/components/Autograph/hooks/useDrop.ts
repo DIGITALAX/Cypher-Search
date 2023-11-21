@@ -10,7 +10,6 @@ import { COLLECTION_CREATOR, INFURA_GATEWAY } from "../../../../lib/constants";
 import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
 
 const useDrop = (
-  lensConnected: Profile | undefined,
   screenDisplay: ScreenDisplay,
   publicClient: PublicClient,
   dispatch: Dispatch,
@@ -48,7 +47,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -75,7 +74,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "updateDrop",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [
           dropDetails?.collectionIds?.map((item) => Number(item)),
           "ipfs://" + dropURI,
@@ -97,7 +96,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -105,7 +104,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "removeDrop",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [Number(dropDetails?.dropId)],
         account: address,
       });
@@ -123,7 +122,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       const response = await fetch("/api/ipfs", {
@@ -139,7 +138,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "createDrop",
-        chain: polygonMumbai,
+        chain: polygon,
         args: ["ipfs://" + dropURI],
         account: address,
       });

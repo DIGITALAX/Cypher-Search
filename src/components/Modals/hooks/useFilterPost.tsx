@@ -1,10 +1,24 @@
-import { Publication } from "@/components/Tiles/types/tiles.types";
+import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { useEffect, useState } from "react";
 import { getOneRandomCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
 import getPublication from "../../../../graphql/lens/queries/publication";
 import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
+import { PublicClient, createWalletClient, custom } from "viem";
+import { polygon } from "viem/chains";
+import lensFollow from "../../../../lib/helpers/api/followProfile";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
+import { AnyAction, Dispatch } from "redux";
+import { Profile } from "../../../../graphql/generated";
+import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 
-const useFilterPost = (filtersOpen: FiltersOpenState) => {
+const useFilterPost = (
+  filtersOpen: FiltersOpenState,
+  dispatch: Dispatch<AnyAction>,
+  address: `0x${string}` | undefined,
+  publicClient: PublicClient,
+  lensConnected: Profile | undefined
+) => {
   const [publication, setPublication] = useState<Publication>();
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>(
     Array.from(
@@ -38,14 +52,7 @@ const useFilterPost = (filtersOpen: FiltersOpenState) => {
       })
     )
   );
-  const [profileHovers, setProfileHovers] = useState<boolean[]>(
-    Array.from(
-      {
-        length: 1,
-      },
-      () => false
-    )
-  );
+  const [profileHovers, setProfileHovers] = useState<boolean[]>([false]);
   const [openMirrorChoice, setOpenMirrorChoice] = useState<boolean[]>(
     Array.from(
       {
@@ -98,17 +105,70 @@ const useFilterPost = (filtersOpen: FiltersOpenState) => {
   };
 
   const unfollowProfile = async () => {
+    setFollowLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[0] = true;
+      return updatedArray;
+    });
+
     try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensUnfollow(
+        (publication?.post as Creation)?.publication?.by?.id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
+
+    setFollowLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[0] = false;
+      return updatedArray;
+    });
   };
 
   const followProfile = async () => {
+    setFollowLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[0] = true;
+      return updatedArray;
+    });
+
     try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await lensFollow(
+        (publication?.post as Creation)?.publication?.by?.id,
+        dispatch,
+        undefined,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
+
+    setFollowLoading((prev) => {
+      const updatedArray = [...prev];
+      updatedArray[0] = false;
+      return updatedArray;
+    });
   };
 
   const getCollection = async () => {
@@ -121,9 +181,12 @@ const useFilterPost = (filtersOpen: FiltersOpenState) => {
         ["chromadin", "coinop", "listener"][Math.floor(Math.random() * 3)]
       );
       if (!data?.data?.collectionCreateds) return;
-      const pubData = await getPublication({
-        forId: data?.data?.collectionCreateds?.[0]?.pubId,
-      });
+      const pubData = await getPublication(
+        {
+          forId: data?.data?.collectionCreateds?.[0]?.pubId,
+        },
+        lensConnected?.id
+      );
       setPublication({
         publishedOn: origin,
         post: {
@@ -143,7 +206,7 @@ const useFilterPost = (filtersOpen: FiltersOpenState) => {
     } else {
       setPublication(undefined);
     }
-  }, [filtersOpen?.value]);
+  }, [filtersOpen?.value, lensConnected?.id]);
 
   return {
     popUpOpen,

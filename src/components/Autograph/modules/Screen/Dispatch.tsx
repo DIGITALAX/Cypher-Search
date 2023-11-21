@@ -145,7 +145,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         ) : (
                           <video
                             className="relative rounded-sm w-full h-full flex object-cover"
-                            id="videoCollection"
+                            id={collectionDetails?.video}
                             draggable={false}
                             controls={false}
                             muted
@@ -460,7 +460,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       >
                         <Image
                           src={`${INFURA_GATEWAY}/ipfs/${item[0]}`}
-                          className="flex"
+                          className="flex rounded-full"
                           draggable={false}
                           width={30}
                           height={35}
@@ -584,8 +584,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 {collectionSettings?.accessOpen && (
                   <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
                     <div className="relative w-full h-fit flex flex-col items-center justify-start">
-                      {filterConstants?.access?.map(
-                        (item: string, index: number) => {
+                      {filterConstants?.access
+                        ?.map((item) => item[0])
+                        ?.map((item: string, index: number) => {
                           return (
                             <div
                               key={index}
@@ -617,8 +618,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                               </div>
                             </div>
                           );
-                        }
-                      )}
+                        })}
                     </div>
                   </div>
                 )}

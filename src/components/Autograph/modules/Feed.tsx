@@ -33,6 +33,9 @@ const Feed: FunctionComponent<FeedProps> = ({
   contentLoading,
   setContentLoading,
   postCollectGif,
+  lensConnected,
+  handleDecrypt,
+  decryptLoading,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -47,58 +50,76 @@ const Feed: FunctionComponent<FeedProps> = ({
           Recent Updates
         </div>
         <div
-          className="relative flex items-start justify-center left-20"
-          id="feedWrapper"
+          className={`relative flex items-start justify-center w-fit h-full ${
+            profileFeed?.length < 1 ? "left-auto" : "left-20"
+          }`}
+          id={profileFeed?.length < 1 ? "" : "feedWrapper"}
         >
           <div
-            className="relative w-fit h-[200rem] flex items-start  justify-center overflow-y-scroll"
-            id="feed"
+            className={`relative h-[200rem] flex items-start  justify-center overflow-y-scroll ${
+              profileFeed?.length < 1 ? "w-full" : "w-fit"
+            }`}
+            id={profileFeed?.length < 1 ? "" : "feed"}
           >
-            <InfiniteScroll
-              dataLength={profileFeed?.length}
-              loader={<></>}
-              hasMore={hasMoreFeed}
-              next={getMoreFeed}
-              className="w-fit h-fit items-start justify-start flex flex-col gap-10"
-            >
-              {profileFeed?.map(
-                (item: Post | Quote | Mirror, index: number) => {
-                  return (
-                    <Publication
-                      data-post-id={item?.id}
-                      key={index}
-                      index={index}
-                      item={item}
-                      mirror={mirror}
-                      like={like}
-                      comment={comment}
-                      simpleCollect={simpleCollect}
-                      dispatch={dispatch}
-                      openMirrorChoice={openMirrorChoice}
-                      setOpenMirrorChoice={setOpenMirrorChoice}
-                      interactionsLoading={interactionsLoading}
-                      router={router}
-                      followProfile={followProfile}
-                      unfollowProfile={unfollowProfile}
-                      followLoading={followLoading}
-                      profileHovers={profileHovers}
-                      setProfileHovers={setProfileHovers}
-                      setOpenMoreOptions={setOpenMoreOptions}
-                      openMoreOptions={openMoreOptions}
-                      handleHidePost={handleHidePost}
-                      handleBookmark={handleBookmark}
-                      setMakePostComment={setMakeComment}
-                      makeComment={makeComment}
-                      setCommentsOpen={setCommentsOpen}
-                      commentsOpen={commentsOpen}
-                      contentLoading={contentLoading}
-                      setContentLoading={setContentLoading}
-                      postCollectGif={postCollectGif}
-                    />
-                  );
-                }
-              )}
-            </InfiniteScroll>
+            {profileFeed?.length < 1 ? (
+              <div className="relative w-fit h-fit flex items-start justify-center text-center font-bit text-lirio text-xs">
+                Nothing to see here yet, check back soon.
+              </div>
+            ) : (
+              <InfiniteScroll
+                dataLength={profileFeed?.length}
+                loader={<></>}
+                hasMore={hasMoreFeed}
+                next={getMoreFeed}
+                className="w-fit h-fit items-start justify-start flex flex-col gap-10"
+              >
+                {profileFeed?.map(
+                  (
+                    item: (Post | Quote | Mirror) & {
+                      decrypted: any;
+                    },
+                    index: number
+                  ) => {
+                    return (
+                      <Publication
+                        decryptLoading={decryptLoading?.[index]}
+                        handleDecrypt={handleDecrypt}
+                        data-post-id={item?.id}
+                        key={index}
+                        lensConnected={lensConnected}
+                        index={index}
+                        item={item}
+                        mirror={mirror}
+                        like={like}
+                        comment={comment}
+                        simpleCollect={simpleCollect}
+                        dispatch={dispatch}
+                        openMirrorChoice={openMirrorChoice}
+                        setOpenMirrorChoice={setOpenMirrorChoice}
+                        interactionsLoading={interactionsLoading}
+                        router={router}
+                        followProfile={followProfile}
+                        unfollowProfile={unfollowProfile}
+                        followLoading={followLoading}
+                        profileHovers={profileHovers}
+                        setProfileHovers={setProfileHovers}
+                        setOpenMoreOptions={setOpenMoreOptions}
+                        openMoreOptions={openMoreOptions}
+                        handleHidePost={handleHidePost}
+                        handleBookmark={handleBookmark}
+                        setMakePostComment={setMakeComment}
+                        makeComment={makeComment}
+                        setCommentsOpen={setCommentsOpen}
+                        commentsOpen={commentsOpen}
+                        contentLoading={contentLoading}
+                        setContentLoading={setContentLoading}
+                        postCollectGif={postCollectGif}
+                      />
+                    );
+                  }
+                )}
+              </InfiniteScroll>
+            )}
           </div>
         </div>
       </div>

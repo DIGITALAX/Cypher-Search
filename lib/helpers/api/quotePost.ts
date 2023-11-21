@@ -10,6 +10,8 @@ import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import cleanCollect from "../cleanCollect";
+import validateMetadata from "../../../graphql/lens/queries/validate";
+import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 
 const lensQuote = async (
   quoteOn: string,
@@ -18,7 +20,8 @@ const lensQuote = async (
   openActionModules: InputMaybe<OpenActionModuleInput[]> | undefined,
   address: `0x${string}`,
   clientWallet: WalletClient,
-  publicClient: PublicClient
+  publicClient: PublicClient,
+  closeBox?: () => void
 ): Promise<void> => {
   if (
     openActionModules &&
@@ -28,6 +31,16 @@ const lensQuote = async (
     )
   ) {
     openActionModules = cleanCollect(openActionModules);
+  }
+
+  const metadata = await validateMetadata({
+    rawURI: contentURI,
+  });
+
+
+  if (!metadata?.data?.validatePublicationMetadata.valid) {
+    dispatch(setInteractError(true))
+    return;
   }
 
   const data = await quotePost({
@@ -58,6 +71,7 @@ const lensQuote = async (
         actionMessage: "Indexing Interaction",
       })
     );
+    closeBox && closeBox();
     await handleIndexCheck(
       {
         forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
@@ -69,7 +83,7 @@ const lensQuote = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "quote",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [
         {
           profileId: typedData?.value.profileId,
@@ -94,6 +108,7 @@ const lensQuote = async (
         actionMessage: "Indexing Interaction",
       })
     );
+    closeBox && closeBox();
     const tx = await publicClient.waitForTransactionReceipt({ hash: res });
     await handleIndexCheck(
       {
@@ -102,12 +117,14 @@ const lensQuote = async (
       dispatch
     );
   }
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
 };
 
 export default lensQuote;

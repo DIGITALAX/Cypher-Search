@@ -17,6 +17,7 @@ const Who: FunctionComponent<WhoProps> = ({
   type,
   router,
   dispatch,
+  lensConnected,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -28,27 +29,32 @@ const Who: FunctionComponent<WhoProps> = ({
                 <ImCross
                   color="white"
                   size={10}
-                  onClick={() =>
+                  onClick={() => {
                     dispatch(
                       setReactBox({
                         actionOpen: false,
                       })
-                    )
-                  }
+                    );
+                    setMirrorQuote(false);
+                  }}
                 />
               </div>
               {type === "Mirrors" &&
                 (reactors?.length > 0 || quoters?.length > 1) && (
                   <div className="relative w-fit h-fit flex items-center justify-center rounded-md font-bit text-white border border-white text-xs md:text-sm">
                     <div
-                      className="relative w-16 md:w-20 h-fit flex items-center justify-center top-px px-2 py-1 hover:opacity-70 cursor-pointer"
+                      className={`relative w-16 md:w-20 h-fit flex items-center justify-center top-px px-2 py-1 hover:opacity-70 cursor-pointer ${
+                        mirrorQuote && "opacity-50"
+                      }`}
                       onClick={() => setMirrorQuote(true)}
                     >
                       Quotes
                     </div>
                     <div className="w-px h-full bg-white"></div>
                     <div
-                      className="relative w-20 h-fit flex items-center justify-center top-px px-2 py-1 hover:opacity-70 cursor-pointer"
+                      className={`relative w-20 h-fit flex items-center justify-center top-px px-2 py-1 hover:opacity-70 cursor-pointer ${
+                        !mirrorQuote && "opacity-50"
+                      }`}
                       onClick={() => setMirrorQuote(false)}
                     >
                       Mirrors
@@ -57,6 +63,7 @@ const Who: FunctionComponent<WhoProps> = ({
                 )}
               <WhoSwitch
                 router={router}
+                lensConnected={lensConnected}
                 type={type}
                 reactors={reactors}
                 quoters={quoters}

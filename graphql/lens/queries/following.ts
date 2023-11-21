@@ -1,5 +1,5 @@
 import { FetchResult } from "@apollo/client";
-import { authClient } from "../../../lib/lens/client";
+import { apolloClient, authClient } from "../../../lib/lens/client";
 import {
   FollowingQuery,
   FollowingRequest,
@@ -7,9 +7,10 @@ import {
 } from "../../generated";
 
 export const following = async (
-  request: FollowingRequest
+  request: FollowingRequest,
+  connected: boolean
 ): Promise<FetchResult<FollowingQuery>> => {
-  return await authClient.query({
+  return await (connected ? apolloClient : authClient).query({
     query: FollowingDocument,
     variables: {
       request: request,

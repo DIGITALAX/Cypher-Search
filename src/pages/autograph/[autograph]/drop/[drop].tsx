@@ -22,7 +22,7 @@ import NotFound from "@/components/Common/modules/NotFound";
 
 const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(),
   });
   const { autograph, drop } = router.query;
@@ -65,7 +65,10 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
   const { address, isConnected } = useAccount();
-  const { profileLoading, profile } = useAutograph(autograph as string);
+  const { profileLoading, profile } = useAutograph(
+    autograph as string,
+    lensConnected
+  );
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
     drop as string,
     profile,
@@ -102,6 +105,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     signInLoading,
     cartListOpen,
     setCartListOpen,
+    handleLogout,
   } = useSignIn(
     publicClient,
     address,
@@ -110,7 +114,8 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     oracleData,
     cartItems,
     lensConnected,
-    cartAnim
+    cartAnim,
+    openAccountModal
   );
   const {
     mirror,
@@ -175,7 +180,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
             cartListOpen={cartListOpen}
             signInLoading={signInLoading}
             setCartListOpen={setCartListOpen}
-            openAccountModal={openAccountModal}
+            handleLogout={handleLogout}
             dispatch={dispatch}
             handleShuffleSearch={handleShuffleSearch}
           />
@@ -332,7 +337,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 setSearchInput={setSearchInput}
                 openConnectModal={openConnectModal}
                 handleLensConnect={handleLensConnect}
-                openAccountModal={openAccountModal}
+                handleLogout={handleLogout}
                 lensConnected={lensConnected}
                 walletConnected={walletConnected}
                 openAccount={openAccount}

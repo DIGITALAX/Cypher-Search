@@ -24,7 +24,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   signInLoading,
   setCartListOpen,
   router,
-  openAccountModal,
+handleLogout,
   dispatch,
   auto,
   cartAnim,
@@ -110,20 +110,23 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             draggable={false}
           />
         </div>
-        <div
-          className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer rounded-full"
-          id="pfp"
-          onClick={() => lensConnected && setOpenAccount(!openAccount)}
-        >
-          {profilePicture && (
-            <Image
-              src={profilePicture}
-              className="rounded-full"
-              layout="fill"
-              draggable={false}
-            />
-          )}
-        </div>
+        {lensConnected && (
+          <div
+            className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer rounded-full"
+            id="pfp"
+            onClick={() => lensConnected && setOpenAccount(!openAccount)}
+          >
+            {profilePicture && (
+              <Image
+                src={profilePicture}
+                className="rounded-full"
+                layout="fill"
+                draggable={false}
+                objectFit="cover"
+              />
+            )}
+          </div>
+        )}
       </div>
       {openAccount && (
         <div className="absolute w-32 h-fit right-3 top-14 sm:top-24 tablet:top-16 flex items-center justify-center text-sol flex-col font-bit rounded-sm bg-black text-xs z-30 border border-sol">
@@ -147,7 +150,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           </div>
           <div
             className="relative w-full h-full flex items-center justify-center cursor-pointer hover:opacity-80"
-            onClick={openAccountModal}
+            onClick={() => handleLogout()}
           >
             <div className="relative w-fit h-fit items-center justify-center p-2 flex">
               Logout

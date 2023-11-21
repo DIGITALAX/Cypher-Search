@@ -84,7 +84,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                   })
                 : allCollections
                     ?.sort(() => Math.random() - 0.5)
-                    .map((item: Creation, index: number) => {
+                    ?.map((item: Creation, index: number) => {
                       return (
                         <div
                           key={index}
@@ -153,7 +153,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             ) : (
                               <video
                                 className="relative rounded-sm w-full h-full flex object-cover"
-                                id="itemCollection"
+                                id={item?.video}
                                 draggable={false}
                                 controls={false}
                                 muted
@@ -169,10 +169,10 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                                 />
                               </video>
                             )}
-                            {item?.audio && (
+                            {(item?.audio || item?.video) && (
                               <Waveform
                                 audio={item?.audio}
-                                type={"audio"}
+                                type={item?.audio ? "audio" : "video"}
                                 keyValue={item?.audio || item?.video}
                                 video={item?.video}
                               />

@@ -44,10 +44,10 @@ const useSuggested = (
         25,
         0
       );
-      if (searchItems?.data.cyphersearch?.length > 0) {
+      if (searchItems?.data?.cyphersearch?.length > 0) {
         collections =
           (await handleCollectionProfilesAndPublications(
-            searchItems?.data.cyphersearch,
+            searchItems?.data?.cyphersearch,
             lensConnected
           )) || [];
       }
@@ -118,10 +118,10 @@ const useSuggested = (
         25,
         suggestedFeed?.graphCursor!
       );
-      if (searchItems?.data.cyphersearch?.length > 0) {
+      if (searchItems?.data?.cyphersearch?.length > 0) {
         collections =
           (await handleCollectionProfilesAndPublications(
-            searchItems?.data.cyphersearch,
+            searchItems?.data?.cyphersearch,
             lensConnected
           )) || [];
       }
@@ -190,7 +190,7 @@ const useSuggested = (
     ) {
       getSuggestedItems();
     }
-  }, []);
+  }, [lensConnected?.id]);
 
   return {
     getMoreSuggested,

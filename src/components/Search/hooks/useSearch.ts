@@ -121,9 +121,9 @@ const useSearch = (
         if (filterEmpty(filters)) {
           const searchItems = await getTextSearch(searchInput, 25, 0);
 
-          if (searchItems?.data.cyphersearch?.length > 0)
+          if (searchItems?.data?.cyphersearch?.length > 0)
             collections = await handleCollectionProfilesAndPublications(
-              searchItems?.data.cyphersearch,
+              searchItems?.data?.cyphersearch,
               lensConnected
             );
         } else {
@@ -140,42 +140,48 @@ const useSearch = (
       }
 
       if (query) {
-        const pubSearch = await searchPubs({
-          limit: LimitType.TwentyFive,
-          query: searchInput,
-          where: {
-            metadata: {
-              publishedOn: filters?.origin
-                ? filters?.origin?.split(",").map((word) => word.trim())
-                : [
-                    "chromadin",
-                    "legend",
-                    "kinora",
-                    "litlistener",
-                    "cyphersearch",
-                  ],
-              tags: filters?.hashtag
-                ? {
-                    oneOf: filters?.hashtag
+        const pubSearch = await searchPubs(
+          {
+            limit: LimitType.TwentyFive,
+            query: searchInput,
+            where: {
+              metadata: {
+                publishedOn: filters?.origin
+                  ? filters?.origin?.split(",").map((word) => word.trim())
+                  : [
+                      "chromadin",
+                      "legend",
+                      "kinora",
+                      "litlistener",
+                      "cyphersearch",
+                    ],
+                tags: filters?.hashtag
+                  ? {
+                      oneOf: filters?.hashtag
+                        ?.split(",")
+                        .map((word) => word.trim()),
+                    }
+                  : undefined,
+                mainContentFocus: filters?.format
+                  ? (filters?.format
                       ?.split(",")
-                      .map((word) => word.trim()),
-                  }
-                : undefined,
-              mainContentFocus: filters?.format
-                ? (filters?.format
-                    ?.split(",")
-                    .map((word) =>
-                      word.trim()
-                    ) as PublicationMetadataMainFocusType[])
-                : undefined,
+                      .map((word) =>
+                        word.trim()
+                      ) as PublicationMetadataMainFocusType[])
+                  : undefined,
+              },
             },
           },
-        });
+          lensConnected?.id
+        );
 
-        const profileSearch = await searchProfiles({
-          limit: LimitType.TwentyFive,
-          query: searchInput,
-        });
+        const profileSearch = await searchProfiles(
+          {
+            limit: LimitType.TwentyFive,
+            query: searchInput,
+          },
+          lensConnected?.id
+        );
 
         publications = (pubSearch?.data?.searchPublications?.items || []) as (
           | Post
@@ -190,11 +196,16 @@ const useSearch = (
       }
 
       if (filters?.microbrand) {
-        const data = await getMicrobrands({
-          where: {
-            profileIds: [filterConstants?.microbrands?.map((item) => item[3])],
+        const data = await getMicrobrands(
+          {
+            where: {
+              profileIds: [
+                filterConstants?.microbrands?.map((item) => item[3]),
+              ],
+            },
           },
-        });
+          lensConnected?.id
+        );
 
         microbrands = (data?.data?.profiles?.items?.map((item, index) => ({
           ...item,
@@ -308,9 +319,9 @@ const useSearch = (
             25,
             allSearchItems?.graphCursor
           );
-          if (searchItems?.data.cyphersearch?.length > 0)
+          if (searchItems?.data?.cyphersearch?.length > 0)
             collections = await handleCollectionProfilesAndPublications(
-              searchItems?.data.cyphersearch,
+              searchItems?.data?.cyphersearch,
               lensConnected
             );
         }
@@ -329,38 +340,41 @@ const useSearch = (
 
       if (query) {
         if (allSearchItems?.lensPubCursor) {
-          const pubSearch = await searchPubs({
-            limit: LimitType.TwentyFive,
-            query: searchInput,
-            cursor: allSearchItems?.lensPubCursor,
-            where: {
-              metadata: {
-                publishedOn: filters?.origin
-                  ? filters?.origin?.split(",").map((word) => word.trim())
-                  : [
-                      "chromadin",
-                      "legend",
-                      "kinora",
-                      "cyphersearch",
-                      "litlistener",
-                    ],
-                tags: filters?.hashtag
-                  ? {
-                      oneOf: filters?.hashtag
+          const pubSearch = await searchPubs(
+            {
+              limit: LimitType.TwentyFive,
+              query: searchInput,
+              cursor: allSearchItems?.lensPubCursor,
+              where: {
+                metadata: {
+                  publishedOn: filters?.origin
+                    ? filters?.origin?.split(",").map((word) => word.trim())
+                    : [
+                        "chromadin",
+                        "legend",
+                        "kinora",
+                        "cyphersearch",
+                        "litlistener",
+                      ],
+                  tags: filters?.hashtag
+                    ? {
+                        oneOf: filters?.hashtag
+                          ?.split(",")
+                          .map((word) => word.trim()),
+                      }
+                    : undefined,
+                  mainContentFocus: filters?.format
+                    ? (filters?.format
                         ?.split(",")
-                        .map((word) => word.trim()),
-                    }
-                  : undefined,
-                mainContentFocus: filters?.format
-                  ? (filters?.format
-                      ?.split(",")
-                      .map((word) =>
-                        word.trim()
-                      ) as PublicationMetadataMainFocusType[])
-                  : undefined,
+                        .map((word) =>
+                          word.trim()
+                        ) as PublicationMetadataMainFocusType[])
+                    : undefined,
+                },
               },
             },
-          });
+            lensConnected?.id
+          );
           publications = (pubSearch?.data?.searchPublications?.items || []) as (
             | Post
             | Comment
@@ -371,10 +385,13 @@ const useSearch = (
         }
 
         if (allSearchItems?.lensProfileCursor) {
-          const profileSearch = await searchProfiles({
-            limit: LimitType.TwentyFive,
-            query: searchInput,
-          });
+          const profileSearch = await searchProfiles(
+            {
+              limit: LimitType.TwentyFive,
+              query: searchInput,
+            },
+            lensConnected?.id
+          );
 
           profiles = (profileSearch?.data?.searchProfiles?.items ||
             []) as Profile[];
@@ -384,11 +401,16 @@ const useSearch = (
       }
 
       if (filters?.microbrand) {
-        const data = await getMicrobrands({
-          where: {
-            profileIds: [filterConstants?.microbrands?.map((item) => item[3])],
+        const data = await getMicrobrands(
+          {
+            where: {
+              profileIds: [
+                filterConstants?.microbrands?.map((item) => item[3]),
+              ],
+            },
           },
-        });
+          lensConnected?.id
+        );
 
         microbrands = (data?.data?.profiles?.items?.map((item, index) => ({
           ...item,

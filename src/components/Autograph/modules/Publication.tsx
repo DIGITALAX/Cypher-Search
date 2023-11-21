@@ -9,10 +9,12 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import {
   Comment,
   Mirror,
+  Post,
   Quote,
   TextOnlyMetadataV3,
 } from "../../../../graphql/generated";
 import PostComment from "./PostComment";
+import Decrypt from "./Decrypt";
 
 const Publication: FunctionComponent<PublicationProps> = ({
   item,
@@ -44,9 +46,20 @@ const Publication: FunctionComponent<PublicationProps> = ({
   contentLoading,
   postCollectGif,
   main,
+  lensConnected,
+  decryptLoading,
+  handleDecrypt,
 }): JSX.Element => {
   return (
-    <div className="relative bg-lirio rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza">
+    <div
+      className={`relative rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza ${
+        (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+          ?.isEncrypted
+          ? "bg-nuba"
+          : "bg-lirio"
+      }`}
+      id={item?.id}
+    >
       <div className="relative w-full h-fit flex items-center justify-between flex-row">
         <div className="relative w-fit h-fit flex items-center justify-start font-bit text-white text-xxs">
           <div className={`relative w-fit h-fit flex`}>
@@ -81,7 +94,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
                     )?.content?.slice(0, 10) + "..."
                   }`}
             </div>
-            <div className="relative w-5 h-5 col-start-2 place-self-center">
+            <div className="relative w-3.5 h-3.5 col-start-2 place-self-center">
               <Image
                 layout="fill"
                 src={`${INFURA_GATEWAY}/ipfs/${
@@ -97,21 +110,40 @@ const Publication: FunctionComponent<PublicationProps> = ({
           </div>
         )}
       </div>
-      <PostSwitch
-        item={item}
-        dispatch={dispatch}
-        router={router}
-        index={index}
-      />
+      {!disabled &&
+        (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+          ?.isEncrypted &&
+        !(
+          (item?.__typename === "Mirror"
+            ? item?.mirrorOn
+            : (item as Post)) as any
+        )?.decrypted && (
+          <Decrypt
+            toDecrypt={
+              item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post)
+            }
+            decryptLoading={decryptLoading!}
+            handleDecrypt={handleDecrypt!}
+            canDecrypt={
+              (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+                ?.operations?.canDecrypt?.result
+            }
+          />
+        )}
+      <PostSwitch disabled={disabled} item={item} dispatch={dispatch} />
       {item?.__typename === "Quote" && (
         <PostQuote
-          quote={item?.quoteOn}
+          disabled={true}
+          quote={{
+            ...item?.quoteOn,
+            decrypted: undefined,
+          }}
           dispatch={dispatch}
           router={router}
-          index={index}
         />
       )}
       <PostBar
+        lensConnected={lensConnected}
         index={index}
         item={item}
         dispatch={dispatch}
@@ -142,7 +174,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
           setMakePostComment={setMakePostComment!}
           commentPost={comment!}
           id={item?.id}
-          commentPostLoading={interactionsLoading?.[index].comment!}
+          commentPostLoading={interactionsLoading?.[index]?.comment!}
           height="5rem"
           imageHeight="1.25rem"
           imageWidth="1.25rem"

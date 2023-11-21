@@ -1,5 +1,5 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { MutableRefObject, SetStateAction } from "react";
+import { ChangeEvent, MutableRefObject, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Erc20,
@@ -29,15 +29,15 @@ export type MapProps = {
 
 export type DisplaySearchProps = {
   dispatch: Dispatch<AnyAction>;
-  galleryLoading: boolean
+  galleryLoading: boolean;
   gallery:
     | {
-        collected:  {
+        collected: {
           collectionId: string;
           images: string[];
           title: string;
         }[];
-        created:  {
+        created: {
           collectionId: string;
           images: string[];
           title: string;
@@ -47,17 +47,23 @@ export type DisplaySearchProps = {
   sortType: SortType;
   itemSearch: string;
   setItemSearch: (e: SetStateAction<string>) => void;
-  sortedGallery:  {
-    collectionId: string;
-    images: string[];
-    title: string;
-  }[] | undefined;
+  sortedGallery:
+    | {
+        collectionId: string;
+        images: string[];
+        title: string;
+      }[]
+    | undefined;
   selectedItem: Creation | undefined;
-  handleItemSelect: (item:  {
-    collectionId: string;
-    images: string[];
-    title: string;
-  }, type: SortType, value: number) => void;
+  handleItemSelect: (
+    item: {
+      collectionId: string;
+      images: string[];
+      title: string;
+    },
+    type: SortType,
+    value: number
+  ) => void;
   numberIndex: number;
 };
 
@@ -126,6 +132,7 @@ export type WhoProps = {
   type: string;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
+  lensConnected: Profile | undefined;
 };
 
 export type WhoSwitchProps = {
@@ -138,6 +145,7 @@ export type WhoSwitchProps = {
   hasMoreQuote: boolean;
   mirrorQuote: boolean;
   showMore: () => void;
+  lensConnected: Profile | undefined;
 };
 
 export type PostBoxProps = {
@@ -145,9 +153,11 @@ export type PostBoxProps = {
   postCollectGif: PostCollectGifState;
   quote: PrimaryPublication | undefined;
   makePost: MakePostComment[];
+  lensConnected: Profile | undefined;
   post: () => Promise<void>;
   setMakePost: (e: SetStateAction<MakePostComment[]>) => void;
   postLoading: boolean[];
+  router: NextRouter;
   setContentLoading: (
     e: SetStateAction<
       {

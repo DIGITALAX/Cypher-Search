@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import lensQuote from "../../../../lib/helpers/api/quotePost";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon , polygonMumbai} from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import {
   PostBoxState,
   setPostBox,
@@ -23,12 +23,17 @@ import {
   setPostCollectGif,
 } from "../../../../redux/reducers/postCollectGifSlice";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
-import { FollowCollectState } from "../../../../redux/reducers/followCollectSlice";
+import {
+  FollowCollectState,
+  setFollowCollect,
+} from "../../../../redux/reducers/followCollectSlice";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import isApprovedData from "../../../../graphql/lens/mutations/isApproved";
 import approveCurrency from "../../../../graphql/lens/mutations/approve";
 import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
+import lensPost from "../../../../lib/helpers/api/postChain";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useQuote = (
   availableCurrencies: Erc20[],
@@ -43,7 +48,7 @@ const useQuote = (
   const videoRef = useRef<null | HTMLElement>(null);
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
   const [informationLoading, setInformationLoading] = useState<boolean>(false);
-  const [approved, setApproved] = useState<boolean>(false);
+  const [approved, setApproved] = useState<boolean>(true);
   const [quoteLoading, setQuoteLoading] = useState<boolean[]>([false]);
   const [makeQuote, setMakeQuote] = useState<MakePostComment[]>([
     {
@@ -102,41 +107,66 @@ const useQuote = (
       !makeQuote[0]?.content &&
       !makeQuote[0]?.images &&
       !makeQuote[0]?.videos &&
-      postCollectGif.gifs?.[postBox?.quote?.id]
+      postCollectGif?.gifs?.[postBox?.quote?.id]
     )
       return;
     setQuoteLoading([true]);
 
     try {
       const contentURI = await uploadPostContent(
-        makeQuote[0]?.content,
-        makeQuote[0]?.images!,
-        makeQuote[0]?.videos!,
+        makeQuote[0]?.content?.trim() == "" ? " " : makeQuote[0]?.content,
+        makeQuote[0]?.images || [],
+        makeQuote[0]?.videos || [],
         [],
-        postCollectGif.gifs?.[postBox?.quote?.id]!
+        postCollectGif.gifs?.[postBox?.quote?.id] || []
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
-      await lensQuote(
-        postBox?.quote?.id,
-        contentURI?.string!,
-        dispatch,
-        [
-          {
-            collectOpenAction: {
-              simpleCollectOpenAction:
-                postCollectGif.collectTypes?.[postBox?.quote?.id]!,
-            },
-          },
-        ],
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
+      if (postBox?.quote) {
+        await lensQuote(
+          postBox?.quote?.id,
+          contentURI?.string!,
+          dispatch,
+          postCollectGif.collectTypes?.[postBox?.quote?.id]
+            ? [
+                {
+                  collectOpenAction: {
+                    simpleCollectOpenAction:
+                      postCollectGif.collectTypes?.[postBox?.quote?.id]!,
+                  },
+                },
+              ]
+            : undefined,
+          address as `0x${string}`,
+          clientWallet,
+          publicClient,
+          () => clearBox()
+        );
+      } else {
+        await lensPost(
+          contentURI?.string!,
+          dispatch,
+          postCollectGif.collectTypes?.[postBox?.quote?.id]
+            ? [
+                {
+                  collectOpenAction: {
+                    simpleCollectOpenAction:
+                      postCollectGif.collectTypes?.[postBox?.quote?.id]!,
+                  },
+                },
+              ]
+            : undefined,
+          address as `0x${string}`,
+          clientWallet,
+          publicClient,
+          () => clearBox()
+        );
+      }
+
       const gifs = { ...postCollectGif.gifs };
       delete gifs[postBox?.quote?.id];
       const cts = { ...postCollectGif.collectTypes };
@@ -148,15 +178,11 @@ const useQuote = (
         })
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
     setQuoteLoading([false]);
-    dispatch(
-      setPostBox({
-        actionOpen: false,
-      })
-    );
   };
 
   const getCurrencies = async () => {
@@ -170,6 +196,22 @@ const useQuote = (
     } catch (err: any) {
       console.error(err.message);
     }
+  };
+
+  const clearBox = () => {
+    setMakeQuote([
+      {
+        content: "",
+        images: [],
+        videos: [],
+      },
+    ]);
+    dispatch(
+      setPostBox({
+        actionOpen: false,
+      })
+    );
+    setQuoteLoading([false]);
   };
 
   const handleGif = async (search: string) => {
@@ -244,7 +286,7 @@ const useQuote = (
       });
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -272,7 +314,7 @@ const useQuote = (
     setTransactionLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -286,6 +328,12 @@ const useQuote = (
         clientWallet,
         publicClient
       );
+
+      dispatch(
+        setFollowCollect({
+          actionType: undefined,
+        })
+      );
     } catch (err: any) {
       console.error(err.message);
     }
@@ -296,17 +344,24 @@ const useQuote = (
     setTransactionLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
       await lensFollow(
-        followCollect?.type === "collect"
+        (followCollect?.type === "collect" &&
+          !followCollect?.collect?.item?.followerOnly) ||
+          (followCollect?.type === "collect" &&
+            followCollect?.collect?.item?.followerOnly &&
+            followCollect?.follower?.operations?.isFollowedByMe?.value)
           ? followCollect?.collect?.id
           : followCollect?.follower?.id,
         dispatch,
-        (followCollect?.follower?.followModule as FeeFollowModuleSettings)
-          ?.amount
+        followCollect?.follower?.followModule?.__typename !==
+          "FeeFollowModuleSettings"
+          ? undefined
+          : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
+              ?.amount
           ? {
               feeFollowModule: {
                 amount: {
@@ -326,7 +381,32 @@ const useQuote = (
         clientWallet,
         publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
+      if (
+        followCollect?.type === "collect" &&
+        followCollect?.collect?.item?.followerOnly
+      ) {
+        dispatch(
+          setFollowCollect({
+            actionType: "collect",
+            actionCollect: {
+              id: followCollect?.collect?.id,
+              stats: followCollect?.collect?.stats,
+              item: followCollect?.collect?.item,
+            },
+            actionFollower: {
+              ...followCollect?.follower,
+              operations: {
+                ...followCollect?.follower?.operations,
+                isFollowedByMe: {
+                  ...followCollect?.follower?.operations?.isFollowedByMe,
+                  value: true,
+                },
+              },
+            },
+          })
+        );
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -340,7 +420,16 @@ const useQuote = (
   }, []);
 
   useEffect(() => {
-    if (followCollect.type) {
+    if (
+      (followCollect.type === "collect" &&
+        followCollect?.follower?.followModule?.__typename ==
+          "FeeFollowModuleSettings") ||
+      (followCollect.type === "follow" &&
+        followCollect?.follower?.followModule?.__typename ==
+          "FeeFollowModuleSettings") ||
+      (followCollect?.type === "collect" &&
+        Number(followCollect?.collect?.item?.amount?.value) > 0)
+    ) {
       checkCurrencyApproved();
     }
   }, [followCollect.type]);

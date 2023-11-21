@@ -60,9 +60,12 @@ export type InteractBarProps = {
   like:
     | ((id: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>)
-    | ((id: string, main: boolean) => Promise<void>);
+    | ((id: string, main: boolean) => Promise<void>)
+    | ((id: string, hasReacted: boolean) => Promise<void>)
+    | ((index: number, id: string, hasReacted: boolean) => Promise<void>);
   simpleCollect:
     | ((id: string) => Promise<void>)
+    | ((id: string, type: string) => Promise<void>)
     | ((index: number, id: string) => Promise<void>)
     | undefined;
   interactionsLoading: {
@@ -90,12 +93,14 @@ export type HoverProfileProps = {
     | ((id: string) => Promise<void>)
     | ((id: string, feed?: boolean, main?: boolean) => Promise<void>);
   publication: Profile;
+  parentId: string;
   router: NextRouter;
   index: number;
   dispatch: Dispatch<AnyAction>;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   feed?: boolean;
   main?: boolean;
+  lensConnected: Profile | undefined;
 };
 
 export type TileLoaderProps = {
@@ -107,7 +112,7 @@ export type AccountsProps = {
   searchActive: boolean;
   cartAnim: boolean;
   openConnectModal: (() => void) | undefined;
-  openAccountModal: (() => void) | undefined;
+  handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
@@ -127,7 +132,7 @@ export type NotFoundProps = {
   searchActive: boolean;
   cartAnim: boolean;
   openConnectModal: (() => void) | undefined;
-  openAccountModal: (() => void) | undefined;
+  handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
@@ -178,7 +183,7 @@ export type SuggestedProps = {
   placeholderText?: string | undefined;
   setSearchInput?: (e: SetStateAction<string>) => void;
   openConnectModal: (() => void) | undefined;
-  openAccountModal: (() => void) | undefined;
+  handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
@@ -199,7 +204,7 @@ export type SuggestedProps = {
   apparel: boolean[];
   setApparel: (e: SetStateAction<boolean[]>) => void;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
@@ -219,4 +224,9 @@ export type SuggestedProps = {
   setHeart: (e: SetStateAction<boolean[]>) => void;
   fullScreenVideo: FullScreenVideoState;
   component: ReactNode;
+};
+
+export type StatsProps = {
+  profile: Profile;
+  dispatch: Dispatch<AnyAction>;
 };

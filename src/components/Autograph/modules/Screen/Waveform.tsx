@@ -18,59 +18,65 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
   const wavesurfer = useRef<null | WaveSurfer>(null);
 
   useEffect(() => {
-    if (waveformRef.current) {
-      if (wavesurfer.current) {
-        wavesurfer.current.destroy();
+    const waver = async () => {
+      if (waveformRef.current) {
+        if (wavesurfer.current) {
+          wavesurfer.current.destroy();
+        }
+
+        wavesurfer.current = WaveSurfer.create({
+          container: waveformRef.current,
+          waveColor: "violet",
+          progressColor: "white",
+          height: 16,
+        });
+
+        if (!wavesurfer.current) return;
+
+        wavesurfer.current.on("seeking", function (seekProgress) {
+          const videoElement = document.getElementById(
+            keyValue
+          ) as HTMLVideoElement;
+          if (videoElement) {
+            videoElement.currentTime = seekProgress;
+          }
+        });
+
+        wavesurfer.current.on("play", function () {
+          const videoElement = document.getElementById(
+            keyValue
+          ) as HTMLVideoElement;
+          if (videoElement) {
+            videoElement.play();
+          }
+        });
+
+        wavesurfer.current.on("pause", function () {
+          const videoElement = document.getElementById(
+            keyValue
+          ) as HTMLVideoElement;
+          if (videoElement) {
+            videoElement.pause();
+          }
+        });
+
+        if (audio && audio !== "" && type === "audio") {
+          await wavesurfer?.current?.load(
+            audio?.includes("ipfs://")
+              ? `${INFURA_GATEWAY}/ipfs/${audio?.split("ipfs://")?.[1]}`
+              : audio
+          );
+        } else if (video && video !== "" && type === "video") {
+          await wavesurfer?.current?.load(
+            video?.includes("ipfs://")
+              ? `${INFURA_GATEWAY}/ipfs/${video?.split("ipfs://")?.[1]}`
+              : video
+          );
+        }
       }
+    };
 
-      wavesurfer.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: "violet",
-        progressColor: "white",
-        height: 16,
-      });
-
-      wavesurfer.current.on("seeking", function (seekProgress) {
-        const videoElement = document.getElementById(
-          keyValue
-        ) as HTMLVideoElement;
-        if (videoElement) {
-          videoElement.currentTime = seekProgress;
-        }
-      });
-
-      wavesurfer.current.on("play", function () {
-        const videoElement = document.getElementById(
-          keyValue
-        ) as HTMLVideoElement;
-        if (videoElement) {
-          videoElement.play();
-        }
-      });
-
-      wavesurfer.current.on("pause", function () {
-        const videoElement = document.getElementById(
-          keyValue
-        ) as HTMLVideoElement;
-        if (videoElement) {
-          videoElement.pause();
-        }
-      });
-
-      if (audio && audio !== "" && type === "audio") {
-        wavesurfer.current.load(
-          audio?.includes("ipfs://")
-            ? `${INFURA_GATEWAY}/ipfs/${audio?.split("ipfs://")?.[1]}`
-            : audio
-        );
-      } else if (video && video !== "" && type === "video") {
-        wavesurfer.current.load(
-          video?.includes("ipfs://")
-            ? `${INFURA_GATEWAY}/ipfs/${video?.split("ipfs://")?.[1]}`
-            : video
-        );
-      }
-    }
+    waver();
 
     return () => {
       wavesurfer.current?.destroy();

@@ -25,7 +25,6 @@ import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
 import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
-import WaveSurfer from "wavesurfer.js";
 
 export type WebProps = {
   router: NextRouter;
@@ -34,6 +33,8 @@ export type WebProps = {
   deleteCollection: () => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
+  decryptLoading: boolean[];
+  handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   collectionLoading: boolean;
   allCollections: Creation[];
   filterConstants: FilterValues | undefined;
@@ -172,7 +173,7 @@ export type WebProps = {
   postCollectGif: PostCollectGifState;
   handleShuffleSearch: () => void;
   openConnectModal: (() => void) | undefined;
-  openAccountModal: (() => void) | undefined;
+  handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
   lensConnected: Profile | undefined;
   walletConnected: boolean;
@@ -180,7 +181,7 @@ export type WebProps = {
   sortType: SortType;
   setSortType: (e: SetStateAction<SortType>) => void;
   mirror: (index: number, id: string) => Promise<void>;
-  like: (index: number, id: string) => Promise<void>;
+  like: (index: number, id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -227,10 +228,12 @@ export type WebProps = {
   handleMoreBookmarks: () => Promise<void>;
   handleBookmark: (id: string, index: number) => Promise<void>;
   handleHidePost: (id: string, index: number) => Promise<void>;
-  bookmarks: (Post | Mirror | Comment | Quote)[];
+  bookmarks: ((Post | Mirror | Comment | Quote) & {
+    decrypted: any;
+  })[];
   bookmarksLoading: boolean;
   mirrorBookmark: (id: string) => Promise<void>;
-  likeBookmark: (id: string) => Promise<void>;
+  likeBookmark: (id: string, hasReacted: boolean) => Promise<void>;
   comment: (id: string) => Promise<void>;
   setOpenMirrorChoiceBookmark: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoiceBookmark: boolean[];
@@ -276,10 +279,15 @@ export type WebProps = {
 };
 
 export type BookmarksProps = {
-  bookmarks: (Post | Mirror | Comment | Quote)[];
+  bookmarks: ((Post | Mirror | Comment | Quote) & {
+    decrypted: any;
+  })[];
+  decryptLoading: boolean[];
+  handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   bookmarksLoading: boolean;
   hasMoreBookmarks: boolean;
   commentsOpen: boolean[];
+  lensConnected: Profile | undefined;
   setContentLoading: (
     e: SetStateAction<
       {
@@ -301,7 +309,7 @@ export type BookmarksProps = {
   handleHidePost: (id: string, index: number) => Promise<void>;
   mirror: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -416,6 +424,8 @@ export type ScreenSwitchProps = {
   dropsLoading: boolean;
   collectionLoading: boolean;
   searchCollection: string;
+  decryptLoading: boolean[];
+  handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   setSearchCollection: (e: SetStateAction<string>) => void;
   setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
   allDrops: Drop[];
@@ -508,7 +518,9 @@ export type ScreenSwitchProps = {
   createCollection: (edit?: boolean) => Promise<void>;
   createDrop: () => Promise<void>;
   screenDisplay: ScreenDisplay;
-  bookmarks: (Post | Mirror | Comment | Quote)[];
+  bookmarks: ((Post | Mirror | Comment | Quote) & {
+    decrypted: any;
+  })[];
   bookmarksLoading: boolean;
   allOrders: Order[];
   ordersLoading: boolean;
@@ -552,7 +564,7 @@ export type ScreenSwitchProps = {
   handleSetDisplay: () => void;
   displayLoading: boolean;
   mirror: (index: number, id: string) => Promise<void>;
-  like: (index: number, id: string) => Promise<void>;
+  like: (index: number, id: string, hasReacted: boolean) => Promise<void>;
   setSettingsData: (
     e: SetStateAction<
       ProfileMetadata & {
@@ -616,7 +628,7 @@ export type ScreenSwitchProps = {
   setCurrencyOpen: (e: SetStateAction<boolean>) => void;
   currencyOpen: boolean;
   mirrorBookmark: (id: string) => Promise<void>;
-  likeBookmark: (id: string) => Promise<void>;
+  likeBookmark: (id: string, hasReacted: boolean) => Promise<void>;
   comment: (id: string) => Promise<void>;
   setOpenMirrorChoiceBookmark: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoiceBookmark: boolean[];
@@ -708,7 +720,7 @@ export type SettingsProps = {
 
 export type DisplayProps = {
   mirror: (index: number, id: string) => Promise<void>;
-  like: (index: number, id: string) => Promise<void>;
+  like: (index: number, id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -751,10 +763,15 @@ export interface Display {
 }
 
 export type FeedProps = {
-  profileFeed: (Post | Quote | Mirror)[];
+  profileFeed: ((Post | Quote | Mirror) & {
+    decrypted: any;
+  })[];
+  decryptLoading: boolean[];
+  handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   comment: (id: string) => Promise<void>;
+  lensConnected: Profile | undefined;
   availableCurrencies: Erc20[];
   commentsOpen: boolean[];
   setContentLoading: (
@@ -812,7 +829,7 @@ export type GalleryProps = {
   lensConnected: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -844,6 +861,7 @@ export type CreationProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followProfile: (id: string) => Promise<void>;
   router: NextRouter;
+  lensConnected: Profile | undefined;
   cartItems: CartItem[];
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
@@ -861,12 +879,13 @@ export type CreationProps = {
     hide: boolean;
   };
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
 };
 
 export type PostBarProps = {
   index: number;
   main: boolean | undefined;
+  lensConnected: Profile | undefined;
   mirror?:
     | ((id: string) => Promise<void>)
     | ((id: string, main: boolean) => Promise<void>);
@@ -875,7 +894,8 @@ export type PostBarProps = {
     | ((id: string, main: boolean) => Promise<void>);
   simpleCollect?:
     | ((id: string, type: string) => Promise<void>)
-    | ((id: string, type: string, main: boolean) => Promise<void>);
+    | ((id: string, type: string, main: boolean) => Promise<void>)
+    | undefined;
   handleBookmark?: (id: string, index: number, main: boolean) => Promise<void>;
   handleHidePost?: (id: string, index: number, main: boolean) => Promise<void>;
   item: Post | Quote | Mirror | Comment;
@@ -904,26 +924,32 @@ export type PostBarProps = {
 };
 
 export type TextProps = {
-  mirror: Mirror | undefined;
-  quote: Comment | Post | Quote | undefined;
-  type: string;
-  id: string;
-  dispatch: Dispatch<AnyAction>;
-  router: NextRouter;
-  index: number;
   metadata: ArticleMetadataV3 | StoryMetadataV3 | TextOnlyMetadataV3;
+  encrypted:
+    | ((Post | Quote) & {
+        decrypted: any;
+      })
+    | undefined;
 };
 
 export type PostQuoteProps = {
-  quote: PrimaryPublication;
+  quote: PrimaryPublication & {
+    decrypted: any;
+  };
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
-  index: number;
+  pink?: boolean;
+  disabled: boolean | undefined;
 };
 
 export type PublicationProps = {
-  item: Post | Mirror | Quote | Comment;
+  item: (Post | Comment | Quote | Mirror) & {
+    decrypted: any;
+  };
   index: number;
+  decryptLoading?: boolean;
+  handleDecrypt?: (post: Comment | Quote | Post) => void;
+  lensConnected: Profile | undefined;
   disabled?: boolean;
   postCollectGif?: PostCollectGifState;
   main?: boolean;
@@ -991,7 +1017,7 @@ export type PostCommentProps = {
   makePostComment: MakePostComment;
   postCollectGif: PostCollectGifState;
   setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
-  main: boolean | undefined;
+  main?: boolean | undefined;
   commentPost:
     | ((id: string) => Promise<void>)
     | (() => Promise<void>)
@@ -1391,18 +1417,26 @@ export type WaveFormProps = {
 
 export type PostSwitchProps = {
   dispatch: Dispatch<AnyAction>;
-  router: NextRouter;
-  index: number;
-  item: Post | Quote | Mirror | Comment;
+  item: (Post | Comment | Quote | Mirror) & {
+    decrypted: any;
+  };
+  disabled: boolean | undefined;
 };
 
 export type ImageProps = {
-  mirror: Mirror | undefined;
-  quote: Comment | Post | Quote | undefined;
-  type: string;
-  id: string;
+  disabled: boolean | undefined;
   dispatch: Dispatch<AnyAction>;
-  router: NextRouter;
-  index: number;
   metadata: ImageMetadataV3 | VideoMetadataV3 | AudioMetadataV3;
+  encrypted:
+    | ((Post | Quote) & {
+        decrypted: any;
+      })
+    | undefined;
+};
+
+export type DecryptProps = {
+  handleDecrypt: (post: Post | Comment | Quote) => void;
+  decryptLoading: boolean;
+  canDecrypt: boolean;
+  toDecrypt: Post | Comment | Quote;
 };

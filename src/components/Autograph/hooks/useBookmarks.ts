@@ -26,11 +26,12 @@ import {
   PostCollectGifState,
   setPostCollectGif,
 } from "../../../../redux/reducers/postCollectGifSlice";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { decryptPost } from "../../../../lib/helpers/decryptPost";
 
 const useBookmarks = (
   lensConnected: Profile | undefined,
   postCollectGif: PostCollectGifState,
-  profileFeed: (Post | Mirror | Quote)[],
   screenDisplay: ScreenDisplay,
   dispatch: Dispatch,
   publicClient: PublicClient,
@@ -38,7 +39,9 @@ const useBookmarks = (
   pageProfile: Profile | undefined
 ) => {
   const [allBookmarks, setAllBookmarks] = useState<
-    (Post | Comment | Quote | Mirror)[]
+    ((Post | Comment | Quote | Mirror) & {
+      decrypted: any;
+    })[]
   >([]);
   const [openMirrorChoiceBookmark, setOpenMirrorChoiceBookmark] = useState<
     boolean[]
@@ -49,6 +52,9 @@ const useBookmarks = (
   const [commentsBookmarkOpen, setCommentsBookmarkOpen] = useState<boolean[]>(
     []
   );
+  const [decryptLoadingBookmark, setDecryptLoadingBookmark] = useState<
+    boolean[]
+  >([]);
   const [openMoreOptionsBookmark, setOpenMoreOptionsBookmark] = useState<
     boolean[]
   >([]);
@@ -77,7 +83,14 @@ const useBookmarks = (
       });
       setBookmarkCursor(data?.publicationBookmarks?.pageInfo?.next);
       setAllBookmarks(
-        data?.publicationBookmarks?.items as (Post | Comment | Mirror | Quote)[]
+        data?.publicationBookmarks?.items as ((
+          | Post
+          | Comment
+          | Mirror
+          | Quote
+        ) & {
+          decrypted: any;
+        })[]
       );
       if (
         data?.publicationBookmarks?.items &&
@@ -102,12 +115,14 @@ const useBookmarks = (
       setBookmarkCursor(data?.publicationBookmarks?.pageInfo?.next);
       setAllBookmarks([
         ...allBookmarks,
-        ...(data?.publicationBookmarks?.items as (
+        ...(data?.publicationBookmarks?.items as ((
           | Post
           | Comment
           | Mirror
           | Quote
-        )[]),
+        ) & {
+          decrypted: any;
+        })[]),
       ]);
       if (
         data?.publicationBookmarks?.items &&
@@ -124,7 +139,8 @@ const useBookmarks = (
   };
 
   const bookmarkComment = async (id: string) => {
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    const index = allBookmarks?.findIndex((pub) => pub.id === id);
+
     if (index === -1) {
       return;
     }
@@ -144,15 +160,17 @@ const useBookmarks = (
 
     try {
       const contentURI = await uploadPostContent(
-        makeCommentBookmark[index]?.content,
-        makeCommentBookmark[index]?.images,
-        makeCommentBookmark[index]?.videos,
+        makeCommentBookmark[index]?.content?.trim() == ""
+          ? " "
+          : makeCommentBookmark[index]?.content,
+        makeCommentBookmark[index]?.images || [],
+        makeCommentBookmark[index]?.videos || [],
         [],
-        postCollectGif.gifs?.[id]!
+        postCollectGif.gifs?.[id] || []
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -160,13 +178,15 @@ const useBookmarks = (
         id,
         contentURI?.string!,
         dispatch,
-        [
-          {
-            collectOpenAction: {
-              simpleCollectOpenAction: postCollectGif.collectTypes?.[id],
-            },
-          },
-        ],
+        postCollectGif.collectTypes?.[id]
+          ? [
+              {
+                collectOpenAction: {
+                  simpleCollectOpenAction: postCollectGif.collectTypes?.[id],
+                },
+              },
+            ]
+          : undefined,
         address as `0x${string}`,
         clientWallet,
         publicClient,
@@ -183,6 +203,7 @@ const useBookmarks = (
         })
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -211,7 +232,7 @@ const useBookmarks = (
   };
 
   const bookmarkMirror = async (id: string) => {
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    const index = allBookmarks?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
     }
@@ -223,7 +244,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -234,6 +255,7 @@ const useBookmarks = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -244,8 +266,8 @@ const useBookmarks = (
     });
   };
 
-  const bookmarkLike = async (id: string) => {
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+  const bookmarkLike = async (id: string, hasReacted: boolean) => {
+    const index = allBookmarks?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
     }
@@ -256,8 +278,9 @@ const useBookmarks = (
     });
 
     try {
-      await lensLike(id, dispatch);
+      await lensLike(id, dispatch, hasReacted);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -269,7 +292,7 @@ const useBookmarks = (
   };
 
   const bookmarkCollect = async (id: string, type: string) => {
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    const index = allBookmarks?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
     }
@@ -282,7 +305,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -295,6 +318,7 @@ const useBookmarks = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -314,6 +338,7 @@ const useBookmarks = (
     try {
       await lensHide(id, dispatch);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setInteractionsLoadingBookmark((prev) => {
@@ -332,6 +357,7 @@ const useBookmarks = (
     try {
       await lensBookmark(on, dispatch);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setInteractionsLoadingBookmark((prev) => {
@@ -343,7 +369,7 @@ const useBookmarks = (
 
   const followProfileBookmark = async (id: string) => {
     const index = allBookmarks?.findIndex((pub) =>
-      (pub as Post | Quote | Mirror).__typename === "Mirror"
+      (pub as Post | Quote | Mirror)?.__typename === "Mirror"
         ? (pub as Mirror).mirrorOn.id
         : (pub as Post | Quote).id
     );
@@ -359,7 +385,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -371,8 +397,9 @@ const useBookmarks = (
         clientWallet,
         publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -385,7 +412,7 @@ const useBookmarks = (
 
   const unfollowProfileBookmark = async (id: string) => {
     const index = allBookmarks?.findIndex((pub) =>
-      (pub as Post | Quote | Mirror).__typename === "Mirror"
+      (pub as Post | Quote | Mirror)?.__typename === "Mirror"
         ? (pub as Mirror).mirrorOn.id
         : (pub as Post | Quote).id
     );
@@ -401,7 +428,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -412,8 +439,9 @@ const useBookmarks = (
         clientWallet,
         publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -424,6 +452,73 @@ const useBookmarks = (
     });
   };
 
+  const handleDecryptBookmark = async (post: Post | Quote | Comment) => {
+    const index = allBookmarks?.findIndex((item) => (item.id = post.id));
+    if (index == -1) {
+      return;
+    }
+    setDecryptLoadingBookmark((prev) => {
+      const arr = [...prev];
+      arr[index] = true;
+      return arr;
+    });
+    try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+
+      await decryptPost(post, clientWallet, dispatch, setAllBookmarks, false);
+    } catch (err: any) {
+      console.error(err.message);
+    }
+    setDecryptLoadingBookmark((prev) => {
+      const arr = [...prev];
+      arr[index] = false;
+      return arr;
+    });
+  };
+
+  useEffect(() => {
+    if (allBookmarks.length > 0) {
+      setOpenMirrorChoiceBookmark(
+        Array.from({ length: allBookmarks?.length }, () => false)
+      );
+      setMakeCommentBookmark(
+        Array.from({ length: allBookmarks?.length }, () => ({
+          content: "",
+          images: [],
+          videos: [],
+        }))
+      );
+      setCommentsBookmarkOpen(
+        Array.from({ length: allBookmarks?.length }, () => false)
+      );
+      setDecryptLoadingBookmark(
+        Array.from({ length: allBookmarks?.length }, () => false)
+      );
+      setOpenMoreOptionsBookmark(
+        Array.from({ length: allBookmarks?.length }, () => false)
+      );
+      setProfileHovers(
+        Array.from({ length: allBookmarks?.length }, () => false)
+      );
+      setFollowLoading(
+        Array.from({ length: allBookmarks?.length }, () => false)
+      );
+      setInteractionsLoadingBookmark(
+        Array.from({ length: allBookmarks?.length }, () => ({
+          like: false,
+          mirror: false,
+          comment: false,
+          simpleCollect: false,
+          bookmark: false,
+          hide: false,
+        }))
+      );
+    }
+  }, [allBookmarks?.length]);
+
   useEffect(() => {
     if (
       screenDisplay === ScreenDisplay.Bookmarks &&
@@ -433,7 +528,7 @@ const useBookmarks = (
     ) {
       getBookmarks();
     }
-  }, [screenDisplay]);
+  }, [screenDisplay, lensConnected?.id]);
 
   return {
     handleMoreBookmarks,
@@ -460,6 +555,8 @@ const useBookmarks = (
     commentsBookmarkOpen,
     makeCommentBookmark,
     setMakeCommentBookmark,
+    handleDecryptBookmark,
+    decryptLoadingBookmark,
   };
 };
 

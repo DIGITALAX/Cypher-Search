@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MakePostComment } from "../types/autograph.types";
 import { createWalletClient, custom } from "viem";
-import { polygon , polygonMumbai} from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { PublicClient } from "wagmi";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensPost from "../../../../lib/helpers/api/postChain";
@@ -10,6 +10,7 @@ import {
   PostCollectGifState,
   setPostCollectGif,
 } from "../../../../redux/reducers/postCollectGifSlice";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const usePost = (
   dispatch: Dispatch,
@@ -42,35 +43,40 @@ const usePost = (
       !makePost[0]?.content &&
       !makePost[0]?.images &&
       !makePost[0]?.videos &&
-      postCollectGif.gifs?.["post"]!
+      !postCollectGif.gifs?.["post"]
     )
       return;
     setPostLoading([true]);
 
     try {
       const contentURI = await uploadPostContent(
-        makePost[0]?.content,
-        makePost[0]?.images!,
-        makePost[0]?.videos!,
+        makePost[0]?.content?.trim() == ""
+        ? " "
+        : makePost[0]?.content,
+        makePost[0]?.images || [],
+        makePost[0]?.videos || [],
         [],
-        postCollectGif.gifs?.["post"]!
+        postCollectGif.gifs?.["post"] || []
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
       await lensPost(
         contentURI?.string!,
         dispatch,
-        [
-          {
-            collectOpenAction: {
-              simpleCollectOpenAction: postCollectGif.collectTypes?.["post"]!,
-            },
-          },
-        ],
+        postCollectGif.collectTypes?.["post"]
+          ? [
+              {
+                collectOpenAction: {
+                  simpleCollectOpenAction:
+                    postCollectGif.collectTypes?.["post"]!,
+                },
+              },
+            ]
+          : undefined,
         address as `0x${string}`,
         clientWallet,
         publicClient
@@ -85,7 +91,15 @@ const usePost = (
           actionGifs: gifs,
         })
       );
+      setMakePost([
+        {
+          content: "",
+          images: [],
+          videos: [],
+        },
+      ])
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setPostLoading([false]);

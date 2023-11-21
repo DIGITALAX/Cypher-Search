@@ -14,6 +14,7 @@ import { getCollectionsPaginated } from "../../../../graphql/subgraph/queries/ge
 import { getOrdersPaginated } from "../../../../graphql/subgraph/queries/getOrders";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useGallery = (
   lensConnected: Profile | undefined,
@@ -130,7 +131,7 @@ const useGallery = (
         ...(collectedData?.data?.orderCreateds || []),
         ...(collectedData?.data?.nFTOnlyOrderCreateds || []),
       ]?.map((item: { subOrderCollectionIds: string[] }) => {
-        item?.subOrderCollectionIds?.map(async (item: string) => {
+        (item?.subOrderCollectionIds || [])?.map(async (item: string) => {
           const res = await getOneCollection(item);
           collected.push(res?.data?.collectionCreateds?.[0]);
         });
@@ -186,7 +187,7 @@ const useGallery = (
           ...(collectedData?.data?.orderCreateds || []),
           ...(collectedData?.data?.nFTOnlyOrderCreateds || []),
         ]?.map((item: { subOrderCollectionIds: string[] }) => {
-          item?.subOrderCollectionIds?.map(async (item: string) => {
+          (item?.subOrderCollectionIds || [])?.map(async (item: string) => {
             const res = await getOneCollection(item);
             collected.push(res?.data?.collectionCreateds?.[0]);
           });
@@ -265,7 +266,7 @@ const useGallery = (
       const responseJSON = await response.json();
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -277,14 +278,14 @@ const useGallery = (
         publicClient
       );
 
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
       console.error(err.message);
     }
     setDisplayLoading(false);
   };
 
-  const galleryLike = async (id: string) => {
+  const galleryLike = async (id: string, hasReacted: boolean) => {
     const index = [
       ...(gallery?.collected || []),
       ...(gallery?.created || []),
@@ -299,8 +300,9 @@ const useGallery = (
     });
 
     try {
-      await lensLike(id, dispatch);
+      await lensLike(id, dispatch, hasReacted);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -327,7 +329,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -338,6 +340,7 @@ const useGallery = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -348,7 +351,11 @@ const useGallery = (
     });
   };
 
-  const displayLike = async (index: number, id: string) => {
+  const displayLike = async (
+    index: number,
+    id: string,
+    hasReacted: boolean
+  ) => {
     setInteractionsDisplayLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], like: true };
@@ -356,8 +363,9 @@ const useGallery = (
     });
 
     try {
-      await lensLike(id, dispatch);
+      await lensLike(id, dispatch, hasReacted);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 
@@ -377,7 +385,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -388,6 +396,7 @@ const useGallery = (
         publicClient
       );
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 

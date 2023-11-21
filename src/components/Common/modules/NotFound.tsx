@@ -19,7 +19,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   signInLoading,
   setCartListOpen,
   router,
-  openAccountModal,
+  handleLogout,
   dispatch,
   handleShuffleSearch,
   cartAnim
@@ -65,7 +65,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
           signInLoading={signInLoading}
           setCartListOpen={setCartListOpen}
           router={router}
-          openAccountModal={openAccountModal}
+          handleLogout={handleLogout}
           dispatch={dispatch}
           auto
           cartAnim={cartAnim}

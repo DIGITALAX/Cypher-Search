@@ -80,7 +80,7 @@ const Sales: FunctionComponent<SalesProps> = ({
                               className="relative flex flex-row w-6 h-6 items-center justify-start rounded-full border border-offWhite cursor-pointer"
                               onClick={() =>
                                 router.push(
-                                  `/item/quest/${sale?.buyer?.handle?.suggestedFormatted?.localName}`
+                                  `/autograph/${sale?.buyer?.handle?.suggestedFormatted?.localName}`
                                 )
                               }
                             >
