@@ -253,10 +253,45 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/ArcadeClassic.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Bitblox.otf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/Austral.ttf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/Ignite.otf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/BebasNeue.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/Vcr.ttf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/ttf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/InternalRainbows.otf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
                 />
                 <link
                   rel="preload"
@@ -274,42 +309,21 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Geometria.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Gamer.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/ClashDisplay.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Network.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/DosisRegular.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/EconomicaBold.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/EconomicaRegular.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Manaspc.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Dogica.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"

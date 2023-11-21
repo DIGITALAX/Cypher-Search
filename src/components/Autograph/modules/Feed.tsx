@@ -36,6 +36,12 @@ const Feed: FunctionComponent<FeedProps> = ({
   lensConnected,
   handleDecrypt,
   decryptLoading,
+  mentionProfiles,
+  setMentionProfiles,
+  setProfilesOpen,
+  caretCoord,
+  profilesOpen,
+  setCaretCoord,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10">
@@ -82,6 +88,12 @@ const Feed: FunctionComponent<FeedProps> = ({
                   ) => {
                     return (
                       <Publication
+                        setCaretCoord={setCaretCoord}
+                        mentionProfiles={mentionProfiles}
+                        profilesOpen={profilesOpen}
+                        setMentionProfiles={setMentionProfiles}
+                        setProfilesOpen={setProfilesOpen}
+                        caretCoord={caretCoord}
                         decryptLoading={decryptLoading?.[index]}
                         handleDecrypt={handleDecrypt}
                         data-post-id={item?.id}

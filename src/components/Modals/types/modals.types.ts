@@ -153,8 +153,20 @@ export type PostBoxProps = {
   postCollectGif: PostCollectGifState;
   quote: PrimaryPublication | undefined;
   makePost: MakePostComment[];
-  lensConnected: Profile | undefined;
   post: () => Promise<void>;
+  lensConnected: Profile | undefined;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   setMakePost: (e: SetStateAction<MakePostComment[]>) => void;
   postLoading: boolean[];
   router: NextRouter;

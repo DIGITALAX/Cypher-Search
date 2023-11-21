@@ -70,7 +70,17 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   setMainMakeComment,
   setMainContentLoading,
   decryptLoading,
-  handleDecrypt
+  handleDecrypt,
+  setMentionProfiles,
+  setMentionProfilesMain,
+  setProfilesOpen,
+  setProfilesOpenMain,
+  profilesOpen,
+  profilesOpenMain,
+  mentionProfiles,
+  mentionProfilesMain,
+  caretCoordMain,
+  caretCoord,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.profile?.metadata?.picture
@@ -119,6 +129,12 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               ) : (
                 <div className="relative w-5/6 h-fit flex flex-col gap-10 justify-start items-center">
                   <PostComment
+                    caretCoord={caretCoordMain}
+                    profilesOpen={profilesOpenMain?.[0]}
+                    mentionProfiles={mentionProfilesMain}
+                    setMentionProfiles={setMentionProfilesMain}
+                    setProfilesOpen={setProfilesOpenMain}
+                    lensConnected={lensConnected}
                     index={0}
                     makePostComment={mainMakeComment?.[0]}
                     setMakePostComment={setMainMakeComment}
@@ -152,6 +168,11 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           ) => {
                             return (
                               <Publication
+                                caretCoord={caretCoord}
+                                profilesOpen={profilesOpen}
+                                mentionProfiles={mentionProfiles}
+                                setMentionProfiles={setMentionProfiles}
+                                setProfilesOpen={setProfilesOpen}
                                 decryptLoading={decryptLoading}
                                 handleDecrypt={handleDecrypt}
                                 index={index}

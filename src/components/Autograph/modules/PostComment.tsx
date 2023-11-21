@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useRef } from "react";
 import { PostCommentProps } from "../types/autograph.types";
 import { AiOutlineLoading } from "react-icons/ai";
 import Image from "next/legacy/image";
@@ -7,6 +7,9 @@ import setPostMedia from "../../../../lib/helpers/setPostMedia";
 import { ImCross } from "react-icons/im";
 import { setPostCollectGif } from "../../../../redux/reducers/postCollectGifSlice";
 import Waveform from "./Screen/Waveform";
+import handleSearchProfiles from "../../../../lib/helpers/handleSearchProfiles";
+import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
+import { Profile } from "../../../../graphql/generated";
 
 const PostComment: FunctionComponent<PostCommentProps> = ({
   commentPost,
@@ -23,7 +26,15 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
   dispatch,
   postCollectGif,
   main,
+  mentionProfiles,
+  profilesOpen,
+  setMentionProfiles,
+  setProfilesOpen,
+  lensConnected,
+  caretCoord,
+  setCaretCoord,
 }): JSX.Element => {
+  const textElement = useRef(null);
   return (
     <div className="relative w-full h-fit flex flex-col items-start justify-start gap-2">
       <div
@@ -33,9 +44,10 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
         }}
       >
         <textarea
-          className="bg-black relative w-full h-full p-1 flex"
+          className="bg-black relative w-full text-xs h-full p-1 flex"
           style={{ resize: "none" }}
-          onChange={(e) =>
+          value={makePostComment?.content}
+          onChange={(e) => {
             setMakePostComment((prev) => {
               const arr = [...prev];
               arr[index] = {
@@ -43,9 +55,81 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                 content: e.target.value,
               };
               return arr;
-            })
-          }
+            });
+            handleSearchProfiles(
+              e,
+              setProfilesOpen,
+              setMentionProfiles,
+              index,
+              lensConnected,
+              setCaretCoord,
+              textElement
+            );
+          }}
+          ref={textElement}
         ></textarea>
+        {mentionProfiles?.length > 0 && profilesOpen && (
+          <div
+            className={`absolute w-32 border border-white max-h-28 h-fit flex flex-col overflow-y-auto items-start justify-start z-40`}
+            style={{
+              top: caretCoord.y + 30,
+              left: caretCoord.x,
+            }}
+          >
+            {mentionProfiles?.map((user: Profile, indexTwo: number) => {
+              const profileImage = createProfilePicture(
+                user?.metadata?.picture
+              );
+              return (
+                <div
+                  key={indexTwo}
+                  className={`relative border-y border-white w-full h-10 px-3 py-2 bg-black flex flex-row gap-3 cursor-pointer items-center justify-center`}
+                  onClick={() => {
+                    setProfilesOpen((prev) => {
+                      const arr = [...prev];
+                      arr[index] = false;
+                      return arr;
+                    });
+
+                    setMakePostComment((prev) => {
+                      const arr = [...prev];
+                      arr[index] = {
+                        ...arr[index],
+                        content:
+                          makePostComment?.content?.substring(
+                            0,
+                            makePostComment?.content?.lastIndexOf("@")
+                          ) + `${user?.handle?.suggestedFormatted?.localName}`,
+                      };
+                      return arr;
+                    });
+                  }}
+                >
+                  <div className="relative flex flex-row w-full h-full text-white font-aust items-center justify-center gap-2">
+                    <div
+                      className={`relative rounded-full flex bg-black w-3 h-3 items-center justify-center`}
+                      id="pfp"
+                    >
+                      {profileImage && (
+                        <Image
+                          src={profileImage}
+                          objectFit="cover"
+                          alt="pfp"
+                          layout="fill"
+                          className="relative w-fit h-fit rounded-full items-center justify-center flex"
+                          draggable={false}
+                        />
+                      )}
+                    </div>
+                    <div className="relative items-center justify-center w-fit h-fit text-xxs flex">
+                      {user?.handle?.suggestedFormatted?.localName}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
       <div className="relative w-full h-fit flex items-center justify-between">
         <div className="relative w-fit h-fit items-center justify-start flex flex-row gap-2">

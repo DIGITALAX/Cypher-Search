@@ -49,6 +49,12 @@ const Publication: FunctionComponent<PublicationProps> = ({
   lensConnected,
   decryptLoading,
   handleDecrypt,
+  setMentionProfiles,
+  setProfilesOpen,
+  mentionProfiles,
+  profilesOpen,
+  caretCoord,
+  setCaretCoord,
 }): JSX.Element => {
   return (
     <div
@@ -170,6 +176,13 @@ const Publication: FunctionComponent<PublicationProps> = ({
       />
       {commentsOpen?.[index] && (
         <PostComment
+          caretCoord={caretCoord!}
+          profilesOpen={profilesOpen?.[index]!}
+          mentionProfiles={mentionProfiles!}
+          setMentionProfiles={setMentionProfiles!}
+          setCaretCoord={setCaretCoord}
+          setProfilesOpen={setProfilesOpen!}
+          lensConnected={lensConnected}
           makePostComment={makeComment?.[index]!}
           setMakePostComment={setMakePostComment!}
           commentPost={comment!}

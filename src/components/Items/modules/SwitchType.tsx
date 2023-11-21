@@ -74,6 +74,18 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   openInteractions,
   handleDecrypt,
   decryptLoading,
+  setMentionProfiles,
+  setMentionProfilesMain,
+  profilesOpen,
+  profilesOpenMain,
+  caretCoord,
+  caretCoordMain,
+  setProfilesOpen,
+  setProfilesOpenMain,
+  mentionProfiles,
+  mentionProfilesMain,
+  setCaretCoord,
+  setCaretCoordMain,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -81,6 +93,8 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
     case "listener":
       return (
         <Chromadin
+          setCaretCoord={setCaretCoord}
+          setCaretCoordMain={setCaretCoordMain}
           handleDecrypt={handleDecrypt}
           decryptLoading={decryptLoading}
           oracleData={oracleData}
@@ -133,12 +147,34 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
           handleHidePost={handleHidePost}
           contentLoading={contentLoading}
           setContentLoading={setContentLoading}
+          setMentionProfiles={setMentionProfiles}
+          setMentionProfilesMain={setMentionProfilesMain}
+          setProfilesOpen={setProfilesOpen}
+          setProfilesOpenMain={setProfilesOpenMain}
+          mentionProfiles={mentionProfiles}
+          mentionProfilesMain={mentionProfilesMain}
+          caretCoord={caretCoord}
+          caretCoordMain={caretCoordMain}
+          profilesOpen={profilesOpen}
+          profilesOpenMain={profilesOpenMain}
         />
       );
 
     case "pub":
       return (
         <Pub
+          setCaretCoord={setCaretCoord}
+          setCaretCoordMain={setCaretCoordMain}
+          setMentionProfiles={setMentionProfiles}
+          setMentionProfilesMain={setMentionProfilesMain}
+          setProfilesOpen={setProfilesOpen}
+          setProfilesOpenMain={setProfilesOpenMain}
+          mentionProfiles={mentionProfiles}
+          mentionProfilesMain={mentionProfilesMain}
+          caretCoord={caretCoord}
+          caretCoordMain={caretCoordMain}
+          profilesOpen={profilesOpen}
+          profilesOpenMain={profilesOpenMain}
           lensConnected={lensConnected}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}

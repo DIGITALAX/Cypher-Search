@@ -16,7 +16,12 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
   contentLoading,
   postCollectGif,
   router,
-  lensConnected
+  lensConnected,
+  caretCoord,
+  profilesOpen,
+  mentionProfiles,
+  setMentionProfiles,
+  setProfilesOpen,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -38,17 +43,24 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
           {quote && (
             <PostQuote
               pink
-              index={0}
               router={router}
               dispatch={dispatch}
-              quote={quote}
-              lensConnected={lensConnected}
+              quote={{
+                ...quote,
+                decrypted: undefined,
+              }}
               disabled={true}
             />
           )}
           <div className="relative w-full h-full flex items-center justify-center pb-3">
             <div className="relative h-full w-4/5 items-center justify-center flex">
               <PostComment
+                caretCoord={caretCoord}
+                profilesOpen={profilesOpen?.[0]}
+                mentionProfiles={mentionProfiles}
+                setMentionProfiles={setMentionProfiles}
+                setProfilesOpen={setProfilesOpen}
+                lensConnected={lensConnected}
                 main={false}
                 setMakePostComment={setMakePost}
                 makePostComment={makePost[0]}

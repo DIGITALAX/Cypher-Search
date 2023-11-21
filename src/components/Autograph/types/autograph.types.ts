@@ -32,6 +32,30 @@ export type WebProps = {
   deleteCollection: () => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  setCaretCoordBookmark: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  setMentionProfilesBookmark: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpenBookmark: (e: SetStateAction<boolean[]>) => void;
+  profilesOpenBookmark: boolean[];
+  mentionProfilesBookmark: Profile[];
+  caretCoordBookmark: {
+    x: number;
+    y: number;
+  };
   decryptLoading: boolean[];
   handleSelected: (item: Profile, pfp: string) => Promise<void>;
   canMessage: boolean;
@@ -281,6 +305,18 @@ export type BookmarksProps = {
   bookmarks: ((Post | Mirror | Comment | Quote) & {
     decrypted: any;
   })[];
+  mentionProfiles: Profile[];
+  profilesOpen: boolean[];
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   decryptLoading: boolean[];
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   bookmarksLoading: boolean;
@@ -420,6 +456,30 @@ export type GalleryScreenProps = {
 };
 
 export type ScreenSwitchProps = {
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  setCaretCoordBookmark: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  setMentionProfilesBookmark: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpenBookmark: (e: SetStateAction<boolean[]>) => void;
+  profilesOpenBookmark: boolean[];
+  mentionProfilesBookmark: Profile[];
+  caretCoordBookmark: {
+    x: number;
+    y: number;
+  };
   dropsLoading: boolean;
   collectionLoading: boolean;
   searchCollection: string;
@@ -765,6 +825,18 @@ export type FeedProps = {
   profileFeed: ((Post | Quote | Mirror) & {
     decrypted: any;
   })[];
+  mentionProfiles: Profile[];
+  profilesOpen: boolean[];
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   decryptLoading: boolean[];
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   mirror: (id: string) => Promise<void>;
@@ -947,6 +1019,18 @@ export type PublicationProps = {
   };
   index: number;
   decryptLoading?: boolean;
+  mentionProfiles?: Profile[];
+  profilesOpen?: boolean[];
+  caretCoord?: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  setMentionProfiles?: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen?: (e: SetStateAction<boolean[]>) => void;
   handleDecrypt?: (post: Comment | Quote | Post) => void;
   lensConnected: Profile | undefined;
   disabled?: boolean;
@@ -1014,6 +1098,19 @@ export interface MakePostComment {
 
 export type PostCommentProps = {
   makePostComment: MakePostComment;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  mentionProfiles: Profile[];
+  profilesOpen: boolean;
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
+  lensConnected: Profile | undefined;
   postCollectGif: PostCollectGifState;
   setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
   main?: boolean | undefined;
@@ -1049,6 +1146,19 @@ export type ScreenPostProps = {
   postCollectGif: PostCollectGifState;
   setMakePost: (e: SetStateAction<MakePostComment[]>) => void;
   postLoading: boolean[];
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (e: SetStateAction<{
+    x: number;
+    y: number;
+  }>) => void
+  lensConnected: Profile | undefined;
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   setContentLoading: (
     e: SetStateAction<
       {

@@ -23,6 +23,34 @@ export type SwitchTypeProps = {
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   filterConstants: FilterValues | undefined;
   router: NextRouter;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  setCaretCoordMain: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
+  caretCoordMain: {
+    x: number;
+    y: number;
+  };
+  profilesOpenMain: boolean[];
+  mentionProfilesMain: Profile[];
+  setMentionProfilesMain: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpenMain: (e: SetStateAction<boolean[]>) => void;
   instantLoading: boolean;
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
@@ -66,7 +94,7 @@ export type SwitchTypeProps = {
   profileHovers: boolean[];
   setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
-  simpleCollect: (id: string, type: string) => Promise<void>;
+  simpleCollect: (id: string, type: string, main: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -126,6 +154,34 @@ export type ChromadinProps = {
   itemData: Creation;
   isApprovedSpend: boolean;
   type: string;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  setCaretCoordMain: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
+  caretCoordMain: {
+    x: number;
+    y: number;
+  };
+  profilesOpenMain: boolean[];
+  mentionProfilesMain: Profile[];
+  setMentionProfilesMain: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpenMain: (e: SetStateAction<boolean[]>) => void;
   decryptLoading: boolean;
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   filterConstants: FilterValues | undefined;
@@ -167,7 +223,7 @@ export type ChromadinProps = {
   profileHovers: boolean[];
   setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
-  simpleCollect: (id: string, type: string) => Promise<void>;
+  simpleCollect: (id: string, type: string, main: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -227,6 +283,34 @@ export type PublicationProps = {
   allComments: (Comment & {
     decrypted: any;
   })[];
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  setCaretCoordMain: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
+  caretCoordMain: {
+    x: number;
+    y: number;
+  };
+  profilesOpenMain: boolean[];
+  mentionProfilesMain: Profile[];
+  setMentionProfilesMain: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpenMain: (e: SetStateAction<boolean[]>) => void;
   decryptLoading: boolean;
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   allCommentsLoading: boolean;
