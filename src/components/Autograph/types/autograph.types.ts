@@ -5,7 +5,6 @@ import {
   Quote,
   Mirror,
   Comment,
-  ProfileMetadata,
   Erc20,
   SimpleCollectOpenActionModuleInput,
   PrimaryPublication,
@@ -13,7 +12,6 @@ import {
   StoryMetadataV3,
   TextOnlyMetadataV3,
   ImageMetadataV3,
-  LiveStreamMetadataV3,
   VideoMetadataV3,
   AudioMetadataV3,
 } from "../../../../graphql/generated";
@@ -25,6 +23,7 @@ import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
 import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
+import { ProfileOptions } from "@lens-protocol/metadata";
 
 export type WebProps = {
   router: NextRouter;
@@ -34,11 +33,12 @@ export type WebProps = {
   creationLoading: boolean;
   isDesigner: boolean;
   decryptLoading: boolean[];
+  handleSelected: (item: Profile, pfp: string) => Promise<void>;
+  canMessage: boolean;
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   collectionLoading: boolean;
   allCollections: Creation[];
   filterConstants: FilterValues | undefined;
-  setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
   dropDetails: {
     collectionIds: string[];
     title: string;
@@ -97,7 +97,7 @@ export type WebProps = {
   conversations: (Conversation & {
     profileImage: string;
     profileHandle: string;
-    preview: DecodedMessage;
+    recordedMessages: DecodedMessage[];
   })[];
   messages: DecodedMessage[];
   selectedUser:
@@ -110,7 +110,6 @@ export type WebProps = {
   handleSearchUser: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
   searchedProfiles: Profile[];
   userSearch: string;
-  setUserSearch: (e: SetStateAction<string>) => void;
   setSelectedUser: (
     e: SetStateAction<
       | {
@@ -146,7 +145,7 @@ export type WebProps = {
   decryptOrder: (orderId: string) => void;
   setSettingsData: (
     e: SetStateAction<
-      ProfileMetadata & {
+      ProfileOptions & {
         microbrands: {
           microbrand: string;
           microbrandCover: string;
@@ -158,7 +157,7 @@ export type WebProps = {
       }
     >
   ) => void;
-  settingsData: ProfileMetadata & {
+  settingsData: ProfileOptions & {
     microbrands: {
       microbrand: string;
       microbrandCover: string;
@@ -427,8 +426,9 @@ export type ScreenSwitchProps = {
   decryptLoading: boolean[];
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   setSearchCollection: (e: SetStateAction<string>) => void;
-  setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
   allDrops: Drop[];
+  handleSelected: (item: Profile, pfp: string) => Promise<void>;
+  canMessage: boolean;
   allCollections: Creation[];
   deleteCollection: () => Promise<void>;
   editDrop: () => Promise<void>;
@@ -451,7 +451,6 @@ export type ScreenSwitchProps = {
   handleSearchUser: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
   searchedProfiles: Profile[];
   userSearch: string;
-  setUserSearch: (e: SetStateAction<string>) => void;
   setSelectedUser: (
     e: SetStateAction<
       | {
@@ -470,7 +469,7 @@ export type ScreenSwitchProps = {
   conversations: (Conversation & {
     profileImage: string;
     profileHandle: string;
-    preview: DecodedMessage;
+    recordedMessages: DecodedMessage[];
   })[];
   messages: DecodedMessage[];
   setDropDetails: (
@@ -567,7 +566,7 @@ export type ScreenSwitchProps = {
   like: (index: number, id: string, hasReacted: boolean) => Promise<void>;
   setSettingsData: (
     e: SetStateAction<
-      ProfileMetadata & {
+      ProfileOptions & {
         microbrands: {
           microbrand: string;
           microbrandCover: string;
@@ -579,7 +578,7 @@ export type ScreenSwitchProps = {
       }
     >
   ) => void;
-  settingsData: ProfileMetadata & {
+  settingsData: ProfileOptions & {
     microbrands: {
       microbrand: string;
       microbrandCover: string;
@@ -670,7 +669,7 @@ export type SettingsProps = {
   isDesigner: boolean;
   setSettingsData: (
     e: SetStateAction<
-      ProfileMetadata & {
+      ProfileOptions & {
         microbrands: {
           microbrand: string;
           microbrandCover: string;
@@ -682,7 +681,7 @@ export type SettingsProps = {
       }
     >
   ) => void;
-  settingsData: ProfileMetadata & {
+  settingsData: ProfileOptions & {
     microbrands: {
       microbrand: string;
       microbrandCover: string;
@@ -1273,12 +1272,13 @@ export type MessagesProps = {
   conversations: (Conversation & {
     profileImage: string;
     profileHandle: string;
-    preview: DecodedMessage;
+    recordedMessages: DecodedMessage[];
   })[];
+  dispatch: Dispatch<AnyAction>;
   sendMessageLoading: boolean;
   handleSendMessage: () => Promise<void>;
-  setUserSearch: (e: SetStateAction<string>) => void;
-  setSearchedProfiles: (e: SetStateAction<Profile[]>) => void;
+  handleSelected: (item: Profile, pfp: string) => Promise<void>;
+  canMessage: boolean;
   currentMessage: string;
   setCurrentMessage: (e: SetStateAction<string>) => void;
   selectedUser:
@@ -1394,9 +1394,11 @@ export interface Drop {
 export type NewConversationProps = {
   messages: DecodedMessage[];
   currentMessage: string;
+  canMessage: boolean;
   setCurrentMessage: (e: SetStateAction<string>) => void;
   handleSendMessage: () => Promise<void>;
   sendMessageLoading: boolean;
+  dispatch: Dispatch<AnyAction>;
   selectedUser:
     | {
         address: string;

@@ -1,33 +1,46 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { omit } from "lodash";
 import {
   Erc20,
   FeeFollowModuleSettings,
-  MetadataAttributeType,
+  NftImage,
   Profile,
-  ProfileMetadata,
   RelaySuccess,
+  MetadataAttributeType,
 } from "../../../../graphql/generated";
+import {
+  ProfileMetadataSchema,
+  ProfileOptions,
+  MetadataAttribute,
+} from "@lens-protocol/metadata";
 import setFollowModule from "../../../../graphql/lens/mutations/followModule";
 import createSetFollowModule from "../../../../lib/helpers/createSetFollowModule";
 import { createWalletClient, custom } from "viem";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { PublicClient } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../../../lib/constants";
 import broadcast from "../../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
-import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
+import handleIndexCheck, {
+  getIndexed,
+} from "../../../../graphql/lens/queries/indexed";
 import { Dispatch } from "redux";
+import { ScreenDisplay } from "../types/autograph.types";
+import { v4 as uuidv4 } from "uuid";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import convertToFile from "../../../../lib/helpers/convertToFile";
 
 const useSettings = (
   lensConnected: Profile | undefined,
   availableCurrencies: Erc20[],
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  screenDisplay: ScreenDisplay,
+  isDesigner: boolean
 ) => {
   const [settingsUpdateLoading, setSettingsUpdateLoading] =
     useState<boolean>(false);
@@ -38,7 +51,7 @@ const useSettings = (
   const [pfpImage, setPFPImage] = useState<string>();
   const [coverImage, setCoverImage] = useState<string>();
   const [settingsData, setSettingsData] = useState<
-    ProfileMetadata & {
+    ProfileOptions & {
       microbrands: {
         microbrand: string;
         microbrandCover: string;
@@ -49,27 +62,13 @@ const useSettings = (
       };
     }
   >({
-    __typename: lensConnected?.metadata?.__typename,
-    appId: "cypersearch",
-    attributes: lensConnected?.metadata?.attributes,
-    bio: lensConnected?.metadata?.bio,
-    coverPicture: lensConnected?.metadata?.coverPicture,
-    displayName: lensConnected?.metadata?.displayName,
-    picture: lensConnected?.metadata?.picture,
-    rawURI: lensConnected?.metadata?.rawURI,
-    microbrands: lensConnected?.metadata?.attributes?.[
-      lensConnected?.metadata?.attributes?.findIndex(
-        (item) => item.key === "microbrandsCypher"
-      )
-    ]
-      ? JSON.parse(
-          lensConnected?.metadata?.attributes?.[
-            lensConnected?.metadata?.attributes?.findIndex(
-              (item) => item.key === "microbrandsCypher"
-            )
-          ].value || ""
-        )
-      : [],
+    appId: "",
+    attributes: undefined,
+    bio: undefined,
+    coverPicture: undefined,
+    name: undefined,
+    picture: undefined,
+    microbrands: [],
     tempMicro: {
       microbrand: undefined,
       microbrandCover: undefined,
@@ -131,107 +130,120 @@ const useSettings = (
         for (let i = 0; i < images.length; i++) {
           const response = await fetch("/api/ipfs", {
             method: "POST",
-            body: images[i],
+            body: convertToFile(images[i] as string, "image/png"),
           });
           const responseJSON = await response.json();
           newImages.push("ipfs://" + responseJSON.cid);
         }
       }
 
-      let attributes = [...(settingsData?.attributes || [])];
+      let newAttributes = [...(settingsData?.attributes || [])];
 
-      const existing = attributes.findIndex(
-        (item) => item.key === "microbrandsCypher"
-      );
-      let itemsToHash: {
-        microbrand: string;
-        microbrandCover: string;
-      }[] = [];
-      if (existing) {
-        await JSON.parse(attributes[existing].value);
-        itemsToHash = [
-          ...settingsData?.microbrands,
-          ...JSON.parse(attributes[existing].value),
-        ].filter(
-          (value, index, array) =>
-            array.findIndex(
-              (v) =>
-                v.microbrand === value.microbrand &&
-                v.microbrandCover === value.microbrandCover
-            ) === index
+      if (isDesigner) {
+        const existing = newAttributes.findIndex(
+          (item) => item.key === "microbrandsCypher"
         );
-      } else {
-        itemsToHash = settingsData?.microbrands;
-      }
-
-      const promises = itemsToHash?.map(
-        async (item: { microbrand: string; microbrandCover: string }) => {
-          const cover = await fetch("/api/ipfs", {
-            method: "POST",
-            body: item?.microbrandCover,
-          });
-          const coverCID = await cover.json();
-          return {
-            microbrand: item.microbrand,
-            microbrandCover: "ipfs://" + coverCID?.cid,
-          };
+        let itemsToHash: {
+          microbrand: string;
+          microbrandCover: string;
+        }[] = [];
+        if (existing != -1) {
+          await JSON.parse(newAttributes[existing]?.value);
+          itemsToHash = [
+            ...settingsData?.microbrands,
+            ...JSON.parse(newAttributes[existing]?.value),
+          ].filter(
+            (value, index, array) =>
+              array.findIndex(
+                (v) =>
+                  v.microbrand === value?.microbrand &&
+                  v.microbrandCover === value?.microbrandCover
+              ) === index
+          );
+        } else {
+          itemsToHash = settingsData?.microbrands;
         }
-      );
 
-      await Promise.all(promises);
+        const promises = itemsToHash?.map(
+          async (item: { microbrand: string; microbrandCover: string }) => {
+            const cover = await fetch("/api/ipfs", {
+              method: "POST",
+              body: convertToFile(item?.microbrandCover, "image/png"),
+            });
+            const coverCID = await cover.json();
+            return {
+              microbrand: item.microbrand,
+              microbrandCover: "ipfs://" + coverCID?.cid,
+            };
+          }
+        );
 
-      if (existing) {
-        attributes[existing].value = JSON.stringify([
-          ...(await JSON.parse(attributes[existing].value)),
-          ...(promises || []),
-        ]);
-      } else {
-        attributes.push({
-          key: "microbrandCypher",
-          value: JSON.stringify(promises || []),
-          type: MetadataAttributeType.Json,
-        });
+        const awaited = await Promise.all(promises);
+
+        if (existing != -1) {
+          newAttributes[existing].value = JSON.stringify([
+            ...(await JSON.parse(newAttributes[existing]?.value)),
+            ...(awaited || []),
+          ]);
+        } else {
+          newAttributes.push({
+            key: "microbrandCypher",
+            value: JSON.stringify(awaited || []),
+            type: MetadataAttributeType.Json as any,
+          });
+        }
       }
 
-      const metadata: ProfileMetadata = {
-        ...settingsData,
-        attributes,
+      const { tempMicro, microbrands, attributes, ...filteredSettingsData } =
+        settingsData;
+      const metadata = {
+        ...filteredSettingsData,
+        // attributes: attributes
+        //   ?.filter((item) => item.key?.toLowerCase() !== "timestamp")
+        //   ?.map((item) => ({
+        //     ...item,
+        //     type:
+        //       item.type.charAt(0).toUpperCase() +
+        //       item.type.slice(1).toLowerCase(),
+        //   })),
         picture: hasNewPfpImage
-          ? {
-              raw: {
-                uri: newImages[hasNewCoverImage ? 1 : 0],
-              },
-            }
+          ? newImages[hasNewCoverImage ? 1 : 0]
           : settingsData.picture,
         coverPicture: hasNewCoverImage
-          ? {
-              raw: {
-                uri: newImages[0],
-              },
-            }
+          ? newImages[0]
           : settingsData.coverPicture,
+        id: uuidv4(),
       };
 
-      const response = await fetch("/api/ipfs", {
-        method: "POST",
-        body: JSON.stringify(metadata),
-      });
-      const responseJSON = await response.json();
-
-      const clientWallet = createWalletClient({
-        chain: polygon,
-        transport: custom((window as any).ethereum),
+      const test = ProfileMetadataSchema.safeParse({
+        $schema: "https://json-schemas.lens.dev/profile/2.0.0.json",
+        lens: metadata,
       });
 
-      await setMeta(
-        "ipfs://" + responseJSON.cid,
-        dispatch,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
+      if (test?.success) {
+        const response = await fetch("/api/ipfs", {
+          method: "POST",
+          body: JSON.stringify(test?.data),
+        });
+        const responseJSON = await response.json();
 
-      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
+        const clientWallet = createWalletClient({
+          chain: polygon,
+          transport: custom((window as any).ethereum),
+        });
+
+        await setMeta(
+          "ipfs://" + responseJSON.cid,
+          dispatch,
+          address as `0x${string}`,
+          clientWallet,
+          publicClient
+        );
+
+        await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
+      } else {
+        setInteractError(true);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -243,8 +255,8 @@ const useSettings = (
     try {
       const { data } = await setFollowModule({
         followModule: createSetFollowModule(
-          followData.type,
-          followData.value,
+          followData?.type,
+          followData?.value,
           followData?.currency?.contract?.address,
           lensConnected?.ownedBy?.address
         ),
@@ -323,6 +335,50 @@ const useSettings = (
     setFollowUpdateLoading(false);
   };
 
+  useEffect(() => {
+    if (
+      lensConnected?.id &&
+      settingsData?.appId?.trim() == "" &&
+      ScreenDisplay.Settings == screenDisplay
+    ) {
+      setSettingsData({
+        appId: "cyphersearch",
+        attributes: lensConnected?.metadata?.attributes?.map((item) => ({
+          key: item?.key,
+          type: item?.type,
+          value: item?.value,
+        })) as MetadataAttribute[] | undefined,
+        bio: lensConnected?.metadata?.bio,
+        coverPicture:
+          lensConnected?.metadata?.coverPicture?.__typename === "ImageSet"
+            ? lensConnected?.metadata?.coverPicture?.raw?.uri
+            : (lensConnected?.metadata?.coverPicture as unknown as NftImage)
+                ?.image?.raw?.uri,
+        name: lensConnected?.metadata?.displayName as string,
+        picture:
+          lensConnected?.metadata?.picture?.__typename === "ImageSet"
+            ? lensConnected?.metadata?.picture?.raw?.uri
+            : (lensConnected?.metadata?.picture as NftImage)?.image?.raw?.uri,
+        microbrands: lensConnected?.metadata?.attributes?.[
+          lensConnected?.metadata?.attributes?.findIndex(
+            (item) => item.key === "microbrandsCypher"
+          )
+        ]
+          ? JSON.parse(
+              lensConnected?.metadata?.attributes?.[
+                lensConnected?.metadata?.attributes?.findIndex(
+                  (item) => item.key === "microbrandsCypher"
+                )
+              ]?.value || ""
+            )
+          : [],
+        tempMicro: {
+          microbrand: undefined,
+          microbrandCover: undefined,
+        },
+      });
+    }
+  }, [lensConnected?.id, screenDisplay]);
   return {
     handleSettingsUpdate,
     settingsUpdateLoading,

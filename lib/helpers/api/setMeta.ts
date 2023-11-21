@@ -22,6 +22,7 @@ const setMeta = async (
 
   const typedData = data?.createOnchainSetProfileMetadataTypedData.typedData;
 
+
   const signature = await clientWallet.signTypedData({
     domain: omit(typedData?.domain, ["__typename"]),
     types: omit(typedData?.types, ["__typename"]),

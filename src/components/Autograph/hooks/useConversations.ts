@@ -5,10 +5,8 @@ import { createWalletClient, custom } from "viem";
 import { polygon, polygonMumbai } from "viem/chains";
 import { ScreenDisplay } from "../types/autograph.types";
 import { LimitType, Profile } from "../../../../graphql/generated";
-import { init, fetchQuery } from "@airstack/airstack-react";
+import { fetchQuery } from "@airstack/airstack-react";
 import searchProfiles from "../../../../graphql/lens/queries/searchProfiles";
-
-init(process.env.AIRSTACK_KEY!);
 
 const useConversations = (
   address: `0x${string}` | undefined,
@@ -24,12 +22,13 @@ const useConversations = (
     (Conversation & {
       profileImage: string;
       profileHandle: string;
-      preview: DecodedMessage;
+      recordedMessages: DecodedMessage[];
     })[]
   >([]);
   const [conversationsLoading, setConversationsLoading] =
     useState<boolean>(false);
   const [searchedProfiles, setSearchedProfiles] = useState<Profile[]>([]);
+  const [canMessage, setCanMessage] = useState<boolean>(true);
   const [userSearch, setUserSearch] = useState<string>("");
   const [selectedUser, setSelectedUser] = useState<
     | {
@@ -46,10 +45,13 @@ const useConversations = (
     try {
       setUserSearch(e.target.value);
       if (!e.target.value || e.target.value?.trim() === "") return;
-      const profileSearch = await searchProfiles({
-        limit: LimitType.TwentyFive,
-        query: e.target.value,
-      }, lensConnected?.id);
+      const profileSearch = await searchProfiles(
+        {
+          limit: LimitType.TwentyFive,
+          query: e.target.value,
+        },
+        lensConnected?.id
+      );
 
       setSearchedProfiles(
         (profileSearch?.data?.searchProfiles?.items?.filter(
@@ -61,26 +63,53 @@ const useConversations = (
     }
   };
 
-  const resolveLensSocial = async (address: `0x${string}`) => {
+  const handleSelected = async (item: Profile, pfp: string) => {
+    try {
+      setCanMessage(await client?.canMessage(item?.ownedBy?.address!)!);
+
+      setSearchedProfiles([]);
+      setUserSearch(
+        item?.handle?.suggestedFormatted?.localName?.split("@")?.[1]!
+      );
+      setSelectedUser({
+        address: item?.ownedBy?.address,
+        handle: item?.handle?.suggestedFormatted?.localName!,
+        image: pfp!,
+      });
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const resolveLensSocial = async (
+    addresses: `0x${string}`[]
+  ): Promise<
+    | { profileImage: string; profileHandle: string; userAddress: string }[]
+    | undefined
+  > => {
     const newQuery = ` 
-    query MyQuery {
-      Wallet(
-        input: {identity: "${address}", blockchain: ethereum, dappName: {_eq: lens}}
-      ) {
-        socials {
-          profileImage
+    query MyQuery($addresses: [Address!]) {
+      Socials(input: {
+        filter: {
+          userAssociatedAddresses: {_in: $addresses}, 
+          dappName: {_eq: lens}
+        }, 
+        blockchain: ethereum
+      }) {
+        Social {
           profileHandle
-        }        
+          profileImage
+          userAddress
+        }
       }
     }
     `;
-    const response = await fetchQuery(newQuery);
-
+    const response = await fetchQuery(newQuery, { addresses });
     if (
-      response.data.Wallet.socials &&
-      response.data.Wallet.socials.length > 0
+      response?.data?.Socials?.Social &&
+      response?.data?.Socials?.Social?.length > 0
     ) {
-      return response?.data?.Wallet?.socials?.[0];
+      return response?.data?.Socials?.Social;
     }
   };
 
@@ -94,7 +123,6 @@ const useConversations = (
 
       const client = await Client.create(clientWallet, {
         env: "production",
-        
       });
       setClient(client);
 
@@ -114,7 +142,7 @@ const useConversations = (
       }
 
       const conversation = await validClient!.conversations?.newConversation(
-        digitalax ? DIGITALAX_ADDRESS : selectedUser?.address!
+        digitalax ? DIGITALAX_ADDRESS : selectedUser?.address?.toLowerCase()!
       );
       const data = conversation.send(digitalax ? digiMessage : currentMessage);
       if ((await data).sent) {
@@ -123,9 +151,10 @@ const useConversations = (
           setTimeout(() => {
             setDigiMessage("");
           }, 6000);
+        } else {
+          setCurrentMessage("");
         }
-      } else {
-        setCurrentMessage("");
+        setMessages(await conversation.messages());
       }
     } catch (err: any) {
       console.error(err.message);
@@ -142,16 +171,87 @@ const useConversations = (
       }
 
       const convos = await validClient!.conversations?.list();
-      const promises = convos?.map(async (con) => {
-        const data = await resolveLensSocial(con.peerAddress as `0x${string}`);
-        return {
-          ...con,
-          profileImage: data?.profileImage,
-          profileHandle: data?.profileHandle,
-          preview: (await con.messages())?.[0],
-        };
-      });
-      setConversations(await Promise.all(promises));
+      const addresses = convos?.map((item) => item.peerAddress);
+      const data = await resolveLensSocial(addresses as `0x${string}`[]);
+
+      if (data) {
+        const socialProfilesMap: Record<
+          string,
+          {
+            userAddress: string;
+            profileImage: string;
+            profileHandle: string;
+          }
+        > =
+          data?.reduce(
+            (
+              map: Record<
+                string,
+                {
+                  userAddress: string;
+                  profileImage: string;
+                  profileHandle: string;
+                }
+              >,
+              profile
+            ) => {
+              map[profile.userAddress?.toLowerCase()] = profile;
+              return map;
+            },
+            {} as Record<
+              string,
+              {
+                userAddress: string;
+                profileImage: string;
+                profileHandle: string;
+              }
+            >
+          ) || {};
+
+        const filteredAndMappedConversations = convos
+          .filter(
+            (convo) => socialProfilesMap[convo.peerAddress?.toLowerCase()]
+          )
+          .map(async (convo) => {
+            const messages = await convo.messages();
+            const profile = socialProfilesMap[convo.peerAddress?.toLowerCase()];
+            if (messages?.length > 0) {
+              return {
+                ...convo,
+                profileImage: profile.profileImage,
+                profileHandle: profile.profileHandle,
+                recordedMessages: messages,
+              };
+            }
+          });
+
+        const updatedConversations = (
+          await Promise.all(filteredAndMappedConversations)
+        )?.filter(Boolean);
+
+        updatedConversations.sort((a, b) => {
+          const dateA = a?.createdAt && new Date(a?.createdAt);
+          const dateB = b?.createdAt && new Date(b?.createdAt);
+          return ((dateB || 0) as number) - ((dateA || 0) as number);
+        });
+        const uniqueConvoSet = new Set();
+        const uniqueConversations = updatedConversations.filter((convo) => {
+          const uniqueId = convo?.peerAddress || "";
+          if (uniqueConvoSet.has(uniqueId)) {
+            return false;
+          }
+          uniqueConvoSet.add(uniqueId);
+          return true;
+        });
+
+        setConversations(
+          uniqueConversations as (Conversation<any> & {
+            profileImage: string;
+            profileHandle: string;
+            recordedMessages: DecodedMessage[];
+          })[]
+        );
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -162,17 +262,27 @@ const useConversations = (
     try {
       if (!selectedUser) return;
       setCurrentMessage("");
-      if (await client?.canMessage(selectedUser?.address!)) {
-        const conversation = await client!.conversations?.newConversation(
-          selectedUser?.address!
-        );
-        const messages = await conversation.messages();
-        setMessages(messages);
+
+      const itemExists = conversations?.find(
+        (conv) => conv?.profileHandle === selectedUser?.handle
+      );
+
+      if (itemExists) {
+        setMessages(itemExists?.recordedMessages);
+      } else {
+        if (await client?.canMessage(selectedUser?.address!)) {
+          const conversation = await client!.conversations?.newConversation(
+            selectedUser?.address!
+          );
+          const messages = await conversation.messages();
+          setMessages(messages);
+        }
       }
     } catch (err: any) {
       console.error(err.message);
     }
   };
+
 
   useEffect(() => {
     if (
@@ -183,7 +293,7 @@ const useConversations = (
     ) {
       handleConversations();
     }
-  }, []);
+  }, [address, screenDisplay, lensConnected?.id]);
 
   useEffect(() => {
     if (selectedUser) {
@@ -209,8 +319,8 @@ const useConversations = (
     sendMessageLoading,
     currentMessage,
     setCurrentMessage,
-    setUserSearch,
-    setSearchedProfiles,
+    handleSelected,
+    canMessage,
   };
 };
 

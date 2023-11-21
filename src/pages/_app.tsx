@@ -4,6 +4,7 @@ import { store } from "./../../redux/store";
 import { Provider } from "react-redux";
 import "@rainbow-me/rainbowkit/styles.css";
 import { XMTPProvider } from "@xmtp/react-sdk";
+import { init } from "@airstack/airstack-react";
 import {
   getDefaultWallets,
   RainbowKitProvider,
@@ -12,7 +13,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 import merge from "lodash.merge";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { polygon, polygonMumbai} from "wagmi/chains";
+import { polygon, polygonMumbai } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import Modals from "@/components/Modals/modules/Modals";
 import RouterChange from "@/components/Common/modules/RouterChange";
@@ -50,6 +51,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
   const [routerChangeLoading, setRouterChangeLoading] =
     useState<boolean>(false);
   useEffect(() => {

@@ -19,7 +19,7 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-center justify-center overflow-y-scroll min-h-[35rem] max-h-[35rem]">
+          <div className="relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-center justify-center overflow-y-scroll h-[35rem]">
             <div className="relative flex items-center justify-center w-2/3 h-full">
               <PostComment
                 commentPost={post}

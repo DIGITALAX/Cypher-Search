@@ -21,9 +21,10 @@ const Messages: FunctionComponent<MessagesProps> = ({
   userSearch,
   currentMessage,
   setCurrentMessage,
-  setUserSearch,
-  setSearchedProfiles,
   handleSendMessage,
+  handleSelected,
+  canMessage,
+  dispatch,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -33,13 +34,13 @@ const Messages: FunctionComponent<MessagesProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm min-h-[35rem] max-h-[35rem] justify-center overflow-hidden ${
+            className={`relative w-full bg-blurs flex bg-cover rounded-sm h-[35rem] justify-center overflow-hidden ${
               client ? "items-start" : "items-center"
             }`}
           >
             {client ? (
-              <div className="relative w-full h-full flex flex-row items-center justify-center gap-3">
-                <div className="relative flex flex-col items-start justify-center w-60 h-full">
+              <div className="relative w-full h-full flex flex-row justify-center  gap-3">
+                <div className="relative flex flex-col items-start justify-center w-60 h-fit">
                   <div className="relative w-full text-white text-xs font-aust h-fit flex flex-col bg-offBlack">
                     <input
                       className="relative border border-white h-10 px-2 py-1 bg-offBlack"
@@ -59,21 +60,7 @@ const Messages: FunctionComponent<MessagesProps> = ({
                                 <div
                                   key={index}
                                   className="relative w-full h-10 px-2 py-1 border-b border-white text-aust flex flex-row gap-2 items-center justify-center font-white text-xs hover:opacity-80 cursor-pointer"
-                                  onClick={() => {
-                                    setSearchedProfiles([]);
-                                    setUserSearch(
-                                      item?.handle?.suggestedFormatted?.localName?.split(
-                                        "@"
-                                      )?.[1]!
-                                    );
-                                    setSelectedUser({
-                                      address: item?.ownedBy?.address,
-                                      handle:
-                                        item?.handle?.suggestedFormatted
-                                          ?.localName!,
-                                      image: pfp!,
-                                    });
-                                  }}
+                                  onClick={() => handleSelected(item, pfp!)}
                                 >
                                   <div className="relative flex flex-row gap-2 items-center justify-start">
                                     <div
@@ -106,10 +93,9 @@ const Messages: FunctionComponent<MessagesProps> = ({
                     )}
                   </div>
                   <div
-                    className="relative w-full h-full flex overflow-y-scroll items-start justify-start bg-offBlack border-b border-x border-white"
+                    className="relative w-full flex overflow-y-scroll items-start justify-start bg-offBlack border-b border-x border-white"
                     style={{
-                      maxHeight: "calc(70vh - 2.5rem)",
-                      minHeight: "calc(70vh - 2.5rem)",
+                      height: "calc(70vh - 5rem)",
                     }}
                   >
                     <div
@@ -144,14 +130,17 @@ const Messages: FunctionComponent<MessagesProps> = ({
                               item: Conversation & {
                                 profileImage: string;
                                 profileHandle: string;
-                                preview: DecodedMessage;
+                                recordedMessages: DecodedMessage[];
                               },
                               index: number
                             ) => {
                               return (
                                 <div
                                   key={index}
-                                  className="relative border-b border-white bg-offBlack p-2 items-start justify-center animate-pulse h-20 w-full flex flex-col gap-2 text-white font-aust text-xs"
+                                  className={`relative border-b border-white bg-offBlack p-2 items-start cursor-pointer justify-center h-20 w-full flex flex-col gap-2 text-white font-aust text-xs ${
+                                    selectedUser?.address ===
+                                      item?.peerAddress && "opacity-70"
+                                  } `}
                                   onClick={() =>
                                     setSelectedUser({
                                       address: item.peerAddress,
@@ -165,18 +154,22 @@ const Messages: FunctionComponent<MessagesProps> = ({
                                       className="relative w-6 rounded-full flex h-6"
                                       id="pfp"
                                     >
-                                      {item?.profileImage?.split(
-                                        "ipfs://"
-                                      )?.[1] && (
+                                      {item?.profileImage && (
                                         <Image
                                           className="rounded-full"
                                           objectFit="cover"
                                           layout="fill"
-                                          src={`${INFURA_GATEWAY}/ipfs/${
-                                            item?.profileImage?.split(
+                                          src={
+                                            item?.profileImage?.includes(
                                               "ipfs://"
-                                            )?.[1]
-                                          }`}
+                                            )
+                                              ? `${INFURA_GATEWAY}/ipfs/${
+                                                  item?.profileImage?.split(
+                                                    "ipfs://"
+                                                  )?.[1]
+                                                }`
+                                              : item?.profileImage
+                                          }
                                           draggable={false}
                                         />
                                       )}
@@ -186,7 +179,19 @@ const Messages: FunctionComponent<MessagesProps> = ({
                                     </div>
                                   </div>
                                   <div className="opacity-80 relative w-fit h-fit items-center justify-start">
-                                    {item?.preview?.content?.slice(0, 20)}...
+                                    {item?.recordedMessages?.[
+                                      item?.recordedMessages?.length - 1
+                                    ]?.content
+                                      ? item?.recordedMessages?.[
+                                          item?.recordedMessages?.length - 1
+                                        ]?.content?.length < 20
+                                        ? item?.recordedMessages?.[
+                                            item?.recordedMessages?.length - 1
+                                          ]?.content
+                                        : item?.recordedMessages?.[
+                                            item?.recordedMessages?.length - 1
+                                          ]?.content?.slice(0, 20) + "..."
+                                      : "..."}
                                   </div>
                                 </div>
                               );
@@ -196,12 +201,14 @@ const Messages: FunctionComponent<MessagesProps> = ({
                   </div>
                 </div>
                 <NewConversation
+                  dispatch={dispatch}
                   messages={messages}
                   currentMessage={currentMessage}
                   setCurrentMessage={setCurrentMessage}
                   selectedUser={selectedUser}
                   handleSendMessage={handleSendMessage}
                   sendMessageLoading={sendMessageLoading}
+                  canMessage={canMessage}
                 />
               </div>
             ) : (

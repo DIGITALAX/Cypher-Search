@@ -1,9 +1,12 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useRef } from "react";
 import { NewConversationProps } from "../../types/autograph.types";
 import Image from "next/legacy/image";
 import { BsSend } from "react-icons/bs";
 import { AiOutlineLoading } from "react-icons/ai";
 import { DecodedMessage } from "@xmtp/react-sdk";
+import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
+import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 
 const NewConversation: FunctionComponent<NewConversationProps> = ({
   messages,
@@ -12,14 +15,22 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
   handleSendMessage,
   selectedUser,
   sendMessageLoading,
+  canMessage,
+  dispatch,
 }): JSX.Element => {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
+  }, [messages, messagesEndRef]);
   return (
     <div className="relative flex items-center justify-center w-full h-full">
       <div
-        className="relative w-4/5 flex bg-offBlack rounded-md border border-white flex-col items-start"
+        className="relative w-4/5 flex bg-offBlack rounded-md border border-white flex-col items-start justify-centers"
         style={{
-          maxHeight: "calc(60vh - 2.5rem)",
-          minHeight: "calc(60vh - 2.5rem)",
+          height: "calc(60vh - 2.5rem)",
         }}
       >
         <div className="relative w-full h-full flex flex-col justify-between items-start">
@@ -31,7 +42,13 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
                     className="rounded-full"
                     objectFit="cover"
                     layout="fill"
-                    src={selectedUser?.image}
+                    src={
+                      selectedUser?.image?.includes("ipfs://")
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            selectedUser?.image?.split("ipfs://")?.[1]
+                          }`
+                        : selectedUser?.image
+                    }
                     draggable={false}
                   />
                 )}
@@ -42,51 +59,109 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
             </div>
           </div>
           <div
-            className="relative w-full h-full flex items-between justify-end overflow-y-scroll"
+            className={`relative w-full flex  ${
+              canMessage || (canMessage && messages?.length > 0)
+                ? "items-between justify-end overflow-y-scroll"
+                : "items-center justify-center"
+            }`}
             style={{
-              maxHeight: "calc(60vh - 10rem)",
-              minHeight: "calc(60vh - 10rem)",
+              height: "30rem",
             }}
+            ref={messagesEndRef}
           >
-            <div className="relative w-full h-fit gap-3 flex flex-col items-end">
-              {messages?.map((item: DecodedMessage, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className={`relative w-full h-fit ${
-                      item?.recipientAddress === selectedUser?.address
-                        ? "items-start justify-start"
-                        : "items-end justify-end"
-                    }`}
-                  >
-                    <div
-                      className={`relative w-fit break-words h-fit px-2 py-1 flex justify-end  ${
-                        item?.recipientAddress === selectedUser?.address
-                          ? "bg-white/70 border border-white text-xs font-aust text-black"
-                          : "bg-sol/70 border border-sol text-xs font-aust text-black"
-                      }`}
-                    >
-                      {item?.content}
-                    </div>
+            {canMessage ? (
+              messages?.length > 0 ? (
+                <div className="relative w-full h-fit min-h-full gap-3 flex flex-col items-end justify-end p-3 overflow-y-scroll">
+                  {messages?.map((item: DecodedMessage, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`relative w-full h-fit flex ${
+                          item?.senderAddress?.toLowerCase() ===
+                          selectedUser?.address?.toLowerCase()
+                            ? "items-start justify-start"
+                            : "items-end justify-end"
+                        }`}
+                      >
+                        {/\bQm[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{44,46}\b/.test(
+                          item?.content
+                        ) ? (
+                          <div
+                            className="relative w-40 h-40 rounded-sm flex items-center justify-center cursor-pointer"
+                            id="pfp"
+                            onClick={() =>
+                              dispatch(
+                                setImageViewer({
+                                  actionValue: true,
+                                  actionImage: `${INFURA_GATEWAY}/ipfs/${item?.content}`,
+                                  actionType: "png",
+                                })
+                              )
+                            }
+                          >
+                            <Image
+                              layout="fill"
+                              objectFit="cover"
+                              src={`${INFURA_GATEWAY}/ipfs/${item?.content}`}
+                              className="rounded-sm"
+                            />
+                          </div>
+                        ) : (
+                          <div
+                            className={`relative w-fit break-words h-fit px-2 py-1 flex whitespace-preline  ${
+                              item?.senderAddress?.toLowerCase() ===
+                              selectedUser?.address?.toLowerCase()
+                                ? "bg-white/70 border border-white text-xs font-aust text-black justify-end"
+                                : "bg-sol/70 border border-sol text-xs font-aust text-black justify-start"
+                            }`}
+                            dangerouslySetInnerHTML={{
+                              __html: descriptionRegex(
+                                item?.content! ? item?.content : "???",
+                                true
+                              ),
+                            }}
+                          ></div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="relative w-full flex h-full text-center items-center justify-center text-white font-aust text-xs">
+                  <div className="relative w-fit flex items-center justify-center h-fit break-words">
+                    No messages appearing yet. Send something?
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              )
+            ) : (
+              <div className="relative w-full flex h-full text-center items-center justify-center text-white font-aust text-xs">
+                <div className="relative w-fit flex items-center justify-center h-fit break-words">
+                  User is not taking messages atm. Message another?
+                </div>
+              </div>
+            )}
           </div>
-          <div className="relative w-full h-20 border border-white rounded-b-md flex items-center justify-start mb-auto font-aust text-white text-xs">
+          <div
+            className={`relative w-full h-20 border border-white rounded-b-md flex items-center justify-start mb-auto font-aust text-white text-xs ${
+              !canMessage && "opacity-50"
+            }`}
+          >
             <textarea
               style={{ resize: "none" }}
               className="relative p-1 rounded-b-md bg-offBlack flex text-left h-full w-full"
               onChange={(e) => setCurrentMessage(e.target.value)}
               value={currentMessage}
+              disabled={!canMessage}
             ></textarea>
             <div
               className={`absolute bottom-3 right-3 w-fit h-fit ${
                 sendMessageLoading
                   ? "animate-spin"
-                  : "cursor-pointer active:scale-95"
+                  : canMessage && "cursor-pointer active:scale-95"
               }`}
-              onClick={() => !sendMessageLoading && handleSendMessage()}
+              onClick={() =>
+                canMessage && !sendMessageLoading && handleSendMessage()
+              }
             >
               {sendMessageLoading ? (
                 <AiOutlineLoading color="white" size={15} />

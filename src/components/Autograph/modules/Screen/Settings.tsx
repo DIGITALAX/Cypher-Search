@@ -4,7 +4,6 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Erc20, MetadataAttributeType } from "../../../../../graphql/generated";
-import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 import { ImCross } from "react-icons/im";
 
 const Settings: FunctionComponent<SettingsProps> = ({
@@ -33,28 +32,28 @@ const Settings: FunctionComponent<SettingsProps> = ({
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll min-h-[35rem] max-h-[35rem]">
+          <div className="relative w-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll h-[35rem]">
             <div className="relative w-full h-fit flex items-center justify-start bg-cover flex-col rounded-sm gap-5">
               <label
                 className="relative w-full h-40 rounded-sm cursor-pointer p-px"
                 id="pfp"
               >
                 <div className="relative w-full h-full flex items-center justify-center rounded-sm opacity-70">
-                  <Image
-                    layout="fill"
-                    src={
-                      coverImage
-                        ? coverImage
-                        : `${INFURA_GATEWAY}/ipfs/${
-                            settingsData?.coverPicture?.raw?.uri?.split(
-                              "ipfs://"
-                            )[1]
-                          }`
-                    }
-                    objectFit="cover"
-                    draggable={false}
-                    className="relative rounded-sm w-full h-full flex"
-                  />
+                  {(settingsData?.coverPicture || coverImage) && (
+                    <Image
+                      layout="fill"
+                      src={
+                        coverImage
+                          ? coverImage
+                          : `${INFURA_GATEWAY}/ipfs/${
+                              settingsData?.coverPicture?.split("ipfs://")[1]
+                            }`
+                      }
+                      objectFit="cover"
+                      draggable={false}
+                      className="relative rounded-sm w-full h-full flex"
+                    />
+                  )}
                   <input
                     hidden
                     type="file"
@@ -70,17 +69,21 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   id="pfp"
                 >
                   <div className="relative w-full h-full flex items-center justify-center rounded-sm">
-                    <Image
-                      layout="fill"
-                      src={
-                        pfpImage
-                          ? pfpImage
-                          : createProfilePicture(settingsData?.picture) || ""
-                      }
-                      objectFit="cover"
-                      draggable={false}
-                      className="relative rounded-sm w-full h-full flex"
-                    />
+                    {(pfpImage || settingsData?.picture) && (
+                      <Image
+                        layout="fill"
+                        src={
+                          pfpImage
+                            ? pfpImage
+                            : `${INFURA_GATEWAY}/ipfs/${
+                                settingsData?.picture?.split("ipfs://")?.[1]
+                              }` || ""
+                        }
+                        objectFit="cover"
+                        draggable={false}
+                        className="relative rounded-sm w-full h-full flex"
+                      />
+                    )}
                     <input
                       hidden
                       type="file"
@@ -102,13 +105,13 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     onChange={(e) =>
                       setSettingsData({
                         ...settingsData,
-                        displayName: e.target.value,
+                        name: e.target.value,
                       })
                     }
                     style={{
                       resize: "none",
                     }}
-                    value={settingsData?.displayName || ""}
+                    value={settingsData?.name || ""}
                     className="bg-piloto p-1 flex w-full h-full items-start justify-start"
                   />
                 </div>
@@ -146,13 +149,13 @@ const Settings: FunctionComponent<SettingsProps> = ({
                         (item) => item.key === "location"
                       );
 
-                      if (index) {
+                      if (index != -1) {
                         attributes[index].value === e.target.value;
                       } else {
                         attributes.push({
                           key: "location",
                           value: e.target.value,
-                          type: MetadataAttributeType.String,
+                          type: MetadataAttributeType.String as any,
                         });
                       }
 
@@ -185,13 +188,13 @@ const Settings: FunctionComponent<SettingsProps> = ({
                           (item) => item.key === "website"
                         );
 
-                        if (index) {
+                        if (index != -1) {
                           attributes[index].value === e.target.value;
                         } else {
                           attributes.push({
                             key: "website",
                             value: e.target.value,
-                            type: MetadataAttributeType.String,
+                            type: MetadataAttributeType.String as any,
                           });
                         }
 
@@ -361,9 +364,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   className={`relative w-32 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white text-xs rounded-sm ${
                     !settingsUpdateLoading && "cursor-pointer active:scale-95"
                   }`}
-                  onClick={() =>
-                    !settingsUpdateLoading && handleSettingsUpdate()
-                  }
+                  onClick={() => handleSettingsUpdate()}
                 >
                   <div
                     className={`${

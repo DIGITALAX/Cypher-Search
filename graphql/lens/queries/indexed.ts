@@ -39,7 +39,7 @@ const handleIndexCheck = async (
   }, 1000);
 };
 
-const getIndexed = async (
+export const getIndexed = async (
   request: LensTransactionStatusRequest
 ): Promise<FetchResult<LensTransactionStatusQuery>> => {
   return await apolloClient.query({
@@ -55,7 +55,7 @@ const pollUntilIndexed = async (
   request: LensTransactionStatusRequest
 ): Promise<boolean> => {
   let count = 0;
-  while (count < 5) {
+  while (count < 10) {
     try {
       const { data } = await getIndexed(request);
       if (data && data.lensTransactionStatus) {
@@ -68,6 +68,7 @@ const pollUntilIndexed = async (
           case LensTransactionStatusType.Processing:
             count += 1;
             await new Promise((resolve) => setTimeout(resolve, 6000));
+            if (count == 11) return true;
             break;
           default:
             throw new Error("Unexpected status");
@@ -77,7 +78,6 @@ const pollUntilIndexed = async (
       count += 1;
       console.error(err.message);
       continue;
-     
     }
   }
   return false;

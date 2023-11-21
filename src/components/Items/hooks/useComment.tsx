@@ -279,10 +279,11 @@ const useComment = (
 
     if (!main) {
       if (
-        !makeComment[index!]?.content &&
-        !makeComment[index!]?.images &&
-        !makeComment[index!]?.videos &&
-        !postCollectGif?.gifs?.[id]
+        (!makeComment[index!]?.content &&
+          !makeComment[index!]?.images &&
+          !makeComment[index!]?.videos &&
+          !postCollectGif?.gifs?.[id]) ||
+        index == -1
       )
         return;
       content = makeComment[index!]?.content;
@@ -417,6 +418,7 @@ const useComment = (
     const index = main
       ? undefined
       : allComments?.findIndex((pub) => pub.id === id);
+    if (!main && index == -1) return;
     handleLoaders(true, main!, index, "mirror");
 
     try {
@@ -443,6 +445,7 @@ const useComment = (
     const index = main
       ? undefined
       : allComments?.findIndex((pub) => pub.id === id);
+      if (!main && index == -1) return;
     handleLoaders(false, main!, index, "like");
 
     try {

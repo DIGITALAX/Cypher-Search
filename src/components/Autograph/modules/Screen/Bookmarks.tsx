@@ -46,7 +46,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center overflow-y-scroll min-h-[35rem] max-h-[35rem] ${
+            className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 justify-center overflow-y-scroll h-[35rem] ${
               !bookmarksLoading && bookmarks?.length == 0
                 ? "items-center"
                 : "items-start"

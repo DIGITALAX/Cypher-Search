@@ -124,7 +124,7 @@ const useCheckout = (
     const index = cartItems?.findIndex(
       (item) => item?.item?.pubId === chooseCartItem
     );
-    if (!index || !address) return;
+    if (index == -1 || !address) return;
 
     setCollectPostLoading((prev) => {
       const arr = [...prev];

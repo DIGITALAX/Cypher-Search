@@ -63,6 +63,7 @@ const useProfile = (
                 : (pub as Post | Quote).id
               : (pub as Creation)?.pubId) === id
         );
+    if (index == -1) return;
     handleLoaders(true, main!, feed!, index);
 
     try {
@@ -104,6 +105,7 @@ const useProfile = (
             : (pub as Post | Quote).id
           : (pub as Creation)?.pubId) === id
     );
+    if (index == -1) return;
     handleLoaders(true, main!, feed!, index);
 
     try {
