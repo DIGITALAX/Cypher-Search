@@ -5,6 +5,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Link from "next/link";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import numeral from "numeral";
+import { MetadataAttributeType } from "../../../../graphql/generated";
 
 const Bio: FunctionComponent<BioProps> = ({
   profile,
@@ -30,7 +31,7 @@ const Bio: FunctionComponent<BioProps> = ({
             </div>
           </div>
           <div className="relative flex items-start justify-between gap-2 w-full h-fit p-2 top-7 flex-col">
-            {!profile?.metadata?.bio && (
+            {profile?.metadata?.bio && (
               <div className="font-aust text-white text-xs  w-fit h-fit relative flex">
                 {profile?.metadata?.bio}
               </div>
@@ -139,48 +140,51 @@ const Bio: FunctionComponent<BioProps> = ({
         </div>
         {profile?.metadata?.attributes?.find(
           (item) => item.key === "microbrandsCypher"
-        )?.value && (
-          <div className="relative w-full hit flex flex-row gap-2 flex-wrap">
-            {JSON.parse(
-              profile?.metadata?.attributes?.[
-                profile?.metadata?.attributes?.findIndex(
-                  (item) => item.key === "microbrandsCypher"
-                )
-              ].value
-            )?.map(
-              (
-                item: {
-                  microbrand: string;
-                  microbranCover: string;
-                },
-                index: number
-              ) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative w-5 h-5 cursor-pointer active:scale-95 rounded-full"
-                    id="pfp"
-                    onClick={() =>
-                      router.push(`/item/microbrand/${item?.microbrand}`)
-                    }
-                  >
-                    {item?.microbranCover && (
-                      <Image
-                        layout="fill"
-                        src={`${INFURA_GATEWAY}/ipfs/${
-                          item?.microbranCover?.split("ipfs://")?.[1]
-                        }`}
-                        draggable={false}
-                        className="rounded-full"
-                        objectFit="cover"
-                      />
-                    )}
-                  </div>
-                );
-              }
-            )}
-          </div>
-        )}
+        )?.value &&
+          profile?.metadata?.attributes?.find(
+            (item) => item.key === "microbrandsCypher"
+          )?.type === MetadataAttributeType.Json && (
+            <div className="relative w-full hit flex flex-row gap-2 flex-wrap">
+              {JSON.parse(
+                profile?.metadata?.attributes?.[
+                  profile?.metadata?.attributes?.findIndex(
+                    (item) => item.key === "microbrandsCypher"
+                  )
+                ].value
+              )?.map(
+                (
+                  item: {
+                    microbrand: string;
+                    microbranCover: string;
+                  },
+                  index: number
+                ) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-5 h-5 cursor-pointer active:scale-95 rounded-full"
+                      id="pfp"
+                      onClick={() =>
+                        router.push(`/item/microbrand/${item?.microbrand}`)
+                      }
+                    >
+                      {item?.microbranCover && (
+                        <Image
+                          layout="fill"
+                          src={`${INFURA_GATEWAY}/ipfs/${
+                            item?.microbranCover?.split("ipfs://")?.[1]
+                          }`}
+                          draggable={false}
+                          className="rounded-full"
+                          objectFit="cover"
+                        />
+                      )}
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          )}
       </div>
       <div className="relative w-full h-fit flex items-end justify-center flex-col gap-3 overflow-x-hidden">
         <div className="font-beb text-white text-9xl w-fit h-fit relative flex items-center justify-end">

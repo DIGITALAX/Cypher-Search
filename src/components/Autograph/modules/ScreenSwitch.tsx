@@ -20,7 +20,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   interactionsLoading,
   sortType,
   display,
-  setSearchedProfiles,
   settingsData,
   setSettingsData,
   handleSettingsUpdate,
@@ -116,7 +115,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   userSearch,
   currentMessage,
   setCurrentMessage,
-  setUserSearch,
   searchCollection,
   setSearchCollection,
   deleteDrop,
@@ -126,6 +124,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   collectionLoading,
   handleDecrypt,
   decryptLoading,
+  handleSelected,
+  canMessage,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -246,8 +246,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Messages:
       return (
         <Messages
+          dispatch={dispatch}
           sendMessageLoading={sendMessageLoading}
-          setUserSearch={setUserSearch}
           selectedUser={selectedUser}
           handleSearchUser={handleSearchUser}
           searchedProfiles={searchedProfiles}
@@ -260,8 +260,9 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           conversationsLoading={conversationsLoading}
           currentMessage={currentMessage}
           setCurrentMessage={setCurrentMessage}
-          setSearchedProfiles={setSearchedProfiles}
           handleSendMessage={handleSendMessage}
+          handleSelected={handleSelected}
+          canMessage={canMessage}
         />
       );
 

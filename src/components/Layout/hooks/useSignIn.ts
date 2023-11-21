@@ -26,6 +26,7 @@ import { PublicClient } from "viem";
 import { PRINT_ACCESS_CONTROL } from "../../../../lib/constants";
 import { setIsDesigner } from "../../../../redux/reducers/isDesignerSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
+import getProfile from "../../../../graphql/lens/queries/profile";
 
 const useSignIn = (
   publicClient: PublicClient,
@@ -75,22 +76,14 @@ const useSignIn = (
 
   const handleRefreshProfile = async (): Promise<void> => {
     try {
-      const profile = await getProfiles(
+      const profile = await getDefaultProfile(
         {
-          where: {
-            ownedBy: [address],
-          },
+          for: address,
         },
         lensConnected?.id
       );
-      if (profile?.data?.profiles?.items?.length !== null) {
-        dispatch(
-          setLensConnected(
-            profile?.data?.profiles?.items?.[
-              profile?.data?.profiles?.items?.length - 1
-            ] as Profile
-          )
-        );
+      if (profile?.data?.defaultProfile) {
+        dispatch(setLensConnected(profile?.data?.defaultProfile as Profile));
       } else {
         removeAuthenticationToken();
       }

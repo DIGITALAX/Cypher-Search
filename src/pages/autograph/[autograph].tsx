@@ -263,8 +263,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setSelectedUser,
     currentMessage,
     setCurrentMessage,
-    setUserSearch,
-    setSearchedProfiles,
+    canMessage,
+    handleSelected,
   } = useConversations(address, screenDisplay, lensConnected, profile);
   const {
     handleSettingsUpdate,
@@ -287,7 +287,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     availableCurrencies,
     dispatch,
     publicClient,
-    address
+    address,
+    screenDisplay,
+    isDesigner
   );
   const {
     handleMoreBookmarks,
@@ -513,9 +515,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 searchCollection={searchCollection}
                 setSearchCollection={setSearchCollection}
                 sendMessageLoading={sendMessageLoading}
-                setSearchedProfiles={setSearchedProfiles}
-                setUserSearch={setUserSearch}
                 router={router}
+                handleSelected={handleSelected}
+                canMessage={canMessage}
                 deleteCollection={deleteCollection}
                 conversationsLoading={conversationsLoading}
                 client={xmtpClient}

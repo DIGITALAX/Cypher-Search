@@ -34,7 +34,6 @@ const Web: FunctionComponent<WebProps> = ({
   coverImage,
   handleImage,
   pfpImage,
-  setSearchedProfiles,
   dispatch,
   displayLoading,
   handleSetDisplay,
@@ -119,7 +118,6 @@ const Web: FunctionComponent<WebProps> = ({
   userSearch,
   currentMessage,
   setCurrentMessage,
-  setUserSearch,
   searchCollection,
   setSearchCollection,
   editDrop,
@@ -128,6 +126,8 @@ const Web: FunctionComponent<WebProps> = ({
   collectionLoading,
   handleDecrypt,
   decryptLoading,
+  handleSelected,
+  canMessage,
 }): JSX.Element => {
   return (
     <div className="relative w-full min-h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20 h-fit">
@@ -208,7 +208,6 @@ const Web: FunctionComponent<WebProps> = ({
           handleMedia={handleMedia}
           searchCollection={searchCollection}
           setSearchCollection={setSearchCollection}
-          setUserSearch={setUserSearch}
           currentMessage={currentMessage}
           setCurrentMessage={setCurrentMessage}
           selectedUser={selectedUser}
@@ -230,8 +229,9 @@ const Web: FunctionComponent<WebProps> = ({
           dropDetails={dropDetails}
           setDropDetails={setDropDetails}
           currencies={currencies}
-          setSearchedProfiles={setSearchedProfiles}
           filterConstants={filterConstants}
+          canMessage={canMessage}
+          handleSelected={handleSelected}
           lensConnected={lensConnected}
           setCurrencyOpen={setCurrencyOpen}
           currencyOpen={currencyOpen}

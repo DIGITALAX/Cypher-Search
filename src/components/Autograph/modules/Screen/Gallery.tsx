@@ -47,7 +47,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 justify-center min-h-[35rem] max-h-[35rem] overflow-y-scroll ${
+            className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 justify-center h-[35rem] overflow-y-scroll ${
               (!createCase &&
                 (allCollections?.length < 0 || collectionLoading)) ||
               (createCase === "drop" && (allDrops?.length > 0 || dropsLoading))
@@ -81,7 +81,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
         className="relative flex w-80 h-full p-px flex-col items-start justify-start"
         id="mar"
       >
-        <div className="relative w-full min-h-[35rem] max-h-[35rem] h-full flex flex-col bg-piloto gap-6 items-center justify-start p-3">
+        <div className="relative w-full h-[35rem] flex flex-col bg-piloto gap-6 items-center justify-start p-3">
           {!createCase && (
             <div className="font-bit text-white text-xs text-center flex w-4/5 h-fit relative">
               Fine-Tune Your gallery, with Art, collectibles, and rare gems that

@@ -22,7 +22,7 @@ const Sales: FunctionComponent<SalesProps> = ({
           id="pfp"
         >
           <div
-            className={`relative w-full h-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll min-h-[35rem] max-h-[35rem] ${
+            className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll h-[35rem] ${
               (salesLoading || allSales?.length > 0) ? "items-start" : "items-center"
             }`}
           >

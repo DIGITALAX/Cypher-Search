@@ -240,7 +240,7 @@ const useGallery = (
         (item) => item.key === "cypherDisplay"
       );
 
-      if (existing) {
+      if (existing != -1) {
         attributes[existing].value = JSON.stringify(profileDisplay);
       } else {
         attributes.push({
