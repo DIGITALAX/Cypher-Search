@@ -36,18 +36,30 @@ export type WebProps = {
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   profilesOpen: boolean[];
   mentionProfiles: Profile[];
+  messageImage: {
+    image: string;
+    type: string;
+  };
+  handleMessageImage: (
+    e: ChangeEvent<HTMLInputElement> | undefined,
+    remove?: boolean
+  ) => Promise<void>;
   caretCoord: {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
-  setCaretCoordBookmark: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  setCaretCoordBookmark: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   setMentionProfilesBookmark: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpenBookmark: (e: SetStateAction<boolean[]>) => void;
   profilesOpenBookmark: boolean[];
@@ -311,10 +323,12 @@ export type BookmarksProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   decryptLoading: boolean[];
@@ -464,14 +478,26 @@ export type ScreenSwitchProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
-  setCaretCoordBookmark: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  messageImage: {
+    image: string;
+    type: string;
+  };
+  handleMessageImage: (
+    e: ChangeEvent<HTMLInputElement> | undefined,
+    remove?: boolean
+  ) => Promise<void>;
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  setCaretCoordBookmark: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   setMentionProfilesBookmark: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpenBookmark: (e: SetStateAction<boolean[]>) => void;
   profilesOpenBookmark: boolean[];
@@ -831,10 +857,12 @@ export type FeedProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   decryptLoading: boolean[];
@@ -1025,10 +1053,12 @@ export type PublicationProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   setMentionProfiles?: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen?: (e: SetStateAction<boolean[]>) => void;
   handleDecrypt?: (post: Comment | Quote | Post) => void;
@@ -1102,10 +1132,12 @@ export type PostCommentProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   mentionProfiles: Profile[];
   profilesOpen: boolean;
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
@@ -1150,10 +1182,12 @@ export type ScreenPostProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   lensConnected: Profile | undefined;
   profilesOpen: boolean[];
   mentionProfiles: Profile[];
@@ -1384,6 +1418,14 @@ export type MessagesProps = {
     profileHandle: string;
     recordedMessages: DecodedMessage[];
   })[];
+  messageImage: {
+    image: string;
+    type: string;
+  };
+  handleMessageImage: (
+    e: ChangeEvent<HTMLInputElement> | undefined,
+    remove?: boolean
+  ) => Promise<void>;
   dispatch: Dispatch<AnyAction>;
   sendMessageLoading: boolean;
   handleSendMessage: () => Promise<void>;
@@ -1506,9 +1548,17 @@ export type NewConversationProps = {
   currentMessage: string;
   canMessage: boolean;
   setCurrentMessage: (e: SetStateAction<string>) => void;
-  handleSendMessage: () => Promise<void>;
+  handleSendMessage: (digitalax?: boolean, type?: string) => Promise<void>;
   sendMessageLoading: boolean;
   dispatch: Dispatch<AnyAction>;
+  messageImage: {
+    image: string;
+    type: string;
+  };
+  handleMessageImage: (
+    e: ChangeEvent<HTMLInputElement> | undefined,
+    remove?: boolean
+  ) => Promise<void>;
   selectedUser:
     | {
         address: string;

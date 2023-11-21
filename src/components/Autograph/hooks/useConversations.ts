@@ -7,6 +7,7 @@ import { ScreenDisplay } from "../types/autograph.types";
 import { LimitType, Profile } from "../../../../graphql/generated";
 import { fetchQuery } from "@airstack/airstack-react";
 import searchProfiles from "../../../../graphql/lens/queries/searchProfiles";
+import convertToFile from "../../../../lib/helpers/convertToFile";
 
 const useConversations = (
   address: `0x${string}` | undefined,
@@ -17,6 +18,13 @@ const useConversations = (
   const [sendMessageLoading, setSendMessageLoading] = useState<boolean>(false);
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [digiMessageLoading, setDigiMessageLoading] = useState<boolean>(false);
+  const [messageImage, setMessageImage] = useState<{
+    image: string;
+    type: string;
+  }>({
+    image: "",
+    type: "",
+  });
   const [digiMessage, setDigiMessage] = useState<string>("");
   const [conversations, setConversations] = useState<
     (Conversation & {
@@ -132,7 +140,7 @@ const useConversations = (
     }
   };
 
-  const handleSendMessage = async (digitalax?: boolean) => {
+  const handleSendMessage = async (digitalax?: boolean): Promise<void> => {
     if (!digitalax && !selectedUser) return;
     digitalax ? setDigiMessageLoading(true) : setSendMessageLoading(true);
     try {
@@ -144,6 +152,21 @@ const useConversations = (
       const conversation = await validClient!.conversations?.newConversation(
         digitalax ? DIGITALAX_ADDRESS : selectedUser?.address?.toLowerCase()!
       );
+
+      if (
+        messageImage?.image?.trim() !== "" &&
+        messageImage?.type?.trim() !== "" &&
+        !digitalax
+      ) {
+        const response = await fetch("/api/ipfs", {
+          method: "POST",
+          body: convertToFile(messageImage?.image, messageImage?.type),
+        });
+        const res = await response.json();
+        const sendImage = conversation.send(res?.cid);
+        (await sendImage).sent;
+      }
+
       const data = conversation.send(digitalax ? digiMessage : currentMessage);
       if ((await data).sent) {
         if (digitalax) {
@@ -153,6 +176,10 @@ const useConversations = (
           }, 6000);
         } else {
           setCurrentMessage("");
+          setMessageImage({
+            image: "",
+            type: "",
+          });
         }
         setMessages(await conversation.messages());
       }
@@ -283,6 +310,32 @@ const useConversations = (
     }
   };
 
+  const handleMessageImage = async (
+    e: ChangeEvent<HTMLInputElement> | undefined,
+    remove?: boolean
+  ): Promise<void> => {
+    if (remove) {
+      setMessageImage({
+        image: "",
+        type: "",
+      });
+
+      return;
+    }
+
+    const file = e?.target?.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setMessageImage({
+          image: e.target?.result as string,
+          type: file?.type,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   useEffect(() => {
     if (
       address &&
@@ -320,6 +373,8 @@ const useConversations = (
     setCurrentMessage,
     handleSelected,
     canMessage,
+    messageImage,
+    handleMessageImage,
   };
 };
 

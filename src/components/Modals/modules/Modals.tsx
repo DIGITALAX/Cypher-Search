@@ -174,6 +174,12 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     approveSpend,
     approved,
     videoRef,
+    mentionProfiles,
+    setMentionProfiles,
+    caretCoord,
+    setCaretCoord,
+    setProfilesOpen,
+    profilesOpen,
   } = useQuote(
     availableCurrencies,
     lensConnected,
@@ -291,6 +297,13 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {postBox?.open && (
         <PostBox
+          lensConnected={lensConnected}
+          setCaretCoord={setCaretCoord}
+          setMentionProfiles={setMentionProfiles}
+          setProfilesOpen={setProfilesOpen}
+          profilesOpen={profilesOpen}
+          mentionProfiles={mentionProfiles}
+          caretCoord={caretCoord}
           dispatch={dispatch}
           router={router}
           quote={postBox?.quote}

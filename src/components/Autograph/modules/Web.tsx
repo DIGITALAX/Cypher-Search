@@ -140,6 +140,8 @@ const Web: FunctionComponent<WebProps> = ({
   caretCoordBookmark,
   setCaretCoord,
   setCaretCoordBookmark,
+  handleMessageImage,
+  messageImage,
 }): JSX.Element => {
   return (
     <div className="relative w-full min-h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20 h-fit">
@@ -215,6 +217,8 @@ const Web: FunctionComponent<WebProps> = ({
           }
         </div>
         <ScreenSwitch
+          handleMessageImage={handleMessageImage}
+          messageImage={messageImage}
           setCaretCoord={setCaretCoord}
           setCaretCoordBookmark={setCaretCoordBookmark}
           editDrop={editDrop}
