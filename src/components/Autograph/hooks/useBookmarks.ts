@@ -43,6 +43,19 @@ const useBookmarks = (
       decrypted: any;
     })[]
   >([]);
+  const [mentionProfilesBookmark, setMentionProfilesBookmark] = useState<
+    Profile[]
+  >([]);
+  const [profilesOpenBookmark, setProfilesOpenBookmark] = useState<boolean[]>(
+    []
+  );
+  const [caretCoordBookmark, setCaretCoordBookmark] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 0,
+    y: 0,
+  });
   const [openMirrorChoiceBookmark, setOpenMirrorChoiceBookmark] = useState<
     boolean[]
   >([]);
@@ -516,6 +529,9 @@ const useBookmarks = (
           hide: false,
         }))
       );
+      setProfilesOpenBookmark(
+        Array.from({ length: allBookmarks?.length }, () => false)
+      );
     }
   }, [allBookmarks?.length]);
 
@@ -557,6 +573,12 @@ const useBookmarks = (
     setMakeCommentBookmark,
     handleDecryptBookmark,
     decryptLoadingBookmark,
+    setCaretCoordBookmark,
+    caretCoordBookmark,
+    setProfilesOpenBookmark,
+    profilesOpenBookmark,
+    mentionProfilesBookmark,
+    setMentionProfilesBookmark,
   };
 };
 

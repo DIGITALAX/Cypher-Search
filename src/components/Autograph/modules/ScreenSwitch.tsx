@@ -126,6 +126,18 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   decryptLoading,
   handleSelected,
   canMessage,
+  setMentionProfiles,
+  setProfilesOpen,
+  profilesOpen,
+  mentionProfiles,
+  caretCoord,
+  setMentionProfilesBookmark,
+  setProfilesOpenBookmark,
+  profilesOpenBookmark,
+  mentionProfilesBookmark,
+  caretCoordBookmark,
+  setCaretCoord,
+  setCaretCoordBookmark,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -179,12 +191,25 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           dispatch={dispatch}
           postCollectGif={postCollectGif}
           setContentLoading={setPostContentLoading}
+          setMentionProfiles={setMentionProfiles}
+          setProfilesOpen={setProfilesOpen}
+          profilesOpen={profilesOpen}
+          mentionProfiles={mentionProfiles}
+          lensConnected={lensConnected}
+          caretCoord={caretCoord}
+          setCaretCoord={setCaretCoord}
         />
       );
 
     case ScreenDisplay.Bookmarks:
       return (
         <Bookmarks
+          setCaretCoord={setCaretCoordBookmark}
+          caretCoord={caretCoordBookmark}
+          setMentionProfiles={setMentionProfilesBookmark}
+          setProfilesOpen={setProfilesOpenBookmark}
+          mentionProfiles={mentionProfilesBookmark}
+          profilesOpen={profilesOpenBookmark}
           handleDecrypt={handleDecrypt}
           decryptLoading={decryptLoading}
           bookmarks={bookmarks}

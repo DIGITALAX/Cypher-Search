@@ -283,7 +283,6 @@ const useConversations = (
     }
   };
 
-
   useEffect(() => {
     if (
       address &&

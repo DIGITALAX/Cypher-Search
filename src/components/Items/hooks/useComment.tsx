@@ -41,6 +41,24 @@ const useComment = (
   const [openMainMirrorChoice, setMainOpenMirrorChoice] = useState<boolean[]>([
     false,
   ]);
+  const [mentionProfilesMain, setMentionProfilesMain] = useState<Profile[]>([]);
+  const [profilesOpenMain, setProfilesOpenMain] = useState<boolean[]>([false]);
+  const [caretCoordMain, setCaretCoordMain] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 0,
+    y: 0,
+  });
+  const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
+  const [profilesOpen, setProfilesOpen] = useState<boolean[]>([]);
+  const [caretCoord, setCaretCoord] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 0,
+    y: 0,
+  });
   const [openMoreOptions, setOpenMoreOptions] = useState<boolean[]>([]);
   const [hasMoreComments, setHasMoreComments] = useState<boolean>(true);
   const [commentsOpen, setCommentsOpen] = useState<boolean[]>([]);
@@ -445,7 +463,7 @@ const useComment = (
     const index = main
       ? undefined
       : allComments?.findIndex((pub) => pub.id === id);
-      if (!main && index == -1) return;
+    if (!main && index == -1) return;
     handleLoaders(false, main!, index, "like");
 
     try {
@@ -532,6 +550,12 @@ const useComment = (
           () => false
         )
       );
+      setProfilesOpen(
+        Array.from(
+          { length: (collections ? collections : allComments).length },
+          () => false
+        )
+      );
     }
   }, [allComments?.length, collections?.length]);
 
@@ -568,6 +592,18 @@ const useComment = (
     like,
     openInteractions,
     setOpenInteractions,
+    setProfilesOpen,
+    setMentionProfiles,
+    setProfilesOpenMain,
+    setMentionProfilesMain,
+    setCaretCoord,
+    setCaretCoordMain,
+    caretCoord,
+    caretCoordMain,
+    mentionProfiles,
+    mentionProfilesMain,
+    profilesOpen,
+    profilesOpenMain,
   };
 };
 

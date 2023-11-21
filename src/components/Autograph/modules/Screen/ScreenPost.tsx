@@ -11,6 +11,13 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
   setContentLoading,
   postCollectGif,
   dispatch,
+  setMentionProfiles,
+  setProfilesOpen,
+  mentionProfiles,
+  profilesOpen,
+  caretCoord,
+  lensConnected,
+  setCaretCoord,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -22,6 +29,13 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
           <div className="relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-center justify-center overflow-y-scroll h-[35rem]">
             <div className="relative flex items-center justify-center w-2/3 h-full">
               <PostComment
+                setCaretCoord={setCaretCoord}
+                caretCoord={caretCoord}
+                profilesOpen={profilesOpen?.[0]}
+                mentionProfiles={mentionProfiles}
+                setMentionProfiles={setMentionProfiles}
+                setProfilesOpen={setProfilesOpen}
+                lensConnected={lensConnected}
                 commentPost={post}
                 commentPostLoading={postLoading[0]}
                 makePostComment={makePost[0]}

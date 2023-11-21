@@ -128,6 +128,18 @@ const Web: FunctionComponent<WebProps> = ({
   decryptLoading,
   handleSelected,
   canMessage,
+  setMentionProfiles,
+  setProfilesOpen,
+  profilesOpen,
+  mentionProfiles,
+  caretCoord,
+  setMentionProfilesBookmark,
+  setProfilesOpenBookmark,
+  profilesOpenBookmark,
+  mentionProfilesBookmark,
+  caretCoordBookmark,
+  setCaretCoord,
+  setCaretCoordBookmark,
 }): JSX.Element => {
   return (
     <div className="relative w-full min-h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20 h-fit">
@@ -203,6 +215,8 @@ const Web: FunctionComponent<WebProps> = ({
           }
         </div>
         <ScreenSwitch
+          setCaretCoord={setCaretCoord}
+          setCaretCoordBookmark={setCaretCoordBookmark}
           editDrop={editDrop}
           deleteDrop={deleteDrop}
           handleMedia={handleMedia}
@@ -320,6 +334,16 @@ const Web: FunctionComponent<WebProps> = ({
           collectionDetails={collectionDetails}
           createCase={createCase}
           setCreateCase={setCreateCase}
+          setMentionProfiles={setMentionProfiles}
+          setProfilesOpen={setProfilesOpen}
+          profilesOpen={profilesOpen}
+          mentionProfiles={mentionProfiles}
+          caretCoord={caretCoord}
+          setMentionProfilesBookmark={setMentionProfilesBookmark}
+          setProfilesOpenBookmark={setProfilesOpenBookmark}
+          profilesOpenBookmark={profilesOpenBookmark}
+          mentionProfilesBookmark={mentionProfilesBookmark}
+          caretCoordBookmark={caretCoordBookmark}
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (

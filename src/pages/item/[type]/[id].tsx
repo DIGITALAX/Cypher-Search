@@ -86,7 +86,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     isApprovedSpend,
     relatedData,
     handleDecrypt,
-    decryptLoading
+    decryptLoading,
   } = useItem(
     type as string,
     id as string,
@@ -132,6 +132,18 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     like: likeItem,
     setOpenInteractions,
     openInteractions,
+    setProfilesOpen,
+    setMentionProfiles,
+    setProfilesOpenMain,
+    setMentionProfilesMain,
+    setCaretCoord,
+    setCaretCoordMain,
+    caretCoord,
+    caretCoordMain,
+    mentionProfiles,
+    mentionProfilesMain,
+    profilesOpen,
+    profilesOpenMain,
   } = useComment(
     address,
     publicClient,
@@ -343,10 +355,45 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/ArcadeClassic.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Bitblox.otf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/Austral.ttf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/Ignite.otf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/BebasNeue.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/Vcr.ttf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/ttf"
+                />
+                <link
+                  rel="preload"
+                  href="https://cypher.digitalax.xyz/fonts/InternalRainbows.otf"
+                  as="font"
+                  crossOrigin="anonymous"
+                  type="font/otf"
                 />
                 <link
                   rel="preload"
@@ -364,42 +411,21 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Geometria.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Gamer.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/ClashDisplay.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Network.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/DosisRegular.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/EconomicaBold.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/EconomicaRegular.ttf"
-                  as="font"
-                  crossOrigin="anonymous"
-                  type="font/ttf"
-                />
-                <link
-                  rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Manaspc.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Dogica.ttf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/ttf"
@@ -411,6 +437,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 cartAnim={cartAnim}
                 component={
                   <SwitchType
+                    setCaretCoord={setCaretCoord}
+                    setCaretCoordMain={setCaretCoordMain}
                     handleDecrypt={handleDecrypt}
                     decryptLoading={decryptLoading}
                     followMainLoading={mainFollowLoading}
@@ -471,6 +499,16 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                     setContentLoading={setContentLoading}
                     openInteractions={openInteractions}
                     setOpenInteractions={setOpenInteractions}
+                    setMentionProfiles={setMentionProfiles}
+                    setMentionProfilesMain={setMentionProfilesMain}
+                    setProfilesOpen={setProfilesOpen}
+                    setProfilesOpenMain={setProfilesOpenMain}
+                    mentionProfiles={mentionProfiles}
+                    mentionProfilesMain={mentionProfilesMain}
+                    caretCoord={caretCoord}
+                    caretCoordMain={caretCoordMain}
+                    profilesOpen={profilesOpen}
+                    profilesOpenMain={profilesOpenMain}
                   />
                 }
                 handleSearch={handleSearch}

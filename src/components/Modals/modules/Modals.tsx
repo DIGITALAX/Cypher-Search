@@ -152,7 +152,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     dispatch,
     address,
     publicClient,
-    lensConnected,
+    lensConnected
   );
   const {
     makeQuote,
@@ -291,7 +291,6 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {postBox?.open && (
         <PostBox
-          lensConnected={lensConnected}
           dispatch={dispatch}
           router={router}
           quote={postBox?.quote}

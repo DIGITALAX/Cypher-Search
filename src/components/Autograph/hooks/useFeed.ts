@@ -43,6 +43,15 @@ const useFeed = (
       decrypted: any;
     })[]
   >([]);
+  const [mentionProfilesFeed, setMentionProfilesFeed] = useState<Profile[]>([]);
+  const [profilesOpenFeed, setProfilesOpenFeed] = useState<boolean[]>([]);
+  const [caretCoordFeed, setCaretCoordFeed] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 0,
+    y: 0,
+  });
   const [decryptLoading, setDecryptLoading] = useState<boolean[]>([]);
   const [hasMoreFeed, setHasMoreFeed] = useState<boolean>(false);
   const [feedLoading, setFeedLoading] = useState<boolean>(false);
@@ -437,6 +446,9 @@ const useFeed = (
           videos: [],
         }))
       );
+      setProfilesOpenFeed(
+        Array.from({ length: profileFeed.length }, () => false)
+      );
     }
   }, [profileFeed?.length]);
 
@@ -464,6 +476,12 @@ const useFeed = (
     profileFeed,
     handleDecrypt,
     decryptLoading,
+    setCaretCoordFeed,
+    setProfilesOpenFeed,
+    setMentionProfilesFeed,
+    mentionProfilesFeed,
+    profilesOpenFeed,
+    caretCoordFeed,
   };
 };
 

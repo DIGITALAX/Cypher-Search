@@ -51,12 +51,30 @@ const Pub: FunctionComponent<PublicationProps> = ({
   lensConnected,
   decryptLoading,
   handleDecrypt,
+  setMentionProfiles,
+  setProfilesOpen,
+  profilesOpen,
+  mentionProfiles,
+  caretCoord,
+  caretCoordMain,
+  setMentionProfilesMain,
+  setProfilesOpenMain,
+  mentionProfilesMain,
+  profilesOpenMain,
+  setCaretCoord,
+  setCaretCoordMain,
 }): JSX.Element => {
   return (
     <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-row pt-32 px-12 gap-7 h-fit">
       <div className="relative w-full h-full flex items-start justify-center">
         <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] h-full">
           <Publication
+            setCaretCoord={setCaretCoord}
+            caretCoord={caretCoordMain}
+            profilesOpen={profilesOpenMain}
+            mentionProfiles={mentionProfilesMain}
+            setMentionProfiles={setMentionProfilesMain}
+            setProfilesOpen={setProfilesOpenMain}
             decryptLoading={decryptLoading}
             handleDecrypt={handleDecrypt}
             lensConnected={lensConnected}
@@ -111,6 +129,12 @@ const Pub: FunctionComponent<PublicationProps> = ({
             ) : (
               <div className="relative w-5/6 h-[37rem] flex flex-col gap-10 justify-start items-center">
                 <PostComment
+                  caretCoord={caretCoordMain}
+                  profilesOpen={profilesOpenMain?.[0]}
+                  mentionProfiles={mentionProfilesMain}
+                  setMentionProfiles={setMentionProfilesMain}
+                  setProfilesOpen={setProfilesOpenMain}
+                  lensConnected={lensConnected}
                   index={0}
                   makePostComment={mainMakeComment?.[0]}
                   setMakePostComment={setMainMakeComment}
@@ -125,6 +149,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                   contentLoading={mainContentLoading?.[0]}
                   dispatch={dispatch}
                   main={true}
+                  setCaretCoord={setCaretCoordMain}
                 />
                 {allComments?.length > 0 ? (
                   <div className="relative w-full h-fit flex items-start justify-center overflow-y-scroll">
@@ -144,6 +169,12 @@ const Pub: FunctionComponent<PublicationProps> = ({
                         ) => {
                           return (
                             <Publication
+                              caretCoord={caretCoord}
+                              setCaretCoord={setCaretCoord}
+                              profilesOpen={profilesOpen}
+                              mentionProfiles={mentionProfiles}
+                              setMentionProfiles={setMentionProfiles}
+                              setProfilesOpen={setProfilesOpen}
                               handleDecrypt={handleDecrypt}
                               decryptLoading={decryptLoading}
                               lensConnected={lensConnected}
