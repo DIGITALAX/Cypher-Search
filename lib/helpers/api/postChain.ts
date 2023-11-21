@@ -10,6 +10,8 @@ import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import postOnChain from "../../../graphql/lens/mutations/post";
 import cleanCollect from "../cleanCollect";
+import validateMetadata from "../../../graphql/lens/queries/validate";
+import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 
 const lensPost = async (
   contentURI: string,
@@ -17,16 +19,27 @@ const lensPost = async (
   openActionModules: InputMaybe<OpenActionModuleInput[]> | undefined,
   address: `0x${string}`,
   clientWallet: WalletClient,
-  publicClient: PublicClient
+  publicClient: PublicClient,
+  closeBox?: () => void
 ): Promise<void> => {
   if (
     openActionModules &&
     openActionModules?.hasOwnProperty("collectOpenAction") &&
     openActionModules?.[0]?.collectOpenAction?.hasOwnProperty(
       "simpleCollectOpenAction"
-    )
+    ) &&
+    openActionModules?.[0]?.collectOpenAction?.simpleCollectOpenAction
   ) {
     openActionModules = cleanCollect(openActionModules);
+  }
+
+  const metadata = await validateMetadata({
+    rawURI: contentURI,
+  });
+
+  if (!metadata?.data?.validatePublicationMetadata.valid) {
+    dispatch(setInteractError(true));
+    return;
   }
 
   const data = await postOnChain({
@@ -49,13 +62,14 @@ const lensPost = async (
     signature,
   });
 
-  if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+  if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
     dispatch(
       setIndexer({
         actionOpen: true,
         actionMessage: "Indexing Interaction",
       })
     );
+    closeBox && closeBox();
     await handleIndexCheck(
       {
         forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
@@ -67,7 +81,7 @@ const lensPost = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "post",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [
         {
           profileId: typedData?.value.profileId,
@@ -87,6 +101,7 @@ const lensPost = async (
         actionMessage: "Indexing Interaction",
       })
     );
+    closeBox && closeBox();
     const tx = await publicClient.waitForTransactionReceipt({ hash: res });
     await handleIndexCheck(
       {
@@ -95,12 +110,14 @@ const lensPost = async (
       dispatch
     );
   }
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
 };
 
 export default lensPost;

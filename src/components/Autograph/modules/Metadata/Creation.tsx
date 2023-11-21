@@ -31,10 +31,14 @@ const Creation: FunctionComponent<CreationProps> = ({
   mirror,
   dispatch,
   cartItems,
+  lensConnected,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.profile?.metadata?.picture);
   return (
-    <div className="relative w-80 h-80 bg-piloto flex items-center justify-start flex-col p-2 gap-4">
+    <div
+      className="relative w-80 h-80 bg-piloto flex items-center justify-start flex-col p-2 gap-4"
+      id={item?.pubId}
+    >
       <div
         className={`relative w-full h-full flex items-center justify-center hover:opacity-90 rounded-md cursor-pointer border-2 ${
           created ? "border-lirio" : "border-olor"
@@ -118,14 +122,20 @@ const Creation: FunctionComponent<CreationProps> = ({
             id="pfp"
             onMouseEnter={() =>
               setProfileHovers((prev) => {
-                const updatedArray = [...prev];
-                updatedArray[index] = true;
-                return updatedArray;
+                const arr = [...prev];
+                arr[index] = true;
+                return arr;
               })
             }
           >
             {profilePicture && (
-              <Image layout="fill" src={profilePicture} draggable={false} />
+              <Image
+                layout="fill"
+                src={profilePicture}
+                draggable={false}
+                className="rounded-full"
+                objectFit="cover"
+              />
             )}
           </div>
           <div className="relative w-fit h-fit flex items-center justify-center font-bit top-px text-xs">
@@ -137,7 +147,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             ${item?.prices?.[0]}
           </div>
         </div>
-        {profileHovers?.[index] && (
+        {profileHovers && (
           <HoverProfile
             followLoading={followLoading}
             followProfile={followProfile}
@@ -147,6 +157,8 @@ const Creation: FunctionComponent<CreationProps> = ({
             index={index}
             setProfileHovers={setProfileHovers}
             dispatch={dispatch}
+            lensConnected={lensConnected}
+            parentId={item?.pubId}
           />
         )}
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">

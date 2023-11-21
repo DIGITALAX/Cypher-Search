@@ -39,7 +39,7 @@ export const encryptItems = async (
         fulfillerEditions.push({
           contractAddress: "",
           standardContractType: "",
-          chain: "polygonMumbai",
+          chain: "polygon",
           method: "",
           parameters: [":userAddress"],
           returnValueTest: {
@@ -58,7 +58,7 @@ export const encryptItems = async (
         {
           contractAddress: "",
           standardContractType: "",
-          chain: "polygonMumbai",
+          chain: "polygon",
           method: "",
           parameters: [":userAddress"],
           returnValueTest: {
@@ -72,7 +72,7 @@ export const encryptItems = async (
         {
           accessControlConditions,
           authSig,
-          chain: "polygonMumbai",
+          chain: "polygon",
           dataToEncrypt: JSON.stringify({
             ...fulfillmentDetails,
             ...item,

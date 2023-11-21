@@ -4,7 +4,11 @@ import ImagePost from "./Tiles/ImagePost";
 import CoinOp from "./Tiles/CoinOp";
 import VideoPost from "./Tiles/VideoPost";
 import TextPost from "./Tiles/TextPost";
-import { Community as CommunityType, Creation, TileSwitchProps } from "../types/tiles.types";
+import {
+  Community as CommunityType,
+  Creation,
+  TileSwitchProps,
+} from "../types/tiles.types";
 import Quest from "./Tiles/Quest";
 import Legend from "./Tiles/Legend";
 import Listener from "./Tiles/Listener";
@@ -51,6 +55,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   simpleCollect,
   setHeart,
   heart,
+  lensConnected,
 }) => {
   switch (type?.toLowerCase()) {
     case "loader":
@@ -59,6 +64,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     case "community":
       return (
         <Community
+          lensConnected={lensConnected}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           followLoading={followLoading}
@@ -84,6 +90,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           dispatch={dispatch}
+          lensConnected={lensConnected}
         />
       );
 
@@ -100,12 +107,14 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           dispatch={dispatch}
+          lensConnected={lensConnected}
         />
       );
 
     case "image":
       return (
         <ImagePost
+          lensConnected={lensConnected}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           layoutAmount={layoutAmount}
@@ -127,6 +136,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     case "listener":
       return (
         <Listener
+          lensConnected={lensConnected}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           popUpOpen={popUpOpen}
@@ -150,6 +160,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     case "chromadin":
       return (
         <Chromadin
+          lensConnected={lensConnected}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           popUpOpen={popUpOpen}
@@ -175,6 +186,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     case "coinop":
       return (
         <CoinOp
+          lensConnected={lensConnected}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           popUpOpen={popUpOpen}
@@ -198,6 +210,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     case "text":
       return (
         <TextPost
+          lensConnected={lensConnected}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}
           layoutAmount={layoutAmount}

@@ -103,13 +103,17 @@ const Controls: FunctionComponent<ControlsProps> = ({
                   return arr;
                 });
               }, 3000);
-              profileId && like(post?.id);
+              profileId && like(post?.id, post?.operations?.hasReacted);
             }}
           >
             {interactionsLoading?.like ? (
               <AiOutlineLoading size={12} color="white" />
             ) : post?.operations?.hasReacted ? (
-              <div className="relative w-3 h-3 flex items-center justify-center">
+              <div
+                className={`relative w-3 h-3 flex items-center justify-center ${
+                  post?.operations?.hasReacted && "mix-blend-hard-light"
+                }`}
+              >
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/Qmc3KCKWRgN8iKwwAPM5pYkAYNeVwWu3moa5RDMDTBV6ZS`}
                   layout="fill"
@@ -177,7 +181,13 @@ const Controls: FunctionComponent<ControlsProps> = ({
             {interactionsLoading?.mirror ? (
               <AiOutlineLoading size={12} color="white" />
             ) : post?.operations?.hasMirrored ? (
-              <div className="relative w-3 h-3 flex items-center justify-center">
+              <div
+                className={`relative w-3 h-3 flex items-center justify-center ${
+                  (post?.operations?.hasMirrored ||
+                    post?.operations?.hasQuoted) &&
+                  "mix-blend-hard-light"
+                }`}
+              >
                 <Image
                   src={`${INFURA_GATEWAY}/ipfs/QmcMNSnbKvUfx3B3iHBd9deZCDf7E4J8W6UtyNer3xoMsB`}
                   layout="fill"

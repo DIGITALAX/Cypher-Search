@@ -30,7 +30,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   cartItems,
   allDrops,
   lensConnected,
-  hasMoreGallery
+  hasMoreGallery,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col gap-10 items-start justify-start flex-grow">
@@ -124,6 +124,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                 ?.map((item: CreationType, index: number) => {
                   return (
                     <Creation
+                      lensConnected={lensConnected}
                       dispatch={dispatch}
                       cartItems={cartItems}
                       key={index}
@@ -163,6 +164,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
             layout="fill"
             src={`${INFURA_GATEWAY}/ipfs/QmV4yM96Dt2ypLN9GMHkXPTkeCGfTQfJErJLfVjikxt52s`}
             draggable={false}
+            objectFit="contain"
           />
           <div className="absolute w-full h-full bg-black opacity-[85%]"></div>
         </div>

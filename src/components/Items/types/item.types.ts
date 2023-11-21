@@ -3,7 +3,7 @@ import { CartItem } from "@/components/Common/types/common.types";
 import { FilterValues } from "@/components/Search/types/search.types";
 import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { NextRouter } from "next/router";
-import { SetStateAction } from "react";
+import { ChangeEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Profile,
@@ -19,6 +19,8 @@ export type SwitchTypeProps = {
   itemData: Publication;
   isApprovedSpend: boolean;
   type: string;
+  decryptLoading: boolean;
+  handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   filterConstants: FilterValues | undefined;
   router: NextRouter;
   instantLoading: boolean;
@@ -40,7 +42,7 @@ export type SwitchTypeProps = {
     | undefined;
   lensConnected: Profile | undefined;
   mirror: (id: string, main?: boolean) => Promise<void>;
-  like: (id: string, main?: boolean) => Promise<void>;
+  like: (id: string, hasReacted: boolean, main?: boolean) => Promise<void>;
   mainInteractionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -53,7 +55,9 @@ export type SwitchTypeProps = {
   openMirrorChoice: boolean[];
   commentSwitch: boolean;
   setCommentSwitch: (e: SetStateAction<boolean>) => void;
-  allComments: Comment[];
+  allComments: (Comment & {
+    decrypted: any;
+  })[];
   comment: (id: string, main: boolean) => Promise<void>;
   handleMoreComments: () => Promise<void>;
   allCommentsLoading: boolean;
@@ -122,6 +126,8 @@ export type ChromadinProps = {
   itemData: Creation;
   isApprovedSpend: boolean;
   type: string;
+  decryptLoading: boolean;
+  handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   filterConstants: FilterValues | undefined;
   router: NextRouter;
   instantLoading: boolean;
@@ -137,7 +143,7 @@ export type ChromadinProps = {
   handleInstantPurchase: () => Promise<void>;
   lensConnected: Profile | undefined;
   mirror: (id: string, main: boolean) => Promise<void>;
-  like: (id: string, main: boolean) => Promise<void>;
+  like: (id: string, hasReacted: boolean, main?: boolean) => Promise<void>;
   mainInteractionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -150,7 +156,9 @@ export type ChromadinProps = {
   openMirrorChoice: boolean[];
   commentSwitch: boolean;
   setCommentSwitch: (e: SetStateAction<boolean>) => void;
-  allComments: Comment[];
+  allComments: (Comment & {
+    decrypted: any;
+  })[];
   comment: (id: string, main: boolean) => Promise<void>;
   handleMoreComments: () => Promise<void>;
   allCommentsLoading: boolean;
@@ -216,11 +224,18 @@ export interface PurchaseDetails {
 export type PublicationProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
-  allComments: Comment[];
+  allComments: (Comment & {
+    decrypted: any;
+  })[];
+  decryptLoading: boolean;
+  handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   allCommentsLoading: boolean;
+  lensConnected: Profile | undefined;
   followLoading: boolean[];
   setMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
-  itemData: Post | Mirror | Quote | Comment;
+  itemData: (Post | Comment | Quote | Mirror) & {
+    decrypted: any;
+  };
   mainMakeComment: MakePostComment[];
   postCollectGif: PostCollectGifState;
   interactionsLoading: {
@@ -246,7 +261,7 @@ export type PublicationProps = {
   }[];
   comment: (id: string, main: boolean) => Promise<void>;
   mirror: (id: string, main: boolean) => Promise<void>;
-  like: (id: string, main: boolean) => Promise<void>;
+  like: (id: string, hasReacted: boolean, main?: boolean) => Promise<void>;
   handleMoreComments: () => Promise<void>;
   hasMoreComments: boolean;
   mainInteractionsLoading:
@@ -290,6 +305,7 @@ export type MicrobrandProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   itemData: Profile;
+  lensConnected: Profile | undefined;
   relatedData:
     | {
         collections: Creation[];
@@ -301,7 +317,7 @@ export type MicrobrandProps = {
     | undefined;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean, main?: boolean) => Promise<void>;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   interactionsLoading: {

@@ -34,6 +34,9 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   contentLoading,
   setContentLoading,
   postCollectGif,
+  lensConnected,
+  handleDecrypt,
+  decryptLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -70,11 +73,19 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                 className="w-fit h-fit items-center justify-start flex flex-col gap-10"
               >
                 {bookmarks?.map(
-                  (item: Post | Mirror | Quote | Comment, index: number) => {
+                  (
+                    item: (Post | Mirror | Quote | Comment) & {
+                      decrypted: any;
+                    },
+                    index: number
+                  ) => {
                     return (
                       <Publication
+                        decryptLoading={decryptLoading?.[index]}
+                        handleDecrypt={handleDecrypt}
                         index={index}
                         item={item}
+                        lensConnected={lensConnected}
                         key={index}
                         dispatch={dispatch}
                         router={router}

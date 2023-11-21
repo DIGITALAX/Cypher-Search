@@ -15,7 +15,7 @@ import { setCypherStorageCart } from "../../../../lib/utils";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import PostComment from "@/components/Autograph/modules/PostComment";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Mirror, Post, Quote, Comment } from "../../../../graphql/generated";
+import { Comment } from "../../../../graphql/generated";
 import Publication from "@/components/Autograph/modules/Publication";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
@@ -69,6 +69,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   mainMakeComment,
   setMainMakeComment,
   setMainContentLoading,
+  decryptLoading,
+  handleDecrypt
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.profile?.metadata?.picture
@@ -97,7 +99,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             showOthers={true}
           />
           <div
-            className={`relative p-3 bg-black flex justify-center w-full h-[37rem] ${
+            className={`relative p-3 bg-black flex justify-center w-full h-fit ${
               commentSwitch ? "items-start" : "items-center"
             } ${allCommentsLoading && "overflow-y-scroll"}`}
           >
@@ -133,7 +135,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     main={true}
                   />
                   {allComments?.length > 0 ? (
-                    <div className="relative w-full h-fit flex items-start justify-center overflow-y-scroll">
+                    <div className="relative w-full h-[37rem] flex items-start justify-center overflow-y-scroll">
                       <InfiniteScroll
                         next={handleMoreComments}
                         hasMore={hasMoreComments}
@@ -143,12 +145,17 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                       >
                         {allComments?.map(
                           (
-                            item: Post | Mirror | Quote | Comment,
+                            item: Comment & {
+                              decrypted: any;
+                            },
                             index: number
                           ) => {
                             return (
                               <Publication
+                                decryptLoading={decryptLoading}
+                                handleDecrypt={handleDecrypt}
                                 index={index}
+                                lensConnected={lensConnected}
                                 item={item}
                                 key={index}
                                 dispatch={dispatch}
@@ -247,7 +254,14 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   />
                 </div>
                 {itemData?.video ? (
-                  <video className="object-cover flex items-center justify-center">
+                  <video
+                    className="object-cover flex items-center justify-center"
+                    autoPlay
+                    muted
+                    controls={false}
+                    playsInline
+                    id={itemData?.video}
+                  >
                     <source src={`${INFURA_GATEWAY}/ipfs/${itemData?.video}`} />
                   </video>
                 ) : (
@@ -263,7 +277,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 {(itemData?.video || itemData?.audio) && (
                   <Waveform
                     audio={itemData?.audio}
-                    type={"audio"}
+                    type={itemData?.audio ? "audio" : "video"}
                     keyValue={itemData?.audio || itemData?.video}
                     video={itemData?.video}
                   />
@@ -425,7 +439,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                             (value) => value[2] == item
                           )?.[0]
                         }`}
-                        className="flex"
+                        className="flex rounded-full"
                         draggable={false}
                         width={30}
                         height={35}

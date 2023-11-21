@@ -28,10 +28,13 @@ const useWho = (
     if (!reactBox.id) return;
     setDataLoading(true);
     try {
-      const data = await whoReactedPublication({
-        for: reactBox.id,
-        limit: LimitType.Ten,
-      });
+      const data = await whoReactedPublication(
+        {
+          for: reactBox.id,
+          limit: LimitType.Ten,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.whoReactedPublication?.items ||
@@ -58,57 +61,49 @@ const useWho = (
     setDataLoading(true);
 
     try {
-      if (!mirrorQuote) {
-        const mirrorData = await getPublications(
-          {
-            limit: LimitType.Ten,
-            where: {
-              publicationTypes: [PublicationType.Mirror],
-              mirrorOn: reactBox.id,
-            },
+      const mirrorData = await getPublications(
+        {
+          limit: LimitType.Ten,
+          where: {
+            mirrorOn: reactBox.id,
           },
-          lensConnected?.id
-        );
-        if (
-          !mirrorData?.data?.publications?.items ||
-          mirrorData?.data?.publications?.items?.length < 1
-        ) {
-          setHasMore(false);
-          setDataLoading(false);
-          return;
-        } else if (mirrorData?.data?.publications?.items?.length === 10) {
-          setHasMore(true);
-        }
-
-        setReactors(mirrorData?.data?.publications?.items);
-        setPageInfo(mirrorData.data?.publications.pageInfo.next);
+        },
+        lensConnected?.id
+      );
+      if (
+        !mirrorData?.data?.publications?.items ||
+        mirrorData?.data?.publications?.items?.length < 1
+      ) {
+        setHasMore(false);
+      } else if (mirrorData?.data?.publications?.items?.length === 10) {
+        setHasMore(true);
       }
 
-      if (mirrorQuote) {
-        const quoteData = await getPublications(
-          {
-            limit: LimitType.Ten,
-            where: {
-              publicationTypes: [PublicationType.Quote],
-              quoteOn: reactBox.id,
-            },
-          },
-          lensConnected?.id
-        );
+      setReactors(mirrorData?.data?.publications?.items || []);
+      setPageInfo(mirrorData.data?.publications.pageInfo.next);
 
-        if (
-          !quoteData?.data?.publications?.items ||
-          quoteData?.data?.publications?.items?.length < 1
-        ) {
-          setHasMoreQuote(false);
-          setDataLoading(false);
-          return;
-        } else if (quoteData?.data?.publications?.items?.length === 10) {
-          setHasMoreQuote(true);
-        }
-        setQuoters(quoteData?.data?.publications?.items);
-        setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
+      const quoteData = await getPublications(
+        {
+          limit: LimitType.Ten,
+          where: {
+            quoteOn: reactBox.id,
+          },
+        },
+        lensConnected?.id
+      );
+
+      if (
+        !quoteData?.data?.publications?.items ||
+        quoteData?.data?.publications?.items?.length < 1
+      ) {
+        setHasMoreQuote(false);
+        setDataLoading(false);
+        return;
+      } else if (quoteData?.data?.publications?.items?.length === 10) {
+        setHasMoreQuote(true);
       }
+      setQuoters(quoteData?.data?.publications?.items);
+      setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -119,10 +114,13 @@ const useWho = (
     if (!reactBox.id) return;
     setDataLoading(true);
     try {
-      const data = await whoActedPublication({
-        on: reactBox.id,
-        limit: LimitType.Ten,
-      });
+      const data = await whoActedPublication(
+        {
+          on: reactBox.id,
+          limit: LimitType.Ten,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.whoActedOnPublication?.items ||
@@ -147,10 +145,13 @@ const useWho = (
     if (!reactBox.id) return;
     setDataLoading(true);
     try {
-      const data = await following({
-        for: reactBox.id,
-        limit: LimitType.Ten,
-      });
+      const data = await following(
+        {
+          for: reactBox.id,
+          limit: LimitType.Ten,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.following?.items ||
@@ -175,10 +176,13 @@ const useWho = (
     if (!reactBox.id) return;
     setDataLoading(true);
     try {
-      const data = await followers({
-        of: reactBox.id,
-        limit: LimitType.Ten,
-      });
+      const data = await followers(
+        {
+          of: reactBox.id,
+          limit: LimitType.Ten,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.followers?.items ||
@@ -202,11 +206,14 @@ const useWho = (
   const showMoreLikes = async () => {
     if (!pageInfo || !hasMore) return;
     try {
-      const data = await whoReactedPublication({
-        for: reactBox.id,
-        limit: LimitType.Ten,
-        cursor: pageInfo,
-      });
+      const data = await whoReactedPublication(
+        {
+          for: reactBox.id,
+          limit: LimitType.Ten,
+          cursor: pageInfo,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.whoReactedPublication?.items ||
@@ -232,11 +239,14 @@ const useWho = (
     if (!pageInfo || !hasMore) return;
 
     try {
-      const data = await whoActedPublication({
-        on: reactBox.id,
-        limit: LimitType.Ten,
-        cursor: pageInfo,
-      });
+      const data = await whoActedPublication(
+        {
+          on: reactBox.id,
+          limit: LimitType.Ten,
+          cursor: pageInfo,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.whoActedOnPublication?.items ||
@@ -261,11 +271,14 @@ const useWho = (
   const showMoreFollowing = async () => {
     if (!pageInfo || !hasMore) return;
     try {
-      const data = await following({
-        for: reactBox.id,
-        limit: LimitType.Ten,
-        cursor: pageInfo,
-      });
+      const data = await following(
+        {
+          for: reactBox.id,
+          limit: LimitType.Ten,
+          cursor: pageInfo,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.following?.items ||
@@ -287,11 +300,14 @@ const useWho = (
   const showMoreFollowers = async () => {
     if (!pageInfo || !hasMore) return;
     try {
-      const data = await followers({
-        of: reactBox.id,
-        limit: LimitType.Ten,
-        cursor: pageInfo,
-      });
+      const data = await followers(
+        {
+          of: reactBox.id,
+          limit: LimitType.Ten,
+          cursor: pageInfo,
+        },
+        lensConnected?.id
+      );
 
       if (
         !data?.data?.followers?.items ||
@@ -314,57 +330,62 @@ const useWho = (
     if ((!pageInfo || !hasMore) && (!pageInfoQuote || !hasMoreQuote)) return;
 
     try {
-      const mirrorData = await getPublications(
-        {
-          limit: LimitType.Ten,
-          where: {
-            publicationTypes: [PublicationType.Mirror],
-            mirrorOn: reactBox?.id,
+      if (hasMore && pageInfo) {
+        const mirrorData = await getPublications(
+          {
+            limit: LimitType.Ten,
+            where: {
+              mirrorOn: reactBox?.id,
+            },
+            cursor: pageInfo,
           },
-          cursor: pageInfo,
-        },
-        lensConnected?.id
-      );
+          lensConnected?.id
+        );
 
-      const quoteData = await getPublications(
-        {
-          limit: LimitType.Ten,
-          where: {
-            publicationTypes: [PublicationType.Mirror],
-            mirrorOn: reactBox?.id,
-          },
-          cursor: pageInfoQuote,
-        },
-        lensConnected?.id
-      );
+        if (
+          !mirrorData?.data?.publications?.items ||
+          mirrorData?.data?.publications?.items?.length < 1
+        ) {
+          setHasMore(false);
+          return;
+        } else if (mirrorData?.data?.publications?.items?.length === 10) {
+          setHasMore(true);
+        }
 
-      if (
-        !mirrorData?.data?.publications?.items ||
-        mirrorData?.data?.publications?.items?.length < 1
-      ) {
-        setHasMore(false);
-        return;
-      } else if (mirrorData?.data?.publications?.items?.length === 10) {
-        setHasMore(true);
+        setReactors([
+          ...reactors,
+          ...(mirrorData?.data?.publications?.items || []),
+        ]);
+        setPageInfo(mirrorData.data?.publications.pageInfo.next);
       }
 
-      if (
-        !quoteData?.data?.publications?.items ||
-        quoteData?.data?.publications?.items?.length < 1
-      ) {
-        setHasMoreQuote(false);
-        return;
-      } else if (quoteData?.data?.publications?.items?.length === 10) {
-        setHasMoreQuote(true);
-      }
+      if (pageInfoQuote && hasMoreQuote) {
+        const quoteData = await getPublications(
+          {
+            limit: LimitType.Ten,
+            where: {
+              mirrorOn: reactBox?.id,
+            },
+            cursor: pageInfoQuote,
+          },
+          lensConnected?.id
+        );
 
-      setReactors([
-        ...reactors,
-        ...(mirrorData?.data?.publications?.items || []),
-      ]);
-      setPageInfo(mirrorData.data?.publications.pageInfo.next);
-      setQuoters([...quoters, ...(quoteData?.data?.publications?.items || [])]);
-      setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
+        if (
+          !quoteData?.data?.publications?.items ||
+          quoteData?.data?.publications?.items?.length < 1
+        ) {
+          setHasMoreQuote(false);
+          return;
+        } else if (quoteData?.data?.publications?.items?.length === 10) {
+          setHasMoreQuote(true);
+        }
+        setQuoters([
+          ...quoters,
+          ...(quoteData?.data?.publications?.items || []),
+        ]);
+        setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
+      }
     } catch (err: any) {
       console.error(err.message);
     }

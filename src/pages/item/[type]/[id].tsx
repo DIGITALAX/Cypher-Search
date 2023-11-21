@@ -29,7 +29,7 @@ import useProfile from "@/components/Autograph/hooks/useProfile";
 
 const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(),
   });
   const { type, id } = router.query;
@@ -85,6 +85,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     approveSpend,
     isApprovedSpend,
     relatedData,
+    handleDecrypt,
+    decryptLoading
   } = useItem(
     type as string,
     id as string,
@@ -94,7 +96,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     address,
     cartItems,
     publicClient,
-    dispatch
+    dispatch,
+    router
   );
   const {
     handleMoreComments,
@@ -183,6 +186,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     signInLoading,
     cartListOpen,
     setCartListOpen,
+    handleLogout,
   } = useSignIn(
     publicClient,
     address,
@@ -191,7 +195,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     oracleData,
     cartItems,
     lensConnected,
-    cartAnim
+    cartAnim,
+    openAccountModal
   );
   const {
     mirror,
@@ -273,7 +278,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
             cartListOpen={cartListOpen}
             signInLoading={signInLoading}
             setCartListOpen={setCartListOpen}
-            openAccountModal={openAccountModal}
+            handleLogout={handleLogout}
             dispatch={dispatch}
             handleShuffleSearch={handleShuffleSearch}
           />
@@ -406,6 +411,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 cartAnim={cartAnim}
                 component={
                   <SwitchType
+                    handleDecrypt={handleDecrypt}
+                    decryptLoading={decryptLoading}
                     followMainLoading={mainFollowLoading}
                     mainProfileHovers={mainProfileHovers}
                     setMainProfileHovers={setMainProfileHovers}
@@ -471,7 +478,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 setSearchInput={setSearchInput}
                 openConnectModal={openConnectModal}
                 handleLensConnect={handleLensConnect}
-                openAccountModal={openAccountModal}
+                handleLogout={handleLogout}
                 lensConnected={lensConnected}
                 walletConnected={walletConnected}
                 openAccount={openAccount}

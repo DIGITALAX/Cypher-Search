@@ -22,7 +22,7 @@ import useBookmarks from "@/components/Autograph/hooks/useBookmarks";
 import usePost from "@/components/Autograph/hooks/usePost";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
-import { polygon , polygonMumbai} from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import useOrders from "@/components/Autograph/hooks/useOrders";
 import useSales from "@/components/Autograph/hooks/useSales";
 import useCreate from "@/components/Autograph/hooks/useCreate";
@@ -37,7 +37,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(),
   });
   const { autograph } = router.query;
@@ -91,7 +91,10 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     (state: RootState) => state.app.searchItemsReducer
   );
 
-  const { profileLoading, profile } = useAutograph(autograph as string);
+  const { profileLoading, profile } = useAutograph(
+    autograph as string,
+    lensConnected
+  );
   const { handleShuffleSearch } = useSearch(
     filtersOpen,
     lensConnected,
@@ -111,6 +114,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     signInLoading,
     cartListOpen,
     setCartListOpen,
+    handleLogout,
   } = useSignIn(
     publicClient,
     address,
@@ -119,7 +123,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     oracleData,
     cartItems,
     lensConnected,
-    cartAnim
+    cartAnim,
+    openAccountModal
   );
   const {
     feedLoading,
@@ -143,6 +148,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     commentContentLoading,
     setCommentContentLoading,
     profileFeed,
+    handleDecrypt,
+    decryptLoading,
   } = useFeed(
     lensConnected,
     postCollectGif,
@@ -214,14 +221,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setSearchCollection,
     editDrop,
     deleteDrop,
-  } = useDrop(
-    lensConnected,
-    screenDisplay,
-    publicClient,
-    dispatch,
-    address,
-    isDesigner
-  );
+  } = useDrop(screenDisplay, publicClient, dispatch, address, isDesigner);
   const {
     setCollectionDetails,
     setCreateCase,
@@ -314,10 +314,11 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     commentsBookmarkOpen,
     makeCommentBookmark,
     setMakeCommentBookmark,
+    handleDecryptBookmark,
+    decryptLoadingBookmark,
   } = useBookmarks(
     lensConnected,
     postCollectGif,
-    profileFeed,
     screenDisplay,
     dispatch,
     publicClient,
@@ -374,7 +375,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
             cartListOpen={cartListOpen}
             signInLoading={signInLoading}
             setCartListOpen={setCartListOpen}
-            openAccountModal={openAccountModal}
+            handleLogout={handleLogout}
             dispatch={dispatch}
             handleShuffleSearch={handleShuffleSearch}
           />
@@ -506,6 +507,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
               </Head>
               <Web
+                decryptLoading={decryptLoadingBookmark}
+                handleDecrypt={handleDecryptBookmark}
                 allCollections={allCollections}
                 searchCollection={searchCollection}
                 setSearchCollection={setSearchCollection}
@@ -554,7 +557,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 handleLensConnect={handleLensConnect}
                 walletConnected={walletConnected}
                 lensConnected={lensConnected}
-                openAccountModal={openAccountModal}
+                handleLogout={handleLogout}
                 screenDisplay={screenDisplay}
                 sortType={sortType}
                 setSortType={setSortType}
@@ -629,6 +632,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
               <Bio profile={profile} dispatch={dispatch} router={router} />
               <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
                 <Feed
+                  decryptLoading={decryptLoading}
+                  handleDecrypt={handleDecrypt}
+                  lensConnected={lensConnected}
                   comment={feedComment}
                   availableCurrencies={availableCurrencies}
                   mirror={feedMirror}

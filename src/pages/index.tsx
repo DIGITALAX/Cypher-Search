@@ -10,14 +10,14 @@ import { NextRouter } from "next/router";
 import Head from "next/head";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import { useAccount } from "wagmi";
-import { polygon , polygonMumbai} from "viem/chains";
+import { polygon, polygonMumbai } from "viem/chains";
 import { createPublicClient, http } from "viem";
 
 export default function Home({ router }: { router: NextRouter }) {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(),
   });
   const walletConnected = useSelector(
@@ -92,6 +92,7 @@ export default function Home({ router }: { router: NextRouter }) {
     signInLoading,
     cartListOpen,
     setCartListOpen,
+    handleLogout,
   } = useSignIn(
     publicClient,
     address,
@@ -100,7 +101,8 @@ export default function Home({ router }: { router: NextRouter }) {
     oracleData,
     cartItems,
     lensConnected,
-    cartAnim
+    cartAnim,
+    openAccountModal
   );
   const {
     mirror,
@@ -157,7 +159,7 @@ export default function Home({ router }: { router: NextRouter }) {
           setSearchInput={setSearchInput}
           openConnectModal={openConnectModal}
           handleLensConnect={handleLensConnect}
-          openAccountModal={openAccountModal}
+          handleLogout={handleLogout}
           lensConnected={lensConnected}
           walletConnected={walletConnected}
           openAccount={openAccount}
@@ -191,6 +193,7 @@ export default function Home({ router }: { router: NextRouter }) {
             cartItems={cartItems}
             mirror={mirror}
             like={like}
+            lensConnected={lensConnected}
             simpleCollect={collect}
             interactionsLoading={interactionsLoading}
             setOpenMirrorChoice={setOpenMirrorChoice}

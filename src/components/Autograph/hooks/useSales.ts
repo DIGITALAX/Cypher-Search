@@ -29,9 +29,12 @@ const useSales = (
           ...(data?.data?.orderCreateds || []),
           ...(data?.data?.nFTOnlyOrderCreateds || []),
         ]?.map(async (item: any) => {
-          const buyer = await getDefaultProfile({
-            for: item?.buyer,
-          });
+          const buyer = await getDefaultProfile(
+            {
+              for: item?.buyer,
+            },
+            lensConnected?.id
+          );
 
           return {
             ...item,

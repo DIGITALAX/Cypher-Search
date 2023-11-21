@@ -33,9 +33,6 @@ const Bio: FunctionComponent<BioProps> = ({
             {!profile?.metadata?.bio && (
               <div className="font-aust text-white text-xs  w-fit h-fit relative flex">
                 {profile?.metadata?.bio}
-                decentralization dons a neon glow. Here, epochs blend and
-                governance dances to the beat of synthwave. The underlying
-                ethos: "In Autonomy We Trust."
               </div>
             )}
             <div className="relative w-full h-fit flex flex-row gap-10 justify-start items-center">
@@ -174,6 +171,8 @@ const Bio: FunctionComponent<BioProps> = ({
                           item?.microbranCover?.split("ipfs://")?.[1]
                         }`}
                         draggable={false}
+                        className="rounded-full"
+                        objectFit="cover"
                       />
                     )}
                   </div>

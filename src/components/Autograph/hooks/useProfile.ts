@@ -13,6 +13,7 @@ import { polygon, polygonMumbai } from "viem/chains";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { Dispatch } from "redux";
 import { createWalletClient, custom, PublicClient } from "viem";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useProfile = (
   profileFeed: (Post | Quote | Mirror | Comment)[] | Creation[],
@@ -57,7 +58,7 @@ const useProfile = (
         )?.findIndex(
           (pub) =>
             (feed
-              ? (pub as Post | Quote | Mirror).__typename === "Mirror"
+              ? (pub as Post | Quote | Mirror)?.__typename === "Mirror"
                 ? (pub as Mirror).mirrorOn.id
                 : (pub as Post | Quote).id
               : (pub as Creation)?.pubId) === id
@@ -66,7 +67,7 @@ const useProfile = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -78,8 +79,9 @@ const useProfile = (
         clientWallet,
         publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     handleLoaders(false, main!, feed!, index);
@@ -97,7 +99,7 @@ const useProfile = (
     )?.findIndex(
       (pub) =>
         (feed
-          ? (pub as Post | Quote | Mirror).__typename === "Mirror"
+          ? (pub as Post | Quote | Mirror)?.__typename === "Mirror"
             ? (pub as Mirror).mirrorOn.id
             : (pub as Post | Quote).id
           : (pub as Creation)?.pubId) === id
@@ -106,7 +108,7 @@ const useProfile = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -117,8 +119,9 @@ const useProfile = (
         clientWallet,
         publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
 

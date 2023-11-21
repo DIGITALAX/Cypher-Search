@@ -34,7 +34,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   const dispatch = useDispatch();
   const { address } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(),
   });
   const mapOpen = useSelector((state: RootState) => state.app.mapReducer);
@@ -147,7 +147,13 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     profileHovers,
     setProfileHovers,
     publication,
-  } = useFilterPost(filtersOpen);
+  } = useFilterPost(
+    filtersOpen,
+    dispatch,
+    address,
+    publicClient,
+    lensConnected,
+  );
   const {
     makeQuote,
     setMakeQuote,
@@ -192,6 +198,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       {mapOpen?.value && <Map dispatch={dispatch} filterValues={filters} />}
       {filtersOpen?.value && (
         <Filters
+          lensConnected={lensConnected}
           filterConstants={filterConstants}
           openDropDown={openDropDown}
           setOpenDropDown={setOpenDropDown}
@@ -223,6 +230,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       {reactBox?.open && (
         <Who
           router={router}
+          lensConnected={lensConnected}
           dispatch={dispatch}
           type={reactBox.type!}
           reactors={reactors}
@@ -283,7 +291,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {postBox?.open && (
         <PostBox
+          lensConnected={lensConnected}
           dispatch={dispatch}
+          router={router}
           quote={postBox?.quote}
           makePost={makeQuote}
           setMakePost={setMakeQuote}

@@ -10,6 +10,8 @@ import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { PublicClient, WalletClient } from "viem";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import cleanCollect from "../cleanCollect";
+import validateMetadata from "../../../graphql/lens/queries/validate";
+import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
 
 const lensComment = async (
   id: string,
@@ -29,6 +31,18 @@ const lensComment = async (
     )
   ) {
     openActionModules = cleanCollect(openActionModules);
+  }
+
+  const metadata = await validateMetadata({
+    rawURI: contentURI,
+  });
+
+
+
+
+  if (!metadata?.data?.validatePublicationMetadata.valid) {
+    dispatch(setInteractError(true))
+    return;
   }
 
   const data = await commentPost({
@@ -65,7 +79,7 @@ const lensComment = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "comment",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [
         {
           profileId: typedData?.value.profileId,
@@ -99,12 +113,14 @@ const lensComment = async (
       dispatch
     );
   }
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
 };
 
 export default lensComment;

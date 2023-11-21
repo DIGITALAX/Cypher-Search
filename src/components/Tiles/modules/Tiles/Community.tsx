@@ -16,12 +16,16 @@ const Community: FunctionComponent<CommunityProps> = ({
   followProfile,
   followLoading,
   dispatch,
+  lensConnected,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol bg-black gap-4 p-2">
+    <div
+      className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol bg-black gap-4 p-2"
+      id={community?.cover}
+    >
       <div className="relative w-fit h-fit gap-1 flex items-center justify-center flex-col">
         <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit text-xl">
-        {community?.name}
+          {community?.name}
         </div>
         <div className="absolute top-1 w-fit h-fit flex items-center justify-center text-sol opacity-50 font-bit text-xl">
           {community?.name}
@@ -142,6 +146,8 @@ const Community: FunctionComponent<CommunityProps> = ({
                         layout="fill"
                         src={profilePicture}
                         draggable={false}
+                        className="rounded-full"
+                        objectFit="cover"
                       />
                     )}
                   </div>
@@ -156,6 +162,8 @@ const Community: FunctionComponent<CommunityProps> = ({
                       setProfileHovers={setProfileHovers}
                       feed
                       dispatch={dispatch}
+                      lensConnected={lensConnected}
+                      parentId={community?.cover}
                     />
                   )}
                   <div className="relative w-fit h-fit text-white font-bit items-center justify-center flex top-px text-xs px-2 py-1">

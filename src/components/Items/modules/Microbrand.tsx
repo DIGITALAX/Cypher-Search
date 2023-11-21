@@ -24,6 +24,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   followLoading,
   profileHovers,
   setProfileHovers,
+  lensConnected
 }): JSX.Element => {
   const profilePicture = createProfilePicture(itemData?.metadata?.picture);
   return (
@@ -47,7 +48,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
         </div>
         <div className="relative w-fit h-fit flex flex-col items-start justify-start">
           <div className="relative w-fit h-fit ml-auto text-5xl text-white font-aust flex items-center justify-center">
-            {relatedData?.microbrand?.microbrand}emmabrand
+            {relatedData?.microbrand?.microbrand}
           </div>
           <div
             className="relative w-fit h-fit gap-1 flex items-center justify-center flex-row"
@@ -74,7 +75,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
               )}
             </div>
             <div className="relative w-fit h-fit ml-auto text-base text-white font-aust flex items-center justify-center">
-              {itemData?.handle?.suggestedFormatted?.localName}@handle
+              {itemData?.handle?.suggestedFormatted?.localName}
             </div>
           </div>
         </div>
@@ -86,6 +87,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
               (item: CreationType, index: number) => {
                 return (
                   <Creation
+                    lensConnected={lensConnected}
                     dispatch={dispatch}
                     cartItems={cartItems}
                     key={index}

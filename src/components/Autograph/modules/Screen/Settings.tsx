@@ -403,7 +403,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                             "RevertFollowModule",
                           ]
                             .filter((item) => item !== followData.type)
-                            .map((item: string, index) => {
+                            ?.map((item: string, index) => {
                               return (
                                 <div
                                   className="relative w-full h-fit rounded-sm bg-piloto border border-fuera flex items-center  justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"

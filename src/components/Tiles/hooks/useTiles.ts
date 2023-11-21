@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { Publication } from "../types/tiles.types";
-import { Mirror, Post, Profile, Quote, Comment } from "../../../../graphql/generated";
+import {
+  Mirror,
+  Post,
+  Profile,
+  Quote,
+  Comment,
+} from "../../../../graphql/generated";
 import { Dispatch } from "redux";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useTiles = (
   allSearchItems: Publication[],
@@ -36,7 +43,7 @@ const useTiles = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -48,8 +55,9 @@ const useTiles = (
         clientWallet,
         publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setFollowLoading((prev) => {
@@ -74,7 +82,7 @@ const useTiles = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -83,10 +91,11 @@ const useTiles = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient,
+        publicClient
       );
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setFollowLoading((prev) => {
@@ -105,12 +114,11 @@ const useTiles = (
         Array.from({ length: allSearchItems.length }, () => false)
       );
     }
-  }, [allSearchItems.length]);
+  }, [allSearchItems?.length]);
 
   useEffect(() => {
     setProfileHovers(Array.from({ length: 10 }, () => false));
   }, []);
-
 
   return {
     popUpOpen,

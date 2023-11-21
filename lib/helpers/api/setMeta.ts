@@ -35,7 +35,7 @@ const setMeta = async (
     signature,
   });
 
-  if (broadcastResult?.data?.broadcastOnchain.__typename === "RelaySuccess") {
+  if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
     dispatch(
       setIndexer({
         actionOpen: true,
@@ -54,7 +54,7 @@ const setMeta = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "setProfileMetadataURI",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [typedData?.value.profileId, typedData?.value.metadataURI],
       account: address,
     });
@@ -74,12 +74,14 @@ const setMeta = async (
     );
   }
 
-  dispatch(
-    setIndexer({
-      actionOpen: false,
-      actionMessage: undefined,
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      setIndexer({
+        actionOpen: false,
+        actionMessage: undefined,
+      })
+    );
+  }, 3000);
 };
 
 export default setMeta;

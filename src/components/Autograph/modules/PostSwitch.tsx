@@ -14,8 +14,7 @@ import Media from "./Metadata/Media";
 const PostSwitch: FunctionComponent<PostSwitchProps> = ({
   item,
   dispatch,
-  router,
-  index,
+  disabled,
 }): JSX.Element => {
   switch (
     item?.__typename === "Mirror"
@@ -27,9 +26,6 @@ const PostSwitch: FunctionComponent<PostSwitchProps> = ({
     case "StoryMetadataV3":
       return (
         <Text
-          dispatch={dispatch}
-          router={router}
-          index={index}
           metadata={
             (item?.__typename === "Mirror"
               ? item?.mirrorOn?.metadata
@@ -38,22 +34,21 @@ const PostSwitch: FunctionComponent<PostSwitchProps> = ({
               | StoryMetadataV3
               | TextOnlyMetadataV3
           }
-          quote={
-            item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
-          }
-          mirror={item?.__typename === "Mirror" ? item : undefined}
-          type={item?.__typename!}
-          id={
-            item?.__typename === "Mirror"
-              ? item?.mirrorOn?.id
-              : (item as Post)?.id
+          encrypted={
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.isEncrypted
+              ? ((item?.__typename === "Mirror" ? item?.mirrorOn : item) as (
+                  | Post
+                  | Quote
+                ) & {
+                  decrypted: any;
+                })
+              : undefined
           }
         />
       );
 
-    case "AudioMetadataV3":
-    case "VideoMetadataV3":
-    case "ImageMetadataV3":
+    default:
       return (
         <Media
           metadata={
@@ -61,24 +56,21 @@ const PostSwitch: FunctionComponent<PostSwitchProps> = ({
               ? item?.mirrorOn?.metadata
               : (item as Post)?.metadata) as ImageMetadataV3
           }
-          quote={
-            item?.__typename === "Quote" ? (item as Quote)?.quoteOn : undefined
-          }
-          mirror={item?.__typename === "Mirror" ? item : undefined}
-          type={item?.__typename!}
-          id={
-            item?.__typename === "Mirror"
-              ? item?.mirrorOn?.id
-              : (item as Post)?.id
-          }
           dispatch={dispatch}
-          router={router}
-          index={index}
+          disabled={disabled}
+          encrypted={
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.isEncrypted
+              ? ((item?.__typename === "Mirror" ? item?.mirrorOn : item) as (
+                  | Post
+                  | Quote
+                ) & {
+                  decrypted: any;
+                })
+              : undefined
+          }
         />
       );
-
-    default:
-      return <></>;
   }
 };
 

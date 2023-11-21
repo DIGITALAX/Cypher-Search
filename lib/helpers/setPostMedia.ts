@@ -77,11 +77,11 @@ const setPostMedia = async (
 
     await Promise.all(imageReaders).then((newImages: string[]) => {
       setMakePostComment((prev) => {
-        const arr = [...prev];
+        const arr = [...(prev || [])];
         arr[index] = {
-          ...arr[index],
+          ...(arr[index] || {}),
           images: [
-            ...prev[index]?.images,
+            ...(prev[index]?.images || []),
             ...newImages?.map((item, index) => ({
               media: item,
               type: types?.[index],
@@ -92,9 +92,9 @@ const setPostMedia = async (
       });
     });
     setContentLoading((prev) => {
-      const arr = [...prev];
+      const arr = [...(prev || [])];
       arr[index] = {
-        ...arr[index],
+        ...(arr[index] || {}),
         image: false,
       };
       return arr;

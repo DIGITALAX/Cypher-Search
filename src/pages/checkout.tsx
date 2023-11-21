@@ -22,7 +22,7 @@ const Checkout: NextPage<{
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(),
   });
   const walletConnected = useSelector(
@@ -55,6 +55,7 @@ const Checkout: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
+    handleLogout,
   } = useSignIn(
     publicClient,
     address,
@@ -63,7 +64,8 @@ const Checkout: NextPage<{
     oracleData,
     cartItems,
     lensConnected,
-    cartAnim
+    cartAnim,
+    openAccountModal
   );
   const {
     collectItem,
@@ -117,7 +119,7 @@ const Checkout: NextPage<{
         signInLoading={signInLoading}
         setCartListOpen={setCartListOpen}
         router={router}
-        openAccountModal={openAccountModal}
+        handleLogout={handleLogout}
         dispatch={dispatch}
         includeSearch={false}
       />

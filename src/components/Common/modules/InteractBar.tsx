@@ -91,6 +91,37 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             : null,
         ].filter(Boolean);
 
+        const responded = [
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn
+            : (publication as Post)
+          )?.operations?.hasMirrored ||
+            (publication?.__typename === "Mirror"
+              ? publication?.mirrorOn
+              : (publication as Post)
+            )?.operations?.hasQuoted,
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn
+            : (publication as Post)
+          )?.operations?.hasReacted,
+          hideCollect
+            ? null
+            : (publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+              )?.operations?.hasActed?.value,
+          false,
+          false,
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn
+            : (publication as Post)
+          )?.operations?.hasBookmarked,
+          (publication?.__typename === "Mirror"
+            ? publication?.mirrorOn
+            : (publication as Post)
+          )?.operations?.hasReported,
+        ]?.filter((item) => item !== null);
+
         const loaders = [
           interactionsLoading?.like,
           hideCollect ? null : interactionsLoading?.simpleCollect,
@@ -187,16 +218,26 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                         })
                       )
                     : functions[indexTwo] &&
-                      (functions[indexTwo]! as any)(publication?.id, type!);
+                      (
+                        functions[indexTwo]! as (
+                          id: string,
+                          type: string
+                        ) => Promise<void>
+                      )(publication?.id, type!);
                 } else if (indexTwo === 1) {
                   !loaders[indexTwo] &&
                     functions[indexTwo] &&
                     (
                       functions[indexTwo]! as (
                         id: string,
+                        hasReacted: boolean,
                         main: boolean
                       ) => Promise<void>
-                    )(publication?.id, main!);
+                    )(
+                      publication?.id,
+                      publication?.by?.operations?.isFollowedByMe.value!,
+                      main!
+                    );
                 } else {
                   !loaders[indexTwo] &&
                     functions[indexTwo] &&
@@ -216,7 +257,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                     functions[indexTwo]
                       ? "cursor-pointer active:scale-95"
                       : "opacity-70"
-                  }`}
+                  } ${responded?.[indexTwo] && "mix-blend-hard-light"}`}
                 >
                   <Image
                     layout="fill"
@@ -245,7 +286,10 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                       dispatch(
                         setReactBox({
                           actionOpen: true,
-                          actionId: publication?.id,
+                          actionId: (publication?.__typename === "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.id,
                           actionType: image[1],
                         })
                       );

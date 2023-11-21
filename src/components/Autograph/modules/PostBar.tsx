@@ -2,11 +2,7 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { AiOutlineLoading } from "react-icons/ai";
-import {
-  ImageMetadataV3,
-  Post,
-  PublicationMetadataMediaImage,
-} from "../../../../graphql/generated";
+import { ImageMetadataV3, Post } from "../../../../graphql/generated";
 import numeral from "numeral";
 import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
@@ -40,11 +36,12 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   commentsOpen,
   setCommentsOpen,
   main,
+  lensConnected,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
     <div className="relative w-full justify-between flex flex-row items-center gap-2">
-      <div className="relative w-fit h-fit flex flex-row items-center gap-1.5 justify-center">
+      <div className="relative w-fit h-fit flex flex-row items-center gap-2 justify-center">
         {[
           ["QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3", "Mirrors"],
           ["QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ", "Likes"],
@@ -59,32 +56,50 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               }),
 
             like,
-            () =>
-              setCommentsOpen((prev) => {
-                const arr = [...prev];
-                arr[index] = !commentsOpen[index];
-                return arr;
-              }),
+            main
+              ? null
+              : () =>
+                  setCommentsOpen((prev) => {
+                    const arr = [...prev];
+                    arr[index] = !commentsOpen[index];
+                    return arr;
+                  }),
           ];
 
           const loaders = [interactionsLoading?.like];
 
           const stats = [
             item?.__typename === "Mirror"
+              ? item?.mirrorOn?.stats?.mirrors! + item?.mirrorOn?.stats?.quotes!
+              : (item as Post)?.stats?.mirrors! +
+                (item as Post)?.stats?.quotes!,
+            item?.__typename === "Mirror"
               ? item?.mirrorOn?.stats?.reactions
               : (item as Post)?.stats?.reactions,
             item?.__typename === "Mirror"
               ? item?.mirrorOn?.stats?.comments
               : (item as Post)?.stats?.comments,
-            item?.__typename === "Mirror"
-              ? item?.mirrorOn?.stats?.mirrors! + item?.mirrorOn?.stats?.quotes!
-              : (item as Post)?.stats?.mirrors! +
-                (item as Post)?.stats?.quotes!,
+          ];
+
+          const responded = [
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.operations?.hasMirrored ||
+              (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+                ?.operations?.hasQuoted,
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.operations?.hasReacted,
           ];
 
           return (
             <div
-              className="relative w-full h-full flex flex-row items-center justify-center gap-2 text-white font-earl"
+              className={`relative w-full h-full flex flex-row items-center justify-center gap-1 font-earl ${
+                (item?.__typename === "Mirror"
+                  ? item?.mirrorOn
+                  : (item as Post)
+                ).isEncrypted
+                  ? "text-black"
+                  : "text-white"
+              }`}
               key={indexTwo}
             >
               <div
@@ -98,28 +113,57 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     );
                     router.push(`/item/pub/${item?.id}`);
                   } else {
-                    functions[indexTwo] &&
-                      (main
-                        ? functions[indexTwo]!(item?.id, main)
-                        : (
-                            functions[indexTwo]! as (
-                              id: string
-                            ) => Promise<void>
-                          )(item?.id));
+                    if (functions[indexTwo]) {
+                      if (image[1] !== "Likes") {
+                        main
+                          ? functions[indexTwo]!(item?.id, main)
+                          : (
+                              functions[indexTwo]! as (
+                                id: string
+                              ) => Promise<void>
+                            )(item?.id);
+                      } else {
+                        main
+                          ? (functions[indexTwo] as (
+                              id: string,
+                              hasReacted: boolean,
+                              main: boolean
+                            ) => Promise<void>)!(
+                              item?.id,
+                              (item?.__typename === "Mirror"
+                                ? item?.mirrorOn
+                                : (item as Post)
+                              )?.operations?.hasReacted,
+                              main
+                            )
+                          : (
+                              functions[indexTwo]! as (
+                                id: string,
+                                hasReacted: boolean
+                              ) => Promise<void>
+                            )(
+                              item?.id,
+                              (item?.__typename === "Mirror"
+                                ? item?.mirrorOn
+                                : (item as Post)
+                              )?.operations?.hasReacted
+                            );
+                      }
+                    }
                   }
                 }}
               >
-                {loaders[index] ? (
+                {loaders[index] && image[1] === "Likes" ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
                     <AiOutlineLoading size={15} color="white" />
                   </div>
                 ) : (
                   <div
-                    className={`relative w-4 h-4 flex items-center justify-center ${
+                    className={`relative w-3.5 h-3.5 flex items-center justify-center ${
                       functions[indexTwo]
                         ? "cursor-pointer active:scale-95"
                         : "opacity-70"
-                    }`}
+                    } ${responded?.[indexTwo] && "mix-blend-hard-light"}`}
                   >
                     <Image
                       layout="fill"
@@ -130,11 +174,12 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 )}
               </div>
               <div
-                className={`relative w-fit h-fit flex items-center justify-center text-center ${
+                className={`relative w-fit h-fit flex items-center justify-center text-center text-sm ${
                   (stats[indexTwo] > 0 || image[1] === "Comments") &&
                   "cursor-pointer active:scale-95"
                 }`}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if (disabled) {
                     dispatch(
                       setReactBox({
@@ -143,14 +188,18 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     );
                     router.push(`/item/pub/${item?.id}`);
                   } else {
-                    (stats[indexTwo] > 0 || image[1] === "Comments") &&
-                      dispatch(
-                        setReactBox({
-                          actionOpen: true,
-                          actionId: item?.id,
-                          actionType: image[1],
-                        })
-                      );
+                    stats[indexTwo] > 0 && image[1] !== "Comments"
+                      ? dispatch(
+                          setReactBox({
+                            actionOpen: true,
+                            actionId: (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.id,
+                            actionType: image[1],
+                          })
+                        )
+                      : !main && router.push(`/item/pub/${item?.id}`);
                   }
                 }}
               >
@@ -210,7 +259,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   }
                 }}
               >
-                {loaders[index] ? (
+                {loaders[index] && indexTwo == 0 ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
                     <AiOutlineLoading size={15} color="white" />
                   </div>
@@ -232,9 +281,9 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           })}
         </div>
       )}
-      <div className="relative w-fit h-fit flex flex-row gap-2">
+      <div className="relative w-fit h-fit flex flex-row gap-2 items-center justify-center">
         <div
-          className="relative w-14 h-5 items-center justify-center flex cursor-pointer active:scale-95"
+          className="relative w-8 h-3.5 items-center justify-center flex cursor-pointer active:scale-95"
           onClick={() => {
             if (disabled) return;
             setOpenMoreOptions!((prev) => {
@@ -249,8 +298,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             draggable={false}
             src={`${INFURA_GATEWAY}/ipfs/${
               index % 2 == 0 ||
-              (item?.__typename === "Mirror" ? item.mirrorOn : (item as Post))
-                .metadata.__typename !== "ImageMetadataV3"
+              (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+                ?.metadata?.__typename !== "ImageMetadataV3"
                 ? "QmNpvEkdHfhFViALNCedoF3WLTngxXG67XnPYaeaFCsA49"
                 : "QmTQYdbL5iJkzMAwHh52SWvzopssTEEV5dRaENNrJgmesH"
             }`}
@@ -259,17 +308,23 @@ const PostBar: FunctionComponent<PostBarProps> = ({
         <div
           className="relative flex items-center justify-center rounded-full w-5 h-5 cursor-pointer"
           id="pfp"
-          onMouseEnter={() => {
+          onMouseEnter={(e) => {
             if (disabled) return;
             setProfileHovers!((prev) => {
-              const updatedArray = [...prev!];
-              updatedArray[index] = true;
-              return updatedArray;
+              const arr = [...(prev || [])];
+              arr[index] = true;
+              return arr;
             });
           }}
         >
           {profilePicture && (
-            <Image layout="fill" src={profilePicture} draggable={false} />
+            <Image
+              layout="fill"
+              src={profilePicture}
+              draggable={false}
+              className="rounded-full"
+              objectFit="cover"
+            />
           )}
         </div>
         <div
@@ -282,7 +337,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               "MultirecipientFeeCollectOpenActionSettings"
               ? "cursor-pointer active:scale-95"
               : "opacity-70"
-          } ${interactionsLoading?.simpleCollect && "animate-spin"}`}
+          } ${interactionsLoading?.simpleCollect && "animate-spin"} ${
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.operations?.hasActed?.value && "mix-blend-hard-light"
+          }`}
           onClick={() => {
             const pub =
               item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post);
@@ -296,9 +354,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             )
               return;
 
-            Number(pub?.openActionModules?.[0].amount.value) > 0 ||
-            pub?.openActionModules?.[0].endsAt ||
-            Number(pub.openActionModules?.[0].collectLimit)
+            Number(pub?.openActionModules?.[0]?.amount?.value) > 0 ||
+            pub?.openActionModules?.[0]?.endsAt != null ||
+            Number(pub.openActionModules?.[0]?.collectLimit) > 0 ||
+            pub?.openActionModules?.[0]?.followerOnly
               ? dispatch(
                   setFollowCollect({
                     actionType: "collect",
@@ -307,14 +366,17 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       stats: pub.stats.countOpenActions,
                       item: pub?.openActionModules?.[0],
                     },
+                    actionFollower: pub?.by,
                   })
                 )
               : main
-              ? simpleCollect!(
-                  pub?.id,
-                  pub?.openActionModules?.[0]?.__typename,
-                  main
-                )
+              ? (
+                  simpleCollect! as (
+                    id: string,
+                    type: string,
+                    main: boolean
+                  ) => Promise<void>
+                )(pub?.id, pub?.openActionModules?.[0]?.__typename, main)
               : (simpleCollect! as (id: string, type: string) => Promise<void>)(
                   pub?.id,
                   pub?.openActionModules?.[0]?.__typename
@@ -342,6 +404,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             setProfileHovers={setProfileHovers!}
             feed
             dispatch={dispatch}
+            lensConnected={lensConnected}
+            parentId={item?.id}
           />
         )}
       </div>
@@ -349,7 +413,14 @@ const PostBar: FunctionComponent<PostBarProps> = ({
         <div className="absolute w-fit h-fit flex flex-row gap-4 p-1 items-center justify-center bg-lirio/80 rounded-sm right-2 -top-10 border border-white">
           {(
             [
-              ["Hide Post", "QmUcaryzjgiLn34eXTPAZxmtfzWgTsUSeaim3yHnsmcnxx"],
+              lensConnected?.id ===
+              (item?.__typename == "Mirror" ? item?.mirrorOn : (item as Post))
+                ?.by?.id
+                ? [
+                    "Hide Post",
+                    "QmUcaryzjgiLn34eXTPAZxmtfzWgTsUSeaim3yHnsmcnxx",
+                  ]
+                : null,
               ["Bookmark", "QmUHAMRX6fenDM6Eyt36N8839b8xbiMDkN9Wb8DXKY2aZC"],
               ["Report Post", "QmRNwdrGa977LxHPbBv8KEAHBEEidKUiPtn4r6SmxDZHkd"],
               router.asPath.includes("item") || main
@@ -363,7 +434,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             const meta =
               item?.__typename == "Mirror" ? item?.mirrorOn : (item as Post);
             const functions = [
-              handleHidePost,
+              lensConnected?.id === meta?.by?.id ? handleHidePost : null,
               handleBookmark,
               () =>
                 dispatch(
@@ -398,12 +469,14 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       }`
                     )
                   : router.push(`/item/pub/${item?.id}`),
-            ];
+            ]?.filter(Boolean);
 
             const loaders = [
-              interactionsLoading?.hide,
+              lensConnected?.id === meta?.by?.id
+                ? interactionsLoading?.hide
+                : null,
               interactionsLoading?.bookmark,
-            ];
+            ]?.filter(Boolean);
             return (
               <div
                 key={indexTwo}
@@ -411,7 +484,14 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 title={image[0]}
                 onClick={() => {
                   if (disabled) return;
-                  if (indexTwo !== 3 && indexTwo !== 2) {
+                  if (
+                    (indexTwo !== 3 &&
+                      indexTwo !== 2 &&
+                      lensConnected?.id === meta?.by?.id) ||
+                    (lensConnected?.id !== meta?.by?.id &&
+                      indexTwo !== 2 &&
+                      indexTwo !== 1)
+                  ) {
                     !loaders[index] && main
                       ? (
                           functions[indexTwo] as (
@@ -431,7 +511,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   }
                 }}
               >
-                {loaders[index] ? (
+                {loaders[indexTwo] ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
                     <AiOutlineLoading size={15} color="white" />
                   </div>

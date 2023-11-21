@@ -43,11 +43,6 @@
             "internalType": "address",
             "name": "newFeeFollowModule",
             "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "migrationAdmin",
-            "type": "address"
           }
         ],
         "internalType": "struct Types.MigrationParams",
@@ -72,6 +67,7 @@
   { "inputs": [], "name": "NonERC721ReceiverImplementer", "type": "error" },
   { "inputs": [], "name": "NotEOA", "type": "error" },
   { "inputs": [], "name": "NotGovernance", "type": "error" },
+  { "inputs": [], "name": "NotHub", "type": "error" },
   { "inputs": [], "name": "NotMigrationAdmin", "type": "error" },
   { "inputs": [], "name": "NotOwnerOrApproved", "type": "error" },
   { "inputs": [], "name": "NotProfileOwner", "type": "error" },
@@ -134,6 +130,111 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "profileId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "pubId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "collectNFTId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "CollectNFTTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "version",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes20",
+        "name": "gitCommit",
+        "type": "bytes20"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "LensUpgradeVersion",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bool",
+        "name": "enabled",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenGuardianDisablingTimestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "TokenGuardianStateChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -155,10 +256,98 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "prevTreasuryFee",
+        "type": "uint16"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "newTreasuryFee",
+        "type": "uint16"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "TreasuryFeeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "prevTreasury",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newTreasury",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "TreasurySet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "unfollowerProfileId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "idOfProfileUnfollowed",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "transactionExecutor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "Unfollowed",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "DANGER__disableTokenGuardian",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "TOKEN_GUARDIAN_COOLDOWN",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -425,11 +614,7 @@
           { "internalType": "address", "name": "signer", "type": "address" },
           { "internalType": "uint8", "name": "v", "type": "uint8" },
           { "internalType": "bytes32", "name": "r", "type": "bytes32" },
-          {
-            "internalType": "bytes32",
-            "name": "s",
-            "type": "changeDelegatedExecutorsConfigWithSig"
-          },
+          { "internalType": "bytes32", "name": "s", "type": "bytes32" },
           { "internalType": "uint256", "name": "deadline", "type": "uint256" }
         ],
         "internalType": "struct Types.EIP712Signature",
@@ -744,6 +929,13 @@
   },
   {
     "inputs": [],
+    "name": "emitVersion",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "enableTokenGuardian",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -896,6 +1088,20 @@
   },
   {
     "inputs": [],
+    "name": "getFollowTokenURIContract",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGitCommit",
+    "outputs": [{ "internalType": "bytes20", "name": "", "type": "bytes20" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getGovernance",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
@@ -961,6 +1167,13 @@
     ],
     "name": "getProfileIdByHandleHash",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getProfileTokenURIContract",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1079,6 +1292,22 @@
     "name": "getTreasuryFee",
     "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVersion",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint8", "name": "increment", "type": "uint8" }
+    ],
+    "name": "incrementNonce",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1684,6 +1913,19 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "followTokenURIContract",
+        "type": "address"
+      }
+    ],
+    "name": "setFollowTokenURIContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "address", "name": "newGovernance", "type": "address" }
     ],
     "name": "setGovernance",
@@ -1733,6 +1975,19 @@
       }
     ],
     "name": "setProfileMetadataURIWithSig",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "profileTokenURIContract",
+        "type": "address"
+      }
+    ],
+    "name": "setProfileTokenURIContract",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

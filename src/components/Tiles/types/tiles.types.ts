@@ -50,12 +50,22 @@ export interface Creation {
   sizes: string[];
   origin: string;
   profile: Profile;
-  publication: Post | undefined;
+  publication:
+    | (Post & {
+        decrypted: any;
+      })
+    | undefined;
   blockTimestamp: string;
 }
 
 export interface Publication {
-  post?: Post | Comment | Quote | Mirror | Profile | Creation | Community;
+  post?:
+    | ((Post | Comment | Quote | Mirror) & {
+        decrypted: any;
+      })
+    | Profile
+    | Creation
+    | Community;
   type: string;
   publishedOn?: string;
 }
@@ -78,7 +88,7 @@ export type TilesProps = {
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
@@ -97,6 +107,7 @@ export type TilesProps = {
   setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
   setHeart: (e: SetStateAction<boolean[]>) => void;
   fullScreenVideo: FullScreenVideoState;
+  lensConnected: Profile | undefined;
 };
 
 export type TileSwitchProps = {
@@ -105,6 +116,7 @@ export type TileSwitchProps = {
   profileHovers: boolean[];
   setHeart?: (e: SetStateAction<boolean[]>) => void;
   heart?: boolean[];
+  lensConnected: Profile | undefined;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   layoutAmount: number;
   popUpOpen: boolean[];
@@ -116,7 +128,7 @@ export type TileSwitchProps = {
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   simpleCollect?: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
@@ -145,7 +157,7 @@ export type ControlsProps = {
   setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
   setVolume: (e: SetStateAction<number[]>) => void;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   profileId: string;
   dispatch: Dispatch<AnyAction>;
   interactionsLoading: {
@@ -170,7 +182,7 @@ export type VideoPostProps = {
   router: NextRouter;
   publication: Publication;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -201,7 +213,7 @@ export type LegendProps = {
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -237,8 +249,8 @@ export type ChromadinProps = {
   cartItems: CartItem[];
   publication: Creation;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
-
+  like: (id: string, hasReacted: boolean) => Promise<void>;
+  lensConnected: Profile | undefined;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -262,8 +274,8 @@ export type CoinOpProps = {
   publication: Creation;
   cartItems: CartItem[];
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
-
+  like: (id: string, hasReacted: boolean) => Promise<void>;
+  lensConnected: Profile | undefined;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -283,12 +295,13 @@ export type TextPostProps = {
   router: NextRouter;
   publication: Post | Comment | Quote | Mirror;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
   };
+  lensConnected: Profile | undefined;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   index: number;
@@ -316,8 +329,8 @@ export type ImagePostProps = {
   publication: Post | Comment | Quote | Mirror;
   dispatch: Dispatch<AnyAction>;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
-
+  like: (id: string, hasReacted: boolean) => Promise<void>;
+  lensConnected: Profile | undefined;
   simpleCollect: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
@@ -361,8 +374,8 @@ export type ListenerProps = {
   cartItems: CartItem[];
   publication: Creation;
   mirror: (id: string) => Promise<void>;
-  like: (id: string) => Promise<void>;
-
+  like: (id: string, hasReacted: boolean) => Promise<void>;
+  lensConnected: Profile | undefined;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -397,6 +410,7 @@ export type ProfileProps = {
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   dispatch: Dispatch<AnyAction>;
+  lensConnected: Profile | undefined;
 };
 
 export type MicrobrandProps = {
@@ -409,6 +423,7 @@ export type MicrobrandProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
+  lensConnected: Profile | undefined;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
@@ -460,6 +475,7 @@ export type CommunityProps = {
   followLoading: boolean[];
   dispatch: Dispatch<AnyAction>;
   profileHovers: boolean[];
+  lensConnected: Profile | undefined;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 

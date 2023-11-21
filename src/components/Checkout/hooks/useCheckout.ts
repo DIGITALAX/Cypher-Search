@@ -97,7 +97,7 @@ const useCheckout = (
     setEncryptionLoading(true);
     try {
       const authSig = await checkAndSignAuthMessage({
-        chain: "polygonMumbai",
+        chain: "polygon",
       });
 
       setEncryptedStrings;
@@ -133,7 +133,7 @@ const useCheckout = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -209,7 +209,7 @@ const useCheckout = (
   const approveSpend = async () => {
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -280,7 +280,7 @@ const useCheckout = (
               },
         ],
         functionName: "approve",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [
           item?.type === "chromadin"
             ? CHROMADIN_OPEN_ACTION

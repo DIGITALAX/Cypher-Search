@@ -35,7 +35,8 @@ const useSignIn = (
   oracleData: OracleData[],
   cartItems: CartItem[],
   lensConnected: Profile | undefined,
-  cartAnim: boolean
+  cartAnim: boolean,
+  openAccountModal: (() => void) | undefined
 ) => {
   const { signMessageAsync } = useSignMessage();
   const [openAccount, setOpenAccount] = useState<boolean>(false);
@@ -45,9 +46,12 @@ const useSignIn = (
   const handleLensConnect = async () => {
     setSignInLoading(true);
     try {
-      const profile = await getDefaultProfile({
-        for: address,
-      });
+      const profile = await getDefaultProfile(
+        {
+          for: address,
+        },
+        lensConnected?.id
+      );
       const challengeResponse = await generateChallenge({
         for: profile?.data?.defaultProfile?.id,
         signedBy: address,
@@ -71,11 +75,14 @@ const useSignIn = (
 
   const handleRefreshProfile = async (): Promise<void> => {
     try {
-      const profile = await getProfiles({
-        where: {
-          ownedBy: [address],
+      const profile = await getProfiles(
+        {
+          where: {
+            ownedBy: [address],
+          },
         },
-      });
+        lensConnected?.id
+      );
       if (profile?.data?.profiles?.items?.length !== null) {
         dispatch(
           setLensConnected(
@@ -147,6 +154,16 @@ const useSignIn = (
     }
   };
 
+  const handleLogout = () => {
+    if (openAccountModal) {
+      openAccountModal();
+    }
+    dispatch(setLensConnected(undefined));
+    removeAuthenticationToken();
+
+    setOpenAccount(false);
+  };
+
   useEffect(() => {
     if (!oracleData) {
       handleOracles();
@@ -169,6 +186,12 @@ const useSignIn = (
     }
   }, [cartAnim]);
 
+  useEffect(() => {
+    if (!isConnected) {
+      dispatch(setLensConnected(undefined));
+    }
+  }, [isConnected]);
+
   return {
     handleLensConnect,
     openAccount,
@@ -176,6 +199,7 @@ const useSignIn = (
     signInLoading,
     cartListOpen,
     setCartListOpen,
+    handleLogout,
   };
 };
 

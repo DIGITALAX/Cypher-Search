@@ -190,7 +190,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                 >
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/${item[0]}`}
-                    className="flex"
+                    className="flex rounded-full"
                     draggable={false}
                     width={30}
                     height={35}

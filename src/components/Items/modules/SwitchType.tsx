@@ -72,6 +72,8 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   openMainMoreOptions,
   setOpenInteractions,
   openInteractions,
+  handleDecrypt,
+  decryptLoading,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -79,6 +81,8 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
     case "listener":
       return (
         <Chromadin
+          handleDecrypt={handleDecrypt}
+          decryptLoading={decryptLoading}
           oracleData={oracleData}
           filterConstants={filterConstants}
           type={type}
@@ -135,6 +139,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
     case "pub":
       return (
         <Pub
+          lensConnected={lensConnected}
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           followLoading={followLoading}
@@ -143,8 +148,14 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
           allComments={allComments}
           allCommentsLoading={allCommentsLoading}
           router={router}
+          handleDecrypt={handleDecrypt}
+          decryptLoading={decryptLoading}
           dispatch={dispatch}
-          itemData={itemData?.post as Post | Mirror | Quote | Comment}
+          itemData={
+            itemData?.post as (Post | Mirror | Quote | Comment) & {
+              decrypted: any;
+            }
+          }
           setMainMakeComment={setMainMakeComment}
           mainMakeComment={mainMakeComment}
           postCollectGif={postCollectGif}
@@ -186,6 +197,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
     case "microbrand":
       return (
         <Microbrand
+          lensConnected={lensConnected}
           relatedData={relatedData}
           itemData={itemData?.post as Profile}
           router={router}

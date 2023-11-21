@@ -2,16 +2,22 @@ import { useEffect, useState } from "react";
 import getProfile from "../../../../graphql/lens/queries/profile";
 import { Profile } from "../../../../graphql/generated";
 
-const useAutograph = (autograph: string | undefined) => {
+const useAutograph = (
+  autograph: string | undefined,
+  lensConnected: Profile | undefined
+) => {
   const [profile, setProfile] = useState<Profile | undefined>();
   const [profileLoading, setProfileLoading] = useState<boolean>(false);
 
   const getProfileData = async (autograph: string) => {
     setProfileLoading(true);
     try {
-      const { data } = await getProfile({
-        forHandle: "test/" + autograph,
-      });
+      const { data } = await getProfile(
+        {
+          forHandle: "lens/" + autograph,
+        },
+        lensConnected?.id
+      );
 
       if (!data?.profile) {
         setProfileLoading(false);
@@ -28,7 +34,7 @@ const useAutograph = (autograph: string | undefined) => {
     if (autograph && !profile) {
       getProfileData(autograph as string);
     }
-  }, [autograph]);
+  }, [autograph, lensConnected?.id]);
 
   return {
     profileLoading,

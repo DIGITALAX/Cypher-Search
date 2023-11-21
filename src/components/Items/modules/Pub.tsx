@@ -3,7 +3,7 @@ import { PublicationProps } from "../types/item.types";
 import Publication from "@/components/Autograph/modules/Publication";
 import PostComment from "@/components/Autograph/modules/PostComment";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Mirror, Post, Quote, Comment } from "../../../../graphql/generated";
+import { Comment } from "../../../../graphql/generated";
 
 const Pub: FunctionComponent<PublicationProps> = ({
   router,
@@ -48,12 +48,18 @@ const Pub: FunctionComponent<PublicationProps> = ({
   openMoreOptions,
   contentLoading,
   setContentLoading,
+  lensConnected,
+  decryptLoading,
+  handleDecrypt,
 }): JSX.Element => {
   return (
     <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-row pt-32 px-12 gap-7 h-fit">
       <div className="relative w-full h-full flex items-start justify-center">
         <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] h-full">
           <Publication
+            decryptLoading={decryptLoading}
+            handleDecrypt={handleDecrypt}
+            lensConnected={lensConnected}
             index={0}
             item={itemData}
             key={0}
@@ -88,7 +94,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
       <div className="relative w-full h-full flex items-end justify-start ml-auto flex-col gap-12">
         <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] h-full">
           <div
-            className={`relative p-3 bg-black flex items-start justify-center w-full h-[37rem] overflow-y-scroll`}
+            className={`relative p-3 bg-black flex items-start justify-center w-full h-fit`}
           >
             {allCommentsLoading ? (
               <div className="relative w-full h-fit flex items-center justify-start gap-3 flex-col">
@@ -103,7 +109,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                 })}
               </div>
             ) : (
-              <div className="relative w-5/6 h-fit flex flex-col gap-10 justify-start items-center">
+              <div className="relative w-5/6 h-[37rem] flex flex-col gap-10 justify-start items-center">
                 <PostComment
                   index={0}
                   makePostComment={mainMakeComment?.[0]}
@@ -131,11 +137,16 @@ const Pub: FunctionComponent<PublicationProps> = ({
                     >
                       {allComments?.map(
                         (
-                          item: Post | Mirror | Quote | Comment,
+                          item: Comment & {
+                            decrypted: any;
+                          },
                           index: number
                         ) => {
                           return (
                             <Publication
+                              handleDecrypt={handleDecrypt}
+                              decryptLoading={decryptLoading}
+                              lensConnected={lensConnected}
                               index={index}
                               item={item}
                               key={index}

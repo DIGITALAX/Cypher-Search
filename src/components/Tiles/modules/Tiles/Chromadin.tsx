@@ -29,9 +29,13 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   followProfile,
   followLoading,
   unfollowProfile,
+  lensConnected,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4">
+    <div
+      className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
+      id={publication?.pubId}
+    >
       <InteractBar
         mirror={mirror}
         like={like}
@@ -127,6 +131,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 index={index}
                 setProfileHovers={setProfileHovers}
                 dispatch={dispatch}
+                lensConnected={lensConnected}
+                parentId={publication?.pubId}
               />
             )}
           </div>

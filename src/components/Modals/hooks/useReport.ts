@@ -12,6 +12,7 @@ import {
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import { Dispatch } from "redux";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useReport = (dispatch: Dispatch) => {
   const [reportLoading, setReportLoading] = useState<boolean>(false);
@@ -92,6 +93,7 @@ const useReport = (dispatch: Dispatch) => {
         );
       }, 4000);
     } catch (err: any) {
+      dispatch(setInteractError(true));
       console.error(err.message);
     }
     setReportLoading(false);

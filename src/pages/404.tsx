@@ -17,7 +17,7 @@ const Custom404: NextPage<{
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(),
   });
   const lensConnected = useSelector(
@@ -69,6 +69,7 @@ const Custom404: NextPage<{
     signInLoading,
     cartListOpen,
     setCartListOpen,
+    handleLogout,
   } = useSignIn(
     publicClient,
     address,
@@ -77,7 +78,8 @@ const Custom404: NextPage<{
     oracleData,
     cartItems,
     lensConnected,
-    cartAnim
+    cartAnim,
+    openAccountModal
   );
 
   return (
@@ -101,7 +103,7 @@ const Custom404: NextPage<{
         cartListOpen={cartListOpen}
         signInLoading={signInLoading}
         setCartListOpen={setCartListOpen}
-        openAccountModal={openAccountModal}
+        handleLogout={handleLogout}
         dispatch={dispatch}
         handleShuffleSearch={handleShuffleSearch}
       />

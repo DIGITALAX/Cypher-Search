@@ -6,6 +6,7 @@ import { ImArrowUp, ImCross } from "react-icons/im";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import lodash from "lodash";
 import { setCypherStorageCart } from "../../../../lib/utils";
+import { CartItem } from "@/components/Common/types/common.types";
 
 const Cart: FunctionComponent<CartProps> = ({
   cartItems,
@@ -22,140 +23,133 @@ const Cart: FunctionComponent<CartProps> = ({
       <div className="relative w-fit h-full flex flex-col items-center justify-start">
         <div className="relative w-96 flex h-full items-start justify-start flex overflow-y-scroll">
           <div className="relative items-center justify-start flex flex-col gap-3 h-fit w-full">
-            {
-              /* {
-                !completedPurchases?.[Object.keys(groupedByPubId)?.indexOf(chooseCartItem)]?.completed
-                 &&
-                groupedByPubId[chooseCartItem]?.collectionIds */
-
-              Array.from({ length: 20 })?.map((_, index: number) => {
-                const mainIndex =
-                  Object.keys(groupedByPubId)?.indexOf(chooseCartItem);
-                return (
-                  <div
-                    key={index}
-                    className={`relative w-full h-12 flex flex-row gap-5 font-mana text-white text-xs justify-between items-center px-1.5 bg-sol/20 rounded-md 
-                    }`}
-                  >
+            {!completedPurchases?.[
+              Object.keys(groupedByPubId)?.indexOf(chooseCartItem)
+            ]?.completed &&
+              groupedByPubId[chooseCartItem]?.collectionIds?.map(
+                (_, index: number) => {
+                  const mainIndex =
+                    Object.keys(groupedByPubId)?.indexOf(chooseCartItem);
+                  return (
                     <div
-                      className="relative w-4 h-4 border border-ligero flex justify-start items-center rounded-full"
-                      style={{
-                        backgroundColor:
-                          groupedByPubId[chooseCartItem]?.colors[index],
-                      }}
-                    ></div>
-                    <div className="relative w-fit h-fit flex justify-start items-center uppercase">
-                      {groupedByPubId[chooseCartItem]?.sizes[index]}
-                    </div>
-                    <div className="relative w-fit h-fit text-ama flex whitespace-nowrap">
-                      {groupedByPubId[chooseCartItem]?.prices[index]}
-                    </div>
-                    <div className="relative w-fit h-fit text-ama flex">
-                      {groupedByPubId[chooseCartItem]?.amounts[index]}
-                    </div>
-                    <div className="relative w-fit h-full flex flex-row items-center justify-center gap-1.5">
+                      key={index}
+                      className={`relative w-full h-12 flex flex-row gap-5 font-mana text-white text-xs justify-between items-center px-1.5 bg-sol/20 rounded-md 
+                    }`}
+                    >
                       <div
-                        className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
-                        onClick={() => {
-                          if (
-                            collectPostLoading?.[mainIndex] ||
-                            completedPurchases?.[mainIndex]?.completed
-                          )
-                            return;
-                          dispatch(
-                            setCartItems([
-                              ...cartItems.slice(0, index),
-                              {
-                                ...cartItems[index],
-                                amount: cartItems[index].amount + 1,
-                              },
-                              ...cartItems.slice(index + 1),
-                            ])
-                          );
-                          setCypherStorageCart(
-                            JSON.stringify([
-                              ...cartItems.slice(0, index),
-                              {
-                                ...cartItems[index],
-                                amount: cartItems[index].amount + 1,
-                              },
-                              ...cartItems.slice(index + 1),
-                            ])
-                          );
+                        className="relative w-4 h-4 border border-ligero flex justify-start items-center rounded-full"
+                        style={{
+                          backgroundColor:
+                            groupedByPubId[chooseCartItem]?.colors[index],
                         }}
-                      >
-                        <Image
-                          src={`${INFURA_GATEWAY}/ipfs/Qma3jm41B4zYQBxag5sJSmfZ45GNykVb8TX9cE3syLafz2`}
-                          layout="fill"
-                          draggable={false}
-                        />
+                      ></div>
+                      <div className="relative w-fit h-fit flex justify-start items-center uppercase">
+                        {groupedByPubId[chooseCartItem]?.sizes[index]}
+                      </div>
+                      <div className="relative w-fit h-fit text-ama flex whitespace-nowrap">
+                        {groupedByPubId[chooseCartItem]?.prices[index]}
+                      </div>
+                      <div className="relative w-fit h-fit text-ama flex">
+                        {groupedByPubId[chooseCartItem]?.amounts[index]}
+                      </div>
+                      <div className="relative w-fit h-full flex flex-row items-center justify-center gap-1.5">
+                        <div
+                          className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
+                          onClick={() => {
+                            if (
+                              collectPostLoading?.[mainIndex] ||
+                              completedPurchases?.[mainIndex]?.completed
+                            )
+                              return;
+                            dispatch(
+                              setCartItems([
+                                ...cartItems.slice(0, index),
+                                {
+                                  ...cartItems[index],
+                                  amount: cartItems[index].amount + 1,
+                                },
+                                ...cartItems.slice(index + 1),
+                              ])
+                            );
+                            setCypherStorageCart(
+                              JSON.stringify([
+                                ...cartItems.slice(0, index),
+                                {
+                                  ...cartItems[index],
+                                  amount: cartItems[index].amount + 1,
+                                },
+                                ...cartItems.slice(index + 1),
+                              ])
+                            );
+                          }}
+                        >
+                          <Image
+                            src={`${INFURA_GATEWAY}/ipfs/Qma3jm41B4zYQBxag5sJSmfZ45GNykVb8TX9cE3syLafz2`}
+                            layout="fill"
+                            draggable={false}
+                          />
+                        </div>
+                        <div
+                          className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
+                          onClick={() => {
+                            if (
+                              collectPostLoading?.[mainIndex] ||
+                              completedPurchases?.[mainIndex]?.completed
+                            )
+                              return;
+                            const newCart =
+                              cartItems[index].amount > 1
+                                ? [
+                                    ...cartItems.slice(0, index),
+                                    {
+                                      ...cartItems[index],
+                                      amount: cartItems[index].amount - 1,
+                                    },
+                                    ...cartItems.slice(index + 1),
+                                  ]
+                                : [
+                                    ...cartItems.slice(0, index),
+                                    ...cartItems.slice(index + 1),
+                                  ];
+                            dispatch(setCartItems(newCart));
+                            setCypherStorageCart(JSON.stringify(newCart));
+                          }}
+                        >
+                          <Image
+                            src={`${INFURA_GATEWAY}/ipfs/QmcBVNVZWGBDcAxF4i564uSNGZrUvzhu5DKkXESvhY45m6`}
+                            layout="fill"
+                            draggable={false}
+                          />
+                        </div>
                       </div>
                       <div
-                        className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
+                        className="ml-auto justify-end items-center w-fit h-fit flex cursor-pointer active:scale-95"
                         onClick={() => {
                           if (
                             collectPostLoading?.[mainIndex] ||
                             completedPurchases?.[mainIndex]?.completed
                           )
                             return;
-                          const newCart =
-                            cartItems[index].amount > 1
-                              ? [
-                                  ...cartItems.slice(0, index),
-                                  {
-                                    ...cartItems[index],
-                                    amount: cartItems[index].amount - 1,
-                                  },
-                                  ...cartItems.slice(index + 1),
-                                ]
-                              : [
-                                  ...cartItems.slice(0, index),
-                                  ...cartItems.slice(index + 1),
-                                ];
+                          const newCart = lodash.concat(
+                            lodash.slice([...cartItems], 0, index),
+                            lodash.slice([...cartItems], index + 1)
+                          );
                           dispatch(setCartItems(newCart));
                           setCypherStorageCart(JSON.stringify(newCart));
                         }}
                       >
-                        <Image
-                          src={`${INFURA_GATEWAY}/ipfs/QmcBVNVZWGBDcAxF4i564uSNGZrUvzhu5DKkXESvhY45m6`}
-                          layout="fill"
-                          draggable={false}
-                        />
+                        <ImCross color="white" size={10} />
                       </div>
                     </div>
-                    <div
-                      className="ml-auto justify-end items-center w-fit h-fit flex cursor-pointer active:scale-95"
-                      onClick={() => {
-                        if (
-                          collectPostLoading?.[mainIndex] ||
-                          completedPurchases?.[mainIndex]?.completed
-                        )
-                          return;
-                        const newCart = lodash.concat(
-                          lodash.slice([...cartItems], 0, index),
-                          lodash.slice([...cartItems], index + 1)
-                        );
-                        dispatch(setCartItems(newCart));
-                        setCypherStorageCart(JSON.stringify(newCart));
-                      }}
-                    >
-                      <ImCross color="white" size={10} />
-                    </div>
-                  </div>
-                );
-              })
-            }
+                  );
+                }
+              )}
           </div>
         </div>
       </div>
       <div className="relative w-fit h-full relative flex items-start justify-center overflow-y-scroll">
         <div className="relative w-full h-fit flex flex-col items-center justify-start gap-5">
-          {Array.from({ length: 10 })?.map((_, index: number) => {
-            const currentItem = cartItems?.find(
-              (item) =>
-                item?.item?.collectionId ===
-                groupedByPubId?.[chooseCartItem]?.collectionIds?.[index]
-            );
+          {cartItems?.map((currentItem: CartItem, index: number) => {
             return (
               <div
                 key={index}

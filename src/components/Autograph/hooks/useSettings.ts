@@ -219,7 +219,7 @@ const useSettings = (
       const responseJSON = await response.json();
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -231,7 +231,7 @@ const useSettings = (
         publicClient
       );
 
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -253,7 +253,7 @@ const useSettings = (
       const typedData = data?.createSetFollowModuleTypedData.typedData;
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -277,7 +277,7 @@ const useSettings = (
           address: LENS_HUB_PROXY_ADDRESS_MATIC,
           abi: LensHubProxy,
           functionName: "setFollowModule",
-          chain: polygonMumbai,
+          chain: polygon,
           args: [
             typedData?.value.profileId,
             typedData?.value.followModule,
@@ -316,7 +316,7 @@ const useSettings = (
           );
         }, 7000);
       }
-      await refetchProfile(dispatch, lensConnected?.id);
+      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
       console.error(err.message);
     }

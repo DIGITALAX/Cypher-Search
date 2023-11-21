@@ -6,6 +6,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
+import ReactDOM from "react-dom";
 
 const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   followLoading,
@@ -18,47 +19,66 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   feed,
   dispatch,
   main,
+  lensConnected,
+  parentId,
 }): JSX.Element => {
   const [popperElement, setPopperElement] = useState<HTMLElement | null>();
   const popperRef = useRef<HTMLDivElement>(null);
   const popper = usePopper(popperRef?.current, popperElement, {
-    placement: "bottom-start",
+    placement: "right-end",
+    strategy: "absolute",
+    modifiers: [
+      {
+        name: "flip",
+        enabled: true,
+        options: {
+          fallbackPlacements: ["top-start"],
+          boundary: "clippingParents",
+          rootBoundary: "viewport",
+          padding: 8,
+        },
+      },
+      {
+        name: "preventOverflow",
+        options: {
+          boundary: "clippingParents",
+          rootBoundary: "viewport",
+          tether: true,
+          padding: 8,
+        },
+      },
+    ],
   });
   const profilePicture = createProfilePicture(publication?.metadata?.picture);
-  return (
+  return ReactDOM.createPortal(
     <div
-      className="absolute w-28 h-fit flex flex-col items-center justify-center p-2 z-20 border border-white rounded-sm bg-black -top-32"
+      className="w-28 h-fit flex flex-col items-center justify-center p-2 z-20 border border-white rounded-sm bg-black"
       onMouseLeave={() =>
         setProfileHovers((prev) => {
-          const updatedArray = [...prev];
-          updatedArray[index] = false;
-          return updatedArray;
+          const arr = [...(prev || [])];
+          arr[index] = false;
+          return arr;
         })
       }
+      style={{
+        ...popper?.styles.popper,
+        top: "auto",
+        left: "auto",
+        bottom: "2px",
+        right: "2px",
+      }}
+      {...popper?.attributes.popper}
+      ref={(element) => setPopperElement(element)}
     >
-      <div
-        style={{
-          ...popper?.styles.popper,
-          zIndex: 1000,
-          borderColor: "white",
-          borderRadius: "0.375rem",
-          display: "flex",
-          position: "relative",
-          alignContent: "center",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        {...popper?.attributes.popper}
-        ref={(element) => setPopperElement(element)}
-        className="relative w-fit h-fit flex items-center justify-center"
-      >
+      <div className="relative w-fit h-fit flex items-center justify-center">
         <div className="relative flex flex-col items-center justify-between gap-7">
           <div className="relative flex flex-col gap-2 flex items-center justify-center w-fit h-fit">
             <div
               className="relative flex flex-row w-10 h-10 items-center justify-start rounded-full border border-offWhite cursor-pointer"
+              id="pfp"
               onClick={() =>
                 router.push(
-                  `/item/quest/${
+                  `/autograph/${
                     publication?.handle?.suggestedFormatted?.localName?.split(
                       "@"
                     )?.[1]
@@ -88,28 +108,41 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
           <div className="relative flex flex-row items-center justify-center gap-5">
             <div
               className={`relative w-7 h-7 flex items-center justify-center ${
-                followLoading[index] && "animate-spin"
+                followLoading[index] &&
+                !publication?.operations?.isFollowedByMe?.value &&
+                "animate-spin"
               } ${
+                !followLoading[index] &&
                 publication?.followModule?.type !== "RevertFollowModule" &&
-                publication?.followModule?.type !== "UnknownFollowModule"
+                publication?.followModule?.type !== "UnknownFollowModule" &&
+                !publication?.operations?.isFollowedByMe?.value &&
+                lensConnected?.id !== publication?.id
                   ? "cursor-pointer active:scale-95"
                   : "opacity-70"
               }`}
-              onClick={() =>
+              onClick={(e) => {
+                if (
+                  followLoading[index] ||
+                  publication?.operations?.isFollowedByMe?.value ||
+                  lensConnected?.id === publication?.id
+                ) {
+                  return;
+                }
+                e.stopPropagation();
                 publication?.followModule?.type !== "RevertFollowModule" &&
                 publication?.followModule?.type !== "UnknownFollowModule" &&
-                followLoading[index] &&
-                (publication?.followModule?.type === "FeeFollowModule"
+                publication?.followModule?.type === "FeeFollowModule"
                   ? dispatch(
                       setFollowCollect({
                         actionType: "follow",
                         actionFollower: publication,
                       })
                     )
-                  : followProfile(publication?.id, feed, main))
-              }
+                  : followProfile(publication?.id, feed, main);
+              }}
             >
-              {followLoading[index] ? (
+              {followLoading[index] &&
+              !publication?.operations?.isFollowedByMe?.value ? (
                 <AiOutlineLoading color="white" size={15} />
               ) : (
                 <Image
@@ -120,19 +153,44 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
               )}
             </div>
             <div
-              className={`relative w-7 h-7 flex items-center justify-center cursor-pointer active:scale-95`}
-              onClick={() => unfollowProfile(publication?.id, feed, main)}
+              className={`relative w-7 h-7 flex items-center justify-center ${
+                publication?.operations?.isFollowedByMe?.value &&
+                !followLoading[index]
+                  ? "cursor-pointer active:scale-95"
+                  : "opacity-50"
+              } ${
+                followLoading[index] &&
+                publication?.operations?.isFollowedByMe?.value &&
+                "animate-spin"
+              }`}
+              onClick={(e) => {
+                if (
+                  followLoading[index] ||
+                  !publication?.operations?.isFollowedByMe?.value ||
+                  lensConnected?.id === publication?.id
+                )
+                  return;
+                e.stopPropagation();
+                publication?.operations?.isFollowedByMe?.value &&
+                  unfollowProfile(publication?.id, feed, main);
+              }}
             >
-              <Image
-                layout="fill"
-                src={`${INFURA_GATEWAY}/ipfs/QmSWjjhXh1VAEkNzhfzEojqg1dfSJ69Xf9ezxbKpwTRjZC`}
-                draggable={false}
-              />
+              {followLoading[index] &&
+              publication?.operations?.isFollowedByMe?.value ? (
+                <AiOutlineLoading color="white" size={15} />
+              ) : (
+                <Image
+                  layout="fill"
+                  src={`${INFURA_GATEWAY}/ipfs/QmSWjjhXh1VAEkNzhfzEojqg1dfSJ69Xf9ezxbKpwTRjZC`}
+                  draggable={false}
+                />
+              )}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.getElementById(parentId) as Element
   );
 };
 

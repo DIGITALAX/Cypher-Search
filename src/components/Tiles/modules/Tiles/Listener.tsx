@@ -27,129 +27,137 @@ const Listener: FunctionComponent<ListenerProps> = ({
   followLoading,
   followProfile,
   unfollowProfile,
+  lensConnected,
 }): JSX.Element => {
   return (
     <div
-      className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
-      id="explainerBg"
+      className="relative w-full h-fit flex items-end justify-center flex rounded-sm border border-sol p-4"
+      id={publication?.pubId}
     >
-      <div className="absolute w-full h-full mix-blend-hard-light bg-listener opacity-60 bg-center bg-cover right-0 top-0"></div>
-      <InteractBar
-        router={router}
-        mirror={mirror}
-        like={like}
-        dispatch={dispatch}
-        interactionsLoading={interactionsLoading}
-        layoutAmount={layoutAmount}
-        openMirrorChoice={openMirrorChoice}
-        setOpenMirrorChoice={setOpenMirrorChoice}
-        index={index}
-        publication={publication?.publication}
-        simpleCollect={undefined}
-        type={undefined}
-      />
       <div
-        className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
-        onClick={() =>
-          dispatch(
-            setImageViewer({
-              actionValue: true,
-              actionType:
-                publication?.publication?.metadata?.marketplace?.image?.raw
-                  ?.mimeType,
-              actionImage:
-                publication?.publication?.metadata?.marketplace?.image?.raw
-                  ?.uri,
-            })
-          )
-        }
+        id="explainerBg"
+        className="relative w-full h-full flex items-end justify-center flex-col gap-4"
       >
-        <Image
-          layout="fill"
-          src={`${INFURA_GATEWAY}/ipfs/`}
-          draggable={false}
+        <div className="absolute w-full h-full mix-blend-hard-light bg-listener opacity-60 bg-center bg-cover right-0 top-0"></div>
+        <InteractBar
+          router={router}
+          mirror={mirror}
+          like={like}
+          dispatch={dispatch}
+          interactionsLoading={interactionsLoading}
+          layoutAmount={layoutAmount}
+          openMirrorChoice={openMirrorChoice}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          index={index}
+          publication={publication?.publication}
+          simpleCollect={undefined}
+          type={undefined}
         />
-      </div>
-      <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">
-        <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
-          <div
-            className={`relative items-start justify-center uppercase break-words font-ignite w-fit h-fit ${
-              layoutAmount === 4 ? "text-lg" : "text-2xl"
-            }`}
-            id="noCode"
-          >
-            Coin Op Preroll
-          </div>
-          <div
-            className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
-              layoutAmount === 4 ? "text-xs" : "text-sm"
-            }`}
-            onMouseEnter={() =>
-              setProfileHovers((prev) => {
-                const updatedArray = [...prev];
-                updatedArray[index] = true;
-                return updatedArray;
+        <div
+          className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
+          onClick={() =>
+            dispatch(
+              setImageViewer({
+                actionValue: true,
+                actionType:
+                  publication?.publication?.metadata?.marketplace?.image?.raw
+                    ?.mimeType,
+                actionImage:
+                  publication?.publication?.metadata?.marketplace?.image?.raw
+                    ?.uri,
               })
-            }
-          >
-            @hiro.lens
-          </div>
-          {profileHovers?.[index] && (
-            <HoverProfile
-              followLoading={followLoading}
-              followProfile={followProfile}
-              unfollowProfile={unfollowProfile}
-              router={router}
-              publication={publication?.profile}
-              index={index}
-              setProfileHovers={setProfileHovers}
-              dispatch={dispatch}
-            />
-          )}
-          <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
-            <div
-              className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
-              onClick={() => {
-                const openPopUps = [...popUpOpen];
-                openPopUps[index] = !openPopUps[index];
-                setPopUpOpen(openPopUps);
-              }}
-            >
-              <Image
-                layout="fill"
-                src={`${INFURA_GATEWAY}/ipfs/QmZ4v5pzdnCBeyKnS9VrjZiEAbUpAVy8ECArNcpxBt6Tw4`}
-                draggable={false}
-              />
-            </div>
-            {popUpOpen?.[index] && (
-              <PopUp
-                cartItem={publication}
-                index={index}
-                dispatch={dispatch}
-                router={router}
-                level={undefined}
-                bottom={"50px"}
-                left={"-10px"}
-                type={ItemType.CoinOp}
-                cartItems={cartItems}
-              />
-            )}
-            <div
-              className={`relative items-center justify-center uppercase break-words font-vcr text-ballena w-fit h-fit ${
-                layoutAmount === 4 ? "text-xl" : "text-2xl"
-              }`}
-            >
-              {`( $120 )`}
-            </div>
-          </div>
-        </div>
-        <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
+            )
+          }
+        >
           <Image
             layout="fill"
             src={`${INFURA_GATEWAY}/ipfs/`}
-            className="rounded-sm"
             draggable={false}
           />
+        </div>
+        <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">
+          <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
+            <div
+              className={`relative items-start justify-center uppercase break-words font-ignite w-fit h-fit ${
+                layoutAmount === 4 ? "text-lg" : "text-2xl"
+              }`}
+              id="noCode"
+            >
+              Coin Op Preroll
+            </div>
+            <div
+              className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
+                layoutAmount === 4 ? "text-xs" : "text-sm"
+              }`}
+              onMouseEnter={() =>
+                setProfileHovers((prev) => {
+                  const updatedArray = [...prev];
+                  updatedArray[index] = true;
+                  return updatedArray;
+                })
+              }
+            >
+              @hiro.lens
+            </div>
+            {profileHovers?.[index] && (
+              <HoverProfile
+                followLoading={followLoading}
+                followProfile={followProfile}
+                unfollowProfile={unfollowProfile}
+                router={router}
+                publication={publication?.profile}
+                index={index}
+                setProfileHovers={setProfileHovers}
+                dispatch={dispatch}
+                lensConnected={lensConnected}
+                parentId={publication?.pubId}
+              />
+            )}
+            <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
+              <div
+                className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
+                onClick={() => {
+                  const openPopUps = [...popUpOpen];
+                  openPopUps[index] = !openPopUps[index];
+                  setPopUpOpen(openPopUps);
+                }}
+              >
+                <Image
+                  layout="fill"
+                  src={`${INFURA_GATEWAY}/ipfs/QmZ4v5pzdnCBeyKnS9VrjZiEAbUpAVy8ECArNcpxBt6Tw4`}
+                  draggable={false}
+                />
+              </div>
+              {popUpOpen?.[index] && (
+                <PopUp
+                  cartItem={publication}
+                  index={index}
+                  dispatch={dispatch}
+                  router={router}
+                  level={undefined}
+                  bottom={"50px"}
+                  left={"-10px"}
+                  type={ItemType.CoinOp}
+                  cartItems={cartItems}
+                />
+              )}
+              <div
+                className={`relative items-center justify-center uppercase break-words font-vcr text-ballena w-fit h-fit ${
+                  layoutAmount === 4 ? "text-xl" : "text-2xl"
+                }`}
+              >
+                {`( $120 )`}
+              </div>
+            </div>
+          </div>
+          <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
+            <Image
+              layout="fill"
+              src={`${INFURA_GATEWAY}/ipfs/`}
+              className="rounded-sm"
+              draggable={false}
+            />
+          </div>
         </div>
       </div>
     </div>

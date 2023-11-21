@@ -22,10 +22,14 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   followProfile,
   unfollowProfile,
   simpleCollect,
-  dispatch
+  dispatch,
+  lensConnected,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4">
+    <div
+      className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4"
+      id={publication?.id}
+    >
       <div className="relative w-full h-100 flex flex-row gap-5 items-center justify-center">
         <div className="relative w-full h-full rounded-sm border border-mosgu bg-fuego p-1 font-bit text-nuba text-sm text-left break-words flex justify-center items-center"></div>
       </div>
@@ -49,15 +53,15 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                 publication?.__typename === "Mirror"
                   ? !publication?.mirrorOn.operations?.actedOn &&
                     (publication?.mirrorOn?.openActionModules?.[0]
-                      .__typename === "SimpleCollectOpenActionSettings" ||
+                      ?.__typename === "SimpleCollectOpenActionSettings" ||
                       publication?.mirrorOn?.openActionModules?.[0]
-                        .__typename ===
+                        ?.__typename ===
                         "MultirecipientFeeCollectOpenActionSettings")
                   : !(publication as Post)?.operations?.actedOn &&
                     ((publication as Post)?.openActionModules?.[0]
-                      .__typename !== "SimpleCollectOpenActionSettings" ||
+                      ?.__typename !== "SimpleCollectOpenActionSettings" ||
                       (publication as Post)?.openActionModules?.[0]
-                        .__typename ===
+                        ?.__typename ===
                         "MultirecipientFeeCollectOpenActionSettings")
               )
                 ? simpleCollect
@@ -110,12 +114,13 @@ const TextPost: FunctionComponent<TextPostProps> = ({
               <div
                 className="relative w-6 h-6 rounded-full flex items-center justify-center p-1 cursor-pointer"
                 id="pfp"
-                onMouseEnter={() =>   setProfileHovers((prev) => {
-                  const updatedArray = [...prev];
-                  updatedArray[index] = false;
-                  return updatedArray;
-                })}
-                
+                onMouseEnter={() =>
+                  setProfileHovers((prev) => {
+                    const updatedArray = [...prev];
+                    updatedArray[index] = false;
+                    return updatedArray;
+                  })
+                }
               ></div>
               {profileHovers?.[index] && (
                 <HoverProfile
@@ -127,6 +132,8 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                   index={index}
                   setProfileHovers={setProfileHovers}
                   dispatch={dispatch}
+                  lensConnected={lensConnected}
+                  parentId={publication?.id}
                 />
               )}
             </div>
