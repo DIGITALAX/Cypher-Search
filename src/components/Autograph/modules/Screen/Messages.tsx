@@ -25,6 +25,8 @@ const Messages: FunctionComponent<MessagesProps> = ({
   handleSelected,
   canMessage,
   dispatch,
+  messageImage,
+  handleMessageImage,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -201,6 +203,8 @@ const Messages: FunctionComponent<MessagesProps> = ({
                   </div>
                 </div>
                 <NewConversation
+                  messageImage={messageImage}
+                  handleMessageImage={handleMessageImage}
                   dispatch={dispatch}
                   messages={messages}
                   currentMessage={currentMessage}

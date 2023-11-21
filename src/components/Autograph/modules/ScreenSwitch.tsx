@@ -138,6 +138,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   caretCoordBookmark,
   setCaretCoord,
   setCaretCoordBookmark,
+  messageImage,
+  handleMessageImage,
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -271,6 +273,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Messages:
       return (
         <Messages
+          messageImage={messageImage}
+          handleMessageImage={handleMessageImage}
           dispatch={dispatch}
           sendMessageLoading={sendMessageLoading}
           selectedUser={selectedUser}

@@ -70,7 +70,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
         ></textarea>
         {mentionProfiles?.length > 0 && profilesOpen && (
           <div
-            className={`absolute w-32 border border-white max-h-28 h-fit flex flex-col overflow-y-auto items-start justify-start z-40`}
+            className={`absolute w-32 border border-white max-h-28 h-fit flex flex-col overflow-y-auto items-start justify-start z-60`}
             style={{
               top: caretCoord.y + 30,
               left: caretCoord.x,

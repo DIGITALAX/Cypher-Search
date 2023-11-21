@@ -271,6 +271,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setCurrentMessage,
     canMessage,
     handleSelected,
+    handleMessageImage,
+    messageImage,
   } = useConversations(address, screenDisplay, lensConnected, profile);
   const {
     handleSettingsUpdate,
@@ -535,6 +537,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
               </Head>
               <Web
+                handleMessageImage={handleMessageImage}
+                messageImage={messageImage}
                 setCaretCoord={setCaretCoordBookmark}
                 setCaretCoordBookmark={setCaretCoordBookmark}
                 setMentionProfiles={setMentionProfilesBookmark}

@@ -48,6 +48,15 @@ const useQuote = (
   const videoRef = useRef<null | HTMLElement>(null);
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
   const [informationLoading, setInformationLoading] = useState<boolean>(false);
+  const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
+  const [profilesOpen, setProfilesOpen] = useState<boolean[]>([false]);
+  const [caretCoord, setCaretCoord] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 0,
+    y: 0,
+  });
   const [approved, setApproved] = useState<boolean>(true);
   const [quoteLoading, setQuoteLoading] = useState<boolean[]>([false]);
   const [makeQuote, setMakeQuote] = useState<MakePostComment[]>([
@@ -454,6 +463,12 @@ const useQuote = (
     approveSpend,
     approved,
     videoRef,
+    mentionProfiles,
+    setMentionProfiles,
+    caretCoord,
+    setCaretCoord,
+    setProfilesOpen,
+    profilesOpen,
   };
 };
 

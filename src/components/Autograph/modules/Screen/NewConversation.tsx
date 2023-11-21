@@ -7,6 +7,7 @@ import { DecodedMessage } from "@xmtp/react-sdk";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
+import { ImCross } from "react-icons/im";
 
 const NewConversation: FunctionComponent<NewConversationProps> = ({
   messages,
@@ -17,6 +18,8 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
   sendMessageLoading,
   canMessage,
   dispatch,
+  messageImage,
+  handleMessageImage,
 }): JSX.Element => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -141,6 +144,28 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
               </div>
             )}
           </div>
+          {messageImage?.image?.trim() !== "" && (
+            <div
+              className="absolute w-20 h-20 rounded-sm flex items-center justify-center right-3 bottom-20"
+              id="pfp"
+            >
+              <Image
+                layout="fill"
+                src={messageImage?.image}
+                objectFit="cover"
+                className="rounded-sm"
+                draggable={false}
+              />
+              <div
+                className="absolute -top-2 -right-2 w-5 h-5 border border-white bg-black rounded-full p-1 cursor-pointer flex items-center justify-center hover:opacity-70"
+                onClick={() => handleMessageImage(undefined, true)}
+              >
+                <div className="relative w-fit h-fit flex items-center justify-center">
+                  <ImCross size={8} color="white" />
+                </div>
+              </div>
+            </div>
+          )}
           <div
             className={`relative w-full h-20 border border-white rounded-b-md flex items-center justify-start mb-auto font-aust text-white text-xs ${
               !canMessage && "opacity-50"
@@ -153,21 +178,43 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
               value={currentMessage}
               disabled={!canMessage}
             ></textarea>
-            <div
-              className={`absolute bottom-3 right-3 w-fit h-fit ${
-                sendMessageLoading
-                  ? "animate-spin"
-                  : canMessage && "cursor-pointer active:scale-95"
-              }`}
-              onClick={() =>
-                canMessage && !sendMessageLoading && handleSendMessage()
-              }
-            >
-              {sendMessageLoading ? (
-                <AiOutlineLoading color="white" size={15} />
-              ) : (
-                <BsSend color="white" size={15} />
-              )}
+            <div className="absolute bottom-2 right-2 flex flex-col w-fit h-fit gap-2">
+              <label
+                className={`relative flex items-center justify-center cursor-pointer active:scale-95 w-4 h-4`}
+              >
+                {
+                  <Image
+                    layout="fill"
+                    src={`${INFURA_GATEWAY}/ipfs/QmetvVH6tdXP4ZfvB7ihH9J9oQ6KfVUVVktyHpbbaAzztX`}
+                    draggable={false}
+                  />
+                }
+                <input
+                  hidden
+                  type="file"
+                  accept={"image/png, image/gif"}
+                  multiple={false}
+                  onChange={(e) =>
+                    e?.target?.files?.[0] && handleMessageImage(e)
+                  }
+                />
+              </label>
+              <div
+                className={`relative w-fit h-fit ${
+                  sendMessageLoading
+                    ? "animate-spin"
+                    : canMessage && "cursor-pointer active:scale-95"
+                }`}
+                onClick={() =>
+                  canMessage && !sendMessageLoading && handleSendMessage(false)
+                }
+              >
+                {sendMessageLoading ? (
+                  <AiOutlineLoading color="white" size={15} />
+                ) : (
+                  <BsSend color="white" size={15} />
+                )}
+              </div>
             </div>
           </div>
         </div>
