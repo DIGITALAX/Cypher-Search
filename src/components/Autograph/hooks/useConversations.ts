@@ -181,7 +181,26 @@ const useConversations = (
             type: "",
           });
         }
-        setMessages(await conversation.messages());
+        const newMessages = await conversation.messages();
+        setMessages(newMessages);
+        const index = conversations?.findIndex(
+          (item) =>
+            item?.peerAddress?.toLowerCase() ===
+            conversation?.peerAddress?.toLowerCase()
+        );
+
+        if (index != -1) {
+          setConversations((prev) => {
+            const arr = [...prev];
+
+            arr[index] = {
+              ...arr[index],
+              recordedMessages: newMessages,
+            };
+
+            return arr;
+          });
+        }
       }
     } catch (err: any) {
       console.error(err.message);
