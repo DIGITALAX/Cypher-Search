@@ -5,7 +5,13 @@ import { ImagePostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
-import { Post } from "../../../../../graphql/generated";
+import {
+  ImageMetadataV3,
+  Post,
+  PublicationMetadataMedia,
+} from "../../../../../graphql/generated";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
+import { metadataMedia } from "../../../../../lib/helpers/postMetadata";
 
 const ImagePost: FunctionComponent<ImagePostProps> = ({
   layoutAmount,
@@ -24,14 +30,63 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   followProfile,
   unfollowProfile,
   simpleCollect,
-  lensConnected
+  lensConnected,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4" id={publication?.id}>
+    <div
+      className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
+      id={publication?.id}
+    >
       {layoutAmount === 4 ? (
         <>
           <div
             className="relative flex w-full h-40 rounded-sm border border-white bg-amo/30 cursor-pointer items-center justify-center cursor-pointer"
+            onClick={() =>
+              dispatch(
+                setImageViewer({
+                  actionValue: true,
+                  actionType: (
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.asset.image?.raw?.mimeType,
+                  actionImage: `${INFURA_GATEWAY}/ipfs/${
+                    (
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.metadata as ImageMetadataV3
+                    )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
+                  }`,
+                })
+              )
+            }
+          >
+            {(
+              (publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+              )?.metadata as ImageMetadataV3
+            )?.asset && (
+              <Image
+                layout="fill"
+                src={`${INFURA_GATEWAY}/ipfs/${
+                  (
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
+                }`}
+                className="rounded-sm"
+                objectFit="cover"
+                draggable={false}
+              />
+            )}
+          </div>
+          <div
+            className="relative w-full h-80 rounded-sm border border-mosgu bg-fuego p-1 font-bit text-nuba text-sm text-left break-words flex justify-center items-center"
             onClick={() =>
               dispatch(
                 setImageViewer({
@@ -51,32 +106,52 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 })
               )
             }
-          >
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/`}
-              className="rounded-sm"
-              draggable={false}
-            />
-          </div>
-          <div className="relative w-full h-80 rounded-sm border border-mosgu bg-fuego p-1 font-bit text-nuba text-sm text-left break-words flex justify-center items-center"></div>
+          ></div>
           <div className="flex flex-row w-full h-full justify-between gap-2 items-between">
             <div className="relative flex flex-wrap items-start justify-start gap-2 w-fit h-fit">
-              {Array.from({ length: 3 }).map((_, index: number) => {
-                return (
-                  <div
-                    className="relative w-24 h-24 flex border border-white rounded-sm cursor-pointer bg-amo/30"
-                    key={index}
-                  >
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/`}
-                      className="rounded-sm"
-                      draggable={false}
-                    />
-                  </div>
-                );
-              })}
+              {(
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.metadata as ImageMetadataV3
+              )?.attachments &&
+                Number(
+                  (
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.attachments?.length
+                ) > 0 &&
+                (
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.metadata as ImageMetadataV3
+                )?.attachments?.map(
+                  (item: PublicationMetadataMedia, index: number) => {
+                    const media = metadataMedia(item);
+                    return (
+                      <div
+                        className="relative w-24 h-24 flex border border-white rounded-sm cursor-pointer bg-amo/30"
+                        key={index}
+                      >
+                        {media?.url && (
+                          <MediaSwitch
+                            type={media?.type}
+                            srcUrl={media?.url}
+                            srcCover={media?.cover}
+                            classNameVideo={
+                              "rounded-sm absolute w-full h-full object-cover"
+                            }
+                            classNameImage={"rounded-sm"}
+                            classNameAudio={"rounded-md"}
+                          />
+                        )}
+                      </div>
+                    );
+                  }
+                )}
             </div>
             <div className="relative h-full w-fit items-center justify-between flex flex-col gap-4">
               <InteractBar
@@ -183,46 +258,90 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 dispatch(
                   setImageViewer({
                     actionValue: true,
-                    actionType:
-                      publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn?.metadata?.marketplace?.image
-                            ?.raw?.mimeType
-                        : (publication as Post)?.metadata?.marketplace?.image
-                            ?.raw?.mimeType,
-
-                    actionImage:
-                      publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn?.metadata?.marketplace?.image
-                            ?.raw?.uri
-                        : (publication as Post)?.metadata?.marketplace?.image
-                            ?.raw?.uri,
+                    actionType: (
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.metadata as ImageMetadataV3
+                    )?.asset.image?.raw?.mimeType,
+                    actionImage: `${INFURA_GATEWAY}/ipfs/${
+                      (
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.metadata as ImageMetadataV3
+                      )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
+                    }`,
                   })
                 )
               }
             >
-              <Image
-                layout="fill"
-                src={`${INFURA_GATEWAY}/ipfs/`}
-                className="rounded-sm"
-                draggable={false}
-              />
+              {(
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.metadata as ImageMetadataV3
+              )?.asset && (
+                <Image
+                  layout="fill"
+                  src={`${INFURA_GATEWAY}/ipfs/${
+                    (
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.metadata as ImageMetadataV3
+                    )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
+                  }`}
+                  className="rounded-sm"
+                  objectFit="cover"
+                  draggable={false}
+                />
+              )}
             </div>
             <div className="relative flex flex-col w-36 h-full gap-2 items-end justify-center">
-              {Array.from({ length: 3 }).map((_, index: number) => {
-                return (
-                  <div
-                    className="relative w-full h-24 flex border border-white rounded-sm cursor-pointer bg-amo/30"
-                    key={index}
-                  >
-                    <Image
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/`}
-                      className="rounded-sm"
-                      draggable={false}
-                    />
-                  </div>
-                );
-              })}
+              {(
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.metadata as ImageMetadataV3
+              )?.attachments &&
+                Number(
+                  (
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.attachments?.length
+                ) > 0 &&
+                (
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.metadata as ImageMetadataV3
+                )?.attachments?.map(
+                  (item: PublicationMetadataMedia, index: number) => {
+                    const media = metadataMedia(item);
+                    return (
+                      <div
+                        className="relative w-full h-24 flex border border-white rounded-sm cursor-pointer bg-amo/30"
+                        key={index}
+                      >
+                        {media?.url && (
+                          <MediaSwitch
+                            type={media?.type}
+                            srcUrl={media?.url}
+                            srcCover={media?.cover}
+                            classNameVideo={
+                              "rounded-sm absolute w-full h-full object-cover"
+                            }
+                            classNameImage={"rounded-sm"}
+                            classNameAudio={"rounded-md"}
+                          />
+                        )}
+                      </div>
+                    );
+                  }
+                )}
               <InteractBar
                 mirror={mirror}
                 router={router}

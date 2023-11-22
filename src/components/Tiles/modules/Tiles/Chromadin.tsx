@@ -57,22 +57,24 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               dispatch(
                 setImageViewer({
                   actionValue: true,
-                  actionType:
-                    publication?.publication?.metadata?.marketplace?.image?.raw
-                      ?.mimeType,
-                  actionImage:
-                    publication?.publication?.metadata?.marketplace?.image?.raw
-                      ?.uri,
+                  actionType: publication?.mediaTypes?.[0],
+                  actionImage: `${INFURA_GATEWAY}/ipfs/${
+                    publication?.images?.[0]?.split("ipfs://")?.[1]
+                  }`,
                 })
               )
             }
           >
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/`}
-              className="rounded-sm"
-              draggable={false}
-            />
+            {publication?.images && (
+              <Image
+                layout="fill"
+                src={`${INFURA_GATEWAY}/ipfs/${
+                  publication?.images?.[0]?.split("ipfs://")?.[1]
+                }`}
+                objectFit="cover"
+                draggable={false}
+              />
+            )}
           </div>
           <div className="relative flex flex-col gap-2 justify-start items-center w-fit h-full mt-0">
             <div className="relative w-10 h-10 flex items-center justify-center">
@@ -107,7 +109,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         <div className="relative flex flex-row justify-between gap-2 w-full h-fit items-center">
           <div className="relative gap-1 flex flex-col items-start justify-center">
             <div className="relative flex w-fit h-fit break-words text-nuba font-bit text-lg uppercase">
-              soul food for thought
+              {publication?.title}
             </div>
             <div
               className="relative w-fit h-fit flex text-mos text-sm font-bit uppercase cursor-pointer"
@@ -119,7 +121,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 })
               }
             >
-              @hiro.lens
+              {publication?.profile?.handle?.suggestedFormatted?.localName}
             </div>
             {profileHovers?.[index] && (
               <HoverProfile

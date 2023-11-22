@@ -235,7 +235,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         }}
       />
       <div className="relative w-fit h-fit flex flex-row items-center justify-center gap-2">
-        {Array.from({ length: 3 }).map((_, index) => {
+        {Array.from({ length: 3 }).map((_, index: number) => {
           return (
             <div className="relative w-4 h-7 flex" key={index}>
               <Image

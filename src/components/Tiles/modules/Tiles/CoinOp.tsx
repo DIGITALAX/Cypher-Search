@@ -27,10 +27,13 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   setProfileHovers,
   followProfile,
   unfollowProfile,
-  lensConnected
+  lensConnected,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4" id={publication?.pubId}>
+    <div
+      className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
+      id={publication?.pubId}
+    >
       <InteractBar
         mirror={mirror}
         like={like}
@@ -56,11 +59,16 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           )
         }
       >
-        <Image
-          layout="fill"
-          src={`${INFURA_GATEWAY}/ipfs/${publication?.images[0]}`}
-          draggable={false}
-        />
+        {publication?.images && (
+          <Image
+            layout="fill"
+            src={`${INFURA_GATEWAY}/ipfs/${
+              publication?.images?.[0]?.split("ipfs://")?.[1]
+            }`}
+            objectFit="cover"
+            draggable={false}
+          />
+        )}
       </div>
       <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">
         <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
@@ -69,7 +77,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               layoutAmount === 4 ? "text-lg" : "text-2xl"
             }`}
           >
-            Coin Op Preroll
+            {publication?.title}
           </div>
           <div
             className={`relative w-fit h-fit flex text-pez font-bit uppercase cursor-pointer ${
@@ -83,7 +91,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               })
             }
           >
-            @hiro.lens
+            {publication?.profile?.handle?.suggestedFormatted?.localName}
           </div>
           {profileHovers?.[index] && (
             <HoverProfile
@@ -134,17 +142,21 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
                 layoutAmount === 4 ? "text-xl" : "text-4xl"
               }`}
             >
-              $120
+              ${Number(publication?.prices?.[0] || 0) / 10 ** 18}
             </div>
           </div>
         </div>
         <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
-          <Image
-            layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/`}
-            className="rounded-sm"
-            draggable={false}
-          />
+          {publication?.images && (
+            <Image
+              layout="fill"
+              src={`${INFURA_GATEWAY}/ipfs/${
+                publication?.images?.[1]?.split("ipfs://")?.[1]
+              }`}
+              objectFit="cover"
+              draggable={false}
+            />
+          )}
         </div>
       </div>
     </div>

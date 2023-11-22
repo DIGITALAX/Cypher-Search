@@ -45,13 +45,14 @@ const wagmiConfig = createConfig({
   publicClient,
 });
 
+init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
   const [routerChangeLoading, setRouterChangeLoading] =
     useState<boolean>(false);
   useEffect(() => {

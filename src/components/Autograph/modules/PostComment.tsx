@@ -6,10 +6,10 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import setPostMedia from "../../../../lib/helpers/setPostMedia";
 import { ImCross } from "react-icons/im";
 import { setPostCollectGif } from "../../../../redux/reducers/postCollectGifSlice";
-import Waveform from "./Screen/Waveform";
 import handleSearchProfiles from "../../../../lib/helpers/handleSearchProfiles";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { Profile } from "../../../../graphql/generated";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const PostComment: FunctionComponent<PostCommentProps> = ({
   commentPost,
@@ -280,36 +280,14 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                     key={indexTwo}
                     className="relative w-40 h-40 rounded-md flex items-center justify-center border border-white"
                   >
-                    {media.type !== "video" ? (
-                      <Image
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-md"
-                        src={media?.item}
-                        draggable={false}
-                      />
-                    ) : (
-                      <>
-                        <video
-                          draggable={false}
-                          controls={false}
-                          muted
-                          // autoPlay
-                          id={media?.item}
-                          playsInline
-                          loop
-                          className="object-cover w-full h-full flex items-center justify-center rounded-md"
-                        >
-                          <source src={media?.item} />
-                        </video>
-                        <Waveform
-                          keyValue={media?.item}
-                          audio={media?.item}
-                          video={media?.item}
-                          type="video"
-                        />
-                      </>
-                    )}
+                    <MediaSwitch
+                      type={media.type !== "video" ? "image" : "video"}
+                      classNameImage={"rounded-md"}
+                      classNameVideo={
+                        "object-cover w-full h-full flex items-center justify-center rounded-md"
+                      }
+                      srcUrl={media?.item}
+                    />
                     <div
                       className="absolute w-5 h-5 bg-black p-px -right-2 -top-2 bg-black rounded-full cursor-pointer flex items-center justify-center border border-white"
                       onClick={() => {

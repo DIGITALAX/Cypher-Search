@@ -59,21 +59,24 @@ const Listener: FunctionComponent<ListenerProps> = ({
             dispatch(
               setImageViewer({
                 actionValue: true,
-                actionType:
-                  publication?.publication?.metadata?.marketplace?.image?.raw
-                    ?.mimeType,
-                actionImage:
-                  publication?.publication?.metadata?.marketplace?.image?.raw
-                    ?.uri,
+                actionType: publication?.mediaTypes?.[0],
+                actionImage: `${INFURA_GATEWAY}/ipfs/${
+                  publication?.images?.[0]?.split("ipfs://")?.[1]
+                }`,
               })
             )
           }
         >
-          <Image
-            layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/`}
-            draggable={false}
-          />
+          {publication?.images && (
+            <Image
+              layout="fill"
+              src={`${INFURA_GATEWAY}/ipfs/${
+                publication?.images?.[0]?.split("ipfs://")?.[1]
+              }`}
+              objectFit="cover"
+              draggable={false}
+            />
+          )}
         </div>
         <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">
           <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
@@ -83,7 +86,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
               }`}
               id="noCode"
             >
-              Coin Op Preroll
+              {publication?.title}
             </div>
             <div
               className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
@@ -97,7 +100,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
                 })
               }
             >
-              @hiro.lens
+              {publication?.profile?.handle?.suggestedFormatted?.localName}
             </div>
             {profileHovers?.[index] && (
               <HoverProfile
@@ -146,17 +149,21 @@ const Listener: FunctionComponent<ListenerProps> = ({
                   layoutAmount === 4 ? "text-xl" : "text-2xl"
                 }`}
               >
-                {`( $120 )`}
+                ${Number(publication?.prices?.[0] || 0) / 10 ** 18}
               </div>
             </div>
           </div>
           <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/`}
-              className="rounded-sm"
-              draggable={false}
-            />
+            {publication?.images && (
+              <Image
+                layout="fill"
+                src={`${INFURA_GATEWAY}/ipfs/${
+                  publication?.images?.[0]?.split("ipfs://")?.[1]
+                }`}
+                objectFit="cover"
+                draggable={false}
+              />
+            )}
           </div>
         </div>
       </div>

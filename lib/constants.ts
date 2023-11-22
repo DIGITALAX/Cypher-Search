@@ -1,6 +1,7 @@
 import { ItemType } from "@/components/Common/types/common.types";
 import { PrintType } from "@/components/Tiles/types/tiles.types";
 
+export const CHROMADIN_ID: string = "0x01c6a9"
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const BASE_URL: string = "https://api-v2.lens.dev/";
 export const DIGITALAX_PROFILE_ID_LENS: string = "0x012d";

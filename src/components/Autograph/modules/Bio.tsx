@@ -80,7 +80,7 @@ const Bio: FunctionComponent<BioProps> = ({
                 );
               })}
               {profile?.metadata?.attributes?.find(
-                (item) => item.key === "location"
+                (item) => item?.key === "location"
               )?.value && (
                 <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
                   <div className="relative w-4 h-4 items-center justify-center flex">
@@ -93,14 +93,14 @@ const Bio: FunctionComponent<BioProps> = ({
                   <div className="relative w-fit h-fit flex">
                     {
                       profile?.metadata?.attributes?.find(
-                        (item) => item.key === "location"
+                        (item) => item?.key === "location"
                       )?.value
                     }
                   </div>
                 </div>
               )}
               {profile?.metadata?.attributes?.find(
-                (item) => item.key === "website"
+                (item) => item?.key === "website"
               )?.value && (
                 <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
                   <div className="relative w-4 h-4 items-center justify-center flex">
@@ -115,21 +115,21 @@ const Bio: FunctionComponent<BioProps> = ({
                     rel="noreferrer"
                     href={
                       (profile?.metadata?.attributes
-                        ?.find((item) => item.key === "website")
+                        ?.find((item) => item?.key === "website")
                         ?.value?.includes("https://")
                         ? profile?.metadata?.attributes?.find(
-                            (item) => item.key === "website"
+                            (item) => item?.key === "website"
                           )?.value
                         : "https://" +
                           profile?.metadata?.attributes?.find(
-                            (item) => item.key === "website"
+                            (item) => item?.key === "website"
                           )?.value) || ""
                     }
                     className="relative w-fit h-fit flex cursor-pointer"
                   >
                     {
                       profile?.metadata?.attributes?.find(
-                        (item) => item.key === "website"
+                        (item) => item?.key === "website"
                       )?.value
                     }
                   </Link>
@@ -139,16 +139,16 @@ const Bio: FunctionComponent<BioProps> = ({
           </div>
         </div>
         {profile?.metadata?.attributes?.find(
-          (item) => item.key === "microbrandsCypher"
+          (item) => item?.key === "microbrandsCypher"
         )?.value &&
           profile?.metadata?.attributes?.find(
-            (item) => item.key === "microbrandsCypher"
+            (item) => item?.key === "microbrandsCypher"
           )?.type === MetadataAttributeType.Json && (
             <div className="relative w-full hit flex flex-row gap-2 flex-wrap">
               {JSON.parse(
                 profile?.metadata?.attributes?.[
                   profile?.metadata?.attributes?.findIndex(
-                    (item) => item.key === "microbrandsCypher"
+                    (item) => item?.key === "microbrandsCypher"
                   )
                 ].value
               )?.map(

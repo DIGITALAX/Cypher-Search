@@ -229,6 +229,8 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           simpleCollect={simpleCollect!}
         />
       );
+    
+    case "audio":
     case "video":
       return (
         <VideoPost
@@ -252,35 +254,35 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
           heart={heart!}
         />
       );
-    case "quest":
-      return (
-        <Quest
-          layoutAmount={layoutAmount}
-          router={router}
-          publication={publication?.post as Post | Comment | Quote | Mirror}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-        />
-      );
-    case "legend":
-      return (
-        <Legend
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          layoutAmount={layoutAmount}
-          index={index}
-          dispatch={dispatch}
-          router={router}
-          publication={publication?.post as Post}
-          cartItems={cartItems}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading?.[index]}
-        />
-      );
+    // case "quest":
+    //   return (
+    //     <Quest
+    //       layoutAmount={layoutAmount}
+    //       router={router}
+    //       publication={publication?.post as Post | Comment | Quote | Mirror}
+    //       followProfile={followProfile}
+    //       unfollowProfile={unfollowProfile}
+    //       followLoading={followLoading}
+    //       profileHovers={profileHovers}
+    //       setProfileHovers={setProfileHovers}
+    //     />
+    //   );
+    // case "legend":
+    //   return (
+    //     <Legend
+    //       openMirrorChoice={openMirrorChoice}
+    //       setOpenMirrorChoice={setOpenMirrorChoice}
+    //       layoutAmount={layoutAmount}
+    //       index={index}
+    //       dispatch={dispatch}
+    //       router={router}
+    //       publication={publication?.post as Post}
+    //       cartItems={cartItems}
+    //       mirror={mirror}
+    //       like={like}
+    //       interactionsLoading={interactionsLoading?.[index]}
+    //     />
+    //   );
 
     default:
       return null;

@@ -26,7 +26,7 @@ const Legend: FunctionComponent<LegendProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative h-fit w-full border border-black flex flex-col items-center justify-center">
-      <Bar title={publication?.metadata?.marketplace?.name!} />
+      {/* <Bar title={publication?.metadata?.marketplace?.name!} />
       <div className="relative w-full h-fit flex flex-col gap-8 bg-legend bg-contain">
         <div className="p-5 relative w-full h-fit flex items-center justify-center flex-row gap-5 bg-grant bg-contain">
           <div className="relative w-full h-fit flex break-words font-vcr text-black p-2 justify-start items-center rounded-sm border border-black bg-virg p-2 flex-col gap-4">
@@ -250,7 +250,7 @@ const Legend: FunctionComponent<LegendProps> = ({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
