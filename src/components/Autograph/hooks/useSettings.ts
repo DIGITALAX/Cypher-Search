@@ -141,7 +141,7 @@ const useSettings = (
 
       if (isDesigner) {
         const existing = newAttributes.findIndex(
-          (item) => item.key === "microbrandsCypher"
+          (item) => item?.key === "microbrandsCypher"
         );
         let itemsToHash: {
           microbrand: string;
@@ -199,7 +199,7 @@ const useSettings = (
       const metadata = {
         ...filteredSettingsData,
         // attributes: attributes
-        //   ?.filter((item) => item.key?.toLowerCase() !== "timestamp")
+        //   ?.filter((item) => item?.key?.toLowerCase() !== "timestamp")
         //   ?.map((item) => ({
         //     ...item,
         //     type:
@@ -361,13 +361,13 @@ const useSettings = (
             : (lensConnected?.metadata?.picture as NftImage)?.image?.raw?.uri,
         microbrands: lensConnected?.metadata?.attributes?.[
           lensConnected?.metadata?.attributes?.findIndex(
-            (item) => item.key === "microbrandsCypher"
+            (item) => item?.key === "microbrandsCypher"
           )
         ]
           ? JSON.parse(
               lensConnected?.metadata?.attributes?.[
                 lensConnected?.metadata?.attributes?.findIndex(
-                  (item) => item.key === "microbrandsCypher"
+                  (item) => item?.key === "microbrandsCypher"
                 )
               ]?.value || ""
             )

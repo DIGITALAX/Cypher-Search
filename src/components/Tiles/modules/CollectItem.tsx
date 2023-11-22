@@ -22,12 +22,17 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
       <Bar title={`Collect Lvl.${index}`} />
       <div className="relative w-full h-110 flex flex-col bg-virg gap-6 justify-between items-center p-2 border-b border-x rounded-b-sm border-black">
         <div className="relative w-52 h-52 rounded-sm border border-black flex items-center justify-center">
-          <Image
-            layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/`}
-            draggable={false}
-            className="rounded-sm"
-          />
+          {item?.images && (
+            <Image
+              className="rounded-sm"
+              layout="fill"
+              objectFit="cover"
+              draggable={false}
+              src={`${INFURA_GATEWAY}/ipfs/${
+                item?.images?.[0]?.split("ipfs://")?.[1]
+              }`}
+            />
+          )}
         </div>
         <div className="relative w-fit h-fit flex flex-col gap-3 items-center justify-center text-center break-words">
           <div className="relative flex items-center items-center justify-center w-fit text-sm font-net">
@@ -134,7 +139,8 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
               router.push("/checkout");
             } else {
               const itemIndex = cartItems?.findIndex(
-                (cartItem) => cartItem?.item?.collectionId === item?.collectionId
+                (cartItem) =>
+                  cartItem?.item?.collectionId === item?.collectionId
               );
               if (
                 cartItems?.some(

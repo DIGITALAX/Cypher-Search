@@ -88,7 +88,7 @@ const useGallery = (
   const getDisplayData = async (collections: Creation[]) => {
     try {
       const displayItems = lensConnected?.metadata?.attributes?.find(
-        (item) => item.key === "cypherDisplay"
+        (item) => item?.key === "cypherDisplay"
       );
       let display: Display | undefined;
 
@@ -237,7 +237,7 @@ const useGallery = (
       let attributes = [...(lensConnected?.metadata?.attributes || [])];
 
       const existing = attributes.findIndex(
-        (item) => item.key === "cypherDisplay"
+        (item) => item?.key === "cypherDisplay"
       );
 
       if (existing != -1) {

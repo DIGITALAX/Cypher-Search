@@ -1,6 +1,7 @@
 import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
 import {
+  CHROMADIN_ID,
   PLACEHOLDERS,
   TAGS,
   itemStringToNumber,
@@ -50,6 +51,7 @@ import {
 import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 import { NextRouter } from "next/router";
+import getPublications from "../../../../graphql/lens/queries/publications";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -193,6 +195,26 @@ const useSearch = (
           []) as Profile[];
         pubCursor = pubSearch?.data?.searchPublications?.pageInfo?.next;
         profileCursor = profileSearch?.data?.searchProfiles?.pageInfo?.next;
+      }
+
+      if (filters?.format?.toLowerCase()?.includes("video")) {
+        const data = await getPublications(
+          {
+            where: {
+              from: [CHROMADIN_ID],
+            },
+          },
+          lensConnected?.id
+        );
+        publications = [
+          ...publications,
+          ...(data?.data?.publications?.items || []),
+        ]?.sort(() => Math.random() - 0.5) as (
+          | Post
+          | Comment
+          | Quote
+          | Mirror
+        )[];
       }
 
       if (filters?.microbrand) {

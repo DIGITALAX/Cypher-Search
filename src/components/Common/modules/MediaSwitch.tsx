@@ -1,0 +1,69 @@
+import Waveform from "@/components/Autograph/modules/Screen/Waveform";
+import Image from "next/legacy/image";
+import { FunctionComponent } from "react";
+import { MediaProps } from "../types/common.types";
+
+const MediaSwitch: FunctionComponent<MediaProps> = ({
+  type,
+  srcUrl,
+  srcCover,
+  classNameVideo,
+  classNameImage,
+  classNameAudio,
+  objectFit,
+}): JSX.Element => {
+  switch (type?.toLowerCase()) {
+    case "video":
+      <>
+        <video
+          draggable={false}
+          controls={false}
+          muted
+          playsInline
+          loop
+          id={srcUrl}
+          className={classNameVideo}
+          poster={srcCover}
+        >
+          <source src={srcUrl} />
+        </video>
+        <Waveform
+          audio={srcUrl}
+          type={"video"}
+          keyValue={srcUrl}
+          video={srcUrl}
+        />
+      </>;
+
+    case "audio":
+      <>
+        <Image
+          src={srcCover!}
+          layout="fill"
+          objectFit={objectFit ? "contain" : "cover"}
+          className={classNameAudio}
+          draggable={false}
+        />
+        <Waveform
+          audio={srcUrl}
+          type={"audio"}
+          keyValue={srcUrl}
+          video={srcUrl}
+        />
+      </>;
+
+    default:
+      return (
+        <Image
+          src={srcUrl}
+          layout="fill"
+          objectFit={objectFit ? "contain" : "cover"}
+          objectPosition={"center"}
+          className={classNameImage}
+          draggable={false}
+        />
+      );
+  }
+};
+
+export default MediaSwitch;

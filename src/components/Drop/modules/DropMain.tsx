@@ -28,13 +28,17 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                   className="relative w-full h-full rounded-sm"
                   id="staticLoad"
                 >
-                  <Image
-                    className="rounded-sm"
-                    layout="fill"
-                    objectFit="cover"
-                    draggable={false}
-                    src={`${INFURA_GATEWAY}/ipfs/`}
-                  />
+                  {collection?.images && (
+                    <Image
+                      className="rounded-sm"
+                      layout="fill"
+                      objectFit="cover"
+                      draggable={false}
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        collection?.images?.[0]?.split("ipfs://")?.[1]
+                      }`}
+                    />
+                  )}
                 </div>
                 <div className="absolute bottom-0 right-0 w-full h-10 bg-offBlack flex items-center justify-between px-3">
                   <div className="relative w-fit h-fit flex items-center justify-start text-sm font-bit text-white top-px">

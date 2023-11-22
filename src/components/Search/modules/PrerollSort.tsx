@@ -91,44 +91,46 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
           <div className="relative w-full h-fit flex flex-col items-start justify-items gap-1">
             <div className="relative w-full h-fit flex flex-row items-center justify-center">
               <div className="flex relative w-full h-fit sm:flex-nowrap flex-wrap flex-row gap-2 items-center justify-start">
-                {filterConstants?.sizes?.apparel?.map(
-                  (size: string, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className="relative w-7 h-6 flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
-                        id={
-                          filterValues.size.apparel.includes(size)
-                            ? "preroll"
-                            : "tiles"
-                        }
-                      >
+                {filterConstants?.sizes?.apparel &&
+                  filterConstants?.sizes?.apparel?.length > 0 &&
+                  filterConstants?.sizes?.apparel?.map(
+                    (size: string, index: number) => {
+                      return (
                         <div
-                          className="relative bg-offBlack w-full h-full flex items-center justify-center text-center"
-                          onClick={() => {
-                            dispatch(
-                              setFilter({
-                                ...filterValues,
-                                size: {
-                                  ...filterValues.size,
-                                  apparel: filterValues.size.apparel.includes(
-                                    size
-                                  )
-                                    ? filterValues.size.apparel.filter(
-                                        (item: string) => item !== size
-                                      )
-                                    : [...filterValues.size.apparel, size],
-                                },
-                              })
-                            );
-                          }}
+                          key={index}
+                          className="relative w-7 h-6 flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
+                          id={
+                            filterValues.size.apparel.includes(size)
+                              ? "preroll"
+                              : "tiles"
+                          }
                         >
-                          {size}
+                          <div
+                            className="relative bg-offBlack w-full h-full flex items-center justify-center text-center"
+                            onClick={() => {
+                              dispatch(
+                                setFilter({
+                                  ...filterValues,
+                                  size: {
+                                    ...filterValues.size,
+                                    apparel: filterValues.size.apparel.includes(
+                                      size
+                                    )
+                                      ? filterValues.size.apparel.filter(
+                                          (item: string) => item !== size
+                                        )
+                                      : [...filterValues.size.apparel, size],
+                                  },
+                                })
+                              );
+                            }}
+                          >
+                            {size}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  }
-                )}
+                      );
+                    }
+                  )}
               </div>
               <div
                 className={`relative flex items-center justify-center cursor-pointer w-4 h-3 ${
@@ -151,84 +153,88 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             {openDropDown.size && (
               <>
                 <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
-                  {filterConstants?.sizes?.poster?.map(
-                    (size: string, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className="relative w-fit h-fit flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
-                          id={
-                            filterValues.size.poster.includes(size)
-                              ? "preroll"
-                              : "tiles"
-                          }
-                          onClick={() => {
-                            dispatch(
-                              setFilter({
-                                ...filterValues,
-                                size: {
-                                  ...filterValues.size,
-                                  poster: filterValues.size.poster.includes(
-                                    size
-                                  )
-                                    ? filterValues.size.poster.filter(
-                                        (item: string) => item !== size
-                                      )
-                                    : [...filterValues.size.poster, size],
-                                },
-                              })
-                            );
-                          }}
-                        >
-                          <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center p-1">
-                            {size?.match(/^[^\(]+/)?.[0]}
-                            <br />
-                            {size?.match(/\(([^)]+)\)/)?.[1]}
+                  {filterConstants?.sizes?.poster &&
+                    filterConstants?.sizes?.poster?.length > 0 &&
+                    filterConstants?.sizes?.poster?.map(
+                      (size: string, index: number) => {
+                        return (
+                          <div
+                            key={index}
+                            className="relative w-fit h-fit flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
+                            id={
+                              filterValues.size.poster.includes(size)
+                                ? "preroll"
+                                : "tiles"
+                            }
+                            onClick={() => {
+                              dispatch(
+                                setFilter({
+                                  ...filterValues,
+                                  size: {
+                                    ...filterValues.size,
+                                    poster: filterValues.size.poster.includes(
+                                      size
+                                    )
+                                      ? filterValues.size.poster.filter(
+                                          (item: string) => item !== size
+                                        )
+                                      : [...filterValues.size.poster, size],
+                                  },
+                                })
+                              );
+                            }}
+                          >
+                            <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center p-1">
+                              {size?.match(/^[^\(]+/)?.[0]}
+                              <br />
+                              {size?.match(/\(([^)]+)\)/)?.[1]}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }
-                  )}
+                        );
+                      }
+                    )}
                 </div>
                 <div className="flex relative w-full h-fit flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
-                  {filterConstants?.sizes?.sticker?.map(
-                    (size: string, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className="relative w-fit h-fit flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
-                          id={
-                            filterValues.size.sticker.includes(size)
-                              ? "preroll"
-                              : "tiles"
-                          }
-                          onClick={() => {
-                            dispatch(
-                              setFilter({
-                                ...filterValues,
-                                size: {
-                                  ...filterValues.size,
-                                  sticker: filterValues.size.sticker.includes(
-                                    size
-                                  )
-                                    ? filterValues.size.sticker.filter(
-                                        (item: string) => item !== size
-                                      )
-                                    : [...filterValues.size.sticker, size],
-                                },
-                              })
-                            );
-                          }}
-                        >
-                          <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center p-1">
-                            {size?.match(/^[^\(]+/)?.[0]}
-                            <br />
-                            {size?.match(/\(([^)]+)\)/)?.[1]}
+                  {filterConstants?.sizes?.sticker &&
+                    filterConstants?.sizes?.sticker?.length > 0 &&
+                    filterConstants?.sizes?.sticker?.map(
+                      (size: string, index: number) => {
+                        return (
+                          <div
+                            key={index}
+                            className="relative w-fit h-fit flex items-center justify-center p-px font-bit text-white text-xs cursor-pointer"
+                            id={
+                              filterValues.size.sticker.includes(size)
+                                ? "preroll"
+                                : "tiles"
+                            }
+                            onClick={() => {
+                              dispatch(
+                                setFilter({
+                                  ...filterValues,
+                                  size: {
+                                    ...filterValues.size,
+                                    sticker: filterValues.size.sticker.includes(
+                                      size
+                                    )
+                                      ? filterValues.size.sticker.filter(
+                                          (item: string) => item !== size
+                                        )
+                                      : [...filterValues.size.sticker, size],
+                                  },
+                                })
+                              );
+                            }}
+                          >
+                            <div className="relative bg-offBlack w-full h-full flex items-center justify-center text-center p-1">
+                              {size?.match(/^[^\(]+/)?.[0]}
+                              <br />
+                              {size?.match(/\(([^)]+)\)/)?.[1]}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }
-                  )}
+                        );
+                      }
+                    )}
                 </div>
               </>
             )}
@@ -239,34 +245,38 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             base colors
           </div>
           <div className="relative flex flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
-            {filterConstants?.colors?.map((color: string, index: number) => {
-              return (
-                <div
-                  key={index}
-                  className="rounded-full w-6 h-6 flex p-px cursor-pointer"
-                  id={filterValues.color.includes(color) ? "preroll" : "tiles"}
-                  onClick={() => {
-                    dispatch(
-                      setFilter({
-                        ...filterValues,
-                        color: filterValues.color.includes(color)
-                          ? filterValues.color.filter(
-                              (item: string) => item !== color
-                            )
-                          : [...filterValues.color, color],
-                      })
-                    );
-                  }}
-                >
+            {filterConstants?.colors &&
+              filterConstants?.colors?.length > 0 &&
+              filterConstants?.colors?.map((color: string, index: number) => {
+                return (
                   <div
-                    className="relative rounded-full w-full h-full flex"
-                    style={{
-                      backgroundColor: color,
+                    key={index}
+                    className="rounded-full w-6 h-6 flex p-px cursor-pointer"
+                    id={
+                      filterValues.color.includes(color) ? "preroll" : "tiles"
+                    }
+                    onClick={() => {
+                      dispatch(
+                        setFilter({
+                          ...filterValues,
+                          color: filterValues.color.includes(color)
+                            ? filterValues.color.filter(
+                                (item: string) => item !== color
+                              )
+                            : [...filterValues.color, color],
+                        })
+                      );
                     }}
-                  ></div>
-                </div>
-              );
-            })}
+                  >
+                    <div
+                      className="relative rounded-full w-full h-full flex"
+                      style={{
+                        backgroundColor: color,
+                      }}
+                    ></div>
+                  </div>
+                );
+              })}
           </div>
         </div>
         <div className="relative flex flex-row gap-3 w-full h-fit items-center justify-start sm:flex-nowrap flex-wrap">

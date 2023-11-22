@@ -6,7 +6,6 @@ import {
   INFURA_GATEWAY,
   itemStringToType,
 } from "../../../../lib/constants";
-import Waveform from "@/components/Autograph/modules/Screen/Waveform";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { AiOutlineLoading } from "react-icons/ai";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
@@ -17,6 +16,7 @@ import PostComment from "@/components/Autograph/modules/PostComment";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Comment } from "../../../../graphql/generated";
 import Publication from "@/components/Autograph/modules/Publication";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   itemData,
@@ -81,6 +81,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   mentionProfilesMain,
   caretCoordMain,
   caretCoord,
+  setCaretCoord,
+  setCaretCoordMain,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.profile?.metadata?.picture
@@ -129,6 +131,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               ) : (
                 <div className="relative w-5/6 h-fit flex flex-col gap-10 justify-start items-center">
                   <PostComment
+                    setCaretCoord={setCaretCoordMain}
                     caretCoord={caretCoordMain}
                     profilesOpen={profilesOpenMain?.[0]}
                     mentionProfiles={mentionProfilesMain}
@@ -168,6 +171,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           ) => {
                             return (
                               <Publication
+                                setCaretCoord={setCaretCoord}
                                 caretCoord={caretCoord}
                                 profilesOpen={profilesOpen}
                                 mentionProfiles={mentionProfiles}
@@ -274,35 +278,29 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     className="rounded-full"
                   />
                 </div>
-                {itemData?.video ? (
-                  <video
-                    className="object-cover flex items-center justify-center"
-                    autoPlay
-                    muted
-                    controls={false}
-                    playsInline
-                    id={itemData?.video}
-                  >
-                    <source src={`${INFURA_GATEWAY}/ipfs/${itemData?.video}`} />
-                  </video>
-                ) : (
-                  itemData?.images?.[0] && (
-                    <Image
-                      layout="fill"
-                      objectFit="contain"
-                      draggable={false}
-                      src={`${INFURA_GATEWAY}/ipfs/${itemData?.images?.[0]}`}
-                    />
-                  )
-                )}
-                {(itemData?.video || itemData?.audio) && (
-                  <Waveform
-                    audio={itemData?.audio}
-                    type={itemData?.audio ? "audio" : "video"}
-                    keyValue={itemData?.audio || itemData?.video}
-                    video={itemData?.video}
+                {
+                  <MediaSwitch
+                    type={
+                      itemData?.video
+                        ? "video"
+                        : itemData?.audio
+                        ? "audio"
+                        : "image"
+                    }
+                    srcUrl={
+                      itemData?.video
+                        ? `${INFURA_GATEWAY}/ipfs/${itemData?.video}`
+                        : itemData?.audio
+                        ? itemData?.audio
+                        : `${INFURA_GATEWAY}/ipfs/${itemData?.images?.[0]}`
+                    }
+                    srcCover=""
+                    classNameVideo={
+                      "object-cover flex items-center justify-center"
+                    }
+                    objectFit="contain"
                   />
-                )}
+                }
               </div>
             )}
           </div>

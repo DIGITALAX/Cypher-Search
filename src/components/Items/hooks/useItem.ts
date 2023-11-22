@@ -118,7 +118,7 @@ const useItem = (
           const item =
             profile?.metadata?.attributes?.[
               profile?.metadata?.attributes?.findIndex(
-                (item) => item.key === "microbrandsCypher"
+                (item) => item?.key === "microbrandsCypher"
               )
             ].value;
 

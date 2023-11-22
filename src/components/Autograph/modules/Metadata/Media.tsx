@@ -1,11 +1,10 @@
 import { FunctionComponent } from "react";
 import { PublicationMetadataMedia } from "../../../../../graphql/generated";
-import Image from "next/legacy/image";
 import { ImageProps } from "../../types/autograph.types";
 import { metadataMedia } from "../../../../../lib/helpers/postMetadata";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
-import Waveform from "../Screen/Waveform";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const Media: FunctionComponent<ImageProps> = ({
   dispatch,
@@ -66,62 +65,24 @@ const Media: FunctionComponent<ImageProps> = ({
                         setImageViewer({
                           actionValue: true,
                           actionType: "png",
-                          actionImage: media.url,
+                          actionImage: media?.url,
                         })
                       )
                     }
                   >
                     <div className="relative w-full h-full flex rounded-sm items-center justify-center">
-                      {media?.url &&
-                        (media?.type === "Image" ? (
-                          <Image
-                            src={media?.url}
-                            layout="fill"
-                            objectFit="cover"
-                            objectPosition={"center"}
-                            className="rounded-sm"
-                            draggable={false}
-                          />
-                        ) : media?.type === "Video" ? (
-                          <>
-                            <video
-                              draggable={false}
-                              controls={false}
-                              muted
-                              // autoPlay
-                              playsInline
-                              loop
-                              id={media?.url}
-                              className="rounded-sm absolute w-full h-full object-cover"
-                              poster={media?.cover}
-                            >
-                              <source src={media?.url} />
-                            </video>
-                            <Waveform
-                              audio={media?.url}
-                              type={"video"}
-                              keyValue={media?.url!}
-                              video={media?.url!}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <Image
-                              src={media?.cover!}
-                              layout="fill"
-                              objectFit="cover"
-                              objectPosition={"center"}
-                              className="rounded-md"
-                              draggable={false}
-                            />
-                            <Waveform
-                              audio={media?.url!}
-                              type={"audio"}
-                              keyValue={media?.url!}
-                              video={media?.url!}
-                            />
-                          </>
-                        ))}
+                      {media?.url && (
+                        <MediaSwitch
+                          type={media?.type}
+                          srcUrl={media?.url}
+                          srcCover={media?.cover}
+                          classNameVideo={
+                            "rounded-sm absolute w-full h-full object-cover"
+                          }
+                          classNameImage={"rounded-sm"}
+                          classNameAudio={"rounded-md"}
+                        />
+                      )}
                     </div>
                   </div>
                 );

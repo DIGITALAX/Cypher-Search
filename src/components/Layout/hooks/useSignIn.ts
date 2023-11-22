@@ -124,6 +124,7 @@ const useSignIn = (
   };
 
   const handleIsCreator = async () => {
+    if (!address) return;
     try {
       const data = await publicClient.readContract({
         address: PRINT_ACCESS_CONTROL,

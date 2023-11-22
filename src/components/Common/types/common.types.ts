@@ -230,3 +230,13 @@ export type StatsProps = {
   profile: Profile;
   dispatch: Dispatch<AnyAction>;
 };
+
+export type MediaProps = {
+  type: string;
+  srcUrl: string;
+  srcCover?: string;
+  classNameVideo?: string;
+  classNameImage?: string;
+  classNameAudio?: string;
+  objectFit?: string;
+};
