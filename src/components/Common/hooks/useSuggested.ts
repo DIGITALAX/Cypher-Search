@@ -28,7 +28,11 @@ const useSuggested = (
   });
   const [suggestedFeed, setSuggestedFeed] = useState<
     AllSearchItemsState | undefined
-  >();
+  >({
+    items: [],
+    hasMore: true,
+    searchInput: "",
+  });
 
   const getSuggestedItems = async () => {
     setLoaders((prev) => ({
@@ -56,8 +60,8 @@ const useSuggested = (
         {
           limit: LimitType.TwentyFive,
           where: {
-            from: pageProfile?.id,
-            publicationTypes: [PublicationType?.Post, PublicationType?.Quote],
+            from: [pageProfile?.id],
+            publicationTypes: [PublicationType?.Post],
           },
         },
         lensConnected?.id
@@ -72,6 +76,7 @@ const useSuggested = (
       pubCursor = relatedPubs?.data?.publications?.pageInfo?.next;
 
       setSuggestedFeed({
+        searchInput: "",
         items: [
           ...(collections?.map((item) => ({
             post: item,
@@ -130,8 +135,8 @@ const useSuggested = (
         {
           limit: LimitType.TwentyFive,
           where: {
-            from: pageProfile?.id,
-            publicationTypes: [PublicationType?.Post, PublicationType?.Quote],
+            from: [pageProfile?.id],
+            publicationTypes: [PublicationType?.Post],
           },
           cursor: suggestedFeed?.lensPubCursor,
         },
@@ -147,6 +152,7 @@ const useSuggested = (
       pubCursor = relatedPubs?.data?.publications?.pageInfo?.next;
 
       setSuggestedFeed({
+        searchInput: "",
         items: [
           ...suggestedFeed?.items!,
           ...[
@@ -183,14 +189,13 @@ const useSuggested = (
 
   useEffect(() => {
     if (
-      suggestedFeed?.items &&
-      suggestedFeed?.items?.length < 1 &&
+      (suggestedFeed?.items?.length || 0) < 1 &&
       routerPath &&
       pageProfile?.id
     ) {
       getSuggestedItems();
     }
-  }, [lensConnected?.id]);
+  }, [lensConnected?.id, pageProfile?.id, routerPath]);
 
   return {
     getMoreSuggested,

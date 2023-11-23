@@ -27,7 +27,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
     >
       <div className="relative h-fit tablet:h-10 w-full md:w-3/5 flex flex-col tablet:flex-row gap-3 tablet:gap-2 items-center justify-center">
         <div
-          className="relative md:w-9 w-8 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
+          className="relative tablet:w-9 w-6 h-5 tablet:h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
           onClick={() => handleShuffleSearch()}
         >
           <Image
@@ -77,7 +77,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
         </div>
         <div className="relative w-fit h-fit flex flex-row gap-2 items-center justify-center">
           <div
-            className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
+            className="relative tablet:w-9 w-6 h-5 tablet:h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
             onClick={() => {
               if (router.asPath !== "/" && filtersOpen) router.push("/");
               dispatch(setFiltersOpen(!filtersOpen));
@@ -90,7 +90,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             />
           </div>
           <div
-            className="relative w-9 h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
+            className="relative tablet:w-9 w-6 h-5 tablet:h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
             onClick={() =>
               dispatch(setLayoutSwitch(layoutAmount < 4 ? layoutAmount + 1 : 2))
             }

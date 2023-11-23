@@ -1,4 +1,4 @@
-import { INFURA_GATEWAY } from "../constants";
+import { INFURA_GATEWAY, IPFS_REGEX } from "../constants";
 import {
   PublicationMetadataMedia,
   Quote,
@@ -43,7 +43,8 @@ export const metadataMedia = (
     case "PublicationMetadataMediaAudio":
       return {
         url: media?.audio?.raw?.uri
-          ? media?.audio?.raw?.uri?.includes("ipfs://")
+          ? media?.audio?.raw?.uri?.includes("ipfs://") &&
+            IPFS_REGEX.test(media?.audio?.raw?.uri?.split("ipfs://")?.[1])
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.audio?.raw?.uri?.split("ipfs://")[1]
               }`
@@ -51,7 +52,8 @@ export const metadataMedia = (
           : media?.audio?.optimized?.uri,
         type: "Audio",
         cover: media?.cover?.raw?.uri
-          ? media?.cover?.raw?.uri?.includes("ipfs://")
+          ? media?.cover?.raw?.uri?.includes("ipfs://") &&
+            IPFS_REGEX.test(media?.cover?.raw?.uri?.split("ipfs://")?.[1])
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.cover?.raw?.uri?.split("ipfs://")[1]
               }`
@@ -62,7 +64,8 @@ export const metadataMedia = (
     case "PublicationMetadataMediaImage":
       return {
         url: media?.image?.raw?.uri
-          ? media?.image?.raw?.uri?.includes("ipfs://")
+          ? media?.image?.raw?.uri?.includes("ipfs://") &&
+            IPFS_REGEX.test(media?.image?.raw?.uri?.split("ipfs://")?.[1])
             ? `${INFURA_GATEWAY}/ipfs/${
                 media.image?.raw?.uri?.split("ipfs://")[1]
               }`
@@ -74,7 +77,8 @@ export const metadataMedia = (
     case "PublicationMetadataMediaVideo":
       return {
         url: media?.video?.raw?.uri
-          ? media?.video?.raw?.uri?.includes("ipfs://")
+          ? media?.video?.raw?.uri?.includes("ipfs://") &&
+            IPFS_REGEX.test(media?.video?.raw?.uri?.split("ipfs://")?.[1])
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.video?.raw?.uri?.split("ipfs://")[1]
               }`
@@ -82,7 +86,8 @@ export const metadataMedia = (
           : media?.video?.optimized?.uri,
         type: "Video",
         cover: media?.cover?.raw?.uri
-          ? media?.cover?.raw?.uri?.includes("ipfs://")
+          ? media?.cover?.raw?.uri?.includes("ipfs://") &&
+            IPFS_REGEX.test(media?.cover?.raw?.uri?.split("ipfs://")?.[1])
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.cover?.raw?.uri?.split("ipfs://")[1]
               }`

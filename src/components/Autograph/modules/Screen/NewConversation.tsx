@@ -4,7 +4,7 @@ import Image from "next/legacy/image";
 import { BsSend } from "react-icons/bs";
 import { AiOutlineLoading } from "react-icons/ai";
 import { DecodedMessage } from "@xmtp/react-sdk";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import { INFURA_GATEWAY, IPFS_REGEX } from "../../../../../lib/constants";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import { ImCross } from "react-icons/im";
@@ -86,9 +86,7 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
                             : "items-end justify-end"
                         }`}
                       >
-                        {/\bQm[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]{44,46}\b/.test(
-                          item?.content
-                        ) ? (
+                        {IPFS_REGEX.test(item?.content) ? (
                           <div
                             className="relative w-40 h-40 rounded-sm flex items-center justify-center cursor-pointer"
                             id="pfp"

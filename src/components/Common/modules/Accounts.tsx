@@ -158,7 +158,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
         )}
       </div>
       {openAccount && (
-        <div className="absolute w-32 h-fit right-3 top-14  tablet:top-16 flex items-center justify-center text-sol flex-col font-bit rounded-sm bg-black text-xs z-30 border border-sol">
+        <div className="absolute w-32 h-fit right-3 top-14 sm:top-24 tablet:top-16 flex items-center justify-center text-sol flex-col font-bit rounded-sm bg-black text-xs z-30 border border-sol">
           <div
             className="relative w-full h-full flex items-center justify-center border-sol cursor-pointer hover:opacity-80 border-b"
             onClick={() => {
@@ -189,7 +189,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
       )}
       {cartListOpen && (
         <div
-          className="absolute z-30 w-60 right-3 top-14 sm:top-14 tablet:top-16 h-72 rounded-sm bg-black flex flex-col p-3 border border-sol items-between justify-center"
+          className="absolute z-30 w-60 right-3 top-14 sm:top-24 tablet:top-16 h-72 rounded-sm bg-black flex flex-col p-3 border border-sol items-between justify-center"
           id="milestone"
         >
           <div className="relative flex items-center justify-center overflow-y-scroll w-full h-full">

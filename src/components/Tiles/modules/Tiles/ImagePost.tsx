@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import { INFURA_GATEWAY, IPFS_REGEX } from "../../../../../lib/constants";
 import { ImagePostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
@@ -100,7 +100,15 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                       ? publication?.mirrorOn
                       : (publication as Post)
                     )?.metadata as ImageMetadataV3
-                  )?.asset.image?.raw?.uri?.includes("ipfs://")
+                  )?.asset.image?.raw?.uri?.includes("ipfs://") &&
+                  IPFS_REGEX.test(
+                    (
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.metadata as ImageMetadataV3
+                    )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
+                  )
                     ? `${INFURA_GATEWAY}/ipfs/${
                         (
                           (publication?.__typename === "Mirror"

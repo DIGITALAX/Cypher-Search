@@ -39,16 +39,18 @@ const Header: FunctionComponent<HeaderProps> = ({
           : "flex-row items-center justify-between"
       } `}
     >
-      <Link
-        className={`relative w-10 h-10 flex cursor-pointer active:scale-95 items-center justify-center`}
-        href={"/"}
-      >
-        <Image
-          src={`${INFURA_GATEWAY}/ipfs/QmYbjMNQAVuQSWNNQ5AKbQtt4Dxw2ax4SvLNwKhCNDniL2`}
-          layout="fill"
-          draggable={false}
-        />
-      </Link>
+      <div className="relative w-fit h-fit flex items-center justify-center cursor-pointer active:scale-95">
+        <Link
+          className={`relative w-10 h-10 flex items-center justify-center`}
+          href={"/"}
+        >
+          <Image
+            src={`${INFURA_GATEWAY}/ipfs/QmYbjMNQAVuQSWNNQ5AKbQtt4Dxw2ax4SvLNwKhCNDniL2`}
+            layout="fill"
+            draggable={false}
+          />
+        </Link>
+      </div>
       {includeSearch && (
         <SearchBar
           dispatch={dispatch}
