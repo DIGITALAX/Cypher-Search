@@ -288,6 +288,8 @@ const useSearch = (
         })) || []),
       ];
 
+      console.log({ allItems });
+
       dispatch(
         setAllSearchItems({
           actionItems: allItems?.sort(() => Math.random() - 0.5),
@@ -524,6 +526,8 @@ const useSearch = (
               : item?.mirrorOn?.metadata?.__typename,
         })) || []),
       ];
+
+      console.log({ newItems });
 
       dispatch(
         setAllSearchItems({

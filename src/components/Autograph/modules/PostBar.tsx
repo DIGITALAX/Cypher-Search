@@ -379,8 +379,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             dispatch={dispatch}
             lensConnected={lensConnected}
             parentId={item?.id}
-            top={main ? "auto" : "20px"}
-            bottom={main ? "2px" : "auto"}
+            top={main || router.asPath?.includes("autograph") ? "auto" : "20px"}
+            bottom={
+              main || router.asPath?.includes("autograph") ? "2px" : "auto"
+            }
             left={"auto"}
             right={"2px"}
           />

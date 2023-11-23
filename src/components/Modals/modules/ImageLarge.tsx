@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { INFURA_GATEWAY, IPFS_REGEX } from "../../../../lib/constants";
 import { setImageViewer } from "../../../../redux/reducers/ImageLargeSlice";
 import { ImageLargeProps } from "../types/modals.types";
 
@@ -29,7 +29,7 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
               {!type?.includes("video") ? (
                 <Image
                   src={
-                    mainImage?.includes("ipfs://")
+                    mainImage?.includes("ipfs://") && IPFS_REGEX.test(mainImage?.split("ipfs://")?.[1])
                       ? `${INFURA_GATEWAY}/ipfs/${
                           mainImage?.split("ipfs://")?.[1]
                         }`

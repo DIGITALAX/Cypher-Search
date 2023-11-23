@@ -1,7 +1,7 @@
 import { ItemType } from "@/components/Common/types/common.types";
 import { PrintType } from "@/components/Tiles/types/tiles.types";
 
-export const CHROMADIN_ID: string = "0x01c6a9"
+export const CHROMADIN_ID: string = "0x01c6a9";
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const BASE_URL: string = "https://api-v2.lens.dev/";
 export const DIGITALAX_PROFILE_ID_LENS: string = "0x012d";
@@ -28,6 +28,7 @@ export const DIGITALAX_ADDRESS: `0x${string}` =
 export const ZERO_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000";
 
+export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|bafy[A-Za-z0-9]+)\b/;
 export const PLACEHOLDERS: string[] = [
   "know the creator by name? @ them, we won't judge",
   "some ideas from trending hashes: #synthwave #neobrutalism #autonomy",
@@ -118,7 +119,6 @@ export const itemStringToType: { [key: string]: ItemType } = {
   ["legend"]: ItemType.Legend,
   ["listener"]: ItemType.Listener,
 };
-
 
 export const itemTypeToString: { [key in ItemType]: string } = {
   [ItemType.CoinOp]: "coinop",
