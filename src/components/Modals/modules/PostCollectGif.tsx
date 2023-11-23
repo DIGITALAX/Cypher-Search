@@ -20,7 +20,7 @@ const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-full md:w-[50vw] h-fit min-h-[27vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
+      <div className="relative w-full md:w-[50vw] h-fit min-h-[27vh] place-self-center bg-offBlack border border-white">
         <div className="relative w-full h-full flex flex-col gap-3 p-2 items-center justify-start">
           <div className="relative w-fit h-fit items-end justify-end ml-auto cursor-pointer flex">
             <ImCross

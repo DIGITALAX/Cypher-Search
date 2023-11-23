@@ -22,9 +22,15 @@ const Profile: FunctionComponent<ProfileProps> = ({
   const profilePicture = createProfilePicture(publication?.metadata?.picture);
   const cover = createProfilePicture(publication?.metadata?.coverPicture);
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4" id={publication?.ownedBy?.address}>
+    <div
+      className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4"
+      id={publication?.ownedBy?.address}
+    >
       <div className="relative p-2 rounded-sm border border-pez w-full h-20 flex-row gap-6 items-center justify-start flex">
-        <div className="absolute w-full h-full opacity-20 flex top-0 left-0" id="preroll">
+        <div
+          className="absolute w-full h-full opacity-20 flex top-0 left-0"
+          id="preroll"
+        >
           {cover && (
             <Image
               layout="fill"
@@ -80,6 +86,10 @@ const Profile: FunctionComponent<ProfileProps> = ({
             dispatch={dispatch}
             lensConnected={lensConnected}
             parentId={publication?.ownedBy?.address}
+            top={"10px"}
+            bottom={"auto"}
+            left={"2px"}
+            right={"auto"}
           />
         )}
         <div

@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Post, Quote } from "../../graphql/generated";
 
 export interface FullScreenVideoState {
   open?: boolean;
-  currentTime?: { [key: string]: number };
-  duration?: { [key: string]: number };
-  isPlaying?: { [key: string]: boolean };
-  video?: { [key: string]: Post | Quote };
+  id?: string;
+  currentTime?: number;
+  duration?: number;
+  isPlaying?: boolean;
+  video?: string;
 }
 
 const initialFullScreenVideoState: FullScreenVideoState = {
@@ -22,6 +22,7 @@ export const fullScreenVideoSlice = createSlice({
       {
         payload: {
           actionOpen,
+          actionId,
           actionTime,
           actionDuration,
           actionIsPlaying,
@@ -30,6 +31,7 @@ export const fullScreenVideoSlice = createSlice({
       }
     ) => {
       state.open = actionOpen;
+      state.id = actionId;
       state.currentTime = actionTime;
       state.duration = actionDuration;
       state.isPlaying = actionIsPlaying;

@@ -156,8 +156,6 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                                 id={item?.video}
                                 draggable={false}
                                 controls={false}
-                                muted
-                                // autoPlay
                                 playsInline
                                 loop
                                 key={item?.video}

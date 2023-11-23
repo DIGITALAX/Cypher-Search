@@ -69,6 +69,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                 dispatch={dispatch}
                 mirror={mirror}
                 like={like}
+                display
                 interactionsLoading={interactionsLoading?.[0]}
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}

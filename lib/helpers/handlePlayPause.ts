@@ -2,12 +2,13 @@ import { MutableRefObject } from "react";
 import WaveSurfer from "wavesurfer.js";
 
 const handlePlayPause = (
-    key: string,
-    wavesurfer: MutableRefObject<WaveSurfer | null>,
-    type: string
-  ) => {
-    const videoElement = document.getElementById(key) as HTMLVideoElement;
+  key: string,
+  wavesurfer: MutableRefObject<WaveSurfer | null>,
+  type: string
+) => {
+  const videoElement = document.getElementById(key) as HTMLVideoElement;
 
+  try {
     if (wavesurfer.current) {
       if (videoElement && type === "video") {
         if (videoElement.paused) {
@@ -25,6 +26,9 @@ const handlePlayPause = (
         }
       }
     }
-  };
+  } catch (err: any) {
+    console.error(err.message);
+  }
+};
 
-  export default handlePlayPause;
+export default handlePlayPause;

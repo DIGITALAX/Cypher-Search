@@ -245,7 +245,29 @@ const useSettings = (
         setInteractError(true);
       }
     } catch (err: any) {
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
     setSettingsUpdateLoading(false);
   };

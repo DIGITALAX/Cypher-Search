@@ -164,10 +164,14 @@ const Community: FunctionComponent<CommunityProps> = ({
                       dispatch={dispatch}
                       lensConnected={lensConnected}
                       parentId={community?.cover}
+                      top={"auto"}
+                      bottom={"2px"}
+                      left={"auto"}
+                      right={"2px"}
                     />
                   )}
                   <div className="relative w-fit h-fit text-white font-bit items-center justify-center flex top-px text-xs px-2 py-1">
-                    username{item?.profile?.handle?.localName}
+                    {item?.profile?.handle?.localName}
                   </div>
                 </div>
               </div>

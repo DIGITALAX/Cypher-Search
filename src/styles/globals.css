@@ -222,6 +222,16 @@ input[type="number"]::-webkit-outer-spin-button:focus {
   background: linear-gradient(#712af6, #7e07d6, #9806cf, #5a0ac7, #682af6);
 }
 
+#prerollFaded {
+  background: linear-gradient(
+    rgba(113, 42, 246, 0.1),
+    rgba(126, 7, 214, 0.1),
+    rgba(152, 6, 207, 0.1),
+    rgba(90, 10, 199, 0.1),
+    rgba(104, 42, 246, 0.1)
+  );
+}
+
 #tiles {
   background: linear-gradient(#f3f6f7, #f7f7f3, #f9e8fa, #f0ecf6, #f3f6f7);
 }
@@ -547,7 +557,8 @@ input[type="range"]::-moz-range-thumb {
   margin-left: auto;
   padding-bottom: 0.5rem;
 }
-#postBox, #highlighted-content {
+#postBox,
+#highlighted-content {
   font-family: "Austral";
   font-size: 1rem;
   line-height: 1.2rem;
@@ -556,7 +567,8 @@ input[type="range"]::-moz-range-thumb {
   box-sizing: border-box;
 }
 
-#postBox::-webkit-scrollbar, #highlighted-content::-webkit-scrollbar {
+#postBox::-webkit-scrollbar,
+#highlighted-content::-webkit-scrollbar {
   display: none;
 }
 

@@ -41,252 +41,250 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
-  profileId,
-  volume,
-  volumeOpen,
-  setVolumeOpen,
-  fullScreenVideo,
-  setVolume,
   followLoading,
   unfollowProfile,
   followProfile,
   profileHovers,
   setProfileHovers,
   simpleCollect,
-  setHeart,
-  heart,
   lensConnected,
 }) => {
-  switch (type?.toLowerCase()) {
-    case "loader":
-      return <LoadTile index={index} />;
-
-    case "community":
-      return (
-        <Community
-          lensConnected={lensConnected}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-          followLoading={followLoading}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          community={publication?.post as CommunityType}
-          index={index}
-          router={router}
-          dispatch={dispatch}
-        />
-      );
-
-    case "profile":
-      return (
-        <Profile
-          publication={publication?.post as LensProfile}
-          index={index}
-          router={router}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          layoutAmount={layoutAmount}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-          dispatch={dispatch}
-          lensConnected={lensConnected}
-        />
-      );
-
-    case "microbrand":
-      return (
-        <Microbrand
-          publication={publication?.post as LensProfile}
-          index={index}
-          router={router}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          layoutAmount={layoutAmount}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-          dispatch={dispatch}
-          lensConnected={lensConnected}
-        />
-      );
-
-    case "image":
-      return (
-        <ImagePost
-          lensConnected={lensConnected}
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          layoutAmount={layoutAmount}
-          router={router}
-          publication={publication?.post as Post | Comment | Quote | Mirror}
-          dispatch={dispatch}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading?.[index]}
-          index={index}
-          simpleCollect={simpleCollect!}
-          followLoading={followLoading}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-        />
-      );
-    case "listener":
-      return (
-        <Listener
-          lensConnected={lensConnected}
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          popUpOpen={popUpOpen}
-          setPopUpOpen={setPopUpOpen}
-          layoutAmount={layoutAmount}
-          index={index}
-          dispatch={dispatch}
-          router={router}
-          publication={publication?.post as Creation}
-          cartItems={cartItems}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading?.[index]}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-        />
-      );
-    case "chromadin":
-      return (
-        <Chromadin
-          lensConnected={lensConnected}
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          popUpOpen={popUpOpen}
-          setPopUpOpen={setPopUpOpen}
-          layoutAmount={layoutAmount}
-          apparel={apparel}
-          setApparel={setApparel}
-          index={index}
-          dispatch={dispatch}
-          router={router}
-          publication={publication?.post as Creation}
-          cartItems={cartItems}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading?.[index]}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-        />
-      );
-    case "coinop":
-      return (
-        <CoinOp
-          lensConnected={lensConnected}
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          popUpOpen={popUpOpen}
-          setPopUpOpen={setPopUpOpen}
-          layoutAmount={layoutAmount}
-          index={index}
-          dispatch={dispatch}
-          router={router}
-          publication={publication?.post as Creation}
-          cartItems={cartItems}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading?.[index]}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-        />
-      );
-    case "text":
-      return (
-        <TextPost
-          lensConnected={lensConnected}
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          layoutAmount={layoutAmount}
-          router={router}
-          publication={publication?.post as Post | Comment | Quote | Mirror}
-          dispatch={dispatch}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading?.[index]}
-          index={index}
-          followProfile={followProfile}
-          unfollowProfile={unfollowProfile}
-          followLoading={followLoading}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-          simpleCollect={simpleCollect!}
-        />
-      );
-    
-    case "audio":
-    case "video":
-      return (
-        <VideoPost
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          layoutAmount={layoutAmount}
-          dispatch={dispatch}
-          index={index}
-          router={router}
-          publication={publication}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading?.[index]}
-          volume={volume!}
-          volumeOpen={volumeOpen!}
-          setVolumeOpen={setVolumeOpen!}
-          profileId={profileId!}
-          fullScreenVideo={fullScreenVideo!}
-          setVolume={setVolume!}
-          setHeart={setHeart!}
-          heart={heart!}
-        />
-      );
-    // case "quest":
-    //   return (
-    //     <Quest
-    //       layoutAmount={layoutAmount}
-    //       router={router}
-    //       publication={publication?.post as Post | Comment | Quote | Mirror}
-    //       followProfile={followProfile}
-    //       unfollowProfile={unfollowProfile}
-    //       followLoading={followLoading}
-    //       profileHovers={profileHovers}
-    //       setProfileHovers={setProfileHovers}
-    //     />
-    //   );
-    // case "legend":
-    //   return (
-    //     <Legend
-    //       openMirrorChoice={openMirrorChoice}
-    //       setOpenMirrorChoice={setOpenMirrorChoice}
-    //       layoutAmount={layoutAmount}
-    //       index={index}
-    //       dispatch={dispatch}
-    //       router={router}
-    //       publication={publication?.post as Post}
-    //       cartItems={cartItems}
-    //       mirror={mirror}
-    //       like={like}
-    //       interactionsLoading={interactionsLoading?.[index]}
-    //     />
-    //   );
-
-    default:
-      return null;
+  if (type?.toLowerCase() == "loader") {
+    return <LoadTile index={index} />;
   }
+
+  if (type?.toLowerCase() == "community") {
+    return (
+      <Community
+        lensConnected={lensConnected}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+        followLoading={followLoading}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        community={publication?.post as CommunityType}
+        index={index}
+        router={router}
+        dispatch={dispatch}
+      />
+    );
+  }
+
+  if (type?.toLowerCase()?.includes("profile")) {
+    return (
+      <Profile
+        publication={publication?.post as LensProfile}
+        index={index}
+        router={router}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        followLoading={followLoading}
+        layoutAmount={layoutAmount}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+        dispatch={dispatch}
+        lensConnected={lensConnected}
+      />
+    );
+  }
+
+  if (type?.toLowerCase() == "microbrand") {
+    return (
+      <Microbrand
+        publication={publication?.post as LensProfile}
+        index={index}
+        router={router}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        followLoading={followLoading}
+        layoutAmount={layoutAmount}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+        dispatch={dispatch}
+        lensConnected={lensConnected}
+      />
+    );
+  }
+
+  if (type?.toLowerCase() == "listener") {
+    return (
+      <Listener
+        lensConnected={lensConnected}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        popUpOpen={popUpOpen}
+        setPopUpOpen={setPopUpOpen}
+        layoutAmount={layoutAmount}
+        index={index}
+        dispatch={dispatch}
+        router={router}
+        publication={publication?.post as Creation}
+        cartItems={cartItems}
+        mirror={mirror}
+        like={like}
+        interactionsLoading={interactionsLoading?.[index]}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        followLoading={followLoading}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+      />
+    );
+  }
+
+  if (type?.toLowerCase() == "chromadin") {
+    return (
+      <Chromadin
+        lensConnected={lensConnected}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        popUpOpen={popUpOpen}
+        setPopUpOpen={setPopUpOpen}
+        layoutAmount={layoutAmount}
+        apparel={apparel}
+        setApparel={setApparel}
+        index={index}
+        dispatch={dispatch}
+        router={router}
+        publication={publication?.post as Creation}
+        cartItems={cartItems}
+        mirror={mirror}
+        like={like}
+        interactionsLoading={interactionsLoading?.[index]}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        followLoading={followLoading}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+      />
+    );
+  }
+
+  if (type?.toLowerCase() == "coinop") {
+    return (
+      <CoinOp
+        lensConnected={lensConnected}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        popUpOpen={popUpOpen}
+        setPopUpOpen={setPopUpOpen}
+        layoutAmount={layoutAmount}
+        index={index}
+        dispatch={dispatch}
+        router={router}
+        publication={publication?.post as Creation}
+        cartItems={cartItems}
+        mirror={mirror}
+        like={like}
+        interactionsLoading={interactionsLoading?.[index]}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        followLoading={followLoading}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+      />
+    );
+  }
+
+  if (
+    type?.toLowerCase()?.includes("video") ||
+    type?.toLowerCase()?.includes("audio")
+  ) {
+    return (
+      <VideoPost
+        collect={simpleCollect!}
+        lensConnected={lensConnected}
+        layoutAmount={layoutAmount}
+        dispatch={dispatch}
+        router={router}
+        publication={publication}
+        mirror={mirror}
+        like={like}
+        interactionsLoading={interactionsLoading?.[index]}
+  
+      />
+    );
+  }
+
+  if (
+    type?.toLowerCase()?.includes("text") ||
+    type?.toLowerCase()?.includes("article") ||
+    type?.toLowerCase()?.includes("story")
+  ) {
+    return (
+      <TextPost
+        lensConnected={lensConnected}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        layoutAmount={layoutAmount}
+        router={router}
+        publication={publication?.post as Post | Comment | Quote | Mirror}
+        dispatch={dispatch}
+        mirror={mirror}
+        like={like}
+        interactionsLoading={interactionsLoading?.[index]}
+        index={index}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        followLoading={followLoading}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+        simpleCollect={simpleCollect!}
+      />
+    );
+  }
+
+  return (
+    <ImagePost
+      lensConnected={lensConnected}
+      openMirrorChoice={openMirrorChoice}
+      setOpenMirrorChoice={setOpenMirrorChoice}
+      layoutAmount={layoutAmount}
+      router={router}
+      publication={publication?.post as Post | Comment | Quote | Mirror}
+      dispatch={dispatch}
+      mirror={mirror}
+      like={like}
+      interactionsLoading={interactionsLoading?.[index]}
+      index={index}
+      simpleCollect={simpleCollect!}
+      followLoading={followLoading}
+      followProfile={followProfile}
+      unfollowProfile={unfollowProfile}
+      profileHovers={profileHovers}
+      setProfileHovers={setProfileHovers}
+    />
+  );
+
+  // case "quest":
+  //   return (
+  //     <Quest
+  //       layoutAmount={layoutAmount}
+  //       router={router}
+  //       publication={publication?.post as Post | Comment | Quote | Mirror}
+  //       followProfile={followProfile}
+  //       unfollowProfile={unfollowProfile}
+  //       followLoading={followLoading}
+  //       profileHovers={profileHovers}
+  //       setProfileHovers={setProfileHovers}
+  //     />
+  //   );
+  // case "legend":
+  //   return (
+  //     <Legend
+  //       openMirrorChoice={openMirrorChoice}
+  //       setOpenMirrorChoice={setOpenMirrorChoice}
+  //       layoutAmount={layoutAmount}
+  //       index={index}
+  //       dispatch={dispatch}
+  //       router={router}
+  //       publication={publication?.post as Post}
+  //       cartItems={cartItems}
+  //       mirror={mirror}
+  //       like={like}
+  //       interactionsLoading={interactionsLoading?.[index]}
+  //     />
+  //   );
 };
 
 export default TileSwitch;

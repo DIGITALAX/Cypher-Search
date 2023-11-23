@@ -11,6 +11,7 @@ import {
   setPostCollectGif,
 } from "../../../../redux/reducers/postCollectGifSlice";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 
 const usePost = (
   dispatch: Dispatch,
@@ -50,9 +51,7 @@ const usePost = (
 
     try {
       const contentURI = await uploadPostContent(
-        makePost[0]?.content?.trim() == ""
-        ? " "
-        : makePost[0]?.content,
+        makePost[0]?.content?.trim() == "" ? " " : makePost[0]?.content,
         makePost[0]?.images || [],
         makePost[0]?.videos || [],
         [],
@@ -97,10 +96,31 @@ const usePost = (
           images: [],
           videos: [],
         },
-      ])
+      ]);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
     setPostLoading([false]);
   };

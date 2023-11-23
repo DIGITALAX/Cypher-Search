@@ -4,9 +4,12 @@ import {
   ActOnOpenActionRequest,
   CreateActOnOpenActionTypedDataDocument,
   CreateActOnOpenActionTypedDataMutation,
+  CreateLegacyCollectTypedDataDocument,
+  CreateLegacyCollectTypedDataMutation,
+  LegacyCollectRequest,
 } from "../../generated";
 
-const collectPost = async (
+export const collectPost = async (
   request: ActOnOpenActionRequest
 ): Promise<FetchResult<CreateActOnOpenActionTypedDataMutation>> => {
   return await apolloClient.mutate({
@@ -17,4 +20,13 @@ const collectPost = async (
   });
 };
 
-export default collectPost;
+export const legacyCollectPost = async (
+  request: LegacyCollectRequest
+): Promise<FetchResult<CreateLegacyCollectTypedDataMutation>> => {
+  return await apolloClient.mutate({
+    mutation: CreateLegacyCollectTypedDataDocument,
+    variables: {
+      request: request,
+    },
+  });
+};

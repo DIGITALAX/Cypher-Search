@@ -1,24 +1,29 @@
 import { useEffect, useState } from "react";
-import { Mirror, Post, Comment, Quote } from "../../../../graphql/generated";
 import {
-  InteractionsCountState,
-  setInteractionsCount,
-} from "../../../../redux/reducers/interactionsCountSlice";
+  Mirror,
+  Post,
+  Comment,
+  Quote,
+  Profile,
+} from "../../../../graphql/generated";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { polygon, polygonMumbai } from "viem/chains";
-import { Publication } from "../types/tiles.types";
 import { Dispatch } from "redux";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import {
+  AllSearchItemsState,
+  setAllSearchItems,
+} from "../../../../redux/reducers/searchItemsSlice";
+import errorChoice from "../../../../lib/helpers/errorChoice";
 
 const useInteractions = (
-  allSearchItems: Publication[],
-  interactionsCount: InteractionsCountState | undefined,
+  allSearchItems: AllSearchItemsState | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  lensConnected: Profile | undefined
 ) => {
   const [openMirrorChoice, setOpenMirrorChoice] = useState<boolean[]>([]);
   const [interactionsLoading, setInteractionsLoading] = useState<
@@ -30,7 +35,8 @@ const useInteractions = (
   >([]);
 
   const like = async (id: string, hasReacted: boolean) => {
-    const index = allSearchItems?.findIndex(
+    if (!lensConnected?.id) return;
+    const index = allSearchItems?.items?.findIndex(
       (pub) => (pub?.post as Post | Comment | Mirror | Quote)?.id === id
     );
     if (index === -1) {
@@ -39,43 +45,36 @@ const useInteractions = (
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], like: true };
+      updatedArray[index!] = { ...updatedArray[index!], like: true };
       return updatedArray;
     });
 
     try {
       await lensLike(id, dispatch, hasReacted);
-
-      dispatch(
-        setInteractionsCount({
-          actionLikes: interactionsCount?.likes?.map((obj, ind) =>
-            ind === index ? obj + 1 : obj
-          ),
-          actionMirrors: interactionsCount?.mirrors,
-          actionQuotes: interactionsCount?.quotes,
-          actionCollects: interactionsCount?.collects,
-          actionComments: interactionsCount?.comments,
-          actionHasLiked: interactionsCount?.hasLiked?.map((obj, ind) =>
-            ind === index ? true : obj
-          ),
-          actionHasMirrored: interactionsCount?.hasMirrored,
-          actionHasCollected: interactionsCount?.hasCollected,
-        })
-      );
+      updateInteractions(index!, {
+        hasReacted: hasReacted ? false : true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index!, {
+            hasReacted: hasReacted ? false : true,
+          }),
+        dispatch
+      );
     }
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], like: false };
+      updatedArray[index!] = { ...updatedArray[index!], like: false };
       return updatedArray;
     });
   };
 
   const collect = async (id: string, type: string) => {
-    const index = allSearchItems?.findIndex(
+    if (!lensConnected?.id) return;
+    const index = allSearchItems?.items?.findIndex(
       (pub) => (pub?.post as Post | Comment | Mirror | Quote)?.id === id
     );
     if (index === -1) {
@@ -84,7 +83,7 @@ const useInteractions = (
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], simpleCollect: true };
+      updatedArray[index!] = { ...updatedArray[index!], simpleCollect: true };
       return updatedArray;
     });
 
@@ -103,36 +102,38 @@ const useInteractions = (
         publicClient
       );
 
-      dispatch(
-        setInteractionsCount({
-          actionLikes: interactionsCount?.likes,
-          actionMirrors: interactionsCount?.mirrors,
-          actionQuotes: interactionsCount?.quotes,
-          actionCollects: interactionsCount?.collects?.map((obj, ind) =>
-            ind === index ? obj + 1 : obj
-          ),
-          actionComments: interactionsCount?.comments,
-          actionHasLiked: interactionsCount?.hasLiked,
-          actionHasMirrored: interactionsCount?.hasMirrored,
-          actionHasCollected: interactionsCount?.hasCollected?.map((obj, ind) =>
-            ind === index ? true : obj
-          ),
-        })
-      );
+      updateInteractions(index!, {
+        hasActed: {
+          __typename: "OptimisticStatusResult",
+          isFinalisedOnchain: true,
+          value: true,
+        },
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index!, {
+            hasActed: {
+              __typename: "OptimisticStatusResult",
+              isFinalisedOnchain: true,
+              value: true,
+            },
+          }),
+        dispatch
+      );
     }
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], simpleCollect: false };
+      updatedArray[index!] = { ...updatedArray[index!], simpleCollect: false };
       return updatedArray;
     });
   };
 
   const mirror = async (id: string) => {
-    const index = allSearchItems?.findIndex(
+    if (!lensConnected?.id) return;
+    const index = allSearchItems?.items?.findIndex(
       (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
     );
     if (index === -1) {
@@ -141,7 +142,7 @@ const useInteractions = (
 
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], mirror: true };
+      updatedArray[index!] = { ...updatedArray[index!], mirror: true };
       return updatedArray;
     });
 
@@ -157,41 +158,58 @@ const useInteractions = (
         clientWallet,
         publicClient
       );
-
-      dispatch(
-        setInteractionsCount({
-          actionLikes: interactionsCount?.likes,
-          actionMirrors: interactionsCount?.mirrors?.map((obj, ind) =>
-            ind === index ? obj + 1 : obj
-          ),
-          actionQuotes: interactionsCount?.quotes,
-          actionCollects: interactionsCount?.collects,
-          actionComments: interactionsCount?.comments,
-          actionHasLiked: interactionsCount?.hasLiked,
-          actionHasMirrored: interactionsCount?.hasMirrored?.map((obj, ind) =>
-            ind === index ? true : obj
-          ),
-          actionHasCollected: interactionsCount?.hasCollected,
-        })
-      );
+      updateInteractions(index!, {
+        hasMirrored: true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index!, {
+            hasMirrored: true,
+          }),
+        dispatch
+      );
     }
     setInteractionsLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], mirror: false };
+      updatedArray[index!] = { ...updatedArray[index!], mirror: false };
       return updatedArray;
     });
   };
 
+  const updateInteractions = (index: number, valueToUpdate: Object) => {
+    const newItems = [...(allSearchItems?.items || [])];
+    newItems[index] = {
+      ...newItems[index],
+      post: {
+        ...newItems[index].post,
+        operations: {
+          ...(newItems[index].post as Post).operations,
+          ...valueToUpdate,
+        },
+      } as Post & { decrypted: any },
+    };
+    dispatch(
+      setAllSearchItems({
+        actionItems: newItems,
+        actionGraphCursor: allSearchItems?.graphCursor,
+        actionLensProfileCursor: allSearchItems?.lensProfileCursor,
+        actionLensPubCursor: allSearchItems?.lensPubCursor,
+        actionPubProfileCursor: allSearchItems?.pubProfileCursor,
+        actionHasMore: allSearchItems?.hasMore,
+        actionInput: allSearchItems?.searchInput,
+      })
+    );
+  };
+
   useEffect(() => {
-    if (allSearchItems?.length > 0) {
+    if (allSearchItems?.items && allSearchItems?.items?.length > 0) {
       setOpenMirrorChoice(
-        Array.from({ length: allSearchItems?.length }, () => false)
+        Array.from({ length: allSearchItems?.items?.length }, () => false)
       );
       setInteractionsLoading(
-        Array.from({ length: allSearchItems?.length }, () => ({
+        Array.from({ length: allSearchItems?.items?.length }, () => ({
           like: false,
           mirror: false,
           quote: false,
@@ -199,7 +217,7 @@ const useInteractions = (
         }))
       );
     }
-  }, [allSearchItems?.length]);
+  }, [allSearchItems?.items?.length]);
 
   return {
     mirror,

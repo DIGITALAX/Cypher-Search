@@ -7,6 +7,7 @@ import {
 } from "../../../../graphql/generated";
 import { CartItem } from "@/components/Common/types/common.types";
 import { Publication } from "@/components/Tiles/types/tiles.types";
+import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 
 export interface FilterValues {
   hashtags: string[];
@@ -47,14 +48,13 @@ export type SearchBarProps = {
     click?: boolean
   ) => Promise<void>;
   searchActive: boolean;
-  searchInput: string;
   router: NextRouter;
-  setSearchInput: (e: SetStateAction<string>) => void;
   filtersOpen: boolean;
   handleShuffleSearch: () => void;
   placeholderText: string | undefined;
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
+  searchItems: AllSearchItemsState | undefined;
 };
 
 export type HeaderProps = {
@@ -68,11 +68,10 @@ export type HeaderProps = {
     click?: boolean
   ) => Promise<void>;
   searchActive: boolean;
-  searchInput?: string;
   placeholderText?: string | undefined;
-  setSearchInput?: (e: SetStateAction<string>) => void;
   openConnectModal: (() => void) | undefined;
   handleLogout: () => void;
+  searchItems: AllSearchItemsState | undefined
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
@@ -163,6 +162,7 @@ export type FilterProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
+    simpleCollect: boolean;
   }[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];

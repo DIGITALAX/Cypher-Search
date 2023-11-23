@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, RefObject } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import dynamic from "next/dynamic";
@@ -110,7 +110,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     filters,
     allSearchItems,
     dispatch,
-    router
+    router,
   );
   const {
     handleItemSelect,
@@ -188,7 +188,8 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     postBox,
     dispatch,
     publicClient,
-    address
+    address,
+    fullScreenVideo
   );
   const { handleReportPost, reason, setReason, reportLoading } =
     useReport(dispatch);
@@ -198,7 +199,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
         <FullScreenVideo
           dispatch={dispatch}
           fullScreenVideo={fullScreenVideo}
-          videoRef={videoRef}
+          videoRef={videoRef as RefObject<HTMLVideoElement>}
         />
       )}
       {mapOpen?.value && <Map dispatch={dispatch} filterValues={filters} />}

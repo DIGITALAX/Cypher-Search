@@ -1053,7 +1053,7 @@ export type PublicationProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (
+  setCaretCoord?: (
     e: SetStateAction<{
       x: number;
       y: number;

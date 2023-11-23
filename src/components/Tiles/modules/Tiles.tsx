@@ -1,9 +1,17 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, memo, useCallback, useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Publication, TilesProps } from "../types/tiles.types";
 import TileSwitch from "./TileSwitch";
 import { Masonry } from "masonic";
-import TileLoader from "@/components/Common/modules/TileLoader";
+import { debounce } from "lodash";
+import stringify from "json-stable-stringify";
+
+const TileSwitchMemo = memo(TileSwitch);
+
+const useDeepMemoize = (value: Object[]) => {
+  const hash = useMemo(() => stringify(value), [value]);
+  return hash;
+};
 
 const Tiles: FunctionComponent<TilesProps> = ({
   handleMoreSearch,
@@ -29,90 +37,91 @@ const Tiles: FunctionComponent<TilesProps> = ({
   followLoading,
   profileHovers,
   setProfileHovers,
-  setVolume,
-  setVolumeOpen,
-  fullScreenVideo,
-  volume,
-  volumeOpen,
-  profileId,
-  heart,
-  setHeart,
   searchItems,
   moreSearchLoading,
-  lensConnected
+  lensConnected,
 }): JSX.Element => {
-  const renderTile = ({
-    index,
-    data,
-  }: {
-    index: number;
-    data: Publication;
-  }) => {
-    return searchLoading ? (
-      <TileLoader layoutAmount={layoutAmount} key={index} />
-    ) : (
-      <TileSwitch
-        type={data?.type}
-        lensConnected={lensConnected}
-        publication={data}
-        cartItems={cartItems}
-        layoutAmount={layoutAmount}
-        popUpOpen={popUpOpen}
-        setPopUpOpen={setPopUpOpen}
-        apparel={apparel}
-        setApparel={setApparel}
-        index={index}
-        dispatch={dispatch}
-        router={router}
-        mirror={mirror}
-        like={like}
-        interactionsLoading={interactionsLoading}
-        openMirrorChoice={openMirrorChoice}
-        setOpenMirrorChoice={setOpenMirrorChoice}
-        followLoading={followLoading}
-        followProfile={followProfile}
-        unfollowProfile={unfollowProfile}
-        profileHovers={profileHovers}
-        setProfileHovers={setProfileHovers}
-        setVolume={setVolume}
-        setVolumeOpen={setVolumeOpen}
-        simpleCollect={simpleCollect}
-        fullScreenVideo={fullScreenVideo}
-        volume={volume}
-        volumeOpen={volumeOpen}
-        profileId={profileId}
-        setHeart={setHeart}
-        heart={heart}
-      />
-    );
-  };
+  const interactionsLoadingMemo = useDeepMemoize(interactionsLoading);
+  const debouncedHandleMoreSearch = useCallback(
+    debounce(() => {
+      if (searchItems?.hasMore && !searchLoading && !moreSearchLoading) {
+        handleMoreSearch();
+      }
+    }, 300),
+    [searchItems, searchLoading, moreSearchLoading, handleMoreSearch]
+  );
+
+  const renderTile = useCallback(
+    ({ index, data }: { index: number; data: Publication }) => {
+      return (
+        <TileSwitchMemo
+          type={data?.type}
+          lensConnected={lensConnected}
+          publication={data}
+          cartItems={cartItems}
+          layoutAmount={layoutAmount}
+          popUpOpen={popUpOpen}
+          setPopUpOpen={setPopUpOpen}
+          apparel={apparel}
+          setApparel={setApparel}
+          index={index}
+          dispatch={dispatch}
+          router={router}
+          mirror={mirror}
+          like={like}
+          interactionsLoading={interactionsLoading}
+          openMirrorChoice={openMirrorChoice}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          followLoading={followLoading}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+          simpleCollect={simpleCollect}
+        />
+      );
+    },
+    [
+      interactionsLoadingMemo,
+      mirror,
+      like,
+      simpleCollect,
+      profileHovers,
+      apparel,
+      openMirrorChoice,
+      followLoading,
+      popUpOpen,
+      layoutAmount,
+    
+    ]
+  );
 
   return (
     <div
       className={`relative w-full min-h-screen h-fit overflow-y-scroll pb-6 px-4 ${
         searchActive || filtersOpen ? "pt-52 sm:pt-24" : "pt-24"
       }`}
+      id="tileSearch"
     >
       <InfiniteScroll
         dataLength={
-          (searchItems?.items || [])?.length + (moreSearchLoading ? 20 : 0)
+          (searchItems?.items || [])?.length +
+          (searchLoading || moreSearchLoading ? 20 : 0)
         }
         loader={<></>}
-        hasMore={searchItems?.hasMore || false}
-        next={handleMoreSearch}
+        hasMore={searchItems?.hasMore!}
+        next={debouncedHandleMoreSearch}
         className={`w-full h-screen items-start justify-center ${
           searchActive && "fadeTiles"
         }`}
-        style={{
-          height: "100vh"
-        }}
       >
         <Masonry
           key={
-            (searchItems?.items || [])?.length + (moreSearchLoading ? 20 : 0)
+            (searchItems?.items || [])?.length +
+            (searchLoading || moreSearchLoading ? 20 : 0)
           }
           items={
-            moreSearchLoading
+            moreSearchLoading || searchLoading
               ? [
                   ...(searchItems?.items || []),
                   ...Array.from({ length: 20 }, (_) => ({

@@ -1,4 +1,7 @@
-import collectPost from "../../../graphql/lens/mutations/collect";
+import {
+  collectPost,
+  legacyCollectPost,
+} from "../../../graphql/lens/mutations/collect";
 import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
@@ -8,6 +11,8 @@ import { WalletClient, PublicClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { polygon, polygonMumbai } from "viem/chains";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
+import { FetchResult } from "@apollo/client";
+import { BroadcastOnchainMutation } from "../../../graphql/generated";
 
 const lensCollect = async (
   id: string,
@@ -17,32 +22,85 @@ const lensCollect = async (
   clientWallet: WalletClient,
   publicClient: PublicClient
 ): Promise<void> => {
-  const { data } = await collectPost({
-    for: id,
-    actOn: {
-      simpleCollectOpenAction:
-        type === "SimpleCollectOpenActionSettings" ? true : undefined,
-      multirecipientCollectOpenAction:
-        type === "MultirecipientFeeCollectOpenActionSettings"
-          ? true
-          : undefined,
-    },
-  });
+  let broadcastResult: FetchResult<BroadcastOnchainMutation>,
+    functionName: string,
+    args: any[];
 
-  const typedData = data?.createActOnOpenActionTypedData.typedData;
+  if (
+    type === "SimpleCollectOpenActionSettings" ||
+    type === "MultirecipientFeeCollectOpenActionSettings"
+  ) {
+    const { data } = await collectPost({
+      for: id,
+      actOn: {
+        simpleCollectOpenAction:
+          type === "SimpleCollectOpenActionSettings" ? true : undefined,
+        multirecipientCollectOpenAction:
+          type === "MultirecipientFeeCollectOpenActionSettings"
+            ? true
+            : undefined,
+      },
+    });
 
-  const signature = await clientWallet.signTypedData({
-    domain: omit(typedData?.domain, ["__typename"]),
-    types: omit(typedData?.types, ["__typename"]),
-    primaryType: "Act",
-    message: omit(typedData?.value, ["__typename"]),
-    account: address as `0x${string}`,
-  });
+    const typedData = data?.createActOnOpenActionTypedData.typedData;
 
-  const broadcastResult = await broadcast({
-    id: data?.createActOnOpenActionTypedData?.id,
-    signature,
-  });
+    const signature = await clientWallet.signTypedData({
+      domain: omit(typedData?.domain, ["__typename"]),
+      types: omit(typedData?.types, ["__typename"]),
+      primaryType: "Act",
+      message: omit(typedData?.value, ["__typename"]),
+      account: address as `0x${string}`,
+    });
+
+    broadcastResult = await broadcast({
+      id: data?.createActOnOpenActionTypedData?.id,
+      signature,
+    });
+    functionName = "act";
+    args = [
+      {
+        publicationActedProfileId: typedData?.value.publicationActedProfileId,
+        publicationActedId: typedData?.value.publicationActedId,
+        actorProfileId: typedData?.value.actorProfileId,
+        referrerProfileIds: typedData?.value.referrerProfileIds,
+        referrerPubIds: typedData?.value.referrerPubIds,
+        actionModuleAddress: typedData?.value.actionModuleAddress,
+        actionModuleData: typedData?.value.actionModuleData,
+      },
+    ];
+  } else {
+    const { data } = await legacyCollectPost({
+      on: id,
+    });
+
+    const typedData = data?.createLegacyCollectTypedData.typedData;
+
+    const signature = await clientWallet.signTypedData({
+      domain: omit(typedData?.domain, ["__typename"]),
+      types: omit(typedData?.types, ["__typename"]),
+      primaryType: "CollectLegacy",
+      message: omit(typedData?.value, ["__typename"]),
+      account: address as `0x${string}`,
+    });
+
+    broadcastResult = await broadcast({
+      id: data?.createLegacyCollectTypedData?.id,
+      signature,
+    });
+
+    functionName = "collectLegacy";
+    args = [
+      {
+        publicationCollectedProfileId:
+          typedData?.value.publicationCollectedProfileId,
+        publicationCollectedId: typedData?.value.publicationCollectedId,
+        collectorProfileId: typedData?.value.collectorProfileId,
+        referrerProfileId: typedData?.value.referrerProfileId,
+        referrerPubId: typedData?.value.referrerPubId,
+        collectModuleData: typedData?.value.collectModuleData,
+      },
+    ];
+  }
 
   if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
     await handleIndexCheck(
@@ -55,19 +113,9 @@ const lensCollect = async (
     const { request } = await publicClient.simulateContract({
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
-      functionName: "act",
+      functionName,
       chain: polygon,
-      args: [
-        {
-          publicationActedProfileId: typedData?.value.publicationActedProfileId,
-          publicationActedId: typedData?.value.publicationActedId,
-          actorProfileId: typedData?.value.actorProfileId,
-          referrerProfileIds: typedData?.value.referrerProfileIds,
-          referrerPubIds: typedData?.value.referrerPubIds,
-          actionModuleAddress: typedData?.value.actionModuleAddress,
-          actionModuleData: typedData?.value.actionModuleData,
-        },
-      ],
+      args,
       account: address,
     });
     const res = await clientWallet.writeContract(request);
@@ -86,6 +134,7 @@ const lensCollect = async (
       dispatch
     );
   }
+
   setTimeout(() => {
     dispatch(
       setIndexer({

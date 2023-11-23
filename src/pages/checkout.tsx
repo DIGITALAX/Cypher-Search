@@ -37,6 +37,9 @@ const Checkout: NextPage<{
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
   );
+  const allSearchItems = useSelector(
+    (state: RootState) => state.app.searchItemsReducer
+  );
   const cartAnim = useSelector(
     (state: RootState) => state.app.cartAnimReducer.value
   );
@@ -105,6 +108,7 @@ const Checkout: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header
+        searchItems={allSearchItems}
         cartAnim={cartAnim}
         searchActive={searchActive}
         filtersOpen={filtersOpen?.value}

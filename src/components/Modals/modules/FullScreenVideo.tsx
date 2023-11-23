@@ -20,7 +20,6 @@ const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
         className={
           "fixed z-20 w-3/5 xl:w-1/3 preG:w-1/2 w-40 h-52 preG:h-60 sm:h-72 md:h-96 p-2 sm:px-8 sm:pb-8 sm:pt-4 cursor-grab active:cursor-grabbing items-center justify-center border-4 border-black rounded-lg top-40 left-0 sm:left-10 flex flex-col"
         }
-        ref={videoRef as any}
         id="videoplayer"
       >
         <div className="relative w-full h-fit flex flex-row items-center">
@@ -37,9 +36,12 @@ const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
             onClick={() =>
               dispatch(
                 setFullScreenVideo({
+                  actionOpen: false,
+                  actionId: fullScreenVideo?.id,
                   actionTime: fullScreenVideo?.currentTime,
                   actionDuration: fullScreenVideo?.duration,
                   actionIsPlaying: fullScreenVideo?.isPlaying,
+                  actionVideo: fullScreenVideo?.video,
                 })
               )
             }
@@ -53,7 +55,19 @@ const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
             />
           </div>
         </div>
-        <div className="relative w-full h-full justify-self-end row-start-2 border border-offBlue col-start-1 rounded-md bg-black"></div>
+        <div className="relative w-full h-full justify-self-end row-start-2 border border-offBlue col-start-1 rounded-md bg-black">
+          <video
+            ref={videoRef}
+            draggable={false}
+            controls={false}
+            playsInline
+            muted
+            autoPlay={fullScreenVideo?.isPlaying}
+            className="relative w-full h-full object-cover rounded-md"
+          >
+            <source src={fullScreenVideo?.video} />
+          </video>
+        </div>
       </div>
     </Draggable>
   );

@@ -22,8 +22,8 @@ import lensHide from "../../../../lib/helpers/api/hidePost";
 import { MakePostComment } from "../types/autograph.types";
 import { Dispatch } from "redux";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
+import errorChoice from "../../../../lib/helpers/errorChoice";
 
 const useFeed = (
   lensConnected: Profile | undefined,
@@ -205,8 +205,7 @@ const useFeed = (
         () => clearComment(index)
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
 
     setInteractionsFeedLoading((prev) => {
@@ -246,9 +245,18 @@ const useFeed = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
+      updateInteractions(index, {
+        hasReacted: hasReacted ? false : true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasReacted: hasReacted ? false : true,
+          }),
+        dispatch
+      );
     }
 
     setInteractionsFeedLoading((prev) => {
@@ -284,9 +292,26 @@ const useFeed = (
         clientWallet,
         publicClient
       );
+      updateInteractions(index, {
+        hasActed: {
+          __typename: "OptimisticStatusResult",
+          isFinalisedOnchain: true,
+          value: true,
+        },
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasActed: {
+              __typename: "OptimisticStatusResult",
+              isFinalisedOnchain: true,
+              value: true,
+            },
+          }),
+        dispatch
+      );
     }
 
     setInteractionsFeedLoading((prev) => {
@@ -319,9 +344,18 @@ const useFeed = (
         clientWallet,
         publicClient
       );
+      updateInteractions(index, {
+        hasMirrored: true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasReacted: true,
+          }),
+        dispatch
+      );
     }
 
     setInteractionsFeedLoading((prev) => {
@@ -340,8 +374,7 @@ const useFeed = (
     try {
       await lensHide(id, dispatch);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
@@ -358,9 +391,18 @@ const useFeed = (
     });
     try {
       await lensBookmark(on, dispatch);
+      updateInteractions(index, {
+        hasBookmarked: true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasBookmarked: true,
+          }),
+        dispatch
+      );
     }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
@@ -394,6 +436,33 @@ const useFeed = (
       arr[index] = false;
       return arr;
     });
+  };
+
+  const updateInteractions = (index: number, valueToUpdate: Object) => {
+    const newItems = [...profileFeed];
+    newItems[index] = (
+      newItems[index]?.__typename === "Mirror"
+        ? {
+            ...(newItems[index] as Mirror),
+            mirrorOn: {
+              ...(newItems[index] as Mirror)?.mirrorOn,
+              operations: {
+                ...(newItems[index] as Mirror).mirrorOn?.operations,
+                ...valueToUpdate,
+              },
+            },
+          }
+        : {
+            ...newItems[index],
+            operations: {
+              ...(newItems[index] as Post).operations,
+              ...valueToUpdate,
+            },
+          }
+    ) as Post & {
+      decrypted: any;
+    };
+    setProfileFeed(newItems);
   };
 
   useEffect(() => {

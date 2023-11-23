@@ -46,6 +46,7 @@ import {
 } from "@lit-protocol/lit-node-client";
 import { AccessControlConditions } from "@lit-protocol/types";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -285,8 +286,29 @@ const useCreate = (
         data?.publications?.items?.[0]?.id
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
     setCreationLoading(false);
   };
@@ -323,8 +345,29 @@ const useCreate = (
         )?.toString(16)}`
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
     setCreationLoading(false);
   };

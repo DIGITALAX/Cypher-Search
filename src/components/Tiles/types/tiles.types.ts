@@ -1,4 +1,4 @@
-import { SetStateAction } from "react";
+import { RefObject, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Mirror,
@@ -9,7 +9,6 @@ import {
 } from "../../../../graphql/generated";
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
-import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 import { Origin } from "@/components/Search/types/search.types";
 
@@ -78,6 +77,7 @@ export type TilesProps = {
   moreSearchLoading: boolean;
   searchActive: boolean;
   filtersOpen: boolean;
+
   searchItems: AllSearchItemsState | undefined;
   layoutAmount: number;
   popUpOpen: boolean[];
@@ -93,20 +93,14 @@ export type TilesProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
+    simpleCollect: boolean;
   }[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
-  profileId: string;
-  volume: number[];
-  volumeOpen: boolean[];
-  heart: boolean[];
-  setVolume: (e: SetStateAction<number[]>) => void;
-  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
-  setHeart: (e: SetStateAction<boolean[]>) => void;
-  fullScreenVideo: FullScreenVideoState;
+
   lensConnected: Profile | undefined;
 };
 
@@ -114,8 +108,6 @@ export type TileSwitchProps = {
   type: string;
   publication: Publication;
   profileHovers: boolean[];
-  setHeart?: (e: SetStateAction<boolean[]>) => void;
-  heart?: boolean[];
   lensConnected: Profile | undefined;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   layoutAmount: number;
@@ -133,62 +125,64 @@ export type TileSwitchProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
+    simpleCollect: boolean;
   }[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
-  profileId?: string;
-  volume?: number[];
-  volumeOpen?: boolean[];
-  setVolumeOpen?: (e: SetStateAction<boolean[]>) => void;
-  fullScreenVideo?: FullScreenVideoState;
-  setVolume?: (e: SetStateAction<number[]>) => void;
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
 };
 
 export type ControlsProps = {
-  fullScreenVideo: FullScreenVideoState;
-  volume: number[];
   router: NextRouter;
-  volumeOpen: boolean[];
-  index: number;
-  setHeart: (e: SetStateAction<boolean[]>) => void;
-  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
-  setVolume: (e: SetStateAction<number[]>) => void;
+  connected: boolean;
+  videoRef: RefObject<HTMLVideoElement | null>;
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
-  profileId: string;
+  collect: (id: string, type: string) => Promise<void>;
   dispatch: Dispatch<AnyAction>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
+    simpleCollect: boolean;
   };
   post: Post | Quote;
+  videoInfo: {
+    volume: number;
+    volumeOpen: boolean;
+    heart: boolean;
+    isPlaying: boolean;
+    duration: number;
+    currentTime: number;
+  };
+  setVideoInfo: (
+    e: SetStateAction<{
+      volume: number;
+      volumeOpen: boolean;
+      heart: boolean;
+      isPlaying: boolean;
+      duration: number;
+      currentTime: number;
+    }>
+  ) => void;
 };
 
 export type VideoPostProps = {
-  fullScreenVideo: FullScreenVideoState;
-  volume: number[];
-  index: number;
-  volumeOpen: boolean[];
-  heart: boolean[];
-  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
-  setHeart: (e: SetStateAction<boolean[]>) => void;
-  setVolume: (e: SetStateAction<number[]>) => void;
-  profileId: string;
+  lensConnected: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
+
   router: NextRouter;
   publication: Publication;
   mirror: (id: string) => Promise<void>;
+  collect: (id: string, type: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
+    simpleCollect: boolean;
   };
-  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
-  openMirrorChoice: boolean[];
 };
 
 export type LegendProps = {

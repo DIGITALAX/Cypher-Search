@@ -561,6 +561,7 @@ const useItem = (
     relatedData,
     decryptLoading,
     handleDecrypt,
+    setItemData
   };
 };
 

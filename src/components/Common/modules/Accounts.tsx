@@ -9,6 +9,7 @@ import { setCypherStorageCart } from "../../../../lib/utils";
 import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { ImCross } from "react-icons/im";
+import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
 
 const Accounts: FunctionComponent<AccountsProps> = ({
   searchActive,
@@ -83,11 +84,26 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             draggable={false}
           />
         </div>
+
         {cartItems?.length > 0 && (
           <div className="absolute rounded-full border border-mar bg-black w-5 flex items-center justify-center right-28 -bottom-1 h-5 p-1 font-vcr text-mar text-xxs">
             {cartItems?.length}
           </div>
         )}
+
+        <div
+          className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer active:scale-95"
+          // onClick={
+          //  () => dispatch(setFullScreenVideo())
+          // }
+          title="The Dial Pirate Radio"
+        >
+          <Image
+            src={`${INFURA_GATEWAY}/ipfs/QmUkpLp5Jf9NB9eT6dCupJa9fGvA2NkuzTKkqA1uaNFqXL`}
+            layout="fill"
+            draggable={false}
+          />
+        </div>
         <div
           className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer active:scale-95"
           onClick={

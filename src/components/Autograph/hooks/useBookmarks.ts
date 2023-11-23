@@ -26,8 +26,8 @@ import {
   PostCollectGifState,
   setPostCollectGif,
 } from "../../../../redux/reducers/postCollectGifSlice";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
+import errorChoice from "../../../../lib/helpers/errorChoice";
 
 const useBookmarks = (
   lensConnected: Profile | undefined,
@@ -216,8 +216,7 @@ const useBookmarks = (
         })
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
 
     setInteractionsLoadingBookmark((prev) => {
@@ -267,9 +266,19 @@ const useBookmarks = (
         clientWallet,
         publicClient
       );
+
+      updateInteractions(index, {
+        hasMirrored: true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasReacted: true,
+          }),
+        dispatch
+      );
     }
 
     setInteractionsLoadingBookmark((prev) => {
@@ -292,9 +301,18 @@ const useBookmarks = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
+      updateInteractions(index, {
+        hasReacted: hasReacted ? false : true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasReacted: hasReacted ? false : true,
+          }),
+        dispatch
+      );
     }
 
     setInteractionsLoadingBookmark((prev) => {
@@ -330,9 +348,27 @@ const useBookmarks = (
         clientWallet,
         publicClient
       );
+
+      updateInteractions(index, {
+        hasActed: {
+          __typename: "OptimisticStatusResult",
+          isFinalisedOnchain: true,
+          value: true,
+        },
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasActed: {
+              __typename: "OptimisticStatusResult",
+              isFinalisedOnchain: true,
+              value: true,
+            },
+          }),
+        dispatch
+      );
     }
 
     setInteractionsLoadingBookmark((prev) => {
@@ -351,8 +387,7 @@ const useBookmarks = (
     try {
       await lensHide(id, dispatch);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
     setInteractionsLoadingBookmark((prev) => {
       const updatedArray = [...prev];
@@ -369,9 +404,18 @@ const useBookmarks = (
     });
     try {
       await lensBookmark(on, dispatch);
+      updateInteractions(index, {
+        hasBookmarked: true,
+      });
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasBookmarked: true,
+          }),
+        dispatch
+      );
     }
     setInteractionsLoadingBookmark((prev) => {
       const updatedArray = [...prev];
@@ -412,8 +456,7 @@ const useBookmarks = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
 
     setFollowLoading((prev) => {
@@ -454,8 +497,7 @@ const useBookmarks = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
 
     setFollowLoading((prev) => {
@@ -534,6 +576,33 @@ const useBookmarks = (
       );
     }
   }, [allBookmarks?.length]);
+
+  const updateInteractions = (index: number, valueToUpdate: Object) => {
+    const newItems = [...allBookmarks];
+    newItems[index] = (
+      newItems[index]?.__typename === "Mirror"
+        ? {
+            ...(newItems[index] as Mirror),
+            mirrorOn: {
+              ...(newItems[index] as Mirror)?.mirrorOn,
+              operations: {
+                ...(newItems[index] as Post).operations,
+                ...valueToUpdate,
+              },
+            },
+          }
+        : {
+            ...newItems[index],
+            operations: {
+              ...(newItems[index] as Post).operations,
+              ...valueToUpdate,
+            },
+          }
+    ) as Post & {
+      decrypted: any;
+    };
+    setAllBookmarks(newItems);
+  };
 
   useEffect(() => {
     if (

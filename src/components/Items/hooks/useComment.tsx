@@ -1,5 +1,11 @@
-import { useEffect, useState } from "react";
-import { Comment, LimitType, Profile } from "../../../../graphql/generated";
+import { SetStateAction, useEffect, useState } from "react";
+import {
+  Comment,
+  LimitType,
+  Mirror,
+  Post,
+  Profile,
+} from "../../../../graphql/generated";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { AnyAction, Dispatch } from "redux";
 import lensHide from "../../../../lib/helpers/api/hidePost";
@@ -14,8 +20,8 @@ import { MakePostComment } from "@/components/Autograph/types/autograph.types";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import { NextRouter } from "next/router";
-import { Creation } from "@/components/Tiles/types/tiles.types";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
+import errorChoice from "../../../../lib/helpers/errorChoice";
 
 const useComment = (
   address: `0x${string}` | undefined,
@@ -25,7 +31,9 @@ const useComment = (
   dispatch: Dispatch<AnyAction>,
   postCollectGif: PostCollectGifState,
   router: NextRouter,
-  collections: Creation[] | undefined
+  collections: Creation[] | undefined,
+  itemData: Publication | undefined,
+  setItemData: (e: SetStateAction<Publication | undefined>) => void
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);
@@ -193,8 +201,7 @@ const useComment = (
     try {
       await lensHide(id, dispatch);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
     setInteractionsItemsLoading((prev) => {
       const updatedArray = [...prev];
@@ -211,9 +218,26 @@ const useComment = (
     });
     try {
       await lensBookmark(on, dispatch);
+      updateInteractions(
+        index,
+        {
+          hasBookmarked: true,
+        },
+        main!
+      );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            index,
+            {
+              hasBookmarked: true,
+            },
+            main!
+          ),
+        dispatch
+      );
     }
     setInteractionsItemsLoading((prev) => {
       const updatedArray = [...prev];
@@ -223,6 +247,10 @@ const useComment = (
   };
 
   const simpleCollect = async (id: string, type: string, main: boolean) => {
+    const index = main
+      ? undefined
+      : allComments?.findIndex((pub) => pub.id === id);
+
     if (main) {
       setMainInteractionsLoading((prev) => {
         const updatedArray = [...prev];
@@ -230,14 +258,13 @@ const useComment = (
         return updatedArray;
       });
     } else {
-      const index = allComments?.findIndex((pub) => pub.id === id);
-      if (index === -1) {
+      if (index == -1) {
         return;
       }
 
       setInteractionsItemsLoading((prev) => {
         const updatedArray = [...prev];
-        updatedArray[index] = { ...updatedArray[index], simpleCollect: true };
+        updatedArray[index!] = { ...updatedArray[index!], simpleCollect: true };
         return updatedArray;
       });
     }
@@ -256,9 +283,34 @@ const useComment = (
         clientWallet,
         publicClient
       );
+      updateInteractions(
+        index!,
+        {
+          hasActed: {
+            __typename: "OptimisticStatusResult",
+            isFinalisedOnchain: true,
+            value: true,
+          },
+        },
+        main
+      );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            index!,
+            {
+              hasActed: {
+                __typename: "OptimisticStatusResult",
+                isFinalisedOnchain: true,
+                value: true,
+              },
+            },
+            main
+          ),
+        dispatch
+      );
     }
 
     if (main) {
@@ -268,14 +320,12 @@ const useComment = (
         return updatedArray;
       });
     } else {
-      const index = allComments?.findIndex((pub) => pub.id === id);
-      if (index === -1) {
-        return;
-      }
-
       setInteractionsItemsLoading((prev) => {
         const updatedArray = [...prev];
-        updatedArray[index] = { ...updatedArray[index], simpleCollect: false };
+        updatedArray[index!] = {
+          ...updatedArray[index!],
+          simpleCollect: false,
+        };
         return updatedArray;
       });
     }
@@ -355,8 +405,7 @@ const useComment = (
         () => clearComment(index, main!)
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
 
     handleLoaders(false, main!, index, "comment");
@@ -451,9 +500,26 @@ const useComment = (
         clientWallet,
         publicClient
       );
+      updateInteractions(
+        index!,
+        {
+          hasMirrored: true,
+        },
+        main!
+      );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            index!,
+            {
+              hasReacted: true,
+            },
+            main!
+          ),
+        dispatch
+      );
     }
 
     handleLoaders(false, main!, index, "mirror");
@@ -468,9 +534,26 @@ const useComment = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
+      updateInteractions(
+        index!,
+        {
+          hasReacted: hasReacted ? false : true,
+        },
+        main!
+      );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            index!,
+            {
+              hasReacted: hasReacted ? false : true,
+            },
+            main!
+          ),
+        dispatch
+      );
     }
 
     handleLoaders(false, main!, index, "like");
@@ -558,6 +641,53 @@ const useComment = (
       );
     }
   }, [allComments?.length, collections?.length]);
+
+  const updateInteractions = (
+    index: number,
+    valueToUpdate: Object,
+    main: boolean
+  ) => {
+    if (main) {
+      if (itemData)
+        setItemData(
+          (itemData?.type == "Mirror"
+            ? {
+                ...itemData,
+                post: {
+                  ...(itemData?.post as Mirror),
+                  mirrorOn: {
+                    ...(itemData?.post as Mirror)?.mirrorOn,
+                    operations: {
+                      ...(itemData?.post as Mirror).mirrorOn?.operations,
+                      ...valueToUpdate,
+                    },
+                  },
+                },
+              }
+            : {
+                ...itemData,
+                post: {
+                  ...(itemData?.post as Post),
+                  operations: {
+                    ...(itemData?.post as Post)?.operations,
+                    ...valueToUpdate,
+                  },
+                },
+              }) as Publication
+        );
+    } else {
+      const newItems = [...allComments];
+      newItems[index] = {
+        ...newItems[index],
+        operations: {
+          ...(newItems[index] as Post).operations,
+          ...valueToUpdate,
+        },
+      };
+
+      setAllComments(newItems);
+    }
+  };
 
   return {
     mainMakeComment,

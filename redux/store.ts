@@ -21,7 +21,6 @@ import cartItemsReducer from "./reducers/cartItemsSlice";
 import ImageLargeReducer from "./reducers/ImageLargeSlice";
 import layoutSwitchReducer from "./reducers/layoutSwitchSlice";
 import reactBoxReducer from "./reducers/reactBoxSlice";
-import interactionsCountReducer from "./reducers/interactionsCountSlice";
 import indexerReducer from "./reducers/indexerSlice";
 import displaySearchBoxReducer from "./reducers/displaySearchBoxSlice";
 import searchItemsReducer from "./reducers/searchItemsSlice";
@@ -44,7 +43,6 @@ const reducer = combineReducers({
   ImageLargeReducer,
   layoutSwitchReducer,
   reactBoxReducer,
-  interactionsCountReducer,
   searchItemsReducer,
   filterConstantsReducer,
   interactErrorReducer,

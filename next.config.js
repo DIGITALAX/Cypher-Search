@@ -7,6 +7,7 @@ const allowedOrigins = [
   "https://api.thegraph.com",
   "https://arweave.net/",
   "https://gw.ipfs-lens.dev",
+  "https://hey.xyz"
 ];
 
 const nextConfig = {
