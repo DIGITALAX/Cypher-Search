@@ -6,6 +6,7 @@ import Link from "next/link";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import numeral from "numeral";
 import { MetadataAttributeType } from "../../../../graphql/generated";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Bio: FunctionComponent<BioProps> = ({
   profile,
@@ -57,6 +58,7 @@ const Bio: FunctionComponent<BioProps> = ({
                         layout="fill"
                         src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                         draggable={false}
+                        onError={(e) => handleImageError(e)}
                       />
                     </div>
                     <div
@@ -88,6 +90,7 @@ const Bio: FunctionComponent<BioProps> = ({
                       layout="fill"
                       draggable={false}
                       src={`${INFURA_GATEWAY}/ipfs/QmchHAtagS96zqoEL9BxrfHLNN1s7jUXJHiMLgzrcfMVpK`}
+                  
                     />
                   </div>
                   <div className="relative w-fit h-fit flex">
@@ -177,6 +180,7 @@ const Bio: FunctionComponent<BioProps> = ({
                           draggable={false}
                           className="rounded-full"
                           objectFit="cover"
+                          onError={(e) => handleImageError(e)}
                         />
                       )}
                     </div>

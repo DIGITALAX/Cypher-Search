@@ -5,6 +5,7 @@ import { Creation as CreationType } from "@/components/Tiles/types/tiles.types";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Microbrand: FunctionComponent<MicrobrandProps> = ({
   relatedData,
@@ -24,7 +25,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   followLoading,
   profileHovers,
   setProfileHovers,
-  lensConnected
+  lensConnected,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(itemData?.metadata?.picture);
   return (
@@ -42,6 +43,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
                 }`}
                 draggable={false}
                 objectFit="contain"
+                onError={(e) => handleImageError(e)}
               />
             )}
           </div>
@@ -71,6 +73,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
                   draggable={false}
                   objectFit="cover"
                   className="rounded-full"
+                  onError={(e) => handleImageError(e)}
                 />
               )}
             </div>

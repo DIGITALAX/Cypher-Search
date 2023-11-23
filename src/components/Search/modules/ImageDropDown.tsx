@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { ImageDropDownProps } from "../types/search.types";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const ImageDropDown: FunctionComponent<ImageDropDownProps> = ({
   title,
@@ -66,6 +67,7 @@ const ImageDropDown: FunctionComponent<ImageDropDownProps> = ({
                     title={value[0]}
                     objectFit={cover ? "cover" : "contain"}
                     className={`${rounded && "rounded-full"}`}
+                    onError={(e) => handleImageError(e)}
                   />
                 </div>
               );

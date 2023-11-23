@@ -10,6 +10,7 @@ import handleSearchProfiles from "../../../../lib/helpers/handleSearchProfiles";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { Profile } from "../../../../graphql/generated";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const PostComment: FunctionComponent<PostCommentProps> = ({
   commentPost,
@@ -118,6 +119,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                           layout="fill"
                           className="relative w-fit h-fit rounded-full items-center justify-center flex"
                           draggable={false}
+                          onError={(e) => handleImageError(e)}
                         />
                       )}
                     </div>
@@ -172,6 +174,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                     layout="fill"
                     src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                     draggable={false}
+                    onError={(e) => handleImageError(e)}
                   />
                 }
                 <input
@@ -215,6 +218,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                   layout="fill"
                   src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                   draggable={false}
+                  onError={(e) => handleImageError(e)}
                 />
               </div>
             );

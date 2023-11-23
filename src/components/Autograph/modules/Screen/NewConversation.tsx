@@ -8,6 +8,7 @@ import { INFURA_GATEWAY, IPFS_REGEX } from "../../../../../lib/constants";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import { ImCross } from "react-icons/im";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const NewConversation: FunctionComponent<NewConversationProps> = ({
   messages,
@@ -45,6 +46,7 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
                     className="rounded-full"
                     objectFit="cover"
                     layout="fill"
+                    onError={(e) => handleImageError(e)}
                     src={
                       selectedUser?.image?.includes("ipfs://")
                         ? `${INFURA_GATEWAY}/ipfs/${
@@ -105,6 +107,7 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
                               objectFit="cover"
                               src={`${INFURA_GATEWAY}/ipfs/${item?.content}`}
                               className="rounded-sm"
+                              onError={(e) => handleImageError(e)}
                             />
                           </div>
                         ) : (
@@ -153,6 +156,7 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
                 objectFit="cover"
                 className="rounded-sm"
                 draggable={false}
+                onError={(e) => handleImageError(e)}
               />
               <div
                 className="absolute -top-2 -right-2 w-5 h-5 border border-white bg-black rounded-full p-1 cursor-pointer flex items-center justify-center hover:opacity-70"

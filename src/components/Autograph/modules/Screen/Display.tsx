@@ -5,6 +5,7 @@ import { DisplayProps, SortType } from "../../types/autograph.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setDisplaySearchBox } from "../../../../../redux/reducers/displaySearchBoxSlice";
 import { AiOutlineLoading } from "react-icons/ai";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Display: FunctionComponent<DisplayProps> = ({
   display,
@@ -18,7 +19,7 @@ const Display: FunctionComponent<DisplayProps> = ({
   handleSetDisplay,
   displayLoading,
   owner,
-  router
+  router,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col w-full h-full items-start justify-start gap-3">
@@ -30,9 +31,16 @@ const Display: FunctionComponent<DisplayProps> = ({
           <div className="relative w-full h-full bg-blurs flex items-center justify-center">
             <Image
               layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs`}
+              src={`${INFURA_GATEWAY}/ipfs/${
+                sortType === SortType.Community
+                  ? display?.community?.main?.images?.[0]?.split("ipfs://")?.[1]
+                  : sortType === SortType.Private
+                  ? display?.private?.main?.images?.[0]?.split("ipfs://")?.[1]
+                  : display?.public?.main?.images?.[0]?.split("ipfs://")?.[1]
+              }`}
               objectFit="cover"
               draggable={false}
+              onError={(e) => handleImageError(e)}
             />
           </div>
           {owner && (
@@ -56,14 +64,6 @@ const Display: FunctionComponent<DisplayProps> = ({
           )}
           {display && (
             <div className="absolute bottom-4 left-4 w-fit h-fit rounded-sm bg-black/70 flex flex-col items-start justify-center p-2 border gap-2 border-[#372B48]">
-              <div className="relative flex flex-col gap-px justify-center items-start font-bit text-white text-left w-fit h-fit whitespace-nowrap">
-                <div className="relative w-fit h-fit flex text-sm justify-center items-start">
-                  CONTENT TITLE
-                </div>
-                <div className="relative w-fit h-fit flex text-xxs justify-center items-start">
-                  METADATA
-                </div>
-              </div>
               <InteractBar
                 router={router}
                 dispatch={dispatch}
@@ -89,7 +89,6 @@ const Display: FunctionComponent<DisplayProps> = ({
             </div>
           )}
         </div>
-
         <div className="relative flex flex-col w-fit h-full gap-5 items-center justify-between">
           {Array.from({ length: 3 }).map((_, index: number) => {
             return (
@@ -100,6 +99,7 @@ const Display: FunctionComponent<DisplayProps> = ({
               >
                 <div className="relative w-full h-full rounded-lg bg-blurs flex items-center justify-center">
                   <Image
+                    onError={(e) => handleImageError(e)}
                     layout="fill"
                     src={`${INFURA_GATEWAY}/ipfs/${
                       display

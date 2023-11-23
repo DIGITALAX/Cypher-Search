@@ -10,6 +10,7 @@ import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { ImCross } from "react-icons/im";
 import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Accounts: FunctionComponent<AccountsProps> = ({
   searchActive,
@@ -152,6 +153,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                 layout="fill"
                 draggable={false}
                 objectFit="cover"
+                onError={(e) => handleImageError(e)}
               />
             )}
           </div>
@@ -213,6 +215,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                           }`}
                           className="rounded-sm"
                           objectFit="cover"
+                          onError={(e) => handleImageError(e)}
                         />
                         <div
                           className="absolute -right-1 border border-white -top-1 font-dog items-center justify-center w-fit h-fit text-center cursor-pointer p-1 rounded-full bg-black active:scale-95 text-white text-xs"

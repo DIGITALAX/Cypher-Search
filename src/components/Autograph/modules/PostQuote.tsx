@@ -4,6 +4,7 @@ import Image from "next/legacy/image";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import moment from "moment";
 import PostSwitch from "./PostSwitch";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const PostQuote: FunctionComponent<PostQuoteProps> = ({
   quote,
@@ -41,6 +42,7 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
                     draggable={false}
                     className="rounded-full"
                     objectFit="cover"
+                    onError={(e) => handleImageError(e)}
                   />
                 )}
               </div>

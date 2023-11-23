@@ -6,6 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Creation as CreationType } from "@/components/Tiles/types/tiles.types";
 import Creation from "./Metadata/Creation";
 import getGallerySort from "../../../../lib/helpers/getGallerySort";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Gallery: FunctionComponent<GalleryProps> = ({
   optionsOpen,
@@ -158,6 +159,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                           className="rounded-sm"
                           objectFit="cover"
                           layout="fill"
+                          onError={(e) => handleImageError(e)}
                         />
                       </div>
                       <div className="absolute bottom-0 right-0 w-full h-6 bg-black flex items-center justify-end px-1">

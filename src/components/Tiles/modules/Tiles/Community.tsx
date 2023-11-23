@@ -5,6 +5,7 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Community: FunctionComponent<CommunityProps> = ({
   community,
@@ -73,6 +74,7 @@ const Community: FunctionComponent<CommunityProps> = ({
                         layout="fill"
                         objectFit="cover"
                         src={profilePicture}
+                        onError={(e) => handleImageError(e)}
                       />
                     )}
                   </div>
@@ -102,6 +104,7 @@ const Community: FunctionComponent<CommunityProps> = ({
                   layout="fill"
                   src={`${INFURA_GATEWAY}/ipfs/${image}`}
                   draggable={false}
+                  onError={(e) => handleImageError(e)}
                 />
               </div>
             );
@@ -124,6 +127,7 @@ const Community: FunctionComponent<CommunityProps> = ({
                   src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
                   draggable={false}
                   objectFit="cover"
+                  onError={(e) => handleImageError(e)}
                 />
 
                 <div
@@ -148,6 +152,7 @@ const Community: FunctionComponent<CommunityProps> = ({
                         draggable={false}
                         className="rounded-full"
                         objectFit="cover"
+                        onError={(e) => handleImageError(e)}
                       />
                     )}
                   </div>

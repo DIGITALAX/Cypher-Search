@@ -5,6 +5,7 @@ import {
   INFURA_GATEWAY,
   numberToItemTypeMap,
 } from "../../../../../lib/constants";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const SubOrder: FunctionComponent<SubOrderProps> = ({
   item,
@@ -28,6 +29,7 @@ const SubOrder: FunctionComponent<SubOrderProps> = ({
           src={`${INFURA_GATEWAY}/${
             item?.collection?.image?.split("ipfs://")?.[0]
           }`}
+          onError={(e) => handleImageError(e)}
           className="rounded-md"
           objectFit="cover"
         />

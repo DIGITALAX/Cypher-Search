@@ -5,6 +5,7 @@ import { PrerollSortProps } from "../types/search.types";
 import DropDown from "./DropDown";
 import { setMap } from "../../../../redux/reducers/mapSlice";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const PrerollSort: FunctionComponent<PrerollSortProps> = ({
   openDropDown,
@@ -77,6 +78,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                       className="rounded-sm flex w-2/3 h-full items-center justify-center"
                       src={`${INFURA_GATEWAY}/ipfs/${image[1]}`}
                       draggable={false}
+                      onError={(e) => handleImageError(e)}
                     />
                   </div>
                 </div>

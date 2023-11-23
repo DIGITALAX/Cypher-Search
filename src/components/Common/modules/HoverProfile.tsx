@@ -7,6 +7,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
 import ReactDOM from "react-dom";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   followLoading,
@@ -98,6 +99,7 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
                     src={profilePicture}
                     objectFit="cover"
                     className="rounded-full"
+                    onError={(e) => handleImageError(e)}
                   />
                 )}
               </div>

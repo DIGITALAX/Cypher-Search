@@ -16,6 +16,7 @@ import { metadataMedia } from "../../../../../lib/helpers/postMetadata";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 import moment from "moment";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const ImagePost: FunctionComponent<ImagePostProps> = ({
   layoutAmount,
@@ -94,6 +95,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
             )?.asset && (
               <Image
                 layout="fill"
+                onError={(e) => handleImageError(e)}
                 src={
                   (
                     (publication?.__typename === "Mirror"
@@ -322,6 +324,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                       src={pfp}
                       draggable={false}
                       className="rounded-full"
+                      onError={(e) => handleImageError(e)}
                     />
                   )}
                 </div>
@@ -414,6 +417,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               )?.asset && (
                 <Image
                   layout="fill"
+                  onError={(e) => handleImageError(e)}
                   src={
                     (
                       (publication?.__typename === "Mirror"
@@ -846,6 +850,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                         src={pfp}
                         draggable={false}
                         className="rounded-full"
+                        onError={(e) => handleImageError(e)}
                       />
                     )}
                   </div>

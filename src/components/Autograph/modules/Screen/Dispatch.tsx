@@ -11,6 +11,7 @@ import {
 } from "../../../../../lib/constants";
 import { setScreenDisplay } from "../../../../../redux/reducers/screenDisplaySlice";
 import Waveform from "./Waveform";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Dispatch: FunctionComponent<DispatchProps> = ({
   collectionDetails,
@@ -116,6 +117,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                               }`
                             : collectionDetails?.images?.[0]?.media
                         }
+                        onError={(e) => handleImageError(e)}
                         objectFit="cover"
                         draggable={false}
                         className="relative rounded-sm w-full h-full flex"
@@ -126,6 +128,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                           collectionDetails?.images?.[0] && (
                             <Image
                               layout="fill"
+                              onError={(e) => handleImageError(e)}
                               src={
                                 collectionDetails?.images?.[0]?.media?.includes(
                                   "ipfs://"
@@ -235,6 +238,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             id="pfp"
                           >
                             <Image
+                              onError={(e) => handleImageError(e)}
                               layout="fill"
                               src={`${INFURA_GATEWAY}/ipfs/${
                                 collectionDetails?.microbrand?.microbrandCover?.split(
@@ -290,6 +294,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                         id="pfp"
                                       >
                                         <Image
+                                          onError={(e) => handleImageError(e)}
                                           layout="fill"
                                           src={`${INFURA_GATEWAY}/ipfs/${
                                             item?.microbrandCover?.split(
@@ -457,6 +462,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         }}
                       >
                         <Image
+                          onError={(e) => handleImageError(e)}
                           src={`${INFURA_GATEWAY}/ipfs/${item[0]}`}
                           className="flex rounded-full"
                           draggable={false}
@@ -684,6 +690,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                   layout="fill"
                                   src={`${INFURA_GATEWAY}/ipfs/${item?.[1]}`}
                                   draggable={false}
+                                  onError={(e) => handleImageError(e)}
                                 />
                               </div>
                               <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
@@ -769,6 +776,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                       className="rounded-full"
                                       objectFit="cover"
                                       draggable={false}
+                                      onError={(e) => handleImageError(e)}
                                     />
                                   </div>
                                   <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">

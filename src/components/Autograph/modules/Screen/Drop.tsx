@@ -2,6 +2,7 @@ import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { Drop, DropProps } from "../../types/autograph.types";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Drop: FunctionComponent<DropProps> = ({
   router,
@@ -64,6 +65,7 @@ const Drop: FunctionComponent<DropProps> = ({
                             item?.cover?.split("ipfs://")?.[1]
                           }`}
                           draggable={false}
+                          onError={(e) => handleImageError(e)}
                         />
                       </div>
                       <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">

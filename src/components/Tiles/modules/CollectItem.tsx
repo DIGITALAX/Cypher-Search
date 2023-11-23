@@ -7,6 +7,7 @@ import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { ItemType } from "@/components/Common/types/common.types";
 import { setCypherStorageCart } from "../../../../lib/utils";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const CollectItem: FunctionComponent<CollectItemProps> = ({
   index,
@@ -31,6 +32,7 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
               src={`${INFURA_GATEWAY}/ipfs/${
                 item?.images?.[0]?.split("ipfs://")?.[1]
               }`}
+              onError={(e) => handleImageError(e)}
             />
           )}
         </div>

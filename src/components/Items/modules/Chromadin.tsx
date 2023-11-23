@@ -17,6 +17,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Comment } from "../../../../graphql/generated";
 import Publication from "@/components/Autograph/modules/Publication";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   itemData,
@@ -272,6 +273,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                         (item) => item[0]?.toLowerCase()?.trim() === type
                       )?.[1]
                     }`}
+                    onError={(e) => handleImageError(e)}
                     layout="fill"
                     draggable={false}
                     objectFit="cover"
@@ -325,6 +327,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     layout="fill"
                     draggable={false}
                     src={profilePicture}
+                    onError={(e) => handleImageError(e)}
                     objectFit="cover"
                     className="rounded-full"
                   />
@@ -348,6 +351,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                       layout="fill"
                       draggable={false}
                       src={`${INFURA_GATEWAY}/ipfs/${itemData?.microbrandCover}`}
+                      onError={(e) => handleImageError(e)}
                       objectFit="cover"
                       className="rounded-full"
                     />
@@ -404,6 +408,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                       layout="fill"
                       objectFit="cover"
                       src={`${INFURA_GATEWAY}/ipfs/${item?.[1]}`}
+                      onError={(e) => handleImageError(e)}
                       className="rounded-full"
                       draggable={false}
                     />
@@ -458,6 +463,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                             (value) => value[2] == item
                           )?.[0]
                         }`}
+                        onError={(e) => handleImageError(e)}
                         className="flex rounded-full"
                         draggable={false}
                         width={30}

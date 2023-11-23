@@ -5,6 +5,7 @@ import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Erc20, MetadataAttributeType } from "../../../../../graphql/generated";
 import { ImCross } from "react-icons/im";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Settings: FunctionComponent<SettingsProps> = ({
   setSettingsData,
@@ -41,6 +42,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                 <div className="relative w-full h-full flex items-center justify-center rounded-sm opacity-70">
                   {(settingsData?.coverPicture || coverImage) && (
                     <Image
+                      onError={(e) => handleImageError(e)}
                       layout="fill"
                       src={
                         coverImage
@@ -72,6 +74,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     {(pfpImage || settingsData?.picture) && (
                       <Image
                         layout="fill"
+                        onError={(e) => handleImageError(e)}
                         src={
                           pfpImage
                             ? pfpImage
@@ -230,6 +233,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                         {settingsData?.tempMicro?.microbrandCover && (
                           <Image
                             layout="fill"
+                            onError={(e) => handleImageError(e)}
                             src={settingsData?.tempMicro?.microbrandCover}
                             objectFit="cover"
                             draggable={false}
@@ -312,6 +316,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                             >
                               <Image
                                 layout="fill"
+                                onError={(e) => handleImageError(e)}
                                 src={
                                   item?.microbrandCover?.includes("ipfs://")
                                     ? `${INFURA_GATEWAY}/ipfs/${

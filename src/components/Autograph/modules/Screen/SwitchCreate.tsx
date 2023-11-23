@@ -9,6 +9,7 @@ import {
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import Drop from "./Drop";
 import Waveform from "./Waveform";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   type,
@@ -145,6 +146,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                                   src={`${INFURA_GATEWAY}/ipfs/${
                                     item?.images?.[0]?.split("ipfs://")?.[1]
                                   }`}
+                                  onError={(e) => handleImageError(e)}
                                   objectFit="cover"
                                   draggable={false}
                                   className="relative rounded-sm w-full h-full flex"

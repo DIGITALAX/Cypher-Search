@@ -6,6 +6,7 @@ import Image from "next/legacy/image";
 import { WhoSwitchProps } from "../types/modals.types";
 import Publication from "@/components/Autograph/modules/Publication";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
   type,
@@ -109,6 +110,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                           alt="pfp"
                           className="relative w-fit h-fit rounded-full self-center flex"
                           draggable={false}
+                          onError={(e) => handleImageError(e)}
                         />
                       )}
                     </div>

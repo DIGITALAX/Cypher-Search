@@ -7,6 +7,7 @@ import {
 } from "../../../../../lib/constants";
 import Image from "next/legacy/image";
 import SubOrder from "./SubOrder";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Orders: FunctionComponent<OrdersProps> = ({
   allOrders,
@@ -25,7 +26,9 @@ const Orders: FunctionComponent<OrdersProps> = ({
         >
           <div
             className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll h-[35rem] ${
-             (ordersLoading || allOrders?.length > 0) ? "items-start" : "items-center"
+              ordersLoading || allOrders?.length > 0
+                ? "items-start"
+                : "items-center"
             }`}
           >
             {ordersLoading ? (
@@ -137,6 +140,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                         image?.split("ipfs://")?.[1]
                                       }`}
                                       className="rounded-md"
+                                      onError={(e) => handleImageError(e)}
                                     />
                                   </div>
                                 );

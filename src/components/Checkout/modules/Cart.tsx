@@ -7,6 +7,7 @@ import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import lodash from "lodash";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { CartItem } from "@/components/Common/types/common.types";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Cart: FunctionComponent<CartProps> = ({
   cartItems,
@@ -212,6 +213,7 @@ const Cart: FunctionComponent<CartProps> = ({
                         src={`${INFURA_GATEWAY}/ipfs/${currentItem?.item?.images?.[0]}`}
                         objectFit="cover"
                         className="rounded-md"
+                        onError={(e) => handleImageError(e)}
                       />
                     </div>
                     {!completedPurchases?.[index].completed && (

@@ -7,6 +7,7 @@ export interface AllSearchItemsState {
   lensPubCursor?: string;
   lensProfileCursor?: string;
   pubProfileCursor?: string;
+  videoCursor?: string;
   graphCursor?: number;
   communityCursor?: number;
   hasMore: boolean;
@@ -32,6 +33,7 @@ export const allSearchItemsSlice = createSlice({
           actionGraphCursor,
           actionLensProfileCursor,
           actionPubProfileCursor,
+          actionVideoCursor,
           actionHasMore,
         },
       }
@@ -42,6 +44,7 @@ export const allSearchItemsSlice = createSlice({
       state.lensProfileCursor = actionLensProfileCursor;
       state.graphCursor = actionGraphCursor;
       state.hasMore = actionHasMore;
+      state.videoCursor = actionVideoCursor;
       state.pubProfileCursor = actionPubProfileCursor;
     },
   },
