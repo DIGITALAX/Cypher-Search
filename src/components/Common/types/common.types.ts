@@ -133,6 +133,7 @@ export type AccountsProps = {
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   auto?: boolean;
+  fullScreenVideo: FullScreenVideoState;
 };
 
 export type NotFoundProps = {
@@ -143,6 +144,7 @@ export type NotFoundProps = {
   handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
+  fullScreenVideo: FullScreenVideoState;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
   lensConnected: Profile | undefined;
   walletConnected: boolean;
@@ -181,6 +183,7 @@ export type SuggestedProps = {
   moreSearchLoading: boolean;
   searchItems: AllSearchItemsState | undefined;
   router: NextRouter;
+  fullScreenVideo: FullScreenVideoState;
   cartAnim: boolean;
   layoutAmount?: number;
   handleSearch?: (

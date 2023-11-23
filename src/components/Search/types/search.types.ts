@@ -8,6 +8,7 @@ import {
 import { CartItem } from "@/components/Common/types/common.types";
 import { Publication } from "@/components/Tiles/types/tiles.types";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
+import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 
 export interface FilterValues {
   hashtags: string[];
@@ -83,6 +84,7 @@ export type HeaderProps = {
   filtersOpen: boolean;
   handleShuffleSearch?: () => void;
   cartItems: CartItem[];
+  fullScreenVideo: FullScreenVideoState
 };
 
 export type DropDownProps = {

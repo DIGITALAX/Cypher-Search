@@ -1,5 +1,11 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { ChangeEvent, MutableRefObject, RefObject, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  MouseEvent,
+  MutableRefObject,
+  RefObject,
+  SetStateAction,
+} from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Erc20,
@@ -21,6 +27,7 @@ import {
 import { NextRouter } from "next/router";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
+import Draggable from "react-draggable";
 
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
@@ -79,8 +86,19 @@ export type SuccessCheckoutProps = {
 
 export type FullScreenVideoProps = {
   dispatch: Dispatch<AnyAction>;
+  router: NextRouter;
   fullScreenVideo: FullScreenVideoState;
   videoRef: RefObject<HTMLVideoElement>;
+  handlePlayPause: () => Promise<void>;
+  handleSeek: (e: MouseEvent<HTMLDivElement>) => void;
+  handleVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleNextVideo: (forward: boolean) => Promise<void>;
+  loading: {
+    play: boolean;
+    next: boolean;
+    videos: boolean;
+  };
+  wrapperRef: RefObject<Draggable>;
 };
 
 export type ImageLargeProps = {
@@ -159,10 +177,12 @@ export type PostBoxProps = {
     x: number;
     y: number;
   };
-  setCaretCoord: (e: SetStateAction<{
-    x: number;
-    y: number;
-  }>) => void
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
   profilesOpen: boolean[];
   mentionProfiles: Profile[];
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;

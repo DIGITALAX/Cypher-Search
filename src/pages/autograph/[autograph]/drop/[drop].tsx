@@ -43,6 +43,9 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const oracleData = useSelector(
     (state: RootState) => state.app.oracleDataReducer.data
   );
+  const fullScreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
+  );
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
   );
@@ -71,17 +74,16 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     profile,
     lensConnected
   );
-  const { handleSearch, handleShuffleSearch, placeholderText } =
-    useSearch(
-      filtersOpen,
-      lensConnected,
-      searchActive,
-      filterConstants,
-      filters,
-      suggestedFeed,
-      dispatch,
-      router
-    );
+  const { handleSearch, handleShuffleSearch, placeholderText } = useSearch(
+    filtersOpen,
+    lensConnected,
+    searchActive,
+    filterConstants,
+    filters,
+    suggestedFeed,
+    dispatch,
+    router
+  );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const {
@@ -152,6 +154,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
       <>
         {!profile || collections?.length < 1 ? (
           <NotFound
+            fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
             searchActive={searchActive}
@@ -316,6 +319,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                fullScreenVideo={fullScreenVideo}
                 moreSearchLoading={loaders?.moreSuggestedLoading}
                 searchItems={suggestedFeed}
                 cartAnim={cartAnim}

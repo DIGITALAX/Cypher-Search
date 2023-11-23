@@ -533,7 +533,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             ?.__typename ===
                             "MultirecipientFeeCollectOpenActionSettings")
                   )
-                    ? simpleCollect 
+                    ? simpleCollect
                     : undefined
                 }
                 type={

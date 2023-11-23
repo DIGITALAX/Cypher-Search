@@ -83,6 +83,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
             )
           ) : (
             <video
+              key={uniqueVideoKey}
               draggable={false}
               controls={false}
               playsInline
@@ -117,7 +118,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
               onVolumeChange={() =>
                 setVideoInfo((prev) => ({
                   ...prev,
-                  volume: videoRef?.current?.currentTime || 0,
+                  volume: videoRef?.current?.volume || 0,
                 }))
               }
               className="relative w-full h-full object-cover"
