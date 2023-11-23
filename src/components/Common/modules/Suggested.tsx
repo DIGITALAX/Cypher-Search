@@ -26,21 +26,13 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   handleLogout,
   handleSearch,
   handleMoreSearch,
-  searchInput,
-  setSearchInput,
+  allSearchItems,
   handleShuffleSearch,
   placeholderText,
   searchLoading,
-  volume,
-  volumeOpen,
-  setVolumeOpen,
-  setVolume,
-  heart,
-  setHeart,
   dispatch,
   lensConnected,
   walletConnected,
-  fullScreenVideo,
   router,
   filtersOpen,
   layoutAmount,
@@ -62,8 +54,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
         cartAnim={cartAnim}
         handleSearch={handleSearch}
         searchActive={true}
-        searchInput={searchInput}
-        setSearchInput={setSearchInput}
+        searchItems={allSearchItems}
         openConnectModal={openConnectModal}
         handleLensConnect={handleLensConnect}
         handleLogout={handleLogout}
@@ -110,14 +101,6 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
         unfollowProfile={unfollowProfile}
         profileHovers={profileHovers}
         setProfileHovers={setProfileHovers}
-        fullScreenVideo={fullScreenVideo}
-        volume={volume}
-        volumeOpen={volumeOpen}
-        setVolumeOpen={setVolumeOpen}
-        setVolume={setVolume}
-        profileId={lensConnected?.id}
-        heart={heart}
-        setHeart={setHeart}
         lensConnected={lensConnected}
       />
     </div>

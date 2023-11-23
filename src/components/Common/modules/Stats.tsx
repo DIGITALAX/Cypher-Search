@@ -4,7 +4,10 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { StatsProps } from "../types/common.types";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 
-const Stats: FunctionComponent<StatsProps> = ({ profile, dispatch }): JSX.Element => {
+const Stats: FunctionComponent<StatsProps> = ({
+  profile,
+  dispatch,
+}): JSX.Element => {
   return (
     <div className="relative flex flex-row w-fit h-fit items-between justify-between gap-4 text-pez text-xxs font-bit">
       <div className="relative flex flex-col gap-2 items-between justify-between">
@@ -57,7 +60,7 @@ const Stats: FunctionComponent<StatsProps> = ({ profile, dispatch }): JSX.Elemen
         ].map((image: string[], indexTwo: number) => {
           const stats = [
             profile?.stats?.mirrors || 0,
-            profile?.stats?.publications || 0,
+            profile?.stats?.posts || 0,
             profile?.stats?.countOpenActions || 0,
             profile?.stats?.comments || 0,
           ];

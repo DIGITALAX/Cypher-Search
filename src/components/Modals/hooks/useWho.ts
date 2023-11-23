@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import whoReactedPublication from "../../../../graphql/lens/queries/whoReacted";
-import {
-  LimitType,
-  Profile,
-  PublicationType,
-} from "../../../../graphql/generated";
+import { LimitType, Profile } from "../../../../graphql/generated";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import whoActedPublication from "../../../../graphql/lens/queries/whoActed";
 import following from "../../../../graphql/lens/queries/following";
@@ -36,9 +32,12 @@ const useWho = (
         lensConnected?.id
       );
 
+      setReactors(data?.data?.whoReactedPublication?.items || []);
+      setPageInfo(data.data?.whoReactedPublication.pageInfo.next);
+
       if (
         !data?.data?.whoReactedPublication?.items ||
-        data?.data?.whoReactedPublication?.items?.length < 1
+        data?.data?.whoReactedPublication?.items?.length < 10
       ) {
         setHasMore(false);
         setDataLoading(false);
@@ -46,9 +45,6 @@ const useWho = (
       } else if (data?.data?.whoReactedPublication?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors(data?.data?.whoReactedPublication?.items);
-      setPageInfo(data.data?.whoReactedPublication.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -70,17 +66,17 @@ const useWho = (
         },
         lensConnected?.id
       );
+
+      setReactors(mirrorData?.data?.publications?.items || []);
+      setPageInfo(mirrorData.data?.publications.pageInfo.next);
       if (
         !mirrorData?.data?.publications?.items ||
-        mirrorData?.data?.publications?.items?.length < 1
+        mirrorData?.data?.publications?.items?.length < 10
       ) {
         setHasMore(false);
       } else if (mirrorData?.data?.publications?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors(mirrorData?.data?.publications?.items || []);
-      setPageInfo(mirrorData.data?.publications.pageInfo.next);
 
       const quoteData = await getPublications(
         {
@@ -94,7 +90,7 @@ const useWho = (
 
       if (
         !quoteData?.data?.publications?.items ||
-        quoteData?.data?.publications?.items?.length < 1
+        quoteData?.data?.publications?.items?.length < 10
       ) {
         setHasMoreQuote(false);
         setDataLoading(false);
@@ -122,9 +118,12 @@ const useWho = (
         lensConnected?.id
       );
 
+      setReactors(data?.data?.whoActedOnPublication?.items || []);
+      setPageInfo(data.data?.whoActedOnPublication.pageInfo.next);
+
       if (
         !data?.data?.whoActedOnPublication?.items ||
-        data?.data?.whoActedOnPublication?.items?.length < 1
+        data?.data?.whoActedOnPublication?.items?.length < 10
       ) {
         setHasMore(false);
         setDataLoading(false);
@@ -132,9 +131,6 @@ const useWho = (
       } else if (data?.data?.whoActedOnPublication?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors(data?.data?.whoActedOnPublication?.items);
-      setPageInfo(data.data?.whoActedOnPublication.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -153,9 +149,12 @@ const useWho = (
         lensConnected?.id
       );
 
+      setReactors(data?.data?.following?.items || []);
+      setPageInfo(data.data?.following.pageInfo.next);
+
       if (
         !data?.data?.following?.items ||
-        data?.data?.following?.items?.length < 1
+        data?.data?.following?.items?.length < 10
       ) {
         setHasMore(false);
         setDataLoading(false);
@@ -163,9 +162,6 @@ const useWho = (
       } else if (data?.data?.following?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors(data?.data?.following?.items);
-      setPageInfo(data.data?.following.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -184,9 +180,12 @@ const useWho = (
         lensConnected?.id
       );
 
+      setReactors(data?.data?.followers?.items || []);
+      setPageInfo(data.data?.followers.pageInfo.next);
+
       if (
         !data?.data?.followers?.items ||
-        data?.data?.followers?.items?.length < 1
+        data?.data?.followers?.items?.length < 10
       ) {
         setHasMore(false);
         setDataLoading(false);
@@ -194,9 +193,6 @@ const useWho = (
       } else if (data?.data?.followers?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors(data?.data?.followers?.items);
-      setPageInfo(data.data?.followers.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -215,21 +211,21 @@ const useWho = (
         lensConnected?.id
       );
 
+      setReactors([
+        ...reactors,
+        ...(data?.data?.whoReactedPublication?.items || []),
+      ]);
+      setPageInfo(data.data?.whoReactedPublication.pageInfo.next);
+
       if (
         !data?.data?.whoReactedPublication?.items ||
-        data?.data?.whoReactedPublication?.items?.length < 1
+        data?.data?.whoReactedPublication?.items?.length < 10
       ) {
         setHasMore(false);
         return;
       } else if (data?.data?.whoReactedPublication?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors([
-        ...reactors,
-        ...(data?.data?.whoReactedPublication?.items || []),
-      ]);
-      setPageInfo(data.data?.whoReactedPublication.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -248,21 +244,21 @@ const useWho = (
         lensConnected?.id
       );
 
+      setReactors([
+        ...reactors,
+        ...(data?.data?.whoActedOnPublication?.items || []),
+      ]);
+      setPageInfo(data.data?.whoActedOnPublication.pageInfo.next);
+
       if (
         !data?.data?.whoActedOnPublication?.items ||
-        data?.data?.whoActedOnPublication?.items?.length < 1
+        data?.data?.whoActedOnPublication?.items?.length < 10
       ) {
         setHasMore(false);
         return;
       } else if (data?.data?.whoActedOnPublication?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors([
-        ...reactors,
-        ...(data?.data?.whoActedOnPublication?.items || []),
-      ]);
-      setPageInfo(data.data?.whoActedOnPublication.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -280,18 +276,18 @@ const useWho = (
         lensConnected?.id
       );
 
+      setReactors([...reactors, ...(data?.data?.following?.items || [])]);
+      setPageInfo(data.data?.following.pageInfo.next);
+
       if (
         !data?.data?.following?.items ||
-        data?.data?.following?.items?.length < 1
+        data?.data?.following?.items?.length < 10
       ) {
         setHasMore(false);
         return;
       } else if (data?.data?.following?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors([...reactors, ...(data?.data?.following?.items || [])]);
-      setPageInfo(data.data?.following.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -308,19 +304,18 @@ const useWho = (
         },
         lensConnected?.id
       );
+      setReactors([...reactors, ...(data?.data?.followers?.items || [])]);
+      setPageInfo(data.data?.followers.pageInfo.next);
 
       if (
         !data?.data?.followers?.items ||
-        data?.data?.followers?.items?.length < 1
+        data?.data?.followers?.items?.length < 10
       ) {
         setHasMore(false);
         return;
       } else if (data?.data?.followers?.items?.length === 10) {
         setHasMore(true);
       }
-
-      setReactors([...reactors, ...(data?.data?.followers?.items || [])]);
-      setPageInfo(data.data?.followers.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -341,22 +336,21 @@ const useWho = (
           },
           lensConnected?.id
         );
+        setReactors([
+          ...reactors,
+          ...(mirrorData?.data?.publications?.items || []),
+        ]);
+        setPageInfo(mirrorData.data?.publications.pageInfo.next);
 
         if (
           !mirrorData?.data?.publications?.items ||
-          mirrorData?.data?.publications?.items?.length < 1
+          mirrorData?.data?.publications?.items?.length < 10
         ) {
           setHasMore(false);
           return;
         } else if (mirrorData?.data?.publications?.items?.length === 10) {
           setHasMore(true);
         }
-
-        setReactors([
-          ...reactors,
-          ...(mirrorData?.data?.publications?.items || []),
-        ]);
-        setPageInfo(mirrorData.data?.publications.pageInfo.next);
       }
 
       if (pageInfoQuote && hasMoreQuote) {
@@ -371,20 +365,21 @@ const useWho = (
           lensConnected?.id
         );
 
+        setQuoters([
+          ...quoters,
+          ...(quoteData?.data?.publications?.items || []),
+        ]);
+        setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
+
         if (
           !quoteData?.data?.publications?.items ||
-          quoteData?.data?.publications?.items?.length < 1
+          quoteData?.data?.publications?.items?.length < 10
         ) {
           setHasMoreQuote(false);
           return;
         } else if (quoteData?.data?.publications?.items?.length === 10) {
           setHasMoreQuote(true);
         }
-        setQuoters([
-          ...quoters,
-          ...(quoteData?.data?.publications?.items || []),
-        ]);
-        setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
       }
     } catch (err: any) {
       console.error(err.message);

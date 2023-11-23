@@ -159,6 +159,10 @@ const Creation: FunctionComponent<CreationProps> = ({
             dispatch={dispatch}
             lensConnected={lensConnected}
             parentId={item?.pubId}
+            top={"auto"}
+            bottom={"2px"}
+            left={"auto"}
+            right={"2px"}
           />
         )}
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">

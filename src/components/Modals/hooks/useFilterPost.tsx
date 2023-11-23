@@ -11,6 +11,7 @@ import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { AnyAction, Dispatch } from "redux";
 import { Profile } from "../../../../graphql/generated";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
+import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 
 const useFilterPost = (
   filtersOpen: FiltersOpenState,
@@ -40,6 +41,7 @@ const useFilterPost = (
     {
       like: boolean;
       mirror: boolean;
+      simpleCollect: boolean;
     }[]
   >(
     Array.from(
@@ -49,6 +51,7 @@ const useFilterPost = (
       () => ({
         like: false,
         mirror: false,
+        simpleCollect: false,
       })
     )
   );
@@ -126,8 +129,29 @@ const useFilterPost = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     setFollowLoading((prev) => {
@@ -160,8 +184,29 @@ const useFilterPost = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     setFollowLoading((prev) => {

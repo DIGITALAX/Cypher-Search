@@ -44,8 +44,6 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
                   className="rounded-md absolute w-full h-full object-contain"
                   draggable={false}
                   controls={false}
-                  muted
-                  // autoPlay
                   playsInline
                   loop
                 >

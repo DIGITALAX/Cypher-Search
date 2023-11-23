@@ -14,6 +14,7 @@ import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 
 const useTiles = (
   allSearchItems: Publication[],
@@ -57,8 +58,29 @@ const useTiles = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
@@ -95,8 +117,29 @@ const useTiles = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
@@ -115,10 +158,6 @@ const useTiles = (
       );
     }
   }, [allSearchItems?.length]);
-
-  useEffect(() => {
-    setProfileHovers(Array.from({ length: 10 }, () => false));
-  }, []);
 
   return {
     popUpOpen,

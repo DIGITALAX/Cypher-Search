@@ -15,7 +15,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-[30vw] h-[40vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
+      <div className="relative w-[30vw] h-[40vh] place-self-center bg-offBlack border border-white">
         <div className="relative w-full h-full flex flex-col gap-5 p-2">
           <div className="relative w-fit h-fit items-end justify-end ml-auto cursor-pointer flex">
             <ImCross
@@ -43,7 +43,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
               !
             </div>
             <div
-              className="relative w-2/3 h-52 flex items-center justify-center rounded-sm p-px cursor-pointer active:scale-95"
+              className="relative w-2/3 h-full min-h-[25vh] lex items-center justify-center rounded-sm p-px cursor-pointer active:scale-95"
               onClick={() => {
                 dispatch(
                   setPostSuccess({

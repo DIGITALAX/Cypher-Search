@@ -135,6 +135,10 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 dispatch={dispatch}
                 lensConnected={lensConnected}
                 parentId={publication?.pubId}
+                top={"auto"}
+                bottom={"2px"}
+                left={"auto"}
+                right={"2px"}
               />
             )}
           </div>

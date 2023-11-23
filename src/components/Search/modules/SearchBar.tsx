@@ -4,18 +4,18 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 import { setLayoutSwitch } from "../../../../redux/reducers/layoutSwitchSlice";
+import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
 
 const SearchBar: FunctionComponent<SearchBarProps> = ({
   handleSearch,
   searchActive,
-  searchInput,
-  setSearchInput,
   filtersOpen,
   handleShuffleSearch,
   placeholderText,
   dispatch,
   layoutAmount,
   router,
+  searchItems,
 }): JSX.Element => {
   return (
     <div
@@ -44,14 +44,25 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             <input
               className="bg-black text-offWhite p-1.5 rounded-sm w-full h-full font-bit flex items-center justify-start relative text-sm"
               id="searchBar"
-              placeholder={placeholderText}
+              placeholder={searchItems?.searchInput ? searchItems?.searchInput :placeholderText}
               onKeyDown={(e) =>
                 (e as KeyboardEvent).key === "Enter" &&
-                searchInput.trim() !== "" &&
+                searchItems?.searchInput?.trim() !== "" &&
                 handleSearch(e)
               }
-              onChange={(e) => setSearchInput(e.target.value)}
-              value={searchInput}
+              onChange={(e) =>
+                dispatch(
+                  setAllSearchItems({
+                    actionItems: searchItems?.items,
+                    actionInput: e.target.value,
+                    actionLensPubCursor: searchItems?.lensPubCursor,
+                    actionGraphCursor: searchItems?.graphCursor,
+                    actionLensProfileCursor: searchItems?.lensProfileCursor,
+                    actionHasMore: searchItems?.hasMore,
+                  })
+                )
+              }
+              value={searchItems?.searchInput}
             />
           </div>
           <div

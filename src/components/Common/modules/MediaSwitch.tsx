@@ -14,43 +14,45 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
 }): JSX.Element => {
   switch (type?.toLowerCase()) {
     case "video":
-      <>
-        <video
-          draggable={false}
-          controls={false}
-          muted
-          playsInline
-          loop
-          id={srcUrl}
-          className={classNameVideo}
-          poster={srcCover}
-        >
-          <source src={srcUrl} />
-        </video>
-        <Waveform
-          audio={srcUrl}
-          type={"video"}
-          keyValue={srcUrl}
-          video={srcUrl}
-        />
-      </>;
+      return (
+        <>
+          <video
+            draggable={false}
+            controls={false}
+            playsInline
+            id={srcUrl}
+            className={classNameVideo}
+            poster={srcCover}
+          >
+            <source src={srcUrl} />
+          </video>
+          <Waveform
+            audio={srcUrl}
+            type={"video"}
+            keyValue={srcUrl}
+            video={srcUrl}
+          />
+        </>
+      );
 
     case "audio":
-      <>
-        <Image
-          src={srcCover!}
-          layout="fill"
-          objectFit={objectFit ? "contain" : "cover"}
-          className={classNameAudio}
-          draggable={false}
-        />
-        <Waveform
-          audio={srcUrl}
-          type={"audio"}
-          keyValue={srcUrl}
-          video={srcUrl}
-        />
-      </>;
+      return (
+        <>
+          <Image
+            src={srcCover!}
+            layout="fill"
+            objectFit={objectFit ? "contain" : "cover"}
+            className={classNameAudio}
+            draggable={false}
+          />
+          <Waveform
+            audio={srcUrl}
+            type={"audio"}
+            keyValue={srcUrl}
+            video={srcUrl}
+          />
+        </>
+      );
 
     default:
       return (

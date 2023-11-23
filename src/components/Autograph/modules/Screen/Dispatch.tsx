@@ -148,8 +148,6 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             id={collectionDetails?.video}
                             draggable={false}
                             controls={false}
-                            muted
-                            // autoPlay
                             playsInline
                             loop
                             key={collectionDetails?.video}

@@ -10,6 +10,7 @@ import {
   PublicationMetadataMediaImage,
   PublicationMetadataMediaVideo,
 } from "../../graphql/generated";
+import formatDuration from "./formatDuration";
 
 export const postMetadata = (
   publication: Post | Mirror | Quote | Comment

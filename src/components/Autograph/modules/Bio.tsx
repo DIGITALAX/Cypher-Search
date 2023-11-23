@@ -155,7 +155,7 @@ const Bio: FunctionComponent<BioProps> = ({
                 (
                   item: {
                     microbrand: string;
-                    microbranCover: string;
+                    microbrandCover: string;
                   },
                   index: number
                 ) => {
@@ -168,11 +168,11 @@ const Bio: FunctionComponent<BioProps> = ({
                         router.push(`/item/microbrand/${item?.microbrand}`)
                       }
                     >
-                      {item?.microbranCover && (
+                      {item?.microbrandCover && (
                         <Image
                           layout="fill"
                           src={`${INFURA_GATEWAY}/ipfs/${
-                            item?.microbranCover?.split("ipfs://")?.[1]
+                            item?.microbrandCover?.split("ipfs://")?.[1]
                           }`}
                           draggable={false}
                           className="rounded-full"

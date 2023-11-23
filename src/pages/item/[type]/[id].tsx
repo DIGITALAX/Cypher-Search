@@ -38,6 +38,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
+  const allSearchItems = useSelector(
+    (state: RootState) => state.app.searchItemsReducer
+  );
   const filterConstants = useSelector(
     (state: RootState) => state.app.filterConstantsReducer.items
   );
@@ -65,12 +68,6 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const cartAnim = useSelector(
     (state: RootState) => state.app.cartAnimReducer.value
   );
-  const interactionsCount = useSelector(
-    (state: RootState) => state.app.interactionsCountReducer
-  );
-  const fullScreenVideo = useSelector(
-    (state: RootState) => state.app.fullScreenVideoReducer
-  );
   const layoutAmount = useSelector(
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
@@ -87,6 +84,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     relatedData,
     handleDecrypt,
     decryptLoading,
+    setItemData,
   } = useItem(
     type as string,
     id as string,
@@ -156,7 +154,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     dispatch,
     postCollectGif,
     router,
-    relatedData?.collections
+    relatedData?.collections,
+    itemData,
+    setItemData
   );
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
     id as string,
@@ -167,19 +167,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
       : (itemData?.post as Post)?.by,
     lensConnected
   );
-  const {
-    handleSearch,
-    searchInput,
-    setSearchInput,
-    handleShuffleSearch,
-    placeholderText,
-    volume,
-    volumeOpen,
-    setVolumeOpen,
-    setVolume,
-    heart,
-    setHeart,
-  } = useSearch(
+  const { handleSearch, handleShuffleSearch, placeholderText } = useSearch(
     filtersOpen,
     lensConnected,
     searchActive,
@@ -218,11 +206,11 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     setOpenMirrorChoice,
     openMirrorChoice,
   } = useInteractions(
-    suggestedFeed?.items || [],
-    interactionsCount,
+    suggestedFeed,
     dispatch,
     publicClient,
-    address
+    address,
+    lensConnected
   );
   const {
     followProfile: followItemProfile,
@@ -512,8 +500,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   />
                 }
                 handleSearch={handleSearch}
-                searchInput={searchInput}
-                setSearchInput={setSearchInput}
+                allSearchItems={allSearchItems}
                 openConnectModal={openConnectModal}
                 handleLensConnect={handleLensConnect}
                 handleLogout={handleLogout}
@@ -549,14 +536,6 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 unfollowProfile={unfollowProfile}
                 profileHovers={profileHovers}
                 setProfileHovers={setProfileHovers}
-                fullScreenVideo={fullScreenVideo}
-                volume={volume}
-                volumeOpen={volumeOpen}
-                setVolumeOpen={setVolumeOpen}
-                setVolume={setVolume}
-                profileId={lensConnected?.id}
-                heart={heart}
-                setHeart={setHeart}
               />
             </div>
           )

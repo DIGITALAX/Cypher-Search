@@ -1,5 +1,5 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { ChangeEvent, MutableRefObject, SetStateAction } from "react";
+import { ChangeEvent, MutableRefObject, RefObject, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Erc20,
@@ -80,7 +80,7 @@ export type SuccessCheckoutProps = {
 export type FullScreenVideoProps = {
   dispatch: Dispatch<AnyAction>;
   fullScreenVideo: FullScreenVideoState;
-  videoRef: MutableRefObject<HTMLElement | null>;
+  videoRef: RefObject<HTMLVideoElement>;
 };
 
 export type ImageLargeProps = {

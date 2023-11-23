@@ -8,7 +8,13 @@ import {
   Quote,
 } from "../../../../graphql/generated";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import { KeyboardEvent, MouseEvent, ReactNode, SetStateAction } from "react";
+import {
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+  RefObject,
+  SetStateAction,
+} from "react";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 
@@ -48,6 +54,7 @@ export type InteractBarProps = {
   layoutAmount?: number;
   index: number;
   hideComment?: boolean;
+  display?: boolean;
   comment?: () => void;
   hideCollect?: boolean;
   main?: boolean;
@@ -58,15 +65,12 @@ export type InteractBarProps = {
     | ((index: number, id: string) => Promise<void>)
     | ((id: string, main: boolean) => Promise<void>);
   like:
-    | ((id: string) => Promise<void>)
-    | ((index: number, id: string) => Promise<void>)
-    | ((id: string, main: boolean) => Promise<void>)
     | ((id: string, hasReacted: boolean) => Promise<void>)
+    | ((id: string, hasReacted: boolean, main?: boolean) => Promise<void>)
     | ((index: number, id: string, hasReacted: boolean) => Promise<void>);
   simpleCollect:
-    | ((id: string) => Promise<void>)
     | ((id: string, type: string) => Promise<void>)
-    | ((index: number, id: string) => Promise<void>)
+    | ((id: string, type: string, main?: boolean) => Promise<void>)
     | undefined;
   interactionsLoading: {
     like: boolean;
@@ -101,6 +105,10 @@ export type HoverProfileProps = {
   feed?: boolean;
   main?: boolean;
   lensConnected: Profile | undefined;
+  bottom: string;
+  top: string;
+  left: string;
+  right: string;
 };
 
 export type TileLoaderProps = {
@@ -179,9 +187,8 @@ export type SuggestedProps = {
     e: KeyboardEvent | MouseEvent,
     click?: boolean
   ) => Promise<void>;
-  searchInput?: string;
+  allSearchItems: AllSearchItemsState | undefined;
   placeholderText?: string | undefined;
-  setSearchInput?: (e: SetStateAction<string>) => void;
   openConnectModal: (() => void) | undefined;
   handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
@@ -209,20 +216,13 @@ export type SuggestedProps = {
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
+    simpleCollect: boolean;
   }[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
-  profileId: string;
-  volume: number[];
-  volumeOpen: boolean[];
-  heart: boolean[];
-  setVolume: (e: SetStateAction<number[]>) => void;
-  setVolumeOpen: (e: SetStateAction<boolean[]>) => void;
-  setHeart: (e: SetStateAction<boolean[]>) => void;
-  fullScreenVideo: FullScreenVideoState;
   component: ReactNode;
 };
 

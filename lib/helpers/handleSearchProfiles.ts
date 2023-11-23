@@ -1,7 +1,6 @@
 import { ChangeEvent, RefObject, SetStateAction } from "react";
 import searchProfiles from "../../graphql/lens/queries/searchProfiles";
-import { LimitType } from "@lens-protocol/client/gated";
-import { Profile } from "../../graphql/generated";
+import { Profile, LimitType } from "../../graphql/generated";
 import getCaretPos from "./getCaretCoord";
 
 const handleSearchProfiles = async (

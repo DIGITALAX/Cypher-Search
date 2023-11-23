@@ -2,9 +2,9 @@ import { FunctionComponent, useEffect, useRef } from "react";
 import { BsCloudUpload } from "react-icons/bs";
 import { HiOutlinePlayPause } from "react-icons/hi2";
 import WaveSurfer from "wavesurfer.js";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { WaveFormProps } from "../../types/autograph.types";
 import handlePlayPause from "../../../../../lib/helpers/handlePlayPause";
+import getMediaUrl from "../../../../../lib/helpers/getMediaURL";
 
 const Waveform: FunctionComponent<WaveFormProps> = ({
   keyValue,
@@ -60,18 +60,13 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
           }
         });
 
-        if (audio && audio !== "" && type === "audio") {
-          await wavesurfer?.current?.load(
-            audio?.includes("ipfs://")
-              ? `${INFURA_GATEWAY}/ipfs/${audio?.split("ipfs://")?.[1]}`
-              : audio
-          );
-        } else if (video && video !== "" && type === "video") {
-          await wavesurfer?.current?.load(
-            video?.includes("ipfs://")
-              ? `${INFURA_GATEWAY}/ipfs/${video?.split("ipfs://")?.[1]}`
-              : video
-          );
+        try {
+          const mediaUrl = getMediaUrl(audio, video, type);
+          if (mediaUrl) {
+            await wavesurfer.current.load(mediaUrl);
+          }
+        } catch (error) {
+          console.error("Error loading media:", error);
         }
       }
     };

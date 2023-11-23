@@ -24,7 +24,7 @@ const InteractError: FunctionComponent<InteractErrorProps> = ({
               Something Went Wrong Indexing Your Interaction. Try Again?
             </div>
             <div
-              className="relative w-2/3 h-52 flex items-center justify-center rounded-sm p-px"
+              className="relative w-2/3 h-full min-h-[25vh] flex items-center justify-center rounded-sm p-px"
               id="smoke"
             >
               <div className="relative w-full h-full rounded-sm flex items-center justify-center">

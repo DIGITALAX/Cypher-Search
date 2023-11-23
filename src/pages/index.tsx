@@ -26,9 +26,6 @@ export default function Home({ router }: { router: NextRouter }) {
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
-  const fullScreenVideo = useSelector(
-    (state: RootState) => state.app.fullScreenVideoReducer
-  );
   const layoutAmount = useSelector(
     (state: RootState) => state.app.layoutSwitchReducer.value
   );
@@ -53,25 +50,14 @@ export default function Home({ router }: { router: NextRouter }) {
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer
   );
-  const interactionsCount = useSelector(
-    (state: RootState) => state.app.interactionsCountReducer
-  );
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
   const {
     handleSearch,
     handleMoreSearch,
-    searchInput,
-    setSearchInput,
     handleShuffleSearch,
     placeholderText,
-    volume,
-    volumeOpen,
-    setVolumeOpen,
-    setVolume,
-    heart,
-    setHeart,
     loaders,
   } = useSearch(
     filtersOpen,
@@ -112,11 +98,11 @@ export default function Home({ router }: { router: NextRouter }) {
     setOpenMirrorChoice,
     openMirrorChoice,
   } = useInteractions(
-    allSearchItems.items,
-    interactionsCount,
+    allSearchItems,
     dispatch,
     publicClient,
-    address
+    address,
+    lensConnected
   );
   const {
     setPopUpOpen,
@@ -155,8 +141,7 @@ export default function Home({ router }: { router: NextRouter }) {
           cartAnim={cartAnim}
           handleSearch={handleSearch}
           searchActive={searchActive}
-          searchInput={searchInput}
-          setSearchInput={setSearchInput}
+          searchItems={allSearchItems}
           openConnectModal={openConnectModal}
           handleLensConnect={handleLensConnect}
           handleLogout={handleLogout}
@@ -204,14 +189,6 @@ export default function Home({ router }: { router: NextRouter }) {
             unfollowProfile={unfollowProfile}
             profileHovers={profileHovers}
             setProfileHovers={setProfileHovers}
-            fullScreenVideo={fullScreenVideo}
-            volume={volume}
-            volumeOpen={volumeOpen}
-            setVolumeOpen={setVolumeOpen}
-            setVolume={setVolume}
-            profileId={lensConnected?.id}
-            heart={heart}
-            setHeart={setHeart}
           />
         )}
       </div>

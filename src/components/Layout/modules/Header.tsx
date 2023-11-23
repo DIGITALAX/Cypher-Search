@@ -9,8 +9,6 @@ import Accounts from "@/components/Common/modules/Accounts";
 const Header: FunctionComponent<HeaderProps> = ({
   handleSearch,
   searchActive,
-  searchInput,
-  setSearchInput,
   openConnectModal,
   handleLensConnect,
   walletConnected,
@@ -30,6 +28,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   includeSearch,
   cartAnim,
   handleLogout,
+  searchItems,
 }): JSX.Element => {
   return (
     <div
@@ -54,13 +53,12 @@ const Header: FunctionComponent<HeaderProps> = ({
           dispatch={dispatch}
           handleSearch={handleSearch!}
           searchActive={searchActive}
-          searchInput={searchInput!}
-          setSearchInput={setSearchInput!}
           filtersOpen={filtersOpen}
           handleShuffleSearch={handleShuffleSearch!}
           placeholderText={placeholderText}
           layoutAmount={layoutAmount!}
           router={router}
+          searchItems={searchItems}
         />
       )}
       <Accounts

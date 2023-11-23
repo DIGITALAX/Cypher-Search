@@ -5,6 +5,9 @@ import { TextPostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import { Post } from "../../../../../graphql/generated";
+import moment from "moment";
+import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
+import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 
 const TextPost: FunctionComponent<TextPostProps> = ({
   layoutAmount,
@@ -25,14 +28,47 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   dispatch,
   lensConnected,
 }): JSX.Element => {
+  const pfp = createProfilePicture(
+    (publication?.__typename === "Mirror"
+      ? publication?.mirrorOn
+      : (publication as Post)
+    )?.by?.metadata?.picture
+  );
   return (
     <div
       className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4"
       id={publication?.id}
     >
-      <div className="relative w-full h-100 flex flex-row gap-5 items-center justify-center">
-        <div className="relative w-full h-full rounded-sm border border-mosgu bg-fuego p-1 font-bit text-nuba text-sm text-left break-words flex justify-center items-center"></div>
-      </div>
+      <div
+        className="relative w-100 h-100 rounded-sm border border-mosgu bg-fuego p-2 font-bit text-nuba text-sm text-left break-words flex justify-center items-start overflow-y-scroll whitespace-preline"
+        dangerouslySetInnerHTML={{
+          __html: descriptionRegex(
+            (publication?.__typename === "Mirror"
+              ? publication?.mirrorOn
+              : (publication as Post)
+            )?.isEncrypted &&
+              !(
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.metadata as any
+              )?.decrypted
+              ? (
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.metadata as any
+                )?.title
+              : (
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.metadata as any
+                )?.content,
+            false
+          ),
+        }}
+      ></div>
       <div className="relative w-fit h-fit flex flex-col gap-5 items-end justify-end">
         <div className="relative flex flex-col w-fit h-fit gap-2 items-end justify-center">
           <InteractBar
@@ -69,18 +105,28 @@ const TextPost: FunctionComponent<TextPostProps> = ({
             }
             type={
               publication?.__typename === "Mirror"
-                ? publication?.mirrorOn?.openActionModules?.[0].__typename
-                : (publication as Post)?.openActionModules?.[0].__typename
+                ? publication?.mirrorOn?.openActionModules?.[0]?.__typename
+                : (publication as Post)?.openActionModules?.[0]?.__typename
             }
           />
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">
               <div className="relative w-full h-fit items-end justify-start flex flex-col">
                 <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-base">
-                  username
+                  {
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.by?.handle?.localName
+                  }
                 </div>
                 <div className="relative flex items-center justify-center text-right break-words text-white/70 font-bit uppercase text-xs">
-                  @username.lens
+                  {
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.by?.handle?.suggestedFormatted?.localName
+                  }
                 </div>
               </div>
               <div className="relative w-full h-fit items-end justify-start flex flex-col">
@@ -88,7 +134,18 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                   posted
                 </div>
                 <div className="relative flex items-center justify-center text-right break-words text-white/70 font-bit uppercase text-sm">
-                  4d ago
+                  {(publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.createdAt &&
+                    moment(
+                      `${
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.createdAt
+                      }`
+                    ).fromNow()}
                 </div>
               </div>
             </div>
@@ -117,11 +174,21 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                 onMouseEnter={() =>
                   setProfileHovers((prev) => {
                     const updatedArray = [...prev];
-                    updatedArray[index] = false;
+                    updatedArray[index] = true;
                     return updatedArray;
                   })
                 }
-              ></div>
+              >
+                {pfp && (
+                  <Image
+                    layout="fill"
+                    objectFit="cover"
+                    src={pfp}
+                    draggable={false}
+                    className="rounded-full"
+                  />
+                )}
+              </div>
               {profileHovers?.[index] && (
                 <HoverProfile
                   followLoading={followLoading}
@@ -134,6 +201,10 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                   dispatch={dispatch}
                   lensConnected={lensConnected}
                   parentId={publication?.id}
+                  top={"auto"}
+                  bottom={"2px"}
+                  left={"auto"}
+                  right={"2px"}
                 />
               )}
             </div>

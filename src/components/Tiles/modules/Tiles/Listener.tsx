@@ -114,6 +114,10 @@ const Listener: FunctionComponent<ListenerProps> = ({
                 dispatch={dispatch}
                 lensConnected={lensConnected}
                 parentId={publication?.pubId}
+                top={"auto"}
+                bottom={"2px"}
+                left={"auto"}
+                right={"2px"}
               />
             )}
             <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">

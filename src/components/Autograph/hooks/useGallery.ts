@@ -15,6 +15,7 @@ import { getOrdersPaginated } from "../../../../graphql/subgraph/queries/getOrde
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 
 const useGallery = (
   lensConnected: Profile | undefined,
@@ -302,8 +303,29 @@ const useGallery = (
     try {
       await lensLike(id, dispatch, hasReacted);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     setInteractionsGalleryLoading((prev) => {
@@ -340,8 +362,29 @@ const useGallery = (
         publicClient
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     setInteractionsGalleryLoading((prev) => {
@@ -365,8 +408,29 @@ const useGallery = (
     try {
       await lensLike(id, dispatch, hasReacted);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     setInteractionsDisplayLoading((prev) => {
@@ -396,8 +460,29 @@ const useGallery = (
         publicClient
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     setInteractionsDisplayLoading((prev) => {

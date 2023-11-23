@@ -34,6 +34,8 @@ import approveCurrency from "../../../../graphql/lens/mutations/approve";
 import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
 import lensPost from "../../../../lib/helpers/api/postChain";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 
 const useQuote = (
   availableCurrencies: Erc20[],
@@ -43,9 +45,10 @@ const useQuote = (
   postBox: PostBoxState,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  fullScreenVideo: FullScreenVideoState
 ) => {
-  const videoRef = useRef<null | HTMLElement>(null);
+  const videoRef = useRef<null | HTMLVideoElement>(null);
   const [transactionLoading, setTransactionLoading] = useState<boolean>(false);
   const [informationLoading, setInformationLoading] = useState<boolean>(false);
   const [mentionProfiles, setMentionProfiles] = useState<Profile[]>([]);
@@ -187,8 +190,29 @@ const useQuote = (
         })
       );
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     setQuoteLoading([false]);
@@ -442,6 +466,7 @@ const useQuote = (
       checkCurrencyApproved();
     }
   }, [followCollect.type]);
+
 
   return {
     quote,

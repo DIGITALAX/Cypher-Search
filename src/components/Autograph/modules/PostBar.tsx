@@ -10,7 +10,7 @@ import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
-import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
+import collectLogic from "../../../../lib/helpers/collectLogic";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -103,7 +103,9 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               key={indexTwo}
             >
               <div
-                className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95"
+                className={`relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 ${
+                  responded?.[indexTwo] && "mix-blend-hard-light"
+                }`}
                 onClick={() => {
                   if (disabled) {
                     dispatch(
@@ -163,7 +165,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       functions[indexTwo]
                         ? "cursor-pointer active:scale-95"
                         : "opacity-70"
-                    } ${responded?.[indexTwo] && "mix-blend-hard-light"}`}
+                    } `}
                   >
                     <Image
                       layout="fill"
@@ -341,47 +343,18 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
               ?.operations?.hasActed?.value && "mix-blend-hard-light"
           }`}
-          onClick={() => {
-            const pub =
-              item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post);
-            if (
-              disabled ||
-              interactionsLoading?.simpleCollect ||
-              (pub?.openActionModules?.[0]?.__typename !==
-                "SimpleCollectOpenActionSettings" &&
-                pub?.openActionModules?.[0]?.__typename !==
-                  "MultirecipientFeeCollectOpenActionSettings")
+          onClick={() =>
+            collectLogic(
+              (item?.__typename === "Mirror"
+                ? item?.mirrorOn
+                : (item as Post)) as Post,
+              disabled,
+              interactionsLoading?.simpleCollect!,
+              dispatch,
+              main!,
+              simpleCollect
             )
-              return;
-
-            Number(pub?.openActionModules?.[0]?.amount?.value) > 0 ||
-            pub?.openActionModules?.[0]?.endsAt != null ||
-            Number(pub.openActionModules?.[0]?.collectLimit) > 0 ||
-            pub?.openActionModules?.[0]?.followerOnly
-              ? dispatch(
-                  setFollowCollect({
-                    actionType: "collect",
-                    actionCollect: {
-                      id: pub?.id,
-                      stats: pub.stats.countOpenActions,
-                      item: pub?.openActionModules?.[0],
-                    },
-                    actionFollower: pub?.by,
-                  })
-                )
-              : main
-              ? (
-                  simpleCollect! as (
-                    id: string,
-                    type: string,
-                    main: boolean
-                  ) => Promise<void>
-                )(pub?.id, pub?.openActionModules?.[0]?.__typename, main)
-              : (simpleCollect! as (id: string, type: string) => Promise<void>)(
-                  pub?.id,
-                  pub?.openActionModules?.[0]?.__typename
-                );
-          }}
+          }
         >
           {interactionsLoading?.simpleCollect ? (
             <AiOutlineLoading size={15} color="white" />
@@ -406,6 +379,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             dispatch={dispatch}
             lensConnected={lensConnected}
             parentId={item?.id}
+            top={main ? "auto" : "20px"}
+            bottom={main ? "2px" : "auto"}
+            left={"auto"}
+            right={"2px"}
           />
         )}
       </div>
@@ -476,7 +453,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 ? interactionsLoading?.hide
                 : null,
               interactionsLoading?.bookmark,
-            ]?.filter(Boolean);
+            ]?.filter((item) => item !== null && item !== undefined);
             return (
               <div
                 key={indexTwo}

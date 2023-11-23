@@ -7,8 +7,8 @@ import { AiOutlineLoading } from "react-icons/ai";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { Post } from "../../../../graphql/generated";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
-import { setFollowCollect } from "../../../../redux/reducers/followCollectSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
+import collectLogic from "../../../../lib/helpers/collectLogic";
 
 type SingleArgFunction = (id: string) => Promise<void>;
 type DualArgFunction =
@@ -31,7 +31,6 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   setOpenMirrorChoice,
   index,
   simpleCollect,
-  type,
   hideCollect,
   dispatch,
   router,
@@ -40,6 +39,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   showOthers,
   handleHidePost,
   handleBookmark,
+  display,
 }): JSX.Element => {
   return (
     <div
@@ -73,13 +73,84 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
               choices[index] = !choices[index];
               return choices;
             }),
-          like,
-          hideCollect ? null : simpleCollect,
+          () =>
+            display
+              ? (
+                  like as (
+                    index: number,
+                    id: string,
+                    hasReacted: boolean
+                  ) => Promise<void>
+                )(
+                  index,
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.id
+                    : publication?.id,
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.operations?.hasReacted
+                )
+              : main
+              ? (
+                  like as (
+                    id: string,
+                    hasReacted: boolean,
+                    main?: boolean
+                  ) => Promise<void>
+                )(
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.id
+                    : publication?.id,
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.operations?.hasReacted,
+                  main
+                )
+              : (like as (id: string, hasReacted: boolean) => Promise<void>)(
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.id
+                    : publication?.id,
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.operations?.hasReacted
+                ),
+          hideCollect
+            ? null
+            : () =>
+                collectLogic(
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)) as Post,
+                  false,
+                  interactionsLoading?.simpleCollect!,
+                  dispatch,
+                  main!,
+                  simpleCollect
+                ),
           comment
             ? () => comment()
             : () => router.push(`/item/pub/${publication?.id}`),
-          showOthers ? handleHidePost : null,
-          showOthers ? handleBookmark : null,
+          showOthers
+            ? () =>
+                handleHidePost!(
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.id
+                    : publication?.id,
+                  index
+                )
+            : null,
+          showOthers
+            ? () =>
+                handleBookmark!(
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.id
+                    : publication?.id,
+                  index
+                )
+            : null,
           showOthers
             ? () =>
                 dispatch(
@@ -90,6 +161,8 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 )
             : null,
         ].filter(Boolean);
+
+      
 
         const responded = [
           (publication?.__typename === "Mirror"
@@ -120,14 +193,17 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             ? publication?.mirrorOn
             : (publication as Post)
           )?.operations?.hasReported,
-        ]?.filter((item) => item !== null);
+        ]?.filter((item) => item !== null && item !== undefined);
+
+        console.log({responded})
 
         const loaders = [
+          false,
           interactionsLoading?.like,
           hideCollect ? null : interactionsLoading?.simpleCollect,
           showOthers ? interactionsLoading?.hide : null,
           showOthers ? interactionsLoading?.bookmark : null,
-        ].filter(Boolean);
+        ]?.filter((item) => item !== null && item !== undefined);
         const stats = [
           (publication?.__typename === "Mirror"
             ? publication.mirrorOn
@@ -151,7 +227,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             ? publication.mirrorOn
             : (publication as Post)
           )?.stats?.comments,
-        ].filter(Boolean);
+        ].filter((item) => item !== undefined && item !== null);
         return (
           <div
             className="relative w-full h-full flex flex-row items-center justify-center gap-2"
@@ -159,7 +235,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             title={image?.[1]}
           >
             <div
-              className={`relative w-fit h-fit flex items-center justify-center ${
+              className={`relative w-fit h-fit flex items-center justify-center ${responded?.[indexTwo] && "mix-blend-hard-light"} ${
                 (publication?.__typename === "Mirror"
                   ? publication?.mirrorOn
                   : (publication as Post)
@@ -173,79 +249,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                   ? "cursor-pointer active:scale-95"
                   : "opacity-70"
               }`}
-              onClick={() => {
-                if (indexTwo === 0 || image[1] === "Comments") {
-                  functions[indexTwo] &&
-                    (functions[indexTwo]! as () => Promise<void>)();
-                }
-                if (showOthers && (index === 3 || index === 4 || index === 5)) {
-                  (
-                    functions[indexTwo] as (
-                      id: string,
-                      index: number
-                    ) => Promise<void>
-                  )(
-                    publication?.__typename === "Mirror"
-                      ? publication?.mirrorOn?.id
-                      : publication?.id,
-                    index
-                  );
-                } else if (indexTwo === 2 && !hideCollect) {
-                  const pub =
-                    publication?.__typename === "Mirror"
-                      ? publication?.mirrorOn
-                      : (publication as Post);
-                  if (
-                    loaders[indexTwo] ||
-                    (pub?.openActionModules?.[0]?.__typename !==
-                      "SimpleCollectOpenActionSettings" &&
-                      pub?.openActionModules?.[0]?.__typename !==
-                        "MultirecipientFeeCollectOpenActionSettings")
-                  )
-                    return;
-
-                  Number(pub?.openActionModules?.[0].amount.value) > 0 ||
-                  pub?.openActionModules?.[0].endsAt ||
-                  Number(pub.openActionModules?.[0].collectLimit)
-                    ? dispatch(
-                        setFollowCollect({
-                          actionType: "collect",
-                          actionCollect: {
-                            id: pub?.id,
-                            stats: pub.stats.countOpenActions,
-                            item: pub?.openActionModules?.[0],
-                          },
-                        })
-                      )
-                    : functions[indexTwo] &&
-                      (
-                        functions[indexTwo]! as (
-                          id: string,
-                          type: string
-                        ) => Promise<void>
-                      )(publication?.id, type!);
-                } else if (indexTwo === 1) {
-                  !loaders[indexTwo] &&
-                    functions[indexTwo] &&
-                    (
-                      functions[indexTwo]! as (
-                        id: string,
-                        hasReacted: boolean,
-                        main: boolean
-                      ) => Promise<void>
-                    )(
-                      publication?.id,
-                      publication?.by?.operations?.isFollowedByMe.value!,
-                      main!
-                    );
-                } else {
-                  !loaders[indexTwo] &&
-                    functions[indexTwo] &&
-                    (functions[indexTwo]! as (id: string) => Promise<void>)(
-                      publication?.id
-                    );
-                }
-              }}
+              onClick={() => functions[indexTwo] && functions[indexTwo]?.()}
             >
               {loaders[indexTwo] ? (
                 <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
@@ -257,7 +261,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                     functions[indexTwo]
                       ? "cursor-pointer active:scale-95"
                       : "opacity-70"
-                  } ${responded?.[indexTwo] && "mix-blend-hard-light"}`}
+                  }`}
                 >
                   <Image
                     layout="fill"
@@ -354,7 +358,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                       )(indexTwo, publication?.id))
                 }
               >
-                {loaders[index] ? (
+                {loaders[indexTwo] ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
                     <AiOutlineLoading size={15} color="white" />
                   </div>

@@ -14,6 +14,7 @@ import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { Dispatch } from "redux";
 import { createWalletClient, custom, PublicClient } from "viem";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 
 const useProfile = (
   profileFeed: (Post | Quote | Mirror | Comment)[] | Creation[],
@@ -82,8 +83,29 @@ const useProfile = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
     handleLoaders(false, main!, feed!, index);
   };
@@ -123,8 +145,29 @@ const useProfile = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      dispatch(setInteractError(true));
-      console.error(err.message);
+      if (
+        !err?.messages?.includes("Block at number") &&
+        !err?.message?.includes("could not be found")
+      ) {
+        dispatch(setInteractError(true));
+        console.error(err.message);
+      } else {
+        dispatch(
+          setIndexer({
+            actionOpen: true,
+            actionMessage: "Successfully Indexed",
+          })
+        );
+
+        setTimeout(() => {
+          dispatch(
+            setIndexer({
+              actionOpen: false,
+              actionMessage: undefined,
+            })
+          );
+        }, 3000);
+      }
     }
 
     handleLoaders(false, main!, feed!, index);

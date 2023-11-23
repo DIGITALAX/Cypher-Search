@@ -20,7 +20,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-full md:w-[40vw] h-fit min-h-[40vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
+      <div className="relative w-full md:w-[40vw] h-fit min-h-[40vh] place-self-center bg-offBlack border border-white">
         <div className="relative w-full h-full flex flex-col gap-5 p-2">
           <div className="relative w-fit h-fit items-end justify-end ml-auto cursor-pointer flex">
             <ImCross

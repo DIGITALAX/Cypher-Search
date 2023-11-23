@@ -1,6 +1,6 @@
 import { AnyAction, Dispatch } from "redux";
 import { ActOnOpenActionInput } from "../../../graphql/generated";
-import collectPost from "../../../graphql/lens/mutations/collect";
+import {collectPost} from "../../../graphql/lens/mutations/collect";
 import { omit } from "lodash";
 import { WalletClient, PublicClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
