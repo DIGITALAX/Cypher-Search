@@ -38,6 +38,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
+  const fullScreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
+  );
   const allSearchItems = useSelector(
     (state: RootState) => state.app.searchItemsReducer
   );
@@ -264,6 +267,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
       <>
         {!itemData ? (
           <NotFound
+            fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
             searchActive={searchActive}
@@ -420,6 +424,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                fullScreenVideo={fullScreenVideo}
                 moreSearchLoading={loaders?.moreSuggestedLoading}
                 searchItems={suggestedFeed}
                 cartAnim={cartAnim}

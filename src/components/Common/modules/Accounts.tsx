@@ -29,6 +29,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   dispatch,
   auto,
   cartAnim,
+  fullScreenVideo,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(lensConnected?.metadata?.picture);
 
@@ -93,9 +94,21 @@ const Accounts: FunctionComponent<AccountsProps> = ({
 
         <div
           className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer active:scale-95"
-          // onClick={
-          //  () => dispatch(setFullScreenVideo())
-          // }
+          onClick={() =>
+            dispatch(
+              setFullScreenVideo({
+                actionOpen: fullScreenVideo?.open ? false : true,
+                actionTime: fullScreenVideo?.currentTime,
+                actionDuration: fullScreenVideo?.duration,
+                actionIsPlaying: fullScreenVideo?.isPlaying,
+                actionVolume: fullScreenVideo?.volume,
+                actionVolumeOpen: fullScreenVideo?.volumeOpen,
+                actionAllVideos: fullScreenVideo?.allVideos,
+                actionCursor: fullScreenVideo?.cursor,
+                actionIndex: fullScreenVideo?.index,
+              })
+            )
+          }
           title="The Dial Pirate Radio"
         >
           <Image

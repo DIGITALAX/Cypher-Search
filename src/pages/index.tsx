@@ -53,6 +53,9 @@ export default function Home({ router }: { router: NextRouter }) {
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
   );
+  const fullScreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
+  );
   const {
     handleSearch,
     handleMoreSearch,
@@ -138,6 +141,7 @@ export default function Home({ router }: { router: NextRouter }) {
         id="results"
       >
         <Header
+          fullScreenVideo={fullScreenVideo}
           cartAnim={cartAnim}
           handleSearch={handleSearch}
           searchActive={searchActive}

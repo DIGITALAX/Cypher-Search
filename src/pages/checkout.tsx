@@ -31,6 +31,9 @@ const Checkout: NextPage<{
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
   );
+  const fullScreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
+  );
   const oracleData = useSelector(
     (state: RootState) => state.app.oracleDataReducer.data
   );
@@ -108,6 +111,7 @@ const Checkout: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header
+        fullScreenVideo={fullScreenVideo}
         searchItems={allSearchItems}
         cartAnim={cartAnim}
         searchActive={searchActive}

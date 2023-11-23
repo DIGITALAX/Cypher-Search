@@ -22,7 +22,8 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   handleLogout,
   dispatch,
   handleShuffleSearch,
-  cartAnim
+  cartAnim,
+  fullScreenVideo
 }): JSX.Element => {
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center">
@@ -52,6 +53,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
       </div>
       <div className="absolute right-2 top-2 flex">
         <Accounts
+          fullScreenVideo={fullScreenVideo}
           searchActive={searchActive}
           filtersOpen={filtersOpen}
           lensConnected={lensConnected}

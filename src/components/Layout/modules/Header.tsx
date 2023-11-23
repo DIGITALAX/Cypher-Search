@@ -29,6 +29,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   cartAnim,
   handleLogout,
   searchItems,
+  fullScreenVideo,
 }): JSX.Element => {
   return (
     <div
@@ -62,6 +63,7 @@ const Header: FunctionComponent<HeaderProps> = ({
         />
       )}
       <Accounts
+        fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         searchActive={searchActive}
         filtersOpen={filtersOpen}

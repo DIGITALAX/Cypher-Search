@@ -110,7 +110,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     filters,
     allSearchItems,
     dispatch,
-    router,
+    router
   );
   const {
     handleItemSelect,
@@ -180,6 +180,12 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     setCaretCoord,
     setProfilesOpen,
     profilesOpen,
+    handleNextVideo,
+    handlePlayPause,
+    handleSeek,
+    handleVolumeChange,
+    videoLoading,
+    wrapperRef,
   } = useQuote(
     availableCurrencies,
     lensConnected,
@@ -200,6 +206,13 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           dispatch={dispatch}
           fullScreenVideo={fullScreenVideo}
           videoRef={videoRef as RefObject<HTMLVideoElement>}
+          loading={videoLoading}
+          handleNextVideo={handleNextVideo}
+          handlePlayPause={handlePlayPause}
+          handleVolumeChange={handleVolumeChange}
+          handleSeek={handleSeek}
+          router={router}
+          wrapperRef={wrapperRef}
         />
       )}
       {mapOpen?.value && <Map dispatch={dispatch} filterValues={filters} />}

@@ -3,7 +3,6 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ControlsProps } from "../types/tiles.types";
-import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
 import numeral from "numeral";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { OpenActionModuleType } from "../../../../graphql/generated";

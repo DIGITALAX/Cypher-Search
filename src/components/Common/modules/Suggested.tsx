@@ -44,6 +44,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   cartAnim,
   searchItems,
   moreSearchLoading,
+  fullScreenVideo,
 }) => {
   return (
     <div
@@ -51,6 +52,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
       id="results"
     >
       <Header
+        fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         handleSearch={handleSearch}
         searchActive={true}
