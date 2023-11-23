@@ -4,7 +4,12 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { Display, SortType } from "../types/autograph.types";
-import { MetadataAttributeType, Profile } from "../../../../graphql/generated";
+import {
+  MetadataAttributeType,
+  Post,
+  Profile,
+  PublicationOperations,
+} from "../../../../graphql/generated";
 import { createWalletClient, custom, PublicClient } from "viem";
 import { polygon, polygonMumbai } from "viem/chains";
 import setMeta from "../../../../lib/helpers/api/setMeta";
@@ -14,8 +19,8 @@ import { getCollectionsPaginated } from "../../../../graphql/subgraph/queries/ge
 import { getOrdersPaginated } from "../../../../graphql/subgraph/queries/getOrders";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
-import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import errorChoice from "../../../../lib/helpers/errorChoice";
+import getGallerySort from "../../../../lib/helpers/getGallerySort";
 
 const useGallery = (
   lensConnected: Profile | undefined,
@@ -302,30 +307,18 @@ const useGallery = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
+      updateInteractions(index, {
+        hasReacted: hasReacted ? false : true,
+      });
     } catch (err: any) {
-      if (
-        !err?.messages?.includes("Block at number") &&
-        !err?.message?.includes("could not be found")
-      ) {
-        dispatch(setInteractError(true));
-        console.error(err.message);
-      } else {
-        dispatch(
-          setIndexer({
-            actionOpen: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-
-        setTimeout(() => {
-          dispatch(
-            setIndexer({
-              actionOpen: false,
-              actionMessage: undefined,
-            })
-          );
-        }, 3000);
-      }
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasReacted: hasReacted ? false : true,
+          }),
+        dispatch
+      );
     }
 
     setInteractionsGalleryLoading((prev) => {
@@ -361,30 +354,18 @@ const useGallery = (
         clientWallet,
         publicClient
       );
+      updateInteractions(index, {
+        hasMirrored: true,
+      });
     } catch (err: any) {
-      if (
-        !err?.messages?.includes("Block at number") &&
-        !err?.message?.includes("could not be found")
-      ) {
-        dispatch(setInteractError(true));
-        console.error(err.message);
-      } else {
-        dispatch(
-          setIndexer({
-            actionOpen: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-
-        setTimeout(() => {
-          dispatch(
-            setIndexer({
-              actionOpen: false,
-              actionMessage: undefined,
-            })
-          );
-        }, 3000);
-      }
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(index, {
+            hasReacted: true,
+          }),
+        dispatch
+      );
     }
 
     setInteractionsGalleryLoading((prev) => {
@@ -407,30 +388,28 @@ const useGallery = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
+      updateInteractions(
+        index,
+        {
+          hasMirrored: true,
+        },
+        true,
+        id
+      );
     } catch (err: any) {
-      if (
-        !err?.messages?.includes("Block at number") &&
-        !err?.message?.includes("could not be found")
-      ) {
-        dispatch(setInteractError(true));
-        console.error(err.message);
-      } else {
-        dispatch(
-          setIndexer({
-            actionOpen: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-
-        setTimeout(() => {
-          dispatch(
-            setIndexer({
-              actionOpen: false,
-              actionMessage: undefined,
-            })
-          );
-        }, 3000);
-      }
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            index,
+            {
+              hasReacted: hasReacted ? false : true,
+            },
+            true,
+            id
+          ),
+        dispatch
+      );
     }
 
     setInteractionsDisplayLoading((prev) => {
@@ -459,30 +438,28 @@ const useGallery = (
         clientWallet,
         publicClient
       );
+      updateInteractions(
+        index,
+        {
+          hasMirrored: true,
+        },
+        true,
+        id
+      );
     } catch (err: any) {
-      if (
-        !err?.messages?.includes("Block at number") &&
-        !err?.message?.includes("could not be found")
-      ) {
-        dispatch(setInteractError(true));
-        console.error(err.message);
-      } else {
-        dispatch(
-          setIndexer({
-            actionOpen: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-
-        setTimeout(() => {
-          dispatch(
-            setIndexer({
-              actionOpen: false,
-              actionMessage: undefined,
-            })
-          );
-        }, 3000);
-      }
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            index,
+            {
+              hasReacted: true,
+            },
+            true,
+            id
+          ),
+        dispatch
+      );
     }
 
     setInteractionsDisplayLoading((prev) => {
@@ -490,6 +467,84 @@ const useGallery = (
       updatedArray[index] = { ...updatedArray[index], mirror: false };
       return updatedArray;
     });
+  };
+
+  const updateInteractions = (
+    index: number,
+    valueToUpdate: Object,
+    display?: boolean,
+    id?: string
+  ) => {
+    if (display) {
+      const newDisplay = profileDisplay;
+      const updateItem = (item: Creation, newItem: Creation) =>
+        item.publication?.id === id ? newItem : item;
+
+      Object.keys(newDisplay!).forEach((categoryKey) => {
+        const category = (newDisplay as any)?.[categoryKey];
+
+        if (category?.main?.publication?.id === id) {
+          category.main = {
+            ...category.main,
+            publication: {
+              ...category.main?.publication,
+              operations: {
+                ...category.main?.publication?.operations,
+                ...valueToUpdate,
+              },
+            },
+          } as Creation;
+        }
+
+        if (category?.side) {
+          category.side = category.side.map((item: Creation) =>
+            updateItem(item, {
+              ...item,
+              publication: {
+                ...item?.publication,
+                operations: {
+                  ...item?.publication?.operations,
+                  ...valueToUpdate,
+                } as PublicationOperations,
+              } as Post & {
+                decrypted: any;
+              },
+            })
+          );
+        }
+      });
+
+      dispatch(setProfileDisplay(newDisplay));
+    } else {
+      const allGallery = getGallerySort(selectedOption, gallery);
+      allGallery[index] = {
+        ...allGallery[index],
+        publication: {
+          ...allGallery[index].publication,
+          operations: {
+            ...allGallery[index].publication?.operations,
+            ...valueToUpdate,
+          } as PublicationOperations,
+        } as Post & {
+          decrypted: any;
+        },
+      };
+
+      let newCollected: Creation[] = [],
+        newCreated: Creation[] = [];
+      allGallery.forEach((item) => {
+        if (gallery?.collected?.includes(item)) {
+          newCollected.push(item);
+        } else if (gallery?.created?.includes(item)) {
+          newCreated.push(item);
+        }
+      });
+
+      setGallery({
+        collected: newCollected,
+        created: newCreated,
+      });
+    }
   };
 
   useEffect(() => {

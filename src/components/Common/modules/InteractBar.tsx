@@ -195,8 +195,6 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
           )?.operations?.hasReported,
         ]?.filter((item) => item !== null && item !== undefined);
 
-        console.log({responded})
-
         const loaders = [
           false,
           interactionsLoading?.like,
