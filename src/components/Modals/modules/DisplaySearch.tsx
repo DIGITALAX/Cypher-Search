@@ -4,6 +4,7 @@ import { ImCross } from "react-icons/im";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { setDisplaySearchBox } from "../../../../redux/reducers/displaySearchBoxSlice";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
   dispatch,
@@ -98,6 +99,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                                   src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
                                   className="rounded-sm"
                                   objectFit="cover"
+                                  onError={(e) => handleImageError(e)}
                                 />
                               </div>
                             </div>

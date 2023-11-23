@@ -9,6 +9,7 @@ import { Post } from "../../../../graphql/generated";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import collectLogic from "../../../../lib/helpers/collectLogic";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 type SingleArgFunction = (id: string) => Promise<void>;
 type DualArgFunction =
@@ -162,8 +163,6 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             : null,
         ].filter(Boolean);
 
-      
-
         const responded = [
           (publication?.__typename === "Mirror"
             ? publication?.mirrorOn
@@ -233,7 +232,9 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             title={image?.[1]}
           >
             <div
-              className={`relative w-fit h-fit flex items-center justify-center ${responded?.[indexTwo] && "mix-blend-hard-light"} ${
+              className={`relative w-fit h-fit flex items-center justify-center ${
+                responded?.[indexTwo] && "mix-blend-hard-light"
+              } ${
                 (publication?.__typename === "Mirror"
                   ? publication?.mirrorOn
                   : (publication as Post)
@@ -265,6 +266,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                     layout="fill"
                     src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                     draggable={false}
+                    onError={(e) => handleImageError(e)}
                   />
                 </div>
               )}
@@ -370,6 +372,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                       layout="fill"
                       src={`${INFURA_GATEWAY}/ipfs/${image}`}
                       draggable={false}
+                      onError={(e) => handleImageError(e)}
                     />
                   </div>
                 )}

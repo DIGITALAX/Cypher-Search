@@ -11,6 +11,7 @@ import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import collectLogic from "../../../../lib/helpers/collectLogic";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -171,6 +172,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       layout="fill"
                       src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                       draggable={false}
+                      onError={(e) => handleImageError(e)}
                     />
                   </div>
                 )}
@@ -275,6 +277,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       layout="fill"
                       src={`${INFURA_GATEWAY}/ipfs/${image}`}
                       draggable={false}
+                      onError={(e) => handleImageError(e)}
                     />
                   </div>
                 )}
@@ -326,6 +329,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               draggable={false}
               className="rounded-full"
               objectFit="cover"
+              onError={(e) => handleImageError(e)}
             />
           )}
         </div>
@@ -504,6 +508,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       layout="fill"
                       src={`${INFURA_GATEWAY}/ipfs/${image[1]}`}
                       draggable={false}
+                      onError={(e) => handleImageError(e)}
                     />
                   </div>
                 )}

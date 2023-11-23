@@ -5,6 +5,7 @@ import {
   INFURA_GATEWAY,
 } from "../../../../lib/constants";
 import { PurchaseTokensProps } from "../types/common.types";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const PurchaseTokens: FunctionComponent<PurchaseTokensProps> = ({
   currency,
@@ -32,6 +33,7 @@ const PurchaseTokens: FunctionComponent<PurchaseTokensProps> = ({
               draggable={false}
               width={30}
               height={35}
+              onError={(e) => handleImageError(e)}
             />
           </div>
         );

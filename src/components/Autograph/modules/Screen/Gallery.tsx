@@ -5,6 +5,7 @@ import SwitchCreate from "./SwitchCreate";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { Creation } from "@/components/Tiles/types/tiles.types";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Gallery: FunctionComponent<GalleryScreenProps> = ({
   setCollectionDetails,
@@ -268,6 +269,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         {dropDetails?.cover && (
                           <Image
                             layout="fill"
+                            onError={(e) => handleImageError(e)}
                             src={
                               dropDetails?.cover?.includes("ipfs://")
                                 ? `${INFURA_GATEWAY}/ipfs/${
@@ -364,6 +366,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                                 <Image
                                   className="relative w-full h-full rounded-sm flex"
                                   objectFit="cover"
+                                  onError={(e) => handleImageError(e)}
                                   layout="fill"
                                   src={`${INFURA_GATEWAY}/ipfs/${
                                     allCollections

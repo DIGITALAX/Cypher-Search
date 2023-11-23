@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { StatsProps } from "../types/common.types";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Stats: FunctionComponent<StatsProps> = ({
   profile,
@@ -40,6 +41,7 @@ const Stats: FunctionComponent<StatsProps> = ({
                   layout="fill"
                   src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                   draggable={false}
+                  onError={(e) => handleImageError(e)}
                 />
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center">
@@ -75,6 +77,7 @@ const Stats: FunctionComponent<StatsProps> = ({
                   layout="fill"
                   src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
                   draggable={false}
+                  onError={(e) => handleImageError(e)}
                 />
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center">

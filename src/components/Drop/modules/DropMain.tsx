@@ -6,6 +6,7 @@ import { INFURA_GATEWAY, numberToItemTypeMap } from "../../../../lib/constants";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const DropMain: FunctionComponent<DropMainProps> = ({
   collections,
@@ -37,6 +38,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                       src={`${INFURA_GATEWAY}/ipfs/${
                         collection?.images?.[0]?.split("ipfs://")?.[1]
                       }`}
+                      onError={(e) => handleImageError(e)}
                     />
                   )}
                 </div>

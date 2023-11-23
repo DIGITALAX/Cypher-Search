@@ -7,6 +7,7 @@ import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import { ItemType } from "@/components/Common/types/common.types";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const CoinOp: FunctionComponent<CoinOpProps> = ({
   layoutAmount,
@@ -67,6 +68,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             }`}
             objectFit="cover"
             draggable={false}
+            onError={(e) => handleImageError(e)}
           />
         )}
       </div>
@@ -159,6 +161,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               }`}
               objectFit="cover"
               draggable={false}
+              onError={(e) => handleImageError(e)}
             />
           )}
         </div>

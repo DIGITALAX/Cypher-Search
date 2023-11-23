@@ -6,6 +6,7 @@ import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { Profile } from "../../../../../graphql/generated";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 import NewConversation from "./NewConversation";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Messages: FunctionComponent<MessagesProps> = ({
   conversations,
@@ -76,6 +77,7 @@ const Messages: FunctionComponent<MessagesProps> = ({
                                           layout="fill"
                                           src={pfp}
                                           draggable={false}
+                                          onError={(e) => handleImageError(e)}
                                         />
                                       )}
                                     </div>
@@ -161,6 +163,7 @@ const Messages: FunctionComponent<MessagesProps> = ({
                                           className="rounded-full"
                                           objectFit="cover"
                                           layout="fill"
+                                          onError={(e) => handleImageError(e)}
                                           src={
                                             item?.profileImage?.includes(
                                               "ipfs://"

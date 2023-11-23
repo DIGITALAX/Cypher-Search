@@ -7,6 +7,7 @@ import {
   INFURA_GATEWAY,
 } from "../../../../lib/constants";
 import Image from "next/legacy/image";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   details,
@@ -194,6 +195,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                     draggable={false}
                     width={30}
                     height={35}
+                    onError={(e) => handleImageError(e)}
                   />
                 </div>
               );

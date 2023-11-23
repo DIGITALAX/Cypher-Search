@@ -8,6 +8,7 @@ import { Post } from "../../../../../graphql/generated";
 import moment from "moment";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const TextPost: FunctionComponent<TextPostProps> = ({
   layoutAmount,
@@ -186,6 +187,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                     src={pfp}
                     draggable={false}
                     className="rounded-full"
+                    onError={(e) => handleImageError(e)}
                   />
                 )}
               </div>

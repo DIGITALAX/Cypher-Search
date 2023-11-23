@@ -112,6 +112,7 @@ const useSearch = (
       pubCursor: string | undefined,
       profileCursor: string | undefined,
       pubProfileCursor: string | undefined,
+      videoCursor: string | undefined,
       microbrands: Profile[] = [];
     try {
       if (
@@ -227,21 +228,18 @@ const useSearch = (
             limit: LimitType.Ten,
             where: {
               publicationTypes: [PublicationType.Post],
-
               from: [CHROMADIN_ID],
             },
           },
           lensConnected?.id
         );
+
+        videoCursor = data?.data?.publications?.pageInfo?.next;
+
         publications = [
           ...publications,
           ...(data?.data?.publications?.items || []),
-        ]?.sort(() => Math.random() - 0.5) as (
-          | Post
-          | Comment
-          | Quote
-          | Mirror
-        )[];
+        ] as (Post | Comment | Quote | Mirror)[];
       }
 
       if (filters?.microbrand) {
@@ -288,22 +286,20 @@ const useSearch = (
         })) || []),
       ];
 
-      console.log({ allItems });
-
       dispatch(
         setAllSearchItems({
           actionItems: allItems?.sort(() => Math.random() - 0.5),
           actionGraphCursor: collections?.length == 10 ? 10 : undefined,
           actionPubProfileCursor: pubProfileCursor,
-          actionLensProfileCursor:
-            profiles?.length == 10 ? profileCursor : undefined,
-          actionLensPubCursor:
-            publications?.length == 10 ? pubCursor : undefined,
+          actionLensProfileCursor: profileCursor,
+          actionLensPubCursor: pubCursor,
+          actionVideoCursor: videoCursor,
           actionHasMore:
             collections?.length == 10 ||
-            publications?.length == 10 ||
+            publications?.length >= 10 ||
             profiles?.length == 10 ||
-            pubProfileCursor
+            pubProfileCursor ||
+            videoCursor
               ? true
               : false,
           actionInput: allSearchItems?.searchInput,
@@ -366,6 +362,7 @@ const useSearch = (
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
       pubCursor: string | undefined,
       pubProfileCursor: string | undefined,
+      videoCursor: string | undefined,
       profileCursor: string | undefined,
       microbrands: Profile[] = [];
     try {
@@ -445,6 +442,7 @@ const useSearch = (
         if (allSearchItems?.lensProfileCursor) {
           const profileSearch = await searchProfiles(
             {
+              cursor: allSearchItems?.lensProfileCursor,
               limit: LimitType.Ten,
               query: allSearchItems?.searchInput,
             },
@@ -460,7 +458,7 @@ const useSearch = (
 
       let moreData: Post[] = [];
 
-      if (publications?.length < 10) {
+      if (publications?.length < 10 && allSearchItems?.pubProfileCursor) {
         const items =
           profiles?.length > 0
             ? profiles
@@ -475,7 +473,7 @@ const useSearch = (
               from: items?.map((item) => item?.id),
               publicationTypes: [PublicationType.Post],
             },
-            cursor: pubProfileCursor,
+            cursor: allSearchItems?.pubProfileCursor,
           },
           lensConnected?.id
         );
@@ -483,23 +481,30 @@ const useSearch = (
         pubProfileCursor = data?.data?.publications?.pageInfo?.next;
       }
 
-      if (filters?.microbrand) {
-        const data = await getMicrobrands(
+      if (
+        (filters?.format?.toLowerCase()?.includes("video") ||
+          !filters?.format ||
+          filters?.format?.trim() == "") &&
+        allSearchItems?.videoCursor
+      ) {
+        const data = await getPublications(
           {
+            limit: LimitType.Ten,
             where: {
-              profileIds: [
-                filterConstants?.microbrands?.map((item) => item[3]),
-              ],
+              publicationTypes: [PublicationType.Post],
+              from: [CHROMADIN_ID],
             },
+            cursor: allSearchItems?.videoCursor,
           },
           lensConnected?.id
         );
 
-        microbrands = (data?.data?.profiles?.items?.map((item, index) => ({
-          ...item,
-          microbandCover: filterConstants?.microbrands[index][1],
-          microbrandName: filterConstants?.microbrands[index][0],
-        })) || []) as any;
+        videoCursor = data?.data?.publications?.pageInfo?.next;
+
+        publications = [
+          ...publications,
+          ...(data?.data?.publications?.items || []),
+        ] as (Post | Comment | Quote | Mirror)[];
       }
 
       const newItems = [
@@ -527,8 +532,6 @@ const useSearch = (
         })) || []),
       ];
 
-      console.log({ newItems });
-
       dispatch(
         setAllSearchItems({
           actionItems: [
@@ -543,11 +546,13 @@ const useSearch = (
           actionLensProfileCursor: profileCursor,
           actionLensPubCursor: pubCursor,
           actionPubProfileCursor: pubProfileCursor,
+          actionVideoCursor: videoCursor,
           actionHasMore:
             collections?.length == 10 ||
-            publications?.length == 10 ||
+            publications?.length >= 10 ||
             profiles?.length == 10 ||
-            pubProfileCursor
+            pubProfileCursor ||
+            videoCursor
               ? true
               : false,
           actionInput: allSearchItems?.searchInput,

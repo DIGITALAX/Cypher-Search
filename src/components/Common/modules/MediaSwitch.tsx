@@ -2,6 +2,7 @@ import Waveform from "@/components/Autograph/modules/Screen/Waveform";
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { MediaProps } from "../types/common.types";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const MediaSwitch: FunctionComponent<MediaProps> = ({
   type,
@@ -44,6 +45,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
             objectFit={objectFit ? "contain" : "cover"}
             className={classNameAudio}
             draggable={false}
+            onError={(e) => handleImageError(e)}
           />
           <Waveform
             audio={srcUrl}
@@ -63,6 +65,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
           objectPosition={"center"}
           className={classNameImage}
           draggable={false}
+          onError={(e) => handleImageError(e)}
         />
       );
   }

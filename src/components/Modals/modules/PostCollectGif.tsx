@@ -5,6 +5,7 @@ import CollectOptions from "@/components/Autograph/modules/CollectOptions";
 import { PostCollectGifProps } from "../types/modals.types";
 import { AiOutlineLoading } from "react-icons/ai";
 import Image from "next/legacy/image";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
   dispatch,
@@ -107,6 +108,7 @@ const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
                           objectFit="cover"
                           className="rounded-md"
                           src={gif?.media_formats?.gif?.url}
+                          onError={(e) => handleImageError(e)}
                         />
                       </div>
                     );

@@ -4,6 +4,7 @@ import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { MicrobrandProps } from "../../types/tiles.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import Stats from "@/components/Common/modules/Stats";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Microbrand: FunctionComponent<MicrobrandProps> = ({
   layoutAmount,
@@ -59,6 +60,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
               (publication as any)?.microbandCover
             }`}
             objectFit="contain"
+            onError={(e) => handleImageError(e)}
           />
         </div>
         {profileHovers?.[index] && (

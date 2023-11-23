@@ -5,6 +5,7 @@ import { ProfileProps } from "../../types/tiles.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import Stats from "@/components/Common/modules/Stats";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Profile: FunctionComponent<ProfileProps> = ({
   layoutAmount,
@@ -38,6 +39,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
               objectFit="cover"
               className="rounded-sm"
               draggable={false}
+              onError={(e) => handleImageError(e)}
             />
           )}
         </div>
@@ -71,6 +73,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
               src={profilePicture}
               objectFit="cover"
               className="rounded-full"
+              onError={(e) => handleImageError(e)}
             />
           )}
         </div>

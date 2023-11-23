@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY, IPFS_REGEX } from "../../../../lib/constants";
 import { setImageViewer } from "../../../../redux/reducers/ImageLargeSlice";
 import { ImageLargeProps } from "../types/modals.types";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const ImageLarge: FunctionComponent<ImageLargeProps> = ({
   mainImage,
@@ -29,12 +30,14 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
               {!type?.includes("video") ? (
                 <Image
                   src={
-                    mainImage?.includes("ipfs://") && IPFS_REGEX.test(mainImage?.split("ipfs://")?.[1])
+                    mainImage?.includes("ipfs://") &&
+                    IPFS_REGEX.test(mainImage?.split("ipfs://")?.[1])
                       ? `${INFURA_GATEWAY}/ipfs/${
                           mainImage?.split("ipfs://")?.[1]
                         }`
                       : mainImage
                   }
+                  onError={(e) => handleImageError(e)}
                   layout="fill"
                   objectFit="contain"
                   draggable={false}

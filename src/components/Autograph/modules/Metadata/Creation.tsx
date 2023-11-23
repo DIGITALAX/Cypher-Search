@@ -11,6 +11,7 @@ import { setCartItems } from "../../../../../redux/reducers/cartItemsSlice";
 import { setCartAnim } from "../../../../../redux/reducers/cartAnimSlice";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 import { setCypherStorageCart } from "../../../../../lib/utils";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Creation: FunctionComponent<CreationProps> = ({
   item,
@@ -94,6 +95,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             draggable={false}
             className="rounded-md"
             objectFit="cover"
+            onError={(e) => handleImageError(e)}
           />
         )}
       </div>
@@ -135,6 +137,7 @@ const Creation: FunctionComponent<CreationProps> = ({
                 draggable={false}
                 className="rounded-full"
                 objectFit="cover"
+                onError={(e) => handleImageError(e)}
               />
             )}
           </div>

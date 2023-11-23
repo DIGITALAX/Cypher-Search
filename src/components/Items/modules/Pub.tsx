@@ -159,6 +159,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                       dataLength={allComments?.length}
                       loader={<></>}
                       className="w-fit h-fit items-center justify-start flex flex-col gap-10"
+                      height={"20rem"}
                     >
                       {allComments?.map(
                         (

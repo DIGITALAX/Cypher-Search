@@ -11,6 +11,7 @@ import {
   VideoMetadataV3,
 } from "../../../../../graphql/generated";
 import { metadataMedia } from "../../../../../lib/helpers/postMetadata";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const VideoPost: FunctionComponent<VideoPostProps> = ({
   dispatch,
@@ -79,6 +80,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 objectFit="cover"
                 draggable={false}
                 src={media?.cover!}
+                onError={(e) => handleImageError(e)}
               />
             )
           ) : (

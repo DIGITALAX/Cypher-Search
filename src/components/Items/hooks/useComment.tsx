@@ -148,6 +148,7 @@ const useComment = (
           decrypted: any;
         })[]
       );
+ 
       setCommentCursor(data?.data?.publications?.pageInfo?.next);
       if (data?.data?.publications?.items?.length != 10) {
         setHasMoreComments(false);

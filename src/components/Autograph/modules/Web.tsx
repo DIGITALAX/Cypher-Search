@@ -5,6 +5,7 @@ import { ScreenDisplay, SortType, WebProps } from "../types/autograph.types";
 import ScreenSwitch from "./ScreenSwitch";
 import { setScreenDisplay } from "../../../../redux/reducers/screenDisplaySlice";
 import Link from "next/link";
+import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Web: FunctionComponent<WebProps> = ({
   router,
@@ -204,6 +205,7 @@ const Web: FunctionComponent<WebProps> = ({
                             layout="fill"
                             src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
                             draggable={false}
+                            onError={(e) => handleImageError(e)}
                           />
                         </div>
                         <div className="relative text-white font-bit text-white font-bit text-xs">
@@ -461,6 +463,7 @@ const Web: FunctionComponent<WebProps> = ({
                         layout="fill"
                         draggable={false}
                         src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
+                        onError={(e) => handleImageError(e)}
                       />
                     </div>
                   </div>
@@ -543,6 +546,7 @@ const Web: FunctionComponent<WebProps> = ({
                         layout="fill"
                         draggable={false}
                         src={`${INFURA_GATEWAY}/ipfs/${item.image}`}
+                        onError={(e) => handleImageError(e)}
                       />
                     </div>
                   </div>

@@ -8,6 +8,7 @@ import {
   numberToItemTypeMap,
 } from "../../../../../lib/constants";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
+import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Sales: FunctionComponent<SalesProps> = ({
   allSales,
@@ -23,7 +24,9 @@ const Sales: FunctionComponent<SalesProps> = ({
         >
           <div
             className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll h-[35rem] ${
-              (salesLoading || allSales?.length > 0) ? "items-start" : "items-center"
+              salesLoading || allSales?.length > 0
+                ? "items-start"
+                : "items-center"
             }`}
           >
             {salesLoading ? (
@@ -91,6 +94,7 @@ const Sales: FunctionComponent<SalesProps> = ({
                                   src={profilePicture}
                                   objectFit="cover"
                                   className="rounded-full"
+                                  onError={(e) => handleImageError(e)}
                                 />
                               )}
                             </div>
@@ -140,6 +144,7 @@ const Sales: FunctionComponent<SalesProps> = ({
                                       image?.split("ipfs://")?.[1]
                                     }`}
                                     className="rounded-md"
+                                    onError={(e) => handleImageError(e)}
                                   />
                                 </div>
                               );

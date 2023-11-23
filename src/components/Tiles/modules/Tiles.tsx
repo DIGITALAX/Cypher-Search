@@ -92,7 +92,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
       followLoading,
       popUpOpen,
       layoutAmount,
-    
     ]
   );
 
@@ -105,8 +104,9 @@ const Tiles: FunctionComponent<TilesProps> = ({
     >
       <InfiniteScroll
         dataLength={
-          (searchItems?.items || [])?.length +
-          (searchLoading || moreSearchLoading ? 20 : 0)
+          searchLoading
+            ? 20
+            : (searchItems?.items || [])?.length + (moreSearchLoading ? 20 : 0)
         }
         loader={<></>}
         hasMore={searchItems?.hasMore!}
@@ -117,11 +117,13 @@ const Tiles: FunctionComponent<TilesProps> = ({
       >
         <Masonry
           key={
-            (searchItems?.items || [])?.length +
-            (searchLoading || moreSearchLoading ? 20 : 0)
+            searchLoading
+              ? 20
+              : (searchItems?.items || [])?.length +
+                (moreSearchLoading ? 20 : 0)
           }
           items={
-            moreSearchLoading || searchLoading
+            moreSearchLoading
               ? [
                   ...(searchItems?.items || []),
                   ...Array.from({ length: 20 }, (_) => ({
@@ -129,6 +131,11 @@ const Tiles: FunctionComponent<TilesProps> = ({
                     type: "loader",
                   })),
                 ]
+              : searchLoading
+              ? Array.from({ length: 20 }, (_) => ({
+                  id: Math.random(),
+                  type: "loader",
+                }))
               : searchItems?.items || []
           }
           render={renderTile}
