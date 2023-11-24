@@ -25,7 +25,7 @@ const SuccessCheckout: FunctionComponent<SuccessCheckoutProps> = ({
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
-              They're all yours, now. Return like a blast from the past for
+              They&quot;re all yours, now. Return like a blast from the past for
               order and fulfillment updates.
             </div>
             <div

@@ -14,7 +14,6 @@ const handleIndexCheck = async (
   tx: LensTransactionStatusRequest,
   dispatch: Dispatch<AnyAction>
 ) => {
-  // try {
   const indexedStatus = await pollUntilIndexed(tx);
   if (indexedStatus) {
     dispatch(
@@ -26,17 +25,17 @@ const handleIndexCheck = async (
   } else {
     dispatch(setInteractError(true));
   }
-  // } catch (err: any) {
-  //   console.error(err.message);
-  // }
-  setTimeout(() => {
+
+  const timeoutId = setTimeout(() => {
     dispatch(
       setIndexer({
         actionOpen: false,
         actionMessage: undefined,
       })
     );
-  }, 1000);
+  }, 3000);
+
+  return () => clearTimeout(timeoutId);
 };
 
 export const getIndexed = async (

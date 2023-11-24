@@ -47,6 +47,7 @@ import {
 import { AccessControlConditions } from "@lit-protocol/types";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -63,7 +64,8 @@ const useCreate = (
   ) => void,
   screenDisplay: ScreenDisplay,
   pageProfile: Profile | undefined,
-  client: LitNodeClient
+  client: LitNodeClient,
+  isDesigner: boolean
 ) => {
   const coder = new ethers.AbiCoder();
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);
@@ -128,20 +130,30 @@ const useCreate = (
       const data = await getCollections(address!);
       data?.data?.collectionCreateds?.map((collection: any) => ({
         ...collection,
-        sizes: collection?.sizes?.split(",").map((word: string) => word.trim()),
+        sizes: collection?.sizes
+          ?.split(",")
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         colors: collection?.colors
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         mediaTypes: collection?.mediaTypes
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         access: collection?.access
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         communities: collection?.communities
           ?.split(",")
-          .map((word: string) => word.trim()),
-        tags: collection?.tags?.split(",").map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
+        tags: collection?.tags
+          ?.split(",")
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
       }));
       setAllCollections(data?.data?.collectionCreateds || []);
     } catch (err: any) {
@@ -156,14 +168,14 @@ const useCreate = (
       collectionDetails.title?.trim() == "" ||
       collectionDetails.description?.trim() == "" ||
       (collectionSettings?.media == "static" &&
-        (!collectionDetails.images || collectionDetails.images!.length < 1)) ||
+        (!collectionDetails.images || collectionDetails.images?.length < 1)) ||
       (collectionSettings?.media === "audio" &&
         collectionDetails?.audio == "") ||
       (collectionSettings?.media === "video" &&
         collectionDetails?.video == "") ||
       collectionDetails.price?.trim() == "" ||
       !collectionDetails.acceptedTokens ||
-      collectionDetails.acceptedTokens!.length < 1 ||
+      collectionDetails.acceptedTokens?.length < 1 ||
       collectionDetails.tags?.trim() == "" ||
       Number(collectionDetails?.amount) < 0 ||
       !address
@@ -181,27 +193,38 @@ const useCreate = (
         [],
         collectionSettings?.media === "audio" ? [collectionDetails?.audio] : [],
         collectionDetails?.title?.trim() == "" ? " " : collectionDetails?.title,
-        [
-          ...collectionDetails?.tags
-            ?.split(/,\s*|\s+/)
-            ?.filter((tag) => tag.trim() !== ""),
-          "MintedWithLoveOnCypherChromadin",
-        ],
+        Array.from(
+          new Set(
+            [
+              ...(collectionDetails?.tags
+                ?.split(/,\s*/)
+                ?.filter((tag) => tag.trim() !== "") || []),
+              "MintedWithLoveOnCypherChromadin",
+            ].map((tag) => tag.toLowerCase())
+          )
+        )
+          .map((lowerCaseTag) =>
+            collectionDetails?.tags
+              ?.split(/,\s*/)
+              .find((tag) => tag.toLowerCase() === lowerCaseTag)
+          )
+          .filter((tag) => tag !== undefined) as string[],
         collectionDetails?.visibility === "private" ? true : false
       );
 
       const communityIds = collectionDetails?.communities
-        ?.split(/,\s*|\s+/)
+        ?.split(/,\s*/)
         ?.filter((com) => com.trim() !== "")
         ?.map((item) => Number(item[2]));
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
       const contentURI = await getURI(
-        collectionDetails?.visibility === "private" ? true : false
+        collectionDetails?.visibility === "private" ? true : false,
+        postContentURI
       );
 
       if (edit) {
@@ -215,7 +238,7 @@ const useCreate = (
           address: COLLECTION_CREATOR,
           abi: CollectionCreatorAbi,
           functionName: "removeCollection",
-          chain: polygon,
+          chain: polygonMumbai,
           args: [Number(collectionDetails?.collectionId)],
           account: address,
         });
@@ -317,7 +340,7 @@ const useCreate = (
     setCreationLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -332,7 +355,7 @@ const useCreate = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "removeCollection",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [Number(collectionDetails?.collectionId)],
         account: address,
       });
@@ -464,7 +487,15 @@ const useCreate = (
     }
   };
 
-  const getURI = async (encrypted: boolean): Promise<string | undefined> => {
+  const getURI = async (
+    encrypted: boolean,
+    postContentURI:
+      | {
+          string: string;
+          object: Object;
+        }
+      | undefined
+  ): Promise<string | undefined> => {
     try {
       const {
         price,
@@ -476,19 +507,35 @@ const useCreate = (
         collectionId,
         profileId,
         pubId,
+        images,
+        audio,
+        video,
+        acceptedTokens,
         ...restOfCollectionDetails
       } = collectionDetails;
 
+      const newAudio = (postContentURI?.object as any)?.lens?.audio?.item;
+      const newVideo = (postContentURI?.object as any)?.lens?.video?.item;
+      const newImages = [
+        (postContentURI?.object as any)?.lens?.image?.item,
+        ...((postContentURI?.object as any)?.lens?.attachments?.map(
+          (value: { type: string; item: string }) => value?.item
+        ) || []),
+      ];
+
       let toHash: Object = {
         ...restOfCollectionDetails,
+        images: newImages,
+        audio: newAudio,
+        video: newVideo,
         tags: collectionDetails?.tags
-          ?.split(/,\s*|\s+/)
+          ?.split(/,\s*/)
           ?.filter((tag) => tag.trim() !== ""),
         access: collectionDetails?.access
-          ?.split(/,\s*|\s+/)
+          ?.split(/,\s*/)
           ?.filter((acc) => acc.trim() !== ""),
         communities: collectionDetails?.communities
-          ?.split(/,\s*|\s+/)
+          ?.split(/,\s*/)
           ?.filter((com) => com.trim() !== ""),
         mediaTypes: [collectionSettings?.media],
         profileHandle:
@@ -499,14 +546,14 @@ const useCreate = (
 
       if (encrypted) {
         const authSig = await checkAndSignAuthMessage({
-          chain: "polygon",
+          chain: "polygonMumbai",
         });
 
         const accessControlConditions = [
           {
             contractAddress: "",
             standardContractType: "",
-            chain: "polygon",
+            chain: "polygonMumbai",
             method: "",
             parameters: [":userAddress"],
             returnValueTest: {
@@ -534,7 +581,7 @@ const useCreate = (
             accessControlConditions:
               accessControlConditions as AccessControlConditions,
             authSig,
-            chain: "polygon",
+            chain: "polygonMumbai",
             dataToEncrypt: JSON.stringify(toHash),
           },
           client!
@@ -610,9 +657,10 @@ const useCreate = (
   useEffect(() => {
     if (
       screenDisplay === ScreenDisplay.Gallery &&
-      allCollections?.length < 1 &&
+      (allCollections?.length < 1 || !allCollections) &&
       address &&
-      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle
+      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle &&
+      isDesigner
     ) {
       getAllCollections();
     }

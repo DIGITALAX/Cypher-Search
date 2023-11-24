@@ -19,6 +19,11 @@ const createProfilePicture = (
         profileImage = `${INFURA_GATEWAY}/ipfs/${
           publication?.raw?.uri?.split("ipfs://")[1]
         }`;
+      } else if (publication?.raw?.uri?.includes("ar://")) {
+        profileImage = `https://arweave.net/${publication?.raw?.uri
+          ?.split("ar://")?.[1]
+          ?.replace(/"/g, "")
+          ?.trim()}`;
       } else {
         profileImage = publication?.raw?.uri;
       }
@@ -30,6 +35,11 @@ const createProfilePicture = (
         profileImage = `${INFURA_GATEWAY}/ipfs/${
           publication?.optimized?.uri?.split("ipfs://")[1]
         }`;
+      } else if (publication?.raw?.uri?.includes("ar://")) {
+        profileImage = `https://arweave.net/${publication?.optimized?.uri
+          ?.split("ar://")?.[1]
+          ?.replace(/"/g, "")
+          ?.trim()}`;
       } else {
         profileImage = publication?.optimized?.uri;
       }
@@ -45,6 +55,15 @@ const createProfilePicture = (
         profileImage = `${INFURA_GATEWAY}/ipfs/${
           (publication as NftImage)?.image?.raw?.uri?.split("ipfs://")[1]
         }`;
+      } else if (
+        (publication as NftImage)?.image?.raw?.uri?.includes("ar://")
+      ) {
+        profileImage = `https://arweave.net/${(
+          publication as NftImage
+        )?.image?.raw?.uri
+          ?.split("ar://")?.[1]
+          ?.replace(/"/g, "")
+          ?.trim()}`;
       } else {
         profileImage = (publication as NftImage)?.image?.raw?.uri;
       }
@@ -60,6 +79,15 @@ const createProfilePicture = (
         profileImage = `${INFURA_GATEWAY}/ipfs/${
           (publication as NftImage)?.image?.optimized?.uri?.split("ipfs://")[1]
         }`;
+      } else if (
+        (publication as NftImage)?.image?.optimized?.uri?.includes("ar://")
+      ) {
+        profileImage = `https://arweave.net/${(
+          publication as NftImage
+        )?.image?.optimized?.uri
+          ?.split("ar://")?.[1]
+          ?.replace(/"/g, "")
+          ?.trim()}`;
       } else {
         profileImage = (publication as NftImage)?.image?.optimized?.uri;
       }

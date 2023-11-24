@@ -143,6 +143,7 @@ const COLLECTION_TITLE = `
 export const getOneCollection = async (
   collectionId: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION),
     variables: {
@@ -153,12 +154,13 @@ export const getOneCollection = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -170,6 +172,7 @@ export const getOneRandomCollection = async (
   origin: string,
   profileId: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION_RANDOM),
     variables: {
@@ -181,12 +184,13 @@ export const getOneRandomCollection = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -197,6 +201,7 @@ export const getOneRandomCollection = async (
 export const getCollectionOrder = async (
   collectionId: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION_ORDER),
     variables: {
@@ -207,12 +212,13 @@ export const getCollectionOrder = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -223,6 +229,7 @@ export const getCollectionOrder = async (
 export const getOneCollectionQuick = async (
   collectionId: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION_QUICK),
     variables: {
@@ -233,12 +240,13 @@ export const getOneCollectionQuick = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -249,6 +257,7 @@ export const getOneCollectionQuick = async (
 export const getOneCollectionTitle = async (
   title: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION_TITLE),
     variables: {
@@ -259,12 +268,13 @@ export const getOneCollectionTitle = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

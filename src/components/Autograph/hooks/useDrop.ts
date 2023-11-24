@@ -5,16 +5,19 @@ import { Dispatch } from "redux";
 import { getDrops } from "../../../../graphql/subgraph/queries/getDrops";
 import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon , polygonMumbai} from "viem/chains";
+import { polygonMumbai } from "viem/chains";
 import { COLLECTION_CREATOR, INFURA_GATEWAY } from "../../../../lib/constants";
 import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
+import convertToFile from "../../../../lib/helpers/convertToFile";
 
 const useDrop = (
   screenDisplay: ScreenDisplay,
   publicClient: PublicClient,
   dispatch: Dispatch,
   address: `0x${string}` | undefined,
-  isDesigner: boolean
+  isDesigner: boolean,
+  pageProfile: Profile | undefined,
+  lensConnected: Profile | undefined
 ) => {
   const [dropsLoading, setDropsLoading] = useState<boolean>(false);
   const [createDropLoading, setCreateDropLoading] = useState<boolean>(false);
@@ -47,18 +50,19 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
       let newImage: string = dropDetails?.cover;
 
-      if (dropDetails?.cover?.includes("ipfs://")) {
-        const res = await fetch(
-          `${INFURA_GATEWAY}/ipfs/${dropDetails?.cover?.split("ipfs://")?.[1]}`
-        );
-        const blob = await res.blob();
-        newImage = await blob.text();
+      if (dropDetails?.cover?.includes("base64")) {
+        const response = await fetch("/api/ipfs", {
+          method: "POST",
+          body: convertToFile(newImage, "image/png"),
+        });
+        const responseJSON = await response.json();
+        newImage = "ipfs://" + responseJSON.cid;
       }
 
       const response = await fetch("/api/ipfs", {
@@ -74,10 +78,10 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "updateDrop",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
           dropDetails?.collectionIds?.map((item) => Number(item)),
-          "ipfs://" + dropURI,
+          "ipfs://" + dropURI?.cid,
           Number(dropDetails?.dropId),
         ],
         account: address,
@@ -96,7 +100,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -104,7 +108,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "removeDrop",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [Number(dropDetails?.dropId)],
         account: address,
       });
@@ -122,14 +126,21 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
+
+      const imageRes = await fetch("/api/ipfs", {
+        method: "POST",
+        body: convertToFile(dropDetails?.cover, "image/png"),
+      });
+      const responseJSON = await imageRes.json();
+
       const response = await fetch("/api/ipfs", {
         method: "POST",
         body: JSON.stringify({
           title: dropDetails?.title,
-          cover: dropDetails?.cover,
+          cover: "ipfs://" + responseJSON.cid,
         }),
       });
       const dropURI = await response.json();
@@ -138,8 +149,8 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "createDrop",
-        chain: polygon,
-        args: ["ipfs://" + dropURI],
+        chain: polygonMumbai,
+        args: ["ipfs://" + dropURI?.cid],
         account: address,
       });
       const res = await clientWallet.writeContract(request);
@@ -176,13 +187,14 @@ const useDrop = (
   useEffect(() => {
     if (
       screenDisplay === ScreenDisplay.Gallery &&
-      allDrops?.length < 1 &&
+      (allDrops?.length < 1 || !allDrops) &&
       address &&
-      isDesigner
+      isDesigner &&
+      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle
     ) {
       getAllDrops();
     }
-  }, [screenDisplay]);
+  }, [screenDisplay, address]);
 
   return {
     createDrop,

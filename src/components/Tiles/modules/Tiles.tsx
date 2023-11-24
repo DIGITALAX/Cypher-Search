@@ -83,9 +83,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
     },
     [
       interactionsLoadingMemo,
-      mirror,
-      like,
-      simpleCollect,
       profileHovers,
       apparel,
       openMirrorChoice,
@@ -116,6 +113,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
         }`}
       >
         <Masonry
+          overscanBy={5}
           key={
             searchLoading
               ? 20

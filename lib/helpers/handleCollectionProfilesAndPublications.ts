@@ -36,22 +36,28 @@ const handleCollectionProfilesAndPublications = async (
         ),
         sizes: (collection?.sizes as any)
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         colors: (collection?.colors as any)
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         mediaTypes: (collection?.mediaTypes as any)
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         access: (collection?.access as any)
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         communities: (collection?.communities as any)
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         tags: (collection?.tags as any)
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
       })
     ) as Creation[];
 

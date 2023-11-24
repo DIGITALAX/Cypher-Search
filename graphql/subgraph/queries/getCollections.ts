@@ -92,6 +92,7 @@ const COLLECTIONS_QUICK = `
 export const getCollections = async (
   creator: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS),
     variables: {
@@ -102,12 +103,13 @@ export const getCollections = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000);
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -120,6 +122,7 @@ export const getCollectionsPaginated = async (
   first: number,
   skip: number
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS_PAGINATED),
     variables: {
@@ -132,12 +135,13 @@ export const getCollectionsPaginated = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000);
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -148,6 +152,7 @@ export const getCollectionsPaginated = async (
 export const getCollectionsQuick = async (
   creator: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS_QUICK),
     variables: {
@@ -158,12 +163,13 @@ export const getCollectionsQuick = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000);
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

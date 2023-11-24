@@ -23,7 +23,9 @@ const Checkout: NextPage<{
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
-    transport: http(),
+    transport: http(
+      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+    ),
   });
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value

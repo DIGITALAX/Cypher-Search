@@ -153,7 +153,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                       );
 
                       if (index != -1) {
-                        attributes[index].value === e.target.value;
+                        attributes[index].value = e.target.value;
                       } else {
                         attributes.push({
                           key: "location",
@@ -166,9 +166,6 @@ const Settings: FunctionComponent<SettingsProps> = ({
                         ...settingsData,
                         attributes,
                       });
-                    }}
-                    style={{
-                      resize: "none",
                     }}
                     value={
                       settingsData?.attributes?.find(
@@ -192,7 +189,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                         );
 
                         if (index != -1) {
-                          attributes[index].value === e.target.value;
+                          attributes[index].value = e.target.value;
                         } else {
                           attributes.push({
                             key: "website",
@@ -283,11 +280,13 @@ const Settings: FunctionComponent<SettingsProps> = ({
                             prev.tempMicro as {
                               microbrand: string;
                               microbrandCover: string;
+                              type: string;
                             },
                           ],
                           tempMicro: {
                             microbrand: undefined,
                             microbrandCover: undefined,
+                            type: undefined,
                           },
                         }))
                       }
@@ -324,6 +323,11 @@ const Settings: FunctionComponent<SettingsProps> = ({
                                           "ipfs://"
                                         )?.[1]
                                       }`
+                                    : item?.microbrandCover?.includes("ar://")
+                                    ? `https://arweave.net/${item?.microbrandCover
+                                        ?.split("ar://")?.[1]
+                                        ?.replace(/"/g, "")
+                                        ?.trim()}`
                                     : item?.microbrandCover
                                 }
                                 objectFit="cover"
@@ -342,14 +346,14 @@ const Settings: FunctionComponent<SettingsProps> = ({
                                     ...prev,
                                   };
 
-                                  const index = arr.microbrands.findIndex(
+                                  const index = arr?.microbrands?.findIndex(
                                     (value) =>
-                                      item.microbrandCover ===
-                                        value.microbrandCover &&
-                                      item.microbrand === value.microbrand
+                                      item?.microbrandCover ===
+                                        value?.microbrandCover &&
+                                      item?.microbrand === value?.microbrand
                                   );
 
-                                  delete arr.microbrands[index];
+                                  delete arr?.microbrands[index];
                                   return arr;
                                 })
                               }

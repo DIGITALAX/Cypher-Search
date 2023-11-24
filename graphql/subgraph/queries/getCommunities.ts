@@ -32,6 +32,7 @@ const COMMUNITY = `
 `;
 
 export const getCommunityShort = async (): Promise<any> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(FILTER),
     fetchPolicy: "no-cache",
@@ -39,12 +40,13 @@ export const getCommunityShort = async (): Promise<any> => {
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -53,6 +55,7 @@ export const getCommunityShort = async (): Promise<any> => {
 };
 
 export const getCommunityName = async (name: string): Promise<any> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COMMUNITY),
     fetchPolicy: "no-cache",
@@ -60,12 +63,13 @@ export const getCommunityName = async (name: string): Promise<any> => {
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

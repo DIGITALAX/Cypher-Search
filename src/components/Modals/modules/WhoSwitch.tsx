@@ -47,6 +47,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                     disabled={true}
                     dispatch={dispatch}
                     data-post-id={item?.id}
+                    key={index}
                   />
                 );
               }

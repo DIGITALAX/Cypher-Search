@@ -51,7 +51,7 @@ const actPost = async (
         address: LENS_HUB_PROXY_ADDRESS_MATIC,
         abi: LensHubProxy,
         functionName: "act",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
           {
             publicationActedProfileId:

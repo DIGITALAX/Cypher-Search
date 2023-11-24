@@ -73,6 +73,7 @@ export const getTextSearch = async (
   first: number,
   skip: number
 ): Promise<any> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(TEXT),
     variables: {
@@ -85,12 +86,13 @@ export const getTextSearch = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -104,6 +106,7 @@ export const getTextFilterSearch = async (
   first: number,
   skip: number
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(TEXT_WHERE),
     variables: {
@@ -117,12 +120,13 @@ export const getTextFilterSearch = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

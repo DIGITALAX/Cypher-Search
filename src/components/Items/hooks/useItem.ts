@@ -118,7 +118,7 @@ const useItem = (
           const item =
             profile?.metadata?.attributes?.[
               profile?.metadata?.attributes?.findIndex(
-                (item) => item?.key === "microbrandsCypher"
+                (item) => item?.key === "microbrandCypher"
               )
             ].value;
 
@@ -147,6 +147,7 @@ const useItem = (
 
   const getIdProfile = async (): Promise<Profile | undefined> => {
     try {
+      if (!filterConstants) return;
       const item = filterConstants?.microbrands?.find((item) => item[1] === id);
       const data = await getProfile(
         {
@@ -168,20 +169,30 @@ const useItem = (
       const data = await getCollectionsPaginated(creator, 3, 0);
       data?.data?.collectionCreateds?.map((collection: any) => ({
         ...collection,
-        sizes: collection?.sizes?.split(",").map((word: string) => word.trim()),
+        sizes: collection?.sizes
+          ?.split(",")
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         colors: collection?.colors
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         mediaTypes: collection?.mediaTypes
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         access: collection?.access
           ?.split(",")
-          .map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
         communities: collection?.communities
           ?.split(",")
-          .map((word: string) => word.trim()),
-        tags: collection?.tags?.split(",").map((word: string) => word.trim()),
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
+        tags: collection?.tags
+          ?.split(",")
+          .map((word: string) => word.trim())
+          .filter((word: string) => word.length > 0),
       }));
       return data?.data?.collectionCreateds;
     } catch (err: any) {
@@ -261,20 +272,28 @@ const useItem = (
           ...collection,
           sizes: collection?.sizes
             ?.split(",")
-            .map((word: string) => word.trim()),
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
           colors: collection?.colors
             ?.split(",")
-            .map((word: string) => word.trim()),
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
           mediaTypes: collection?.mediaTypes
             ?.split(",")
-            .map((word: string) => word.trim()),
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
           access: collection?.access
             ?.split(",")
-            .map((word: string) => word.trim()),
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
           communities: collection?.communities
             ?.split(",")
-            .map((word: string) => word.trim()),
-          tags: collection?.tags?.split(",").map((word: string) => word.trim()),
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
+          tags: collection?.tags
+            ?.split(",")
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
         }));
 
         return data?.data?.collectionCreateds?.[0];
@@ -561,7 +580,7 @@ const useItem = (
     relatedData,
     decryptLoading,
     handleDecrypt,
-    setItemData
+    setItemData,
   };
 };
 

@@ -48,6 +48,11 @@ export const metadataMedia = (
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.audio?.raw?.uri?.split("ipfs://")[1]
               }`
+            : media?.audio?.raw?.uri?.includes("ar://")
+            ? `https://arweave.net/${media?.audio?.raw?.uri
+                ?.split("ar://")?.[1]
+                ?.replace(/"/g, "")
+                ?.trim()}`
             : media?.audio?.raw?.uri
           : media?.audio?.optimized?.uri,
         type: "Audio",
@@ -57,6 +62,11 @@ export const metadataMedia = (
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.cover?.raw?.uri?.split("ipfs://")[1]
               }`
+            : media?.cover?.raw?.uri?.includes("ar://")
+            ? `https://arweave.net/${media?.cover?.raw?.uri
+                ?.split("ar://")?.[1]
+                ?.replace(/"/g, "")
+                ?.trim()}`
             : media?.cover?.raw?.uri
           : `${INFURA_GATEWAY}/ipfs/QmNW7axzePWYgpqXS31FG93fsYJrHjpC1QTPyGmz3nCMmi`,
       };
@@ -69,6 +79,11 @@ export const metadataMedia = (
             ? `${INFURA_GATEWAY}/ipfs/${
                 media.image?.raw?.uri?.split("ipfs://")[1]
               }`
+            : media?.image?.raw?.uri?.includes("ar://")
+            ? `https://arweave.net/${media?.image?.raw?.uri
+                ?.split("ar://")?.[1]
+                ?.replace(/"/g, "")
+                ?.trim()}`
             : media?.image?.raw?.uri
           : media?.image?.optimized?.uri,
         type: "Image",
@@ -82,6 +97,11 @@ export const metadataMedia = (
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.video?.raw?.uri?.split("ipfs://")[1]
               }`
+            : media?.video?.raw?.uri?.includes("ar://")
+            ? `https://arweave.net/${media?.video?.raw?.uri
+                ?.split("ar://")?.[1]
+                ?.replace(/"/g, "")
+                ?.trim()}`
             : media?.video?.raw?.uri
           : media?.video?.optimized?.uri,
         type: "Video",
@@ -91,6 +111,11 @@ export const metadataMedia = (
             ? `${INFURA_GATEWAY}/ipfs/${
                 media?.cover?.raw?.uri?.split("ipfs://")[1]
               }`
+            : media?.cover?.raw?.uri?.includes("ar://")
+            ? `https://arweave.net/${media?.cover?.raw?.uri
+                ?.split("ar://")?.[1]
+                ?.replace(/"/g, "")
+                ?.trim()}`
             : media?.cover?.raw?.uri
           : `${INFURA_GATEWAY}/ipfs/QmNW7axzePWYgpqXS31FG93fsYJrHjpC1QTPyGmz3nCMmi`,
       };

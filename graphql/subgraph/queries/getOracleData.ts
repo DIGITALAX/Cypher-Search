@@ -12,6 +12,7 @@ const ORACLE = `
 `;
 
 export const getOracleData = async (): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(ORACLE),
     fetchPolicy: "no-cache",
@@ -19,12 +20,13 @@ export const getOracleData = async (): Promise<FetchResult | void> => {
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+   timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

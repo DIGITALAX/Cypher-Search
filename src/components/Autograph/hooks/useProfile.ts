@@ -105,6 +105,7 @@ const useProfile = (
             })
           );
         }, 3000);
+
       }
     }
     handleLoaders(false, main!, feed!, index);
@@ -167,6 +168,7 @@ const useProfile = (
             })
           );
         }, 3000);
+
       }
     }
 

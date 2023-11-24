@@ -37,8 +37,10 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
+    chain: polygonMumbai,
+    transport: http(
+      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+    ),
   });
   const { autograph } = router.query;
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
@@ -62,6 +64,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   );
   const availableCurrencies = useSelector(
     (state: RootState) => state.app.availableCurrenciesReducer.currencies
+  );
+  const fullScreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
   );
   const postSuccess = useSelector(
     (state: RootState) => state.app.postSuccessReducer.value
@@ -227,7 +232,15 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setSearchCollection,
     editDrop,
     deleteDrop,
-  } = useDrop(screenDisplay, publicClient, dispatch, address, isDesigner);
+  } = useDrop(
+    screenDisplay,
+    publicClient,
+    dispatch,
+    address,
+    isDesigner,
+    profile,
+    lensConnected
+  );
   const {
     setCollectionDetails,
     setCreateCase,
@@ -249,7 +262,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setDropDetails,
     screenDisplay,
     profile,
-    client
+    client,
+    isDesigner
   );
   const {
     handleSendMessage,
@@ -297,7 +311,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     publicClient,
     address,
     screenDisplay,
-    isDesigner
+    isDesigner,
+    profile
   );
   const {
     handleMoreBookmarks,
@@ -365,11 +380,13 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   );
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (!profileLoading && !feedLoading && !galleryLoading) {
         setGlobalLoading(false);
       }
     }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [profileLoading]);
 
   if (!profileLoading && !globalLoading && !feedLoading && !galleryLoading) {
@@ -377,6 +394,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
       <>
         {!profile ? (
           <NotFound
+            fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
             searchActive={searchActive}

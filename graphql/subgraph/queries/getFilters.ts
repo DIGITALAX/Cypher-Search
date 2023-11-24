@@ -17,6 +17,7 @@ const FILTER = `
 `;
 
 export const getFilters = async (): Promise<any> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(FILTER),
     fetchPolicy: "no-cache",
@@ -24,12 +25,13 @@ export const getFilters = async (): Promise<any> => {
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

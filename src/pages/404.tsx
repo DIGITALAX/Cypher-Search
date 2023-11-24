@@ -18,7 +18,9 @@ const Custom404: NextPage<{
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
-    transport: http(),
+    transport: http(
+      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+    ),
   });
   const lensConnected = useSelector(
     (state: RootState) => state.app.lensConnectedReducer.profile
@@ -43,6 +45,9 @@ const Custom404: NextPage<{
   );
   const filterConstants = useSelector(
     (state: RootState) => state.app.filterConstantsReducer.items
+  );
+  const fullScreenVideo = useSelector(
+    (state: RootState) => state.app.fullScreenVideoReducer
   );
   const filters = useSelector(
     (state: RootState) => state.app.filterReducer.filter
@@ -89,6 +94,7 @@ const Custom404: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NotFound
+        fullScreenVideo={fullScreenVideo}
         router={router}
         cartAnim={cartAnim}
         searchActive={searchActive}
