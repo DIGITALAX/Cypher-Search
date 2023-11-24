@@ -3,7 +3,7 @@ import { PrintType } from "@/components/Tiles/types/tiles.types";
 
 export const CHROMADIN_ID: string = "0x01c6a9";
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
-export const BASE_URL: string = "https://api-v2.lens.dev/";
+export const BASE_URL: string = "https://api-v2-mumbai.lens.dev/";
 export const DIGITALAX_PROFILE_ID_LENS: string = "0x012d";
 export const LENS_HUB_PROXY_ADDRESS_MUMBAI: `0x${string}` =
   "0xC1E77eE73403B8a7478884915aA599932A677870";
@@ -12,7 +12,7 @@ export const LENS_HUB_PROXY_ADDRESS_MATIC: `0x${string}` =
 export const NFT_CREATOR_ADDRESS: `0x${string}` =
   "0x3Bb3157F4af00BA61A562A0Ffe9cBfd07388d2b1";
 export const CHROMADIN_OPEN_ACTION: `0x${string}` =
-  "0x3C6Bc6A6BC1051fFC961fbbD905b89F0bEb40a44";
+  "0xEf7a24F490496f9f88078D7C4e7Ce6B8c757859F";
 export const LISTENER_OPEN_ACTION: `0x${string}` =
   "0xeA2B9375910dd3032b514Daefd8061f545aa62B3";
 export const COIN_OP_OPEN_ACTION: `0x${string}` =

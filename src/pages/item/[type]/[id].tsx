@@ -31,7 +31,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
     chain: polygonMumbai,
     transport: http(
-      `https://polygon.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
     ),
   });
   const { type, id } = router.query;
@@ -359,7 +359,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Austral.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Austral.otf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/otf"

@@ -485,7 +485,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
                 <link
                   rel="preload"
-                  href="https://cypher.digitalax.xyz/fonts/Austral.ttf"
+                  href="https://cypher.digitalax.xyz/fonts/Austral.otf"
                   as="font"
                   crossOrigin="anonymous"
                   type="font/otf"
