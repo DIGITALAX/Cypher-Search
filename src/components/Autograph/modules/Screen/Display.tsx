@@ -29,19 +29,23 @@ const Display: FunctionComponent<DisplayProps> = ({
           id="pfp"
         >
           <div className="relative w-full h-full bg-blurs flex items-center justify-center">
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/${
-                sortType === SortType.Community
-                  ? display?.community?.main?.images?.[0]?.split("ipfs://")?.[1]
-                  : sortType === SortType.Private
-                  ? display?.private?.main?.images?.[0]?.split("ipfs://")?.[1]
-                  : display?.public?.main?.images?.[0]?.split("ipfs://")?.[1]
-              }`}
-              objectFit="cover"
-              draggable={false}
-              onError={(e) => handleImageError(e)}
-            />
+            {display && (
+              <Image
+                layout="fill"
+                src={`${INFURA_GATEWAY}/ipfs/${
+                  sortType === SortType.Community
+                    ? display?.community?.main?.images?.[0]?.split(
+                        "ipfs://"
+                      )?.[1]
+                    : sortType === SortType.Private
+                    ? display?.private?.main?.images?.[0]?.split("ipfs://")?.[1]
+                    : display?.public?.main?.images?.[0]?.split("ipfs://")?.[1]
+                }`}
+                objectFit="cover"
+                draggable={false}
+                onError={(e) => handleImageError(e)}
+              />
+            )}
           </div>
           {owner && (
             <div

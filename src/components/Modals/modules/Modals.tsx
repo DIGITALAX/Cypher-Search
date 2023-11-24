@@ -35,7 +35,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   const { address } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
-    transport: http(),
+    transport: http(
+      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+    ),
   });
   const mapOpen = useSelector((state: RootState) => state.app.mapReducer);
   const layoutAmount = useSelector(

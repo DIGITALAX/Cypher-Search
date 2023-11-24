@@ -29,7 +29,7 @@ const walletTheme = merge(darkTheme(), {
 } as Theme);
 
 const { chains, publicClient } = configureChains(
-  [polygon],
+  [polygon, polygonMumbai],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })]
 );
 

@@ -1,7 +1,7 @@
 import { omit } from "lodash";
 import LensHubProxy from "../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
@@ -21,7 +21,6 @@ const setMeta = async (
   });
 
   const typedData = data?.createOnchainSetProfileMetadataTypedData.typedData;
-
 
   const signature = await clientWallet.signTypedData({
     domain: omit(typedData?.domain, ["__typename"]),
@@ -60,7 +59,7 @@ const setMeta = async (
       account: address,
     });
     const res = await clientWallet.writeContract(request);
-   const tx = await publicClient.waitForTransactionReceipt({ hash: res });
+    const tx = await publicClient.waitForTransactionReceipt({ hash: res });
     dispatch(
       setIndexer({
         actionOpen: true,

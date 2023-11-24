@@ -28,7 +28,6 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   const microBrands = lensConnected?.metadata?.attributes?.find(
     (item) => item?.key === "microbrandCypher"
   )?.value;
-
   return (
     <div className="relative items-center justify-center text-white font-bit w-full h-full overflow-y-auto">
       <div className="relative w-full h-full p-4 flex items-start justify-start">
@@ -163,6 +162,11 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                         "ipfs://"
                                       )?.[1]
                                     }`
+                                  : collectionDetails?.video?.includes("ar://")
+                                  ? `https://arweave.net/${collectionDetails?.video
+                                      ?.split("ar://")?.[1]
+                                      ?.replace(/"/g, "")
+                                      ?.trim()}`
                                   : collectionDetails?.video
                               }
                             />
@@ -217,7 +221,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 Connect Microbrand?
               </div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
-                {microBrands ? (
+                {microBrands && microBrands?.length > 0 ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                     <div className="relative w-fit h-fit text-xs">
                       Current Brands:
@@ -233,24 +237,28 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         }
                       >
                         <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
-                          <div
-                            className="relative flex items-center justify-center rounded-full w-5 h-5 cursor-pointer"
-                            id="pfp"
-                          >
-                            <Image
-                              onError={(e) => handleImageError(e)}
-                              layout="fill"
-                              src={`${INFURA_GATEWAY}/ipfs/${
-                                collectionDetails?.microbrand?.microbrandCover?.split(
-                                  "ipfs://"
-                                )?.[1]
-                              }`}
-                              className="rounded-full"
-                              objectFit="cover"
-                              draggable={false}
-                            />
-                          </div>
-                          <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
+                          {collectionDetails?.microbrand?.microbrandCover && (
+                            <div
+                              className="relative flex items-center justify-center rounded-full w-5 h-5 cursor-pointer"
+                              id="pfp"
+                            >
+                              (
+                              <Image
+                                onError={(e) => handleImageError(e)}
+                                layout="fill"
+                                src={`${INFURA_GATEWAY}/ipfs/${
+                                  collectionDetails?.microbrand?.microbrandCover?.split(
+                                    "ipfs://"
+                                  )?.[1]
+                                }`}
+                                className="rounded-full"
+                                objectFit="cover"
+                                draggable={false}
+                              />
+                              )
+                            </div>
+                          )}
+                          <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
                             {collectionDetails?.microbrand?.microbrand}
                           </div>
                         </div>
@@ -265,6 +273,28 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       {collectionSettings?.microOpen && (
                         <div className="absolute top-10 bg-offBlack z-10 w-40 max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
                           <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                            <div
+                              className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust text-sm cursor-pointer hover:opacity-80"
+                              onClick={() => {
+                                setCollectionSettings((prev) => ({
+                                  ...prev,
+                                  microOpen: !prev.microOpen,
+                                }));
+                                setCollectionDetails((prev) => ({
+                                  ...prev,
+                                  microbrand: {
+                                    microbrand: "",
+                                    microbrandCover: "",
+                                  },
+                                }));
+                              }}
+                            >
+                              <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
+                                <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                  No Brand
+                                </div>
+                              </div>
+                            </div>
                             {JSON.parse(microBrands!)?.map(
                               (
                                 item: {
@@ -306,7 +336,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                           draggable={false}
                                         />
                                       </div>
-                                      <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
+                                      <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
                                         {item?.microbrand}
                                       </div>
                                     </div>
@@ -334,7 +364,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
               <div className="relative w-fit h-fit text-sm">Select Drop</div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
-                {allDrops?.length < 1 ? (
+                {allDrops?.length > 0 ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                     <div className="relative w-fit h-fit text-xs">
                       Available Drops:
@@ -382,7 +412,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                     }));
                                     setCollectionDetails((prev) => ({
                                       ...prev,
-                                      drop: item.dropId,
+                                      dropId: item.dropId,
                                     }));
                                   }}
                                 >
@@ -501,7 +531,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 onChange={(e) =>
                   setCollectionDetails((prev) => ({
                     ...prev,
-                    tags: e.target.value.toLowerCase(),
+                    tags: e.target.value,
                   }))
                 }
                 className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60 max-w-[15rem]"

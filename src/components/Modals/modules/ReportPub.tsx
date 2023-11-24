@@ -42,7 +42,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
             </div>
             <div className="relative flex flex-col gap-2 items-center justify-center w-fit h-fit">
               <div className="relative w-full h-fit flex flex-col items-center justify-center text-white text-center">
-                What's the core reason for reporting?
+                What&quot;s the core reason for reporting?
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center gap-2 flex flex-wrap">
                 {["Fraud", "Illegal", "Sensitive", "Spam"].map(

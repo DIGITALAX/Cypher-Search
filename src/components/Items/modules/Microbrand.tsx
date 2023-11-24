@@ -62,20 +62,22 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
               )
             }
           >
-            <div
-              className="relative w-5 h-5 ml-auto text-base text-white font-aust flex items-center rounded-full justify-center"
-              id="pfp"
-            >
-              {profilePicture && (
-                <Image
-                  layout="fill"
-                  src={profilePicture}
-                  draggable={false}
-                  objectFit="cover"
-                  className="rounded-full"
-                  onError={(e) => handleImageError(e)}
-                />
-              )}
+            <div className="relative w-fit h-fit flex items-center ml-auto">
+              <div
+                className="relative w-5 h-5 text-base text-white font-aust flex items-center rounded-full justify-center"
+                id="pfp"
+              >
+                {profilePicture && (
+                  <Image
+                    layout="fill"
+                    src={profilePicture}
+                    draggable={false}
+                    objectFit="cover"
+                    className="rounded-full"
+                    onError={(e) => handleImageError(e)}
+                  />
+                )}
+              </div>
             </div>
             <div className="relative w-fit h-fit ml-auto text-base text-white font-aust flex items-center justify-center">
               {itemData?.handle?.suggestedFormatted?.localName}

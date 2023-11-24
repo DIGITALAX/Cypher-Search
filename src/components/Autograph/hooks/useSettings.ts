@@ -6,12 +6,12 @@ import {
   NftImage,
   Profile,
   RelaySuccess,
-  MetadataAttributeType,
 } from "../../../../graphql/generated";
 import {
   ProfileMetadataSchema,
   ProfileOptions,
   MetadataAttribute,
+  MetadataAttributeType,
 } from "@lens-protocol/metadata";
 import setFollowModule from "../../../../graphql/lens/mutations/followModule";
 import createSetFollowModule from "../../../../lib/helpers/createSetFollowModule";
@@ -24,14 +24,13 @@ import broadcast from "../../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
-import handleIndexCheck, {
-  getIndexed,
-} from "../../../../graphql/lens/queries/indexed";
+import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
 import { Dispatch } from "redux";
 import { ScreenDisplay } from "../types/autograph.types";
 import { v4 as uuidv4 } from "uuid";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import convertToFile from "../../../../lib/helpers/convertToFile";
+import errorChoice from "../../../../lib/helpers/errorChoice";
 
 const useSettings = (
   lensConnected: Profile | undefined,
@@ -40,7 +39,8 @@ const useSettings = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   screenDisplay: ScreenDisplay,
-  isDesigner: boolean
+  isDesigner: boolean,
+  pageProfile: Profile | undefined
 ) => {
   const [settingsUpdateLoading, setSettingsUpdateLoading] =
     useState<boolean>(false);
@@ -55,14 +55,15 @@ const useSettings = (
       microbrands: {
         microbrand: string;
         microbrandCover: string;
+        type: string;
       }[];
       tempMicro: {
         microbrand: string | undefined;
         microbrandCover: string | undefined;
+        type: string | undefined;
       };
     }
   >({
-    appId: "",
     attributes: undefined,
     bio: undefined,
     coverPicture: undefined,
@@ -70,6 +71,7 @@ const useSettings = (
     picture: undefined,
     microbrands: [],
     tempMicro: {
+      type: undefined,
       microbrand: undefined,
       microbrandCover: undefined,
     },
@@ -105,6 +107,7 @@ const useSettings = (
             tempMicro: {
               ...prev.tempMicro,
               microbrandCover: e.target?.result as string,
+              type: file.type,
             },
           }));
         } else if (id == "cover") {
@@ -139,20 +142,20 @@ const useSettings = (
 
       let newAttributes = [...(settingsData?.attributes || [])];
 
-      if (isDesigner) {
+      if (isDesigner && settingsData?.microbrands) {
         const existing = newAttributes.findIndex(
-          (item) => item?.key === "microbrandsCypher"
+          (item) => item?.key === "microbrandCypher"
         );
         let itemsToHash: {
           microbrand: string;
           microbrandCover: string;
+          type: string;
         }[] = [];
+
         if (existing != -1) {
-          await JSON.parse(newAttributes[existing]?.value);
-          itemsToHash = [
-            ...settingsData?.microbrands,
-            ...JSON.parse(newAttributes[existing]?.value),
-          ].filter(
+          const parsed = await JSON.parse(newAttributes[existing]?.value);
+
+          itemsToHash = [...settingsData?.microbrands, ...parsed].filter(
             (value, index, array) =>
               array.findIndex(
                 (v) =>
@@ -164,33 +167,41 @@ const useSettings = (
           itemsToHash = settingsData?.microbrands;
         }
 
-        const promises = itemsToHash?.map(
-          async (item: { microbrand: string; microbrandCover: string }) => {
-            const cover = await fetch("/api/ipfs", {
-              method: "POST",
-              body: convertToFile(item?.microbrandCover, "image/png"),
+        if (itemsToHash?.length > 0) {
+          const promises = itemsToHash
+            ?.filter(Boolean)
+            ?.map(
+              async (item: {
+                microbrand: string;
+                microbrandCover: string;
+                type: string;
+              }) => {
+                const cover = await fetch("/api/ipfs", {
+                  method: "POST",
+                  body: convertToFile(item?.microbrandCover, item?.type),
+                });
+                const coverCID = await cover.json();
+                return {
+                  microbrand: item.microbrand,
+                  microbrandCover: "ipfs://" + coverCID?.cid,
+                };
+              }
+            );
+
+          const awaited = (await Promise.all(promises))?.filter(Boolean);
+
+          if (existing != -1) {
+            newAttributes[existing].value = JSON.stringify([
+              ...(await JSON.parse(newAttributes[existing]?.value)),
+              ...(awaited || []),
+            ]);
+          } else {
+            newAttributes.push({
+              type: MetadataAttributeType.STRING,
+              key: "microbrandCypher",
+              value: JSON.stringify(awaited || []),
             });
-            const coverCID = await cover.json();
-            return {
-              microbrand: item.microbrand,
-              microbrandCover: "ipfs://" + coverCID?.cid,
-            };
           }
-        );
-
-        const awaited = await Promise.all(promises);
-
-        if (existing != -1) {
-          newAttributes[existing].value = JSON.stringify([
-            ...(await JSON.parse(newAttributes[existing]?.value)),
-            ...(awaited || []),
-          ]);
-        } else {
-          newAttributes.push({
-            key: "microbrandCypher",
-            value: JSON.stringify(awaited || []),
-            type: MetadataAttributeType.Json as any,
-          });
         }
       }
 
@@ -198,14 +209,14 @@ const useSettings = (
         settingsData;
       const metadata = {
         ...filteredSettingsData,
-        // attributes: attributes
-        //   ?.filter((item) => item?.key?.toLowerCase() !== "timestamp")
-        //   ?.map((item) => ({
-        //     ...item,
-        //     type:
-        //       item.type.charAt(0).toUpperCase() +
-        //       item.type.slice(1).toLowerCase(),
-        //   })),
+        attributes: newAttributes?.map((item) => ({
+          ...item,
+          type:
+            item.type.toLowerCase() === "json"
+              ? "JSON"
+              : item.type.charAt(0).toUpperCase() +
+                item.type.slice(1).toLowerCase(),
+        })),
         picture: hasNewPfpImage
           ? newImages[hasNewCoverImage ? 1 : 0]
           : settingsData.picture,
@@ -213,6 +224,7 @@ const useSettings = (
           ? newImages[0]
           : settingsData.coverPicture,
         id: uuidv4(),
+        version: "2.0.0",
       };
 
       const test = ProfileMetadataSchema.safeParse({
@@ -245,29 +257,7 @@ const useSettings = (
         setInteractError(true);
       }
     } catch (err: any) {
-      if (
-        !err?.messages?.includes("Block at number") &&
-        !err?.message?.includes("could not be found")
-      ) {
-        dispatch(setInteractError(true));
-        console.error(err.message);
-      } else {
-        dispatch(
-          setIndexer({
-            actionOpen: true,
-            actionMessage: "Successfully Indexed",
-          })
-        );
-
-        setTimeout(() => {
-          dispatch(
-            setIndexer({
-              actionOpen: false,
-              actionMessage: undefined,
-            })
-          );
-        }, 3000);
-      }
+      errorChoice(err, () => {}, dispatch);
     }
     setSettingsUpdateLoading(false);
   };
@@ -360,14 +350,13 @@ const useSettings = (
   useEffect(() => {
     if (
       lensConnected?.id &&
-      settingsData?.appId?.trim() == "" &&
+      // lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle &&
       ScreenDisplay.Settings == screenDisplay
     ) {
       setSettingsData({
-        appId: "cyphersearch",
         attributes: lensConnected?.metadata?.attributes?.map((item) => ({
-          key: item?.key,
           type: item?.type,
+          key: item?.key,
           value: item?.value,
         })) as MetadataAttribute[] | undefined,
         bio: lensConnected?.metadata?.bio,
@@ -383,13 +372,13 @@ const useSettings = (
             : (lensConnected?.metadata?.picture as NftImage)?.image?.raw?.uri,
         microbrands: lensConnected?.metadata?.attributes?.[
           lensConnected?.metadata?.attributes?.findIndex(
-            (item) => item?.key === "microbrandsCypher"
+            (item) => item?.key === "microbrandCypher"
           )
         ]
           ? JSON.parse(
               lensConnected?.metadata?.attributes?.[
                 lensConnected?.metadata?.attributes?.findIndex(
-                  (item) => item?.key === "microbrandsCypher"
+                  (item) => item?.key === "microbrandCypher"
                 )
               ]?.value || ""
             )
@@ -397,10 +386,12 @@ const useSettings = (
         tempMicro: {
           microbrand: undefined,
           microbrandCover: undefined,
+          type: undefined,
         },
       });
     }
-  }, [lensConnected?.id, screenDisplay]);
+  }, [lensConnected?.id, screenDisplay, pageProfile]);
+
   return {
     handleSettingsUpdate,
     settingsUpdateLoading,

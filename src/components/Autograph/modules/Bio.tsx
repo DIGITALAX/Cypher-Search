@@ -28,7 +28,7 @@ const Bio: FunctionComponent<BioProps> = ({
               Oscillating between 2023 and 1983, where AI meets analog and
               decentralization dons a neon glow. Here, epochs blend and
               governance dances to the beat of synthwave. The underlying ethos:
-              "In Autonomy We Trust."
+              &quot;In Autonomy We Trust.&quot;
             </div>
           </div>
           <div className="relative flex items-start justify-between gap-2 w-full h-fit p-2 top-7 flex-col">
@@ -90,7 +90,6 @@ const Bio: FunctionComponent<BioProps> = ({
                       layout="fill"
                       draggable={false}
                       src={`${INFURA_GATEWAY}/ipfs/QmchHAtagS96zqoEL9BxrfHLNN1s7jUXJHiMLgzrcfMVpK`}
-                  
                     />
                   </div>
                   <div className="relative w-fit h-fit flex">
@@ -142,16 +141,13 @@ const Bio: FunctionComponent<BioProps> = ({
           </div>
         </div>
         {profile?.metadata?.attributes?.find(
-          (item) => item?.key === "microbrandsCypher"
-        )?.value &&
-          profile?.metadata?.attributes?.find(
-            (item) => item?.key === "microbrandsCypher"
-          )?.type === MetadataAttributeType.Json && (
+          (item) => item?.key === "microbrandCypher"
+        )?.value && (
             <div className="relative w-full hit flex flex-row gap-2 flex-wrap">
               {JSON.parse(
                 profile?.metadata?.attributes?.[
                   profile?.metadata?.attributes?.findIndex(
-                    (item) => item?.key === "microbrandsCypher"
+                    (item) => item?.key === "microbrandCypher"
                   )
                 ].value
               )?.map(

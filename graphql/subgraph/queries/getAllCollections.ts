@@ -46,6 +46,7 @@ export const getAllCollections = async (
   first: number,
   skip: number
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS),
     variables: {
@@ -58,12 +59,15 @@ export const getAllCollections = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+  timeoutId =  setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000);
+    return () => clearTimeout(timeoutId);
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

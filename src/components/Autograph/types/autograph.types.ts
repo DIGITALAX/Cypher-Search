@@ -185,10 +185,12 @@ export type WebProps = {
         microbrands: {
           microbrand: string;
           microbrandCover: string;
+          type: string;
         }[];
         tempMicro: {
           microbrand: string | undefined;
           microbrandCover: string | undefined;
+          type: string | undefined;
         };
       }
     >
@@ -197,10 +199,12 @@ export type WebProps = {
     microbrands: {
       microbrand: string;
       microbrandCover: string;
+      type: string;
     }[];
     tempMicro: {
       microbrand: string | undefined;
       microbrandCover: string | undefined;
+      type: string | undefined;
     };
   };
   handleSettingsUpdate: () => Promise<void>;
@@ -656,10 +660,12 @@ export type ScreenSwitchProps = {
         microbrands: {
           microbrand: string;
           microbrandCover: string;
+          type: string;
         }[];
         tempMicro: {
           microbrand: string | undefined;
           microbrandCover: string | undefined;
+          type: string | undefined;
         };
       }
     >
@@ -668,10 +674,12 @@ export type ScreenSwitchProps = {
     microbrands: {
       microbrand: string;
       microbrandCover: string;
+      type: string;
     }[];
     tempMicro: {
       microbrand: string | undefined;
       microbrandCover: string | undefined;
+      type: string | undefined;
     };
   };
   handleSettingsUpdate: () => Promise<void>;
@@ -759,10 +767,12 @@ export type SettingsProps = {
         microbrands: {
           microbrand: string;
           microbrandCover: string;
+          type: string;
         }[];
         tempMicro: {
           microbrand: string | undefined;
           microbrandCover: string | undefined;
+          type: string | undefined;
         };
       }
     >
@@ -771,10 +781,12 @@ export type SettingsProps = {
     microbrands: {
       microbrand: string;
       microbrandCover: string;
+      type: string;
     }[];
     tempMicro: {
       microbrand: string | undefined;
       microbrandCover: string | undefined;
+      type: string | undefined;
     };
   };
   handleSettingsUpdate: () => Promise<void>;

@@ -69,6 +69,7 @@ const ORDERS_QUICK = `
 export const getOrders = async (
   buyer: `0x${string}`
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(ORDERS),
     variables: {
@@ -79,12 +80,13 @@ export const getOrders = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -97,6 +99,7 @@ export const getOrdersPaginated = async (
   first: number,
   skip: number
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(ORDERS_PAGINATED),
     variables: {
@@ -109,12 +112,13 @@ export const getOrdersPaginated = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {
@@ -125,6 +129,7 @@ export const getOrdersPaginated = async (
 export const getOrdersQuick = async (
   buyer: `0x${string}`
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(ORDERS_QUICK),
     variables: {
@@ -135,12 +140,13 @@ export const getOrdersQuick = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
   if (result.timedOut) {
     return;
   } else {

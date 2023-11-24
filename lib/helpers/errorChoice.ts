@@ -2,9 +2,9 @@ import { AnyAction, Dispatch } from "redux";
 import { setInteractError } from "../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../redux/reducers/indexerSlice";
 
-const errorChoice = (
+const errorChoice = async (
   err: any,
-  runner: () => void,
+  runner: (() => Promise<void>) | (() => void),
   dispatch: Dispatch<AnyAction>
 ) => {
   if (
@@ -21,7 +21,11 @@ const errorChoice = (
       })
     );
 
-    runner();
+    if (runner() instanceof Promise) {
+      await runner();
+    } else {
+      runner();
+    }
 
     setTimeout(() => {
       dispatch(

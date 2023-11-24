@@ -1,6 +1,5 @@
 import { FetchResult, gql } from "@apollo/client";
 import { graphPrintClient } from "../../../lib/graph/client";
-import { FilterInput } from "@/components/Tiles/types/tiles.types";
 
 const DROPS = `
   query($creator: String!) {
@@ -25,26 +24,27 @@ const DROP = `
     }
   }
 `;
-
 export const getDrops = async (
   creator: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(DROPS),
-    variables: {
-      creator,
-    },
+    variables: { creator },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000);
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+
+  timeoutId && clearTimeout(timeoutId);
+
   if (result.timedOut) {
     return;
   } else {
@@ -56,6 +56,7 @@ export const getOneDrop = async (
   creator: string,
   title: string
 ): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(DROP),
     variables: {
@@ -67,12 +68,14 @@ export const getOneDrop = async (
   });
 
   const timeoutPromise = new Promise((resolve) => {
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000);
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
+
   if (result.timedOut) {
     return;
   } else {

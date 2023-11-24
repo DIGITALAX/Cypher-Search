@@ -52,6 +52,11 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
                         ? `${INFURA_GATEWAY}/ipfs/${
                             selectedUser?.image?.split("ipfs://")?.[1]
                           }`
+                        : selectedUser?.image?.includes("ar://")
+                        ? `https://arweave.net/${selectedUser?.image
+                            ?.split("ar://")?.[1]
+                            ?.replace(/"/g, "")
+                            ?.trim()}`
                         : selectedUser?.image
                     }
                     draggable={false}

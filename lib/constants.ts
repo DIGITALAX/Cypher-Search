@@ -12,7 +12,7 @@ export const LENS_HUB_PROXY_ADDRESS_MATIC: `0x${string}` =
 export const NFT_CREATOR_ADDRESS: `0x${string}` =
   "0x3Bb3157F4af00BA61A562A0Ffe9cBfd07388d2b1";
 export const CHROMADIN_OPEN_ACTION: `0x${string}` =
-  "0x616BBd3F1d09349a9cd32C05621FE04572539A41";
+  "0x3C6Bc6A6BC1051fFC961fbbD905b89F0bEb40a44";
 export const LISTENER_OPEN_ACTION: `0x${string}` =
   "0xeA2B9375910dd3032b514Daefd8061f545aa62B3";
 export const COIN_OP_OPEN_ACTION: `0x${string}` =
@@ -28,7 +28,7 @@ export const DIGITALAX_ADDRESS: `0x${string}` =
 export const ZERO_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000";
 
-export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|bafy[A-Za-z0-9]+)\b/;
+export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|ba[A-Za-z2-7]{57})\b/;
 export const PLACEHOLDERS: string[] = [
   "know the creator by name? @ them, we won't judge",
   "some ideas from trending hashes: #synthwave #neobrutalism #autonomy",

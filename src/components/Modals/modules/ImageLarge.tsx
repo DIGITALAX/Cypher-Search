@@ -35,6 +35,11 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
                       ? `${INFURA_GATEWAY}/ipfs/${
                           mainImage?.split("ipfs://")?.[1]
                         }`
+                      : mainImage?.includes("ar://")
+                      ? `https://arweave.net/${mainImage
+                          ?.split("ar://")?.[1]
+                          ?.replace(/"/g, "")
+                          ?.trim()}`
                       : mainImage
                   }
                   onError={(e) => handleImageError(e)}
@@ -56,6 +61,11 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
                         ? `${INFURA_GATEWAY}/ipfs/${
                             mainImage?.split("ipfs://")?.[1]
                           }`
+                        : mainImage?.includes("ar://")
+                        ? `https://arweave.net/${mainImage
+                            ?.split("ar://")?.[1]
+                            ?.replace(/"/g, "")
+                            ?.trim()}`
                         : mainImage
                     }
                     type="video/mp4"

@@ -92,6 +92,7 @@ const useReport = (dispatch: Dispatch) => {
           })
         );
       }, 4000);
+
     } catch (err: any) {
       if (
         !err?.messages?.includes("Block at number") &&
@@ -115,6 +116,7 @@ const useReport = (dispatch: Dispatch) => {
             })
           );
         }, 3000);
+
       }
     }
     setReportLoading(false);

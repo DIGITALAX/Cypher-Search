@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSignMessage } from "wagmi";
 import { setWalletConnected } from "../../../../redux/reducers/walletConnectedSlice";
 import { setLensConnected } from "../../../../redux/reducers/lensConnectedSlice";
-import getProfiles from "../../../../graphql/lens/queries/profiles";
 import generateChallenge from "../../../../graphql/lens/queries/challenge";
 import PrintAccessControlAbi from "./../../../../abis/PrintAccessControl.json";
 import {
@@ -173,11 +172,14 @@ const useSignIn = (
   }, []);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     if (cartAnim) {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         dispatch(setCartAnim(false));
       }, 1000);
     }
+
+    return () => timeoutId && clearTimeout(timeoutId);
   }, [cartAnim]);
 
   useEffect(() => {

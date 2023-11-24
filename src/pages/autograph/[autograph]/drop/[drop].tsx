@@ -22,8 +22,10 @@ import NotFound from "@/components/Common/modules/NotFound";
 
 const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
+    chain: polygonMumbai,
+    transport: http(
+      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+    ),
   });
   const { autograph, drop } = router.query;
   const dispatch = useDispatch();
@@ -142,11 +144,13 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   );
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (!profileLoading && !dropLoading) {
         setGlobalLoading(false);
       }
     }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [profileLoading]);
 
   if (!profileLoading && !globalLoading && !dropLoading) {

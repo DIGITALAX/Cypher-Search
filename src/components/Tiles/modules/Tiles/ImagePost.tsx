@@ -82,6 +82,21 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                           ? publication?.mirrorOn
                           : (publication as Post)
                         )?.metadata as ImageMetadataV3
+                      )?.asset.image?.raw?.uri?.includes("ar://")
+                    ? `https://arweave.net/${(
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.metadata as ImageMetadataV3
+                      )?.asset.image?.raw?.uri
+                        ?.split("ar://")?.[1]
+                        ?.replace(/"/g, "")
+                        ?.trim()}`
+                    : (
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.metadata as ImageMetadataV3
                       )?.asset.image?.raw?.uri,
                 })
               )
@@ -119,6 +134,21 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                           )?.metadata as ImageMetadataV3
                         )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
                       }`
+                    : (
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.metadata as ImageMetadataV3
+                      )?.asset.image?.raw?.uri?.includes("ar://")
+                    ? `https://arweave.net/${(
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.metadata as ImageMetadataV3
+                      )?.asset.image?.raw?.uri
+                        ?.split("ar://")?.[1]
+                        ?.replace(/"/g, "")
+                        ?.trim()}`
                     : (
                         (publication?.__typename === "Mirror"
                           ? publication?.mirrorOn
@@ -404,6 +434,21 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             ? publication?.mirrorOn
                             : (publication as Post)
                           )?.metadata as ImageMetadataV3
+                        )?.asset.image?.raw?.uri?.includes("ar://")
+                      ? `https://arweave.net/${(
+                          (publication?.__typename === "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.asset.image?.raw?.uri
+                          ?.split("ar://")?.[1]
+                          ?.replace(/"/g, "")
+                          ?.trim()}`
+                      : (
+                          (publication?.__typename === "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
                         )?.asset.image?.raw?.uri,
                   })
                 )
@@ -433,6 +478,21 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             )?.metadata as ImageMetadataV3
                           )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
                         }`
+                      : (
+                          (publication?.__typename === "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.asset.image?.raw?.uri?.includes("ar://")
+                      ? `https://arweave.net/${(
+                          (publication?.__typename === "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.asset.image?.raw?.uri
+                          ?.split("ar://")?.[1]
+                          ?.replace(/"/g, "")
+                          ?.trim()}`
                       : (
                           (publication?.__typename === "Mirror"
                             ? publication?.mirrorOn

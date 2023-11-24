@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createWalletClient, custom, PublicClient } from "viem";
 import { polygon, polygonMumbai } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";

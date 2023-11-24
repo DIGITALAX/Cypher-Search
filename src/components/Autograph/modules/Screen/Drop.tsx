@@ -59,16 +59,22 @@ const Drop: FunctionComponent<DropProps> = ({
                       }
                     >
                       <div className="relative w-full h-full">
-                        <Image
-                          layout="fill"
-                          src={`${INFURA_GATEWAY}/ipfs/${
-                            item?.cover?.split("ipfs://")?.[1]
-                          }`}
-                          draggable={false}
-                          onError={(e) => handleImageError(e)}
-                        />
+                        {item?.cover && (
+                          <Image
+                            layout="fill"
+                            src={`${INFURA_GATEWAY}/ipfs/${
+                              item?.cover?.split("ipfs://")?.[1]
+                            }`}
+                            objectFit="cover"
+                            draggable={false}
+                            onError={(e) => handleImageError(e)}
+                          />
+                        )}
                       </div>
                       <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
+                        <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">
+                          {item?.title}
+                        </div>
                         <div
                           className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
                           title="Go to Drop"

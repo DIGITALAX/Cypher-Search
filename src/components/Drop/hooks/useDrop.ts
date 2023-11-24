@@ -14,7 +14,7 @@ const useDrop = (drop: string, profile: Profile | undefined) => {
     try {
       const res = await getOneDrop(profile?.ownedBy?.address, drop);
 
-      return res?.data?.dropCreateds?.[0];
+      return res?.data?.collectionCreateds?.[0];
     } catch (err: any) {
       console.error(err.message);
     }

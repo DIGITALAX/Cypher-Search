@@ -275,6 +275,11 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                                 ? `${INFURA_GATEWAY}/ipfs/${
                                     dropDetails?.cover?.split("ipfs://")?.[1]
                                   }`
+                                : dropDetails?.cover?.includes("ar://")
+                                ? `https://arweave.net/${dropDetails?.cover
+                                    ?.split("ar://")?.[1]
+                                    ?.replace(/"/g, "")
+                                    ?.trim()}`
                                 : dropDetails?.cover
                             }
                             objectFit="cover"
@@ -295,7 +300,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     </label>
                     {dropDetails?.dropId !== "" && (
                       <>
-                        <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 font-aust text-white">
+                        <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 font-aust text-white relative">
                           <div className="relative w-fit h-fit text-sm">
                             Add Collections
                           </div>
@@ -306,52 +311,54 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                               setSearchCollection(e.target.value)
                             }
                           />
-                        </div>
-                        {allCollections?.filter((item) =>
-                          item?.title
-                            ?.toLowerCase()
-                            ?.includes(searchCollection?.toLowerCase())
-                        ) && (
-                          <div className="absolute w-full max-h-[10rem] h-fit flex overflow-y-scroll bg-offBlack z-1 border border-white rounded-md">
-                            <div className="relative w-full h-fit flex flex-col ">
-                              {allCollections
-                                ?.filter((item) =>
-                                  item?.title
-                                    ?.toLowerCase()
-                                    ?.includes(searchCollection?.toLowerCase())
-                                )
-                                ?.map((item: Creation, index: number) => {
-                                  return (
-                                    <div
-                                      key={index}
-                                      className="relative px-2 py-1 text-center flex justify-center items-center hover:opacity-70 cursor-pointer active:scale-95"
-                                      onClick={() => {
-                                        if (
-                                          !dropDetails?.collectionIds?.find(
-                                            (value) =>
-                                              item.collectionId === value
-                                          )
-                                        ) {
-                                          setSearchCollection("");
-                                          setDropDetails((prev) => ({
-                                            ...prev,
-                                            collectionIds: [
-                                              ...prev.collectionIds,
-                                              item.collectionId,
-                                            ],
-                                          }));
-                                        }
-                                      }}
-                                    >
-                                      <div className="relative w-fit h-fit flex items-center justify-center text-white font-aust text-xs">
-                                        {item?.title}
+                          {allCollections?.filter((item) =>
+                            item?.title
+                              ?.toLowerCase()
+                              ?.includes(searchCollection?.toLowerCase())
+                          )?.length > 0 && (
+                            <div className="absolute w-full max-h-[10rem] h-fit flex overflow-y-scroll bg-offBlack z-1 border border-sol rounded-md -bottom-40">
+                              <div className="relative w-full h-fit flex flex-col">
+                                {allCollections
+                                  ?.filter((item) =>
+                                    item?.title
+                                      ?.toLowerCase()
+                                      ?.includes(
+                                        searchCollection?.toLowerCase()
+                                      )
+                                  )
+                                  ?.map((item: Creation, index: number) => {
+                                    return (
+                                      <div
+                                        key={index}
+                                        className="relative px-2 py-1 text-center flex justify-center items-center hover:opacity-70 cursor-pointer h-10 w-full active:scale-95"
+                                        onClick={() => {
+                                          if (
+                                            !dropDetails?.collectionIds?.find(
+                                              (value) =>
+                                                item.collectionId === value
+                                            )
+                                          ) {
+                                            setSearchCollection("");
+                                            setDropDetails((prev) => ({
+                                              ...prev,
+                                              collectionIds: [
+                                                ...prev.collectionIds,
+                                                item?.collectionId,
+                                              ],
+                                            }));
+                                          }
+                                        }}
+                                      >
+                                        <div className="relative w-fit h-fit flex items-center justify-center text-white font-aust text-xs">
+                                          {item?.title}
+                                        </div>
                                       </div>
-                                    </div>
-                                  );
-                                })}
+                                    );
+                                  })}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </>
                     )}
                     <div className="relative w-60 overflow-x-scroll h-fit flex items-center justify-start">

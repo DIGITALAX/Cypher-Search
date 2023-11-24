@@ -1,5 +1,5 @@
 import Image from "next/legacy/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useRef } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { AiOutlineLoading } from "react-icons/ai";
 import { ControlsProps } from "../types/tiles.types";
@@ -21,6 +21,15 @@ const Controls: FunctionComponent<ControlsProps> = ({
   videoRef,
   setVideoInfo,
 }): JSX.Element => {
+  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
+  useEffect(() => {
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div
       className={`relative h-fit flex w-full gap-3 items-center galaxy:px-2 justify-center flex-col md:flex-row flex-wrap`}
@@ -79,7 +88,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
                 ...prev,
                 heart: true,
               }));
-              setTimeout(() => {
+              timeoutIdRef.current = setTimeout(() => {
                 setVideoInfo((prev) => ({
                   ...prev,
                   heart: false,

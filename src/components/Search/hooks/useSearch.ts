@@ -155,20 +155,25 @@ const useSearch = (
               publicationTypes: [SearchPublicationType.Post],
               metadata: {
                 publishedOn: filters?.origin
-                  ? filters?.origin?.split(",").map((word) => word.trim())
+                  ? filters?.origin
+                      ?.split(",")
+                      .map((word) => word.trim())
+                      .filter((word: string) => word.length > 0)
                   : undefined,
                 tags: filters?.hashtag
                   ? {
                       oneOf: filters?.hashtag
                         ?.split(",")
-                        .map((word) => word.trim()),
+                        .map((word) => word.trim())
+                        .filter((word: string) => word.length > 0),
                     }
                   : undefined,
                 mainContentFocus: filters?.format
                   ? (filters?.format
                       ?.split(",")
-                      .map((word) =>
-                        word.trim()
+                      .map((word) => word.trim())
+                      .filter(
+                        (word: string) => word.length > 0
                       ) as PublicationMetadataMainFocusType[])
                   : undefined,
               },
@@ -403,7 +408,10 @@ const useSearch = (
                 publicationTypes: [SearchPublicationType.Post],
                 metadata: {
                   publishedOn: filters?.origin
-                    ? filters?.origin?.split(",").map((word) => word.trim())
+                    ? filters?.origin
+                        ?.split(",")
+                        .map((word) => word.trim())
+                        .filter((word: string) => word.length > 0)
                     : [
                         "chromadin",
                         "legend",
@@ -415,14 +423,16 @@ const useSearch = (
                     ? {
                         oneOf: filters?.hashtag
                           ?.split(",")
-                          .map((word) => word.trim()),
+                          .map((word) => word.trim())
+                          .filter((word: string) => word.length > 0),
                       }
                     : undefined,
                   mainContentFocus: filters?.format
                     ? (filters?.format
                         ?.split(",")
-                        .map((word) =>
-                          word.trim()
+                        .map((word) => word.trim())
+                        .filter(
+                          (word: string) => word.length > 0
                         ) as PublicationMetadataMainFocusType[])
                     : undefined,
                 },

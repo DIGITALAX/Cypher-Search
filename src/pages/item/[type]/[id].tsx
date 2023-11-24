@@ -29,8 +29,10 @@ import useProfile from "@/components/Autograph/hooks/useProfile";
 
 const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
-    chain: polygon,
-    transport: http(),
+    chain: polygonMumbai,
+    transport: http(
+      `https://polygon.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+    ),
   });
   const { type, id } = router.query;
   const dispatch = useDispatch();
@@ -254,18 +256,21 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address
   );
+  console.log({ itemData });
   useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (!itemLoading) {
         setGlobalLoading(false);
       }
     }, 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [itemLoading]);
 
   if (!globalLoading && !itemLoading && type) {
     return (
       <>
-        {!itemData ? (
+        {!itemData?.post ? (
           <NotFound
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
