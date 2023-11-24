@@ -7,7 +7,7 @@ const allowedOrigins = [
   "https://api.thegraph.com",
   "https://arweave.net/",
   "https://gw.ipfs-lens.dev",
-  "https://hey.xyz"
+  "https://hey.xyz",
 ];
 
 const nextConfig = {
@@ -23,13 +23,15 @@ const nextConfig = {
     unoptimized: true,
   },
   async headers() {
-    return [
-      {
+    let headersConfig = [];
+
+    allowedOrigins.forEach((origin) => {
+      headersConfig.push({
         source: "/(.*)",
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: allowedOrigins.join(","),
+            value: origin,
           },
           {
             key: "Access-Control-Allow-Headers",
@@ -41,8 +43,10 @@ const nextConfig = {
             value: "GET, POST, PUT, DELETE, OPTIONS",
           },
         ],
-      },
-    ];
+      });
+    });
+
+    return headersConfig;
   },
 };
 
