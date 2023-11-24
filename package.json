@@ -12,6 +12,7 @@
     "@airstack/airstack-react": "^0.5.7",
     "@apollo/client": "^3.8.5",
     "@lens-protocol/client": "^2.0.0-alpha.21",
+    "@lens-protocol/metadata": "^1.0.5",
     "@lit-protocol/lit-node-client": "^3.0.22",
     "@rainbow-me/rainbowkit": "^1.1.1",
     "@reduxjs/toolkit": "^1.9.7",
