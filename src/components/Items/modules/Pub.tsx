@@ -65,9 +65,9 @@ const Pub: FunctionComponent<PublicationProps> = ({
   setCaretCoordMain,
 }): JSX.Element => {
   return (
-    <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-row pt-32 px-12 gap-7 h-fit">
+    <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-col xl:flex-row pt-52 sm:pt-40 md:pt-32 px-2 sm:px-12 gap-7 h-fit">
       <div className="relative w-full h-full flex items-start justify-center">
-        <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] h-full">
+        <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] xl:w-[30rem] 2xl:w-[40rem] h-full">
           <Publication
             setCaretCoord={setCaretCoord}
             caretCoord={caretCoordMain}
@@ -109,8 +109,8 @@ const Pub: FunctionComponent<PublicationProps> = ({
           />
         </div>
       </div>
-      <div className="relative w-full h-full flex items-end justify-start ml-auto flex-col gap-12">
-        <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] h-full">
+      <div className="relative w-full h-full flex items-center 2xl:items-end justify-start 2xl:ml-auto flex-col gap-12">
+        <div className="relative flex flex-col gap-2 items-center justify-center w-full md:w-[40rem] h-full">
           <div
             className={`relative p-3 bg-black flex items-start justify-center w-full h-fit`}
           >
@@ -127,7 +127,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                 })}
               </div>
             ) : (
-              <div className="relative w-5/6 h-[37rem] flex flex-col gap-10 justify-start items-center">
+              <div className="relative w-full md:w-5/6 h-[37rem] flex flex-col gap-10 justify-start items-center">
                 <PostComment
                   caretCoord={caretCoordMain}
                   profilesOpen={profilesOpenMain?.[0]}
@@ -158,7 +158,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                       hasMore={hasMoreComments}
                       dataLength={allComments?.length}
                       loader={<></>}
-                      className="w-fit h-fit items-center justify-start flex flex-col gap-10"
+                      className="w-full sm:w-fit h-fit items-center justify-start flex flex-col gap-10"
                       height={"20rem"}
                     >
                       {allComments?.map(

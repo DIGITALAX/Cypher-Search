@@ -25,7 +25,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
           : "absolute top-[35vh] sm:right-auto right-0"
       }`}
     >
-      <div className="relative h-fit tablet:h-10 w-full md:w-3/5 flex flex-col tablet:flex-row gap-3 tablet:gap-2 items-center justify-center">
+      <div className="relative h-fit tablet:h-10 w-full sm:w-5/6 lg:w-3/5 flex flex-col tablet:flex-row gap-3 tablet:gap-2 items-center justify-center">
         <div
           className="relative tablet:w-9 w-6 h-5 tablet:h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
           onClick={() => handleShuffleSearch()}
