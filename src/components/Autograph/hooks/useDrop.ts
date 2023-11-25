@@ -194,7 +194,7 @@ const useDrop = (
     ) {
       getAllDrops();
     }
-  }, [screenDisplay, address]);
+  }, [screenDisplay, address, lensConnected, pageProfile]);
 
   return {
     createDrop,

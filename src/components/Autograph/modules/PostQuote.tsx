@@ -16,7 +16,7 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
   const profilePicture = createProfilePicture(quote?.by?.metadata?.picture);
   return (
     <div
-      className="relative w-full h-60 overflow-y-hidden px-5 py-1 flex items-start justify-center"
+      className="relative w-full h-60 overflow-y-hidden sm:px-5 py-1 flex items-start justify-center"
       id="fadedQuote"
     >
       <div

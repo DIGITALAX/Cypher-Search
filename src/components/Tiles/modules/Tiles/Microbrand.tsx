@@ -87,10 +87,9 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
           }`}
         >
           {(publication as any)?.microbandName}
-          yawp11
         </div>
       </div>
-      <Stats dispatch={dispatch} profile={publication} />
+      <Stats layoutAmount={layoutAmount} dispatch={dispatch} profile={publication} />
     </div>
   );
 };

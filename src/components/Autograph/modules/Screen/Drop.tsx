@@ -14,7 +14,7 @@ const Drop: FunctionComponent<DropProps> = ({
 }): JSX.Element => {
   return allDrops?.length > 0 || dropsLoading ? (
     <div
-      className="relative w-4/5 h-full overflow-x-scroll flex justify-start items-start"
+      className="relative w-full tablet:w-4/5 h-full overflow-x-scroll flex justify-start items-start"
       id="prerollScroll"
     >
       <div className="relative w-full h-full flex items-start justify-start">

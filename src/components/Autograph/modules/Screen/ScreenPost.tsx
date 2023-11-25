@@ -21,13 +21,13 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      <div className="relative flex w-4/5 h-fit items-start justify-center rounded-sm">
+      <div className="relative flex w-full tablet:w-4/5 h-fit items-start justify-center rounded-sm">
         <div
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-center justify-center overflow-y-scroll h-[35rem]">
-            <div className="relative flex items-center justify-center w-2/3 h-full">
+          <div className="relative w-full bg-blurs flex bg-cover rounded-sm px-8 tablet:px-3 tablet:py-3 items-center justify-center overflow-y-scroll h-[35rem]">
+            <div className="relative flex items-center justify-center w-full tablet:w-2/3 h-full">
               <PostComment
                 setCaretCoord={setCaretCoord}
                 caretCoord={caretCoord}

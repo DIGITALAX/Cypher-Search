@@ -167,39 +167,45 @@ const useConversations = (
         (await sendImage).sent;
       }
 
-      const data = conversation.send(digitalax ? digiMessage : currentMessage);
-      if ((await data).sent) {
-        if (digitalax) {
+      if (digitalax && digiMessage?.trim() !== "") {
+        const data = conversation.send(digiMessage);
+
+        if ((await data).sent) {
           setDigiMessage("Message sent! We'll be in touch shortly.");
           setTimeout(() => {
             setDigiMessage("");
           }, 6000);
-        } else {
+        }
+      } else if (currentMessage?.trim() !== "" && !digitalax) {
+        const data = conversation.send(currentMessage);
+
+        if ((await data).sent) {
           setCurrentMessage("");
           setMessageImage({
             image: "",
             type: "",
           });
-        }
-        const newMessages = await conversation.messages();
-        setMessages(newMessages);
-        const index = conversations?.findIndex(
-          (item) =>
-            item?.peerAddress?.toLowerCase() ===
-            conversation?.peerAddress?.toLowerCase()
-        );
 
-        if (index != -1) {
-          setConversations((prev) => {
-            const arr = [...prev];
+          const newMessages = await conversation.messages();
+          setMessages(newMessages);
+          const index = conversations?.findIndex(
+            (item) =>
+              item?.peerAddress?.toLowerCase() ===
+              conversation?.peerAddress?.toLowerCase()
+          );
 
-            arr[index] = {
-              ...arr[index],
-              recordedMessages: newMessages,
-            };
+          if (index != -1) {
+            setConversations((prev) => {
+              const arr = [...prev];
 
-            return arr;
-          });
+              arr[index] = {
+                ...arr[index],
+                recordedMessages: newMessages,
+              };
+
+              return arr;
+            });
+          }
         }
       }
     } catch (err: any) {

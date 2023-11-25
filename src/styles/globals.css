@@ -114,6 +114,12 @@ div::-webkit-scrollbar-thumb {
   width: 10px; /* Width of the scrollbar */
 }
 
+@media (max-width: 647px) {
+  #feed::-webkit-scrollbar {
+    width: 3px;
+  }
+}
+
 #feed::-webkit-scrollbar-track {
   background-color: transparent; /* Make the track transparent */
   box-shadow: inset 0 0 0 10px #0090ff; /* Simulate padding with box shadow */
@@ -582,4 +588,10 @@ input[type="range"]::-moz-range-thumb {
 #highlighted-content {
   position: absolute;
   z-index: 0;
+}
+
+.infinite-scroll-component__outerdiv {
+  width: 100%;
+  display: flex;
+  justify-content: center
 }

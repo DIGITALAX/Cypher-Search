@@ -256,7 +256,6 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address
   );
-  console.log({ itemData });
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (!itemLoading) {

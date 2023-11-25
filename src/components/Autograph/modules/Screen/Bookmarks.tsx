@@ -46,13 +46,13 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      <div className="relative flex w-4/5 h-fit items-start justify-center rounded-sm">
+      <div className="relative flex w-full tablet:w-4/5 h-fit items-start justify-center rounded-sm">
         <div
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
           <div
-            className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 justify-center overflow-y-scroll h-[35rem] ${
+            className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 justify-center overflow-y-scroll h-[55rem] sm:h-[40rem] min-h-[35rem] tablet:h-[35rem] ${
               !bookmarksLoading && bookmarks?.length == 0
                 ? "items-center"
                 : "items-start"
@@ -76,7 +76,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                 hasMore={hasMoreBookmarks}
                 dataLength={bookmarksLoading ? 20 : bookmarks?.length}
                 loader={<></>}
-                className="w-fit h-fit items-center justify-start flex flex-col gap-10"
+                className="w-full sm:w-fit h-fit items-center justify-start flex flex-col gap-10"
               >
                 {bookmarks?.map(
                   (

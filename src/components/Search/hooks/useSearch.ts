@@ -93,7 +93,8 @@ const useSearch = (
 
   const handleSearch = async (
     e?: KeyboardEvent | MouseEvent,
-    click?: boolean
+    click?: boolean,
+    random?: boolean
   ) => {
     setLoaders((prev) => ({
       ...prev,
@@ -139,7 +140,7 @@ const useSearch = (
         query = allSearchItems?.searchInput;
       } else {
         collections = await filterSearch(0);
-        if (!allSearchItems?.searchInput) {
+        if (!allSearchItems?.searchInput || random) {
           query = filters?.hashtag || filters?.community;
         } else {
           query = allSearchItems?.searchInput;
@@ -150,7 +151,7 @@ const useSearch = (
         const pubSearch = await searchPubs(
           {
             limit: LimitType.Ten,
-            query: allSearchItems?.searchInput!,
+            query,
             where: {
               publicationTypes: [SearchPublicationType.Post],
               metadata: {
@@ -185,7 +186,7 @@ const useSearch = (
         const profileSearch = await searchProfiles(
           {
             limit: LimitType.Ten,
-            query: allSearchItems?.searchInput!,
+            query,
           },
           lensConnected?.id
         );
@@ -247,7 +248,11 @@ const useSearch = (
         ] as (Post | Comment | Quote | Mirror)[];
       }
 
-      if (filters?.microbrand) {
+      if (
+        filters?.microbrand &&
+        filterConstants?.microbrands &&
+        filterConstants?.microbrands?.length > 0
+      ) {
         const data = await getMicrobrands(
           {
             where: {
@@ -402,7 +407,7 @@ const useSearch = (
           const pubSearch = await searchPubs(
             {
               limit: LimitType.Ten,
-              query: allSearchItems?.searchInput,
+              query,
               cursor: allSearchItems?.lensPubCursor,
               where: {
                 publicationTypes: [SearchPublicationType.Post],
@@ -454,7 +459,7 @@ const useSearch = (
             {
               cursor: allSearchItems?.lensProfileCursor,
               limit: LimitType.Ten,
-              query: allSearchItems?.searchInput,
+              query,
             },
             lensConnected?.id
           );
@@ -577,7 +582,7 @@ const useSearch = (
     }));
   };
 
-  const handleShuffleSearch = () => {
+  const handleShuffleSearch = async () => {
     dispatch(
       setFilter({
         hashtag: getRandomElement(filterConstants?.hashtags!),
@@ -621,6 +626,8 @@ const useSearch = (
         ),
       })
     );
+
+    await handleSearch(undefined, undefined, true);
   };
 
   const handleResetFilters = () => {
@@ -742,10 +749,15 @@ const useSearch = (
   }, []);
 
   useEffect(() => {
-    if (!filtersOpen.value && !filterEmpty(filters) && router?.asPath === "/") {
+    if (
+      !filtersOpen.value &&
+      !filterEmpty(filters) &&
+      router?.asPath === "/" &&
+      filtersOpen.allow
+    ) {
       handleSearch();
     }
-  }, [filtersOpen.value]);
+  }, [filtersOpen.value, filtersOpen.allow]);
 
   return {
     handleSearch,

@@ -44,7 +44,11 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             <input
               className="bg-black text-offWhite p-1.5 rounded-sm w-full h-full font-bit flex items-center justify-start relative text-sm"
               id="searchBar"
-              placeholder={searchItems?.searchInput ? searchItems?.searchInput :placeholderText}
+              placeholder={
+                searchItems?.searchInput
+                  ? searchItems?.searchInput
+                  : placeholderText
+              }
               onKeyDown={(e) =>
                 (e as KeyboardEvent).key === "Enter" &&
                 searchItems?.searchInput?.trim() !== "" &&
@@ -80,7 +84,12 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             className="relative tablet:w-9 w-6 h-5 tablet:h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
             onClick={() => {
               if (router.asPath !== "/" && filtersOpen) router.push("/");
-              dispatch(setFiltersOpen(!filtersOpen));
+              dispatch(
+                setFiltersOpen({
+                  actionValue: !filtersOpen,
+                  actionAllow: true,
+                })
+              );
             }}
           >
             <Image
@@ -92,7 +101,20 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
           <div
             className="relative tablet:w-9 w-6 h-5 tablet:h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
             onClick={() =>
-              dispatch(setLayoutSwitch(layoutAmount < 4 ? layoutAmount + 1 : 2))
+              dispatch(
+                setLayoutSwitch(
+                  layoutAmount <
+                    (window.innerWidth < 648
+                      ? 1
+                      : window.innerWidth < 1000
+                      ? 2
+                      : window.innerWidth < 1200
+                      ? 3
+                      : 4)
+                    ? layoutAmount + 1
+                    : 1
+                )
+              )
             }
           >
             <Image

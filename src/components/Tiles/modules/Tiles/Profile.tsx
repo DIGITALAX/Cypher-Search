@@ -1,6 +1,5 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { ProfileProps } from "../../types/tiles.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import Stats from "@/components/Common/modules/Stats";
@@ -24,7 +23,9 @@ const Profile: FunctionComponent<ProfileProps> = ({
   const cover = createProfilePicture(publication?.metadata?.coverPicture);
   return (
     <div
-      className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4"
+      className={`relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4 gap-4 ${
+        layoutAmount === 4 ? "flex-col" : "flex-col tablet:flex-row"
+      }`}
       id={publication?.ownedBy?.address}
     >
       <div className="relative p-2 rounded-sm border border-pez w-full h-20 flex-row gap-6 items-center justify-start flex">
@@ -97,13 +98,13 @@ const Profile: FunctionComponent<ProfileProps> = ({
         )}
         <div
           className={`relative text-pez font-bit uppercase relative w-fit h-fit flex ${
-            layoutAmount === 4 ? "text-xs" : "text-sm"
+            layoutAmount === 4 ? "text-xs" : "text-xs tablet:text-sm"
           }`}
         >
           {publication?.handle?.suggestedFormatted?.localName}
         </div>
       </div>
-      <Stats dispatch={dispatch} profile={publication} />
+      <Stats layoutAmount={layoutAmount} dispatch={dispatch} profile={publication} />
     </div>
   );
 };

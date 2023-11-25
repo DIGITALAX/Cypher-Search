@@ -46,7 +46,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
 
   return (
     <div
-      className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
+      className={`relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4 gap-4 flex-col`}
       id={publication?.id}
     >
       {layoutAmount === 4 ? (
@@ -162,9 +162,10 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               />
             )}
           </div>
-
-          <div className="flex flex-row w-full h-full justify-between gap-2 items-between">
-            <div className="relative flex flex-wrap items-start justify-start gap-2 w-fit h-fit">
+          <div className={`flex flex-row w-full h-full justify-between gap-2 items-between xl:flex-row flex-col`}>
+            <div
+              className={`relative flex flex-wrap items-start justify-start gap-2 w-full h-full`}
+            >
               {(
                 (publication?.__typename === "Mirror"
                   ? publication?.mirrorOn
@@ -382,7 +383,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
         </>
       ) : (
         <>
-          <div className="relative w-full h-full flex flex-row gap-5 items-end justify-end">
+          <div className="relative w-full h-full flex flex-col md:flex-row gap-5 items-end justify-end">
             <div
               className={`flex items-start justify-center w-full border border-white rounded-sm cursor-pointer bg-amo/30 relative ${
                 Number(
@@ -616,7 +617,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               />
             </div>
           </div>
-          <div className="relative w-full h-full flex flex-row gap-5 items-center justify-center">
+          <div className="relative w-full h-full flex flex-col md:flex-row gap-5 items-center justify-center">
             {(publication?.__typename === "Mirror"
               ? publication?.mirrorOn
               : (publication as Post)
@@ -694,7 +695,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                         : (publication as Post)
                       )?.metadata as any
                     )?.content?.length > 0
-                  ? "w-36 flex-col"
+                  ? "w-full md:w-36"
                   : "w-full flex-row"
               }`}
             >
@@ -722,12 +723,12 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                           : (publication as Post)
                         )?.metadata as any
                       )?.content?.length > 0
-                    ? "h-80 flex-col items-center justify-start"
+                    ? "h-fit gap-1.5 md:gap-0 md:h-80 flex-col items-center justify-start"
                     : "h-fit flex-row items-end justify-start gap-4"
                 }`}
               >
                 <div
-                  className={`relative w-full h-full flex flex-col gap-3 ${
+                  className={`relative w-full h-full flex flex-row md:flex-col gap-3 ${
                     (publication?.__typename === "Mirror"
                       ? publication?.mirrorOn
                       : (publication as Post)
@@ -782,7 +783,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                         : "items-start justify-end"
                     }`}
                   >
-                    <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-base">
+                    <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-sm 2xl:text-base">
                       {
                         (publication?.__typename === "Mirror"
                           ? publication?.mirrorOn
@@ -870,7 +871,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             : (publication as Post)
                           )?.metadata as any
                         )?.content?.length > 0
-                      ? "justify-between"
+                      ? "justify-end md:justify-between"
                       : "justify-end"
                   }`}
                 >

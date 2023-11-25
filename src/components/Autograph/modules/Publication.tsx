@@ -58,7 +58,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative rounded-sm h-fit w-110 p-2 flex flex-col gap-2 border-2 items-center justify-between border-cereza ${
+      className={`relative rounded-sm h-fit w-full sm:w-110 px-1 py-3 sm:py-2 sm:px-2 flex flex-col gap-4 sm:gap-2 border-2 items-center justify-between border-cereza ${
         (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
           ?.isEncrypted
           ? "bg-nuba"

@@ -19,13 +19,13 @@ const Orders: FunctionComponent<OrdersProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      <div className="relative flex w-4/5 h-fit items-start justify-center rounded-sm">
+      <div className="relative flex w-full tablet:w-4/5 h-fit items-start justify-center rounded-sm">
         <div
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
           <div
-            className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll h-[35rem] ${
+            className={`relative w-full bg-blurs flex bg-cover rounded-sm p-3 items-start justify-center overflow-y-scroll h-[50rem] tablet:h-[35rem] ${
               ordersLoading || allOrders?.length > 0
                 ? "items-start"
                 : "items-center"

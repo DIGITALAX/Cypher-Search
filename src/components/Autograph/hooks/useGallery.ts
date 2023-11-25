@@ -260,7 +260,6 @@ const useGallery = (
         method: "POST",
         body: JSON.stringify({
           __typename: lensConnected?.metadata?.__typename,
-          appId: "cypersearch",
           attributes,
           bio: lensConnected?.metadata?.bio,
           coverPicture: lensConnected?.metadata?.coverPicture,

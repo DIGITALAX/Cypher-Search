@@ -155,6 +155,8 @@ export type ControlsProps = {
     isPlaying: boolean;
     duration: number;
     currentTime: number;
+    isActive: boolean;
+    loading: boolean;
   };
   setVideoInfo: (
     e: SetStateAction<{
@@ -164,6 +166,8 @@ export type ControlsProps = {
       isPlaying: boolean;
       duration: number;
       currentTime: number;
+      isActive: boolean;
+      loading: boolean;
     }>
   ) => void;
 };

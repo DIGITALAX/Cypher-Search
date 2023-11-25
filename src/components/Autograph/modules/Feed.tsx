@@ -3,6 +3,8 @@ import { FeedProps } from "../types/autograph.types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Mirror, Post, Quote } from "../../../../graphql/generated";
 import Publication from "./Publication";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
 
 const Feed: FunctionComponent<FeedProps> = ({
   profileFeed,
@@ -44,25 +46,37 @@ const Feed: FunctionComponent<FeedProps> = ({
   setCaretCoord,
 }): JSX.Element => {
   return (
-    <div className="relative flex items-start justify-start w-full h-auto z-10">
-      <div className="relative flex items-center justify-start flex-col gap-4 bg-olor rounded-sm p-4 w-96 h-fit">
-        <div className="absolute flex items-center justify-center text-3xl font-bit text-[#00FFBA] top-3 w-fit h-fit blur-sm">
+    <div className="relative flex items-start justify-start w-full h-auto z-10 otro:order-1 order-2">
+      <div
+        className="absolute w-full h-[50rem] bottom-0 items-end justify-center otro:hidden flex"
+        draggable={false}
+      >
+        <Image
+          layout="fill"
+          src={`${INFURA_GATEWAY}/ipfs/QmV4yM96Dt2ypLN9GMHkXPTkeCGfTQfJErJLfVjikxt52s`}
+          draggable={false}
+          objectFit="contain"
+        />
+        <div className="absolute w-full h-full bg-black opacity-[85%]"></div>
+      </div>
+      <div className="relative flex items-center justify-start flex-col gap-4 bg-olor rounded-sm px-px sm:px-4 py-4 w-full sm:w-96 h-fit">
+        <div className="absolute flex items-center justify-center text-xl sm:text-3xl font-bit text-[#00FFBA] top-3 w-fit h-fit blur-sm break-words">
           Recent Updates
         </div>
-        <div className="absolute flex items-center justify-center text-3xl font-bit text-white top-3.5 w-fit h-fit blur-sm">
+        <div className="absolute flex items-center justify-center text-xl sm:text-3xl font-bit text-white top-3.5 w-fit h-fit blur-sm break-words">
           Recent Updates
         </div>
-        <div className="relative flex items-center justify-center text-3xl font-bit text-saph w-fit h-fit">
+        <div className="relative flex items-center justify-center text-xl sm:text-3xl font-bit text-saph w-fit h-fit break-words">
           Recent Updates
         </div>
         <div
           className={`relative flex items-start justify-center w-fit h-full ${
-            profileFeed?.length < 1 ? "left-auto" : "left-20"
+            profileFeed?.length < 1 ? "left-auto" : "left-auto sm:left-20"
           }`}
           id={profileFeed?.length < 1 ? "" : "feedWrapper"}
         >
           <div
-            className={`relative h-[200rem] flex items-start  justify-center overflow-y-scroll ${
+            className={`relative h-[80rem] otro:h-[200rem] flex items-start  justify-center overflow-y-scroll ${
               profileFeed?.length < 1 ? "w-full" : "w-fit"
             }`}
             id={profileFeed?.length < 1 ? "" : "feed"}

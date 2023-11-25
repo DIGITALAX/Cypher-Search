@@ -139,7 +139,7 @@ export default function Home({ router }: { router: NextRouter }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div
-        className={`relative w-full h-fit flex items-center justify-center gap-10 flex-col h-full`}
+        className={`relative w-full h-fit flex items-center justify-center gap-10 flex-col h-full z-0`}
         id="results"
       >
         <Header

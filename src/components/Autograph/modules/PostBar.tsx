@@ -41,8 +41,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
-    <div className="relative w-full justify-between flex flex-row items-center gap-2">
-      <div className="relative w-fit h-fit flex flex-row items-center gap-2 justify-center">
+    <div className="relative w-full justify-between flex flex-col sm:flex-row items-between sm:items-center gap-2">
+      <div className="relative w-fit h-fit flex flex-row items-start sm:items-center gap-2 justify-center">
         {[
           ["QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3", "Mirrors"],
           ["QmT1aZypVcoAWc6ffvrudV3JQtgkL8XBMjYpJEfdFwkRMZ", "Likes"],
@@ -97,7 +97,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 (item?.__typename === "Mirror"
                   ? item?.mirrorOn
                   : (item as Post)
-                ).isEncrypted
+                )?.isEncrypted
                   ? "text-black"
                   : "text-white"
               }`}
@@ -286,7 +286,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
           })}
         </div>
       )}
-      <div className="relative w-fit h-fit flex flex-row gap-2 items-center justify-center">
+      <div className="relative w-fit h-fit flex flex-row gap-2 items-end sm:items-center justify-center ml-auto">
         <div
           className="relative w-8 h-3.5 items-center justify-center flex cursor-pointer active:scale-95"
           onClick={() => {
@@ -393,7 +393,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
         )}
       </div>
       {openMoreOptions?.[index] && (
-        <div className="absolute w-fit h-fit flex flex-row gap-4 p-1 items-center justify-center bg-lirio/80 rounded-sm right-2 -top-10 border border-white">
+        <div className="absolute w-fit h-fit flex flex-row gap-4 p-1 items-center justify-center bg-lirio/80 rounded-sm right-2 -top-2 sm:-top-10 border border-white z-10">
           {(
             [
               lensConnected?.id ===

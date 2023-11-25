@@ -32,6 +32,8 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
     isPlaying: boolean;
     duration: number;
     currentTime: number;
+    isActive: boolean;
+    loading: boolean;
   }>({
     volume: 0.5,
     volumeOpen: false,
@@ -39,6 +41,8 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
     isPlaying: false,
     duration: 0,
     currentTime: 0,
+    isActive: false,
+    loading: false,
   });
 
   const media = metadataMedia(
@@ -62,7 +66,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
         <div
           className={`relative w-full flex bg-amo/30 ${
             layoutAmount === 4 ? "h-60" : "h-100"
-          }`}
+          } ${videoInfo?.loading && "opacity-50"}`}
         >
           {videoInfo?.heart && (
             <Image
@@ -74,7 +78,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
             />
           )}
           {media?.type == "Audio" ? (
-            media?.cover && (
+            <>
               <Image
                 layout="fill"
                 objectFit="cover"
@@ -82,13 +86,55 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 src={media?.cover!}
                 onError={(e) => handleImageError(e)}
               />
-            )
-          ) : (
+              <audio
+                key={uniqueVideoKey}
+                draggable={false}
+                controls={false}
+                playsInline
+                autoPlay
+                onPlay={() =>
+                  setVideoInfo((prev) => ({
+                    ...prev,
+                    isPlaying: true,
+                  }))
+                }
+                onLoadedMetadata={() => {
+                  setVideoInfo((prev) => ({
+                    ...prev,
+                    duration: videoRef?.current?.duration || 0,
+                  }));
+
+                  if (videoInfo?.currentTime != 0 && videoRef.current) {
+                    videoRef.current.currentTime = videoInfo?.currentTime;
+                  }
+                }}
+                onTimeUpdate={() =>
+                  setVideoInfo((prev) => ({
+                    ...prev,
+                    currentTime: videoRef?.current?.currentTime || 0,
+                    loading: false,
+                  }))
+                }
+                onVolumeChange={() =>
+                  setVideoInfo((prev) => ({
+                    ...prev,
+                    volume: videoRef?.current?.volume || 0,
+                  }))
+                }
+                hidden
+                id={uniqueVideoKey}
+                ref={videoRef as RefObject<HTMLVideoElement>}
+              >
+                <source src={media?.url} />
+              </audio>
+            </>
+          ) : videoInfo?.isActive ? (
             <video
               key={uniqueVideoKey}
               draggable={false}
               controls={false}
               playsInline
+              autoPlay
               onPlay={() =>
                 setVideoInfo((prev) => ({
                   ...prev,
@@ -99,6 +145,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 setVideoInfo((prev) => ({
                   ...prev,
                   isPlaying: false,
+                  isActive: false,
                 }))
               }
               onLoadedMetadata={() => {
@@ -115,6 +162,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 setVideoInfo((prev) => ({
                   ...prev,
                   currentTime: videoRef?.current?.currentTime || 0,
+                  loading: false,
                 }))
               }
               onVolumeChange={() =>
@@ -130,6 +178,14 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
             >
               <source src={media?.url} />
             </video>
+          ) : (
+            <Image
+              layout="fill"
+              objectFit="cover"
+              draggable={false}
+              src={media?.cover!}
+              onError={(e) => handleImageError(e)}
+            />
           )}
         </div>
         <div className="relative w-full h-fit flex flex-row justify-between p-2">
@@ -153,12 +209,12 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
           />
         </div>
         <div className="relative w-full h-fit p-2 bg-white flex flex-row justify-between gap-2 items-center">
-          <div className="relative w-20 h-fit text-left font-bit text-mos flex items-center text-xs justify-center break-words">
+          <div className="relative w-20 h-fit text-left font-bit text-mos flex items-center text-xs justify-center break-all">
             {(
               (publication?.post as Post)?.metadata as VideoMetadataV3
             )?.content?.slice(0, 20) + "..."}
           </div>
-          <div className="relative w-fit h-fit text-center font-rain text-mos text-sm flex items-start justify-center text-black break-words">
+          <div className="relative w-fit h-fit text-center font-rain text-mos text-sm flex items-start justify-center text-black break-all">
             {((publication?.post as Post)?.metadata as VideoMetadataV3)?.title}
           </div>
           <div className="relative w-fit h-fit items-center justify-center flex">

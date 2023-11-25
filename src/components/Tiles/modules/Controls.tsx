@@ -226,27 +226,42 @@ const Controls: FunctionComponent<ControlsProps> = ({
           </div>
         </div>
         <div
-          className="relative cursor-pointer w-3 h-3 flex items-center justify-center"
+          className={`relative cursor-pointer w-3 h-3 flex items-center justify-center ${
+            videoInfo?.loading && "animate-spin"
+          }`}
           onClick={() => {
             const video = videoRef?.current;
             if (video && video.readyState >= 3) {
-              if (video?.paused) {
-                video.play();
-              } else {
-                video.pause();
-              }
+              const currentTime = videoRef.current?.currentTime || 0;
+              video.pause();
+              setVideoInfo((prev) => ({
+                ...prev,
+                isPlaying: false,
+                currentTime,
+                isActive: false,
+              }));
+            } else {
+              setVideoInfo((prev) => ({
+                ...prev,
+                isActive: true,
+                loading: true,
+              }));
             }
           }}
         >
-          <Image
-            src={`${INFURA_GATEWAY}/ipfs/${
-              videoInfo?.isPlaying
-                ? "Qmbg8t4xoNywhtCexD5Ln5YWvcKMXGahfwyK6UHpR3nBip"
-                : "QmXw52mJFnzYXmoK8eExoHKv7YW9RBVEwSFtfvxXgy7sfp"
-            }`}
-            draggable={false}
-            layout="fill"
-          />
+          {videoInfo?.loading ? (
+            <AiOutlineLoading color={"white"} size={12} />
+          ) : (
+            <Image
+              src={`${INFURA_GATEWAY}/ipfs/${
+                videoInfo?.isActive || videoInfo?.isPlaying
+                  ? "Qmbg8t4xoNywhtCexD5Ln5YWvcKMXGahfwyK6UHpR3nBip"
+                  : "QmXw52mJFnzYXmoK8eExoHKv7YW9RBVEwSFtfvxXgy7sfp"
+              }`}
+              draggable={false}
+              layout="fill"
+            />
+          )}
         </div>
         <div
           className="relative cursor-pointer w-3 h-3 flex items-center justify-center"

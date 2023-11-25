@@ -145,12 +145,12 @@ const Web: FunctionComponent<WebProps> = ({
   messageImage,
 }): JSX.Element => {
   return (
-    <div className="relative w-full min-h-[50rem] bg-web bg-cover flex flex-row p-10 items-start justify-between gap-20 h-fit">
-      <div className="relative w-full h-fit flex flex-col items-start justify-start gap-5">
+    <div className="relative w-full min-h-[90rem] sm:min-h-[60rem] xl:min-h-[50rem] bg-web bg-cover flex flex-col xl:flex-row p-4 tablet:p-10 items-start xl:justify-between gap-12 sm:gap-10 xl:gap-20 h-fit">
+      <div className="relative w-full h-fit flex flex-col items-start justify-start gap-5 xl:order-1 order-2">
         <div className="relative flex flex-col items-start justify-between w-full h-fit gap-1">
           <Link
             href={"/"}
-            className="flex absolute items-center justify-start w-16 h-16 cursor-pointer active:scale-95 z-1"
+            className="flex relative sm:absolute items-center justify-start w-10 h-10 sm:w-16 sm:h-16 cursor-pointer active:scale-95 z-1"
           >
             <Image
               layout="fill"
@@ -196,7 +196,7 @@ const Web: FunctionComponent<WebProps> = ({
                         key={index}
                       >
                         <div
-                          className={`relative w-10 h-10 cursor-pointer flex active:scale-95 ${
+                          className={`relative w-8 h-8 sm:w-10 sm:h-10 cursor-pointer flex active:scale-95 ${
                             item.type === sortType && "mix-blend-luminosity"
                           }`}
                           onClick={() => item.function()}
@@ -208,7 +208,7 @@ const Web: FunctionComponent<WebProps> = ({
                             onError={(e) => handleImageError(e)}
                           />
                         </div>
-                        <div className="relative text-white font-bit text-white font-bit text-xs">
+                        <div className="relative text-white font-bit text-white font-bit text-xxs sm:text-xs">
                           {item.text}
                         </div>
                       </div>
@@ -353,83 +353,101 @@ const Web: FunctionComponent<WebProps> = ({
         />
       </div>
       {lensConnected?.handle?.fullHandle === profile?.handle?.fullHandle ? (
-        <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-4">
+        <div className="relative w-full xl:w-fit h-fit items-center justify-between xl:justify-center flex flex-row xl:flex-col gap-6 tablet:gap-4 xl:order-2 order-1 flex-wrap xl:flex-nowrap">
           {[
             {
               image: "QmRozkh6CWW9u3ATqcMKr4w4LUEd4h1vNN4Gon3zsrtCA4",
               text: "display",
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Display)),
-              width: "10",
-              height: "9",
+              width: "2.5rem",
+              height: "2.25rem",
               type: ScreenDisplay.Display,
+              sWidth: "1.75rem",
+              sHeight: "1.5rem",
             },
             {
               image: "QmaGQyeUd1Upcei8b9UxiTC7TuDaQPP4Ps5mZpVB1w6Gto",
               text: "gallery",
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Gallery)),
-              width: "10",
-              height: "8",
+              width: "2.5rem",
+              height: "2rem",
               type: ScreenDisplay.Gallery,
+              sWidth: "1.75rem",
+              sHeight: "1.4rem",
             },
             {
               image: "QmTTtDqqjwxYbz3rvfGuyB3fz8YQj27qEVdJLHRYkFg4D9",
               text: "circuits",
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Circuits)),
-              width: "10",
-              height: "10",
+              width: "2.5rem",
+              height: "2.5rem",
               type: ScreenDisplay.Circuits,
+              sWidth: "1.75rem",
+              sHeight: "1.75rem",
             },
             {
               image: "QmaRcPqtKii9T6FZzFekRvaPHMMLzZzQi37KxkMxLW72so",
               text: "bookmarks",
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Bookmarks)),
-              width: "8",
-              height: "10",
+              width: "2rem",
+              height: "2.5rem",
               type: ScreenDisplay.Bookmarks,
+              sWidth: "1.5rem",
+              sHeight: "1.75rem",
             },
             {
               image: "QmeBzqFPc3nvegBtwpNjViVNtiEkWsPSWjJaTem9bysdBU",
               text: "post",
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Post)),
-              width: "10",
-              height: "10",
+              width: "2.5rem",
+              height: "2.5rem",
               type: ScreenDisplay.Post,
+              sWidth: "1.75rem",
+              sHeight: "1.75rem",
             },
             {
               image: "Qmd7w4HyNrtWvSy48jGnidSx77mSqgAALTsVrbcVcSMeoG",
               text: "orders",
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Orders)),
-              width: "10",
-              height: "10",
+              width: "2.5rem",
+              height: "2.5rem",
               type: ScreenDisplay.Orders,
+              sWidth: "1.75rem",
+              sHeight: "1.75rem",
             },
             {
               image: "QmQ8U7cmvoUizxS7tFeWGcUs7f54svfBdxE6aXfTgPbshw",
               text: "sales",
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Sales)),
-              width: "10",
-              height: "10",
+              width: "2.5rem",
+              height: "2.5rem",
               type: ScreenDisplay.Sales,
+              sWidth: "1.75rem",
+              sHeight: "1.75rem",
             },
             {
               image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",
               text: "settings",
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Settings)),
-              width: "10",
-              height: "10",
+              width: "2.5rem",
+              height: "2.5rem",
               type: ScreenDisplay.Settings,
+              sWidth: "1.75rem",
+              sHeight: "1.75rem",
             },
             {
               image: "QmXm26YHs1k1cZuBBXsNB5ifuAdq2db7AmZHSoHYSY6x6c",
               text: "messages",
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Messages)),
-              width: "10",
-              height: "10",
+              width: "2.5rem",
+              height: "2.5rem",
               type: ScreenDisplay.Messages,
+              sWidth: "1.75rem",
+              sHeight: "1.75rem",
             },
           ].map(
             (
@@ -440,6 +458,8 @@ const Web: FunctionComponent<WebProps> = ({
                 width: string;
                 height: string;
                 type: ScreenDisplay;
+                sWidth: string;
+                sHeight: string;
               },
               index: number
             ) => {
@@ -452,9 +472,13 @@ const Web: FunctionComponent<WebProps> = ({
                 >
                   <div className="relative w-fit h-fit flex items-center justify-center">
                     <div
-                      className={`relative w-${item.width} h-${
-                        item.height
-                      } flex items-center justify-center cursor-pointer active:scale-95 ${
+                      style={{
+                        height:
+                          window?.innerWidth < 648 ? item.sHeight : item.height,
+                        width:
+                          window?.innerWidth < 648 ? item.sWidth : item.width,
+                      }}
+                      className={`relative flex items-center justify-center cursor-pointer active:scale-95 ${
                         item.type === screenDisplay && "mix-blend-luminosity"
                       }`}
                       onClick={() => item.function()}

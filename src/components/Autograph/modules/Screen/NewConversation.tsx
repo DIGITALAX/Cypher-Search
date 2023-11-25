@@ -30,12 +30,9 @@ const NewConversation: FunctionComponent<NewConversationProps> = ({
     }
   }, [messages, messagesEndRef]);
   return (
-    <div className="relative flex items-center justify-center w-full h-full">
+    <div className="relative flex items-center justify-center w-full h-full sm:px-0 px-2">
       <div
-        className="relative w-4/5 flex bg-offBlack rounded-md border border-white flex-col items-start justify-centers"
-        style={{
-          height: "calc(60vh - 2.5rem)",
-        }}
+        className="relative h-5/6 w-full sm:w-5/6 tablet:w-4/5 flex bg-offBlack rounded-md border border-white flex-col items-start justify-centers"
       >
         <div className="relative w-full h-full flex flex-col justify-between items-start">
           <div className="relative w-full h-10 px-2 py-1 border border-white rounded-t-md flex items-center justify-start">
