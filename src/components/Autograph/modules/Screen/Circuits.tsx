@@ -2,8 +2,8 @@ import { FunctionComponent } from "react";
 
 const Circuits: FunctionComponent = (): JSX.Element => {
   return (
-    <div className="relative flex flex-row gap-4 items-start justify-center w-full h-full">
-      <div className="relative flex w-4/5 h-fit items-start justify-center rounded-sm">
+    <div className="relative flex flex-col tablet:flex-row gap-4 items-start justify-center w-full h-full">
+      <div className="relative flex w-full tablet:w-4/5 h-fit items-start justify-center rounded-sm">
         <div
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
@@ -18,10 +18,10 @@ const Circuits: FunctionComponent = (): JSX.Element => {
         </div>
       </div>
       <div
-        className="relative flex w-80 h-full p-px flex-col items-start justify-start"
+        className="relative flex w-full tablet:w-80 h-full p-px flex-col items-start justify-start"
         id="mar"
       >
-        <div className="relative w-full h-[35rem] flex flex-col bg-piloto gap-6 items-center justify-start p-3">
+        <div className="relative w-full h-fit tablet:h-[35rem] flex flex-col bg-piloto gap-6 items-center justify-start p-3">
           <div className="font-bit text-white text-xs text-center flex w-4/5 h-fit relative">
             Share what you’ve collected or created. Keep each item open, super
             stealth mode, or find that cryptic balance in the force. The choice

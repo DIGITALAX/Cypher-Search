@@ -37,11 +37,15 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   );
   return (
     <div
-      className="relative w-full h-fit flex items-end justify-center flex flex-row rounded-sm border border-sol p-4 gap-4"
+      className={`relative w-full h-fit flex items-end justify-center flex rounded-sm border border-sol p-4 gap-4 ${
+        layoutAmount == 4 ? "flex-col xl:flex-row" : "flex-col md:flex-row"
+      }`}
       id={publication?.id}
     >
       <div
-        className="relative w-100 h-100 rounded-sm border border-mosgu bg-fuego p-2 font-bit text-nuba text-sm text-left break-words flex justify-center items-start overflow-y-scroll whitespace-preline"
+        className={`relative rounded-sm border border-mosgu bg-fuego p-2 font-bit text-nuba text-sm text-left break-words flex justify-center break-words items-start overflow-y-scroll h-100 whitespace-preline ${
+          layoutAmount === 2 ? "w-full" : "w-full xl:w-100"
+        }`}
         dangerouslySetInnerHTML={{
           __html: descriptionRegex(
             (publication?.__typename === "Mirror"
@@ -113,7 +117,9 @@ const TextPost: FunctionComponent<TextPostProps> = ({
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">
               <div className="relative w-full h-fit items-end justify-start flex flex-col">
-                <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-base">
+                <div className={`relative flex items-center justify-center text-right break-words text-white font-bit uppercase ${
+                  layoutAmount < 4 ? "text-xs 2xl:text-sm" : "text-sm 2xl:text-base"
+                }`}>
                   {
                     (publication?.__typename === "Mirror"
                       ? publication?.mirrorOn

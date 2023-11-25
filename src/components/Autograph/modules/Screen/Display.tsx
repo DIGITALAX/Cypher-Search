@@ -23,12 +23,12 @@ const Display: FunctionComponent<DisplayProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col w-full h-full items-start justify-start gap-3">
-      <div className="relative flex flex-row gap-5 w-full h-[35rem] items-start justify-center">
+      <div className="relative flex flex-col tablet:flex-row gap-5 w-full h-fit sm:h-[35rem] items-start justify-center">
         <div
-          className="relative w-full h-full p-px flex items-center justify-center"
+          className="relative w-full h-[25rem] sm:h-full p-px flex items-center justify-center"
           id="pfp"
         >
-          <div className="relative w-full h-full bg-blurs flex items-center justify-center">
+          <div className="relative w-full h-full tablet:h-full bg-blurs flex items-center justify-center">
             {display && (
               <Image
                 layout="fill"
@@ -42,6 +42,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                     : display?.public?.main?.images?.[0]?.split("ipfs://")?.[1]
                 }`}
                 objectFit="cover"
+                objectPosition={"center"}
                 draggable={false}
                 onError={(e) => handleImageError(e)}
               />
@@ -93,12 +94,12 @@ const Display: FunctionComponent<DisplayProps> = ({
             </div>
           )}
         </div>
-        <div className="relative flex flex-col w-fit h-full gap-5 items-center justify-between">
+        <div className="relative flex tablet:flex-nowrap flex-wrap flex-row tablet:flex-col w-full sm:w-fit h-fit tablet:h-full gap-5 items-center tablet:justify-between">
           {Array.from({ length: 3 }).map((_, index: number) => {
             return (
               <div
                 key={index}
-                className="relative w-72 rounded-lg h-52 flex items-center justify-center p-px"
+                className="relative w-full sm:w-48 tablet:w-72 rounded-lg h-48 sm:h-24 tablet:h-52 flex items-center justify-center p-px"
                 id="smoke"
               >
                 <div className="relative w-full h-full rounded-lg bg-blurs flex items-center justify-center">
@@ -127,7 +128,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                 </div>
                 {owner && (
                   <div
-                    className="absolute w-7 h-10 top-2 right-2 flex cursor-pointer active:scale-95"
+                    className="absolute w-5 h-8 tablet:w-7 tablet:h-10 top-2 right-2 flex cursor-pointer active:scale-95"
                     onClick={() =>
                       dispatch(
                         setDisplaySearchBox({
@@ -175,7 +176,7 @@ const Display: FunctionComponent<DisplayProps> = ({
         </div>
       </div>
       {owner && (
-        <div className="relative w-full h-fit flex justify-end items-center">
+        <div className="relative w-full h-fit flex justify-start tablet:justify-end items-center">
           <div
             className={`relative w-20 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
               !displayLoading && "cursor-pointer active:scale-95"

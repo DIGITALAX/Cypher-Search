@@ -88,6 +88,7 @@ const config: Config = {
       screens: {
         tablet: "900px",
         galaxy: "300px",
+        otro: "1350px"
       },
     },
   },

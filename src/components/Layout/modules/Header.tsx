@@ -5,6 +5,9 @@ import SearchBar from "../../Search/modules/SearchBar";
 import { HeaderProps } from "../../Search/types/search.types";
 import Link from "next/link";
 import Accounts from "@/components/Common/modules/Accounts";
+import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
+import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
+import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 
 const Header: FunctionComponent<HeaderProps> = ({
   handleSearch,
@@ -35,21 +38,39 @@ const Header: FunctionComponent<HeaderProps> = ({
     <div
       className={`fixed w-full h-fit flex p-2 top-0 z-30 bg-offBlack ${
         searchActive || filtersOpen
-          ? "items-start justify-center flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-0 gap-4"
+          ? "items-start justify-center flex-col sm:flex-row sm:items-center sm:justify-between gap-6 galaxy:gap-8"
           : "flex-row items-center justify-between"
       } `}
     >
       <div className="relative w-fit h-fit flex items-center justify-center cursor-pointer active:scale-95">
-        <Link
+        <div
           className={`relative w-10 h-10 flex items-center justify-center`}
-          href={"/"}
+          // href={"/"}
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push("/");
+            dispatch(setSearchActive(false));
+            dispatch(
+              setFiltersOpen({
+                actionValue: false,
+                actionAllow: false,
+              })
+            );
+            dispatch(
+              setAllSearchItems({
+                actionItems: [],
+                actionHasMore: true,
+                actionInput: "",
+              })
+            );
+          }}
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/QmYbjMNQAVuQSWNNQ5AKbQtt4Dxw2ax4SvLNwKhCNDniL2`}
             layout="fill"
             draggable={false}
           />
-        </Link>
+        </div>
       </div>
       {includeSearch && (
         <SearchBar

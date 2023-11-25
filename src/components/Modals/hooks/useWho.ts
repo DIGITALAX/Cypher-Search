@@ -33,7 +33,7 @@ const useWho = (
       );
 
       setReactors(data?.data?.whoReactedPublication?.items || []);
-      setPageInfo(data.data?.whoReactedPublication.pageInfo.next);
+      setPageInfo(data?.data?.whoReactedPublication.pageInfo.next);
 
       if (
         !data?.data?.whoReactedPublication?.items ||
@@ -68,7 +68,7 @@ const useWho = (
       );
 
       setReactors(mirrorData?.data?.publications?.items || []);
-      setPageInfo(mirrorData.data?.publications.pageInfo.next);
+      setPageInfo(mirrordata?.data?.publications.pageInfo.next);
       if (
         !mirrorData?.data?.publications?.items ||
         mirrorData?.data?.publications?.items?.length < 10
@@ -99,7 +99,7 @@ const useWho = (
         setHasMoreQuote(true);
       }
       setQuoters(quoteData?.data?.publications?.items);
-      setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
+      setPageInfoQuote(quotedata?.data?.publications.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -119,7 +119,7 @@ const useWho = (
       );
 
       setReactors(data?.data?.whoActedOnPublication?.items || []);
-      setPageInfo(data.data?.whoActedOnPublication.pageInfo.next);
+      setPageInfo(data?.data?.whoActedOnPublication.pageInfo.next);
 
       if (
         !data?.data?.whoActedOnPublication?.items ||
@@ -150,7 +150,7 @@ const useWho = (
       );
 
       setReactors(data?.data?.following?.items || []);
-      setPageInfo(data.data?.following.pageInfo.next);
+      setPageInfo(data?.data?.following.pageInfo.next);
 
       if (
         !data?.data?.following?.items ||
@@ -181,7 +181,7 @@ const useWho = (
       );
 
       setReactors(data?.data?.followers?.items || []);
-      setPageInfo(data.data?.followers.pageInfo.next);
+      setPageInfo(data?.data?.followers.pageInfo.next);
 
       if (
         !data?.data?.followers?.items ||
@@ -215,7 +215,7 @@ const useWho = (
         ...reactors,
         ...(data?.data?.whoReactedPublication?.items || []),
       ]);
-      setPageInfo(data.data?.whoReactedPublication.pageInfo.next);
+      setPageInfo(data?.data?.whoReactedPublication.pageInfo.next);
 
       if (
         !data?.data?.whoReactedPublication?.items ||
@@ -248,7 +248,7 @@ const useWho = (
         ...reactors,
         ...(data?.data?.whoActedOnPublication?.items || []),
       ]);
-      setPageInfo(data.data?.whoActedOnPublication.pageInfo.next);
+      setPageInfo(data?.data?.whoActedOnPublication.pageInfo.next);
 
       if (
         !data?.data?.whoActedOnPublication?.items ||
@@ -277,7 +277,7 @@ const useWho = (
       );
 
       setReactors([...reactors, ...(data?.data?.following?.items || [])]);
-      setPageInfo(data.data?.following.pageInfo.next);
+      setPageInfo(data?.data?.following.pageInfo.next);
 
       if (
         !data?.data?.following?.items ||
@@ -305,7 +305,7 @@ const useWho = (
         lensConnected?.id
       );
       setReactors([...reactors, ...(data?.data?.followers?.items || [])]);
-      setPageInfo(data.data?.followers.pageInfo.next);
+      setPageInfo(data?.data?.followers.pageInfo.next);
 
       if (
         !data?.data?.followers?.items ||
@@ -340,7 +340,7 @@ const useWho = (
           ...reactors,
           ...(mirrorData?.data?.publications?.items || []),
         ]);
-        setPageInfo(mirrorData.data?.publications.pageInfo.next);
+        setPageInfo(mirrordata?.data?.publications.pageInfo.next);
 
         if (
           !mirrorData?.data?.publications?.items ||
@@ -369,7 +369,7 @@ const useWho = (
           ...quoters,
           ...(quoteData?.data?.publications?.items || []),
         ]);
-        setPageInfoQuote(quoteData.data?.publications.pageInfo.next);
+        setPageInfoQuote(quotedata?.data?.publications.pageInfo.next);
 
         if (
           !quoteData?.data?.publications?.items ||

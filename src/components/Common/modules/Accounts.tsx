@@ -165,7 +165,12 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             className="relative w-full h-full flex items-center justify-center border-sol cursor-pointer hover:opacity-80 border-b"
             onClick={() => {
               setOpenAccount(false);
-              dispatch(setFiltersOpen(false));
+              dispatch(
+                setFiltersOpen({
+                  actionValue: false,
+                  actionAllow: false,
+                })
+              );
               router.push(
                 `/autograph/${
                   lensConnected?.handle?.suggestedFormatted?.localName?.split(

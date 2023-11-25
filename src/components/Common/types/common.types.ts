@@ -232,6 +232,7 @@ export type SuggestedProps = {
 export type StatsProps = {
   profile: Profile;
   dispatch: Dispatch<AnyAction>;
+  layoutAmount: number;
 };
 
 export type MediaProps = {

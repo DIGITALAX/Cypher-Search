@@ -49,7 +49,7 @@ const lensQuote = async (
     openActionModules,
   });
 
-  const typedData = data.data?.createOnchainQuoteTypedData?.typedData;
+  const typedData = data?.data?.createOnchainQuoteTypedData?.typedData;
 
   const signature = await clientWallet.signTypedData({
     domain: omit(typedData?.domain, ["__typename"]),
@@ -60,7 +60,7 @@ const lensQuote = async (
   });
 
   const broadcastResult = await broadcast({
-    id: data.data?.createOnchainQuoteTypedData?.id,
+    id: data?.data?.createOnchainQuoteTypedData?.id,
     signature,
   });
 

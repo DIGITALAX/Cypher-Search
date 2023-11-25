@@ -42,6 +42,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   lensConnected,
 }): JSX.Element => {
   const interactionsLoadingMemo = useDeepMemoize(interactionsLoading);
+  const searchItemsMemo = useDeepMemoize(searchItems?.items || []);
   const debouncedHandleMoreSearch = useCallback(
     debounce(() => {
       if (searchItems?.hasMore && !searchLoading && !moreSearchLoading) {
@@ -89,6 +90,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
       followLoading,
       popUpOpen,
       layoutAmount,
+      searchItemsMemo,
     ]
   );
 
@@ -106,6 +108,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
             : (searchItems?.items || [])?.length + (moreSearchLoading ? 20 : 0)
         }
         loader={<></>}
+        scrollThreshold={1}
         hasMore={searchItems?.hasMore!}
         next={debouncedHandleMoreSearch}
         className={`w-full h-screen items-start justify-center ${

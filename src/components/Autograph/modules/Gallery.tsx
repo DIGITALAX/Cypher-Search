@@ -35,17 +35,17 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   hasMoreGallery,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-col gap-10 items-start justify-start flex-grow">
-      <div className="relative w-full justify-end flex items-center h-fit">
+    <div className="relative w-full h-full flex flex-col gap-10 items-start justify-start flex-grow otro:order-2 order-1 sm:pt-0 pt-10">
+      <div className="relative w-full justify-end flex items-center h-fit sm:px-0 px-1">
         <div className="relative w-[16rem] h-fit flex items-center justify-between flex p-2 border border-afilado rounded-md gap-3 font-bit">
-          <div className="relative w-fit h-fit flex items-center justify-center text-white text-md top-px">
+          <div className="relative w-fit h-fit flex items-center justify-center text-white text-sm sm:text-base top-px">
             Gallery
           </div>
           <div
             className="relative flex flex-row justify-between gap-2 cursor-pointer border items-center rounded-sm w-fit h-fit border-hierba p-2"
             onClick={() => setOptionsOpen(!optionsOpen)}
           >
-            <div className="relative w-fit h-fit flex items-center justify-center text-white text-sm top-px">
+            <div className="relative w-fit h-fit flex items-center justify-center text-white text-xs sm:text-sm top-px">
               {selectedOption}
             </div>
             <div className="relative w-3 h-2 items-center justify-center flex">
@@ -57,7 +57,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           </div>
         </div>
         {optionsOpen && (
-          <div className="absolute flex items-start justify-center w-60 h-40 top-14 z-10 bg-black overflow-y-scroll border border-afilado rounded-md">
+          <div className="absolute flex items-start justify-center w-40 sm:w-60 h-40 top-14 z-10 bg-black overflow-y-scroll border border-afilado rounded-md">
             <div className="relative flex flex-col w-full h-fit gap-2 items-center justify-start">
               {GALLERY_OPTIONS?.map((item: string, index: number) => {
                 return (
@@ -69,7 +69,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                       setOptionsOpen(false);
                     }}
                   >
-                    <div className="relative w-fit h-fit flex items-center justify-center">
+                    <div className="relative w-fit h-fit flex items-center justify-center text-xs sm:text-sm">
                       {item}
                     </div>
                   </div>
@@ -79,7 +79,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           </div>
         )}
       </div>
-      <div className="relative w-full h-[145rem] flex items-start justify-center overflow-y-scroll">
+      <div className="relative w-full h-[40rem] otro:h-[145rem] flex items-start justify-center overflow-y-scroll">
         <InfiniteScroll
           dataLength={
             [...(gallery?.collected || []), ...(gallery?.created || [])]?.length
@@ -125,9 +125,9 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           )}
         </InfiniteScroll>
       </div>
-      <div className="relative flex-grow flex justify-center w-full h-[55rem]">
+      <div className={`relative flex-grow flex justify-center w-full otro:h-[55rem] h-fit`}>
         <div
-          className="absolute w-full h-[50rem] bottom-0 flex items-end justify-center"
+          className="absolute w-full h-[50rem] bottom-0 items-end justify-center otro:flex hidden"
           draggable={false}
         >
           <Image

@@ -47,7 +47,6 @@ import {
 import { AccessControlConditions } from "@lit-protocol/types";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
-import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 
 const useCreate = (
   publicClient: PublicClient,

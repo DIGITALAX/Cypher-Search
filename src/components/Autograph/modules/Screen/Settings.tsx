@@ -28,12 +28,12 @@ const Settings: FunctionComponent<SettingsProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      <div className="relative flex w-4/5 h-fit items-start justify-center rounded-sm">
+      <div className="relative flex w-full tablet:w-4/5 h-fit items-start justify-center rounded-sm">
         <div
           className="relative w-full h-full flex flex-col items-center justify-start gap-5 p-px"
           id="pfp"
         >
-          <div className="relative w-full bg-blurs flex bg-cover rounded-sm p-3 overflow-y-scroll h-[35rem]">
+          <div className="relative w-full bg-blurs flex bg-cover rounded-sm px-1.5 sm:px-3 py-3 overflow-y-scroll h-[55rem] tablet:h-[35rem]">
             <div className="relative w-full h-fit flex items-center justify-start bg-cover flex-col rounded-sm gap-5">
               <label
                 className="relative w-full h-40 rounded-sm cursor-pointer p-px"
@@ -139,7 +139,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   ></textarea>
                 </div>
               </div>
-              <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left gap-2 font-bit text-sm">
+              <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left gap-2 font-bit text-sm flex-wrap sm:flex-nowrap">
                 <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
                   <div className="relative w-fit h-fit justify-start items-center">
                     Location?
@@ -221,7 +221,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   <div className="relative font font-bit text-white text-sm">
                     Connected Microbrands
                   </div>
-                  <div className="relative w-full h-fit flex flex-row gap-2">
+                  <div className="relative w-full h-fit flex flex-row gap-2 sm:flex-nowrap flex-wrap">
                     <label
                       className="relative border border-white w-10 h-10 cursor-pointer p-px rounded-full flex items-center justify-center"
                       id="pfp"
@@ -370,7 +370,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
 
               <div className="relative w-full h-fit flex justify-end items-center">
                 <div
-                  className={`relative w-32 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white text-xs rounded-sm ${
+                  className={`relative w-32 sm:w-40 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white text-xxs sm:text-xs rounded-sm ${
                     !settingsUpdateLoading && "cursor-pointer active:scale-95"
                   }`}
                   onClick={() => handleSettingsUpdate()}
@@ -388,15 +388,15 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="relative w-full h-fit flex flex-row gap-2 items-start justify-start">
+              <div className="relative w-full h-fit flex flex-row gap-2 items-start justify-start md:flex-nowrap flex-wrap">
                 <div className="relative w-fit h-fit flex flex-col gap-2 items-start justify-start">
                   <div className="relative font font-bit text-white text-sm">
                     Follow Module
                   </div>
                   <div className="relative flex flex-row items-start justify-start gap-3">
-                    <div className="relative flex flex-col items-start justify-start h-10 w-60">
+                    <div className="relative flex flex-col items-start justify-start h-10 w-44 galaxy:w-60">
                       <div
-                        className="relative w-full h-full rounded-sm bg-piloto border border-fuera flex items-center justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"
+                        className="relative w-full h-full rounded-sm bg-piloto border border-fuera flex items-center justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center sm:text-base text-xs"
                         onClick={() => setOpenType(!openType)}
                       >
                         <div className="relative flex items-center justify-center w-fit h-fit">
@@ -416,7 +416,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                             ?.map((item: string, index) => {
                               return (
                                 <div
-                                  className="relative w-full h-fit rounded-sm bg-piloto border border-fuera flex items-center  justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"
+                                  className="relative w-full h-fit rounded-sm bg-piloto border border-fuera flex items-center  justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center sm:text-base text-xs"
                                   key={index}
                                   onClick={() => {
                                     setOpenType(!openType);
@@ -440,8 +440,8 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   </div>
                 </div>
                 {followData.type === "FeeFollowModule" && (
-                  <div className="relative flex flex-row gap-3 items-center justify-center">
-                    <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
+                  <div className="relative flex flex-row gap-3 items-center justify-start sm:justify-center sm:flex-nowrap flex-wrap">
+                    <div className="relative w-44 galaxy:w-60 sm:w-full h-fit flex flex-col gap-2 items-start justify-start">
                       <div className="relative font font-bit text-white text-sm">
                         Amount
                       </div>
@@ -466,12 +466,12 @@ const Settings: FunctionComponent<SettingsProps> = ({
                         Currency
                       </div>
                       <div className="relative flex flex-row items-start justify-start gap-3">
-                        <div className="relative flex flex-col items-start justify-start h-10 w-60">
+                        <div className="relative flex flex-col items-start justify-start h-10 w-44 galaxy:w-60">
                           <div
                             className="relative w-full h-full rounded-sm bg-piloto border border-fuera flex items-center justify-center text-left text-white font-bit cursor-pointer px-3 py-1 text-center"
                             onClick={() => setCurrencyOpen(!currencyOpen)}
                           >
-                            <div className="relative flex items-center justify-center w-fit h-fit">
+                            <div className="relative flex items-center justify-center w-fit h-fit sm:text-base text-xs">
                               {followData?.currency?.name}
                             </div>
                           </div>
@@ -508,7 +508,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
               </div>
               <div className="relative w-full h-fit flex justify-end items-center">
                 <div
-                  className={`relative w-40 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm text-xs ${
+                  className={`relative w-32 sm:w-40 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm text-xxs sm:text-xs ${
                     !followUpdateLoading && "cursor-pointer active:scale-95"
                   }`}
                   onClick={() => !followUpdateLoading && handleFollowUpdate()}

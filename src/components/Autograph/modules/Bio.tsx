@@ -5,7 +5,6 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Link from "next/link";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import numeral from "numeral";
-import { MetadataAttributeType } from "../../../../graphql/generated";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const Bio: FunctionComponent<BioProps> = ({
@@ -14,26 +13,26 @@ const Bio: FunctionComponent<BioProps> = ({
   router,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit flex flex-row items-start justify-start gap-5 px-5 -top-7">
+    <div className="relative w-full h-fit flex flex-wrap otro:flex-nowrap flex-row items-start justify-start gap-5 px-2 sm:px-5 sm:-top-3 tablet:-top-7 sm:pt-0 pt-4">
       <div className="relative w-full h-fit flex flex-col gap-2">
-        <div className="w-full h-fit items-start flex gap-3 flex-row relative">
+        <div className="w-full h-fit items-start flex gap-3 flex-col sm:flex-row relative">
           <div className="relative flex items-start justify-between gap-1 w-fit h-fit max-w-[18rem] border border-saph bg-black p-2 flex-col">
-            <div className="font-bit text-ballena blur-sm w-fit h-fit absolute top-1 flex">
+            <div className="font-bit text-ballena blur-sm w-fit h-fit absolute top-1 flex tablet:text-base text-xs">
               Caption on display:
             </div>
-            <div className="font-bit text-olor w-fit h-fit relative flex">
+            <div className="font-bit text-olor w-fit h-fit relative flex tablet:text-base text-xs">
               Caption on display:
             </div>
-            <div className="font-aust text-white text-xs w-fit h-fit relative flex">
+            <div className="font-aust text-white text-xxs tablet:text-xs w-fit h-fit relative flex">
               Oscillating between 2023 and 1983, where AI meets analog and
               decentralization dons a neon glow. Here, epochs blend and
               governance dances to the beat of synthwave. The underlying ethos:
               &quot;In Autonomy We Trust.&quot;
             </div>
           </div>
-          <div className="relative flex items-start justify-between gap-2 w-full h-fit p-2 top-7 flex-col">
+          <div className="relative flex items-start justify-between gap-2 w-full h-fit p-2 top-auto sm:top-7 flex-col">
             {profile?.metadata?.bio && (
-              <div className="font-aust text-white text-xs  w-fit h-fit relative flex">
+              <div className="font-aust text-white text-xs tablet:text-xs w-fit h-fit relative flex break-words">
                 {profile?.metadata?.bio}
               </div>
             )}
@@ -186,31 +185,31 @@ const Bio: FunctionComponent<BioProps> = ({
             </div>
           )}
       </div>
-      <div className="relative w-full h-fit flex items-end justify-center flex-col gap-3 overflow-x-hidden">
-        <div className="font-beb text-white text-9xl w-fit h-fit relative flex items-center justify-end">
+      <div className="relative w-full h-fit flex items-end justify-end sm:justify-center flex-col gap-3 sm:overflow-x-hidden">
+        <div className="font-beb text-white text-4xl sm:text-6xl tablet:text-9xl w-fit h-fit relative flex items-center justify-end break-words">
           {profile?.handle?.suggestedFormatted?.localName}
         </div>
-        <div className="relative flex flex-row gap-10 items-center justify-end w-fit h-fit">
-          <div className="relative flex w-20 h-16 items-center justify-center">
+        <div className="relative flex flex-col sm:flex-row gap-10 items-end sm:items-center justify-end w-full sm:w-fit h-fit">
+          <div className="relative flex w-10 h-7 tablet:w-20 tablet:h-16 items-center justify-center">
             <Image
               layout="fill"
               src={`${INFURA_GATEWAY}/ipfs/QmcQibTswkoR7jFQoa4qJcwSmwNU3kBg6AkErsJ3q3qGCW`}
               draggable={false}
             />
           </div>
-          <div className="gap-2 flex flex-row items-center justify-start w-fit h-fit">
+          <div className="gap-2 flex flex-row items-center justify-start w-fit h-fit sm:flex-nowrap flex-wrap">
             {Array.from({ length: 4 })?.map((_, index: number) => {
               return (
                 <div
                   key={index}
                   className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
                 >
-                  <div className="relative text-white text-xs font-bit w-fit h-fit">
+                  <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
                     Quests <br />
                     Soon
                   </div>
                   <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
-                    <div className="relative w-14 h-14 flex items-center justify-center">
+                    <div className="relative w-6 h-6 tablet:w-14 tablet:h-14 flex items-center justify-center">
                       <Image
                         draggable={false}
                         layout="fill"
@@ -219,9 +218,9 @@ const Bio: FunctionComponent<BioProps> = ({
                     </div>
                     {index !== 3 && (
                       <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
-                        <div className="relative w-3 h-3 items-center justify-center flex bg-lirio rounded-full"></div>
-                        <div className="relative w-4 h-4 items-center justify-center flex bg-olor rounded-full"></div>
-                        <div className="relative w-3 h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                        <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                        <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
+                        <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
                       </div>
                     )}
                   </div>

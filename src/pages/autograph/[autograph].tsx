@@ -692,7 +692,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 createDropLoading={createDropLoading}
               />
               <Bio profile={profile} dispatch={dispatch} router={router} />
-              <div className="relative flex flex-row gap-3 items-start justify-between px-4 w-full h-full">
+              <div className="relative flex flex-row gap-3 items-start justify-between sm:px-4 w-full h-full otro:flex-nowrap flex-wrap">
                 <Feed
                   caretCoord={caretCoordFeed}
                   setCaretCoord={setCaretCoordFeed}

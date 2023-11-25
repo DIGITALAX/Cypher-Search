@@ -20,7 +20,7 @@ const lensMirror = async (
     mirrorOn,
   });
 
-  const typedData = data.data?.createOnchainMirrorTypedData?.typedData;
+  const typedData = data?.data?.createOnchainMirrorTypedData?.typedData;
 
   const signature = await clientWallet.signTypedData({
     domain: omit(typedData?.domain, ["__typename"]),
@@ -31,7 +31,7 @@ const lensMirror = async (
   });
 
   const broadcastResult = await broadcast({
-    id: data.data?.createOnchainMirrorTypedData?.id,
+    id: data?.data?.createOnchainMirrorTypedData?.id,
     signature,
   });
 

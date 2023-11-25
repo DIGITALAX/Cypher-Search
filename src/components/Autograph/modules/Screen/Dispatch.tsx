@@ -34,11 +34,11 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
         <div className="relative flex flex-wrap items-start justify-start w-full h-full font-aust text-white gap-4">
           <div className="relative flex flex-col items-start justify-start gap-4">
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
-              <div className="relative w-fit h-fit text-sm">
+              <div className="relative w-fit h-fit text-sm break-words">
                 Collection Title
               </div>
               <input
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-80"
+                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60 sm:w-80"
                 value={collectionDetails?.title}
                 onChange={(e) =>
                   setCollectionDetails((prev) => ({
@@ -49,7 +49,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               />
             </div>
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
-              <div className="relative w-fit h-fit text-sm">
+              <div className="relative w-fit h-fit text-sm break-words">
                 Collection Description
               </div>
               <textarea
@@ -60,14 +60,14 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     description: e.target.value,
                   }))
                 }
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-60 w-80"
+                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-60 w-60 sm:w-80"
                 style={{
                   resize: "none",
                 }}
               ></textarea>
             </div>
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
-              <div className="relative w-fit h-fit text-sm">
+              <div className="relative w-fit h-fit text-sm break-words">
                 Profilerate Your Creation. Share your prompt?
               </div>
               <textarea
@@ -78,7 +78,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     prompt: e.target.value,
                   }))
                 }
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-40 w-80"
+                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-40 w-60 sm:w-80"
                 style={{
                   resize: "none",
                 }}
@@ -87,7 +87,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
           </div>
           <div className="relative flex flex-col items-start justify-start gap-4">
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
-              <div className="relative w-fit h-fit text-sm">
+              <div className="relative w-fit h-fit text-sm break-words">
                 Artwork{" "}
                 {collectionSettings?.media === "static"
                   ? "(png / gif)"
@@ -97,7 +97,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center">
                 <label
-                  className="relative border border-white w-80 h-80 rounded-sm cursor-pointer p-px"
+                  className="relative border border-white w-60 sm:w-80 h-80 rounded-sm cursor-pointer p-px"
                   id="pfp"
                 >
                   <div className="relative w-full h-full flex items-center justify-center rounded-sm">
@@ -217,7 +217,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
             </div>
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
-              <div className="relative w-fit h-fit text-sm">
+              <div className="relative w-fit h-fit text-sm break-words">
                 Connect Microbrand?
               </div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
@@ -362,7 +362,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
             </div>
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
-              <div className="relative w-fit h-fit text-sm">Select Drop</div>
+              <div className="relative w-fit h-fit text-sm break-words">Select Drop</div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
                 {allDrops?.length > 0 ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
@@ -525,7 +525,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               />
             </div>
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 relative">
-              <div className="relative w-fit h-fit text-sm">Discovery Tags</div>
+              <div className="relative w-fit h-fit text-sm break-words">Discovery Tags</div>
               <input
                 value={collectionDetails?.tags}
                 onChange={(e) =>
@@ -593,7 +593,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 )}
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
-              <div className="relative w-fit h-fit text-sm">Eco-Access</div>
+              <div className="relative w-fit h-fit text-sm break-words">Eco-Access</div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div
                   className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
@@ -659,7 +659,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
-              <div className="relative w-fit h-fit text-sm">Visibility</div>
+              <div className="relative w-fit h-fit text-sm break-words">Visibility</div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div
                   className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
@@ -737,7 +737,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             {collectionDetails?.visibility === "community" && (
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
-                <div className="relative w-fit h-fit text-sm">Communities</div>
+                <div className="relative w-fit h-fit text-sm break-words">Communities</div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
                     className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}

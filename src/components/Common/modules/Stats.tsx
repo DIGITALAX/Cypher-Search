@@ -8,10 +8,19 @@ import handleImageError from "../../../../lib/helpers/handleImageError";
 const Stats: FunctionComponent<StatsProps> = ({
   profile,
   dispatch,
+  layoutAmount,
 }): JSX.Element => {
   return (
-    <div className="relative flex flex-row w-fit h-fit items-between justify-between gap-4 text-pez text-xxs font-bit">
-      <div className="relative flex flex-col gap-2 items-between justify-between">
+    <div
+      className={`relative flex flex-row h-fit items-between justify-between gap-4 text-pez text-xxs font-bit ${
+        layoutAmount === 4 ? "flex-wrap w-full" : "flex-wrap w-full tablet:flex-nowrap tablet:w-fit"
+      }`}
+    >
+      <div
+        className={`relative flex gap-2 items-between justify-between ${
+          layoutAmount === 4 ? "flex-row" : "flex-row tablet:flex-col"
+        }`}
+      >
         {[
           ["QmfLepA6hufGLdzWXXCjJZJTyTFjQKhTAXcCB3mNsRq4Nw", "Followers"],
           ["QmZo867R8s4UE5ofN7fSCzPuPrcwpy5cEKUWHbZiUXqJL2", "Following"],

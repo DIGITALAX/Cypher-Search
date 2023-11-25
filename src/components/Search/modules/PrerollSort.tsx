@@ -22,7 +22,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
       id="preroll"
     >
       <div
-        className="bg-offBlack relative flex w-full h-full rounded-sm flex flex-col items-between justify-start py-3 px-4 gap-4 overflow-y-none"
+        className="bg-offBlack relative flex w-full h-full rounded-sm flex flex-col items-between justify-start py-3 px-4 gap-4 overflow-y-auto galaxy:overflow-y-none"
         id="prerollScroll"
       >
         <div className="relative w-full h-fit flex flex-row justify-between items-center gap-5">

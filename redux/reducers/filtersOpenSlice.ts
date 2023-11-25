@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface FiltersOpenState {
   value: boolean;
+  allow: boolean;
 }
 
 const initialFiltersOpenState: FiltersOpenState = {
   value: false,
+  allow: true,
 };
 
 export const filtersOpenSlice = createSlice({
@@ -14,9 +16,10 @@ export const filtersOpenSlice = createSlice({
   reducers: {
     setFiltersOpen: (
       state: FiltersOpenState,
-      action: PayloadAction<boolean>
+      { payload: { actionValue, actionAllow } }
     ) => {
-      state.value = action.payload;
+      state.value = actionValue;
+      state.allow = actionAllow;
     },
   },
 });
