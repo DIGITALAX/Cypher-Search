@@ -20,7 +20,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-[50vw] h-[50vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
+      <div className="relative w-[90vw] sm:w-[70vw] tablet:w-[50vw] h-[50vh] place-self-center bg-offBlack rounded-lg border border-white rounded-sm">
         <div className="relative w-full h-full flex flex-col gap-5 p-2">
           <div className="relative w-fit h-fit items-end justify-end ml-auto cursor-pointer flex">
             <ImCross
@@ -37,8 +37,8 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
             />
           </div>
           <div className="relative w-full h-fit items-center justify-start flex flex-col gap-3">
-            <div className="relative w-2/3 h-fit flex flex-col gap-2 items-center justify-center">
-              <div className="relative font font-bit text-white text-sm">
+            <div className="relative w-5/6 sm:w-2/3 h-fit flex flex-col gap-2 items-center justify-center">
+              <div className="relative font font-bit text-white text-sm text-center">
                 Search Collected & Created
               </div>
               <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">

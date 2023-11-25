@@ -28,7 +28,7 @@ const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
     >
       <div
         className={
-          "fixed z-50 xl:w-1/3 sm:w-1/2 w-full h-fit p-2 sm:px-8 sm:pb-8 sm:pt-4 cursor-grab active:cursor-grabbing items-center justify-center border-4 border-black rounded-lg top-40 left-0 sm:left-10 flex flex-col gap-3"
+          "fixed z-50 xl:w-1/3 sm:w-1/2 w-full h-fit px-4 md:px-8 pb-8 pt-4 cursor-grab active:cursor-grabbing items-center justify-center border-4 border-black rounded-lg top-40 left-0 sm:left-10 flex flex-col gap-3"
         }
         id="videoplayer"
       >

@@ -25,7 +25,7 @@ const ImageLarge: FunctionComponent<ImageLargeProps> = ({
         }
       >
         <div className="relative w-full h-full flex py-8 flex items-center justify-center">
-          <div className="relative w-4/5 h-4/5 justify-center flex items-center">
+          <div className="relative w-5/6 sm:w-4/5 h-4/5 justify-center flex items-center">
             <div className="relative w-full h-full row-start-1 grid grid-flow-col auto-cols-auto px-4">
               {!type?.includes("video") ? (
                 <Image
