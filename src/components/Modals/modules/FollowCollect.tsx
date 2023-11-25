@@ -22,7 +22,7 @@ const FollowCollect: FunctionComponent<FollowCollectProps> = ({
 
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-full md:w-[25vw] h-fit min-h-[27vh] place-self-center bg-offBlack border border-white">
+      <div className="relative w-[90vw] sm:w-[40vw] tablet:w-[35vw] h-fit max-h-[90vh] min-h-[27vh] place-self-center bg-offBlack border border-white overflow-y-scroll">
         <div className="relative w-full h-full flex flex-col gap-3 px-2 pt-2 pb-4 items-center justify-start">
           <div className="relative w-fit h-fit items-end justify-end ml-auto cursor-pointer flex">
             <ImCross

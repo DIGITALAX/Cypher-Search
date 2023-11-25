@@ -273,7 +273,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           type={image.type}
         />
       )}
-      {displaySearch?.value !== undefined && (
+      {displaySearch?.value && (
         <DisplaySearch
           dispatch={dispatch}
           sortType={displaySearch?.type!}
@@ -372,7 +372,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           }
         />
       )}
-      {indexer?.open && <Index message={indexer?.message} />}
+      {!indexer?.open && <Index message={indexer?.message} />}
     </>
   );
 };

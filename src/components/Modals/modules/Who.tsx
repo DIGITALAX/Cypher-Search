@@ -23,7 +23,7 @@ const Who: FunctionComponent<WhoProps> = ({
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
-      <div className="relative w-full sm:w-[60vw] min-w-fit px-2 md:w-[40vw] lg:w-[25vw] h-fit col-start-1 place-self-center bg-offBlack border border-white">
+      <div className="relative w-full w-[90vw] sm:w-[70vw] tablet:w-[60vw] min-w-fit px-2 md:w-[40vw] lg:w-[25vw] h-fit col-start-1 place-self-center bg-offBlack border border-white">
         <div className="relative w-full row-start-2 h-fit grid grid-flow-col auto-cols-auto">
           <div className="relative w-full h-full col-start-1 place-self-center">
             <div className="relative w-full h-full flex flex-col items-center justify-center gap-4 pb-8">
