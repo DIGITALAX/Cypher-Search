@@ -133,8 +133,8 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
           </div>
         )}
       </div>
-      <div className="relative w-full h-fit flex items-center justify-between">
-        <div className="relative w-fit h-fit items-center justify-start flex flex-row gap-2">
+      <div className="relative w-full h-fit flex flex-col sm:flex-row items-between justify-center sm:items-center sm:justify-between sm:gap-1.5 gap-4">
+        <div className="relative w-full sm:w-fit h-fit items-center justify-start flex flex-row gap-2">
           {[
             ["QmetvVH6tdXP4ZfvB7ihH9J9oQ6KfVUVVktyHpbbaAzztX", "image"],
             ["QmNd2Rj7tzTJiN7vMbWaFoYJuUARUfEnXRpjKRkQ4uEKoD", "video"],
@@ -224,7 +224,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
             );
           })}
         </div>
-        <div className="relative w-fit h-fit items-center justify-end">
+        <div className="relative w-full sm:w-fit h-fit items-center justify-end flex">
           <div
             className={`relative w-20 h-8 font-aust text-white flex items-center justify-center bg-fuego border border-white text-xs rounded-sm ${
               !commentPostLoading && "cursor-pointer active:scale-95"
