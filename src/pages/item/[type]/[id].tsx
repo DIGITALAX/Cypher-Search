@@ -171,15 +171,16 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     type as string,
     setRelatedData
   );
-  const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
-    id as string,
-    type === "chromadin" || type === "coinop" || type === "listener"
-      ? (itemData?.post as Creation)?.profile
-      : (itemData?.post as Mirror)?.__typename === "Mirror"
-      ? (itemData?.post as Mirror)?.mirrorOn?.by
-      : (itemData?.post as Profile),
-    lensConnected
-  );
+  const { getMoreSuggested, suggestedFeed, loaders, setSuggestedFeed } =
+    useSuggested(
+      id as string,
+      type === "chromadin" || type === "coinop" || type === "listener"
+        ? (itemData?.post as Creation)?.profile
+        : (itemData?.post as Mirror)?.__typename === "Mirror"
+        ? (itemData?.post as Mirror)?.mirrorOn?.by
+        : (itemData?.post as Profile),
+      lensConnected
+    );
   const { handleSearch, handleShuffleSearch, placeholderText } = useSearch(
     filtersOpen,
     lensConnected,
@@ -223,7 +224,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     dispatch,
     publicClient,
     address,
-    lensConnected
+    lensConnected,
+    setSuggestedFeed,
   );
   const {
     followProfile: followItemProfile,

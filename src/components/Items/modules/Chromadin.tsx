@@ -214,6 +214,30 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                                 contentLoading={contentLoading}
                                 setContentLoading={setContentLoading}
                                 postCollectGif={postCollectGif}
+                                top={
+                                  item?.metadata?.content?.length < 100 &&
+                                  item?.metadata?.__typename !==
+                                    "AudioMetadataV3" &&
+                                  item?.metadata?.__typename !==
+                                    "ImageMetadataV3" &&
+                                  item?.metadata?.__typename !==
+                                    "VideoMetadataV3"
+                                    ? "20px"
+                                    : "auto"
+                                }
+                                bottom={
+                                  item?.metadata?.content?.length < 100 &&
+                                  item?.metadata?.__typename !==
+                                    "AudioMetadataV3" &&
+                                  item?.metadata?.__typename !==
+                                    "ImageMetadataV3" &&
+                                  item?.metadata?.__typename !==
+                                    "VideoMetadataV3"
+                                    ? "auto"
+                                    : "2px"
+                                }
+                                left={"auto"}
+                                right={"2px"}
                               />
                             );
                           }

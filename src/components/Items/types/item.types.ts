@@ -126,8 +126,8 @@ export type SwitchTypeProps = {
     image: boolean;
     video: boolean;
   }[];
-  handleHidePost: (id: string, index: number) => Promise<void>;
-  handleBookmark: (id: string, index: number) => Promise<void>;
+  handleHidePost: (id: string, index: number, main?: boolean) => Promise<void>;
+  handleBookmark: (id: string, index: number, main?: boolean) => Promise<void>;
   setMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
   openMainMirrorChoice: boolean[];
   setMainOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
@@ -257,8 +257,8 @@ export type ChromadinProps = {
     image: boolean;
     video: boolean;
   }[];
-  handleHidePost: (id: string, index: number) => Promise<void>;
-  handleBookmark: (id: string, index: number) => Promise<void>;
+  handleHidePost: (id: string, index: number, main?: boolean) => Promise<void>;
+  handleBookmark: (id: string, index: number, main?: boolean) => Promise<void>;
   setMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
   mainContentLoading: {
     image: boolean;

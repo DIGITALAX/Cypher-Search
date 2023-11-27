@@ -497,9 +497,9 @@ const useFeed = (
                 ...valueToUpdate,
               },
               stats: {
-                ...(newItems[index] as Post).stats,
+                ...(newItems[index] as Mirror)?.mirrorOn?.stats,
                 [statToUpdate]:
-                  (newItems[index] as Post).stats?.[
+                  (newItems[index] as Mirror)?.mirrorOn?.stats?.[
                     statToUpdate as keyof PublicationStats
                   ] + (increase ? 1 : -1),
               },
@@ -508,13 +508,13 @@ const useFeed = (
         : {
             ...newItems[index],
             operations: {
-              ...(newItems[index] as Post).operations,
+              ...(newItems[index] as Post)?.operations,
               ...valueToUpdate,
             },
             stats: {
-              ...(newItems[index] as Post).stats,
+              ...(newItems[index] as Post)?.stats,
               [statToUpdate]:
-                (newItems[index] as Post).stats?.[
+                (newItems[index] as Post)?.stats?.[
                   statToUpdate as keyof PublicationStats
                 ] + (increase ? 1 : -1),
             },

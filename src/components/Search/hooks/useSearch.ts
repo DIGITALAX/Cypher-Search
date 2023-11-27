@@ -278,7 +278,7 @@ const useSearch = (
       const allItems = [
         ...(collections?.map((item) => ({
           post: item,
-          type: item.origin,
+          type: numberToItemTypeMap[Number(item.origin)],
         })) || []),
         ...[
           ...(profiles?.map((item) => ({

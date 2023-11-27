@@ -77,7 +77,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
               draggable={false}
             />
           )}
-          {media?.type == "Audio" ? (
+          {media?.type == "Audio" ?  (
             <>
               <Image
                 layout="fill"
@@ -86,7 +86,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 src={media?.cover!}
                 onError={(e) => handleImageError(e)}
               />
-              <audio
+             {videoInfo?.isActive && <audio
                 key={uniqueVideoKey}
                 draggable={false}
                 controls={false}
@@ -126,7 +126,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 ref={videoRef as RefObject<HTMLVideoElement>}
               >
                 <source src={media?.url} />
-              </audio>
+              </audio>}
             </>
           ) : videoInfo?.isActive ? (
             <video

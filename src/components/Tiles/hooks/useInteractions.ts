@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import {
   Mirror,
   Post,
@@ -18,13 +18,17 @@ import {
   setAllSearchItems,
 } from "../../../../redux/reducers/searchItemsSlice";
 import errorChoice from "../../../../lib/helpers/errorChoice";
+import { Creation } from "../types/tiles.types";
 
 const useInteractions = (
   allSearchItems: AllSearchItemsState | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  lensConnected: Profile | undefined
+  lensConnected: Profile | undefined,
+  setSuggestedFeed:
+    | ((e: SetStateAction<AllSearchItemsState | undefined>) => void)
+    | undefined
 ) => {
   const [openMirrorChoice, setOpenMirrorChoice] = useState<boolean[]>([]);
   const [interactionsLoading, setInteractionsLoading] = useState<
@@ -218,32 +222,64 @@ const useInteractions = (
     const newItems = [...(allSearchItems?.items || [])];
     newItems[index] = {
       ...newItems[index],
-      post: {
-        ...newItems[index]?.post,
-        operations: {
-          ...(newItems[index]?.post as Post)?.operations,
-          ...valueToUpdate,
-        },
-        stats: {
-          ...(newItems[index]?.post as Post)?.stats,
-          [statToUpdate]:
-            (newItems[index]?.post as Post)?.stats?.[
-              statToUpdate as keyof PublicationStats
-            ] + (increase ? 1 : -1),
-        },
-      } as Post & { decrypted: any },
+      post: newItems[index]?.type?.includes("V3")
+        ? ({
+            ...newItems[index]?.post,
+            operations: {
+              ...(newItems[index]?.post as Post)?.operations,
+              ...valueToUpdate,
+            },
+            stats: {
+              ...(newItems[index]?.post as Post)?.stats,
+              [statToUpdate]:
+                (newItems[index]?.post as Post)?.stats?.[
+                  statToUpdate as keyof PublicationStats
+                ] + (increase ? 1 : -1),
+            },
+          } as Post & { decrypted: any })
+        : ({
+            ...newItems[index]?.post,
+            publication: {
+              ...(newItems[index]?.post as Creation)?.publication,
+              operations: {
+                ...((newItems[index]?.post as Creation)?.publication as Post)
+                  ?.operations,
+                ...valueToUpdate,
+              },
+              stats: {
+                ...((newItems[index]?.post as Creation)?.publication as Post)
+                  ?.stats,
+                [statToUpdate]:
+                  ((newItems[index]?.post as Creation)?.publication as Post)
+                    ?.stats?.[statToUpdate as keyof PublicationStats] +
+                  (increase ? 1 : -1),
+              },
+            },
+          } as Creation),
     };
-    dispatch(
-      setAllSearchItems({
-        actionItems: newItems,
-        actionGraphCursor: allSearchItems?.graphCursor,
-        actionLensProfileCursor: allSearchItems?.lensProfileCursor,
-        actionLensPubCursor: allSearchItems?.lensPubCursor,
-        actionPubProfileCursor: allSearchItems?.pubProfileCursor,
-        actionHasMore: allSearchItems?.hasMore,
-        actionInput: allSearchItems?.searchInput,
-      })
-    );
+    if (setSuggestedFeed) {
+      setSuggestedFeed({
+        items: newItems,
+        graphCursor: allSearchItems?.graphCursor,
+        lensProfileCursor: allSearchItems?.lensProfileCursor,
+        lensPubCursor: allSearchItems?.lensPubCursor,
+        pubProfileCursor: allSearchItems?.pubProfileCursor,
+        hasMore: allSearchItems?.hasMore!,
+        searchInput: allSearchItems?.searchInput!,
+      });
+    } else {
+      dispatch(
+        setAllSearchItems({
+          actionItems: newItems,
+          actionGraphCursor: allSearchItems?.graphCursor,
+          actionLensProfileCursor: allSearchItems?.lensProfileCursor,
+          actionLensPubCursor: allSearchItems?.lensPubCursor,
+          actionPubProfileCursor: allSearchItems?.pubProfileCursor,
+          actionHasMore: allSearchItems?.hasMore,
+          actionInput: allSearchItems?.searchInput,
+        })
+      );
+    }
   };
 
   useEffect(() => {

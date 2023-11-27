@@ -632,13 +632,13 @@ const useBookmarks = (
             mirrorOn: {
               ...(newItems[index] as Mirror)?.mirrorOn,
               operations: {
-                ...(newItems[index] as Post).operations,
+                ...(newItems[index] as Mirror)?.mirrorOn?.operations,
                 ...valueToUpdate,
               },
               stats: {
-                ...(newItems[index] as Post).stats,
+                ...(newItems[index] as Mirror)?.mirrorOn?.stats,
                 [statToUpdate]:
-                  (newItems[index] as Post).stats?.[
+                  (newItems[index] as Mirror)?.mirrorOn?.stats?.[
                     statToUpdate as keyof PublicationStats
                   ] + (increase ? 1 : -1),
               },

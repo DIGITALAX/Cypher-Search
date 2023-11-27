@@ -349,7 +349,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 key={indexTwo}
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
                 onClick={() =>
-                  !loaders[index] &&
+                  !loaders[indexTwo] &&
                   (isSingleArgFunction(
                     functions[indexTwo] as
                       | ((id: string) => Promise<void>)

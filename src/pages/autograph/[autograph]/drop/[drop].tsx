@@ -74,11 +74,8 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     autograph as string,
     lensConnected
   );
-  const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
-    drop as string,
-    profile,
-    lensConnected
-  );
+  const { getMoreSuggested, suggestedFeed, loaders, setSuggestedFeed } =
+    useSuggested(drop as string, profile, lensConnected);
   const { handleSearch, handleShuffleSearch, placeholderText } = useSearch(
     filtersOpen,
     lensConnected,
@@ -122,7 +119,8 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     dispatch,
     publicClient,
     address,
-    lensConnected
+    lensConnected,
+    setSuggestedFeed,
   );
   const { dropLoading, dropItem, collections } = useDrop(
     drop as string,

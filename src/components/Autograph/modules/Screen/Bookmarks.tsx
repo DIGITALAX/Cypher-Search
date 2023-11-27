@@ -43,7 +43,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   caretCoord,
   profilesOpen,
   setCaretCoord,
-  cartItems
+  cartItems,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -86,6 +86,10 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                     },
                     index: number
                   ) => {
+                    const type =
+                      item?.__typename === "Mirror"
+                        ? item.mirrorOn
+                        : (item as Post);
                     return (
                       <Publication
                         setCaretCoord={setCaretCoord}
@@ -127,6 +131,24 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                         contentLoading={contentLoading}
                         setContentLoading={setContentLoading}
                         postCollectGif={postCollectGif}
+                        top={
+                          type?.metadata?.content?.length < 100 &&
+                          type?.metadata?.__typename !== "AudioMetadataV3" &&
+                          type?.metadata?.__typename !== "ImageMetadataV3" &&
+                          type?.metadata?.__typename !== "VideoMetadataV3"
+                            ? "20px"
+                            : "auto"
+                        }
+                        bottom={
+                          type?.metadata?.content?.length < 100 &&
+                          type?.metadata?.__typename !== "AudioMetadataV3" &&
+                          type?.metadata?.__typename !== "ImageMetadataV3" &&
+                          type?.metadata?.__typename !== "VideoMetadataV3"
+                            ? "auto"
+                            : "2px"
+                        }
+                        left={"auto"}
+                        right={"2px"}
                       />
                     );
                   }

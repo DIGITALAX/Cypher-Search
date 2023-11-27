@@ -201,6 +201,7 @@ const useSuggested = (
     getMoreSuggested,
     suggestedFeed,
     loaders,
+    setSuggestedFeed
   };
 };
 

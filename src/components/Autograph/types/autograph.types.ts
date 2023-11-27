@@ -1000,6 +1000,10 @@ export type PostBarProps = {
   main: boolean | undefined;
   lensConnected: Profile | undefined;
   cartItems: CartItem[];
+  top: string;
+  bottom: string;
+  left: string;
+  right: string;
   mirror?:
     | ((id: string) => Promise<void>)
     | ((id: string, main: boolean) => Promise<void>);
@@ -1061,6 +1065,10 @@ export type PublicationProps = {
     decrypted: any;
   };
   index: number;
+  top: string;
+  bottom: string;
+  left: string;
+  right: string;
   cartItems?: CartItem[];
   decryptLoading?: boolean;
   mentionProfiles?: Profile[];
