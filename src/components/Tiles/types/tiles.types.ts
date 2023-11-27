@@ -18,6 +18,7 @@ export interface Creation {
   tags: string[];
   pubId: string;
   prompt: string;
+  uri: string;
   profileId: string;
   mediaTypes: string[];
   profileHandle: string;
@@ -426,17 +427,17 @@ export type MicrobrandProps = {
 };
 
 export interface FilterInput {
-  access_contains?: String;
-  communities_contains?: String;
-  description_contains?: String;
-  dropTitle_contains?: String;
-  microbrand_contains?: String;
-  printType_contains?: String;
-  prompt_contains?: String;
-  tags_contains?: String;
-  title_contains?: String;
-  visibility_contains?: String;
-  mediaTypes_contains?: String;
+  access_contains_nocase?: String;
+  communities_contains_nocase?: String;
+  description_contains_nocase?: String;
+  dropTitle_contains_nocase?: String;
+  microbrand_contains_nocase?: String;
+  printType_contains_nocase?: String;
+  prompt_contains_nocase?: String;
+  tags_contains_nocase?: String;
+  title_contains_nocase?: String;
+  visibility_contains_nocase?: String;
+  mediaTypes_contains_nocase?: String;
   unlimited?: Boolean;
   amount_gte?: String;
   amount_lte?: String;

@@ -12,6 +12,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
   classNameImage,
   classNameAudio,
   objectFit,
+  hidden,
 }): JSX.Element => {
   switch (type?.toLowerCase()) {
     case "video":
@@ -24,15 +25,20 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
             id={srcUrl}
             className={classNameVideo}
             poster={srcCover}
+            autoPlay={hidden}
+            muted={hidden}
+            loop={hidden}
           >
             <source src={srcUrl} />
           </video>
-          <Waveform
-            audio={srcUrl}
-            type={"video"}
-            keyValue={srcUrl}
-            video={srcUrl}
-          />
+          {!hidden && (
+            <Waveform
+              audio={srcUrl}
+              type={"video"}
+              keyValue={srcUrl}
+              video={srcUrl}
+            />
+          )}
         </>
       );
 
@@ -47,12 +53,14 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
             draggable={false}
             onError={(e) => handleImageError(e)}
           />
-          <Waveform
-            audio={srcUrl}
-            type={"audio"}
-            keyValue={srcUrl}
-            video={srcUrl}
-          />
+          {!hidden && (
+            <Waveform
+              audio={srcUrl}
+              type={"audio"}
+              keyValue={srcUrl}
+              video={srcUrl}
+            />
+          )}
         </>
       );
 

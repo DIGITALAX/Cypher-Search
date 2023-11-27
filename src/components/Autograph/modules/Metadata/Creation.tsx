@@ -12,6 +12,7 @@ import { setCartAnim } from "../../../../../redux/reducers/cartAnimSlice";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
 import { setCypherStorageCart } from "../../../../../lib/utils";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const Creation: FunctionComponent<CreationProps> = ({
   item,
@@ -35,6 +36,7 @@ const Creation: FunctionComponent<CreationProps> = ({
   lensConnected,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.profile?.metadata?.picture);
+  console.log({ item });
   return (
     <div
       className="relative w-80 h-80 bg-piloto flex items-center justify-start flex-col p-2 gap-4"
@@ -53,22 +55,39 @@ const Creation: FunctionComponent<CreationProps> = ({
         }
         id="staticLoad"
       >
-        {item?.images?.[0] && (
-          <Image
-            layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/${
-              item?.images?.[0]?.split("ipfs://")?.[1]
-            }`}
-            draggable={false}
-            className="rounded-md"
-            objectFit="cover"
-            onError={(e) => handleImageError(e)}
+        {
+          <MediaSwitch
+            type={
+              item.mediaTypes?.[0] == "video"
+                ? "video"
+                : item.mediaTypes?.[0] == "audio"
+                ? "audio"
+                : "image"
+            }
+            classNameImage={"rounded-md w-full h-full flex relative"}
+            classNameVideo={
+              "object-cover w-full h-full flex items-center justify-center rounded-md"
+            }
+            srcUrl={
+              item.mediaTypes?.[0] == "video"
+                ? `${INFURA_GATEWAY}/ipfs/${item?.video?.split("ipfs://")?.[1]}`
+                : item.mediaTypes?.[0] == "audio"
+                ? `${INFURA_GATEWAY}/ipfs/${item?.audio?.split("ipfs://")?.[1]}`
+                : `${INFURA_GATEWAY}/ipfs/${
+                    item?.images?.[0]?.split("ipfs://")?.[1]
+                  }`
+            }
+            srcCover={
+              item?.images?.[0]
+                ? `${INFURA_GATEWAY}/ipfs/${
+                    item?.images?.[0]?.split("ipfs://")?.[1]
+                  }`
+                : undefined
+            }
           />
-        )}
+        }
         <div
-          className={`absolute right-2 top-2 text-xxs text-white font-bit bg-offBlack flex items-center justify-center border border-white px-1 py-px  ${
-            item?.amount == item?.soldTokens ? "w-fit h-fit" : "w-7 h-7"
-          }`}
+          className={`absolute right-2 top-2 text-xxs text-white font-bit bg-offBlack flex items-center justify-center border border-white px-1 py-px  w-fit h-fit`}
         >
           <div className="relative w-fit h-fit flex items-center justify-center top-px">
             {item?.amount == item?.soldTokens

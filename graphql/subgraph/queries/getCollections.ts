@@ -8,11 +8,14 @@ const COLLECTIONS = `
       title
       tags
       pubId
+      uri
       prompt
       profileId
       profileHandle
       printType
       prices
+      video
+      audio
       owner
       mediaTypes
       microbrandCover
@@ -60,6 +63,8 @@ const COLLECTIONS_PAGINATED = `
       soldTokens
       microbrand
       images
+      video
+      audio
       fulfillerPercent
       fulfillerBase
       fulfiller
@@ -70,6 +75,7 @@ const COLLECTIONS_PAGINATED = `
       dropTitle
       description
       communities
+      uri
       collectionId
       access
       unlimited

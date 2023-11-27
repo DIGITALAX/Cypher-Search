@@ -7,6 +7,7 @@ import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const DropMain: FunctionComponent<DropMainProps> = ({
   collections,
@@ -19,6 +20,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
       <div className="relative w-full h-fit flex items-center justify-start">
         <div className="relative w-fit h-fit flex items-center justify-start flex-wrap gap-5">
           {collections?.map((collection: Creation, index: number) => {
+            console.log({ collection }, collection.mediaTypes?.[0]);
             return (
               <div
                 key={index}
@@ -35,20 +37,42 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                     )
                   }
                 >
-                  {collection?.images && (
-                    <Image
-                      className="rounded-sm"
-                      layout="fill"
-                      objectFit="cover"
-                      draggable={false}
-                      src={`${INFURA_GATEWAY}/ipfs/${
-                        collection?.images?.[0]?.split("ipfs://")?.[1]
-                      }`}
-                      onError={(e) => handleImageError(e)}
-                    />
-                  )}
+                  <MediaSwitch
+                    hidden
+                    type={
+                      collection.mediaTypes?.[0] == "video"
+                        ? "video"
+                        : collection.mediaTypes?.[0] == "audio"
+                        ? "audio"
+                        : "image"
+                    }
+                    classNameImage={"rounded-sm w-full h-full flex relative"}
+                    classNameVideo={
+                      "object-cover w-full h-full flex items-center justify-center rounded-sm"
+                    }
+                    srcUrl={
+                      collection.mediaTypes?.[0] == "video"
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            collection?.video?.split("ipfs://")?.[1]
+                          }`
+                        : collection.mediaTypes?.[0] == "audio"
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            collection?.audio?.split("ipfs://")?.[1]
+                          }`
+                        : `${INFURA_GATEWAY}/ipfs/${
+                            collection?.images?.[0]?.split("ipfs://")?.[1]
+                          }`
+                    }
+                    srcCover={
+                      collection?.images?.[0]
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            collection?.images?.[0]?.split("ipfs://")?.[1]
+                          }`
+                        : undefined
+                    }
+                  />
                 </div>
-                <div className="absolute bottom-0 right-0 w-full h-12 bg-offBlack flex items-center justify-between px-3">
+                <div className="absolute bottom-0 right-0 w-full h-12 bg-offBlack flex items-center justify-between px-3 z-2">
                   <div className="relative w-fit h-fit flex items-center justify-start text-sm font-bit text-white top-px">
                     {collection?.title?.length > 20
                       ? collection?.title?.slice(0, 20) + "..."
@@ -56,7 +80,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                   </div>
                   <div className="relative flex flex-row gap-2 ml-auto items-center justify-center">
                     <div className="relative w-fit h-fit flex items-center justify-start text-sm font-bit text-white top-px">
-                      ${Number(collection?.prices?.[0]) / 10 ** 18}
+                      ${Number(collection?.prices?.[0])}
                     </div>
                     <div
                       className="relative w-6 h-6 justify-end flex items-center cursor-pointer active:scale-95"

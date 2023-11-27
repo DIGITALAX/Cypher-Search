@@ -244,6 +244,7 @@ export type MediaProps = {
   classNameImage?: string;
   classNameAudio?: string;
   objectFit?: string;
+  hidden?: boolean;
 };
 
 export type CartListProps = {

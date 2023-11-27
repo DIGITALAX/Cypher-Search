@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Profile } from "../../../../graphql/generated";
 import { getOneDrop } from "../../../../graphql/subgraph/queries/getDrops";
 import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
+import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 
 const useDrop = (drop: string, profile: Profile | undefined) => {
   const [dropLoading, setDropLoading] = useState<boolean>();
@@ -29,14 +30,73 @@ const useDrop = (drop: string, profile: Profile | undefined) => {
       const drop = await getDrop();
 
       if (drop) {
-        let colls: Creation[] = [];
+        if (drop.collectionIds) {
+          const promises = drop.collectionIds.map(async (item) => {
+            const res = await getOneCollection(item);
+            if (res?.data?.collectionCreateds) {
+              return Promise.all(
+                res.data.collectionCreateds.map(
+                  async (collection: Creation) => {
+                    let ipfs = {};
+                    if (!collection?.title) {
+                      ipfs = await fetchIPFSJSON(collection?.uri);
+                    }
+                    const coll = {
+                      ...collection,
+                      ...ipfs,
+                    };
+                    return {
+                      ...coll,
+                      sizes:
+                        typeof coll?.sizes === "string" &&
+                        (coll?.sizes as any)
+                          ?.split(",")
+                          ?.map((word: string) => word.trim())
+                          ?.filter((word: string) => word.length > 0),
+                      colors:
+                        typeof coll?.colors === "string" &&
+                        (coll?.colors as any)
+                          ?.split(",")
+                          ?.map((word: string) => word.trim())
+                          ?.filter((word: string) => word.length > 0),
+                      mediaTypes:
+                        typeof coll?.mediaTypes === "string" &&
+                        (coll?.mediaTypes as any)
+                          ?.split(",")
+                          ?.map((word: string) => word.trim())
+                          ?.filter((word: string) => word.length > 0),
+                      access:
+                        typeof coll?.access === "string" &&
+                        (coll?.access as any)
+                          ?.split(",")
+                          ?.map((word: string) => word.trim())
+                          ?.filter((word: string) => word.length > 0),
+                      communities:
+                        typeof coll?.communities === "string" &&
+                        (coll?.communities as any)
+                          ?.split(",")
+                          ?.map((word: string) => word.trim())
+                          ?.filter((word: string) => word.length > 0),
+                      tags:
+                        typeof coll?.tags === "string" &&
+                        (coll?.tags as any)
+                          ?.split(",")
+                          ?.map((word: string) => word.trim())
+                          ?.filter((word: string) => word.length > 0),
+                      prices: coll?.prices?.map((price: string) =>
+                        String(Number(price) / 10 ** 18)
+                      ),
+                    } as Creation;
+                  }
+                )
+              );
+            }
+          });
 
-        const promises = drop?.collectionIds?.map(async (item: string) => {
-          const res = await getOneCollection(item);
-          colls.push(res?.data?.collectionCreateds?.[0]);
-        });
-        await Promise.all(promises);
-        setCollections(colls);
+          const collections = (await Promise.all(promises)).flat();
+          setCollections(collections);
+        }
+
         setDropItem(drop);
       }
     } catch (err: any) {

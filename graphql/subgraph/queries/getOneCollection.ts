@@ -9,6 +9,7 @@ const COLLECTION = `
       tags
       pubId
       prompt
+      uri
       profileId
       profileHandle
       printType
@@ -23,6 +24,8 @@ const COLLECTION = `
       fulfillerPercent
       fulfillerBase
       fulfiller
+      video
+      audio
       designerPercent
       dropId
       dropCollectionIds
@@ -66,6 +69,8 @@ export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
       dropId
       dropCollectionIds
       dropCover
+      video
+      audio
       dropTitle
       description
       communities
@@ -104,7 +109,7 @@ const COLLECTION_QUICK = `
 
 const COLLECTION_TITLE = `
   query($title: String!) {
-    collectionCreateds(where: {title: $title}, first: 1) {
+    collectionCreateds(where: {title_contains_nocase: $title}, first: 1) {
       amount
       title
       tags
@@ -126,6 +131,9 @@ const COLLECTION_TITLE = `
       fulfiller
       designerPercent
       dropId
+      uri
+      video
+      audio
       dropCollectionIds
       dropCover
       dropTitle

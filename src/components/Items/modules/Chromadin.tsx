@@ -333,9 +333,15 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                             itemData?.images?.[0]?.split("ipfs://")?.[1]
                           }`
                     }
-                    srcCover=""
+                    srcCover={
+                      itemData?.images?.[0]
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            itemData?.images?.[0]?.split("ipfs://")?.[1]
+                          }`
+                        : undefined
+                    }
                     classNameVideo={
-                      "object-cover flex items-center justify-center relative"
+                      "flex items-center justify-center relative w-full h-full"
                     }
                     classNameImage="flex items-center justify-center w-full h-full relative"
                     objectFit="contain"

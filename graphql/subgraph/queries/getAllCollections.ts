@@ -9,10 +9,13 @@ const COLLECTIONS = `
       title
       tags
       pubId
+      video
+      audio
       prompt
       profileId
       acceptedTokens
       visibility
+      uri
       profileHandle
       printType
       prices
