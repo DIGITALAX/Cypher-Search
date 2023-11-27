@@ -158,6 +158,8 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                               classNameImage={
                                 "rounded-md w-full h-full flex relative"
                               }
+                              classNameAudio={"rounded-md w-full h-full flex relative"}
+
                               classNameVideo={
                                 "object-cover w-full h-full flex items-center justify-center rounded-md relative"
                               }

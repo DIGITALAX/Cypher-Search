@@ -4,7 +4,6 @@ import { ImCross } from "react-icons/im";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { setDisplaySearchBox } from "../../../../redux/reducers/displaySearchBoxSlice";
-import handleImageError from "../../../../lib/helpers/handleImageError";
 
 const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
   dispatch,
@@ -71,7 +70,6 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                           ...(gallery?.created || []),
                         ]
                     )
-                      ?.sort(() => Math.random() - 0.5)
                       ?.filter((item) =>
                         item?.title
                           ?.toLowerCase()
@@ -83,6 +81,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                             collectionId: string;
                             images: string[];
                             title: string;
+                            mediaCover: string;
                           },
                           index: number
                         ) => {
@@ -101,13 +100,16 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                             >
                               <div className="relative w-full h-full rounded-sm">
                                 <Image
-                                  layout="fill"
-                                  src={`${INFURA_GATEWAY}/ipfs/${
-                                    item?.images?.[0]?.split("ipfs://")?.[1]
-                                  }`}
+                                  draggable={false}
                                   className="rounded-sm"
+                                  src={`${INFURA_GATEWAY}/ipfs/${
+                                    (item?.images?.[0]
+                                      ? item?.images?.[0]
+                                      : item?.mediaCover
+                                    )?.split("ipfs://")?.[1]
+                                  }`}
+                                  layout="fill"
                                   objectFit="cover"
-                                  onError={(e) => handleImageError(e)}
                                 />
                               </div>
                             </div>

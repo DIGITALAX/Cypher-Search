@@ -102,6 +102,8 @@ const useOrders = (
         return;
       }
 
+      await client.connect();
+
       const authSig = await checkAndSignAuthMessage({
         chain: "mumbai",
       });

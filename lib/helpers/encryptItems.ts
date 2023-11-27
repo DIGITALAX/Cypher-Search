@@ -68,6 +68,8 @@ export const encryptItems = async (
         },
       ];
 
+      await client.connect();
+
       const { ciphertext, dataToEncryptHash } = await encryptString(
         {
           accessControlConditions,

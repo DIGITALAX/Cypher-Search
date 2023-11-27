@@ -706,7 +706,7 @@ const useSearch = (
         microbrands: aggregateMicrobrands(data?.data?.collectionCreateds),
         dropsSuggested: aggregateUniqueValues(
           data?.data?.collectionCreateds,
-          "drop"
+          "dropTitle"
         ),
         hashtags: aggregateUniqueValues(data?.data?.collectionCreateds, "tags"),
         colors: aggregateUniqueValues(data?.data?.collectionCreateds, "colors"),
@@ -740,6 +740,7 @@ const useSearch = (
         sizes: data?.sizes!,
         community: data?.communities!,
       };
+
       dispatch(setFilterConstants(filters));
       setFilteredDropDownValues(filters);
     } catch (err: any) {

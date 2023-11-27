@@ -707,18 +707,18 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         return (
                           <div
                             key={index}
-                            className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
-                            onClick={() => {
-                              setCollectionSettings((prev) => ({
-                                ...prev,
-                                visibilityOpen: !prev.visibilityOpen,
-                              }));
+                            className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust opacity-80"
+                            // onClick={() => {
+                            //   setCollectionSettings((prev) => ({
+                            //     ...prev,
+                            //     visibilityOpen: !prev.visibilityOpen,
+                            //   }));
 
-                              setCollectionDetails((prev) => ({
-                                ...prev,
-                                visibility: item?.[0],
-                              }));
-                            }}
+                            //   setCollectionDetails((prev) => ({
+                            //     ...prev,
+                            //     visibility: item?.[0],
+                            //   }));
+                            // }}
                           >
                             <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
                               <div className="relative flex items-center justify-center w-5 h-5 cursor-pointer">

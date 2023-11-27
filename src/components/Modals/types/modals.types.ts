@@ -43,11 +43,13 @@ export type DisplaySearchProps = {
           collectionId: string;
           images: string[];
           title: string;
+          mediaCover: string;
         }[];
         created: {
           collectionId: string;
           images: string[];
           title: string;
+          mediaCover: string;
         }[];
       }
     | undefined;
@@ -59,6 +61,7 @@ export type DisplaySearchProps = {
         collectionId: string;
         images: string[];
         title: string;
+        mediaCover: string;
       }[]
     | undefined;
   selectedItem: Creation | undefined;
@@ -67,6 +70,7 @@ export type DisplaySearchProps = {
       collectionId: string;
       images: string[];
       title: string;
+      mediaCover: string;
     },
     type: SortType,
     value: number

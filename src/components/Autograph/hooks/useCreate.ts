@@ -42,6 +42,7 @@ import { setInteractError } from "../../../../redux/reducers/interactErrorSlice"
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
+import collectionFixer from "../../../../lib/helpers/collectionFixer";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -124,69 +125,7 @@ const useCreate = (
     try {
       const data = await getCollections(address!);
       const newCollections = data?.data?.collectionCreateds?.map(
-        async (collection: any) => {
-          let ipfs: Object = {};
-          if (!collection?.title) {
-            let data = await fetchIPFSJSON(collection?.uri);
-            const { cover, ...rest } = data;
-            ipfs = {
-              ...rest,
-              mediaCover: cover,
-            };
-          }
-          const coll = {
-            ...collection,
-            ...ipfs,
-          };
-          return {
-            ...coll,
-            sizes:
-              typeof coll?.sizes === "string"
-                ? coll?.sizes
-                    ?.split(",")
-                    ?.map((word: string) => word.trim())
-                    ?.filter((word: string) => word.length > 0)
-                : coll?.sizes,
-            colors:
-              typeof coll?.colors === "string"
-                ? coll?.colors
-                    ?.split(",")
-                    ?.map((word: string) => word.trim())
-                    ?.filter((word: string) => word.length > 0)
-                : coll?.colors,
-            mediaTypes:
-              typeof coll?.mediaTypes === "string"
-                ? coll?.mediaTypes
-                    ?.split(",")
-                    ?.map((word: string) => word.trim())
-                    ?.filter((word: string) => word.length > 0)
-                : coll?.mediaTypes,
-            access:
-              typeof coll?.access === "string"
-                ? coll?.access
-                    ?.split(",")
-                    ?.map((word: string) => word.trim())
-                    ?.filter((word: string) => word.length > 0)
-                : coll?.access,
-            communities:
-              typeof coll?.communities === "string"
-                ? coll?.communities
-                    ?.split(",")
-                    ?.map((word: string) => word.trim())
-                    ?.filter((word: string) => word.length > 0)
-                : coll?.communities,
-            tags:
-              typeof coll?.tags === "string"
-                ? coll?.tags
-                    ?.split(",")
-                    ?.map((word: string) => word.trim())
-                    ?.filter((word: string) => word.length > 0)
-                : coll?.tags,
-            prices: coll?.prices?.map(
-              (price: string) => Number(price) / 10 ** 18
-            ),
-          };
-        }
+        async (collection: any) => await collectionFixer(collection)
       );
       const promises = await Promise.all(newCollections);
       setAllCollections(promises || []);
@@ -610,6 +549,8 @@ const useCreate = (
         const authSig = await checkAndSignAuthMessage({
           chain: "mumbai",
         });
+
+        await client.connect();
 
         const accessControlConditions = [
           {

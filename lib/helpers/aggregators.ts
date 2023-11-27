@@ -1,4 +1,5 @@
 import { PrintType } from "@/components/Tiles/types/tiles.types";
+import { INFURA_GATEWAY } from "../constants";
 
 export const aggregateMicrobrands = (
   collection: {
@@ -15,12 +16,14 @@ export const aggregateMicrobrands = (
   const uniquePairs = new Set<string>();
 
   collection?.forEach((item) => {
-    const pair = JSON.stringify([
-      item.microbrand,
-      item.microbrandCover,
-      item.profileId,
-    ]);
-    uniquePairs.add(pair);
+    if (item.microbrand && item.microbrandCover) {
+      const pair = JSON.stringify([
+        item.microbrand,
+        item.microbrandCover?.split("ipfs://")?.[1],
+        item.profileId,
+      ]);
+      uniquePairs.add(pair);
+    }
   });
 
   return Array.from(uniquePairs).map((pair) => JSON.parse(pair));
@@ -31,7 +34,7 @@ export const aggregateUniqueValues = (
     tags: string[];
     microbrandCover: string;
     microbrand: string;
-    drop: string;
+    dropTitle: string;
     colors: string[];
     sizes: string[];
     printType: string;
@@ -40,13 +43,29 @@ export const aggregateUniqueValues = (
     tags: string[];
     microbrandCover: string;
     microbrand: string;
-    drop: string;
+    dropTitle: string;
     colors: string[];
     sizes: string[];
     printType: string;
   }
 ): string[] => {
-  return Array.from(new Set(collection?.flatMap((item) => item[key])));
+  const uniqueValues = new Set<string>();
+
+  collection.forEach((item) => {
+    if (key === "tags" && item[key]) {
+      const tagsArray = item[key]
+        .toString()
+        .split(",")
+        .map((tag) => tag.trim());
+      tagsArray.forEach((tag) => {
+        if (tag) uniqueValues.add(tag);
+      });
+    } else if (item[key]) {
+      uniqueValues.add(item[key].toString());
+    }
+  });
+
+  return Array.from(uniqueValues);
 };
 
 export const aggregateSizes = (

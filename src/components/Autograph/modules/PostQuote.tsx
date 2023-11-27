@@ -5,6 +5,12 @@ import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import moment from "moment";
 import PostSwitch from "./PostSwitch";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import { ImageMetadataV3 } from "../../../../graphql/generated";
+import {
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  LISTENER_OPEN_ACTION,
+} from "../../../../lib/constants";
 
 const PostQuote: FunctionComponent<PostQuoteProps> = ({
   quote,
@@ -25,7 +31,32 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
         } to-black bg-gradient-to-r rounded-md gap-5`}
         onClick={(e) => {
           e.stopPropagation();
-          !pink && router.push(`/item/pub/${quote?.id}`);
+          !pink &&
+            (quote?.openActionModules?.[0]?.contract?.address
+              ?.toLowerCase()
+              ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+              ? router.push(
+                  `/item/chromadin/${(
+                    quote?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
+              : quote?.openActionModules?.[0]?.contract?.address
+                  ?.toLowerCase()
+                  ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+              ? router.push(
+                  `/item/coinop/${(
+                    quote?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
+              : quote?.openActionModules?.[0]?.contract?.address
+                  ?.toLowerCase()
+                  ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+              ? router.push(
+                  `/item/listener/${(
+                    quote?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
+              : router.push(`/item/pub/${quote?.id}`));
         }}
       >
         <div className="relative w-full h-fit flex flex-row items-center justify-center gap-2 px-1">
@@ -69,11 +100,7 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
           </div>
         </div>
         <div className="relative w-full h-fit flex items-start justify-center">
-          <PostSwitch
-            item={quote}
-            dispatch={dispatch}
-            disabled={disabled}
-          />
+          <PostSwitch item={quote} dispatch={dispatch} disabled={disabled} />
         </div>
       </div>
     </div>

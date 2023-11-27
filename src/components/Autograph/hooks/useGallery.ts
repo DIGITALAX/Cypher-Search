@@ -4,8 +4,10 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import { setProfileDisplay } from "../../../../redux/reducers/profileDisplaySlice";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { Display, SortType } from "../types/autograph.types";
+import { v4 as uuidv4 } from "uuid";
 import {
   MetadataAttributeType,
+  NftImage,
   Post,
   Profile,
   PublicationOperations,
@@ -22,6 +24,8 @@ import handleCollectionProfilesAndPublications from "../../../../lib/helpers/han
 import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
 import errorChoice from "../../../../lib/helpers/errorChoice";
 import getGallerySort from "../../../../lib/helpers/getGallerySort";
+import { ProfileMetadataSchema } from "@lens-protocol/metadata";
+import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 
 const useGallery = (
   lensConnected: Profile | undefined,
@@ -100,7 +104,92 @@ const useGallery = (
       let display: Display | undefined;
 
       if (displayItems?.value) {
-        display = await JSON.parse(displayItems.value);
+        const reducedDisplay = await JSON.parse(displayItems.value);
+        display = {
+          private: {
+            main:
+              reducedDisplay.private?.main &&
+              reducedDisplay.private.main !== "0"
+                ? (
+                    await handleCollectionProfilesAndPublications(
+                      (
+                        await getOneCollection(reducedDisplay.private.main)
+                      )?.data?.collectionCreateds,
+                      lensConnected?.id
+                    )
+                  )?.[0]
+                : undefined,
+            side: await Promise.all(
+              (reducedDisplay.private?.side || []).map(async (id: string) =>
+                id && id !== "0"
+                  ? ((
+                      await handleCollectionProfilesAndPublications(
+                        (
+                          await getOneCollection(id)
+                        )?.data?.collectionCreateds,
+                        lensConnected?.id
+                      )
+                    )?.[0] as Creation)
+                  : undefined
+              )
+            ),
+          },
+          community: {
+            main:
+              reducedDisplay.community?.main &&
+              reducedDisplay.community.main !== "0"
+                ? (
+                    await handleCollectionProfilesAndPublications(
+                      (
+                        await getOneCollection(reducedDisplay.community.main)
+                      )?.data?.collectionCreateds,
+                      lensConnected?.id
+                    )
+                  )?.[0]
+                : undefined,
+            side: await Promise.all(
+              (reducedDisplay.community?.side || []).map(async (id: string) =>
+                id && id !== "0"
+                  ? ((
+                      await handleCollectionProfilesAndPublications(
+                        (
+                          await getOneCollection(id)
+                        )?.data?.collectionCreateds,
+                        lensConnected?.id
+                      )
+                    )?.[0] as Creation)
+                  : undefined
+              )
+            ),
+          },
+          public: {
+            main:
+              reducedDisplay.public?.main && reducedDisplay.public.main !== "0"
+                ? (
+                    await handleCollectionProfilesAndPublications(
+                      (
+                        await getOneCollection(reducedDisplay.public.main)
+                      )?.data?.collectionCreateds,
+                      lensConnected?.id
+                    )
+                  )?.[0]
+                : undefined,
+            side: await Promise.all(
+              (reducedDisplay.public?.side || []).map(async (id: string) =>
+                id && id !== "0"
+                  ? ((
+                      await handleCollectionProfilesAndPublications(
+                        (
+                          await getOneCollection(id)
+                        )?.data?.collectionCreateds,
+                        lensConnected?.id
+                      )
+                    )?.[0] as Creation)
+                  : undefined
+              )
+            ),
+          },
+        };
       } else {
         if (collections?.length > 0) {
           display = {
@@ -247,46 +336,93 @@ const useGallery = (
         (item) => item?.key === "cypherDisplay"
       );
 
+      const reducedDiplay = {
+        private: {
+          main: profileDisplay?.private?.main?.collectionId || "0",
+          side: Array.from({ length: 3 })?.map(
+            (_, index: number) =>
+              profileDisplay?.private?.side?.[index]?.collectionId || "0"
+          ),
+        },
+        community: {
+          main: profileDisplay?.community?.main?.collectionId || "0",
+          side: Array.from({ length: 3 })?.map(
+            (_, index: number) =>
+              profileDisplay?.community?.side?.[index]?.collectionId || "0"
+          ),
+        },
+        public: {
+          main: profileDisplay?.public?.main?.collectionId || "0",
+          side: Array.from({ length: 3 })?.map(
+            (_, index: number) =>
+              profileDisplay?.public?.side?.[index]?.collectionId || "0"
+          ),
+        },
+      };
+
       if (existing != -1) {
-        attributes[existing].value = JSON.stringify(profileDisplay);
+        attributes[existing].value = JSON.stringify(reducedDiplay);
       } else {
         attributes.push({
           key: "cypherDisplay",
-          value: JSON.stringify(profileDisplay),
+          value: JSON.stringify(reducedDiplay),
           type: MetadataAttributeType.Json,
         });
       }
 
-      const response = await fetch("/api/ipfs", {
-        method: "POST",
-        body: JSON.stringify({
-          __typename: lensConnected?.metadata?.__typename,
-          attributes,
+      const test = ProfileMetadataSchema.safeParse({
+        $schema: "https://json-schemas.lens.dev/profile/2.0.0.json",
+        lens: {
+          attributes: attributes?.map((item) => ({
+            ...item,
+            type:
+              item.type.toLowerCase() === "json"
+                ? "JSON"
+                : item.type.charAt(0).toUpperCase() +
+                  item.type.slice(1).toLowerCase(),
+          })),
           bio: lensConnected?.metadata?.bio,
-          coverPicture: lensConnected?.metadata?.coverPicture,
-          displayName: lensConnected?.metadata?.displayName,
-          picture: lensConnected?.metadata?.picture,
-          rawURI: lensConnected?.metadata?.rawURI,
-        }),
+          coverPicture:
+            lensConnected?.metadata?.coverPicture?.__typename === "ImageSet"
+              ? lensConnected?.metadata?.coverPicture?.raw?.uri
+              : (lensConnected?.metadata?.coverPicture as unknown as NftImage)
+                  ?.image?.raw?.uri,
+          name: lensConnected?.metadata?.displayName as string,
+          picture:
+            lensConnected?.metadata?.picture?.__typename === "ImageSet"
+              ? lensConnected?.metadata?.picture?.raw?.uri
+              : (lensConnected?.metadata?.picture as NftImage)?.image?.raw?.uri,
+          id: uuidv4(),
+          version: "2.0.0",
+        },
       });
-      const responseJSON = await response.json();
 
-      const clientWallet = createWalletClient({
-        chain: polygonMumbai,
-        transport: custom((window as any).ethereum),
-      });
+      if (test?.success) {
+        const response = await fetch("/api/ipfs", {
+          method: "POST",
+          body: JSON.stringify(test?.data),
+        });
+        const responseJSON = await response.json();
 
-      await setMeta(
-        "ipfs://" + responseJSON.cid,
-        dispatch,
-        address as `0x${string}`,
-        clientWallet,
-        publicClient
-      );
+        const clientWallet = createWalletClient({
+          chain: polygonMumbai,
+          transport: custom((window as any).ethereum),
+        });
 
-      await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
+        await setMeta(
+          "ipfs://" + responseJSON.cid,
+          dispatch,
+          address as `0x${string}`,
+          clientWallet,
+          publicClient
+        );
+
+        await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
+      } else {
+        dispatch(setInteractError(true));
+      }
     } catch (err: any) {
-      console.error(err.message);
+      errorChoice(err, () => {}, dispatch);
     }
     setDisplayLoading(false);
   };
@@ -506,55 +642,59 @@ const useGallery = (
     id?: string
   ) => {
     if (display) {
-      const newDisplay = profileDisplay;
-      const updateItem = (item: Creation, newItem: Creation) =>
-        item.publication?.id === id ? newItem : item;
+      const newDisplay = JSON.parse(JSON.stringify(profileDisplay));
 
       Object.keys(newDisplay!).forEach((categoryKey) => {
-        const category = (newDisplay as any)?.[categoryKey];
+        if (
+          (categoryKey == "private" && sortType == 1) ||
+          (categoryKey == "public" && sortType == 2) ||
+          (categoryKey == "community" && sortType == 0)
+        ) {
+          const category = newDisplay[categoryKey];
 
-        if (category?.main?.publication?.id === id) {
-          category.main = {
-            ...category.main,
-            publication: {
-              ...category.main?.publication,
-              operations: {
-                ...category.main?.publication?.operations,
-                ...valueToUpdate,
-              },
-              stats: {
-                ...category.main?.publication?.stats,
-                [statToUpdate]:
-                  category.main?.publication?.stats?.[
-                    statToUpdate as keyof PublicationStats
-                  ] + (increase ? 1 : -1),
-              },
-            },
-          } as Creation;
-        }
-
-        if (category?.side) {
-          category.side = category.side.map((item: Creation) =>
-            updateItem(item, {
-              ...item,
+          if (category?.main?.publication?.id === id && index == 0) {
+            category.main = {
+              ...category.main,
               publication: {
-                ...item?.publication,
+                ...category.main?.publication,
                 operations: {
-                  ...item?.publication?.operations,
+                  ...category.main?.publication?.operations,
                   ...valueToUpdate,
-                } as PublicationOperations,
+                },
                 stats: {
-                  ...item?.publication?.stats,
+                  ...category.main?.publication?.stats,
                   [statToUpdate]:
-                    item?.publication?.stats?.[
+                    category.main?.publication?.stats?.[
                       statToUpdate as keyof PublicationStats
                     ] + (increase ? 1 : -1),
                 },
-              } as Post & {
-                decrypted: any;
               },
-            })
-          );
+            } as Creation;
+          }
+
+          if (
+            category?.side?.[index - 1]?.publication?.id == id &&
+            index !== 0
+          ) {
+            category.side[index - 1] = {
+              ...category.side[index - 1],
+              publication: {
+                ...category.side[index - 1]?.publication,
+                operations: {
+                  ...category.side[index - 1]?.publication?.operations,
+                  ...valueToUpdate,
+                } as PublicationOperations,
+                stats: {
+                  ...category.side[index - 1]?.publication?.stats,
+                  [statToUpdate]:
+                    category.side[index - 1]?.publication?.stats?.[
+                      statToUpdate as keyof PublicationStats
+                    ] + (increase ? 1 : -1),
+                },
+              },
+            };
+          }
+          newDisplay[categoryKey] = category;
         }
       });
 

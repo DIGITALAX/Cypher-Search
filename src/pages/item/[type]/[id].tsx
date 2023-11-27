@@ -22,6 +22,7 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import {
   Mirror,
   Post,
+  Profile,
   TextOnlyMetadataV3,
 } from "../../../../graphql/generated";
 import useComment from "@/components/Items/hooks/useComment";
@@ -95,6 +96,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     handleDecrypt,
     decryptLoading,
     setItemData,
+    setRelatedData,
   } = useItem(
     type as string,
     id as string,
@@ -102,7 +104,6 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     lensConnected,
     oracleData,
     address,
-    cartItems,
     publicClient,
     dispatch,
     router
@@ -167,15 +168,16 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     relatedData?.collections,
     itemData,
     setItemData,
-    type as string
+    type as string,
+    setRelatedData
   );
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
     id as string,
-    type === "chromadin" || type === "coinop"
+    type === "chromadin" || type === "coinop" || type === "listener"
       ? (itemData?.post as Creation)?.profile
       : (itemData?.post as Mirror)?.__typename === "Mirror"
       ? (itemData?.post as Mirror)?.mirrorOn?.by
-      : (itemData?.post as Post)?.by,
+      : (itemData?.post as Profile),
     lensConnected
   );
   const { handleSearch, handleShuffleSearch, placeholderText } = useSearch(
@@ -235,7 +237,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     openMainMoreOptions,
     setMainOpenMoreOptions,
     hoverPrompt,
-    setHoverPrompt
+    setHoverPrompt,
   } = useProfile(
     relatedData?.collections ? relatedData?.collections : allComments,
     {
@@ -452,7 +454,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 cartAnim={cartAnim}
                 component={
                   <SwitchType
-                  allSearchItems={allSearchItems}
+                    allSearchItems={allSearchItems}
                     setCaretCoord={setCaretCoord}
                     hoverPrompt={hoverPrompt}
                     setHoverPrompt={setHoverPrompt}

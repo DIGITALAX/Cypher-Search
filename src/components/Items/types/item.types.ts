@@ -66,10 +66,12 @@ export type SwitchTypeProps = {
   relatedData:
     | {
         collections: Creation[];
-        microbrand: {
-          microbrand: string;
-          microbrandCover: string;
-        };
+        microbrand: [
+          {
+            microbrand: string;
+            microbrandCover: string;
+          }
+        ];
       }
     | undefined;
   lensConnected: Profile | undefined;
@@ -401,10 +403,12 @@ export type MicrobrandProps = {
   relatedData:
     | {
         collections: Creation[];
-        microbrand: {
-          microbrand: string;
-          microbrandCover: string;
-        };
+        microbrand: [
+          {
+            microbrand: string;
+            microbrandCover: string;
+          }
+        ];
       }
     | undefined;
   cartItems: CartItem[];

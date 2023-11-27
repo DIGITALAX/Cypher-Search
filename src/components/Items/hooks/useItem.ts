@@ -41,6 +41,7 @@ import { AnyAction, Dispatch } from "redux";
 import { NextRouter } from "next/router";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
+import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 
 const useItem = (
   type: string,
@@ -49,7 +50,6 @@ const useItem = (
   lensConnected: Profile | undefined,
   oracleData: OracleData[],
   address: `0x${string}` | undefined,
-  cartItems: CartItem[],
   publicClient: PublicClient,
   dispatch: Dispatch<AnyAction>,
   router: NextRouter
@@ -61,10 +61,10 @@ const useItem = (
   const [isApprovedSpend, setIsApprovedSpend] = useState<boolean>(false);
   const [relatedData, setRelatedData] = useState<{
     collections: Creation[];
-    microbrand: {
+    microbrand: [{
       microbrand: string;
       microbrandCover: string;
-    };
+    }];
   }>();
   const [purchaseDetails, setPurchaseDetails] = useState<PurchaseDetails>({
     color: "",
@@ -86,7 +86,6 @@ const useItem = (
           const coll = (await getCollection(
             id?.replaceAll("_", " ")
           )) as Creation;
-      
 
           pub = (await getPub(
             `${"0x" + toHexWithLeadingZero(Number(coll?.profileId))}-${
@@ -192,15 +191,15 @@ const useItem = (
     try {
       if (!filterConstants) return;
       const item = filterConstants?.microbrands?.find(
-        (item) => item[1] === id?.replaceAll("_", " ")
+        (item) =>
+          item[0]?.toLowerCase() === id?.replaceAll("_", " ")?.toLowerCase()
       );
       const data = await getProfile(
         {
-          forProfileId: item?.[3],
+          forProfileId: "0x" + toHexWithLeadingZero(Number(item?.[2])),
         },
         lensConnected?.id
       );
-
       return data?.data?.profile as Profile;
     } catch (err: any) {
       console.error(err.message);
@@ -212,36 +211,11 @@ const useItem = (
   ): Promise<Creation[] | undefined> => {
     try {
       const data = await getCollectionsPaginated(creator, 3, 0);
-      const collections = data?.data?.collectionCreateds?.map(
-        (collection: any) => ({
-          ...collection,
-          sizes: collection?.sizes
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          colors: collection?.colors
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          mediaTypes: collection?.mediaTypes
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          access: collection?.access
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          communities: collection?.communities
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          tags: collection?.tags
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-        })
+
+      return await handleCollectionProfilesAndPublications(
+        data?.data?.collectionCreateds,
+        lensConnected
       );
-      return collections;
     } catch (err: any) {
       console.error(err.message);
     }
@@ -314,7 +288,6 @@ const useItem = (
     title: string
   ): Promise<Creation | undefined> => {
     try {
-  
       const data = await getOneCollectionTitle(title);
 
       if (data?.data?.collectionCreateds) {
@@ -542,7 +515,11 @@ const useItem = (
 
   const checkApproved = async () => {
     try {
-      if (purchaseDetails?.currency == "" || !purchaseDetails?.currency || !address)
+      if (
+        purchaseDetails?.currency == "" ||
+        !purchaseDetails?.currency ||
+        !address
+      )
         return;
       const data = await publicClient.readContract({
         address: ACCEPTED_TOKENS_MUMBAI.filter(
@@ -636,10 +613,11 @@ const useItem = (
   }, [purchaseDetails?.currency, address]);
 
   useEffect(() => {
-    if (type) {
+    if (type && id && filterConstants) {
+      if (type === "microbrand" && !filterConstants) return;
       getItemData();
     }
-  }, [type, lensConnected?.id]);
+  }, [type, lensConnected?.id, id, filterConstants]);
 
   return {
     itemLoading,
@@ -654,6 +632,7 @@ const useItem = (
     decryptLoading,
     handleDecrypt,
     setItemData,
+    setRelatedData
   };
 };
 

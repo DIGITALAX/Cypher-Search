@@ -24,6 +24,7 @@ const useDisplaySearch = (
     {
       collectionId: string;
       images: string[];
+      mediaCover: string;
       title: string;
     }[]
   >();
@@ -70,8 +71,12 @@ const useDisplaySearch = (
   const handleSortGallery = () => {
     setSortedGallery(
       [...(gallery?.collected || []), ...(gallery?.created || [])]?.filter(
-        (item: { collectionId: string; images: string[]; title: string }) =>
-          item?.title?.includes(itemSearch)
+        (item: {
+          collectionId: string;
+          images: string[];
+          title: string;
+          mediaCover: string;
+        }) => item?.title?.includes(itemSearch)
       )
     );
   };
@@ -81,6 +86,7 @@ const useDisplaySearch = (
       collectionId: string;
       images: string[];
       title: string;
+      mediaCover: string;
     },
     type: SortType,
     value: number
@@ -93,7 +99,7 @@ const useDisplaySearch = (
           public: undefined,
         };
 
-    const newData = { ...data };
+    const newData = JSON.parse(JSON.stringify(data));
 
     const item = await getOneCollection(selected?.collectionId);
 
@@ -105,14 +111,13 @@ const useDisplaySearch = (
             side: data?.community?.side,
           };
         } else {
-          const newSide = [...(data?.community?.side || [])];
+          const newSide = [
+            ...(JSON.parse(JSON.stringify(data?.community?.side || [])) || []),
+          ];
           newSide[value - 1] = item?.data?.collectionCreateds?.[0];
-          data = {
-            ...data,
-            community: {
-              main: data?.community?.main,
-              side: newSide,
-            },
+          newData.community = {
+            main: data?.community?.main,
+            side: newSide,
           };
         }
         break;
@@ -123,14 +128,13 @@ const useDisplaySearch = (
             side: data?.private?.side,
           };
         } else {
-          const newSide = [...(data?.private?.side || [])];
+          const newSide = [
+            ...(JSON.parse(JSON.stringify(data?.private?.side || [])) || []),
+          ];
           newSide[value - 1] = item?.data?.collectionCreateds?.[0];
-          data = {
-            ...data,
-            private: {
-              main: data?.private?.main,
-              side: newSide,
-            },
+          newData.private = {
+            main: data?.private?.main,
+            side: newSide,
           };
         }
 
@@ -142,14 +146,13 @@ const useDisplaySearch = (
             side: data?.public?.side,
           };
         } else {
-          const newSide = [...(data?.public?.side || [])];
+          const newSide = [
+            ...(JSON.parse(JSON.stringify(data?.public?.side || [])) || []),
+          ];
           newSide[value - 1] = item?.data?.collectionCreateds?.[0];
-          data = {
-            ...data,
-            public: {
-              main: data?.public?.main,
-              side: newSide,
-            },
+          newData.public = {
+            main: data?.public?.main,
+            side: newSide,
           };
         }
 
@@ -169,6 +172,8 @@ const useDisplaySearch = (
   useEffect(() => {
     if (!gallery && address && open !== undefined) {
       handleGetGallery();
+    } else if (open === undefined) {
+      setSelectedItem(undefined);
     }
   }, [open]);
 

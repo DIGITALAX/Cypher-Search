@@ -35,7 +35,21 @@ const useComment = (
   collections: Creation[] | undefined,
   itemData: Publication | undefined,
   setItemData: (e: SetStateAction<Publication | undefined>) => void,
-  type: string
+  type: string,
+  setRelatedData: (
+    e: SetStateAction<
+      | {
+          collections: Creation[];
+          microbrand: [
+            {
+              microbrand: string;
+              microbrandCover: string;
+            }
+          ];
+        }
+      | undefined
+    >
+  ) => void
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);
@@ -256,8 +270,9 @@ const useComment = (
   const simpleCollect = async (id: string, type: string, main: boolean) => {
     const index = main
       ? undefined
-      : allComments?.findIndex((pub) => pub.id === id);
-
+      : allComments?.length > 0
+      ? allComments?.findIndex((pub) => pub.id === id)
+      : collections?.findIndex((pub) => pub.publication?.id === id);
     if (main) {
       setMainInteractionsLoading((prev) => {
         const updatedArray = [...prev];
@@ -354,7 +369,9 @@ const useComment = (
 
     const index = main
       ? undefined
-      : allComments?.findIndex((pub) => pub.id === id);
+      : allComments?.length > 0
+      ? allComments?.findIndex((pub) => pub.id === id)
+      : collections?.findIndex((pub) => pub.publication?.id === id);
 
     if (!main) {
       if (
@@ -497,7 +514,9 @@ const useComment = (
   const mirror = async (id: string, main?: boolean) => {
     const index = main
       ? undefined
-      : allComments?.findIndex((pub) => pub.id === id);
+      : allComments?.length > 0
+      ? allComments?.findIndex((pub) => pub.id === id)
+      : collections?.findIndex((pub) => pub.publication?.id === id);
     if (!main && index == -1) return;
     handleLoaders(true, main!, index, "mirror");
 
@@ -545,7 +564,9 @@ const useComment = (
   const like = async (id: string, hasReacted: boolean, main?: boolean) => {
     const index = main
       ? undefined
-      : allComments?.findIndex((pub) => pub.id === id);
+      : allComments?.length > 0
+      ? allComments?.findIndex((pub) => pub.id === id)
+      : collections?.findIndex((pub) => pub.publication?.id === id);
     if (!main && index == -1) return;
     handleLoaders(false, main!, index, "like");
 
@@ -731,7 +752,7 @@ const useComment = (
                     },
               }) as Publication
         );
-    } else {
+    } else if (allComments?.length > 0) {
       const newItems = [...allComments];
       newItems[index] = {
         ...newItems[index],
@@ -749,6 +770,34 @@ const useComment = (
       };
 
       setAllComments(newItems);
+    } else {
+      const newItems = [...(collections || [])] as Creation[];
+      newItems[index] = {
+        ...newItems[index],
+        publication: {
+          ...newItems[index]?.publication,
+          operations: {
+            ...(newItems[index]?.publication as Post).operations,
+            ...valueToUpdate,
+          },
+          stats: {
+            ...(newItems[index]?.publication as Post).stats,
+            [statToUpdate]:
+              (newItems[index]?.publication as Post).stats?.[
+                statToUpdate as keyof PublicationStats
+              ] + (increase ? 1 : -1),
+          },
+        } as Post & {
+          decrypted: any;
+        },
+      } as Creation;
+
+      setRelatedData((prev) => ({
+        microbrand: prev?.microbrand || [
+          { microbrand: "", microbrandCover: "" },
+        ],
+        collections: newItems,
+      }));
     }
   };
 

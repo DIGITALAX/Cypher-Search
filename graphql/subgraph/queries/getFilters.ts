@@ -7,7 +7,7 @@ const FILTER = `
         tags
         microbrandCover
         microbrand
-        drop
+        dropTitle
         colors
         sizes
         printType
