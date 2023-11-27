@@ -374,6 +374,14 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   );
 
   useEffect(() => {
+    if (client) {
+      async () => {
+        await client.connect();
+      };
+    }
+  }, [client]);
+
+  useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (!profileLoading && !feedLoading && !galleryLoading) {
         setGlobalLoading(false);

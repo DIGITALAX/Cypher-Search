@@ -1,10 +1,13 @@
 import { FunctionComponent } from "react";
 import { FeedProps } from "../types/autograph.types";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Mirror, Post, Quote } from "../../../../graphql/generated";
+import {
+  ImageMetadataV3,
+  Mirror,
+  Post,
+  Quote,
+} from "../../../../graphql/generated";
 import Publication from "./Publication";
-import Image from "next/legacy/image";
-import { INFURA_GATEWAY } from "../../../../lib/constants";
 
 const Feed: FunctionComponent<FeedProps> = ({
   profileFeed,
@@ -44,7 +47,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   caretCoord,
   profilesOpen,
   setCaretCoord,
-  cartItems
+  cartItems,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10 otro:order-1 order-2">
@@ -89,8 +92,30 @@ const Feed: FunctionComponent<FeedProps> = ({
                     },
                     index: number
                   ) => {
+                    const type =
+                      item?.__typename === "Mirror"
+                        ? item.mirrorOn
+                        : (item as Post);
                     return (
                       <Publication
+                        top={
+                          type?.metadata?.content?.length < 100 &&
+                          type?.metadata?.__typename !== "AudioMetadataV3" &&
+                          type?.metadata?.__typename !== "ImageMetadataV3" &&
+                          type?.metadata?.__typename !== "VideoMetadataV3"
+                            ? "20px"
+                            : "auto"
+                        }
+                        bottom={
+                          type?.metadata?.content?.length < 100 &&
+                          type?.metadata?.__typename !== "AudioMetadataV3" &&
+                          type?.metadata?.__typename !== "ImageMetadataV3" &&
+                          type?.metadata?.__typename !== "VideoMetadataV3"
+                            ? "auto"
+                            : "2px"
+                        }
+                        left={"auto"}
+                        right={"2px"}
                         setCaretCoord={setCaretCoord}
                         mentionProfiles={mentionProfiles}
                         profilesOpen={profilesOpen}

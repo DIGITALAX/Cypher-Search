@@ -550,8 +550,6 @@ const useCreate = (
           chain: "mumbai",
         });
 
-        await client.connect();
-
         const accessControlConditions = [
           {
             contractAddress: "",

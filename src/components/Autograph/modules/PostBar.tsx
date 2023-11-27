@@ -52,6 +52,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   main,
   lensConnected,
   cartItems,
+  top,
+  bottom,
+  left,
+  right,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
@@ -170,7 +174,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   }
                 }}
               >
-                {loaders[index] && image[1] === "Likes" ? (
+                {loaders[indexTwo] && image[1] === "Likes" ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
                     <AiOutlineLoading size={15} color="white" />
                   </div>
@@ -265,7 +269,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
 
                     router.push(`/item/pub/${item?.id}`);
                   } else {
-                    !loaders[index] &&
+                    !loaders[indexTwo] &&
                       (main
                         ? (
                             functions[indexTwo] as (
@@ -279,7 +283,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   }
                 }}
               >
-                {loaders[index] && indexTwo == 0 ? (
+                {loaders[indexTwo] && indexTwo == 0 ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
                     <AiOutlineLoading size={15} color="white" />
                   </div>
@@ -487,12 +491,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             dispatch={dispatch}
             lensConnected={lensConnected}
             parentId={item?.id}
-            top={main || router.asPath?.includes("autograph") ? "auto" : "20px"}
-            bottom={
-              main || router.asPath?.includes("autograph") ? "2px" : "auto"
-            }
-            left={"auto"}
-            right={"2px"}
+            top={top}
+            bottom={bottom}
+            left={left}
+            right={right}
           />
         )}
       </div>
@@ -579,20 +581,21 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       indexTwo !== 2 &&
                       indexTwo !== 1)
                   ) {
-                    !loaders[index] && main
-                      ? (
-                          functions[indexTwo] as (
-                            id: string,
-                            index: number,
-                            main: boolean
-                          ) => Promise<void>
-                        )(item?.id, index, main)
-                      : (
-                          functions[indexTwo] as (
-                            id: string,
-                            index: number
-                          ) => Promise<void>
-                        )(item?.id, index);
+                    !loaders[indexTwo] &&
+                      (main
+                        ? (
+                            functions[indexTwo] as (
+                              id: string,
+                              index: number,
+                              main: boolean
+                            ) => Promise<void>
+                          )(item?.id, index, main)
+                        : (
+                            functions[indexTwo] as (
+                              id: string,
+                              index: number
+                            ) => Promise<void>
+                          )(item?.id, index));
                   } else {
                     (functions[indexTwo] as () => void)();
                   }

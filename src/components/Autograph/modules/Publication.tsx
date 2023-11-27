@@ -5,7 +5,12 @@ import PostQuote from "./PostQuote";
 import moment from "moment";
 import { PublicationProps } from "../types/autograph.types";
 import Image from "next/legacy/image";
-import { CHROMADIN_OPEN_ACTION, COIN_OP_OPEN_ACTION, INFURA_GATEWAY, LISTENER_OPEN_ACTION } from "../../../../lib/constants";
+import {
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  INFURA_GATEWAY,
+  LISTENER_OPEN_ACTION,
+} from "../../../../lib/constants";
 import {
   Comment,
   Mirror,
@@ -56,6 +61,10 @@ const Publication: FunctionComponent<PublicationProps> = ({
   caretCoord,
   setCaretCoord,
   cartItems,
+  top,
+  bottom,
+  left,
+  right,
 }): JSX.Element => {
   return (
     <div
@@ -167,6 +176,10 @@ const Publication: FunctionComponent<PublicationProps> = ({
         index={index}
         cartItems={cartItems!}
         item={item}
+        top={top}
+        bottom={bottom}
+        left={left}
+        right={right}
         dispatch={dispatch}
         router={router}
         mirror={mirror}

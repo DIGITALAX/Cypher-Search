@@ -14,6 +14,7 @@ import { useAccount } from "wagmi";
 import { polygon, polygonMumbai } from "viem/chains";
 import { createPublicClient, http } from "viem";
 import { ACCEPTED_TOKENS_MUMBAI } from "../../lib/constants";
+import { useEffect } from "react";
 
 const Checkout: NextPage<{
   router: NextRouter;
@@ -106,6 +107,14 @@ const Checkout: NextPage<{
     oracleData,
     cartItems
   );
+
+  useEffect(() => {
+    if (client) {
+      async () => {
+        await client.connect();
+      };
+    }
+  }, [client]);
 
   return (
     <div

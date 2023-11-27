@@ -110,7 +110,8 @@ export default function Home({ router }: { router: NextRouter }) {
     dispatch,
     publicClient,
     address,
-    lensConnected
+    lensConnected,
+    undefined
   );
   const {
     setPopUpOpen,

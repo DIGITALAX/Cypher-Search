@@ -48,6 +48,24 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                     dispatch={dispatch}
                     data-post-id={item?.id}
                     key={index}
+                    top={
+                      item?.metadata?.content?.length < 100 &&
+                      item?.metadata?.__typename !== "AudioMetadataV3" &&
+                      item?.metadata?.__typename !== "ImageMetadataV3" &&
+                      item?.metadata?.__typename !== "VideoMetadataV3"
+                        ? "20px"
+                        : "auto"
+                    }
+                    bottom={
+                      item?.metadata?.content?.length < 100 &&
+                      item?.metadata?.__typename !== "AudioMetadataV3" &&
+                      item?.metadata?.__typename !== "ImageMetadataV3" &&
+                      item?.metadata?.__typename !== "VideoMetadataV3"
+                        ? "auto"
+                        : "2px"
+                    }
+                    left={"auto"}
+                    right={"2px"}
                   />
                 );
               }

@@ -106,6 +106,10 @@ const Pub: FunctionComponent<PublicationProps> = ({
             contentLoading={mainContentLoading}
             setContentLoading={setMainContentLoading}
             postCollectGif={postCollectGif}
+            top={"auto"}
+            bottom={"2px"}
+            left={"auto"}
+            right={"2px"}
           />
         </div>
       </div>
@@ -208,6 +212,28 @@ const Pub: FunctionComponent<PublicationProps> = ({
                               handleHidePost={handleHidePost}
                               data-post-id={item?.id}
                               postCollectGif={postCollectGif}
+                              top={
+                                item?.metadata?.content?.length < 100 &&
+                                item?.metadata?.__typename !==
+                                  "AudioMetadataV3" &&
+                                item?.metadata?.__typename !==
+                                  "ImageMetadataV3" &&
+                                item?.metadata?.__typename !== "VideoMetadataV3"
+                                  ? "20px"
+                                  : "auto"
+                              }
+                              bottom={
+                                item?.metadata?.content?.length < 100 &&
+                                item?.metadata?.__typename !==
+                                  "AudioMetadataV3" &&
+                                item?.metadata?.__typename !==
+                                  "ImageMetadataV3" &&
+                                item?.metadata?.__typename !== "VideoMetadataV3"
+                                  ? "auto"
+                                  : "2px"
+                              }
+                              left={"auto"}
+                              right={"2px"}
                             />
                           );
                         }

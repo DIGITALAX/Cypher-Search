@@ -209,30 +209,67 @@ const useComment = (
     }
   };
 
-  const handleHidePost = async (id: string, index: number) => {
-    setInteractionsItemsLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], hide: true };
-      return updatedArray;
-    });
+  const handleHidePost = async (id: string, index: number, main?: boolean) => {
+    if (main) {
+      setMainInteractionsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[0] = { ...updatedArray[0], hide: true };
+        return updatedArray;
+      });
+    } else {
+      if (index == -1) {
+        return;
+      }
+
+      setInteractionsItemsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index!] = { ...updatedArray[index!], hide: true };
+        return updatedArray;
+      });
+    }
     try {
       await lensHide(id, dispatch);
     } catch (err: any) {
       errorChoice(err, () => {}, dispatch);
     }
-    setInteractionsItemsLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], hide: false };
-      return updatedArray;
-    });
+    if (main) {
+      setMainInteractionsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[0] = { ...updatedArray[0], hide: false };
+        return updatedArray;
+      });
+    } else {
+      if (index == -1) {
+        return;
+      }
+
+      setInteractionsItemsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index!] = { ...updatedArray[index!], hide: false };
+        return updatedArray;
+      });
+    }
   };
 
   const handleBookmark = async (on: string, index: number, main?: boolean) => {
-    setInteractionsItemsLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], bookmark: true };
-      return updatedArray;
-    });
+    if (main) {
+      setMainInteractionsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[0] = { ...updatedArray[0], bookmark: true };
+        return updatedArray;
+      });
+    } else {
+      if (index == -1) {
+        return;
+      }
+
+      setInteractionsItemsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index!] = { ...updatedArray[index!], bookmark: true };
+        return updatedArray;
+      });
+    }
+
     try {
       await lensBookmark(on, dispatch);
       updateInteractions(
@@ -260,11 +297,23 @@ const useComment = (
         dispatch
       );
     }
-    setInteractionsItemsLoading((prev) => {
-      const updatedArray = [...prev];
-      updatedArray[index] = { ...updatedArray[index], bookmark: false };
-      return updatedArray;
-    });
+    if (main) {
+      setMainInteractionsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[0] = { ...updatedArray[0], bookmark: false };
+        return updatedArray;
+      });
+    } else {
+      if (index == -1) {
+        return;
+      }
+
+      setInteractionsItemsLoading((prev) => {
+        const updatedArray = [...prev];
+        updatedArray[index!] = { ...updatedArray[index!], bookmark: false };
+        return updatedArray;
+      });
+    }
   };
 
   const simpleCollect = async (id: string, type: string, main: boolean) => {
@@ -694,7 +743,8 @@ const useComment = (
     if (main) {
       if (itemData)
         setItemData(
-          (itemData?.type == "Mirror"
+          (itemData?.type == "pub" &&
+          (itemData?.post as Mirror)?.__typename === "Mirror"
             ? {
                 ...itemData,
                 post: {
@@ -706,9 +756,9 @@ const useComment = (
                       ...valueToUpdate,
                     },
                     stats: {
-                      ...(itemData?.post as Post)?.stats,
+                      ...(itemData?.post as Mirror)?.mirrorOn?.stats,
                       [statToUpdate]:
-                        (itemData?.post as Post)?.stats?.[
+                        (itemData?.post as Mirror)?.mirrorOn?.stats?.[
                           statToUpdate as keyof PublicationStats
                         ] + (increase ? 1 : -1),
                     },
@@ -717,7 +767,7 @@ const useComment = (
               }
             : {
                 ...itemData,
-                post: type?.includes("pub")
+                post: type?.includes("V3")
                   ? {
                       ...(itemData?.post as Post),
                       operations: {
