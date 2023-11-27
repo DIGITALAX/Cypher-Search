@@ -53,7 +53,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 Collection Description
               </div>
               <textarea
-                value={collectionDetails?.description}
+                value={collectionDetails?.description || ""}
                 onChange={(e) =>
                   setCollectionDetails((prev) => ({
                     ...prev,
@@ -71,7 +71,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 Profilerate Your Creation. Share your prompt?
               </div>
               <textarea
-                value={collectionDetails?.prompt}
+                value={collectionDetails?.prompt || ""}
                 onChange={(e) =>
                   setCollectionDetails((prev) => ({
                     ...prev,
@@ -124,20 +124,18 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     ) : (
                       <>
                         {collectionSettings?.media === "audio" ? (
-                          collectionDetails?.images?.[0] && (
+                          collectionDetails?.cover && (
                             <Image
                               layout="fill"
                               onError={(e) => handleImageError(e)}
                               src={
-                                collectionDetails?.images?.[0]?.media?.includes(
-                                  "ipfs://"
-                                )
+                                collectionDetails?.cover?.includes("ipfs://")
                                   ? `${INFURA_GATEWAY}/ipfs/${
-                                      collectionDetails?.images?.[0]?.media?.split(
+                                      collectionDetails?.cover?.split(
                                         "ipfs://"
                                       )?.[1]
                                     }`
-                                  : collectionDetails?.images?.[0]?.media
+                                  : collectionDetails?.cover
                               }
                               objectFit="cover"
                               draggable={false}
@@ -188,7 +186,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         handleMedia(
                           e,
                           collectionSettings?.media === "audio"
-                            ? "static"
+                            ? "cover"
                             : collectionSettings?.media
                         )
                       }
@@ -362,7 +360,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
             </div>
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
-              <div className="relative w-fit h-fit text-sm break-words">Select Drop</div>
+              <div className="relative w-fit h-fit text-sm break-words">
+                Select Drop
+              </div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
                 {allDrops?.length > 0 ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
@@ -525,7 +525,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               />
             </div>
             <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 relative">
-              <div className="relative w-fit h-fit text-sm break-words">Discovery Tags</div>
+              <div className="relative w-fit h-fit text-sm break-words">
+                Discovery Tags
+              </div>
               <input
                 value={collectionDetails?.tags}
                 onChange={(e) =>
@@ -539,7 +541,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   resize: "none",
                 }}
               />
-              {collectionDetails?.tags.split(",").pop()?.trim() &&
+              {collectionDetails?.tags?.split(",").pop()?.trim() &&
                 filterConstants?.hashtags?.some((tag) =>
                   tag
                     .toLowerCase()
@@ -567,15 +569,15 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             key={index}
                             className="relative py-1 h-10 w-full flex items-center justify-center text-white border-y border-sol font-aust text-xs cursor-pointer hover:opacity-80"
                             onClick={() => {
-                              const allArray = collectionDetails.tags
+                              const allArray = collectionDetails?.tags
                                 .split(/,\s*/)
                                 .map((t) => t.trim());
 
                               if (!allArray.includes(tag.trim())) {
                                 const tagsArray =
-                                  collectionDetails.tags.split(/,\s*/);
-                                tagsArray[tagsArray.length - 1] = tag;
-                                const newTags = tagsArray.join(", ") + ", ";
+                                  collectionDetails?.tags?.split(/,\s*/);
+                                tagsArray[tagsArray?.length - 1] = tag;
+                                const newTags = tagsArray?.join(", ") + ", ";
                                 setCollectionDetails((prev) => ({
                                   ...prev,
                                   tags: newTags,
@@ -593,7 +595,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 )}
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
-              <div className="relative w-fit h-fit text-sm break-words">Eco-Access</div>
+              <div className="relative w-fit h-fit text-sm break-words">
+                Eco-Access
+              </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div
                   className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
@@ -631,13 +635,13 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                   accessOpen: !prev.accessOpen,
                                 }));
 
-                                const allArray = collectionDetails.access
-                                  .split(/,\s*/)
-                                  .map((t) => t.trim());
+                                const allArray = collectionDetails?.access
+                                  ?.split(/,\s*/)
+                                  ?.map((t) => t.trim());
 
                                 if (!allArray.includes(item.trim())) {
                                   const accessArray =
-                                    collectionDetails.access.split(/,\s*/);
+                                    collectionDetails?.access?.split(/,\s*/);
                                   accessArray[accessArray.length - 1] = item;
 
                                   setCollectionDetails((prev) => ({
@@ -659,7 +663,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
-              <div className="relative w-fit h-fit text-sm break-words">Visibility</div>
+              <div className="relative w-fit h-fit text-sm break-words">
+                Visibility
+              </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div
                   className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
@@ -737,7 +743,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             {collectionDetails?.visibility === "community" && (
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
-                <div className="relative w-fit h-fit text-sm break-words">Communities</div>
+                <div className="relative w-fit h-fit text-sm break-words">
+                  Communities
+                </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
                     className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
@@ -773,22 +781,23 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                     ...prev,
                                     communityOpen: !prev.communityOpen,
                                   }));
-                                  const allArray = collectionDetails.communities
-                                    .split(/,\s*/)
-                                    .map((t) => t.trim());
+                                  const allArray =
+                                    collectionDetails?.communities
+                                      ?.split(/,\s*/)
+                                      ?.map((t) => t.trim());
 
                                   if (!allArray.includes(item?.[0].trim())) {
                                     const communityArray =
-                                      collectionDetails.communities.split(
+                                      collectionDetails?.communities?.split(
                                         /,\s*/
                                       );
-                                    communityArray[communityArray.length - 1] =
+                                    communityArray[communityArray?.length - 1] =
                                       item?.[0];
 
                                     setCollectionDetails((prev) => ({
                                       ...prev,
                                       communities:
-                                        communityArray.join(", ") + ", ",
+                                        communityArray?.join(", ") + ", ",
                                     }));
                                   }
                                 }}

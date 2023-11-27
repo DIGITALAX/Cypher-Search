@@ -43,6 +43,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   caretCoord,
   profilesOpen,
   setCaretCoord,
+  cartItems
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -93,6 +94,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                         setMentionProfiles={setMentionProfiles}
                         setProfilesOpen={setProfilesOpen}
                         caretCoord={caretCoord}
+                        cartItems={cartItems}
                         decryptLoading={decryptLoading?.[index]}
                         handleDecrypt={handleDecrypt}
                         index={index}

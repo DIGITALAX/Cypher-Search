@@ -549,6 +549,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
               </Head>
               <Web
+                cartItems={cartItems}
                 handleMessageImage={handleMessageImage}
                 messageImage={messageImage}
                 setCaretCoord={setCaretCoordBookmark}
@@ -688,6 +689,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
               <Bio profile={profile} dispatch={dispatch} router={router} />
               <div className="relative flex flex-row gap-3 items-start justify-between sm:px-4 w-full h-full otro:flex-nowrap flex-wrap">
                 <Feed
+                  cartItems={cartItems}
                   caretCoord={caretCoordFeed}
                   setCaretCoord={setCaretCoordFeed}
                   setMentionProfiles={setMentionProfilesFeed}

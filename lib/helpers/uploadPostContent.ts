@@ -13,11 +13,13 @@ const uploadPostContent = async (
   gifs: string[],
   title?: string,
   tags?: string[],
-  skipUpload?: boolean
+  skipUpload?: boolean,
+  cover?: string
 ): Promise<{ string: string; object: Object } | undefined> => {
   let $schema: string,
     mainContentFocus: PublicationMetadataMainFocusType,
-    value: object = {};
+    value: object = {},
+    coverJSON: string | undefined;
 
   if (
     images?.length < 1 &&
@@ -40,7 +42,10 @@ const uploadPostContent = async (
     });
 
     const mediaWithKeys = [
-      ...(audio || []).map((audio) => ({ type: "audio/mpeg", item: audio })),
+      ...(audio || []).map((audio) => ({
+        type: "audio/mpeg",
+        item: convertToFile(audio, "audio/mpeg"),
+      })),
       ...(videos || []).map((video) => ({
         type: "video/mp4",
         item: convertToFile(video, "video/mp4"),
@@ -68,9 +73,14 @@ const uploadPostContent = async (
       })
     );
 
-    const firstImage = uploads.find(
-      (img) => img?.type === "image/png" || img?.type === "image/gif"
-    );
+    if (cover) {
+      const loadedCover = await fetch("/api/ipfs", {
+        method: "POST",
+        body: convertToFile(cover, "image/png"),
+      });
+      const res = await loadedCover.json();
+      coverJSON = "ipfs://" + res?.cid;
+    }
 
     const primaryMedia = uploads[0];
     if (primaryMedia?.type === "video/mp4") {
@@ -79,7 +89,7 @@ const uploadPostContent = async (
       value = {
         video: {
           ...primaryMedia,
-          cover: firstImage ? firstImage : undefined,
+          cover: coverJSON ? coverJSON : undefined,
         },
       };
     } else if (primaryMedia?.type === "audio/mpeg") {
@@ -88,7 +98,7 @@ const uploadPostContent = async (
       value = {
         audio: {
           ...primaryMedia,
-          cover: firstImage ? firstImage : undefined,
+          cover: coverJSON ? coverJSON : undefined,
         },
       };
     } else {
@@ -110,24 +120,26 @@ const uploadPostContent = async (
   }
 
   try {
+    const object = {
+      $schema,
+      lens: {
+        mainContentFocus,
+        title: title ? title : contentText ? contentText.slice(0, 20) : "",
+        content: contentText ? contentText : "",
+        appId: "cyphersearch",
+        ...value,
+        id: uuidv4(),
+        hideFromFeed: false,
+        locale: "en",
+        tags: tags || [],
+      },
+    };
+
     let cid: string = "";
     if (!skipUpload) {
       const response = await fetch("/api/ipfs", {
         method: "POST",
-        body: JSON.stringify({
-          $schema,
-          lens: {
-            mainContentFocus,
-            title: title ? title : contentText ? contentText.slice(0, 20) : "",
-            content: contentText ? contentText : "",
-            appId: "cyphersearch",
-            ...value,
-            id: uuidv4(),
-            hideFromFeed: false,
-            locale: "en",
-            tags: [...(tags || []), "cypher", "cyphersearch"],
-          },
-        }),
+        body: JSON.stringify(object),
       });
       let responseJSON = await response.json();
       cid = responseJSON?.cid;
@@ -135,20 +147,7 @@ const uploadPostContent = async (
 
     return {
       string: "ipfs://" + cid,
-      object: {
-        $schema,
-        lens: {
-          mainContentFocus,
-          title: title ? title : contentText ? contentText.slice(0, 20) : "",
-          content: contentText ? contentText : "",
-          appId: "cyphersearch",
-          ...value,
-          id: uuidv4(),
-          hideFromFeed: false,
-          locale: "en",
-          tags: [...(tags || []), "cypher", "cyphersearch"],
-        },
-      },
+      object,
     };
   } catch (err: any) {
     console.error(err.message);

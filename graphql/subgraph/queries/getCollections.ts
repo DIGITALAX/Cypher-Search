@@ -10,6 +10,7 @@ const COLLECTIONS = `
       pubId
       uri
       prompt
+      mediaCover
       profileId
       profileHandle
       printType

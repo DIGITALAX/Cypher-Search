@@ -8,9 +8,8 @@ import {
 } from "../../../../../lib/constants";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import Drop from "./Drop";
-import Waveform from "./Waveform";
-import handleImageError from "../../../../../lib/helpers/handleImageError";
 import toHexWithLeadingZero from "../../../../../lib/helpers/leadingZero";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   type,
@@ -119,7 +118,10 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                               ],
                               video: item?.video,
                               audio: item?.audio,
-                              tags: item?.tags?.join(", ") + ",",
+                              tags: item?.tags
+                                ? item?.tags?.join(", ") + ","
+                                : "",
+                              cover: "",
                               prompt: item?.prompt,
                               amount: item?.amount,
                               visibility: item?.visibility,
@@ -130,54 +132,56 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                                 microbrand: item?.microbrand,
                                 microbrandCover: item?.microbrandCover,
                               },
-                              access: item?.access?.join(", "),
+                              access: item?.access
+                                ? item?.access?.join(", ")
+                                : "",
                               dropTitle: item?.dropTitle,
                               dropCover: item?.dropCover,
                               dropCollectionIds: item?.dropCollectionIds,
                               dropId: item?.dropId,
-                              communities: item?.communities?.join(", "),
+                              communities: item?.communities
+                                ? item?.communities?.join(", ")
+                                : "",
                             });
                           }}
                         >
                           <div className="relative w-full h-full flex">
-                            {item?.audio === "audio" || item?.images?.[0] ? (
-                              item?.images?.[0] && (
-                                <Image
-                                  layout="fill"
-                                  src={`${INFURA_GATEWAY}/ipfs/${
-                                    item?.images?.[0]?.split("ipfs://")?.[1]
-                                  }`}
-                                  onError={(e) => handleImageError(e)}
-                                  objectFit="cover"
-                                  draggable={false}
-                                  className="relative rounded-sm w-full h-full flex"
-                                />
-                              )
-                            ) : (
-                              <video
-                                className="relative rounded-sm w-full h-full flex object-cover"
-                                id={item?.video}
-                                draggable={false}
-                                controls={false}
-                                playsInline
-                                loop
-                                key={item?.video}
-                              >
-                                <source
-                                  src={`${INFURA_GATEWAY}/ipfs/${
-                                    item?.video?.split("ipfs://")?.[1]
-                                  }`}
-                                />
-                              </video>
-                            )}
-                            {(item?.audio || item?.video) && (
-                              <Waveform
-                                audio={item?.audio}
-                                type={item?.audio ? "audio" : "video"}
-                                keyValue={item?.audio || item?.video}
-                                video={item?.video}
-                              />
-                            )}
+                            <MediaSwitch
+                              type={
+                                item.mediaTypes?.[0] == "video"
+                                  ? "video"
+                                  : item.mediaTypes?.[0] == "audio"
+                                  ? "audio"
+                                  : "image"
+                              }
+                              hidden
+                              classNameImage={
+                                "rounded-md w-full h-full flex relative"
+                              }
+                              classNameVideo={
+                                "object-cover w-full h-full flex items-center justify-center rounded-md relative"
+                              }
+                              srcUrl={
+                                item.mediaTypes?.[0] == "video"
+                                  ? `${INFURA_GATEWAY}/ipfs/${
+                                      item?.video?.split("ipfs://")?.[1]
+                                    }`
+                                  : item.mediaTypes?.[0] == "audio"
+                                  ? `${INFURA_GATEWAY}/ipfs/${
+                                      item?.audio?.split("ipfs://")?.[1]
+                                    }`
+                                  : `${INFURA_GATEWAY}/ipfs/${
+                                      item?.images?.[0]?.split("ipfs://")?.[1]
+                                    }`
+                              }
+                              srcCover={
+                                item?.mediaCover
+                                  ? `${INFURA_GATEWAY}/ipfs/${
+                                      item?.mediaCover?.split("ipfs://")?.[1]
+                                    }`
+                                  : undefined
+                              }
+                            />
                           </div>
                           <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
                             <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">

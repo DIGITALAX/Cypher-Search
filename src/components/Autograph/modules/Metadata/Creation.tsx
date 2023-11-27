@@ -36,7 +36,6 @@ const Creation: FunctionComponent<CreationProps> = ({
   lensConnected,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.profile?.metadata?.picture);
-  console.log({ item });
   return (
     <div
       className="relative w-80 h-80 bg-piloto flex items-center justify-start flex-col p-2 gap-4"
@@ -55,7 +54,7 @@ const Creation: FunctionComponent<CreationProps> = ({
         }
         id="staticLoad"
       >
-        {
+        <div className="relative w-full h-full flex">
           <MediaSwitch
             type={
               item.mediaTypes?.[0] == "video"
@@ -64,9 +63,10 @@ const Creation: FunctionComponent<CreationProps> = ({
                 ? "audio"
                 : "image"
             }
+            hidden
             classNameImage={"rounded-md w-full h-full flex relative"}
             classNameVideo={
-              "object-cover w-full h-full flex items-center justify-center rounded-md"
+              "object-cover w-full h-[252px] flex items-center justify-center rounded-md relative"
             }
             srcUrl={
               item.mediaTypes?.[0] == "video"
@@ -78,14 +78,14 @@ const Creation: FunctionComponent<CreationProps> = ({
                   }`
             }
             srcCover={
-              item?.images?.[0]
+              item?.mediaCover
                 ? `${INFURA_GATEWAY}/ipfs/${
-                    item?.images?.[0]?.split("ipfs://")?.[1]
+                    item?.mediaCover?.split("ipfs://")?.[1]
                   }`
                 : undefined
             }
           />
-        }
+        </div>
         <div
           className={`absolute right-2 top-2 text-xxs text-white font-bit bg-offBlack flex items-center justify-center border border-white px-1 py-px  w-fit h-fit`}
         >

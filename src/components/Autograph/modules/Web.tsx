@@ -27,6 +27,7 @@ const Web: FunctionComponent<WebProps> = ({
   setOpenMirrorChoice,
   profile,
   display,
+  cartItems,
   allCollections,
   handleSettingsUpdate,
   settingsUpdateLoading,
@@ -320,6 +321,7 @@ const Web: FunctionComponent<WebProps> = ({
           makePost={makePost}
           setMakePost={setMakePost}
           post={post}
+          cartItems={cartItems}
           postLoading={postLoading}
           commentContentLoading={commentContentLoading}
           setCommentContentLoading={setCommentContentLoading}

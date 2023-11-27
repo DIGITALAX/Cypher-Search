@@ -20,7 +20,6 @@ const DropMain: FunctionComponent<DropMainProps> = ({
       <div className="relative w-full h-fit flex items-center justify-start">
         <div className="relative w-fit h-fit flex items-center justify-start flex-wrap gap-5">
           {collections?.map((collection: Creation, index: number) => {
-            console.log({ collection }, collection.mediaTypes?.[0]);
             return (
               <div
                 key={index}
@@ -64,9 +63,9 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                           }`
                     }
                     srcCover={
-                      collection?.images?.[0]
+                      collection?.mediaCover
                         ? `${INFURA_GATEWAY}/ipfs/${
-                            collection?.images?.[0]?.split("ipfs://")?.[1]
+                            collection?.mediaCover?.split("ipfs://")?.[1]
                           }`
                         : undefined
                     }

@@ -334,9 +334,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           }`
                     }
                     srcCover={
-                      itemData?.images?.[0]
+                      itemData?.mediaCover
                         ? `${INFURA_GATEWAY}/ipfs/${
-                            itemData?.images?.[0]?.split("ipfs://")?.[1]
+                            itemData?.mediaCover?.split("ipfs://")?.[1]
                           }`
                         : undefined
                     }

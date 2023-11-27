@@ -86,6 +86,7 @@ const useItem = (
           const coll = (await getCollection(
             id?.replaceAll("_", " ")
           )) as Creation;
+      
 
           pub = (await getPub(
             `${"0x" + toHexWithLeadingZero(Number(coll?.profileId))}-${
@@ -313,6 +314,7 @@ const useItem = (
     title: string
   ): Promise<Creation | undefined> => {
     try {
+  
       const data = await getOneCollectionTitle(title);
 
       if (data?.data?.collectionCreateds) {
@@ -438,7 +440,6 @@ const useItem = (
         transport: custom((window as any).ethereum),
       });
 
-   
       const { request } = await publicClient.simulateContract({
         address: purchaseDetails?.currency as `0x${string}`,
         abi: [
@@ -541,7 +542,8 @@ const useItem = (
 
   const checkApproved = async () => {
     try {
-      if (purchaseDetails?.currency == "") return;
+      if (purchaseDetails?.currency == "" || !purchaseDetails?.currency || !address)
+        return;
       const data = await publicClient.readContract({
         address: ACCEPTED_TOKENS_MUMBAI.filter(
           (token) =>
@@ -631,7 +633,7 @@ const useItem = (
     ) {
       checkApproved();
     }
-  }, [purchaseDetails?.currency]);
+  }, [purchaseDetails?.currency, address]);
 
   useEffect(() => {
     if (type) {

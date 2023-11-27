@@ -1,8 +1,17 @@
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../lib/constants";
+import {
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  INFURA_GATEWAY,
+  LISTENER_OPEN_ACTION,
+} from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { AiOutlineLoading } from "react-icons/ai";
-import { ImageMetadataV3, Post } from "../../../../graphql/generated";
+import {
+  ImageMetadataV3,
+  Post,
+  UnknownOpenActionModuleSettings,
+} from "../../../../graphql/generated";
 import numeral from "numeral";
 import { PostBarProps } from "../types/autograph.types";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
@@ -12,6 +21,10 @@ import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import collectLogic from "../../../../lib/helpers/collectLogic";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import decodeReturnedData from "../../../../lib/helpers/decodeReturned";
+import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
+import { setCypherStorageCart } from "../../../../lib/utils";
+import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -38,6 +51,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   setCommentsOpen,
   main,
   lensConnected,
+  cartItems,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
   return (
@@ -214,7 +228,9 @@ const PostBar: FunctionComponent<PostBarProps> = ({
         })}
       </div>
       {openMirrorChoice?.[index] && (
-        <div className="absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-lirio/80 rounded-sm left-2 -top-8 border border-white">
+        <div
+          className={`absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-lirio/80 rounded-sm left-2 -top-8 border border-white`}
+        >
           {[
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
             "QmfDNH347Vph4b1tEuegydufjMU2QwKzYnMZCjygGvvUMM",
@@ -340,24 +356,112 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               "SimpleCollectOpenActionSettings" ||
             (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
               ?.openActionModules?.[0]?.__typename ===
-              "MultirecipientFeeCollectOpenActionSettings"
+              "MultirecipientFeeCollectOpenActionSettings" ||
+            [
+              CHROMADIN_OPEN_ACTION,
+              LISTENER_OPEN_ACTION,
+              COIN_OP_OPEN_ACTION,
+            ]?.some((value) =>
+              (item?.__typename === "Mirror"
+                ? item?.mirrorOn
+                : (item as Post)
+              )?.openActionModules?.[0]?.contract?.address
+                ?.toLowerCase()
+                ?.includes(value?.toLowerCase())
+            )
               ? "cursor-pointer active:scale-95"
               : "opacity-70"
           } ${interactionsLoading?.simpleCollect && "animate-spin"} ${
             (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
-              ?.operations?.hasActed?.value && "mix-blend-hard-light hue-rotate-60"
+              ?.operations?.hasActed?.value &&
+            "mix-blend-hard-light hue-rotate-60"
           }`}
-          onClick={() =>
-            collectLogic(
+          onClick={
+            [
+              CHROMADIN_OPEN_ACTION,
+              LISTENER_OPEN_ACTION,
+              COIN_OP_OPEN_ACTION,
+            ]?.some((value) =>
               (item?.__typename === "Mirror"
                 ? item?.mirrorOn
-                : (item as Post)) as Post,
-              disabled,
-              interactionsLoading?.simpleCollect!,
-              dispatch,
-              main!,
-              simpleCollect
+                : (item as Post)
+              )?.openActionModules?.[0]?.contract?.address
+                ?.toLowerCase()
+                ?.includes(value?.toLowerCase())
             )
+              ? async () => {
+                  const meta =
+                    item?.__typename === "Mirror"
+                      ? item?.mirrorOn
+                      : (item as Post);
+                  const returned = await decodeReturnedData(
+                    (
+                      meta
+                        ?.openActionModules?.[0] as UnknownOpenActionModuleSettings
+                    )?.openActionModuleReturnData
+                  );
+                  const newItem = {
+                    ...returned,
+                    amount: 1,
+                    price: Number(returned?.prices?.[0]),
+                    type: meta?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                      ? "chromadin"
+                      : meta?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                      ? "coinop"
+                      : "listener",
+                    color: returned?.colors?.split(",")?.[0],
+                    size: returned?.sizes?.split(",")?.[0],
+                    purchased: false,
+                    chosenIndex: 0,
+                  };
+
+                  const existingItem = cartItems?.find(
+                    (value) => value?.item?.pubId === returned?.pubId
+                  );
+
+                  if (existingItem) {
+                    const newCartItems = [...cartItems];
+                    const itemIndex = newCartItems?.indexOf(existingItem);
+
+                    if (
+                      existingItem?.color === newItem?.color &&
+                      existingItem?.size === newItem?.size
+                    ) {
+                      newCartItems[itemIndex] = {
+                        ...existingItem,
+                        amount: existingItem?.amount + 1,
+                      };
+                    } else {
+                      newCartItems.splice(itemIndex, 1);
+                      newCartItems.push(newItem);
+                    }
+
+                    dispatch(setCartItems(newCartItems));
+                    setCypherStorageCart(JSON.stringify(newCartItems));
+                  } else {
+                    dispatch(setCartItems([...cartItems, newItem]));
+                    setCypherStorageCart(
+                      JSON.stringify([...cartItems, newItem])
+                    );
+                  }
+
+                  dispatch(setCartAnim(true));
+                }
+              : () =>
+                  collectLogic(
+                    (item?.__typename === "Mirror"
+                      ? item?.mirrorOn
+                      : (item as Post)) as Post,
+                    disabled,
+                    interactionsLoading?.simpleCollect!,
+                    dispatch,
+                    main!,
+                    simpleCollect
+                  )
           }
         >
           {interactionsLoading?.simpleCollect ? (
@@ -427,29 +531,29 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   })
                 ),
               () =>
-                meta?.metadata?.tags?.includes(
-                  "MintedWithLoveOnCypherChromadin"
-                )
+                meta?.openActionModules?.[0]?.contract?.address
+                  ?.toLowerCase()
+                  ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
                   ? router.push(
-                      `/item/chromadin/${
-                        (meta?.metadata as ImageMetadataV3)?.title?.replaceAll(" ", "_")
-                      }`
+                      `/item/chromadin/${(
+                        meta?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
                     )
-                  : meta?.metadata?.tags?.includes(
-                      "MintedWithLoveOnCypherCoinOp"
-                    )
+                  : meta?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
                   ? router.push(
-                      `/item/coinop/${
-                        (meta?.metadata as ImageMetadataV3)?.title?.replaceAll(" ", "_")
-                      }`
+                      `/item/coinop/${(
+                        meta?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
                     )
-                  : meta?.metadata?.tags?.includes(
-                      "MintedWithLoveOnCypherListener"
-                    )
+                  : meta?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
                   ? router.push(
-                      `/item/listener/${
-                        (meta?.metadata as ImageMetadataV3)?.title?.replaceAll(" ", "_")
-                      }`
+                      `/item/listener/${(
+                        meta?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
                     )
                   : router.push(`/item/pub/${item?.id}`),
             ]?.filter(Boolean);

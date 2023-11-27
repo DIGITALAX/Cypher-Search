@@ -151,7 +151,53 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               <>
                 <div
                   className="relative w-full h-10 bg-olor border border-[#DAB275] flex items-center justify-center text-saph font-bit text-lg cursor-pointer active:scale-95"
-                  onClick={() => isDesigner && setCreateCase("collection")}
+                  onClick={() => {
+                    if (isDesigner) {
+                      setCreateCase("collection");
+                      setCollectionDetails({
+                        title: "",
+                        description: "",
+                        collectionId: "",
+                        price: "",
+                        acceptedTokens: [
+                          "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
+                          "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
+                        ],
+                        cover: "",
+                        images: [],
+                        profileId: "",
+                        pubId: "",
+                        video: "",
+                        audio: "",
+                        tags: "",
+                        prompt: "",
+                        amount: "",
+                        visibility: "public",
+                        sizes: [],
+                        colors: [],
+                        profileHandle: "",
+                        microbrand: {
+                          microbrand: "",
+                          microbrandCover: "",
+                        },
+                        access: "",
+                        dropId: "",
+                        dropTitle: "",
+                        dropCover: "",
+                        dropCollectionIds: [],
+                        communities: "",
+                      });
+                      setCollectionSettings({
+                        media: "static",
+                        origin: "chromadin",
+                        microOpen: false,
+                        communityOpen: false,
+                        accessOpen: false,
+                        visibilityOpen: false,
+                        dropOpen: false,
+                      });
+                    }
+                  }}
                 >
                   <div className="relative w-fit h-fit items-center justify-center flex top-1">
                     + New Collection

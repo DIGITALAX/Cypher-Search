@@ -35,6 +35,7 @@ const COLLECTIONS = `
       dropTitle
       description
       communities
+      mediaCover
       collectionId
       access
       unlimited
