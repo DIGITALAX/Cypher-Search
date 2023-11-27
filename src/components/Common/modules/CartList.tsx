@@ -6,6 +6,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
+import MediaSwitch from "./MediaSwitch";
 
 const CartList: FunctionComponent<CartListProps> = ({
   cartItems,
@@ -16,14 +17,16 @@ const CartList: FunctionComponent<CartListProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`absolute z-30 w-60 h-72 rounded-sm bg-black flex flex-col p-3 border border-sol items-between justify-center ${
-        page ? "right-1 sm:right-3 bottom-16" : "right-3 top-14 sm:top-24 tablet:top-16"
+      className={`absolute z-30 w-60 h-72 rounded-sm bg-black flex flex-col p-3 border border-sol items-between justify-start ${
+        page
+          ? "right-1 sm:right-3 bottom-16"
+          : "right-3 top-14 sm:top-24 tablet:top-16"
       }`}
       id="milestone"
     >
-      <div className="relative flex items-center justify-center overflow-y-scroll w-full h-full">
+      <div className="relative flex items-start justify-start overflow-y-scroll w-full h-full pb-2">
         {cartItems?.length > 0 ? (
-          <div className="relative flex flex-col gap-4 items-center justify-start w-full h-fit px-4 pt-2">
+          <div className="relative flex flex-col gap-8 items-center justify-start w-full h-fit px-4 pt-2">
             {cartItems?.map((item, index: number) => {
               return (
                 <div
@@ -34,16 +37,41 @@ const CartList: FunctionComponent<CartListProps> = ({
                     className="relative w-full h-40 flex items-center justify-center rounded-sm"
                     id="pfp"
                   >
-                    <Image
-                      draggable={false}
-                      layout="fill"
-                      src={`${INFURA_GATEWAY}/ipfs/${
-                        item?.item?.images?.[0]?.split("ipfs://")?.[1]
-                      }`}
-                      className="rounded-sm"
-                      objectFit="cover"
-                      onError={(e) => handleImageError(e)}
+                    <MediaSwitch
+                      hidden
+                      type={
+                        item?.item.mediaTypes?.[0] == "video"
+                          ? "video"
+                          : item?.item.mediaTypes?.[0] == "audio"
+                          ? "audio"
+                          : "image"
+                      }
+                      classNameImage={"rounded-sm w-full h-full flex relative"}
+                      classNameVideo={
+                        "object-cover w-full h-full flex items-center justify-center rounded-sm"
+                      }
+                      srcUrl={
+                        item?.item.mediaTypes?.[0] == "video"
+                          ? `${INFURA_GATEWAY}/ipfs/${
+                              item?.item?.video?.split("ipfs://")?.[1]
+                            }`
+                          : item?.item.mediaTypes?.[0] == "audio"
+                          ? `${INFURA_GATEWAY}/ipfs/${
+                              item?.item?.audio?.split("ipfs://")?.[1]
+                            }`
+                          : `${INFURA_GATEWAY}/ipfs/${
+                              item?.item?.images?.[0]?.split("ipfs://")?.[1]
+                            }`
+                      }
+                      srcCover={
+                        item?.item?.images?.[0]
+                          ? `${INFURA_GATEWAY}/ipfs/${
+                              item?.item?.images?.[0]?.split("ipfs://")?.[1]
+                            }`
+                          : undefined
+                      }
                     />
+
                     <div
                       className="absolute -right-1 border border-white -top-1 font-dog items-center justify-center w-fit h-fit text-center cursor-pointer p-1 rounded-full bg-black active:scale-95 text-white text-xs"
                       onClick={() => {
@@ -57,7 +85,7 @@ const CartList: FunctionComponent<CartListProps> = ({
                       }}
                     >
                       <div className="relative w-fit h-fit flex items-center justify-center">
-                        <ImCross size={12} color={"white"} />
+                        <ImCross size={8} color={"white"} />
                       </div>
                     </div>
                   </div>

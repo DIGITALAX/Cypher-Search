@@ -438,30 +438,7 @@ const useItem = (
         transport: custom((window as any).ethereum),
       });
 
-      console.log([
-        type === "chromadin"
-          ? CHROMADIN_OPEN_ACTION
-          : type === "listener"
-          ? LISTENER_OPEN_ACTION
-          : type === "coinop"
-          ? COIN_OP_OPEN_ACTION
-          : LEGEND_OPEN_ACTION,
-        ((Number(
-          (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
-        ) *
-          10 ** 18) /
-          Number(
-            oracleData?.find(
-              (oracle) =>
-                oracle.currency ===
-                ACCEPTED_TOKENS_MUMBAI.find(
-                  (item) => item[2] === purchaseDetails?.currency
-                )?.[2]
-            )?.rate
-          )) *
-          10 ** 18,
-      ]);
-
+   
       const { request } = await publicClient.simulateContract({
         address: purchaseDetails?.currency as `0x${string}`,
         abi: [

@@ -40,6 +40,7 @@ export const metadataMedia = (
     }
   | undefined => {
   switch (media?.__typename) {
+
     case "PublicationMetadataMediaAudio":
       return {
         url: media?.audio?.raw?.uri

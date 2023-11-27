@@ -16,10 +16,10 @@ const buildQuery = (filters: Filter): FilterInput => {
     return values.slice(1).reduce<AndBlock>(
       (acc, value) => {
         return {
-          and: { ...(acc.and || {}), [`${fieldName}_contains`]: value },
+          and: { ...(acc.and || {}), [`${fieldName}_contains_nocase`]: value },
         };
       },
-      { [`${fieldName}_contains`]: values[0] }
+      { [`${fieldName}_contains_nocase`]: values[0] }
     );
   };
 

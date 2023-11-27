@@ -41,6 +41,7 @@ import { AccessControlConditions } from "@lit-protocol/types";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
+import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -122,36 +123,58 @@ const useCreate = (
     try {
       const data = await getCollections(address!);
       const newCollections = data?.data?.collectionCreateds?.map(
-        (collection: any) => ({
-          ...collection,
-          sizes: collection?.sizes
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          colors: collection?.colors
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          mediaTypes: collection?.mediaTypes
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          access: collection?.access
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          communities: collection?.communities
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          tags: collection?.tags
-            ?.split(",")
-            .map((word: string) => word.trim())
-            .filter((word: string) => word.length > 0),
-          prices: collection?.prices?.map(
-            (price: string) => Number(price) / 10 ** 18
-          ),
-        })
+        async (collection: any) => {
+          let ipfs: Object = {};
+          if (!collection?.title) {
+            ipfs = await fetchIPFSJSON(collection?.uri);
+          }
+          const coll = {
+            ...collection,
+            ...ipfs,
+          };
+          return {
+            ...coll,
+            sizes:
+              typeof coll?.sizes === "string" &&
+              coll?.sizes
+                ?.split(",")
+                ?.map((word: string) => word.trim())
+                ?.filter((word: string) => word.length > 0),
+            colors:
+              typeof coll?.colors === "string" &&
+              coll?.colors
+                ?.split(",")
+                ?.map((word: string) => word.trim())
+                ?.filter((word: string) => word.length > 0),
+            mediaTypes:
+              typeof coll?.mediaTypes === "string" &&
+              coll?.mediaTypes
+                ?.split(",")
+                ?.map((word: string) => word.trim())
+                ?.filter((word: string) => word.length > 0),
+            access:
+              typeof coll?.access === "string" &&
+              coll?.access
+                ?.split(",")
+                ?.map((word: string) => word.trim())
+                ?.filter((word: string) => word.length > 0),
+            communities:
+              typeof coll?.communities === "string" &&
+              coll?.communities
+                ?.split(",")
+                ?.map((word: string) => word.trim())
+                ?.filter((word: string) => word.length > 0),
+            tags:
+              typeof coll?.tags === "string" &&
+              coll?.tags
+                ?.split(",")
+                ?.map((word: string) => word.trim())
+                ?.filter((word: string) => word.length > 0),
+            prices: coll?.prices?.map(
+              (price: string) => Number(price) / 10 ** 18
+            ),
+          };
+        }
       );
       setAllCollections(newCollections || []);
     } catch (err: any) {
@@ -174,7 +197,6 @@ const useCreate = (
       collectionDetails.price?.trim() == "" ||
       !collectionDetails.acceptedTokens ||
       collectionDetails.acceptedTokens?.length < 1 ||
-      collectionDetails.tags?.trim() == "" ||
       Number(collectionDetails?.amount) < 0 ||
       !address
     )
