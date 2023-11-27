@@ -26,7 +26,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
             className={classNameVideo}
             poster={srcCover}
             autoPlay={hidden}
-            muted={hidden}
+            muted
             loop={hidden}
           >
             <source src={srcUrl} />

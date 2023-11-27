@@ -8,7 +8,7 @@ import { DisplayProps, SortType } from "../../types/autograph.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setDisplaySearchBox } from "../../../../../redux/reducers/displaySearchBoxSlice";
 import { AiOutlineLoading } from "react-icons/ai";
-import handleImageError from "../../../../../lib/helpers/handleImageError";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const Display: FunctionComponent<DisplayProps> = ({
   display,
@@ -24,6 +24,12 @@ const Display: FunctionComponent<DisplayProps> = ({
   owner,
   router,
 }): JSX.Element => {
+  const displayType =
+    sortType === SortType.Community
+      ? display?.community
+      : sortType === SortType.Private
+      ? display?.private
+      : display?.public;
   return (
     <div className="relative flex flex-col w-full h-full items-start justify-start gap-3">
       <div className="relative flex flex-col tablet:flex-row gap-5 w-full h-fit sm:h-[35rem] items-start justify-center">
@@ -32,22 +38,41 @@ const Display: FunctionComponent<DisplayProps> = ({
           id="pfp"
         >
           <div className="relative w-full h-full tablet:h-full bg-blurs flex items-center justify-center">
-            {display && (
-              <Image
-                layout="fill"
-                src={`${INFURA_GATEWAY}/ipfs/${
-                  sortType === SortType.Community
-                    ? display?.community?.main?.images?.[0]?.split(
-                        "ipfs://"
-                      )?.[1]
-                    : sortType === SortType.Private
-                    ? display?.private?.main?.images?.[0]?.split("ipfs://")?.[1]
-                    : display?.public?.main?.images?.[0]?.split("ipfs://")?.[1]
-                }`}
-                objectFit="cover"
-                objectPosition={"center"}
-                draggable={false}
-                onError={(e) => handleImageError(e)}
+            {displayType?.main && (
+              <MediaSwitch
+                type={
+                  displayType?.main?.mediaTypes?.[0] == "video"
+                    ? "video"
+                    : displayType?.main?.mediaTypes?.[0] == "audio"
+                    ? "audio"
+                    : "image"
+                }
+                hidden
+                classNameImage={"w-full h-full flex relative"}
+                classNameVideo={
+                  "object-cover w-full h-full flex items-center justify-center relative"
+                }
+                classNameAudio={"w-full h-full flex relative"}
+                srcUrl={
+                  displayType?.main?.mediaTypes?.[0] == "video"
+                    ? `${INFURA_GATEWAY}/ipfs/${
+                        displayType?.main?.video?.split("ipfs://")?.[1]
+                      }`
+                    : displayType?.main?.mediaTypes?.[0] == "audio"
+                    ? `${INFURA_GATEWAY}/ipfs/${
+                        displayType?.main?.audio?.split("ipfs://")?.[1]
+                      }`
+                    : `${INFURA_GATEWAY}/ipfs/${
+                        displayType?.main?.images?.[0]?.split("ipfs://")?.[1]
+                      }`
+                }
+                srcCover={
+                  displayType?.main?.mediaCover
+                    ? `${INFURA_GATEWAY}/ipfs/${
+                        displayType?.main?.mediaCover?.split("ipfs://")?.[1]
+                      }`
+                    : undefined
+                }
               />
             )}
           </div>
@@ -70,7 +95,7 @@ const Display: FunctionComponent<DisplayProps> = ({
               />
             </div>
           )}
-          {display && (
+          {displayType?.main && (
             <div className="absolute bottom-4 left-4 w-fit h-fit rounded-sm bg-black/70 flex flex-col items-start justify-center p-2 border gap-2 border-[#372B48]">
               <InteractBar
                 router={router}
@@ -78,28 +103,12 @@ const Display: FunctionComponent<DisplayProps> = ({
                 mirror={mirror}
                 like={like}
                 hideCollect
-                display={
-                  numberToItemTypeMap[
-                    Number(
-                      sortType === SortType.Community
-                        ? display?.community?.main?.origin
-                        : sortType === SortType.Public
-                        ? display?.public?.main?.origin
-                        : display?.private?.main?.origin
-                    )
-                  ]
-                }
+                display={numberToItemTypeMap[Number(displayType?.main?.origin)]}
                 interactionsLoading={interactionsLoading?.[0]}
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}
                 index={0}
-                publication={
-                  sortType === SortType.Community
-                    ? display?.community?.main?.publication!
-                    : sortType === SortType.Public
-                    ? display?.public?.main?.publication!
-                    : display?.private?.main?.publication!
-                }
+                publication={displayType?.main?.publication}
                 simpleCollect={undefined}
               />
             </div>
@@ -114,28 +123,53 @@ const Display: FunctionComponent<DisplayProps> = ({
                 id="smoke"
               >
                 <div className="relative w-full h-full rounded-lg bg-blurs flex items-center justify-center">
-                  <Image
-                    onError={(e) => handleImageError(e)}
-                    layout="fill"
-                    src={`${INFURA_GATEWAY}/ipfs/${
-                      display
-                        ? sortType === SortType.Community
-                          ? display?.community?.main?.images?.[0]?.split(
-                              "ipfs://"
-                            )[1]
-                          : sortType === SortType.Public
-                          ? display?.public?.main?.images?.[0]?.split(
-                              "ipfs://"
-                            )[1]
-                          : display?.private?.main?.images?.[0]?.split(
-                              "ipfs://"
-                            )[1]
-                        : "QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY"
-                    }`}
-                    objectFit="cover"
-                    draggable={false}
-                    className="rounded-lg"
-                  />
+                  {displayType?.side?.[index] && (
+                    <MediaSwitch
+                      type={
+                        displayType?.side?.[index]?.mediaTypes?.[0] == "video"
+                          ? "video"
+                          : displayType?.side?.[index]?.mediaTypes?.[0] ==
+                            "audio"
+                          ? "audio"
+                          : "image"
+                      }
+                      hidden
+                      classNameImage={"w-full h-full flex relative rounded-lg"}
+                      classNameAudio={"w-full h-full flex relative rounded-lg"}
+                      classNameVideo={
+                        "object-cover w-full h-full flex items-center justify-center relative rounded-lg"
+                      }
+                      srcUrl={
+                        displayType?.side?.[index]?.mediaTypes?.[0] == "video"
+                          ? `${INFURA_GATEWAY}/ipfs/${
+                              displayType?.side?.[index]?.video?.split(
+                                "ipfs://"
+                              )?.[1]
+                            }`
+                          : displayType?.side?.[index]?.mediaTypes?.[0] ==
+                            "audio"
+                          ? `${INFURA_GATEWAY}/ipfs/${
+                              displayType?.side?.[index]?.audio?.split(
+                                "ipfs://"
+                              )?.[1]
+                            }`
+                          : `${INFURA_GATEWAY}/ipfs/${
+                              displayType?.side?.[index]?.images?.[0]?.split(
+                                "ipfs://"
+                              )?.[1]
+                            }`
+                      }
+                      srcCover={
+                        displayType?.side?.[index]?.mediaCover
+                          ? `${INFURA_GATEWAY}/ipfs/${
+                              displayType?.side?.[index]?.mediaCover?.split(
+                                "ipfs://"
+                              )?.[1]
+                            }`
+                          : undefined
+                      }
+                    />
+                  )}
                 </div>
                 {owner && (
                   <div
@@ -156,7 +190,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                     />
                   </div>
                 )}
-                {display && (
+                {displayType?.side?.[index] && (
                   <div className="absolute bottom-2 left-2 flex items-center justify-center">
                     <InteractBar
                       router={router}
@@ -168,23 +202,11 @@ const Display: FunctionComponent<DisplayProps> = ({
                       openMirrorChoice={openMirrorChoice}
                       setOpenMirrorChoice={setOpenMirrorChoice}
                       index={index + 1}
-                      publication={
-                        sortType === SortType.Community
-                          ? display?.community?.side?.[index]?.publication!
-                          : sortType === SortType.Public
-                          ? display?.public?.side?.[index]?.publication!
-                          : display?.private?.side?.[index]?.publication!
-                      }
+                      publication={displayType?.side?.[index]?.publication!}
                       simpleCollect={undefined}
                       display={
                         numberToItemTypeMap[
-                          Number(
-                            sortType === SortType.Community
-                              ? display?.community?.main?.origin
-                              : sortType === SortType.Public
-                              ? display?.public?.main?.origin
-                              : display?.private?.main?.origin
-                          )
+                          Number(displayType?.side?.[index]?.origin)
                         ]
                       }
                     />

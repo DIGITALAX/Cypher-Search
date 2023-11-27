@@ -287,6 +287,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                     <MediaSwitch
                       type={media.type !== "video" ? "image" : "video"}
                       classNameImage={"rounded-md"}
+                      classNameAudio={"rounded-md"}
                       classNameVideo={
                         "object-cover w-full h-full flex items-center justify-center rounded-md"
                       }

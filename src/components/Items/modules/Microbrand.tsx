@@ -30,30 +30,28 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   const profilePicture = createProfilePicture(itemData?.metadata?.picture);
   return (
     <div className="relative w-full min-h-[50rem] flex items-center justify-start flex-col  pt-52 sm:pt-40 md:pt-32 px-12 gap-7 h-fit">
-      <div className="relative w-full h-fit flex gap-2 flex-row items-center justify-center">
-        <div className="relative w-20 h-20 ml-auto text-4xl text-white font-aust flex items-center justify-center">
-          <div className="relative w-fit h-fit flex items-center justify-center">
-            {relatedData?.microbrand?.microbrandCover && (
-              <Image
-                layout="fill"
-                src={`${INFURA_GATEWAY}/ipfs/${
-                  relatedData?.microbrand?.microbrandCover?.split(
-                    "ipfs://"
-                  )?.[1]
-                }`}
-                draggable={false}
-                objectFit="contain"
-                onError={(e) => handleImageError(e)}
-              />
-            )}
-          </div>
+      <div className="relative w-full h-fit flex flex-col gap-6 items-center justify-center">
+        <div className="relative w-full h-[10rem] flex items-center justify-center">
+          {relatedData?.microbrand?.[0]?.microbrandCover && (
+            <Image
+              layout="fill"
+              src={`${INFURA_GATEWAY}/ipfs/${
+                relatedData?.microbrand?.[0]?.microbrandCover?.split(
+                  "ipfs://"
+                )?.[1]
+              }`}
+              draggable={false}
+              objectFit="contain"
+              onError={(e) => handleImageError(e)}
+            />
+          )}
         </div>
-        <div className="relative w-fit h-fit flex flex-col items-start justify-start">
-          <div className="relative w-fit h-fit ml-auto text-5xl text-white font-aust flex items-center justify-center">
-            {relatedData?.microbrand?.microbrand}
+        <div className="relative w-fit h-fit flex flex-col items-center justify-center">
+          <div className="relative w-fit h-fit ml-auto text-3xl text-white font-aust flex items-center justify-center">
+            {relatedData?.microbrand?.[0]?.microbrand}
           </div>
           <div
-            className="relative w-fit h-fit gap-1 flex items-center justify-center flex-row"
+            className="relative w-fit h-fit gap-2 flex items-center justify-center flex-row text-sm cursor-pointer"
             onClick={() =>
               router.push(
                 `/autograph/${itemData?.handle?.suggestedFormatted?.localName?.split(
@@ -62,9 +60,9 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
               )
             }
           >
-            <div className="relative w-fit h-fit flex items-center ml-auto">
+            <div className="relative w-fit h-fit flex items-center">
               <div
-                className="relative w-5 h-5 text-base text-white font-aust flex items-center rounded-full justify-center"
+                className="relative w-5 h-5 font-aust flex items-center rounded-full justify-center"
                 id="pfp"
               >
                 {profilePicture && (
@@ -79,7 +77,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
                 )}
               </div>
             </div>
-            <div className="relative w-fit h-fit ml-auto text-base text-white font-aust flex items-center justify-center">
+            <div className="relative w-fit h-fit text-white font-aust flex items-center justify-center">
               {itemData?.handle?.suggestedFormatted?.localName}
             </div>
           </div>

@@ -232,7 +232,6 @@ const useQuote = (
             })
           );
         }, 3000);
-
       }
     }
 
@@ -461,7 +460,7 @@ const useQuote = (
                 ?.amount.asset.contract.address,
       });
 
-      if (data) {
+      if (data && data.approvedModuleAllowanceAmount[0]) {
         parseInt(data.approvedModuleAllowanceAmount[0].allowance.value) >
         (followCollect?.type === "collect"
           ? parseInt(followCollect?.collect?.item?.amount?.value || "")
@@ -500,7 +499,23 @@ const useQuote = (
                     ?.followModule as FeeFollowModuleSettings
                 )?.amount.value!,
         },
-        module: {},
+        module: {
+          openActionModule:
+            (followCollect?.type === "collect" &&
+              !followCollect?.collect?.item?.followerOnly) ||
+            (followCollect?.type === "collect" &&
+              followCollect?.collect?.item?.followerOnly &&
+              followCollect?.follower?.operations?.isFollowedByMe?.value)
+              ? followCollect?.collect?.item?.type
+              : undefined,
+          followModule:
+            (followCollect?.type === "collect" &&
+              followCollect?.collect?.item?.followerOnly &&
+              !followCollect?.follower?.operations?.isFollowedByMe?.value) ||
+            followCollect?.type === "follow"
+              ? followCollect?.follower?.followModule?.type
+              : undefined,
+        },
       });
 
       const clientWallet = createWalletClient({
@@ -651,6 +666,41 @@ const useQuote = (
       checkCurrencyApproved();
     }
   }, [followCollect.type]);
+
+  useEffect(() => {
+    if (postCollectGif.type) {
+      setOpenMeasure((prev) => ({
+        ...prev,
+        collectibleOpen: false,
+        collectible:
+          postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
+          Number(
+            postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value
+          ) > 0
+            ? "Yes"
+            : "No",
+        award:
+          postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
+          Number(
+            postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value
+          )
+            ? "Yes"
+            : "No",
+        whoCollectsOpen: false,
+        creatorAwardOpen: false,
+        currencyOpen: false,
+        editionOpen: false,
+        edition: postCollectGif.collectTypes?.[postCollectGif?.id!]
+          ?.collectLimit
+          ? "Yes"
+          : "No",
+        timeOpen: false,
+        time: postCollectGif.collectTypes?.[postCollectGif?.id!]?.endsAt
+          ? "Yes"
+          : "No",
+      }));
+    }
+  }, [postCollectGif.type]);
 
   useEffect(() => {
     if (fullScreenVideo?.open && fullScreenVideo?.allVideos?.length < 1) {

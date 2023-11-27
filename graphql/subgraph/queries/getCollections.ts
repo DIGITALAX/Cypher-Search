@@ -96,6 +96,7 @@ const COLLECTIONS_QUICK = `
       title
       images
       collectionId
+      mediaCover
     }
   }
 `;

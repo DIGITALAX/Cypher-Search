@@ -253,7 +253,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                     ...(newCTs[id] || {}),
                     endsAt: new Date(
                       new Date().getTime() + 24 * 60 * 60 * 1000
-                    ).getTime(),
+                    ),
                   } as any;
                 } else {
                   newCTs[id] = {
@@ -367,6 +367,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                       <input
                         className="relative bg-offBlack flex flex-row w-full h-full justify-start items-center rounded-sm p-2 gap-2"
                         onChange={(e) => item.setValue(e.target.value)}
+                        value={item.chosenValue || ""}
                       />
                     </div>
                   </div>

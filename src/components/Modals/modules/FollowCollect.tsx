@@ -6,6 +6,7 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import { FeeFollowModuleSettings } from "../../../../graphql/generated";
 import { AiOutlineLoading } from "react-icons/ai";
+import moment from "moment";
 
 const FollowCollect: FunctionComponent<FollowCollectProps> = ({
   dispatch,
@@ -19,7 +20,6 @@ const FollowCollect: FunctionComponent<FollowCollectProps> = ({
   approved,
   approveSpend,
 }): JSX.Element => {
-
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
       <div className="relative w-[90vw] sm:w-[40vw] tablet:w-[35vw] h-fit max-h-[90vh] min-h-[27vh] place-self-center bg-offBlack border border-white overflow-y-scroll">
@@ -60,7 +60,19 @@ const FollowCollect: FunctionComponent<FollowCollectProps> = ({
                 <div className="relative w-fit h-fit flex items-center justify-center font-bit break-words px-2 text-center">
                   {collect?.item?.endsAt < Date.now()
                     ? "Collect Period Over :/"
-                    : `Collect Period Finishes by ${collect?.item?.endsAt}`}
+                    : `Collect Period Finishes in ${
+                        moment
+                          .duration(
+                            moment(collect?.item?.endsAt).diff(moment())
+                          )
+                          .asMilliseconds() > 0
+                          ? `${moment
+                              .utc(moment(collect?.item?.endsAt).diff(moment()))
+                              .format("H [hrs]")} and ${moment
+                              .utc(moment(collect?.item?.endsAt).diff(moment()))
+                              .format("m [min]")}`
+                          : "0 hrs and 0 min"
+                      }`}
                 </div>
               )}
               {Number(collect?.item?.collectLimit) > 0 && (

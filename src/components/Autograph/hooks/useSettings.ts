@@ -254,7 +254,7 @@ const useSettings = (
 
         await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
       } else {
-        setInteractError(true);
+        dispatch(setInteractError(true));
       }
     } catch (err: any) {
       errorChoice(err, () => {}, dispatch);

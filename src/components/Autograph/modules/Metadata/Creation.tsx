@@ -68,6 +68,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             classNameVideo={
               "object-cover w-full h-[252px] flex items-center justify-center rounded-md relative"
             }
+            classNameAudio={"rounded-md w-full h-full flex relative"}
             srcUrl={
               item.mediaTypes?.[0] == "video"
                 ? `${INFURA_GATEWAY}/ipfs/${item?.video?.split("ipfs://")?.[1]}`

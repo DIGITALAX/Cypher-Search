@@ -76,12 +76,6 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, [router]);
 
-  useEffect(() => {
-    async () => {
-      await (client as LitNodeClient).connect();
-    };
-  }, []);
-
   if (routerChangeLoading) {
     return <RouterChange />;
   }

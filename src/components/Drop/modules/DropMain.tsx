@@ -49,6 +49,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                     classNameVideo={
                       "object-cover w-full h-full flex items-center justify-center rounded-sm"
                     }
+                    classNameAudio={"rounded-sm w-full h-full flex relative"}
                     srcUrl={
                       collection.mediaTypes?.[0] == "video"
                         ? `${INFURA_GATEWAY}/ipfs/${
