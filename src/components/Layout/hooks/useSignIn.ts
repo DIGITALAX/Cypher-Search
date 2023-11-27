@@ -25,7 +25,6 @@ import { PublicClient } from "viem";
 import { PRINT_ACCESS_CONTROL } from "../../../../lib/constants";
 import { setIsDesigner } from "../../../../redux/reducers/isDesignerSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
-import getProfile from "../../../../graphql/lens/queries/profile";
 
 const useSignIn = (
   publicClient: PublicClient,
@@ -46,6 +45,11 @@ const useSignIn = (
   const handleLensConnect = async () => {
     setSignInLoading(true);
     try {
+      // await createProfile({
+      //   handle: "emmaja",
+      //   to: address,
+      // });
+
       const profile = await getDefaultProfile(
         {
           for: address,
@@ -158,7 +162,7 @@ const useSignIn = (
   };
 
   useEffect(() => {
-    if (!oracleData) {
+    if (!oracleData || oracleData?.length < 1) {
       handleOracles();
     }
 

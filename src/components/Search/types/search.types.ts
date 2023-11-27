@@ -51,6 +51,7 @@ export type SearchBarProps = {
   searchActive: boolean;
   router: NextRouter;
   filtersOpen: boolean;
+  filterChange: boolean;
   handleShuffleSearch: () => void;
   placeholderText: string | undefined;
   dispatch: Dispatch<AnyAction>;
@@ -63,6 +64,7 @@ export type HeaderProps = {
   includeSearch: boolean;
   router: NextRouter;
   layoutAmount?: number;
+  filterChange: boolean;
   cartAnim: boolean;
   handleSearch?: (
     e: KeyboardEvent | MouseEvent,
@@ -72,7 +74,7 @@ export type HeaderProps = {
   placeholderText?: string | undefined;
   openConnectModal: (() => void) | undefined;
   handleLogout: () => void;
-  searchItems: AllSearchItemsState | undefined
+  searchItems: AllSearchItemsState | undefined;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
@@ -84,7 +86,7 @@ export type HeaderProps = {
   filtersOpen: boolean;
   handleShuffleSearch?: () => void;
   cartItems: CartItem[];
-  fullScreenVideo: FullScreenVideoState
+  fullScreenVideo: FullScreenVideoState;
 };
 
 export type DropDownProps = {

@@ -4,7 +4,7 @@ import { getOneRandomCollection } from "../../../../graphql/subgraph/queries/get
 import getPublication from "../../../../graphql/lens/queries/publication";
 import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon } from "viem/chains";
+import { polygonMumbai } from "viem/chains";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
@@ -116,7 +116,7 @@ const useFilterPost = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -172,7 +172,7 @@ const useFilterPost = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 

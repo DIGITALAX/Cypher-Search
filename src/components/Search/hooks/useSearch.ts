@@ -51,10 +51,11 @@ import {
   aggregateSizes,
   aggregateUniqueValues,
 } from "../../../../lib/helpers/aggregators";
-import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 import { NextRouter } from "next/router";
 import getPublications from "../../../../graphql/lens/queries/publications";
+import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
+import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -94,7 +95,8 @@ const useSearch = (
   const handleSearch = async (
     e?: KeyboardEvent | MouseEvent,
     click?: boolean,
-    random?: boolean
+    random?: boolean,
+    backup?: boolean
   ) => {
     setLoaders((prev) => ({
       ...prev,
@@ -122,7 +124,7 @@ const useSearch = (
           !click) ||
         (click && allSearchItems?.searchInput.trim() !== "")
       ) {
-        if (filterEmpty(filters)) {
+        if (filterEmpty(filters) && !backup) {
           const searchItems = await getTextSearch(
             allSearchItems?.searchInput!,
             10,
@@ -140,8 +142,10 @@ const useSearch = (
         query = allSearchItems?.searchInput;
       } else {
         collections = await filterSearch(0);
-        if (!allSearchItems?.searchInput || random) {
+        if ((!allSearchItems?.searchInput || random) && !backup) {
           query = filters?.hashtag || filters?.community;
+        } else if (backup) {
+          query = TAGS?.sort(() => Math.random() - 0.5)?.[0];
         } else {
           query = allSearchItems?.searchInput;
         }
@@ -358,7 +362,10 @@ const useSearch = (
   };
 
   const handleMoreSearch = async () => {
-    if (!allSearchItems?.hasMore) return;
+    if (!allSearchItems?.hasMore) {
+      await handleSearch(undefined, undefined, false, true);
+      return;
+    }
     setLoaders((prev) => ({
       ...prev,
       moreSearchLoading: true,
@@ -659,6 +666,8 @@ const useSearch = (
       })
     );
 
+    dispatch(setFilterChange(true));
+
     setOpenDropDown({
       hashtag: false,
       community: false,
@@ -702,7 +711,7 @@ const useSearch = (
         hashtags: aggregateUniqueValues(data?.data?.collectionCreateds, "tags"),
         colors: aggregateUniqueValues(data?.data?.collectionCreateds, "colors"),
         sizes: aggregateSizes(data?.data?.collectionCreateds),
-        communities: community?.data?.communityCreateds?.(
+        communities: community?.data?.communityCreateds?.map?.(
           (item: { name: string; cover: string; communityId: string }) => {
             return [item.name, item.cover, item.communityId];
           }

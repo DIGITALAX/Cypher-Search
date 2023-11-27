@@ -29,7 +29,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
 }): JSX.Element => {
   const profilePicture = createProfilePicture(itemData?.metadata?.picture);
   return (
-    <div className="relative w-full min-h-[50rem] flex items-center justify-start flex-col pt-32 px-12 gap-7 h-fit">
+    <div className="relative w-full min-h-[50rem] flex items-center justify-start flex-col  pt-52 sm:pt-40 md:pt-32 px-12 gap-7 h-fit">
       <div className="relative w-full h-fit flex gap-2 flex-row items-center justify-center">
         <div className="relative w-20 h-20 ml-auto text-4xl text-white font-aust flex items-center justify-center">
           <div className="relative w-fit h-fit flex items-center justify-center">

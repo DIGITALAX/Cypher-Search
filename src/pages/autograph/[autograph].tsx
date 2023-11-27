@@ -29,6 +29,8 @@ import useCreate from "@/components/Autograph/hooks/useCreate";
 import useConversations from "@/components/Autograph/hooks/useConversations";
 import useDrop from "@/components/Autograph/hooks/useDrop";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
+import Image from "next/legacy/image";
+import { INFURA_GATEWAY } from "../../../lib/constants";
 
 const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   router,
@@ -232,15 +234,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setSearchCollection,
     editDrop,
     deleteDrop,
-  } = useDrop(
-    screenDisplay,
-    publicClient,
-    dispatch,
-    address,
-    isDesigner,
-    profile,
-    lensConnected
-  );
+  } = useDrop(publicClient, dispatch, address, profile);
   const {
     setCollectionDetails,
     setCreateCase,
@@ -387,7 +381,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     }, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [profileLoading]);
+  }, [profileLoading, feedLoading, galleryLoading]);
 
   if (!profileLoading && !globalLoading && !feedLoading && !galleryLoading) {
     return (
@@ -759,6 +753,17 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   dispatch={dispatch}
                   allDrops={allDrops}
                 />
+                <div
+                  className="absolute w-[60vw] h-[30rem] lg:h-[50rem] bottom-0 items-end justify-center opacity-20 hidden sm:flex mb-auto mr-auto right-0"
+                  draggable={false}
+                >
+                  <Image
+                    layout="fill"
+                    src={`${INFURA_GATEWAY}/ipfs/QmV4yM96Dt2ypLN9GMHkXPTkeCGfTQfJErJLfVjikxt52s`}
+                    draggable={false}
+                    objectFit="contain"
+                  />
+                </div>
               </div>
             </div>
           )

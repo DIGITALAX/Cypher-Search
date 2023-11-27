@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon } from "viem/chains";
+import { polygonMumbai } from "viem/chains";
 import { Publication } from "../types/tiles.types";
 import {
   Mirror,
@@ -44,7 +44,7 @@ const useTiles = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -104,7 +104,7 @@ const useTiles = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 

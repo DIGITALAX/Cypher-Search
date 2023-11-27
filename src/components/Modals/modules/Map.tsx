@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 
 const Map: FunctionComponent<MapProps> = ({
   dispatch,
@@ -43,13 +44,18 @@ const Map: FunctionComponent<MapProps> = ({
               }
               position={[40.7477249, -73.9903851]}
               eventHandlers={{
-                click: () =>
+                click: () => {
+                  if (filterValues?.fulfiller != "the manufactory") {
+                    dispatch(setFilterChange(true));
+                  }
+
                   dispatch(
                     setFilter({
                       ...filterValues,
                       fulfiller: "the manufactory",
                     })
-                  ),
+                  );
+                },
               }}
             >
               <Popup className="bg-offBlack border border-white text-white">

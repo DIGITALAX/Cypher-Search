@@ -59,7 +59,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                       return (
                         <div
                           key={index}
-                          className={`relative w-20 h-20 rounded-sm p-px flex animate-pulse items-center justify-center`}
+                          className={`relative w-60 h-60 rounded-sm p-px flex animate-pulse items-center justify-center`}
                           id="pfp"
                         ></div>
                       );
@@ -72,6 +72,11 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                         ]
                     )
                       ?.sort(() => Math.random() - 0.5)
+                      ?.filter((item) =>
+                        item?.title
+                          ?.toLowerCase()
+                          ?.includes(itemSearch?.toLowerCase())
+                      )
                       ?.map(
                         (
                           item: {
@@ -84,9 +89,10 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                           return (
                             <div
                               key={index}
-                              className={`relative w-20 h-20 rounded-sm p-px flex cursor-pointer ${
+                              className={`relative w-60 h-60 rounded-sm p-px flex cursor-pointer ${
                                 item?.collectionId ===
-                                selectedItem?.collectionId
+                                  selectedItem?.collectionId &&
+                                "border-2 border-white"
                               }`}
                               id="pfp"
                               onClick={() =>
@@ -96,7 +102,9 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                               <div className="relative w-full h-full rounded-sm">
                                 <Image
                                   layout="fill"
-                                  src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
+                                  src={`${INFURA_GATEWAY}/ipfs/${
+                                    item?.images?.[0]?.split("ipfs://")?.[1]
+                                  }`}
                                   className="rounded-sm"
                                   objectFit="cover"
                                   onError={(e) => handleImageError(e)}

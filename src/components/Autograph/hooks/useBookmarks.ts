@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createWalletClient, custom, PublicClient } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygonMumbai } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensComment from "../../../../lib/helpers/api/commentPost";
 import lensLike from "../../../../lib/helpers/api/likePost";
@@ -15,6 +15,7 @@ import {
   Quote,
   Comment,
   Profile,
+  PublicationStats,
 } from "../../../../graphql/generated";
 import bookmarks from "../../../../graphql/lens/queries/bookmarks";
 import { MakePostComment, ScreenDisplay } from "../types/autograph.types";
@@ -183,7 +184,7 @@ const useBookmarks = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -256,7 +257,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -267,16 +268,26 @@ const useBookmarks = (
         publicClient
       );
 
-      updateInteractions(index, {
-        hasMirrored: true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasMirrored: true,
+        },
+        "mirrors",
+        true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasReacted: true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasMirrored: true,
+            },
+            "mirrors",
+            true
+          ),
         dispatch
       );
     }
@@ -301,16 +312,26 @@ const useBookmarks = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
-      updateInteractions(index, {
-        hasReacted: hasReacted ? false : true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasReacted: hasReacted ? false : true,
+        },
+        "reactions",
+        hasReacted ? false : true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasReacted: hasReacted ? false : true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasReacted: hasReacted ? false : true,
+            },
+            "reactions",
+            hasReacted ? false : true
+          ),
         dispatch
       );
     }
@@ -336,7 +357,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -349,24 +370,34 @@ const useBookmarks = (
         publicClient
       );
 
-      updateInteractions(index, {
-        hasActed: {
-          __typename: "OptimisticStatusResult",
-          isFinalisedOnchain: true,
-          value: true,
+      updateInteractions(
+        index,
+        {
+          hasActed: {
+            __typename: "OptimisticStatusResult",
+            isFinalisedOnchain: true,
+            value: true,
+          },
         },
-      });
+        "countOpenActions",
+        true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasActed: {
-              __typename: "OptimisticStatusResult",
-              isFinalisedOnchain: true,
-              value: true,
+          updateInteractions(
+            index,
+            {
+              hasActed: {
+                __typename: "OptimisticStatusResult",
+                isFinalisedOnchain: true,
+                value: true,
+              },
             },
-          }),
+            "countOpenActions",
+            true
+          ),
         dispatch
       );
     }
@@ -404,16 +435,26 @@ const useBookmarks = (
     });
     try {
       await lensBookmark(on, dispatch);
-      updateInteractions(index, {
-        hasBookmarked: true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasBookmarked: true,
+        },
+        "bookmarks",
+        true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasBookmarked: true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasBookmarked: true,
+            },
+            "bookmarks",
+            true
+          ),
         dispatch
       );
     }
@@ -442,7 +483,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -484,7 +525,7 @@ const useBookmarks = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -519,7 +560,7 @@ const useBookmarks = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -577,7 +618,12 @@ const useBookmarks = (
     }
   }, [allBookmarks?.length]);
 
-  const updateInteractions = (index: number, valueToUpdate: Object) => {
+  const updateInteractions = (
+    index: number,
+    valueToUpdate: Object,
+    statToUpdate: string,
+    increase: boolean
+  ) => {
     const newItems = [...allBookmarks];
     newItems[index] = (
       newItems[index]?.__typename === "Mirror"
@@ -589,6 +635,13 @@ const useBookmarks = (
                 ...(newItems[index] as Post).operations,
                 ...valueToUpdate,
               },
+              stats: {
+                ...(newItems[index] as Post).stats,
+                [statToUpdate]:
+                  (newItems[index] as Post).stats?.[
+                    statToUpdate as keyof PublicationStats
+                  ] + (increase ? 1 : -1),
+              },
             },
           }
         : {
@@ -596,6 +649,13 @@ const useBookmarks = (
             operations: {
               ...(newItems[index] as Post).operations,
               ...valueToUpdate,
+            },
+            stats: {
+              ...(newItems[index] as Post).stats,
+              [statToUpdate]:
+                (newItems[index] as Post).stats?.[
+                  statToUpdate as keyof PublicationStats
+                ] + (increase ? 1 : -1),
             },
           }
     ) as Post & {

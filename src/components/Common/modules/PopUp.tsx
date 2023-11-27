@@ -1,6 +1,6 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { INFURA_GATEWAY, itemTypeToString } from "../../../../lib/constants";
 import { PopUpProps } from "../types/common.types";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
@@ -86,7 +86,9 @@ const PopUp: FunctionComponent<PopUpProps> = ({
       </div>
       <div
         className="relative flex w-8 h-8 items-center justify-center rounded-full cursor-pointer active:scale-95 hover:opacity-70"
-        onClick={() => router.push(`/item/${type}/${cartItem?.pubId}`)}
+        onClick={() =>
+          router.push(`/item/${itemTypeToString[type]}/${cartItem?.pubId}`)
+        }
         title="View Item"
       >
         <Image

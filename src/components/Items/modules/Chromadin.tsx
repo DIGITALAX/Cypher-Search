@@ -18,6 +18,8 @@ import { Comment } from "../../../../graphql/generated";
 import Publication from "@/components/Autograph/modules/Publication";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import { setImageViewer } from "../../../../redux/reducers/ImageLargeSlice";
+import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   itemData,
@@ -84,14 +86,17 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   caretCoord,
   setCaretCoord,
   setCaretCoordMain,
+  hoverPrompt,
+  setHoverPrompt,
+  allSearchItems,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.profile?.metadata?.picture
   );
   return (
-    <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-row pt-32 px-12 gap-7 h-fit">
+    <div className="relative w-full h-fit xl:h-[50rem] flex items-center justify-center flex-row pt-52 sm:pt-40 tablet:pt-32 px-2 sm:px-12 gap-12 xl:gap-7 flex-wrap xl:flex-nowrap">
       <div className="relative w-full h-full flex items-center justify-center">
-        <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] h-full">
+        <div className="relative flex flex-col gap-2 items-center justify-center w-full sm:w-[40rem] h-full">
           <InteractBar
             mirror={mirror}
             like={like}
@@ -101,18 +106,17 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             setOpenMirrorChoice={setMainOpenMirrorChoice}
             simpleCollect={undefined}
             index={0}
-            type={undefined}
-            hideCollect={true}
+            hideCollect
             dispatch={dispatch}
             router={router}
             comment={() => setCommentSwitch(!commentSwitch)}
-            main={true}
+            main
             handleBookmark={handleBookmark}
             handleHidePost={handleHidePost}
-            showOthers={true}
+            showOthers
           />
           <div
-            className={`relative p-3 bg-black flex justify-center w-full h-fit ${
+            className={`relative p-3 bg-black flex justify-center w-full h-[25rem] pre:h-[30rem] ${
               commentSwitch ? "items-start" : "items-center"
             } ${allCommentsLoading && "overflow-y-scroll"}`}
           >
@@ -130,7 +134,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   })}
                 </div>
               ) : (
-                <div className="relative w-5/6 h-fit flex flex-col gap-10 justify-start items-center">
+                <div className="relative w-5/6 h-full flex flex-col gap-10 justify-start items-center">
                   <PostComment
                     setCaretCoord={setCaretCoordMain}
                     caretCoord={caretCoordMain}
@@ -155,13 +159,13 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     main={true}
                   />
                   {allComments?.length > 0 ? (
-                    <div className="relative w-full h-[37rem] flex items-start justify-center overflow-y-scroll">
+                    <div className="relative w-full h-[20rem] flex items-start justify-center overflow-y-scroll">
                       <InfiniteScroll
                         next={handleMoreComments}
                         hasMore={hasMoreComments}
                         dataLength={allComments?.length}
                         loader={<></>}
-                        className="w-fit h-fit items-center justify-start flex flex-col gap-10"
+                        className="w-full sm:w-fit h-fit items-center justify-start flex flex-col gap-10"
                       >
                         {allComments?.map(
                           (
@@ -224,9 +228,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 </div>
               )
             ) : (
-              <div className="flex items-center justify-center w-full h-full bg-amo/30">
-                {itemData?.images?.length > 0 && (
-                  <div className="absolute left-5 top-5 w-fit h-fit flex flex-row items-center justify-center gap-1.5">
+              <div className="flex items-center justify-center w-full h-full bg-amo/30 p-1">
+                {itemData?.images?.length > 1 && (
+                  <div className="absolute z-1 left-5 top-5 w-fit h-fit flex flex-row items-center justify-center gap-1.5">
                     <div
                       className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
                       onClick={() =>
@@ -246,7 +250,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                       />
                     </div>
                     <div
-                      className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
+                      className="relative  w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
                       onClick={() =>
                         setPurchaseDetails((prev) => ({
                           ...prev,
@@ -265,12 +269,14 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 )}
                 <div
                   title={type}
-                  className="w-5 h-5 absolute right-5 top-5 rounded-full flex border border-white"
+                  className="w-5 h-5 z-1 absolute right-5 top-5 rounded-full flex border border-white bg-offBlack"
+                  onMouseOver={() => itemData?.prompt && setHoverPrompt(true)}
                 >
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/${
-                      filterConstants?.origin?.map(
-                        (item) => item[0]?.toLowerCase()?.trim() === type
+                      filterConstants?.origin?.find(
+                        (item) =>
+                          item[0]?.toLowerCase()?.trim() === type?.toLowerCase()
                       )?.[1]
                     }`}
                     onError={(e) => handleImageError(e)}
@@ -280,7 +286,34 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     className="rounded-full"
                   />
                 </div>
-                {
+                {hoverPrompt && (
+                  <div
+                    onMouseOut={() => setHoverPrompt(false)}
+                    className="absolute top-5 right-5 w-60 h-60 rounded-sm border border-white bg-offBlack/90 overflow-y-scroll text-white font-bit text-xs p-2 items-start justify-start z-10"
+                  >
+                    {itemData?.prompt}
+                  </div>
+                )}
+                <div
+                  className={`relative w-full h-full flex items-center justify-center ${
+                    !itemData?.video && !itemData.audio && "cursor-pointer"
+                  }`}
+                  onClick={() =>
+                    !itemData?.video &&
+                    !itemData.audio &&
+                    dispatch(
+                      setImageViewer({
+                        actionValue: true,
+                        actionImage: `${INFURA_GATEWAY}/ipfs/${
+                          itemData?.images?.[
+                            purchaseDetails?.imageIndex
+                          ]?.split("ipfs://")?.[1]
+                        }`,
+                        actionType: "png",
+                      })
+                    )
+                  }
+                >
                   <MediaSwitch
                     type={
                       itemData?.video
@@ -291,26 +324,31 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     }
                     srcUrl={
                       itemData?.video
-                        ? `${INFURA_GATEWAY}/ipfs/${itemData?.video}`
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            itemData?.video?.split("ipfs://")?.[1]
+                          }`
                         : itemData?.audio
-                        ? itemData?.audio
-                        : `${INFURA_GATEWAY}/ipfs/${itemData?.images?.[0]}`
+                        ? itemData?.audio?.split("ipfs://")?.[1]
+                        : `${INFURA_GATEWAY}/ipfs/${
+                            itemData?.images?.[0]?.split("ipfs://")?.[1]
+                          }`
                     }
                     srcCover=""
                     classNameVideo={
-                      "object-cover flex items-center justify-center"
+                      "object-cover flex items-center justify-center relative"
                     }
+                    classNameImage="flex items-center justify-center w-full h-full relative"
                     objectFit="contain"
                   />
-                }
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
-      <div className="relative w-full h-full flex items-end justify-start ml-auto flex-col gap-12">
-        <div className="relative w-full h-full flex items-end justify-start ml-auto flex-col gap-4">
-          <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-words text-5xl mt-0">
+      <div className="relative w-full h-fit flex items-center sm:items-end justify-start ml-auto flex-col gap-12">
+        <div className="relative w-full h-full flex items-center sm:items-end justify-start ml-auto flex-col gap-4">
+          <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-5xl mt-0">
             {itemData?.title}
           </div>
           <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-center justify-center">
@@ -350,7 +388,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     <Image
                       layout="fill"
                       draggable={false}
-                      src={`${INFURA_GATEWAY}/ipfs/${itemData?.microbrandCover}`}
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        itemData?.microbrandCover?.split("ipfs://")?.[1]
+                      }`}
                       onError={(e) => handleImageError(e)}
                       objectFit="cover"
                       className="rounded-full"
@@ -363,20 +403,30 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               </div>
             )}
           </div>
-          <div className="relative flex items-end w-fit h-fit justify-end items-center text-sol font-bit justify-center flex-col gap-1.5 ml-auto">
-            <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
-              {Number(itemData?.amount) - Number(itemData?.soldTokens) > 0
-                ? `${Number(itemData?.amount)}/${Number(itemData?.soldTokens)}`
+          <div className="relative flex items-center sm:items-end w-fit h-fit justify-end text-sol font-bit justify-center flex-col gap-1.5 sm:ml-auto">
+            <div className="relative w-full h-fit items-center sm:items-end justify-end text-base ml-auto">
+              {Number(itemData?.amount) - Number(itemData?.soldTokens) > 0 ||
+              !itemData?.soldTokens
+                ? `${
+                    itemData?.soldTokens
+                      ? Number(itemData?.soldTokens)
+                      : Number(itemData?.amount)
+                  }/${Number(itemData?.amount)}`
                 : "SOLD OUT"}
             </div>
           </div>
-          <div className="relative w-full h-fit flex font-bit text-xxs text-white">
-            <div className="relative w-1/2 h-fit flex flex-wrap items-end justify-end ml-auto gap-3">
+          <div className="relative w-fit h-fit flex items-start justify-center sm:justify-end font-aust text-white break-words text-xs text-center sm:text-right mt-0 max-h-[6rem] overflow-y-scroll">
+            <div className="relative w-5/6 h-fit flex items-start justiy-center sm:justify-end">
+              {itemData?.description}
+            </div>
+          </div>
+          <div className="relative w-full h-fit flex font-bit text-xxs text-white justify-center items-center sm:justify-end">
+            <div className="relative w-1/2 max-h-[6rem] overflow-y-scroll h-fit flex flex-wrap items-center sm:items-end justify-center sm:justify-end sm:ml-auto gap-3">
               {itemData?.tags?.map((tag: string, index: number) => {
                 return (
                   <div
                     key={index}
-                    className="relative w-fit h-fit px-2 py-1 rounded-full flex items-center justify-center text-center"
+                    className="relative w-fit h-fit px-2 py-1 rounded-full flex items-center justify-center text-center cursor-pointer hover:opacity-80"
                     style={{
                       backgroundColor:
                         index % 3 === 0
@@ -385,6 +435,19 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           ? "#FFDCFF"
                           : "#81A8F8",
                     }}
+                    onClick={() =>
+                      dispatch(
+                        setAllSearchItems({
+                          actionItems: allSearchItems?.items,
+                          actionInput: allSearchItems?.searchInput + " " + tag,
+                          actionLensPubCursor: allSearchItems?.lensPubCursor,
+                          actionGraphCursor: allSearchItems?.graphCursor,
+                          actionLensProfileCursor:
+                            allSearchItems?.lensProfileCursor,
+                          actionHasMore: allSearchItems?.hasMore,
+                        })
+                      )
+                    }
                   >
                     <div className="relative w-fit h-fit flex top-px">
                       {tag}
@@ -394,7 +457,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               })}
             </div>
           </div>
-          <div className="relative justify-end items-end flex w-1/2 h-fit flex flex-row ml-auto gap-3">
+          <div className="relative justify-center sm:justify-end items-end flex w-1/2 h-fit flex flex-row sm:ml-auto gap-3">
             {filterConstants?.access
               ?.filter((item: string[]) => itemData?.access?.includes(item[0]))
               ?.map((item: string[], index: number) => {
@@ -417,25 +480,31 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               })}
           </div>
         </div>
-        <div className="relative w-full h-full flex items-end justify-start flex-col gap-3 mt-auto">
-          <div className="flex flex-col gap-2 items-end justify-start relative">
-            <div className="relative text-5xl font-bit w-fit h-fit text-sol font-bit">
+        <div className="relative w-full h-full flex items-center sm:items-end justify-start flex-col gap-3 mt-auto">
+          <div className="flex flex-col gap-2 items-center sm:items-end justify-start relative">
+            <div className="relative text-2xl font-bit w-fit h-fit text-sol font-bit items-center justify-center">
               {`${Number(
                 (
-                  Number(itemData?.prices?.[0]) /
+                  (Number(itemData?.prices?.[0]) * 10 ** 18) /
                   Number(
                     oracleData?.find(
                       (oracle) =>
-                        oracle.currency ===
+                        oracle.currency?.toLowerCase() ===
                         itemData?.acceptedTokens?.find(
-                          (item) => item[2] === purchaseDetails?.currency
-                        )?.[2]
+                          (item) =>
+                            item?.toLowerCase() ===
+                            purchaseDetails?.currency?.toLowerCase()
+                        )
                     )?.rate
                   )
                 )?.toFixed(3)
               )} ${
-                itemData?.acceptedTokens?.find(
-                  (item) => item[2] === purchaseDetails?.currency
+                ACCEPTED_TOKENS_MUMBAI?.filter((item) =>
+                  itemData?.acceptedTokens?.includes(item?.[2]?.toLowerCase())
+                )?.find(
+                  (item) =>
+                    item?.[2]?.toLowerCase() ===
+                    purchaseDetails?.currency?.toLowerCase()
                 )?.[1]
               }`}
             </div>
@@ -460,7 +529,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                       <Image
                         src={`${INFURA_GATEWAY}/ipfs/${
                           ACCEPTED_TOKENS_MUMBAI?.find(
-                            (value) => value[2] == item
+                            (value) =>
+                              value[2]?.toLowerCase() == item?.toLowerCase()
                           )?.[0]
                         }`}
                         onError={(e) => handleImageError(e)}
@@ -540,7 +610,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         <div className="relative w-fit h-fit flex items-center justify-center flex-row gap-6 justify-end items-end">
           {type == "chromadin" && (
             <div
-              className={`relative w-36 text-sm h-10 rounded-sm flex items-center justify-center border border-white text-black font-bit bg-sol px-2 py-1 ${
+              className={`relative w-32 text-sm h-8 rounded-sm flex items-center justify-center border border-white text-black font-bit text-xs bg-sol px-2 py-1 ${
                 !lensConnected?.id
                   ? "opacity-70"
                   : "cursor-pointer active:scale-95"
@@ -581,9 +651,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 color: purchaseDetails.color,
                 size: purchaseDetails.size,
                 purchased: false,
-                chosenIndex: itemData?.prices?.findIndex(
-                  (item) => item == purchaseDetails.price
-                ),
+                chosenIndex: purchaseDetails?.priceIndex,
               };
 
               const existingItem = cartItems?.find(

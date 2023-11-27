@@ -11,23 +11,29 @@ import handleImageError from "../../../../lib/helpers/handleImageError";
 const DropMain: FunctionComponent<DropMainProps> = ({
   collections,
   router,
-  handle,
   dispatch,
   cartItems,
 }) => {
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex-row pt-32">
-      <div className="relative w-full h-fit flex items-center justify-center">
-        <div className="relative w-fit h-fit flex items-center justify-center flex-wrap gap-5">
+    <div className="relative w-full h-fit flex items-center justify-center flex-row pt-52 sm:pt-40 md:pt-32 px-2 sm:px-10">
+      <div className="relative w-full h-fit flex items-center justify-start">
+        <div className="relative w-fit h-fit flex items-center justify-start flex-wrap gap-5">
           {collections?.map((collection: Creation, index: number) => {
             return (
               <div
                 key={index}
-                className="relative w-80 h-80 flex items-center justify-center bg-offBlack p-3 rounded-sm"
+                className="relative w-96 h-96 flex items-center justify-center bg-offBlack p-3 rounded-sm"
               >
                 <div
-                  className="relative w-full h-full rounded-sm"
+                  className="relative w-full h-full rounded-sm hover:opacity-70 cursor-pointer"
                   id="staticLoad"
+                  onClick={() =>
+                    router.push(
+                      `/item/${
+                        numberToItemTypeMap[Number(collection?.origin)]
+                      }/${collection?.title?.replaceAll(" ", "_")}`
+                    )
+                  }
                 >
                   {collection?.images && (
                     <Image
@@ -42,16 +48,18 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                     />
                   )}
                 </div>
-                <div className="absolute bottom-0 right-0 w-full h-10 bg-offBlack flex items-center justify-between px-3">
+                <div className="absolute bottom-0 right-0 w-full h-12 bg-offBlack flex items-center justify-between px-3">
                   <div className="relative w-fit h-fit flex items-center justify-start text-sm font-bit text-white top-px">
-                    {collection?.title?.slice(0, 20) + "..."}
+                    {collection?.title?.length > 20
+                      ? collection?.title?.slice(0, 20) + "..."
+                      : collection?.title}
                   </div>
                   <div className="relative flex flex-row gap-2 ml-auto items-center justify-center">
                     <div className="relative w-fit h-fit flex items-center justify-start text-sm font-bit text-white top-px">
-                      ${collection?.prices?.[0]}
+                      ${Number(collection?.prices?.[0]) / 10 ** 18}
                     </div>
                     <div
-                      className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95"
+                      className="relative w-6 h-6 justify-end flex items-center cursor-pointer active:scale-95"
                       title="Add to Cart"
                       onClick={() => {
                         const newItem = {
@@ -102,21 +110,6 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                         draggable={false}
                         layout="fill"
                         src={`${INFURA_GATEWAY}/ipfs/QmZ4v5pzdnCBeyKnS9VrjZiEAbUpAVy8ECArNcpxBt6Tw4`}
-                      />
-                    </div>
-                    <div
-                      className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95"
-                      title="Go to Drop"
-                      onClick={() =>
-                        router.push(
-                          `/autograph/${handle}/drop/${collection?.title}`
-                        )
-                      }
-                    >
-                      <Image
-                        draggable={false}
-                        layout="fill"
-                        src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
                       />
                     </div>
                   </div>

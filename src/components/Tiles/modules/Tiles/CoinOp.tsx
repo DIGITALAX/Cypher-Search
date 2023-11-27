@@ -44,7 +44,6 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
         index={index}
         publication={publication?.publication}
         simpleCollect={undefined}
-        type={undefined}
         dispatch={dispatch}
         router={router}
       />

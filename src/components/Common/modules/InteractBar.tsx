@@ -5,7 +5,7 @@ import { InteractBarProps } from "../types/common.types";
 import numeral from "numeral";
 import { AiOutlineLoading } from "react-icons/ai";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
-import { Post } from "../../../../graphql/generated";
+import { ImageMetadataV3, Post } from "../../../../graphql/generated";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import collectLogic from "../../../../lib/helpers/collectLogic";
@@ -41,12 +41,13 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   handleHidePost,
   handleBookmark,
   display,
+  gallery,
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-full h-fit rounded-sm border border-frio text-base font-vcr text-mar flex gap-4 p-2 items-center justify-center bg-fuego ${
+      className={`relative w-full h-fit rounded-sm border border-frio font-vcr text-mar flex gap-4 p-2 items-center justify-center bg-fuego ${
         col || layoutAmount ? "flex-col" : "flex-row"
-      }`}
+      } ${gallery || display ? "text-xxs" : "text-base"}`}
     >
       {(
         [
@@ -75,7 +76,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
               return choices;
             }),
           () =>
-            display
+            display && !gallery
               ? (
                   like as (
                     index: number,
@@ -133,6 +134,16 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 ),
           comment
             ? () => comment()
+            : display
+            ? () =>
+                router.push(
+                  `/item/${display}/${(
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
             : () => router.push(`/item/pub/${publication?.id}`),
           showOthers
             ? () =>
@@ -233,7 +244,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
           >
             <div
               className={`relative w-fit h-fit flex items-center justify-center ${
-                responded?.[indexTwo] && "mix-blend-hard-light"
+                responded?.[indexTwo] && "mix-blend-hard-light hue-rotate-60"
               } ${
                 (publication?.__typename === "Mirror"
                   ? publication?.mirrorOn
@@ -252,11 +263,16 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             >
               {loaders[indexTwo] ? (
                 <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
-                  <AiOutlineLoading size={15} color="white" />
+                  <AiOutlineLoading
+                    size={gallery || display ? 12 : 15}
+                    color="white"
+                  />
                 </div>
               ) : (
                 <div
-                  className={`relative w-4 h-4 flex items-center justify-center ${
+                  className={`relative ${
+                    gallery || display ? "w-3 h-3" : "w-4 h-4"
+                  } flex items-center justify-center ${
                     functions[indexTwo]
                       ? "cursor-pointer active:scale-95"
                       : "opacity-70"
@@ -360,13 +376,16 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
               >
                 {loaders[indexTwo] ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
-                    <AiOutlineLoading size={15} color="white" />
+                    <AiOutlineLoading
+                      size={gallery || display ? 12 : 15}
+                      color="white"
+                    />
                   </div>
                 ) : (
                   <div
-                    className={
-                      "relative w-4 h-4 flex items-center justify-center cursor-pointer active:scale-95"
-                    }
+                    className={`relative ${
+                      gallery || display ? "w-3 h-3" : "w-4 h-4"
+                    } flex items-center justify-center cursor-pointer active:scale-95`}
                   >
                     <Image
                       layout="fill"

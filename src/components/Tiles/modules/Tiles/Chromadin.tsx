@@ -46,7 +46,6 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         index={index}
         publication={publication?.publication}
         simpleCollect={undefined}
-        type={undefined}
         dispatch={dispatch}
         router={router}
       />

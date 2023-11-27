@@ -11,6 +11,8 @@ const COLLECTIONS = `
       pubId
       prompt
       profileId
+      acceptedTokens
+      visibility
       profileHandle
       printType
       prices

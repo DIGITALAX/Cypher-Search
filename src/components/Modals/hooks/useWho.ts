@@ -68,7 +68,7 @@ const useWho = (
       );
 
       setReactors(mirrorData?.data?.publications?.items || []);
-      setPageInfo(mirrordata?.data?.publications.pageInfo.next);
+      setPageInfo(mirrorData?.data?.publications.pageInfo.next);
       if (
         !mirrorData?.data?.publications?.items ||
         mirrorData?.data?.publications?.items?.length < 10
@@ -99,7 +99,7 @@ const useWho = (
         setHasMoreQuote(true);
       }
       setQuoters(quoteData?.data?.publications?.items);
-      setPageInfoQuote(quotedata?.data?.publications.pageInfo.next);
+      setPageInfoQuote(quoteData?.data?.publications.pageInfo.next);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -340,7 +340,7 @@ const useWho = (
           ...reactors,
           ...(mirrorData?.data?.publications?.items || []),
         ]);
-        setPageInfo(mirrordata?.data?.publications.pageInfo.next);
+        setPageInfo(mirrorData?.data?.publications.pageInfo.next);
 
         if (
           !mirrorData?.data?.publications?.items ||
@@ -369,7 +369,7 @@ const useWho = (
           ...quoters,
           ...(quoteData?.data?.publications?.items || []),
         ]);
-        setPageInfoQuote(quotedata?.data?.publications.pageInfo.next);
+        setPageInfoQuote(quoteData?.data?.publications.pageInfo.next);
 
         if (
           !quoteData?.data?.publications?.items ||

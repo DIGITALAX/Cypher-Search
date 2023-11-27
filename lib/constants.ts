@@ -3,26 +3,26 @@ import { PrintType } from "@/components/Tiles/types/tiles.types";
 
 export const CHROMADIN_ID: string = "0x01c6a9";
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
-export const BASE_URL: string = "https://api-v2.lens.dev/";
+export const BASE_URL: string = "https://api-v2-mumbai-live.lens.dev/";
 export const DIGITALAX_PROFILE_ID_LENS: string = "0x012d";
 export const LENS_HUB_PROXY_ADDRESS_MUMBAI: `0x${string}` =
   "0xC1E77eE73403B8a7478884915aA599932A677870";
 export const LENS_HUB_PROXY_ADDRESS_MATIC: `0x${string}` =
   "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d";
 export const NFT_CREATOR_ADDRESS: `0x${string}` =
-  "0x3Bb3157F4af00BA61A562A0Ffe9cBfd07388d2b1";
+  "0xc9C77d0ad2E881397b2Ad5f38Aa20bDb04A5c35c";
 export const CHROMADIN_OPEN_ACTION: `0x${string}` =
-  "0xEf7a24F490496f9f88078D7C4e7Ce6B8c757859F";
+  "0x35EB473bc7df000D5730d289D6b695217d5470C4";
 export const LISTENER_OPEN_ACTION: `0x${string}` =
-  "0xeA2B9375910dd3032b514Daefd8061f545aa62B3";
+  "0x565eCEd13C8c93Dd204bb4A3C6852f5F8A97Ad12";
 export const COIN_OP_OPEN_ACTION: `0x${string}` =
-  "0x6A1878895AE23375f678dE7E9582F03Aa33c8A80";
+  "0xff67A1a26CC6a9Cf8CEc5Bf55F7EBFfEA99D56D0";
 export const LEGEND_OPEN_ACTION: `0x${string}` =
   "0xb998D9FdE369327B23f471416070d4E70315B30D";
 export const PRINT_ACCESS_CONTROL: `0x${string}` =
-  "0xCF96CeeB6745a9374A8391ED51aF02CddFFacAf4";
+  "0xd140356e35930a15943757A276D72487E7e77746";
 export const COLLECTION_CREATOR: `0x${string}` =
-  "0x15448744C11Ee4C8974018B7e7183435187E0Fa1";
+  "0xb40009a0aEAe4d01a539E8Acd56A6893F65c19d3";
 export const DIGITALAX_ADDRESS: `0x${string}` =
   "0xAA3e5ee4fdC831e5274FE7836c95D670dC2502e6";
 export const ZERO_ADDRESS: `0x${string}` =

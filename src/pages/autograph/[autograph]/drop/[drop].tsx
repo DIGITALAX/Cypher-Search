@@ -36,6 +36,9 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const filterConstants = useSelector(
     (state: RootState) => state.app.filterConstantsReducer.items
   );
+  const filterChange = useSelector(
+    (state: RootState) => state.app.filterChangeReducer.change
+  );
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );
@@ -151,7 +154,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     }, 1000);
 
     return () => clearTimeout(timeoutId);
-  }, [profileLoading]);
+  }, [profileLoading, dropLoading]);
 
   if (!profileLoading && !globalLoading && !dropLoading) {
     return (
@@ -186,7 +189,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
             >
               <Head>
                 <title>
-                  {(drop as string)?.toUpperCase()} |{" "}
+                  {(drop as string)?.replaceAll("_", " ")?.toUpperCase()} |{" "}
                   {profile?.handle?.localName?.toUpperCase()}
                 </title>
                 <meta
@@ -323,6 +326,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
                 moreSearchLoading={loaders?.moreSuggestedLoading}
                 searchItems={suggestedFeed}
@@ -330,11 +334,6 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 component={
                   <DropMain
                     collections={collections}
-                    handle={
-                      profile?.handle?.suggestedFormatted?.localName?.split(
-                        "@"
-                      )?.[1]!
-                    }
                     router={router}
                     dispatch={dispatch}
                     cartItems={cartItems}

@@ -3,7 +3,7 @@ import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
 import { OpenActionModuleInput, InputMaybe } from "../../../graphql/generated";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
-import { polygon, polygonMumbai } from "viem/chains";
+import {  polygonMumbai } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
@@ -37,17 +37,10 @@ const lensPost = async (
     rawURI: contentURI,
   });
 
-  console.log({ metadata });
-
   if (!metadata?.data?.validatePublicationMetadata.valid) {
     dispatch(setInteractError(true));
     return;
   }
-
-  console.log({
-    contentURI,
-    openActionModules,
-  });
 
   const data = await postOnChain({
     contentURI,
@@ -55,8 +48,6 @@ const lensPost = async (
   });
 
   const typedData = data?.data?.createOnchainPostTypedData?.typedData;
-
-  console.log({data})
 
   const signature = await clientWallet.signTypedData({
     domain: omit(typedData?.domain, ["__typename"]),
@@ -70,8 +61,6 @@ const lensPost = async (
     id: data?.data?.createOnchainPostTypedData?.id,
     signature,
   });
-
-  console.log({ broadcastResult });
 
   if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
     dispatch(
@@ -92,7 +81,7 @@ const lensPost = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "post",
-      chain: polygon,
+      chain: polygonMumbai,
       args: [
         {
           profileId: typedData?.value.profileId,

@@ -22,6 +22,9 @@ import getProfiles from "../../../../graphql/lens/queries/profiles";
 import {
   ACCEPTED_TOKENS_MUMBAI,
   CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  LEGEND_OPEN_ACTION,
+  LISTENER_OPEN_ACTION,
   itemStringToType,
   numberToItemTypeMap,
   numberToPrintType,
@@ -30,7 +33,6 @@ import { PurchaseDetails } from "../types/item.types";
 import { OracleData } from "@/components/Checkout/types/checkout.types";
 import { CartItem } from "@/components/Common/types/common.types";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { ethers } from "ethers";
 import { polygon, polygonMumbai } from "viem/chains";
 import encodeActData from "../../../../lib/helpers/encodeActData";
 import actPost from "../../../../lib/helpers/api/actPost";
@@ -38,6 +40,7 @@ import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSl
 import { AnyAction, Dispatch } from "redux";
 import { NextRouter } from "next/router";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 
 const useItem = (
   type: string,
@@ -69,17 +72,55 @@ const useItem = (
     size: "",
     price: "",
     imageIndex: 0,
+    priceIndex: 0,
   });
 
   const getItemData = async () => {
     setItemLoading(true);
     try {
       let pub: Post | Mirror | Comment | Quote;
-      switch (type) {
+      switch (type?.toLowerCase()) {
         case "chromadin":
+        case "listener":
         case "coinop":
+          const coll = (await getCollection(
+            id?.replaceAll("_", " ")
+          )) as Creation;
+
+          pub = (await getPub(
+            `${"0x" + toHexWithLeadingZero(Number(coll?.profileId))}-${
+              "0x" + toHexWithLeadingZero(Number(coll?.pubId))
+            }`
+          )) as Post;
+
+          setItemData({
+            post: coll
+              ? {
+                  ...coll,
+                  profile: pub?.by,
+                  publication: {
+                    ...pub,
+                    decrypted: undefined,
+                  },
+                }
+              : {
+                  ...pub,
+                  decrypted: undefined,
+                },
+            type,
+          });
+          setPurchaseDetails({
+            color: coll?.colors?.[0],
+            currency: coll?.acceptedTokens?.[0],
+            size: coll?.sizes?.[0],
+            price: coll?.prices?.[0],
+            imageIndex: 0,
+            priceIndex: 0,
+          });
+          break;
+
         case "pub":
-          pub = (await getPub()) as Post;
+          pub = (await getPub(id)) as Post;
           const collection = (await getCollection(
             (pub?.metadata as ImageMetadataV3)?.title
           )) as Creation;
@@ -105,6 +146,7 @@ const useItem = (
             size: collection?.sizes?.[0],
             price: collection?.prices?.[0],
             imageIndex: 0,
+            priceIndex: 0,
           });
           break;
 
@@ -148,7 +190,9 @@ const useItem = (
   const getIdProfile = async (): Promise<Profile | undefined> => {
     try {
       if (!filterConstants) return;
-      const item = filterConstants?.microbrands?.find((item) => item[1] === id);
+      const item = filterConstants?.microbrands?.find(
+        (item) => item[1] === id?.replaceAll("_", " ")
+      );
       const data = await getProfile(
         {
           forProfileId: item?.[3],
@@ -167,108 +211,8 @@ const useItem = (
   ): Promise<Creation[] | undefined> => {
     try {
       const data = await getCollectionsPaginated(creator, 3, 0);
-      data?.data?.collectionCreateds?.map((collection: any) => ({
-        ...collection,
-        sizes: collection?.sizes
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        colors: collection?.colors
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        mediaTypes: collection?.mediaTypes
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        access: collection?.access
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        communities: collection?.communities
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        tags: collection?.tags
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-      }));
-      return data?.data?.collectionCreateds;
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  const getCommunity = async (): Promise<Community | undefined> => {
-    try {
-      const data = await getCommunityName(id);
-
-      if (data?.data?.communityCreateds) {
-        data?.data?.communityCreateds?.map(async (item: any) => {
-          const members = await getProfiles(
-            {
-              where: {
-                profileIds: item.members,
-              },
-            },
-            lensConnected?.id
-          );
-
-          const creators = await getProfiles(
-            {
-              where: {
-                profileIds: item.validCreators,
-              },
-            },
-            lensConnected?.id
-          );
-
-          const items = (item.validCreators as string[])
-            .sort(() => 0.5 - Math.random())
-            .slice(0, Math.min(4, item.validCreators.length));
-
-          const sample = items?.map(async (item: string) => {
-            return await getIdCollections(item);
-          });
-
-          const steward = await getProfile(
-            {
-              forProfileId: item.steward,
-            },
-            lensConnected?.id
-          );
-
-          return {
-            ...item,
-            steward: steward?.data?.profile,
-            validPrintTypes: item.validPrintTypes.map(
-              (value: string) => numberToPrintType[Number(value)]
-            ),
-            sample: await Promise.all(sample),
-            validCreators: creators?.data?.profiles,
-            validOrigins: item.validOrigins.map(
-              (value: string) => numberToItemTypeMap[Number(value)]
-            ),
-            members: members?.data?.profiles,
-          };
-        });
-
-        return data?.data?.communityCreateds?.[0];
-      }
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  const getCollection = async (
-    title: string
-  ): Promise<Creation | undefined> => {
-    try {
-      const data = await getOneCollectionTitle(title);
-
-      if (data?.data?.collectionCreateds) {
-        data?.data?.collectionCreateds?.map((collection: any) => ({
+      const collections = data?.data?.collectionCreateds?.map(
+        (collection: any) => ({
           ...collection,
           sizes: collection?.sizes
             ?.split(",")
@@ -294,22 +238,131 @@ const useItem = (
             ?.split(",")
             .map((word: string) => word.trim())
             .filter((word: string) => word.length > 0),
-        }));
+        })
+      );
+      return collections;
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
 
-        return data?.data?.collectionCreateds?.[0];
+  const getCommunity = async (): Promise<Community | undefined> => {
+    try {
+      const data = await getCommunityName(id?.replaceAll("_", " "));
+
+      if (data?.data?.communityCreateds) {
+        const newCommunities = data?.data?.communityCreateds?.map(
+          async (item: any) => {
+            const members = await getProfiles(
+              {
+                where: {
+                  profileIds: item.members,
+                },
+              },
+              lensConnected?.id
+            );
+
+            const creators = await getProfiles(
+              {
+                where: {
+                  profileIds: item.validCreators,
+                },
+              },
+              lensConnected?.id
+            );
+
+            const items = (item.validCreators as string[])
+              .sort(() => 0.5 - Math.random())
+              .slice(0, Math.min(4, item.validCreators.length));
+
+            const sample = items?.map(async (item: string) => {
+              return await getIdCollections(item);
+            });
+
+            const steward = await getProfile(
+              {
+                forProfileId: item.steward,
+              },
+              lensConnected?.id
+            );
+
+            return {
+              ...item,
+              steward: steward?.data?.profile,
+              validPrintTypes: item.validPrintTypes.map(
+                (value: string) => numberToPrintType[Number(value)]
+              ),
+              sample: await Promise.all(sample),
+              validCreators: creators?.data?.profiles,
+              validOrigins: item.validOrigins.map(
+                (value: string) => numberToItemTypeMap[Number(value)]
+              ),
+              members: members?.data?.profiles,
+            };
+          }
+        );
+
+        return newCommunities?.[0];
       }
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  const getPub = async (): Promise<
-    Post | Mirror | Comment | Quote | undefined | null
-  > => {
+  const getCollection = async (
+    title: string
+  ): Promise<Creation | undefined> => {
+    try {
+      const data = await getOneCollectionTitle(title);
+
+      if (data?.data?.collectionCreateds) {
+        const collections = data?.data?.collectionCreateds?.map(
+          (collection: any) => ({
+            ...collection,
+            sizes: collection?.sizes
+              ?.split(",")
+              .map((word: string) => word.trim())
+              .filter((word: string) => word.length > 0),
+            colors: collection?.colors
+              ?.split(",")
+              .map((word: string) => word.trim())
+              .filter((word: string) => word.length > 0),
+            mediaTypes: collection?.mediaTypes
+              ?.split(",")
+              .map((word: string) => word.trim())
+              .filter((word: string) => word.length > 0),
+            access: collection?.access
+              ?.split(",")
+              .map((word: string) => word.trim())
+              .filter((word: string) => word.length > 0),
+            communities: collection?.communities
+              ?.split(",")
+              .map((word: string) => word.trim())
+              .filter((word: string) => word.length > 0),
+            tags: collection?.tags
+              ?.split(",")
+              .map((word: string) => word.trim())
+              .filter((word: string) => word.length > 0),
+            prices: collection?.prices?.map((price: string) =>
+              String(Number(price) / 10 ** 18)
+            ),
+          })
+        );
+
+        return collections?.[0];
+      }
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
+  const getPub = async (
+    forId: string
+  ): Promise<Post | Mirror | Comment | Quote | undefined | null> => {
     try {
       const { data } = await getPublication(
         {
-          forId: id,
+          forId,
         },
         lensConnected?.id
       );
@@ -324,7 +377,7 @@ const useItem = (
     setInstantLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -355,11 +408,10 @@ const useItem = (
         clientWallet,
         publicClient
       );
-
-      dispatch(setSuccessCheckout(true));
     } catch (err: any) {
       console.error(err.messgae);
     }
+    dispatch(setSuccessCheckout(true));
     setInstantLoading(false);
   };
 
@@ -367,7 +419,7 @@ const useItem = (
     setDecryptLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -382,14 +434,33 @@ const useItem = (
     setInstantLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
-      const item = cartItems?.find(
-        (item) =>
-          item?.item?.pubId === (itemData?.post as Creation).publication?.id
-      );
+      console.log([
+        type === "chromadin"
+          ? CHROMADIN_OPEN_ACTION
+          : type === "listener"
+          ? LISTENER_OPEN_ACTION
+          : type === "coinop"
+          ? COIN_OP_OPEN_ACTION
+          : LEGEND_OPEN_ACTION,
+        ((Number(
+          (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
+        ) *
+          10 ** 18) /
+          Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency ===
+                ACCEPTED_TOKENS_MUMBAI.find(
+                  (item) => item[2] === purchaseDetails?.currency
+                )?.[2]
+            )?.rate
+          )) *
+          10 ** 18,
+      ]);
 
       const { request } = await publicClient.simulateContract({
         address: purchaseDetails?.currency as `0x${string}`,
@@ -456,20 +527,29 @@ const useItem = (
               },
         ],
         functionName: "approve",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
-          CHROMADIN_OPEN_ACTION,
-          ethers.parseEther(
-            oracleData
-              ?.find(
+          type === "chromadin"
+            ? CHROMADIN_OPEN_ACTION
+            : type === "listener"
+            ? LISTENER_OPEN_ACTION
+            : type === "coinop"
+            ? COIN_OP_OPEN_ACTION
+            : LEGEND_OPEN_ACTION,
+          (((Number(
+            (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
+          ) *
+            10 ** 18) /
+            Number(
+              oracleData?.find(
                 (oracle) =>
                   oracle.currency ===
                   ACCEPTED_TOKENS_MUMBAI.find(
                     (item) => item[2] === purchaseDetails?.currency
                   )?.[2]
-              )
-              ?.rate?.toString()!
-          ),
+              )?.rate
+            )) *
+            10 ** 18) as any,
         ],
         account: address,
       });
@@ -484,16 +564,12 @@ const useItem = (
 
   const checkApproved = async () => {
     try {
-      const item = cartItems?.find(
-        (item) =>
-          item?.item?.pubId === (itemData?.post as Creation).publication?.id
-      );
-
+      if (purchaseDetails?.currency == "") return;
       const data = await publicClient.readContract({
         address: ACCEPTED_TOKENS_MUMBAI.filter(
           (token) =>
             token[2].toLowerCase() === purchaseDetails?.currency?.toLowerCase()
-        )?.[0]?.[1] as `0x${string}`,
+        )?.[0]?.[2] as `0x${string}`,
         abi: [
           {
             inputs: [
@@ -521,25 +597,43 @@ const useItem = (
           },
         ],
         functionName: "allowance",
-        args: [address as `0x${string}`, CHROMADIN_OPEN_ACTION],
+        args: [
+          address as `0x${string}`,
+          type === "chromadin"
+            ? CHROMADIN_OPEN_ACTION
+            : type === "listener"
+            ? LISTENER_OPEN_ACTION
+            : type === "coinop"
+            ? COIN_OP_OPEN_ACTION
+            : LEGEND_OPEN_ACTION,
+        ],
       });
 
       if (data && address) {
         if (
           Number((data as any)?.toString()) /
-            (purchaseDetails?.currency ===
-            "0x07b722856369f6b923e1f276abca58dd3d15243d"
-              ? 10 ** 6
-              : 10 ** 18) >=
-          Number(
-            oracleData?.find(
-              (oracle) =>
-                oracle.currency ===
-                ACCEPTED_TOKENS_MUMBAI.find(
-                  (item) => item[2] === purchaseDetails?.currency
-                )?.[2]
-            )?.rate
-          )
+            Number(
+              oracleData?.find(
+                (oracle) =>
+                  oracle.currency ===
+                  ACCEPTED_TOKENS_MUMBAI.find(
+                    (item) => item[2] === purchaseDetails?.currency
+                  )?.[2]
+              )?.wei
+            ) >=
+          (Number(
+            (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
+          ) *
+            10 ** 18) /
+            Number(
+              oracleData?.find(
+                (oracle) =>
+                  oracle.currency ===
+                  ACCEPTED_TOKENS_MUMBAI.find(
+                    (item) => item[2] === purchaseDetails?.currency
+                  )?.[2]
+              )?.rate
+            )
         ) {
           setIsApprovedSpend(true);
         } else {

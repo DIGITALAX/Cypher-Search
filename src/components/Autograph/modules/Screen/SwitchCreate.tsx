@@ -10,6 +10,7 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import Drop from "./Drop";
 import Waveform from "./Waveform";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
+import toHexWithLeadingZero from "../../../../../lib/helpers/leadingZero";
 
 const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   type,
@@ -118,7 +119,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                               ],
                               video: item?.video,
                               audio: item?.audio,
-                              tags: item?.tags.join(", "),
+                              tags: item?.tags?.join(", ") + ",",
                               prompt: item?.prompt,
                               amount: item?.amount,
                               visibility: item?.visibility,
@@ -190,9 +191,15 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                                 router.push(
                                   `/item/${
                                     numberToItemTypeMap[Number(item?.origin)]
-                                  }/${Number(item?.profileId)?.toString(
-                                    16
-                                  )}-${Number(item?.pubId)?.toString(16)}`
+                                  }/${
+                                    "0x" +
+                                    toHexWithLeadingZero(
+                                      Number(item?.profileId)
+                                    )
+                                  }-${
+                                    "0x" +
+                                    toHexWithLeadingZero(Number(item?.pubId))
+                                  }`
                                 );
                               }}
                             >

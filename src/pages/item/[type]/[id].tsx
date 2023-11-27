@@ -26,6 +26,8 @@ import {
 } from "../../../../graphql/generated";
 import useComment from "@/components/Items/hooks/useComment";
 import useProfile from "@/components/Autograph/hooks/useProfile";
+import { itemTypeToString } from "../../../../lib/constants";
+import { ItemType } from "@/components/Common/types/common.types";
 
 const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
@@ -66,6 +68,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
+  );
+  const filterChange = useSelector(
+    (state: RootState) => state.app.filterChangeReducer.change
   );
   const filters = useSelector(
     (state: RootState) => state.app.filterReducer.filter
@@ -161,7 +166,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     router,
     relatedData?.collections,
     itemData,
-    setItemData
+    setItemData,
+    type as string
   );
   const { getMoreSuggested, suggestedFeed, loaders } = useSuggested(
     id as string,
@@ -228,6 +234,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     setMainProfileHovers,
     openMainMoreOptions,
     setMainOpenMoreOptions,
+    hoverPrompt,
+    setHoverPrompt
   } = useProfile(
     relatedData?.collections ? relatedData?.collections : allComments,
     {
@@ -269,7 +277,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   if (!globalLoading && !itemLoading && type) {
     return (
       <>
-        {!itemData?.post ? (
+        {!itemData?.post ||
+        (Object.keys(itemData?.post).length === 1 &&
+          (itemData?.post as any)?.decrypted === undefined) ? (
           <NotFound
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
@@ -299,13 +309,16 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
               <Head>
                 <title>
                   {(type as string)?.toUpperCase()} |{" "}
-                  {(id as string)?.toUpperCase()}
+                  {(id as string)?.replaceAll("_", " ")?.toUpperCase()}
                 </title>
                 <meta
                   name="og:url"
                   content={"https://cypher.digitalax.xyz/card.png/"}
                 />
-                <meta name="og:title" content={(id as string)?.toUpperCase()} />
+                <meta
+                  name="og:title"
+                  content={(id as string)?.replaceAll("_", " ")?.toUpperCase()}
+                />
                 <meta
                   name="og:description"
                   content={
@@ -333,11 +346,15 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 <meta name="twitter:creator" content="@digitalax" />
                 <meta
                   name="twitter:image"
-                  content={`https://cypher.digitalax.xyz/item/${type}/${id}`}
+                  content={`https://cypher.digitalax.xyz/item/${
+                    itemTypeToString[Number(type) as unknown as ItemType]
+                  }/${(id as string)?.replaceAll("_", " ")}`}
                 />
                 <meta
                   name="twitter:url"
-                  content={`https://cypher.digitalax.xyz/item/${type}/${id}`}
+                  content={`https://cypher.digitalax.xyz/item/${
+                    itemTypeToString[Number(type) as unknown as ItemType]
+                  }/${(id as string)?.replaceAll("_", " ")}`}
                 />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
@@ -428,13 +445,17 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
                 moreSearchLoading={loaders?.moreSuggestedLoading}
                 searchItems={suggestedFeed}
                 cartAnim={cartAnim}
                 component={
                   <SwitchType
+                  allSearchItems={allSearchItems}
                     setCaretCoord={setCaretCoord}
+                    hoverPrompt={hoverPrompt}
+                    setHoverPrompt={setHoverPrompt}
                     setCaretCoordMain={setCaretCoordMain}
                     handleDecrypt={handleDecrypt}
                     decryptLoading={decryptLoading}

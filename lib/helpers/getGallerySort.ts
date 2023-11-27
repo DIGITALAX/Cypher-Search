@@ -7,7 +7,6 @@ const getGallerySort = (
         created: Creation[];
         collected: Creation[];
       }
-    | undefined
 ): Creation[] => {
   return selectedOption === "NEWEST"
     ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort(

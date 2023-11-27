@@ -5,6 +5,7 @@ import {
   Mirror,
   Post,
   Profile,
+  PublicationStats,
 } from "../../../../graphql/generated";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { AnyAction, Dispatch } from "redux";
@@ -33,7 +34,8 @@ const useComment = (
   router: NextRouter,
   collections: Creation[] | undefined,
   itemData: Publication | undefined,
-  setItemData: (e: SetStateAction<Publication | undefined>) => void
+  setItemData: (e: SetStateAction<Publication | undefined>) => void,
+  type: string
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);
@@ -148,7 +150,7 @@ const useComment = (
           decrypted: any;
         })[]
       );
- 
+
       setCommentCursor(data?.data?.publications?.pageInfo?.next);
       if (data?.data?.publications?.items?.length != 10) {
         setHasMoreComments(false);
@@ -224,6 +226,8 @@ const useComment = (
         {
           hasBookmarked: true,
         },
+        "bookmarks",
+        true,
         main!
       );
     } catch (err: any) {
@@ -235,6 +239,8 @@ const useComment = (
             {
               hasBookmarked: true,
             },
+            "bookmarks",
+            true,
             main!
           ),
         dispatch
@@ -272,7 +278,7 @@ const useComment = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -293,6 +299,8 @@ const useComment = (
             value: true,
           },
         },
+        "countOpenActions",
+        true,
         main
       );
     } catch (err: any) {
@@ -308,6 +316,8 @@ const useComment = (
                 value: true,
               },
             },
+            "countOpenActions",
+            true,
             main
           ),
         dispatch
@@ -383,7 +393,7 @@ const useComment = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -405,6 +415,8 @@ const useComment = (
         publicClient,
         () => clearComment(index, main!)
       );
+
+      await getComments();
     } catch (err: any) {
       errorChoice(err, () => {}, dispatch);
     }
@@ -453,7 +465,7 @@ const useComment = (
     }
   };
 
-  const clearComment = (index: number | undefined, main: boolean) => {
+  const clearComment = async (index: number | undefined, main: boolean) => {
     if (!main) {
       setMakeComment((prev) => {
         const updatedArray = [...prev];
@@ -491,7 +503,7 @@ const useComment = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -506,6 +518,8 @@ const useComment = (
         {
           hasMirrored: true,
         },
+        "mirrors",
+        true,
         main!
       );
     } catch (err: any) {
@@ -515,8 +529,10 @@ const useComment = (
           updateInteractions(
             index!,
             {
-              hasReacted: true,
+              hasMirrored: true,
             },
+            "mirrors",
+            true,
             main!
           ),
         dispatch
@@ -540,6 +556,8 @@ const useComment = (
         {
           hasReacted: hasReacted ? false : true,
         },
+        "reactions",
+        hasReacted ? false : true,
         main!
       );
     } catch (err: any) {
@@ -551,6 +569,8 @@ const useComment = (
             {
               hasReacted: hasReacted ? false : true,
             },
+            "reactions",
+            hasReacted ? false : true,
             main!
           ),
         dispatch
@@ -646,6 +666,8 @@ const useComment = (
   const updateInteractions = (
     index: number,
     valueToUpdate: Object,
+    statToUpdate: string,
+    increase: boolean,
     main: boolean
   ) => {
     if (main) {
@@ -662,18 +684,51 @@ const useComment = (
                       ...(itemData?.post as Mirror).mirrorOn?.operations,
                       ...valueToUpdate,
                     },
+                    stats: {
+                      ...(itemData?.post as Post)?.stats,
+                      [statToUpdate]:
+                        (itemData?.post as Post)?.stats?.[
+                          statToUpdate as keyof PublicationStats
+                        ] + (increase ? 1 : -1),
+                    },
                   },
                 },
               }
             : {
                 ...itemData,
-                post: {
-                  ...(itemData?.post as Post),
-                  operations: {
-                    ...(itemData?.post as Post)?.operations,
-                    ...valueToUpdate,
-                  },
-                },
+                post: type?.includes("pub")
+                  ? {
+                      ...(itemData?.post as Post),
+                      operations: {
+                        ...(itemData?.post as Post)?.operations,
+                        ...valueToUpdate,
+                      },
+                      stats: {
+                        ...(itemData?.post as Post)?.stats,
+                        [statToUpdate]:
+                          (itemData?.post as Post)?.stats?.[
+                            statToUpdate as keyof PublicationStats
+                          ] + (increase ? 1 : -1),
+                      },
+                    }
+                  : {
+                      ...(itemData?.post as Creation),
+                      publication: {
+                        ...(itemData?.post as Creation)?.publication,
+                        operations: {
+                          ...(itemData?.post as Creation)?.publication
+                            ?.operations,
+                          ...valueToUpdate,
+                        },
+                        stats: {
+                          ...(itemData?.post as Creation)?.publication?.stats,
+                          [statToUpdate]:
+                            (itemData?.post as Creation)?.publication?.stats?.[
+                              statToUpdate as keyof PublicationStats
+                            ] + (increase ? 1 : -1),
+                        },
+                      },
+                    },
               }) as Publication
         );
     } else {
@@ -683,6 +738,13 @@ const useComment = (
         operations: {
           ...(newItems[index] as Post).operations,
           ...valueToUpdate,
+        },
+        stats: {
+          ...(newItems[index] as Post).stats,
+          [statToUpdate]:
+            (newItems[index] as Post).stats?.[
+              statToUpdate as keyof PublicationStats
+            ] + (increase ? 1 : -1),
         },
       };
 

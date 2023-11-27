@@ -34,7 +34,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   const dispatch = useDispatch();
   const { address } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(
       `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
     ),
@@ -273,7 +273,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           type={image.type}
         />
       )}
-      {displaySearch?.value && (
+      {displaySearch?.value !== undefined && (
         <DisplaySearch
           dispatch={dispatch}
           sortType={displaySearch?.type!}
@@ -372,7 +372,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           }
         />
       )}
-      {!indexer?.open && <Index message={indexer?.message} />}
+      {indexer?.open && <Index message={indexer?.message} />}
     </>
   );
 };

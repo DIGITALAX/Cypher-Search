@@ -52,7 +52,6 @@ const Listener: FunctionComponent<ListenerProps> = ({
           index={index}
           publication={publication?.publication}
           simpleCollect={undefined}
-          type={undefined}
         />
         <div
           className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"

@@ -2,8 +2,8 @@ import { FetchResult, gql } from "@apollo/client";
 import { graphPrintClient } from "../../../lib/graph/client";
 
 const COLLECTIONS = `
-  query($creator: String!) {
-    collectionCreateds(where: {creator: $creator}) {
+  query($owner: String!) {
+    collectionCreateds(where: {owner: $owner}) {
       amount
       title
       tags
@@ -30,19 +30,21 @@ const COLLECTIONS = `
       communities
       collectionId
       access
+      acceptedTokens
       unlimited
       colors
       sizes
       origin
       soldTokens
       blockTimestamp
+      visibility
     }
   }
 `;
 
 const COLLECTIONS_PAGINATED = `
-  query($creator: String!, $first: Int, $skip: Int) {
-    collectionCreateds(where: {creator: $creator}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
+  query($owner: String!, $first: Int, $skip: Int) {
+    collectionCreateds(where: {owner: $owner}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
       amount
       title
       tags
@@ -72,16 +74,18 @@ const COLLECTIONS_PAGINATED = `
       access
       unlimited
       colors
+      acceptedTokens
       sizes
       origin
       blockTimestamp
+      visibility
     }
   }
 `;
 
 const COLLECTIONS_QUICK = `
-  query($creator: String!, $first: Int, $skip: Int) {
-    collectionCreateds(where: {creator: $creator}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
+  query($owner: String!, $first: Int, $skip: Int) {
+    collectionCreateds(where: {owner: $owner}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
       title
       images
       collectionId
@@ -90,13 +94,13 @@ const COLLECTIONS_QUICK = `
 `;
 
 export const getCollections = async (
-  creator: string
+  owner: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS),
     variables: {
-      creator,
+      owner,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
@@ -118,7 +122,7 @@ export const getCollections = async (
 };
 
 export const getCollectionsPaginated = async (
-  creator: string,
+  owner: string,
   first: number,
   skip: number
 ): Promise<FetchResult | void> => {
@@ -126,7 +130,7 @@ export const getCollectionsPaginated = async (
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS_PAGINATED),
     variables: {
-      creator,
+      owner,
       first,
       skip,
     },
@@ -150,13 +154,13 @@ export const getCollectionsPaginated = async (
 };
 
 export const getCollectionsQuick = async (
-  creator: string
+  owner: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS_QUICK),
     variables: {
-      creator,
+      owner,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

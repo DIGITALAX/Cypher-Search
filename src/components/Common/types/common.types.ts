@@ -54,7 +54,8 @@ export type InteractBarProps = {
   layoutAmount?: number;
   index: number;
   hideComment?: boolean;
-  display?: boolean;
+  display?: string;
+  gallery?: boolean;
   comment?: () => void;
   hideCollect?: boolean;
   main?: boolean;
@@ -79,7 +80,6 @@ export type InteractBarProps = {
     hide?: boolean;
     bookmark?: boolean;
   };
-  type: string | undefined;
   publication: Post | Mirror | Quote | Comment | undefined;
   openMirrorChoice: boolean[];
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
@@ -181,6 +181,7 @@ export type SuggestedProps = {
   dispatch: Dispatch<AnyAction>;
   includeSearch: boolean;
   moreSearchLoading: boolean;
+  filterChange: boolean;
   searchItems: AllSearchItemsState | undefined;
   router: NextRouter;
   fullScreenVideo: FullScreenVideoState;
@@ -243,4 +244,12 @@ export type MediaProps = {
   classNameImage?: string;
   classNameAudio?: string;
   objectFit?: string;
+};
+
+export type CartListProps = {
+  cartItems: CartItem[];
+  router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
+  setCartListOpen: (e: SetStateAction<boolean>) => void;
+  page?: boolean;
 };

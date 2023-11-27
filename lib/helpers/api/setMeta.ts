@@ -1,7 +1,7 @@
 import { omit } from "lodash";
 import LensHubProxy from "../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
-import { polygon } from "viem/chains";
+import { polygonMumbai } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
@@ -54,7 +54,7 @@ const setMeta = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "setProfileMetadataURI",
-      chain: polygon,
+      chain: polygonMumbai,
       args: [typedData?.value.profileId, typedData?.value.metadataURI],
       account: address,
     });

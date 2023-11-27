@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Layout/modules/Footer";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
+import Cart from "@/components/Common/modules/Cart";
 
 const walletTheme = merge(darkTheme(), {
   colors: {
@@ -29,13 +30,14 @@ const walletTheme = merge(darkTheme(), {
 } as Theme);
 
 const { chains, publicClient } = configureChains(
-  [polygon, polygonMumbai],
+  [polygonMumbai],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })]
 );
 
 const { connectors } = getDefaultWallets({
   appName: "Cypher Search",
-  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,  chains,
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
+  chains,
 });
 
 const wagmiConfig = createConfig({
@@ -97,6 +99,8 @@ export default function App({ Component, pageProps }: AppProps) {
             >
               <Component {...pageProps} router={router} client={client} />
               <Modals router={router} />
+              {router?.asPath?.includes("/autograph/") &&
+                !router?.asPath?.includes("/drop/") && <Cart router={router} />}
               <Footer handleRewind={handleRewind} />
             </div>
           </Provider>

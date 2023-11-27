@@ -6,7 +6,6 @@ import { AnyAction, Dispatch } from "redux";
 export type DropMainProps = {
   collections: Creation[];
   router: NextRouter;
-  handle: string;
   dispatch: Dispatch<AnyAction>
   cartItems: CartItem[]
 };
