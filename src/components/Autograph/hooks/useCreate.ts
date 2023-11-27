@@ -100,7 +100,7 @@ const useCreate = (
       tags: "",
       prompt: "",
       amount: "1",
-      visibility: "",
+      visibility: "public",
       sizes: [],
       colors: [],
       profileHandle: "",
@@ -114,6 +114,7 @@ const useCreate = (
       dropCover: "",
       dropCollectionIds: [],
       communities: "",
+      cover: "",
     }
   );
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
@@ -126,7 +127,12 @@ const useCreate = (
         async (collection: any) => {
           let ipfs: Object = {};
           if (!collection?.title) {
-            ipfs = await fetchIPFSJSON(collection?.uri);
+            let data = await fetchIPFSJSON(collection?.uri);
+            const { cover, ...rest } = data;
+            ipfs = {
+              ...rest,
+              mediaCover: cover,
+            };
           }
           const coll = {
             ...collection,
@@ -135,48 +141,55 @@ const useCreate = (
           return {
             ...coll,
             sizes:
-              typeof coll?.sizes === "string" &&
-              coll?.sizes
-                ?.split(",")
-                ?.map((word: string) => word.trim())
-                ?.filter((word: string) => word.length > 0),
+              typeof coll?.sizes === "string"
+                ? coll?.sizes
+                    ?.split(",")
+                    ?.map((word: string) => word.trim())
+                    ?.filter((word: string) => word.length > 0)
+                : coll?.sizes,
             colors:
-              typeof coll?.colors === "string" &&
-              coll?.colors
-                ?.split(",")
-                ?.map((word: string) => word.trim())
-                ?.filter((word: string) => word.length > 0),
+              typeof coll?.colors === "string"
+                ? coll?.colors
+                    ?.split(",")
+                    ?.map((word: string) => word.trim())
+                    ?.filter((word: string) => word.length > 0)
+                : coll?.colors,
             mediaTypes:
-              typeof coll?.mediaTypes === "string" &&
-              coll?.mediaTypes
-                ?.split(",")
-                ?.map((word: string) => word.trim())
-                ?.filter((word: string) => word.length > 0),
+              typeof coll?.mediaTypes === "string"
+                ? coll?.mediaTypes
+                    ?.split(",")
+                    ?.map((word: string) => word.trim())
+                    ?.filter((word: string) => word.length > 0)
+                : coll?.mediaTypes,
             access:
-              typeof coll?.access === "string" &&
-              coll?.access
-                ?.split(",")
-                ?.map((word: string) => word.trim())
-                ?.filter((word: string) => word.length > 0),
+              typeof coll?.access === "string"
+                ? coll?.access
+                    ?.split(",")
+                    ?.map((word: string) => word.trim())
+                    ?.filter((word: string) => word.length > 0)
+                : coll?.access,
             communities:
-              typeof coll?.communities === "string" &&
-              coll?.communities
-                ?.split(",")
-                ?.map((word: string) => word.trim())
-                ?.filter((word: string) => word.length > 0),
+              typeof coll?.communities === "string"
+                ? coll?.communities
+                    ?.split(",")
+                    ?.map((word: string) => word.trim())
+                    ?.filter((word: string) => word.length > 0)
+                : coll?.communities,
             tags:
-              typeof coll?.tags === "string" &&
-              coll?.tags
-                ?.split(",")
-                ?.map((word: string) => word.trim())
-                ?.filter((word: string) => word.length > 0),
+              typeof coll?.tags === "string"
+                ? coll?.tags
+                    ?.split(",")
+                    ?.map((word: string) => word.trim())
+                    ?.filter((word: string) => word.length > 0)
+                : coll?.tags,
             prices: coll?.prices?.map(
               (price: string) => Number(price) / 10 ** 18
             ),
           };
         }
       );
-      setAllCollections(newCollections || []);
+      const promises = await Promise.all(newCollections);
+      setAllCollections(promises || []);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -208,19 +221,18 @@ const useCreate = (
         collectionDetails?.description?.trim() == ""
           ? " "
           : collectionDetails?.description,
-        collectionSettings?.media !== "video" ? collectionDetails.images : [],
+        collectionSettings?.media === "static" ? collectionDetails.images : [],
         collectionSettings?.media === "video" ? [collectionDetails?.video] : [],
-        [],
         collectionSettings?.media === "audio" ? [collectionDetails?.audio] : [],
+        [],
         collectionDetails?.title?.trim() == "" ? " " : collectionDetails?.title,
         Array.from(
           new Set(
-            [
-              ...(collectionDetails?.tags
+            (
+              collectionDetails?.tags
                 ?.split(/,\s*/)
-                ?.filter((tag) => tag.trim() !== "") || []),
-              "MintedWithLoveOnCypherChromadin",
-            ].map((tag) => tag.toLowerCase())
+                ?.filter((tag) => tag.trim() !== "") || []
+            ).map((tag) => tag.toLowerCase())
           )
         )
           .map((lowerCaseTag) =>
@@ -229,7 +241,8 @@ const useCreate = (
               .find((tag) => tag.toLowerCase() === lowerCaseTag)
           )
           .filter((tag) => tag !== undefined) as string[],
-        collectionDetails?.visibility === "private" ? true : false
+        collectionDetails?.visibility === "private" ? true : false,
+        collectionDetails?.cover
       );
 
       const communityIds = collectionDetails?.communities
@@ -434,7 +447,7 @@ const useCreate = (
         tags: "",
         prompt: "",
         amount: "",
-        visibility: "",
+        visibility: "public",
         sizes: [],
         colors: [],
         profileHandle: "",
@@ -448,6 +461,7 @@ const useCreate = (
         dropCover: "",
         dropCollectionIds: [],
         communities: "",
+        cover: "",
       });
       setCollectionSettings({
         media: "static",
@@ -482,12 +496,33 @@ const useCreate = (
             audio: e.target?.result as string,
           }));
         } else if (id == "video") {
-          setCollectionDetails((prev) => ({
-            ...prev,
-            video: e.target?.result as string,
-          }));
+          const video = document.createElement("video");
+          video.src = e.target?.result as string;
+          video.currentTime = 0.1;
+
+          video.addEventListener("loadeddata", () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const ctx = canvas.getContext("2d");
+            ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            setCollectionDetails((prev) => ({
+              ...prev,
+              video: e.target?.result as string,
+              cover: canvas.toDataURL(),
+            }));
+          });
+
+          video.load();
         } else if (id == "drop") {
           setDropDetails((prev) => ({
+            ...prev,
+            cover: e.target?.result as string,
+          }));
+        } else if (id == "cover") {
+          setCollectionDetails((prev) => ({
             ...prev,
             cover: e.target?.result as string,
           }));
@@ -530,6 +565,7 @@ const useCreate = (
         images,
         audio,
         video,
+        cover,
         acceptedTokens,
         ...restOfCollectionDetails
       } = collectionDetails;
@@ -548,6 +584,12 @@ const useCreate = (
         images: newImages,
         audio: newAudio,
         video: newVideo,
+        cover:
+          collectionSettings?.media === "audio"
+            ? (postContentURI?.object as any)?.lens?.audio?.cover
+            : collectionSettings?.media === "video"
+            ? (postContentURI?.object as any)?.lens?.video?.cover
+            : undefined,
         tags: collectionDetails?.tags
           ?.split(/,\s*/)
           ?.filter((tag) => tag.trim() !== ""),

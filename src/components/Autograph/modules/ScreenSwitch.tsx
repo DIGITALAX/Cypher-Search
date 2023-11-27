@@ -140,6 +140,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setCaretCoordBookmark,
   messageImage,
   handleMessageImage,
+  cartItems
 }): JSX.Element => {
   switch (screenDisplay) {
     case ScreenDisplay.Circuits:
@@ -206,6 +207,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
     case ScreenDisplay.Bookmarks:
       return (
         <Bookmarks
+          cartItems={cartItems}
           setCaretCoord={setCaretCoordBookmark}
           caretCoord={caretCoordBookmark}
           setMentionProfiles={setMentionProfilesBookmark}

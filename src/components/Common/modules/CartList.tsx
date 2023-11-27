@@ -64,9 +64,9 @@ const CartList: FunctionComponent<CartListProps> = ({
                             }`
                       }
                       srcCover={
-                        item?.item?.images?.[0]
+                        item?.item?.mediaCover
                           ? `${INFURA_GATEWAY}/ipfs/${
-                              item?.item?.images?.[0]?.split("ipfs://")?.[1]
+                              item?.item?.mediaCover?.split("ipfs://")?.[1]
                             }`
                           : undefined
                       }

@@ -5,7 +5,7 @@ import PostQuote from "./PostQuote";
 import moment from "moment";
 import { PublicationProps } from "../types/autograph.types";
 import Image from "next/legacy/image";
-import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { CHROMADIN_OPEN_ACTION, COIN_OP_OPEN_ACTION, INFURA_GATEWAY, LISTENER_OPEN_ACTION } from "../../../../lib/constants";
 import {
   Comment,
   Mirror,
@@ -55,6 +55,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
   profilesOpen,
   caretCoord,
   setCaretCoord,
+  cartItems,
 }): JSX.Element => {
   return (
     <div
@@ -62,6 +63,19 @@ const Publication: FunctionComponent<PublicationProps> = ({
         (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
           ?.isEncrypted
           ? "bg-nuba"
+          : [
+              CHROMADIN_OPEN_ACTION,
+              LISTENER_OPEN_ACTION,
+              COIN_OP_OPEN_ACTION,
+            ]?.some((value) =>
+              (item?.__typename === "Mirror"
+                ? item?.mirrorOn
+                : (item as Post)
+              )?.openActionModules?.[0]?.contract?.address
+                ?.toLowerCase()
+                ?.includes(value?.toLowerCase())
+            )
+          ? "bg-[#3887c3]"
           : "bg-lirio"
       }`}
       id={item?.id}
@@ -151,6 +165,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
       <PostBar
         lensConnected={lensConnected}
         index={index}
+        cartItems={cartItems!}
         item={item}
         dispatch={dispatch}
         router={router}

@@ -44,6 +44,7 @@ const Feed: FunctionComponent<FeedProps> = ({
   caretCoord,
   profilesOpen,
   setCaretCoord,
+  cartItems
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10 otro:order-1 order-2">
@@ -108,6 +109,7 @@ const Feed: FunctionComponent<FeedProps> = ({
                         comment={comment}
                         simpleCollect={simpleCollect}
                         dispatch={dispatch}
+                        cartItems={cartItems}
                         openMirrorChoice={openMirrorChoice}
                         setOpenMirrorChoice={setOpenMirrorChoice}
                         interactionsLoading={interactionsLoading}

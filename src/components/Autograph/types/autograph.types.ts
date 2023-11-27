@@ -233,6 +233,7 @@ export type WebProps = {
   openMirrorChoice: boolean[];
   display: Display | undefined;
   handleImage: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  cartItems: CartItem[];
   coverImage: string | undefined;
   pfpImage: string | undefined;
   followUpdateLoading: boolean;
@@ -321,6 +322,7 @@ export type BookmarksProps = {
   bookmarks: ((Post | Mirror | Comment | Quote) & {
     decrypted: any;
   })[];
+  cartItems: CartItem[];
   mentionProfiles: Profile[];
   profilesOpen: boolean[];
   caretCoord: {
@@ -486,6 +488,7 @@ export type ScreenSwitchProps = {
     image: string;
     type: string;
   };
+  cartItems: CartItem[];
   handleMessageImage: (
     e: ChangeEvent<HTMLInputElement> | undefined,
     remove?: boolean
@@ -875,6 +878,7 @@ export type FeedProps = {
       y: number;
     }>
   ) => void;
+  cartItems: CartItem[];
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   decryptLoading: boolean[];
@@ -995,6 +999,7 @@ export type PostBarProps = {
   index: number;
   main: boolean | undefined;
   lensConnected: Profile | undefined;
+  cartItems: CartItem[];
   mirror?:
     | ((id: string) => Promise<void>)
     | ((id: string, main: boolean) => Promise<void>);
@@ -1056,6 +1061,7 @@ export type PublicationProps = {
     decrypted: any;
   };
   index: number;
+  cartItems?: CartItem[];
   decryptLoading?: boolean;
   mentionProfiles?: Profile[];
   profilesOpen?: boolean[];
@@ -1400,6 +1406,7 @@ export interface CollectionDetails {
   amount: string;
   profileId: string;
   pubId: string;
+  cover: string;
   acceptedTokens: string[];
   images: { media: string; type: string }[];
   video: string;

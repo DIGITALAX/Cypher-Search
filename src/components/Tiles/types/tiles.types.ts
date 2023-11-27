@@ -46,6 +46,7 @@ export interface Creation {
   access: string[];
   visibility: string;
   unlimited: boolean;
+  mediaCover: string;
   colors: string[];
   sizes: string[];
   origin: string;

@@ -35,6 +35,7 @@ const COLLECTION = `
       communities
       collectionId
       access
+      mediaCover
       acceptedTokens
       unlimited
       colors
@@ -79,6 +80,7 @@ export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
       access
       acceptedTokens
       unlimited
+      mediaCover
       colors
       sizes
       origin
@@ -112,6 +114,7 @@ const COLLECTION_TITLE = `
     collectionCreateds(where: {title_contains_nocase: $title}, first: 1) {
       amount
       title
+      mediaCover
       tags
       pubId
       prompt
