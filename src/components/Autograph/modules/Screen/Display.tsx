@@ -1,6 +1,9 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import {
+  INFURA_GATEWAY,
+  numberToItemTypeMap,
+} from "../../../../../lib/constants";
 import { DisplayProps, SortType } from "../../types/autograph.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setDisplaySearchBox } from "../../../../../redux/reducers/displaySearchBoxSlice";
@@ -74,21 +77,29 @@ const Display: FunctionComponent<DisplayProps> = ({
                 dispatch={dispatch}
                 mirror={mirror}
                 like={like}
-                display
+                hideCollect
+                display={
+                  numberToItemTypeMap[
+                    Number(
+                      sortType === SortType.Community
+                        ? display?.community?.main?.origin
+                        : sortType === SortType.Public
+                        ? display?.public?.main?.origin
+                        : display?.private?.main?.origin
+                    )
+                  ]
+                }
                 interactionsLoading={interactionsLoading?.[0]}
                 openMirrorChoice={openMirrorChoice}
                 setOpenMirrorChoice={setOpenMirrorChoice}
                 index={0}
                 publication={
-                  display
-                    ? sortType === SortType.Community
-                      ? display?.community?.main?.publication!
-                      : sortType === SortType.Public
-                      ? display?.public?.main?.publication!
-                      : display?.private?.main?.publication!
-                    : undefined
+                  sortType === SortType.Community
+                    ? display?.community?.main?.publication!
+                    : sortType === SortType.Public
+                    ? display?.public?.main?.publication!
+                    : display?.private?.main?.publication!
                 }
-                type={undefined}
                 simpleCollect={undefined}
               />
             </div>
@@ -152,21 +163,30 @@ const Display: FunctionComponent<DisplayProps> = ({
                       dispatch={dispatch}
                       mirror={mirror}
                       like={like}
+                      hideCollect
                       interactionsLoading={interactionsLoading?.[index + 1]}
                       openMirrorChoice={openMirrorChoice}
                       setOpenMirrorChoice={setOpenMirrorChoice}
                       index={index + 1}
                       publication={
-                        display
-                          ? sortType === SortType.Community
-                            ? display?.community?.side?.[index].publication!
-                            : sortType === SortType.Public
-                            ? display?.public?.side?.[index].publication!
-                            : display?.private?.side?.[index].publication!
-                          : undefined
+                        sortType === SortType.Community
+                          ? display?.community?.side?.[index]?.publication!
+                          : sortType === SortType.Public
+                          ? display?.public?.side?.[index]?.publication!
+                          : display?.private?.side?.[index]?.publication!
                       }
-                      type={undefined}
                       simpleCollect={undefined}
+                      display={
+                        numberToItemTypeMap[
+                          Number(
+                            sortType === SortType.Community
+                              ? display?.community?.main?.origin
+                              : sortType === SortType.Public
+                              ? display?.public?.main?.origin
+                              : display?.private?.main?.origin
+                          )
+                        ]
+                      }
                     />
                   </div>
                 )}

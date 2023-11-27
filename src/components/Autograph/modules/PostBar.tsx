@@ -105,7 +105,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             >
               <div
                 className={`relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 ${
-                  responded?.[indexTwo] && "mix-blend-hard-light"
+                  responded?.[indexTwo] && "mix-blend-hard-light hue-rotate-60"
                 }`}
                 onClick={() => {
                   if (disabled) {
@@ -345,7 +345,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               : "opacity-70"
           } ${interactionsLoading?.simpleCollect && "animate-spin"} ${
             (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
-              ?.operations?.hasActed?.value && "mix-blend-hard-light"
+              ?.operations?.hasActed?.value && "mix-blend-hard-light hue-rotate-60"
           }`}
           onClick={() =>
             collectLogic(
@@ -432,7 +432,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 )
                   ? router.push(
                       `/item/chromadin/${
-                        (meta?.metadata as ImageMetadataV3)?.title
+                        (meta?.metadata as ImageMetadataV3)?.title?.replaceAll(" ", "_")
                       }`
                     )
                   : meta?.metadata?.tags?.includes(
@@ -440,7 +440,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     )
                   ? router.push(
                       `/item/coinop/${
-                        (meta?.metadata as ImageMetadataV3)?.title
+                        (meta?.metadata as ImageMetadataV3)?.title?.replaceAll(" ", "_")
                       }`
                     )
                   : meta?.metadata?.tags?.includes(
@@ -448,7 +448,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     )
                   ? router.push(
                       `/item/listener/${
-                        (meta?.metadata as ImageMetadataV3)?.title
+                        (meta?.metadata as ImageMetadataV3)?.title?.replaceAll(" ", "_")
                       }`
                     )
                   : router.push(`/item/pub/${item?.id}`),

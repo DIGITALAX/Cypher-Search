@@ -928,12 +928,10 @@ export type FeedProps = {
 };
 
 export type GalleryProps = {
-  gallery:
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined;
+  gallery: {
+    collected: Creation[];
+    created: Creation[];
+  };
   hasMoreGallery: boolean;
   allDrops: Drop[] | undefined;
   cartItems: CartItem[];

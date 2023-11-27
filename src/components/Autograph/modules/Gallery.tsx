@@ -79,119 +79,113 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           </div>
         )}
       </div>
-      <div className="relative w-full h-[40rem] otro:h-[145rem] flex items-start justify-center overflow-y-scroll">
-        <InfiniteScroll
-          dataLength={
-            [...(gallery?.collected || []), ...(gallery?.created || [])]?.length
-          }
-          loader={<></>}
-          hasMore={hasMoreGallery}
-          next={getMoreGallery}
-          className="w-full h-fit items-start justify-between flex flex-row flex-wrap gap-8"
-        >
-          {getGallerySort(selectedOption, gallery)?.map(
-            (item: CreationType, index: number) => {
-              return (
-                <Creation
-                  lensConnected={lensConnected}
-                  dispatch={dispatch}
-                  cartItems={cartItems}
-                  key={index}
-                  followProfile={followProfile}
-                  unfollowProfile={unfollowProfile}
-                  followLoading={followLoading}
-                  profileHovers={profileHovers}
-                  setProfileHovers={setProfileHovers}
-                  mirror={mirror}
-                  like={like}
-                  openMirrorChoice={openMirrorChoice}
-                  setOpenMirrorChoice={setOpenMirrorChoice}
-                  interactionsLoading={interactionsLoading?.[index]}
-                  router={router}
-                  item={item}
-                  index={index}
-                  created={
-                    gallery?.created?.find(
-                      (value) => item.pubId === value.pubId
-                    )
-                      ? true
-                      : false
-                  }
-                  openInteractions={openInteractions}
-                  setOpenInteractions={setOpenInteractions}
-                />
-              );
+      {
+        <div className="relative w-full h-fit max-h-[40rem] otro:max-h-[145rem] flex items-start justify-center overflow-y-scroll">
+          <InfiniteScroll
+            dataLength={
+              [...(gallery?.collected || []), ...(gallery?.created || [])]
+                ?.length
             }
-          )}
-        </InfiniteScroll>
-      </div>
-      <div className={`relative flex-grow flex justify-center w-full otro:h-[55rem] h-fit`}>
-        <div
-          className="absolute w-full h-[50rem] bottom-0 items-end justify-center otro:flex hidden"
-          draggable={false}
-        >
-          <Image
-            layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/QmV4yM96Dt2ypLN9GMHkXPTkeCGfTQfJErJLfVjikxt52s`}
-            draggable={false}
-            objectFit="contain"
-          />
-          <div className="absolute w-full h-full bg-black opacity-[85%]"></div>
-        </div>
-        {allDrops && allDrops?.length > 0 && (
-          <div className="relative w-[45rem] h-fit flex items-center justify-start overflow-x-scroll">
-            <div className="relative w-fit h-fit flex items-center justify-start gap-4">
-              {allDrops?.map((item: Drop, index: number) => {
+            loader={<></>}
+            hasMore={hasMoreGallery}
+            next={getMoreGallery}
+            className="w-full h-fit items-start justify-center md:justify-between flex flex-row flex-wrap gap-8"
+          >
+            {getGallerySort(selectedOption, gallery)?.map(
+              (item: CreationType, index: number) => {
                 return (
-                  <div
+                  <Creation
+                    lensConnected={lensConnected}
+                    dispatch={dispatch}
+                    cartItems={cartItems}
                     key={index}
-                    className="relative h-80 w-80 rounded-sm flex items-center justify-center cursor-pointer hover:opacity-80 p-3 bg-offBlack"
+                    followProfile={followProfile}
+                    unfollowProfile={unfollowProfile}
+                    followLoading={followLoading}
+                    profileHovers={profileHovers}
+                    setProfileHovers={setProfileHovers}
+                    mirror={mirror}
+                    like={like}
+                    openMirrorChoice={openMirrorChoice}
+                    setOpenMirrorChoice={setOpenMirrorChoice}
+                    interactionsLoading={interactionsLoading?.[index]}
+                    router={router}
+                    item={item}
+                    index={index}
+                    created={
+                      gallery?.created?.find(
+                        (value) => item.pubId === value.pubId
+                      )
+                        ? true
+                        : false
+                    }
+                    openInteractions={openInteractions}
+                    setOpenInteractions={setOpenInteractions}
+                  />
+                );
+              }
+            )}
+          </InfiniteScroll>
+        </div>
+      }
+      {allDrops && allDrops?.length > 0 && (
+        <div className="relative w-full h-fit flex items-start justify-start overflow-x-scroll max-h-[40rem] otro:max-h-[60rem]">
+          <div className="w-full h-fit items-start justify-center md:justify-between flex flex-row flex-wrap gap-8">
+            {allDrops?.map((item: Drop, index: number) => {
+              return (
+                <div
+                  key={index}
+                  className="relative h-80 w-80 rounded-sm flex items-center justify-center cursor-pointer hover:opacity-80 p-3 bg-offBlack"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(
+                      `/autograph/${
+                        lensConnected?.handle?.suggestedFormatted?.localName?.split(
+                          "@"
+                        )?.[1]
+                      }/drop/${item?.title?.replaceAll(" ", "_")}`
+                    );
+                  }}
+                >
+                  <div
+                    className="relative w-full h-full flex items-center justify-center"
+                    id="staticLoad"
                   >
-                    <div
-                      className="relative w-full h-full flex items-center justify-center"
-                      id="staticLoad"
-                    >
-                      <div className="relative w-full h-full flex">
-                        <Image
-                          src={`${INFURA_GATEWAY}/ipfs/${
-                            item?.cover?.split("ipfs://")?.[1]
-                          }`}
-                          className="rounded-sm"
-                          objectFit="cover"
-                          layout="fill"
-                          onError={(e) => handleImageError(e)}
-                        />
+                    <div className="relative w-full h-full flex">
+                      <Image
+                        src={`${INFURA_GATEWAY}/ipfs/${
+                          item?.cover?.split("ipfs://")?.[1]
+                        }`}
+                        className="rounded-sm"
+                        objectFit="cover"
+                        layout="fill"
+                        onError={(e) => handleImageError(e)}
+                      />
+                    </div>
+                    <div className="absolute bottom-0 right-0 w-full h-10 bg-black flex items-center justify-end px-1">
+                      <div className="relative w-fit h-fit flex items-center justify-center font-bit top-px text-xs text-white">
+                        {item?.title?.length > 20
+                          ? item?.title?.slice(0, 20)?.toLowerCase()
+                          : item?.title?.toLowerCase()}
                       </div>
-                      <div className="absolute bottom-0 right-0 w-full h-6 bg-black flex items-center justify-end px-1">
-                        <div
-                          className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
-                          title="Go to Drop"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(
-                              `/autograph/${
-                                lensConnected?.handle?.suggestedFormatted?.localName?.split(
-                                  "@"
-                                )?.[1]
-                              }/drop/${item?.title}`
-                            );
-                          }}
-                        >
-                          <Image
-                            draggable={false}
-                            layout="fill"
-                            src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
-                          />
-                        </div>
+                      <div
+                        className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
+                        title="Go to Drop"
+                      >
+                        <Image
+                          draggable={false}
+                          layout="fill"
+                          src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
+                        />
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

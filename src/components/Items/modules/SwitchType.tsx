@@ -86,6 +86,9 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   mentionProfilesMain,
   setCaretCoord,
   setCaretCoordMain,
+  hoverPrompt,
+  setHoverPrompt,
+  allSearchItems,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -93,6 +96,9 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
     case "listener":
       return (
         <Chromadin
+          allSearchItems={allSearchItems}
+          hoverPrompt={hoverPrompt}
+          setHoverPrompt={setHoverPrompt}
           setCaretCoord={setCaretCoord}
           setCaretCoordMain={setCaretCoordMain}
           handleDecrypt={handleDecrypt}

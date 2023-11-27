@@ -31,6 +31,7 @@ const useProfile = (
 ) => {
   const [feedProfileHovers, setFeedProfileHovers] = useState<boolean[]>([]);
   const [feedFollowLoading, setFeedFollowLoading] = useState<boolean[]>([]);
+  const [hoverPrompt, setHoverPrompt] = useState<boolean>(false);
   const [galleryProfileHovers, setGalleryProfileHovers] = useState<boolean[]>(
     []
   );
@@ -69,7 +70,7 @@ const useProfile = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -105,7 +106,6 @@ const useProfile = (
             })
           );
         }, 3000);
-
       }
     }
     handleLoaders(false, main!, feed!, index);
@@ -133,7 +133,7 @@ const useProfile = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -168,7 +168,6 @@ const useProfile = (
             })
           );
         }, 3000);
-
       }
     }
 
@@ -274,6 +273,8 @@ const useProfile = (
     setMainProfileHovers,
     openMainMoreOptions,
     setMainOpenMoreOptions,
+    hoverPrompt,
+    setHoverPrompt,
   };
 };
 

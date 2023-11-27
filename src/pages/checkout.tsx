@@ -22,13 +22,16 @@ const Checkout: NextPage<{
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(
       `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
     ),
   });
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const filterChange = useSelector(
+    (state: RootState) => state.app.filterChangeReducer.change
   );
   const searchActive = useSelector(
     (state: RootState) => state.app.searchActiveReducer.value
@@ -113,6 +116,7 @@ const Checkout: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header
+        filterChange={filterChange}
         fullScreenVideo={fullScreenVideo}
         searchItems={allSearchItems}
         cartAnim={cartAnim}

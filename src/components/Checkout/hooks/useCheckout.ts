@@ -97,7 +97,7 @@ const useCheckout = (
     setEncryptionLoading(true);
     try {
       const authSig = await checkAndSignAuthMessage({
-        chain: "polygon",
+        chain: "mumbai",
       });
 
       setEncryptedStrings;
@@ -133,7 +133,7 @@ const useCheckout = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -209,7 +209,7 @@ const useCheckout = (
   const approveSpend = async () => {
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -280,7 +280,7 @@ const useCheckout = (
               },
         ],
         functionName: "approve",
-        chain: polygon,
+        chain: polygonMumbai,
         args: [
           item?.type === "chromadin"
             ? CHROMADIN_OPEN_ACTION
@@ -289,17 +289,17 @@ const useCheckout = (
             : item?.type === "coinop"
             ? COIN_OP_OPEN_ACTION
             : LEGEND_OPEN_ACTION,
-          ethers.parseEther(
-            oracleData
-              ?.find(
+          (((Number(item?.price) * 10 ** 18) /
+            Number(
+              oracleData?.find(
                 (oracle) =>
                   oracle.currency ===
                   ACCEPTED_TOKENS_MUMBAI.find(
                     (item) => item[2] === checkoutCurrency
                   )?.[2]
-              )
-              ?.rate?.toString()!
-          ),
+              )?.rate
+            )) *
+            10 ** 18) as any,
         ],
         account: address,
       });
@@ -363,18 +363,25 @@ const useCheckout = (
       if (data && address) {
         if (
           Number((data as any)?.toString()) /
-            (checkoutCurrency === "0x07b722856369f6b923e1f276abca58dd3d15243d"
-              ? 10 ** 6
-              : 10 ** 18) >=
-          Number(
-            oracleData?.find(
-              (oracle) =>
-                oracle.currency ===
-                ACCEPTED_TOKENS_MUMBAI.find(
-                  (item) => item[2] === checkoutCurrency
-                )?.[2]
-            )?.rate
-          )
+            Number(
+              oracleData?.find(
+                (oracle) =>
+                  oracle.currency ===
+                  ACCEPTED_TOKENS_MUMBAI.find(
+                    (item) => item[2] === checkoutCurrency
+                  )?.[2]
+              )?.wei
+            ) >=
+          (Number(item?.price) * 10 ** 18) /
+            Number(
+              oracleData?.find(
+                (oracle) =>
+                  oracle.currency ===
+                  ACCEPTED_TOKENS_MUMBAI.find(
+                    (item) => item[2] === checkoutCurrency
+                  )?.[2]
+              )?.rate
+            )
         ) {
           setApprovedSpend(true);
         } else {

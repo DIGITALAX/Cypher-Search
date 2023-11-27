@@ -102,7 +102,8 @@ const Controls: FunctionComponent<ControlsProps> = ({
             ) : (
               <div
                 className={`relative w-3 h-3 flex items-center justify-center ${
-                  post?.operations?.hasReacted && "mix-blend-hard-light"
+                  post?.operations?.hasReacted &&
+                  "mix-blend-hard-light hue-rotate-60"
                 }`}
               >
                 <Image
@@ -162,7 +163,8 @@ const Controls: FunctionComponent<ControlsProps> = ({
             ) : (
               <div
                 className={`relative w-3 h-3 flex items-center justify-center ${
-                  post?.operations?.hasActed?.value && "mix-blend-hard-light"
+                  post?.operations?.hasActed?.value &&
+                  "mix-blend-hard-light hue-rotate-60"
                 }`}
               >
                 <Image
@@ -195,7 +197,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
                 className={`relative w-3 h-3 flex items-center justify-center ${
                   (post?.operations?.hasMirrored ||
                     post?.operations?.hasQuoted) &&
-                  "mix-blend-hard-light"
+                  "mix-blend-hard-light hue-rotate-60"
                 }`}
               >
                 <Image

@@ -125,7 +125,7 @@ const useConversations = (
     try {
       const clientWallet = createWalletClient({
         account: address,
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 

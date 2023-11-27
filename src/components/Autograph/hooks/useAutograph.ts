@@ -14,7 +14,7 @@ const useAutograph = (
     try {
       const { data } = await getProfile(
         {
-          forHandle: "lens/" + autograph,
+          forHandle: "test/" + autograph,
         },
         lensConnected?.id
       );

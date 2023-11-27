@@ -45,6 +45,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   searchItems,
   moreSearchLoading,
   fullScreenVideo,
+  filterChange
 }) => {
   return (
     <div
@@ -54,6 +55,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
       <Header
         fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
+        filterChange={filterChange}
         handleSearch={handleSearch}
         searchActive={true}
         searchItems={allSearchItems}

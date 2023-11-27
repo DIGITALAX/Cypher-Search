@@ -6,7 +6,7 @@ import { WalletClient, PublicClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygonMumbai } from "viem/chains";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 
 const lensUnfollow = async (
@@ -54,7 +54,7 @@ const lensUnfollow = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "unfollow",
-      chain: polygon,
+      chain: polygonMumbai,
       args: [
         typedData?.value?.unfollowerProfileId,
         typedData?.value?.idsOfProfilesToUnfollow,

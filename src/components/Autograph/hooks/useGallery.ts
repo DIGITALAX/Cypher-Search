@@ -9,6 +9,7 @@ import {
   Post,
   Profile,
   PublicationOperations,
+  PublicationStats,
 } from "../../../../graphql/generated";
 import { createWalletClient, custom, PublicClient } from "viem";
 import { polygon, polygonMumbai } from "viem/chains";
@@ -40,13 +41,13 @@ const useGallery = (
       hide: boolean;
     }[]
   >([]);
-  const [gallery, setGallery] = useState<
-    | {
-        collected: Creation[];
-        created: Creation[];
-      }
-    | undefined
-  >();
+  const [gallery, setGallery] = useState<{
+    collected: Creation[];
+    created: Creation[];
+  }>({
+    collected: [],
+    created: [],
+  });
   const [cursorInfo, setCursorInfo] = useState<{
     collected: number;
     created: number;
@@ -130,7 +131,6 @@ const useGallery = (
         25,
         cursorInfo.created
       );
-
       let collected: Creation[] = [];
 
       const collData = [
@@ -148,12 +148,13 @@ const useGallery = (
       const created =
         (await handleCollectionProfilesAndPublications(
           createdData?.data?.collectionCreateds,
-          lensConnected?.id
+          lensConnected
         )) || [];
+
       collected =
         (await handleCollectionProfilesAndPublications(
           collected,
-          lensConnected?.id
+          lensConnected
         )) || [];
 
       setCursorInfo({
@@ -204,7 +205,7 @@ const useGallery = (
         collected =
           (await handleCollectionProfilesAndPublications(
             collected,
-            lensConnected?.id
+            lensConnected
           )) || [];
       }
 
@@ -217,7 +218,7 @@ const useGallery = (
         created =
           (await handleCollectionProfilesAndPublications(
             createdData?.data?.collectionCreateds,
-            lensConnected?.id
+            lensConnected
           )) || [];
       }
 
@@ -271,7 +272,7 @@ const useGallery = (
       const responseJSON = await response.json();
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -294,7 +295,7 @@ const useGallery = (
     const index = [
       ...(gallery?.collected || []),
       ...(gallery?.created || []),
-    ].findIndex((pub) => pub.pubId === id);
+    ].findIndex((pub) => pub.publication?.id === id);
     if (index === -1) {
       return;
     }
@@ -306,16 +307,26 @@ const useGallery = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
-      updateInteractions(index, {
-        hasReacted: hasReacted ? false : true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasReacted: hasReacted ? false : true,
+        },
+        "reactions",
+        hasReacted ? false : true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasReacted: hasReacted ? false : true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasReacted: hasReacted ? false : true,
+            },
+            "reactions",
+            hasReacted ? false : true
+          ),
         dispatch
       );
     }
@@ -331,7 +342,7 @@ const useGallery = (
     const index = [
       ...(gallery?.collected || []),
       ...(gallery?.created || []),
-    ].findIndex((pub) => pub.pubId === id);
+    ].findIndex((pub) => pub.publication?.id === id);
     if (index === -1) {
       return;
     }
@@ -343,7 +354,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -353,16 +364,26 @@ const useGallery = (
         clientWallet,
         publicClient
       );
-      updateInteractions(index, {
-        hasMirrored: true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasMirrored: true,
+        },
+        "mirrors",
+        true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasReacted: true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasMirrored: true,
+            },
+            "mirrors",
+            true
+          ),
         dispatch
       );
     }
@@ -390,8 +411,10 @@ const useGallery = (
       updateInteractions(
         index,
         {
-          hasMirrored: true,
+          hasReacted: hasReacted ? false : true,
         },
+        "reactions",
+        hasReacted ? false : true,
         true,
         id
       );
@@ -404,6 +427,8 @@ const useGallery = (
             {
               hasReacted: hasReacted ? false : true,
             },
+            "reactions",
+            hasReacted ? false : true,
             true,
             id
           ),
@@ -427,7 +452,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -442,6 +467,8 @@ const useGallery = (
         {
           hasMirrored: true,
         },
+        "mirrors",
+        true,
         true,
         id
       );
@@ -452,8 +479,10 @@ const useGallery = (
           updateInteractions(
             index,
             {
-              hasReacted: true,
+              hasMirrored: true,
             },
+            "mirrors",
+            true,
             true,
             id
           ),
@@ -471,6 +500,8 @@ const useGallery = (
   const updateInteractions = (
     index: number,
     valueToUpdate: Object,
+    statToUpdate: string,
+    increase: boolean,
     display?: boolean,
     id?: string
   ) => {
@@ -491,6 +522,13 @@ const useGallery = (
                 ...category.main?.publication?.operations,
                 ...valueToUpdate,
               },
+              stats: {
+                ...category.main?.publication?.stats,
+                [statToUpdate]:
+                  category.main?.publication?.stats?.[
+                    statToUpdate as keyof PublicationStats
+                  ] + (increase ? 1 : -1),
+              },
             },
           } as Creation;
         }
@@ -505,6 +543,13 @@ const useGallery = (
                   ...item?.publication?.operations,
                   ...valueToUpdate,
                 } as PublicationOperations,
+                stats: {
+                  ...item?.publication?.stats,
+                  [statToUpdate]:
+                    item?.publication?.stats?.[
+                      statToUpdate as keyof PublicationStats
+                    ] + (increase ? 1 : -1),
+                },
               } as Post & {
                 decrypted: any;
               },
@@ -524,6 +569,13 @@ const useGallery = (
             ...allGallery[index].publication?.operations,
             ...valueToUpdate,
           } as PublicationOperations,
+          stats: {
+            ...allGallery[index]?.publication?.stats,
+            [statToUpdate]:
+              allGallery[index]?.publication?.stats?.[
+                statToUpdate as keyof PublicationStats
+              ] + (increase ? 1 : -1),
+          },
         } as Post & {
           decrypted: any;
         },
@@ -531,10 +583,23 @@ const useGallery = (
 
       let newCollected: Creation[] = [],
         newCreated: Creation[] = [];
+
       allGallery.forEach((item) => {
-        if (gallery?.collected?.includes(item)) {
+        if (
+          gallery?.collected?.some(
+            (collectedItem) =>
+              collectedItem.pubId === item.pubId &&
+              item.profileId === collectedItem.profileId
+          )
+        ) {
           newCollected.push(item);
-        } else if (gallery?.created?.includes(item)) {
+        } else if (
+          gallery?.created?.some(
+            (createdItem) =>
+              createdItem.pubId === item.pubId &&
+              item.profileId === createdItem.profileId
+          )
+        ) {
           newCreated.push(item);
         }
       });
@@ -548,14 +613,13 @@ const useGallery = (
 
   useEffect(() => {
     if (
-      gallery?.collected &&
-      gallery?.created &&
       gallery?.collected?.length < 1 &&
-      gallery?.created?.length < 1
+      gallery?.created?.length < 1 &&
+      pageProfile?.ownedBy?.address
     ) {
       getGallery();
     }
-  }, []);
+  }, [pageProfile?.ownedBy?.address, lensConnected?.id]);
 
   useEffect(() => {
     if (postSuccess) {

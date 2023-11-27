@@ -14,12 +14,16 @@ import {
 } from "../../../../graphql/generated";
 import { MakePostComment } from "@/components/Autograph/types/autograph.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
+import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 
 export type SwitchTypeProps = {
   itemData: Publication;
   isApprovedSpend: boolean;
   type: string;
+  hoverPrompt: boolean;
+  setHoverPrompt: (e: SetStateAction<boolean>) => void;
   decryptLoading: boolean;
+  allSearchItems: AllSearchItemsState;
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   filterConstants: FilterValues | undefined;
   router: NextRouter;
@@ -154,10 +158,13 @@ export type ChromadinProps = {
   itemData: Creation;
   isApprovedSpend: boolean;
   type: string;
+  hoverPrompt: boolean;
+  setHoverPrompt: (e: SetStateAction<boolean>) => void;
   caretCoord: {
     x: number;
     y: number;
   };
+  allSearchItems: AllSearchItemsState;
   setCaretCoord: (
     e: SetStateAction<{
       x: number;
@@ -275,6 +282,7 @@ export interface PurchaseDetails {
   size: string;
   color: string;
   imageIndex: number;
+  priceIndex: number;
 }
 
 export type PublicationProps = {

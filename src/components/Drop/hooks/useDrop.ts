@@ -12,9 +12,12 @@ const useDrop = (drop: string, profile: Profile | undefined) => {
 
   const getDrop = async (): Promise<Drop | undefined> => {
     try {
-      const res = await getOneDrop(profile?.ownedBy?.address, drop);
+      const res = await getOneDrop(
+        profile?.ownedBy?.address,
+        drop?.replaceAll("_", " ")
+      );
 
-      return res?.data?.collectionCreateds?.[0];
+      return res?.data?.dropCreateds?.[0];
     } catch (err: any) {
       console.error(err.message);
     }
@@ -46,7 +49,7 @@ const useDrop = (drop: string, profile: Profile | undefined) => {
     if (collections?.length < 1 && !dropItem && profile && drop) {
       getDropItems();
     }
-  }, [profile]);
+  }, [profile, drop]);
 
   return {
     dropLoading,

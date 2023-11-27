@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  MutableRefObject,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import { CollectionDetails, ScreenDisplay } from "../types/autograph.types";
 import { erc721OwnershipCondition } from "@lens-protocol/metadata";
 import lensPost from "../../../../lib/helpers/api/postChain";
@@ -47,6 +40,7 @@ import {
 import { AccessControlConditions } from "@lit-protocol/types";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -127,34 +121,39 @@ const useCreate = (
     setCollectionLoading(true);
     try {
       const data = await getCollections(address!);
-      data?.data?.collectionCreateds?.map((collection: any) => ({
-        ...collection,
-        sizes: collection?.sizes
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        colors: collection?.colors
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        mediaTypes: collection?.mediaTypes
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        access: collection?.access
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        communities: collection?.communities
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-        tags: collection?.tags
-          ?.split(",")
-          .map((word: string) => word.trim())
-          .filter((word: string) => word.length > 0),
-      }));
-      setAllCollections(data?.data?.collectionCreateds || []);
+      const newCollections = data?.data?.collectionCreateds?.map(
+        (collection: any) => ({
+          ...collection,
+          sizes: collection?.sizes
+            ?.split(",")
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
+          colors: collection?.colors
+            ?.split(",")
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
+          mediaTypes: collection?.mediaTypes
+            ?.split(",")
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
+          access: collection?.access
+            ?.split(",")
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
+          communities: collection?.communities
+            ?.split(",")
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
+          tags: collection?.tags
+            ?.split(",")
+            .map((word: string) => word.trim())
+            .filter((word: string) => word.length > 0),
+          prices: collection?.prices?.map(
+            (price: string) => Number(price) / 10 ** 18
+          ),
+        })
+      );
+      setAllCollections(newCollections || []);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -228,9 +227,9 @@ const useCreate = (
 
       if (edit) {
         await lensHide(
-          `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
-            collectionDetails?.pubId
-          )?.toString(16)}`,
+          `${
+            "0x" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
+          }-${"0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
           dispatch
         );
         const { request } = await publicClient.simulateContract({
@@ -344,9 +343,9 @@ const useCreate = (
       });
 
       await lensHide(
-        `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
-          collectionDetails?.pubId
-        )?.toString(16)}`,
+        `${"0x" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
+          "0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))
+        }`,
         dispatch
       );
 
@@ -362,9 +361,9 @@ const useCreate = (
       await publicClient.waitForTransactionReceipt({ hash: res });
       await cleanCollection(
         "deleted",
-        `${Number(collectionDetails?.profileId)?.toString(16)}-${Number(
-          collectionDetails?.pubId
-        )?.toString(16)}`
+        `${"0x" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
+          "0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))
+        }`
       );
     } catch (err: any) {
       if (
@@ -439,7 +438,7 @@ const useCreate = (
       });
       dispatch(
         setPostSuccess({
-          actionValue: "coll",
+          actionValue: "collection",
           actionPubId,
           actionType,
         })
@@ -545,14 +544,14 @@ const useCreate = (
 
       if (encrypted) {
         const authSig = await checkAndSignAuthMessage({
-          chain: "polygonMumbai",
+          chain: "mumbai",
         });
 
         const accessControlConditions = [
           {
             contractAddress: "",
             standardContractType: "",
-            chain: "polygonMumbai",
+            chain: "mumbai",
             method: "",
             parameters: [":userAddress"],
             returnValueTest: {
@@ -566,7 +565,7 @@ const useCreate = (
           {
             contractAddress: NFT_CREATOR_ADDRESS,
             standardContractType: "ERC721",
-            chain: 137,
+            chain: 80001,
             method: "balanceOf",
             parameters: [":userAddress"],
             returnValueTest: {
@@ -580,7 +579,7 @@ const useCreate = (
             accessControlConditions:
               accessControlConditions as AccessControlConditions,
             authSig,
-            chain: "polygonMumbai",
+            chain: "mumbai",
             dataToEncrypt: JSON.stringify(toHash),
           },
           client!
@@ -636,7 +635,7 @@ const useCreate = (
       const result = await client.gated.encryptPublicationMetadata(
         postContentURI as any,
         erc721OwnershipCondition({
-          contract: { address: NFT_CREATOR_ADDRESS, chainId: 137 },
+          contract: { address: NFT_CREATOR_ADDRESS, chainId: 80001 },
         })
       );
 
@@ -663,7 +662,7 @@ const useCreate = (
     ) {
       getAllCollections();
     }
-  }, []);
+  }, [screenDisplay, lensConnected?.id, address]);
 
   return {
     createCase,

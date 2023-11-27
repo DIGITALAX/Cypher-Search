@@ -3,7 +3,6 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import SearchBar from "../../Search/modules/SearchBar";
 import { HeaderProps } from "../../Search/types/search.types";
-import Link from "next/link";
 import Accounts from "@/components/Common/modules/Accounts";
 import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
@@ -33,6 +32,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   handleLogout,
   searchItems,
   fullScreenVideo,
+  filterChange
 }): JSX.Element => {
   return (
     <div
@@ -74,6 +74,7 @@ const Header: FunctionComponent<HeaderProps> = ({
       </div>
       {includeSearch && (
         <SearchBar
+          filterChange={filterChange}
           dispatch={dispatch}
           handleSearch={handleSearch!}
           searchActive={searchActive}

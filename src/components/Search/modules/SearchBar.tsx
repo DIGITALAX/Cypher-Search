@@ -5,6 +5,7 @@ import Image from "next/legacy/image";
 import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 import { setLayoutSwitch } from "../../../../redux/reducers/layoutSwitchSlice";
 import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
+import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 
 const SearchBar: FunctionComponent<SearchBarProps> = ({
   handleSearch,
@@ -16,6 +17,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
   layoutAmount,
   router,
   searchItems,
+  filterChange,
 }): JSX.Element => {
   return (
     <div
@@ -87,9 +89,10 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
               dispatch(
                 setFiltersOpen({
                   actionValue: !filtersOpen,
-                  actionAllow: true,
+                  actionAllow: filterChange ? true : false,
                 })
               );
+              dispatch(setFilterChange(false));
             }}
           >
             <Image

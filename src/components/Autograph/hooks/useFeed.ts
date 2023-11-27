@@ -7,6 +7,7 @@ import {
   PublicationType,
   Quote,
   Comment,
+  PublicationStats,
 } from "../../../../graphql/generated";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensComment from "../../../../lib/helpers/api/commentPost";
@@ -182,7 +183,7 @@ const useFeed = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -245,16 +246,26 @@ const useFeed = (
 
     try {
       await lensLike(id, dispatch, hasReacted);
-      updateInteractions(index, {
-        hasReacted: hasReacted ? false : true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasReacted: hasReacted ? false : true,
+        },
+        "reactions",
+        hasReacted ? false : true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasReacted: hasReacted ? false : true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasReacted: hasReacted ? false : true,
+            },
+            "reactions",
+            hasReacted ? false : true
+          ),
         dispatch
       );
     }
@@ -280,7 +291,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -292,24 +303,34 @@ const useFeed = (
         clientWallet,
         publicClient
       );
-      updateInteractions(index, {
-        hasActed: {
-          __typename: "OptimisticStatusResult",
-          isFinalisedOnchain: true,
-          value: true,
+      updateInteractions(
+        index,
+        {
+          hasActed: {
+            __typename: "OptimisticStatusResult",
+            isFinalisedOnchain: true,
+            value: true,
+          },
         },
-      });
+        "countOpenActions",
+        true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasActed: {
-              __typename: "OptimisticStatusResult",
-              isFinalisedOnchain: true,
-              value: true,
+          updateInteractions(
+            index,
+            {
+              hasActed: {
+                __typename: "OptimisticStatusResult",
+                isFinalisedOnchain: true,
+                value: true,
+              },
             },
-          }),
+            "countOpenActions",
+            true
+          ),
         dispatch
       );
     }
@@ -334,7 +355,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -344,16 +365,26 @@ const useFeed = (
         clientWallet,
         publicClient
       );
-      updateInteractions(index, {
-        hasMirrored: true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasMirrored: true,
+        },
+        "mirrors",
+        true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasReacted: true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasMirrored: true,
+            },
+            "mirrors",
+            true
+          ),
         dispatch
       );
     }
@@ -391,16 +422,26 @@ const useFeed = (
     });
     try {
       await lensBookmark(on, dispatch);
-      updateInteractions(index, {
-        hasBookmarked: true,
-      });
+      updateInteractions(
+        index,
+        {
+          hasBookmarked: true,
+        },
+        "bookmarks",
+        true
+      );
     } catch (err: any) {
       errorChoice(
         err,
         () =>
-          updateInteractions(index, {
-            hasBookmarked: true,
-          }),
+          updateInteractions(
+            index,
+            {
+              hasBookmarked: true,
+            },
+            "bookmarks",
+            true
+          ),
         dispatch
       );
     }
@@ -423,7 +464,7 @@ const useFeed = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 
@@ -438,7 +479,12 @@ const useFeed = (
     });
   };
 
-  const updateInteractions = (index: number, valueToUpdate: Object) => {
+  const updateInteractions = (
+    index: number,
+    valueToUpdate: Object,
+    statToUpdate: string,
+    increase: boolean
+  ) => {
     const newItems = [...profileFeed];
     newItems[index] = (
       newItems[index]?.__typename === "Mirror"
@@ -450,6 +496,13 @@ const useFeed = (
                 ...(newItems[index] as Mirror).mirrorOn?.operations,
                 ...valueToUpdate,
               },
+              stats: {
+                ...(newItems[index] as Post).stats,
+                [statToUpdate]:
+                  (newItems[index] as Post).stats?.[
+                    statToUpdate as keyof PublicationStats
+                  ] + (increase ? 1 : -1),
+              },
             },
           }
         : {
@@ -457,6 +510,13 @@ const useFeed = (
             operations: {
               ...(newItems[index] as Post).operations,
               ...valueToUpdate,
+            },
+            stats: {
+              ...(newItems[index] as Post).stats,
+              [statToUpdate]:
+                (newItems[index] as Post).stats?.[
+                  statToUpdate as keyof PublicationStats
+                ] + (increase ? 1 : -1),
             },
           }
     ) as Post & {

@@ -1,39 +1,26 @@
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import getPublications from "../../graphql/lens/queries/publications";
-import { numberToItemTypeMap } from "../constants";
-import { Post, Profile, PublicationType } from "../../graphql/generated";
+import { Post, Profile } from "../../graphql/generated";
+import toHexWithLeadingZero from "./leadingZero";
+import getPublication from "../../graphql/lens/queries/publication";
 
 const handleCollectionProfilesAndPublications = async (
   collections: Creation[],
   lens: Profile | undefined
 ): Promise<Creation[] | undefined> => {
   try {
-    const { data } = await getPublications(
-      {
-        where: {
-          publicationIds: (collections || [])?.map(
-            (item) =>
-              `${numberToItemTypeMap[Number(item?.origin)]}/${
-                "0x" + Number(item?.pubId)?.toString(16)
-              }-${"0x" + Number(item?.profileId)?.toString(16)}`
-          ),
-          publicationTypes: [PublicationType.Post],
+    const promises = collections?.map(async (collection: Creation) => {
+      const publication = await getPublication(
+        {
+          forId: `${
+            "0x" + toHexWithLeadingZero(Number(collection?.profileId))
+          }-${"0x" + toHexWithLeadingZero(Number(collection?.pubId))}`,
         },
-      },
-      lens?.id
-    );
-
-    const newCollections: Creation[] = (collections || [])?.map(
-      (collection: Creation) => ({
+        lens?.id
+      );
+      return {
         ...collection,
-        profile: (
-          data?.publications?.items.find(
-            (item) => (item as Post).by.id === collection.profileId
-          ) as Post
-        ).by,
-        publication: data?.publications?.items.find(
-          (item) => item.id === collection.pubId
-        ),
+        profile: publication?.data?.publication?.by as Profile,
+        publication: publication?.data?.publication,
         sizes: (collection?.sizes as any)
           ?.split(",")
           .map((word: string) => word.trim())
@@ -58,10 +45,13 @@ const handleCollectionProfilesAndPublications = async (
           ?.split(",")
           .map((word: string) => word.trim())
           .filter((word: string) => word.length > 0),
-      })
-    ) as Creation[];
-
-    return newCollections;
+        prices: collection?.prices?.map((price: string) =>
+          String(Number(price) / 10 ** 18)
+        ),
+      } as Creation;
+    });
+    const colls = await Promise.all(promises);
+    return colls;
   } catch (err: any) {
     console.error(err.message);
   }

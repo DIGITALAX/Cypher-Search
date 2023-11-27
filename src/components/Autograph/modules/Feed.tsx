@@ -47,18 +47,6 @@ const Feed: FunctionComponent<FeedProps> = ({
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10 otro:order-1 order-2">
-      <div
-        className="absolute w-full h-[50rem] bottom-0 items-end justify-center otro:hidden flex"
-        draggable={false}
-      >
-        <Image
-          layout="fill"
-          src={`${INFURA_GATEWAY}/ipfs/QmV4yM96Dt2ypLN9GMHkXPTkeCGfTQfJErJLfVjikxt52s`}
-          draggable={false}
-          objectFit="contain"
-        />
-        <div className="absolute w-full h-full bg-black opacity-[85%]"></div>
-      </div>
       <div className="relative flex items-center justify-start flex-col gap-4 bg-olor rounded-sm px-px sm:px-4 py-4 w-full sm:w-96 h-fit">
         <div className="absolute flex items-center justify-center text-xl sm:text-3xl font-bit text-[#00FFBA] top-3 w-fit h-fit blur-sm break-words">
           Recent Updates

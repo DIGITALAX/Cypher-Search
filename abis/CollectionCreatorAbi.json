@@ -15,6 +15,11 @@
         "internalType": "address",
         "name": "_printAccessControlAddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_printSplitsDataAddress",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -33,6 +38,16 @@
   {
     "inputs": [],
     "name": "AddressNotMarket",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidCurrency",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidRemoval",
     "type": "error"
   },
   {
@@ -107,6 +122,11 @@
           {
             "internalType": "bool",
             "name": "unlimited",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "encrypted",
             "type": "bool"
           }
         ],
@@ -197,6 +217,19 @@
     "outputs": [
       {
         "internalType": "contract PrintDesignData",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "printSplitsData",
+    "outputs": [
+      {
+        "internalType": "contract PrintSplitsData",
         "name": "",
         "type": "address"
       }
@@ -316,6 +349,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newPrintSplitsDataAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setPrintSplitsDataAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "symbol",
     "outputs": [
@@ -326,91 +372,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_collectionId",
-        "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "address[]",
-            "name": "acceptedTokens",
-            "type": "address[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "prices",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "communityIds",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "string",
-            "name": "uri",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "fulfiller",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "creator",
-            "type": "address"
-          },
-          {
-            "internalType": "enum PrintLibrary.PrintType",
-            "name": "printType",
-            "type": "uint8"
-          },
-          {
-            "internalType": "enum PrintLibrary.Origin",
-            "name": "origin",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "pubId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "profileId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "dropId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "unlimited",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct PrintLibrary.MintParams",
-        "name": "_params",
-        "type": "tuple"
-      }
-    ],
-    "name": "updateCollection",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -5,6 +5,7 @@ import { ChangeEvent, FunctionComponent } from "react";
 import { ContentSortProps } from "../types/search.types";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
 import ImageDropDown from "./ImageDropDown";
+import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 
 const ContentSort: FunctionComponent<ContentSortProps> = ({
   openDropDown,
@@ -57,6 +58,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             ),
           });
 
+          if (
+            filterValues?.hashtag !=
+            (e.target as HTMLInputElement).value.toLowerCase()
+          ) {
+            dispatch(setFilterChange(true));
+          }
+
           dispatch(
             setFilter({
               ...filterValues,
@@ -93,6 +101,10 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               newValues = filterValues.hashtag + ` ${value},`;
             }
 
+            if (filterValues?.hashtag != newValues) {
+              dispatch(setFilterChange(true));
+            }
+
             dispatch(
               setFilter({
                 ...filterValues,
@@ -122,6 +134,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                 )
             ),
           });
+
+          if (
+            filterValues?.community !=
+            (e.target as HTMLInputElement).value.toLowerCase()
+          ) {
+            dispatch(setFilterChange(true));
+          }
 
           dispatch(
             setFilter({
@@ -159,6 +178,10 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               newValues = filterValues.community + ` ${value},`;
             }
 
+            if (filterValues?.community != newValues) {
+              dispatch(setFilterChange(true));
+            }
+
             dispatch(
               setFilter({
                 ...filterValues,
@@ -188,6 +211,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                 )
             ),
           });
+
+          if (
+            filterValues?.microbrand !=
+            (e.target as HTMLInputElement).value.toLowerCase()
+          ) {
+            dispatch(setFilterChange(true));
+          }
 
           dispatch(
             setFilter({
@@ -223,6 +253,10 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               newValues = allValues?.join(", ")?.trim();
             } else {
               newValues = filterValues?.microbrand + ` ${value},`;
+            }
+
+            if (filterValues?.microbrand != newValues) {
+              dispatch(setFilterChange(true));
             }
 
             dispatch(
@@ -289,6 +323,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               ),
             });
 
+            if (
+              filterValues?.origin !=
+              (e.target as HTMLInputElement).value.toLowerCase()
+            ) {
+              dispatch(setFilterChange(true));
+            }
+
             dispatch(
               setFilter({
                 ...filterValues,
@@ -325,6 +366,10 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                 newValues = filterValues?.origin + ` ${value},`;
               }
 
+              if (filterValues?.origin != newValues) {
+                dispatch(setFilterChange(true));
+              }
+
               dispatch(
                 setFilter({
                   ...filterValues,
@@ -355,6 +400,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                 )
             ),
           });
+
+          if (
+            filterValues?.format !=
+            (e.target as HTMLInputElement).value.toLowerCase()
+          ) {
+            dispatch(setFilterChange(true));
+          }
 
           dispatch(
             setFilter({
@@ -392,6 +444,10 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               newValues = filterValues?.format + ` ${value},`;
             }
 
+            if (filterValues?.format != newValues) {
+              dispatch(setFilterChange(true));
+            }
+
             dispatch(
               setFilter({
                 ...filterValues,
@@ -421,6 +477,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                 )
             ),
           });
+
+          if (
+            filterValues?.catalog !=
+            (e.target as HTMLInputElement).value.toLowerCase()
+          ) {
+            dispatch(setFilterChange(true));
+          }
 
           dispatch(
             setFilter({
@@ -458,6 +521,10 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               newValues = filterValues?.catalog + ` ${value},`;
             }
 
+            if (filterValues?.catalog != newValues) {
+              dispatch(setFilterChange(true));
+            }
+
             dispatch(
               setFilter({
                 ...filterValues,
@@ -487,6 +554,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                 )
             ),
           });
+
+          if (
+            filterValues?.access !=
+            (e.target as HTMLInputElement).value.toLowerCase()
+          ) {
+            dispatch(setFilterChange(true));
+          }
 
           dispatch(
             setFilter({
@@ -524,6 +598,10 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               newValues = filterValues?.access + ` ${value},`;
             }
 
+            if (filterValues?.access != newValues) {
+              dispatch(setFilterChange(true));
+            }
+
             dispatch(
               setFilter({
                 ...filterValues,
@@ -544,6 +622,9 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               type="number"
               placeholder={String(filterValues.editions)}
               onChange={(e) => {
+                if (filterValues?.editions != Number(e.target.value)) {
+                  dispatch(setFilterChange(true));
+                }
                 dispatch(
                   setFilter({
                     ...filterValues,
@@ -572,6 +653,9 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                   filterValues.available ? "bg-brill text-black" : "text-white"
                 }`}
                 onClick={() => {
+                  if (filterValues?.available != true) {
+                    dispatch(setFilterChange(true));
+                  }
                   dispatch(
                     setFilter({
                       ...filterValues,
@@ -587,6 +671,9 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                   !filterValues.available ? "bg-brill text-black" : "text-white"
                 }`}
                 onClick={() => {
+                  if (filterValues?.available != false) {
+                    dispatch(setFilterChange(true));
+                  }
                   dispatch(
                     setFilter({
                       ...filterValues,

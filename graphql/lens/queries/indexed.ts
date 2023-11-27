@@ -57,7 +57,6 @@ const pollUntilIndexed = async (
   while (count < 10) {
     try {
       const { data } = await getIndexed(request);
-      console.log({data})
       if (data && data.lensTransactionStatus) {
         switch (data.lensTransactionStatus.status) {
           case LensTransactionStatusType.Failed:

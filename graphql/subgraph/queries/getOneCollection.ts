@@ -32,6 +32,7 @@ const COLLECTION = `
       communities
       collectionId
       access
+      acceptedTokens
       unlimited
       colors
       sizes
@@ -71,6 +72,7 @@ export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
       collectionId
       soldTokens
       access
+      acceptedTokens
       unlimited
       colors
       sizes
@@ -136,6 +138,7 @@ const COLLECTION_TITLE = `
       sizes
       origin
       blockTimestamp
+      acceptedTokens
     }
   }
 `;

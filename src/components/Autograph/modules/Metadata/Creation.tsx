@@ -44,72 +44,88 @@ const Creation: FunctionComponent<CreationProps> = ({
         className={`relative w-full h-full flex items-center justify-center hover:opacity-90 rounded-md cursor-pointer border-2 ${
           created ? "border-lirio" : "border-olor"
         }`}
-        onClick={() => {
-          const newItem = {
-            item,
-            amount: 1,
-            price: Number(item.prices?.[0]),
-            type: numberToItemTypeMap[Number(item?.origin)],
-            color: item?.colors?.[0],
-            size: item?.sizes?.[0],
-            purchased: false,
-            chosenIndex: 0,
-          };
-
-          const existingItem = cartItems?.find(
-            (value) => value?.item?.pubId === item?.pubId
-          );
-
-          if (existingItem) {
-            const newCartItems = [...cartItems];
-            const itemIndex = newCartItems?.indexOf(existingItem);
-
-            if (
-              existingItem?.color === newItem?.color &&
-              existingItem?.size === newItem?.size
-            ) {
-              newCartItems[itemIndex] = {
-                ...existingItem,
-                amount: existingItem?.amount + 1,
-              };
-            } else {
-              newCartItems.splice(itemIndex, 1);
-              newCartItems.push(newItem);
-            }
-
-            dispatch(setCartItems(newCartItems));
-            setCypherStorageCart(JSON.stringify(newCartItems));
-          } else {
-            dispatch(setCartItems([...cartItems, newItem]));
-            setCypherStorageCart(JSON.stringify([...cartItems, newItem]));
-          }
-
-          dispatch(setCartAnim(true));
-        }}
+        onClick={() =>
+          router.push(
+            `/item/${
+              numberToItemTypeMap[Number(item?.origin)]
+            }/${item?.title?.replaceAll(" ", "_")}`
+          )
+        }
         id="staticLoad"
       >
         {item?.images?.[0] && (
           <Image
             layout="fill"
-            src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
+            src={`${INFURA_GATEWAY}/ipfs/${
+              item?.images?.[0]?.split("ipfs://")?.[1]
+            }`}
             draggable={false}
             className="rounded-md"
             objectFit="cover"
             onError={(e) => handleImageError(e)}
           />
         )}
+        <div
+          className={`absolute right-2 top-2 text-xxs text-white font-bit bg-offBlack flex items-center justify-center border border-white px-1 py-px  ${
+            item?.amount == item?.soldTokens ? "w-fit h-fit" : "w-7 h-7"
+          }`}
+        >
+          <div className="relative w-fit h-fit flex items-center justify-center top-px">
+            {item?.amount == item?.soldTokens
+              ? "SOLD OUT"
+              : `${item?.soldTokens ? item?.soldTokens : item?.amount}/${
+                  item?.amount
+                }`}
+          </div>
+        </div>
       </div>
       <div className="relative flex w-full h-fit flex flex-row justify-between gap-2">
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">
           <div
             className="relative w-7 h-7 items-center justify-center flex cursor-pointer"
-            onClick={() =>
-              router.push(
-                `/item/${numberToItemTypeMap[Number(item?.origin)]}/${
-                  item?.pubId
-                }`
-              )
-            }
+            onClick={() => {
+              const newItem = {
+                item,
+                amount: 1,
+                price: Number(item?.prices?.[0]),
+                type: numberToItemTypeMap[Number(item?.origin)],
+                color: item?.colors?.[0],
+                size: item?.sizes?.[0],
+                purchased: false,
+                chosenIndex: 0,
+              };
+
+              const existingItem = cartItems?.find(
+                (value) => value?.item?.pubId === item?.pubId
+              );
+
+              if (existingItem) {
+                const newCartItems = [...cartItems];
+                const itemIndex = newCartItems?.indexOf(existingItem);
+
+                if (
+                  existingItem?.color === newItem?.color &&
+                  existingItem?.size === newItem?.size
+                ) {
+                  newCartItems[itemIndex] = {
+                    ...existingItem,
+                    amount: existingItem?.amount + 1,
+                  };
+                } else {
+                  newCartItems.splice(itemIndex, 1);
+                  newCartItems.push(newItem);
+                }
+
+                dispatch(setCartItems(newCartItems));
+                setCypherStorageCart(JSON.stringify(newCartItems));
+              } else {
+                dispatch(setCartItems([...cartItems, newItem]));
+                setCypherStorageCart(JSON.stringify([...cartItems, newItem]));
+              }
+
+              dispatch(setCartAnim(true));
+            }}
+            title="Add to Cart"
           >
             <Image
               layout="fill"
@@ -150,7 +166,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             ${item?.prices?.[0]}
           </div>
         </div>
-        {profileHovers && (
+        {profileHovers?.[index] && (
           <HoverProfile
             followLoading={followLoading}
             followProfile={followProfile}
@@ -164,8 +180,8 @@ const Creation: FunctionComponent<CreationProps> = ({
             parentId={item?.pubId}
             top={"auto"}
             bottom={"2px"}
-            left={"auto"}
-            right={"2px"}
+            left={"2px"}
+            right={"auto"}
           />
         )}
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">
@@ -197,10 +213,11 @@ const Creation: FunctionComponent<CreationProps> = ({
               setOpenMirrorChoice={setOpenMirrorChoice}
               interactionsLoading={interactionsLoading}
               index={index}
-              type={undefined}
               publication={item?.publication}
               hideCollect
               router={router}
+              display={numberToItemTypeMap[Number(item?.origin)]}
+              gallery
             />
           </div>
         )}

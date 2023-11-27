@@ -17,13 +17,16 @@ export default function Home({ router }: { router: NextRouter }) {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygon,
+    chain: polygonMumbai,
     transport: http(
       `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
     ),
   });
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
+  );
+  const filterChange = useSelector(
+    (state: RootState) => state.app.filterChangeReducer.change
   );
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
@@ -145,6 +148,7 @@ export default function Home({ router }: { router: NextRouter }) {
         <Header
           fullScreenVideo={fullScreenVideo}
           cartAnim={cartAnim}
+          filterChange={filterChange}
           handleSearch={handleSearch}
           searchActive={searchActive}
           searchItems={allSearchItems}

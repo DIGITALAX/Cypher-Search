@@ -54,8 +54,8 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
                 );
                 router.push(
                   type === "collection"
-                    ? `/item/pub/${pubId}`
-                    : `/autograph/${handle}/drop/${pubId}`
+                    ? `/item/chromadin/${pubId?.replaceAll(" ", "_")}`
+                    : `/autograph/${handle}/drop/${pubId?.replaceAll(" ", "_")}`
                 );
               }}
               id="success"

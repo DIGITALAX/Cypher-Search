@@ -6,18 +6,15 @@ import { getDrops } from "../../../../graphql/subgraph/queries/getDrops";
 import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { polygonMumbai } from "viem/chains";
-import { COLLECTION_CREATOR, INFURA_GATEWAY } from "../../../../lib/constants";
+import { COLLECTION_CREATOR } from "../../../../lib/constants";
 import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
 import convertToFile from "../../../../lib/helpers/convertToFile";
 
 const useDrop = (
-  screenDisplay: ScreenDisplay,
   publicClient: PublicClient,
   dispatch: Dispatch,
   address: `0x${string}` | undefined,
-  isDesigner: boolean,
-  pageProfile: Profile | undefined,
-  lensConnected: Profile | undefined
+  pageProfile: Profile | undefined
 ) => {
   const [dropsLoading, setDropsLoading] = useState<boolean>(false);
   const [createDropLoading, setCreateDropLoading] = useState<boolean>(false);
@@ -185,16 +182,10 @@ const useDrop = (
   };
 
   useEffect(() => {
-    if (
-      screenDisplay === ScreenDisplay.Gallery &&
-      (allDrops?.length < 1 || !allDrops) &&
-      address &&
-      isDesigner &&
-      lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle
-    ) {
+    if (allDrops?.length < 1 && pageProfile?.ownedBy?.address) {
       getAllDrops();
     }
-  }, [screenDisplay, address, lensConnected, pageProfile]);
+  }, [address, pageProfile?.ownedBy?.address]);
 
   return {
     createDrop,

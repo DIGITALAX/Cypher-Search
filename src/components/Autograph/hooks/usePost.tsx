@@ -59,7 +59,7 @@ const usePost = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygon,
+        chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
 

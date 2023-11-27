@@ -81,7 +81,7 @@ const Drop: FunctionComponent<DropProps> = ({
                           onClick={(e) => {
                             e.stopPropagation();
                             router.push(
-                              `/autograph/${handle}/drop/${item?.title}`
+                              `/autograph/${handle}/drop/${item?.title?.replaceAll(" ", "_")}`
                             );
                           }}
                         >

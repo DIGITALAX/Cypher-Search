@@ -108,11 +108,6 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                 ? simpleCollect
                 : undefined
             }
-            type={
-              publication?.__typename === "Mirror"
-                ? publication?.mirrorOn?.openActionModules?.[0]?.__typename
-                : (publication as Post)?.openActionModules?.[0]?.__typename
-            }
           />
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">

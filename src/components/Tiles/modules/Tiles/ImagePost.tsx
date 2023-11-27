@@ -307,11 +307,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     ? simpleCollect
                     : undefined
                 }
-                type={
-                  publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn?.openActionModules?.[0]?.__typename
-                    : (publication as Post)?.openActionModules?.[0]?.__typename
-                }
               />
               <div className="relative mb-0 flex flex-row items-center justify-between gap-2 w-full h-fit">
                 <div className="relative w-6 h-6 items-center justify-center flex">
@@ -608,11 +603,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   )
                     ? simpleCollect
                     : undefined
-                }
-                type={
-                  publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn?.openActionModules?.[0]?.__typename
-                    : (publication as Post)?.openActionModules?.[0]?.__typename
                 }
               />
             </div>
