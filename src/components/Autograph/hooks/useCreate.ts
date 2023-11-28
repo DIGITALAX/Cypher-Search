@@ -425,6 +425,8 @@ const useCreate = (
     }
   };
 
+  console.log({ allCollections });
+
   const handleMedia = async (e: ChangeEvent<HTMLInputElement>, id: string) => {
     const file = e.target?.files?.[0];
     if (file) {
@@ -667,6 +669,8 @@ const useCreate = (
       getAllCollections();
     }
   }, [screenDisplay, lensConnected?.id, address]);
+
+  console.log({collectionDetails})
 
   return {
     createCase,

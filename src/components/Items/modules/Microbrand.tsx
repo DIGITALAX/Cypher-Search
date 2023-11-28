@@ -29,7 +29,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
 }): JSX.Element => {
   const profilePicture = createProfilePicture(itemData?.metadata?.picture);
   return (
-    <div className="relative w-full min-h-[50rem] flex items-center justify-start flex-col  pt-52 sm:pt-40 md:pt-32 px-12 gap-7 h-fit">
+    <div className="relative w-full min-h-[50rem] flex items-center justify-start flex-col  pt-52 sm:pt-40 md:pt-36 px-12 gap-7 h-fit">
       <div className="relative w-full h-fit flex flex-col gap-6 items-center justify-center">
         <div className="relative w-full h-[10rem] flex items-center justify-center">
           {relatedData?.microbrand?.[0]?.microbrandCover && (
@@ -47,7 +47,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
           )}
         </div>
         <div className="relative w-fit h-fit flex flex-col items-center justify-center">
-          <div className="relative w-fit h-fit ml-auto text-3xl text-white font-aust flex items-center justify-center">
+          <div className="relative w-fit h-fit text-3xl text-white font-aust flex items-center justify-center">
             {relatedData?.microbrand?.[0]?.microbrand}
           </div>
           <div

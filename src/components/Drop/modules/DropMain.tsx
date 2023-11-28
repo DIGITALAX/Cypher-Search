@@ -6,7 +6,6 @@ import { INFURA_GATEWAY, numberToItemTypeMap } from "../../../../lib/constants";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
-import handleImageError from "../../../../lib/helpers/handleImageError";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const DropMain: FunctionComponent<DropMainProps> = ({
@@ -16,7 +15,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
   cartItems,
 }) => {
   return (
-    <div className="relative w-full h-fit flex items-center justify-center flex-row pt-52 sm:pt-40 md:pt-32 px-2 sm:px-10">
+    <div className="relative w-full h-fit flex items-center justify-center flex-row pt-52 sm:pt-40 md:pt-36 px-2 sm:px-10">
       <div className="relative w-full h-fit flex items-center justify-start">
         <div className="relative w-fit h-fit flex items-center justify-start flex-wrap gap-5">
           {collections?.map((collection: Creation, index: number) => {
