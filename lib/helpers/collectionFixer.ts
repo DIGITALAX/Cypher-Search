@@ -5,12 +5,11 @@ const collectionFixer = async (collection: Creation): Promise<Creation> => {
   let ipfs = {};
   if (!collection?.collectionMetadata?.title) {
     let data = await fetchIPFSJSON(collection?.uri);
-    const { collectionMetadata, ...rest } = data;
+    const { cover, ...rest } = data;
     ipfs = {
-      ...rest,
       collectionMetadata: {
-        ...collectionMetadata,
-        mediaCover: collectionMetadata?.cover,
+        ...rest,
+        mediaCover: rest?.cover,
       },
     };
   }

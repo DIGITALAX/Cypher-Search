@@ -58,14 +58,14 @@ export const getDrops = async (
 
 export const getOneDrop = async (
   creator: string,
-  title: string
+  dropTitle: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(DROP),
     variables: {
       creator,
-      title,
+      dropTitle,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

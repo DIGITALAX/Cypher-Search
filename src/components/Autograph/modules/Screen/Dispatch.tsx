@@ -24,6 +24,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   dispatch,
   allDrops,
   setCreateCase,
+  edit
 }): JSX.Element => {
   const microBrands = lensConnected?.metadata?.attributes?.find(
     (item) => item?.key === "microbrandCypher"
@@ -387,12 +388,13 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                       <div
                         className={`relative h-10 flex flex-row justify-between p-2 w-40 items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack`}
-                        onClick={() =>
-                          setCollectionSettings((prev) => ({
-                            ...prev,
-                            dropOpen: !prev.dropOpen,
-                          }))
-                        }
+                        onClick={() => {
+                          if (!edit)
+                            setCollectionSettings((prev) => ({
+                              ...prev,
+                              dropOpen: !prev.dropOpen,
+                            }));
+                        }}
                       >
                         <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
                           <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
@@ -421,14 +423,16 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                   key={index}
                                   className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust text-sm cursor-pointer hover:opacity-80"
                                   onClick={() => {
-                                    setCollectionSettings((prev) => ({
-                                      ...prev,
-                                      dropOpen: !prev.dropOpen,
-                                    }));
-                                    setCollectionDetails((prev) => ({
-                                      ...prev,
-                                      dropId: item.dropId,
-                                    }));
+                                    if (!edit) {
+                                      setCollectionSettings((prev) => ({
+                                        ...prev,
+                                        dropOpen: !prev.dropOpen,
+                                      }));
+                                      setCollectionDetails((prev) => ({
+                                        ...prev,
+                                        dropId: item.dropId,
+                                      }));
+                                    }
                                   }}
                                 >
                                   <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">

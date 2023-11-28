@@ -1379,6 +1379,7 @@ export type DispatchProps = {
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
   allDrops: Drop[];
+  edit: boolean;
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
@@ -1531,7 +1532,7 @@ export type SwitchCreateProps = {
       dropOpen: boolean;
     }>
   ) => void;
-
+  edit: boolean;
   lensConnected: Profile | undefined;
 };
 

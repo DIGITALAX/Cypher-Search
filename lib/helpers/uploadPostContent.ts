@@ -44,19 +44,29 @@ const uploadPostContent = async (
     const mediaWithKeys = [
       ...(audio || []).map((audio) => ({
         type: "audio/mpeg",
-        item: convertToFile(audio, "audio/mpeg"),
+        item: audio?.includes("ipfs://")
+          ? audio
+          : convertToFile(audio, "audio/mpeg"),
       })),
       ...(videos || []).map((video) => ({
         type: "video/mp4",
-        item: convertToFile(video, "video/mp4"),
+        item: video?.includes("ipfs://")
+          ? video
+          : convertToFile(video, "video/mp4"),
       })),
       ...(cleanedImages || []).map((image) => ({
         type: "image/png",
-        item: image && convertToFile(image, "image/png"),
+        item:
+          image &&
+          (image?.includes("ipfs://")
+            ? image
+            : convertToFile(image, "image/png")),
       })),
       ...[...(gifs || []), ...(cleanedGifs || [])].map((gif) => ({
         type: "image/gif",
-        item: gif && convertToFile(gif, "image/gif"),
+        item:
+          gif &&
+          (gif?.includes("ipfs://") ? gif : convertToFile(gif, "image/gif")),
       })),
     ]
       ?.filter(Boolean)
@@ -64,22 +74,35 @@ const uploadPostContent = async (
 
     const uploads = await Promise.all(
       mediaWithKeys.map(async (media) => {
-        const response = await fetch("/api/ipfs", {
-          method: "POST",
-          body: media.item,
-        });
-        const responseJSON = await response.json();
-        return { type: media?.type, item: "ipfs://" + responseJSON.cid };
+        if (
+          typeof media?.item == "string" &&
+          (media?.item as String)?.includes("ipfs://")
+        ) {
+          return { type: media?.type, item: media?.item };
+        } else {
+          const response = await fetch("/api/ipfs", {
+            method: "POST",
+            body: media.item,
+          });
+          const responseJSON = await response.json();
+          return { type: media?.type, item: "ipfs://" + responseJSON.cid };
+        }
       })
     );
 
     if (cover) {
-      const loadedCover = await fetch("/api/ipfs", {
-        method: "POST",
-        body: convertToFile(cover, "image/png"),
-      });
-      const res = await loadedCover.json();
-      coverJSON = "ipfs://" + res?.cid;
+      if (typeof cover == "string" && (cover as String)?.includes("ipfs://")) {
+        coverJSON = cover;
+      } else {
+        const loadedCover = await fetch("/api/ipfs", {
+          method: "POST",
+          body: cover?.includes("ipfs://")
+            ? cover
+            : convertToFile(cover, "image/png"),
+        });
+        const res = await loadedCover.json();
+        coverJSON = "ipfs://" + res?.cid;
+      }
     }
 
     const primaryMedia = uploads[0];

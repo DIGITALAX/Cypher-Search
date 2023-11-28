@@ -29,6 +29,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   setCreateCase,
   allCollections,
   collectionLoading,
+  edit,
 }): JSX.Element => {
   switch (type) {
     case "collection":
@@ -44,6 +45,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
           setCollectionSettings={setCollectionSettings}
           dispatch={dispatch}
           setCreateCase={setCreateCase}
+          edit={edit}
         />
       );
 
@@ -108,18 +110,22 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             collectionId: item?.collectionId,
                             price: item?.prices?.[0],
                             acceptedTokens: item?.acceptedTokens,
-                            images: [
-                              {
-                                media: item?.collectionMetadata?.images?.[0],
-                                type: item?.collectionMetadata?.mediaTypes?.[0],
-                              },
-                            ],
+                            images: item?.collectionMetadata?.images?.[0]
+                              ? [
+                                  {
+                                    media:
+                                      item?.collectionMetadata?.images?.[0],
+                                    type: item?.collectionMetadata
+                                      ?.mediaTypes?.[0],
+                                  },
+                                ]
+                              : [],
                             video: item?.collectionMetadata?.video,
                             audio: item?.collectionMetadata?.audio,
                             tags: item?.collectionMetadata?.tags
                               ? item?.collectionMetadata?.tags?.join(", ") + ","
                               : "",
-                            cover: "",
+                            cover: item?.collectionMetadata?.mediaCover,
                             prompt: item?.collectionMetadata?.prompt,
                             amount: item?.amount,
                             visibility: item?.collectionMetadata?.visibility,

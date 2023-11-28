@@ -65,7 +65,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
   setCaretCoordMain,
 }): JSX.Element => {
   return (
-    <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-col xl:flex-row pt-52 sm:pt-40 md:pt-32 px-2 sm:px-12 gap-7 h-fit">
+    <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-col xl:flex-row pt-52 sm:pt-40 md:pt-36 px-2 sm:px-12 gap-7 h-fit">
       <div className="relative w-full h-full flex items-start justify-center">
         <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] xl:w-[30rem] 2xl:w-[40rem] h-full">
           <Publication

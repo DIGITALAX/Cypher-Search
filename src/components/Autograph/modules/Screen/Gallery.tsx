@@ -76,6 +76,10 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               lensConnected={lensConnected}
               collectionSettings={collectionSettings}
               setCollectionSettings={setCollectionSettings}
+              edit={
+                createCase === "collection" &&
+                collectionDetails?.collectionId !== ""
+              }
             />
           </div>
         </div>

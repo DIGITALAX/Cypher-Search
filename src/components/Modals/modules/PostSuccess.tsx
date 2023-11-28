@@ -40,7 +40,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
                 : successType === "deleted"
                 ? "Deleted"
                 : "Updated"}
-              !
+              ! It may take a few moments for your creations to show live correctly, don&apos;t fret, check back in a bit.
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] lex items-center justify-center rounded-sm p-px cursor-pointer active:scale-95"
