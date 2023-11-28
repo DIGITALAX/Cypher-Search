@@ -120,7 +120,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address,
     lensConnected,
-    setSuggestedFeed,
+    setSuggestedFeed
   );
   const { dropLoading, dropItem, collections } = useDrop(
     drop as string,
@@ -206,9 +206,9 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 <meta
                   name="og:image"
                   content={
-                    !dropItem?.cover
+                    !dropItem?.dropDetails?.dropCover
                       ? "https://cypher.digitalax.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.cover?.split(
+                      : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.dropDetails?.dropCover?.split(
                           "ipfs://"
                         )}`
                   }
@@ -220,9 +220,9 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 <meta
                   name="twitter:image"
                   content={
-                    !dropItem?.cover
+                    !dropItem?.dropDetails?.dropCover
                       ? "https://cypher.digitalax.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.cover?.split(
+                      : `https://chromadin.infura-ipfs.io/ipfs/${dropItem?.dropDetails?.dropCover?.split(
                           "ipfs://"
                         )}`
                   }

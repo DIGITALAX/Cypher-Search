@@ -253,7 +253,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               )
             ) : (
               <div className="flex items-center justify-center w-full h-full bg-amo/30 p-1">
-                {itemData?.images?.length > 1 && (
+                {itemData?.collectionMetadata?.images?.length > 1 && (
                   <div className="absolute z-1 left-5 top-5 w-fit h-fit flex flex-row items-center justify-center gap-1.5">
                     <div
                       className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
@@ -261,7 +261,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                         setPurchaseDetails((prev) => ({
                           ...prev,
                           imageIndex:
-                            prev.imageIndex + 1 > itemData?.images?.length
+                            prev.imageIndex + 1 >
+                            itemData?.collectionMetadata?.images?.length
                               ? 0
                               : prev.imageIndex + 1,
                         }))
@@ -294,7 +295,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 <div
                   title={type}
                   className="w-5 h-5 z-1 absolute right-5 top-5 rounded-full flex border border-white bg-offBlack"
-                  onMouseOver={() => itemData?.prompt && setHoverPrompt(true)}
+                  onMouseOver={() =>
+                    itemData?.collectionMetadata?.prompt && setHoverPrompt(true)
+                  }
                 >
                   <Image
                     src={`${INFURA_GATEWAY}/ipfs/${
@@ -315,21 +318,23 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     onMouseOut={() => setHoverPrompt(false)}
                     className="absolute top-5 right-5 w-60 h-60 rounded-sm border border-white bg-offBlack/90 overflow-y-scroll text-white font-bit text-xs p-2 items-start justify-start z-10"
                   >
-                    {itemData?.prompt}
+                    {itemData?.collectionMetadata?.prompt}
                   </div>
                 )}
                 <div
                   className={`relative w-full h-full flex items-center justify-center ${
-                    !itemData?.video && !itemData.audio && "cursor-pointer"
+                    !itemData?.collectionMetadata?.video &&
+                    !itemData.collectionMetadata?.audio &&
+                    "cursor-pointer"
                   }`}
                   onClick={() =>
-                    !itemData?.video &&
-                    !itemData.audio &&
+                    !itemData?.collectionMetadata?.video &&
+                    !itemData.collectionMetadata?.audio &&
                     dispatch(
                       setImageViewer({
                         actionValue: true,
                         actionImage: `${INFURA_GATEWAY}/ipfs/${
-                          itemData?.images?.[
+                          itemData?.collectionMetadata?.images?.[
                             purchaseDetails?.imageIndex
                           ]?.split("ipfs://")?.[1]
                         }`,
@@ -340,27 +345,35 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 >
                   <MediaSwitch
                     type={
-                      itemData?.video
+                      itemData?.collectionMetadata?.video
                         ? "video"
-                        : itemData?.audio
+                        : itemData?.collectionMetadata?.audio
                         ? "audio"
                         : "image"
                     }
                     srcUrl={
-                      itemData?.video
+                      itemData?.collectionMetadata?.video
                         ? `${INFURA_GATEWAY}/ipfs/${
-                            itemData?.video?.split("ipfs://")?.[1]
+                            itemData?.collectionMetadata?.video?.split(
+                              "ipfs://"
+                            )?.[1]
                           }`
-                        : itemData?.audio
-                        ? itemData?.audio?.split("ipfs://")?.[1]
+                        : itemData?.collectionMetadata?.audio
+                        ? itemData?.collectionMetadata?.audio?.split(
+                            "ipfs://"
+                          )?.[1]
                         : `${INFURA_GATEWAY}/ipfs/${
-                            itemData?.images?.[0]?.split("ipfs://")?.[1]
+                            itemData?.collectionMetadata?.images?.[0]?.split(
+                              "ipfs://"
+                            )?.[1]
                           }`
                     }
                     srcCover={
-                      itemData?.mediaCover
+                      itemData?.collectionMetadata?.mediaCover
                         ? `${INFURA_GATEWAY}/ipfs/${
-                            itemData?.mediaCover?.split("ipfs://")?.[1]
+                            itemData?.collectionMetadata?.mediaCover?.split(
+                              "ipfs://"
+                            )?.[1]
                           }`
                         : undefined
                     }
@@ -380,7 +393,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
       <div className="relative w-full h-fit flex items-center sm:items-end justify-start ml-auto flex-col gap-12">
         <div className="relative w-full h-full flex items-center sm:items-end justify-start ml-auto flex-col gap-4">
           <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-5xl mt-0">
-            {itemData?.title}
+            {itemData?.collectionMetadata?.title}
           </div>
           <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-center justify-center">
             <div className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end font-aust text-white break-words text-sm cursor-pointer">
@@ -388,7 +401,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 className="relative flex flex-row gap-4 w-5 h-5 items-center justify-start rounded-full border border-offWhite"
                 id="pfp"
                 onClick={() =>
-                  router.push(`/autograph/${itemData?.profileHandle}`)
+                  router.push(
+                    `/autograph/${itemData?.collectionMetadata?.profileHandle}`
+                  )
                 }
               >
                 {profilePicture && (
@@ -403,24 +418,28 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 )}
               </div>
               <div className="relative w-fit h-fit items-center justify-center flex">
-                {itemData?.profileHandle}
+                {itemData?.collectionMetadata?.profileHandle}
               </div>
             </div>
-            {itemData?.microbrandCover && (
+            {itemData?.collectionMetadata?.microbrandCover && (
               <div className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end font-aust text-white break-words text-sm cursor-pointer">
                 <div
                   className="relative flex flex-row gap-4 w-5 h-5 items-center justify-start rounded-full border border-offWhite"
                   id="pfp"
                   onClick={() =>
-                    router.push(`/item/microbrand/${itemData?.microbrand}`)
+                    router.push(
+                      `/item/microbrand/${itemData?.collectionMetadata?.microbrand}`
+                    )
                   }
                 >
-                  {itemData?.microbrandCover && (
+                  {itemData?.collectionMetadata?.microbrandCover && (
                     <Image
                       layout="fill"
                       draggable={false}
                       src={`${INFURA_GATEWAY}/ipfs/${
-                        itemData?.microbrandCover?.split("ipfs://")?.[1]
+                        itemData?.collectionMetadata?.microbrandCover?.split(
+                          "ipfs://"
+                        )?.[1]
                       }`}
                       onError={(e) => handleImageError(e)}
                       objectFit="cover"
@@ -429,7 +448,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   )}
                 </div>
                 <div className="relative w-fit h-fit items-center justify-center flex">
-                  {itemData?.microbrand}
+                  {itemData?.collectionMetadata?.microbrand}
                 </div>
               </div>
             )}
@@ -448,49 +467,54 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           </div>
           <div className="relative w-fit h-fit flex items-start justify-center sm:justify-end font-aust text-white break-words text-xs text-center sm:text-right mt-0 max-h-[6rem] overflow-y-scroll">
             <div className="relative w-5/6 h-fit flex items-start justiy-center sm:justify-end">
-              {itemData?.description}
+              {itemData?.collectionMetadata?.description}
             </div>
           </div>
           <div className="relative w-full h-fit flex font-bit text-xxs text-white justify-center items-center sm:justify-end">
             <div className="relative w-1/2 max-h-[6rem] overflow-y-scroll h-fit flex flex-wrap items-center sm:items-end justify-center sm:justify-end sm:ml-auto gap-3">
-              {itemData?.tags?.map((tag: string, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative w-fit h-fit px-2 py-1 rounded-full flex items-center justify-center text-center cursor-pointer hover:opacity-80"
-                    style={{
-                      backgroundColor:
-                        index % 3 === 0
-                          ? "#078fd6"
-                          : index % 4 === 0
-                          ? "#FFDCFF"
-                          : "#81A8F8",
-                    }}
-                    onClick={() =>
-                      dispatch(
-                        setAllSearchItems({
-                          actionItems: allSearchItems?.items,
-                          actionInput: allSearchItems?.searchInput + " " + tag,
-                          actionLensPubCursor: allSearchItems?.lensPubCursor,
-                          actionGraphCursor: allSearchItems?.graphCursor,
-                          actionLensProfileCursor:
-                            allSearchItems?.lensProfileCursor,
-                          actionHasMore: allSearchItems?.hasMore,
-                        })
-                      )
-                    }
-                  >
-                    <div className="relative w-fit h-fit flex top-px">
-                      {tag}
+              {itemData?.collectionMetadata?.tags?.map(
+                (tag: string, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-fit h-fit px-2 py-1 rounded-full flex items-center justify-center text-center cursor-pointer hover:opacity-80"
+                      style={{
+                        backgroundColor:
+                          index % 3 === 0
+                            ? "#078fd6"
+                            : index % 4 === 0
+                            ? "#FFDCFF"
+                            : "#81A8F8",
+                      }}
+                      onClick={() =>
+                        dispatch(
+                          setAllSearchItems({
+                            actionItems: allSearchItems?.items,
+                            actionInput:
+                              allSearchItems?.searchInput + " " + tag,
+                            actionLensPubCursor: allSearchItems?.lensPubCursor,
+                            actionGraphCursor: allSearchItems?.graphCursor,
+                            actionLensProfileCursor:
+                              allSearchItems?.lensProfileCursor,
+                            actionHasMore: allSearchItems?.hasMore,
+                          })
+                        )
+                      }
+                    >
+                      <div className="relative w-fit h-fit flex top-px">
+                        {tag}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
             </div>
           </div>
           <div className="relative justify-center sm:justify-end items-end flex w-1/2 h-fit flex flex-row sm:ml-auto gap-3">
             {filterConstants?.access
-              ?.filter((item: string[]) => itemData?.access?.includes(item[0]))
+              ?.filter((item: string[]) =>
+                itemData?.collectionMetadata?.access?.includes(item[0])
+              )
               ?.map((item: string[], index: number) => {
                 return (
                   <div
@@ -583,27 +607,29 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   Color
                 </div>
                 <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
-                  {itemData?.colors?.map((item: string, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer active:scale-95 border ${
-                          item === purchaseDetails?.color
-                            ? "border-black opacity-100"
-                            : "border-white opacity-70"
-                        }`}
-                        style={{
-                          backgroundColor: item,
-                        }}
-                        onClick={() =>
-                          setPurchaseDetails((prev) => ({
-                            ...prev,
-                            color: item,
-                          }))
-                        }
-                      ></div>
-                    );
-                  })}
+                  {itemData?.collectionMetadata?.colors?.map(
+                    (item: string, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer active:scale-95 border ${
+                            item === purchaseDetails?.color
+                              ? "border-black opacity-100"
+                              : "border-white opacity-70"
+                          }`}
+                          style={{
+                            backgroundColor: item,
+                          }}
+                          onClick={() =>
+                            setPurchaseDetails((prev) => ({
+                              ...prev,
+                              color: item,
+                            }))
+                          }
+                        ></div>
+                      );
+                    }
+                  )}
                 </div>
               </div>
               <div className="relative flex items-end justify-end items-center justify-center h-fit w-fit flex-col gap-1.5 ml-auto">
@@ -611,28 +637,30 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   Size
                 </div>
                 <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
-                  {itemData?.sizes?.map((item: string, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
-                          item === purchaseDetails?.color
-                            ? "border-black opacity-100"
-                            : "border-white opacity-70"
-                        }`}
-                        onClick={() =>
-                          setPurchaseDetails((prev) => ({
-                            ...prev,
-                            size: item,
-                          }))
-                        }
-                      >
-                        <div className="relative w-fit h-fit flex items-center justify-center top-px">
-                          {item}
+                  {itemData?.collectionMetadata?.sizes?.map(
+                    (item: string, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
+                            item === purchaseDetails?.color
+                              ? "border-black opacity-100"
+                              : "border-white opacity-70"
+                          }`}
+                          onClick={() =>
+                            setPurchaseDetails((prev) => ({
+                              ...prev,
+                              size: item,
+                            }))
+                          }
+                        >
+                          <div className="relative w-fit h-fit flex items-center justify-center top-px">
+                            {item}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    }
+                  )}
                 </div>
               </div>
             </div>

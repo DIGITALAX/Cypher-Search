@@ -59,19 +59,23 @@ const Listener: FunctionComponent<ListenerProps> = ({
             dispatch(
               setImageViewer({
                 actionValue: true,
-                actionType: publication?.mediaTypes?.[0],
+                actionType: publication?.collectionMetadata?.mediaTypes?.[0],
                 actionImage: `${INFURA_GATEWAY}/ipfs/${
-                  publication?.images?.[0]?.split("ipfs://")?.[1]
+                  publication?.collectionMetadata?.images?.[0]?.split(
+                    "ipfs://"
+                  )?.[1]
                 }`,
               })
             )
           }
         >
-          {publication?.images && (
+          {publication?.collectionMetadata?.images && (
             <Image
               layout="fill"
               src={`${INFURA_GATEWAY}/ipfs/${
-                publication?.images?.[0]?.split("ipfs://")?.[1]
+                publication?.collectionMetadata?.images?.[0]?.split(
+                  "ipfs://"
+                )?.[1]
               }`}
               objectFit="cover"
               draggable={false}
@@ -87,7 +91,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
               }`}
               id="noCode"
             >
-              {publication?.title}
+              {publication?.collectionMetadata?.title}
             </div>
             <div
               className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
@@ -159,11 +163,13 @@ const Listener: FunctionComponent<ListenerProps> = ({
             </div>
           </div>
           <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
-            {publication?.images && (
+            {publication?.collectionMetadata?.images && (
               <Image
                 layout="fill"
                 src={`${INFURA_GATEWAY}/ipfs/${
-                  publication?.images?.[0]?.split("ipfs://")?.[1]
+                  publication?.collectionMetadata?.images?.[0]?.split(
+                    "ipfs://"
+                  )?.[1]
                 }`}
                 objectFit="cover"
                 draggable={false}

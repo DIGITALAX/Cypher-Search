@@ -38,9 +38,11 @@ const CartList: FunctionComponent<CartListProps> = ({
                     <MediaSwitch
                       hidden
                       type={
-                        item?.item.mediaTypes?.[0] == "video"
+                        item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                        "video"
                           ? "video"
-                          : item?.item.mediaTypes?.[0] == "audio"
+                          : item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                            "audio"
                           ? "audio"
                           : "image"
                       }
@@ -50,22 +52,32 @@ const CartList: FunctionComponent<CartListProps> = ({
                       }
                       classNameAudio={"rounded-sm w-full h-full flex relative"}
                       srcUrl={
-                        item?.item.mediaTypes?.[0] == "video"
+                        item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                        "video"
                           ? `${INFURA_GATEWAY}/ipfs/${
-                              item?.item?.video?.split("ipfs://")?.[1]
+                              item?.item?.collectionMetadata?.video?.split(
+                                "ipfs://"
+                              )?.[1]
                             }`
-                          : item?.item.mediaTypes?.[0] == "audio"
+                          : item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                            "audio"
                           ? `${INFURA_GATEWAY}/ipfs/${
-                              item?.item?.audio?.split("ipfs://")?.[1]
+                              item?.item?.collectionMetadata?.audio?.split(
+                                "ipfs://"
+                              )?.[1]
                             }`
                           : `${INFURA_GATEWAY}/ipfs/${
-                              item?.item?.images?.[0]?.split("ipfs://")?.[1]
+                              item?.item?.collectionMetadata?.images?.[0]?.split(
+                                "ipfs://"
+                              )?.[1]
                             }`
                       }
                       srcCover={
-                        item?.item?.mediaCover
+                        item?.item?.collectionMetadata?.mediaCover
                           ? `${INFURA_GATEWAY}/ipfs/${
-                              item?.item?.mediaCover?.split("ipfs://")?.[1]
+                              item?.item?.collectionMetadata?.mediaCover?.split(
+                                "ipfs://"
+                              )?.[1]
                             }`
                           : undefined
                       }

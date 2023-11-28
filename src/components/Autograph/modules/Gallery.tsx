@@ -144,7 +144,10 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                           lensConnected?.handle?.suggestedFormatted?.localName?.split(
                             "@"
                           )?.[1]
-                        }/drop/${item?.title?.replaceAll(" ", "_")}`
+                        }/drop/${item?.dropDetails?.dropTitle?.replaceAll(
+                          " ",
+                          "_"
+                        )}`
                       );
                     }}
                   >
@@ -155,7 +158,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                       <div className="relative w-full h-full flex">
                         <Image
                           src={`${INFURA_GATEWAY}/ipfs/${
-                            item?.cover?.split("ipfs://")?.[1]
+                            item?.dropDetails?.dropCover?.split("ipfs://")?.[1]
                           }`}
                           className="rounded-sm"
                           objectFit="cover"
@@ -165,9 +168,11 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                       </div>
                       <div className="absolute bottom-0 right-0 w-full h-10 bg-black flex items-center justify-end px-1">
                         <div className="relative w-fit h-fit flex items-center justify-center font-bit top-px text-xs text-white">
-                          {item?.title?.length > 20
-                            ? item?.title?.slice(0, 20)?.toLowerCase()
-                            : item?.title?.toLowerCase()}
+                          {item?.dropDetails?.dropTitle?.length > 20
+                            ? item?.dropDetails?.dropTitle
+                                ?.slice(0, 20)
+                                ?.toLowerCase()
+                            : item?.dropDetails?.dropTitle?.toLowerCase()}
                         </div>
                         <div
                           className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"

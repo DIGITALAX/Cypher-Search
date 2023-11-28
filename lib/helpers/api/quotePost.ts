@@ -37,7 +37,6 @@ const lensQuote = async (
     rawURI: contentURI,
   });
 
-
   if (!metadata?.data?.validatePublicationMetadata.valid) {
     dispatch(setInteractError(true))
     return;

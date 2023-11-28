@@ -6,6 +6,8 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
+import { ImCross } from "react-icons/im";
 
 const Gallery: FunctionComponent<GalleryScreenProps> = ({
   setCollectionDetails,
@@ -358,52 +360,53 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                             }
                           />
                           {allCollections?.filter((item) =>
-                            item?.title
+                            item?.collectionMetadata?.title
                               ?.toLowerCase()
                               ?.includes(searchCollection?.toLowerCase())
-                          )?.length > 0 && (
-                            <div className="absolute w-full max-h-[10rem] h-fit flex overflow-y-scroll bg-offBlack z-1 border border-sol rounded-md -bottom-40">
-                              <div className="relative w-full h-fit flex flex-col">
-                                {allCollections
-                                  ?.filter((item) =>
-                                    item?.title
-                                      ?.toLowerCase()
-                                      ?.includes(
-                                        searchCollection?.toLowerCase()
-                                      )
-                                  )
-                                  ?.map((item: Creation, index: number) => {
-                                    return (
-                                      <div
-                                        key={index}
-                                        className="relative px-2 py-1 text-center flex justify-center items-center hover:opacity-70 cursor-pointer h-10 w-full active:scale-95"
-                                        onClick={() => {
-                                          if (
-                                            !dropDetails?.collectionIds?.find(
-                                              (value) =>
-                                                item.collectionId === value
-                                            )
-                                          ) {
+                          )?.length > 0 &&
+                            searchCollection?.trim() !== "" && (
+                              <div className="absolute w-full max-h-[10rem] h-fit flex overflow-y-scroll bg-offBlack z-1 border border-sol rounded-md items-start top-[4.2rem]">
+                                <div className="relative w-full h-fit flex flex-col justify-start">
+                                  {allCollections
+                                    ?.filter((item) =>
+                                      item?.collectionMetadata?.title
+                                        ?.toLowerCase()
+                                        ?.includes(
+                                          searchCollection?.toLowerCase()
+                                        )
+                                    )
+                                    ?.map((item: Creation, index: number) => {
+                                      return (
+                                        <div
+                                          key={index}
+                                          className="relative px-2 py-1 text-center flex justify-center items-center hover:opacity-70 cursor-pointer h-10 w-full active:scale-95"
+                                          onClick={() => {
+                                            if (
+                                              !dropDetails?.collectionIds?.find(
+                                                (value) =>
+                                                  item.collectionId === value
+                                              )
+                                            ) {
+                                              setDropDetails((prev) => ({
+                                                ...prev,
+                                                collectionIds: [
+                                                  ...prev.collectionIds,
+                                                  item?.collectionId,
+                                                ],
+                                              }));
+                                            }
                                             setSearchCollection("");
-                                            setDropDetails((prev) => ({
-                                              ...prev,
-                                              collectionIds: [
-                                                ...prev.collectionIds,
-                                                item?.collectionId,
-                                              ],
-                                            }));
-                                          }
-                                        }}
-                                      >
-                                        <div className="relative w-fit h-fit flex items-center justify-center text-white font-aust text-xs">
-                                          {item?.title}
+                                          }}
+                                        >
+                                          <div className="relative w-fit h-fit flex items-center justify-center text-white font-aust text-xs">
+                                            {item?.collectionMetadata?.title}
+                                          </div>
                                         </div>
-                                      </div>
-                                    );
-                                  })}
+                                      );
+                                    })}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </div>
                       </>
                     )}
@@ -414,21 +417,123 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                             return (
                               <div
                                 key={index}
-                                className="relative w-10 h-10 rounded-sm border border-white"
+                                className="relative w-10 h-10 rounded-sm border border-white "
                               >
-                                <Image
-                                  className="relative w-full h-full rounded-sm flex"
-                                  objectFit="cover"
-                                  onError={(e) => handleImageError(e)}
-                                  layout="fill"
-                                  src={`${INFURA_GATEWAY}/ipfs/${
-                                    allCollections
-                                      ?.find(
-                                        (value) => value.collectionId == item
-                                      )
-                                      ?.images?.[0]?.split("ipsf://")?.[1]
-                                  }`}
+                                <MediaSwitch
+                                  type={
+                                    allCollections?.find(
+                                      (value) => value.collectionId == item
+                                    )?.collectionMetadata?.mediaTypes?.[0] ==
+                                    "video"
+                                      ? "video"
+                                      : allCollections?.find(
+                                          (value) => value.collectionId == item
+                                        )?.collectionMetadata
+                                          ?.mediaTypes?.[0] == "audio"
+                                      ? "audio"
+                                      : "image"
+                                  }
+                                  hidden
+                                  classNameImage={
+                                    "relative w-full h-full rounded-sm flex"
+                                  }
+                                  classNameVideo={
+                                    "object-cover w-full h-full flex items-center justify-center relative rounded-sm"
+                                  }
+                                  classNameAudio={
+                                    "relative w-full h-full rounded-sm flex"
+                                  }
+                                  srcUrl={
+                                    allCollections?.find(
+                                      (value) => value.collectionId == item
+                                    )?.collectionMetadata?.mediaTypes?.[0] ==
+                                    "video"
+                                      ? `${INFURA_GATEWAY}/ipfs/${
+                                          allCollections
+                                            ?.find(
+                                              (value) =>
+                                                value.collectionId == item
+                                            )
+                                            ?.collectionMetadata?.video?.split(
+                                              "ipfs://"
+                                            )?.[1]
+                                        }`
+                                      : allCollections?.find(
+                                          (value) => value.collectionId == item
+                                        )?.collectionMetadata
+                                          ?.mediaTypes?.[0] == "audio"
+                                      ? `${INFURA_GATEWAY}/ipfs/${
+                                          allCollections
+                                            ?.find(
+                                              (value) =>
+                                                value.collectionId == item
+                                            )
+                                            ?.collectionMetadata?.audio?.split(
+                                              "ipfs://"
+                                            )?.[1]
+                                        }`
+                                      : `${INFURA_GATEWAY}/ipfs/${
+                                          allCollections
+                                            ?.find(
+                                              (value) =>
+                                                value.collectionId == item
+                                            )
+                                            ?.collectionMetadata?.images?.[0]?.split(
+                                              "ipfs://"
+                                            )?.[1]
+                                        }`
+                                  }
+                                  srcCover={
+                                    allCollections?.find(
+                                      (value) => value.collectionId == item
+                                    )?.collectionMetadata?.mediaCover
+                                      ? `${INFURA_GATEWAY}/ipfs/${
+                                          allCollections
+                                            ?.find(
+                                              (value) =>
+                                                value.collectionId == item
+                                            )
+                                            ?.collectionMetadata?.mediaCover?.split(
+                                              "ipfs://"
+                                            )?.[1]
+                                        }`
+                                      : undefined
+                                  }
                                 />
+                                <div
+                                  className="absolute top-2.5 left-2 rounded-full w-5 h-5 flex items-center justify-center bg-offBlack border border-white cursor-pointer hover:opacity-70 active:scale-95"
+                                  onClick={() => {
+                                    if (
+                                      dropDetails?.collectionIds?.find(
+                                        (value) =>
+                                          allCollections?.find(
+                                            (value) =>
+                                              value.collectionId == item
+                                          )?.collectionId === value
+                                      )
+                                    ) {
+                                      setDropDetails((prev) => {
+                                        const obj = { ...prev };
+                                        const filteredArray =
+                                          obj?.collectionIds?.filter(
+                                            (value) =>
+                                              value !==
+                                              allCollections?.find(
+                                                (collection) =>
+                                                  collection.collectionId ===
+                                                  item
+                                              )?.collectionId
+                                          );
+
+                                        obj.collectionIds = filteredArray;
+
+                                        return obj;
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <ImCross color="white" size={7} />
+                                </div>
                               </div>
                             );
                           }

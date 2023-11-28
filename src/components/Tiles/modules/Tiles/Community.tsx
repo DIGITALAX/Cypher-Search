@@ -22,22 +22,22 @@ const Community: FunctionComponent<CommunityProps> = ({
   return (
     <div
       className="relative w-full h-fit flex items-center justify-center flex flex-col rounded-sm border border-sol bg-black gap-4 p-2"
-      id={community?.cover}
+      id={community?.communityMetadata?.cover}
     >
       <div className="relative w-fit h-fit gap-1 flex items-center justify-center flex-col">
         <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit text-xl">
-          {community?.name}
+          {community?.communityMetadata?.name}
         </div>
         <div className="absolute top-1 w-fit h-fit flex items-center justify-center text-sol opacity-50 font-bit text-xl">
-          {community?.name}
+          {community?.communityMetadata?.name}
         </div>
         <div className="relative w-fit h-fit flex items-center justify-center text-white font-bit text-xs">
-          {community?.subTopic}
+          {community?.communityMetadata?.subTopic}
         </div>
       </div>
       <div className="relative w-4/5 h-20  p-2 text-white text-center font-bit text-sm border border-[#1B4986] bg-fuego">
         <div className="relative w-full h-full flex items-start justify-center overflow-y-scroll">
-          {community?.description}
+          {community?.communityMetadata?.description}
         </div>
       </div>
       <div className="relative w-full h-fit flex flex-row gap-4 justify-between items-center">
@@ -124,7 +124,7 @@ const Community: FunctionComponent<CommunityProps> = ({
               >
                 <Image
                   layout="fill"
-                  src={`${INFURA_GATEWAY}/ipfs/${item?.images?.[0]}`}
+                  src={`${INFURA_GATEWAY}/ipfs/${item?.collectionMetadata?.images?.[0]}`}
                   draggable={false}
                   objectFit="cover"
                   onError={(e) => handleImageError(e)}
@@ -168,7 +168,7 @@ const Community: FunctionComponent<CommunityProps> = ({
                       feed
                       dispatch={dispatch}
                       lensConnected={lensConnected}
-                      parentId={community?.cover}
+                      parentId={community?.communityMetadata?.cover}
                       top={"auto"}
                       bottom={"2px"}
                       left={"auto"}
@@ -188,7 +188,9 @@ const Community: FunctionComponent<CommunityProps> = ({
       <div className="relative w-full h-fit flex flex-row gap-2 justify-start items-center">
         <div
           className="relative w-10 h-10 cursor-pointer active:scale-95"
-          onClick={() => router.push(`/item/community/${community?.name}`)}
+          onClick={() =>
+            router.push(`/item/community/${community?.communityMetadata?.name}`)
+          }
         >
           <Image
             layout="fill"

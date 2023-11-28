@@ -4,12 +4,16 @@ import { graphPrintClient } from "../../../lib/graph/client";
 const FILTER = `
   query {
     collectionCreateds {
-        tags
-        microbrandCover
-        microbrand
-        dropTitle
-        colors
-        sizes
+        collectionMetadata {
+          colors
+          sizes
+          tags
+          microbrandCover
+          microbrand
+        }
+        dropMetadata {
+          dropTitle
+        }
         printType
         profileId
       }

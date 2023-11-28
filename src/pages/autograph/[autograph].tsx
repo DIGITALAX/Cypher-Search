@@ -441,9 +441,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 <meta
                   name="og:image"
                   content={
-                    !gallery?.created[0]?.images?.[0]
+                    !gallery?.created[0]?.collectionMetadata?.images?.[0]
                       ? "https://cypher.digitalax.xyz/card.png/"
-                      : `https://chromadin.infura-ipfs.io/ipfs/${gallery?.created[0]?.images?.[0]?.split(
+                      : `https://chromadin.infura-ipfs.io/ipfs/${gallery?.created[0]?.collectionMetadata?.images?.[0]?.split(
                           "ipfs://"
                         )}`
                   }

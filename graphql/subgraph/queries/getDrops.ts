@@ -5,20 +5,24 @@ const DROPS = `
   query($creator: String!) {
     dropCreateds(where: { creator: $creator}) {
       creator
-      title
-      cover
       dropId
       collectionIds
+      dropDetails {
+        dropTitle
+        dropCover
+      }
     }
   }
 `;
 
 const DROP = `
-  query($creator: String!, $title: String!) {
-    dropCreateds(where: { creator: $creator, title: $title}, first: 1) {
+  query($creator: String!, $dropTitle: String!) {
+    dropCreateds(where: { creator: $creator, dropDetails_: { dropTitle: $dropTitle }}, first: 1) {
       creator
-      title
-      cover
+      dropDetails {
+        dropTitle
+        dropCover
+      }
       dropId
       collectionIds
     }

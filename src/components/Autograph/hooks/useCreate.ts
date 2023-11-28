@@ -41,7 +41,6 @@ import { AccessControlConditions } from "@lit-protocol/types";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
-import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 import collectionFixer from "../../../../lib/helpers/collectionFixer";
 
 const useCreate = (
@@ -666,6 +665,7 @@ const useCreate = (
       getAllCollections();
     }
   }, [screenDisplay, lensConnected?.id, address]);
+
 
   return {
     createCase,

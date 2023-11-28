@@ -14,41 +14,22 @@ import { Origin } from "@/components/Search/types/search.types";
 
 export interface Creation {
   amount: string;
-  title: string;
-  tags: string[];
   pubId: string;
-  prompt: string;
   uri: string;
   profileId: string;
-  mediaTypes: string[];
-  profileHandle: string;
   printType: string;
   prices: string[];
   acceptedTokens: string[];
   owner: string;
-  microbrandCover: string;
-  microbrand: string;
-  images: string[];
-  video: string;
-  audio: string;
   soldTokens: string;
   fulfillerPercent: string;
   fulfillerBase: string;
   fulfiller: string;
   designerPercent: string;
   dropId: string;
-  dropCover: string;
   dropCollectionIds: string[];
-  dropTitle: string;
-  description: string;
-  communities: string[];
   collectionId: string;
-  access: string[];
-  visibility: string;
   unlimited: boolean;
-  mediaCover: string;
-  colors: string[];
-  sizes: string[];
   origin: string;
   profile: Profile;
   publication:
@@ -57,6 +38,29 @@ export interface Creation {
       })
     | undefined;
   blockTimestamp: string;
+  dropMetadata: {
+    dropTitle: string;
+    dropCover: string;
+  };
+  collectionMetadata: {
+    access: string[];
+    visibility: string;
+    colors: string[];
+    sizes: string[];
+    mediaCover: string;
+    description: string;
+    communities: string[];
+    title: string;
+    tags: string[];
+    prompt: string;
+    mediaTypes: string[];
+    profileHandle: string;
+    microbrandCover: string;
+    microbrand: string;
+    images: string[];
+    video: string;
+    audio: string;
+  };
 }
 
 export interface Publication {
@@ -452,10 +456,6 @@ export enum ERC20Tokens {
 }
 
 export interface Community {
-  name: string;
-  subTopic: string;
-  description: string;
-  cover: string;
   sample: Creation[];
   steward: Profile;
   validPrintTypes: PrintType[];
@@ -464,6 +464,12 @@ export interface Community {
   valid20Tokens: string[];
   valid20Thresholds: string[];
   members: Profile[];
+  communityMetadata: {
+    name: string;
+    subTopic: string;
+    description: string;
+    cover: string;
+  };
 }
 
 export type CommunityProps = {

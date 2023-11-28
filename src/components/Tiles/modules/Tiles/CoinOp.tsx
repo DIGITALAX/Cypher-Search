@@ -54,16 +54,18 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             setImageViewer({
               actionValue: true,
               actionType: "png",
-              actionImage: publication?.images[0],
+              actionImage: publication?.collectionMetadata?.images[0],
             })
           )
         }
       >
-        {publication?.images && (
+        {publication?.collectionMetadata?.images && (
           <Image
             layout="fill"
             src={`${INFURA_GATEWAY}/ipfs/${
-              publication?.images?.[0]?.split("ipfs://")?.[1]
+              publication?.collectionMetadata?.images?.[0]?.split(
+                "ipfs://"
+              )?.[1]
             }`}
             objectFit="cover"
             draggable={false}
@@ -78,7 +80,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               layoutAmount === 4 ? "text-lg" : "text-2xl"
             }`}
           >
-            {publication?.title}
+            {publication?.collectionMetadata?.title}
           </div>
           <div
             className={`relative w-fit h-fit flex text-pez font-bit uppercase cursor-pointer ${
@@ -152,11 +154,13 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           </div>
         </div>
         <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
-          {publication?.images && (
+          {publication?.collectionMetadata?.images && (
             <Image
               layout="fill"
               src={`${INFURA_GATEWAY}/ipfs/${
-                publication?.images?.[1]?.split("ipfs://")?.[1]
+                publication?.collectionMetadata?.images?.[1]?.split(
+                  "ipfs://"
+                )?.[1]
               }`}
               objectFit="cover"
               draggable={false}

@@ -16,6 +16,7 @@ import {
   PublicationReportingIllegalSubreason,
   PublicationReportingSensitiveSubreason,
   PublicationReportingSpamSubreason,
+  Quote,
   SimpleCollectOpenActionModuleInput,
   SimpleCollectOpenActionSettings,
 } from "../../../../graphql/generated";
@@ -41,15 +42,19 @@ export type DisplaySearchProps = {
     | {
         collected: {
           collectionId: string;
-          images: string[];
-          title: string;
-          mediaCover: string;
+          collectionMetadata: {
+            images: string[];
+            mediaCover: string;
+            title: string;
+          };
         }[];
         created: {
           collectionId: string;
-          images: string[];
-          title: string;
-          mediaCover: string;
+          collectionMetadata: {
+            images: string[];
+            mediaCover: string;
+            title: string;
+          };
         }[];
       }
     | undefined;
@@ -59,18 +64,31 @@ export type DisplaySearchProps = {
   sortedGallery:
     | {
         collectionId: string;
-        images: string[];
-        title: string;
-        mediaCover: string;
+        collectionMetadata: {
+          images: string[];
+          mediaCover: string;
+          title: string;
+        };
       }[]
     | undefined;
-  selectedItem: Creation | undefined;
+  selectedItem:
+    | {
+        collectionId: string;
+        collectionMetadata: {
+          images: string[];
+          mediaCover: string;
+          title: string;
+        };
+      }
+    | undefined;
   handleItemSelect: (
     item: {
       collectionId: string;
-      images: string[];
-      title: string;
-      mediaCover: string;
+      collectionMetadata: {
+        images: string[];
+        mediaCover: string;
+        title: string;
+      };
     },
     type: SortType,
     value: number
@@ -145,7 +163,9 @@ export type ReportPubProps = {
 export type WhoProps = {
   dataLoading: boolean;
   reactors: any[];
-  quoters: any[];
+  quoters: (Quote & {
+    decrypted: any;
+  })[];
   hasMore: boolean;
   hasMoreQuote: boolean;
   showMore: () => void;
@@ -162,7 +182,9 @@ export type WhoSwitchProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   reactors: any[];
-  quoters: any[];
+  quoters: (Quote & {
+    decrypted: any;
+  })[];
   hasMore: boolean;
   hasMoreQuote: boolean;
   mirrorQuote: boolean;

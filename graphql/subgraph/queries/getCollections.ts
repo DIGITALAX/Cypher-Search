@@ -5,43 +5,48 @@ const COLLECTIONS = `
   query($owner: String!) {
     collectionCreateds(where: {owner: $owner}) {
       amount
-      title
-      tags
+      dropMetadata {
+        dropCover
+        dropTitle
+      }
+      collectionMetadata {
+        access
+        visibility
+        video
+        title
+        tags
+        prompt
+        profileHandle
+        sizes
+        microbrand
+        mediaTypes
+        mediaCover
+        id
+        description
+        audio
+        colors
+        communities
+        images
+        microbrandCover
+      }
       pubId
-      uri
-      prompt
-      mediaCover
       profileId
-      profileHandle
+      acceptedTokens
+      uri
       printType
       prices
-      video
-      audio
       owner
-      mediaTypes
-      microbrandCover
-      microbrand
-      images
+      soldTokens
       fulfillerPercent
       fulfillerBase
       fulfiller
       designerPercent
       dropId
       dropCollectionIds
-      dropCover
-      dropTitle
-      description
-      communities
       collectionId
-      access
-      acceptedTokens
       unlimited
-      colors
-      sizes
       origin
-      soldTokens
       blockTimestamp
-      visibility
     }
   }
 `;
@@ -50,42 +55,48 @@ const COLLECTIONS_PAGINATED = `
   query($owner: String!, $first: Int, $skip: Int) {
     collectionCreateds(where: {owner: $owner}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
       amount
-      title
-      tags
+      dropMetadata {
+        dropCover
+        dropTitle
+      }
+      collectionMetadata {
+        access
+        visibility
+        video
+        title
+        tags
+        prompt
+        profileHandle
+        sizes
+        microbrand
+        mediaTypes
+        mediaCover
+        id
+        description
+        audio
+        colors
+        communities
+        images
+        microbrandCover
+      }
       pubId
-      prompt
       profileId
-      profileHandle
+      acceptedTokens
+      uri
       printType
       prices
       owner
-      mediaTypes
-      microbrandCover
       soldTokens
-      microbrand
-      images
-      video
-      audio
       fulfillerPercent
       fulfillerBase
       fulfiller
       designerPercent
       dropId
       dropCollectionIds
-      dropCover
-      dropTitle
-      description
-      communities
-      uri
       collectionId
-      access
       unlimited
-      colors
-      acceptedTokens
-      sizes
       origin
       blockTimestamp
-      visibility
     }
   }
 `;
@@ -93,10 +104,12 @@ const COLLECTIONS_PAGINATED = `
 const COLLECTIONS_QUICK = `
   query($owner: String!, $first: Int, $skip: Int) {
     collectionCreateds(where: {owner: $owner}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
-      title
-      images
       collectionId
-      mediaCover
+      collectionMetadata {
+        mediaCover
+        title
+        images
+      }
     }
   }
 `;

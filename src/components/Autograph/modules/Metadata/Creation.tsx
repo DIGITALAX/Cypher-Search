@@ -49,7 +49,7 @@ const Creation: FunctionComponent<CreationProps> = ({
           router.push(
             `/item/${
               numberToItemTypeMap[Number(item?.origin)]
-            }/${item?.title?.replaceAll(" ", "_")}`
+            }/${item?.collectionMetadata?.title?.replaceAll(" ", "_")}`
           )
         }
         id="staticLoad"
@@ -57,9 +57,9 @@ const Creation: FunctionComponent<CreationProps> = ({
         <div className="relative w-full h-full flex">
           <MediaSwitch
             type={
-              item.mediaTypes?.[0] == "video"
+              item.collectionMetadata?.mediaTypes?.[0] == "video"
                 ? "video"
-                : item.mediaTypes?.[0] == "audio"
+                : item.collectionMetadata?.mediaTypes?.[0] == "audio"
                 ? "audio"
                 : "image"
             }
@@ -70,18 +70,22 @@ const Creation: FunctionComponent<CreationProps> = ({
             }
             classNameAudio={"rounded-md w-full h-full flex relative"}
             srcUrl={
-              item.mediaTypes?.[0] == "video"
-                ? `${INFURA_GATEWAY}/ipfs/${item?.video?.split("ipfs://")?.[1]}`
-                : item.mediaTypes?.[0] == "audio"
-                ? `${INFURA_GATEWAY}/ipfs/${item?.audio?.split("ipfs://")?.[1]}`
+              item.collectionMetadata?.mediaTypes?.[0] == "video"
+                ? `${INFURA_GATEWAY}/ipfs/${
+                    item?.collectionMetadata?.video?.split("ipfs://")?.[1]
+                  }`
+                : item.collectionMetadata?.mediaTypes?.[0] == "audio"
+                ? `${INFURA_GATEWAY}/ipfs/${
+                    item?.collectionMetadata?.audio?.split("ipfs://")?.[1]
+                  }`
                 : `${INFURA_GATEWAY}/ipfs/${
-                    item?.images?.[0]?.split("ipfs://")?.[1]
+                    item?.collectionMetadata?.images?.[0]?.split("ipfs://")?.[1]
                   }`
             }
             srcCover={
-              item?.mediaCover
+              item?.collectionMetadata?.mediaCover
                 ? `${INFURA_GATEWAY}/ipfs/${
-                    item?.mediaCover?.split("ipfs://")?.[1]
+                    item?.collectionMetadata?.mediaCover?.split("ipfs://")?.[1]
                   }`
                 : undefined
             }
@@ -109,8 +113,8 @@ const Creation: FunctionComponent<CreationProps> = ({
                 amount: 1,
                 price: Number(item?.prices?.[0]),
                 type: numberToItemTypeMap[Number(item?.origin)],
-                color: item?.colors?.[0],
-                size: item?.sizes?.[0],
+                color: item?.collectionMetadata?.colors?.[0],
+                size: item?.collectionMetadata?.sizes?.[0],
                 purchased: false,
                 chosenIndex: 0,
               };
@@ -178,9 +182,9 @@ const Creation: FunctionComponent<CreationProps> = ({
             )}
           </div>
           <div className="relative w-fit h-fit flex items-center justify-center font-bit top-px text-xs">
-            {item?.title?.length > 13
-              ? item?.title?.slice(0, 10) + "..."
-              : item?.title}
+            {item?.collectionMetadata?.title?.length > 13
+              ? item?.collectionMetadata?.title?.slice(0, 10) + "..."
+              : item?.collectionMetadata?.title}
           </div>
           <div className="relative w-fit h-fit flex items-center justify-center font-bit top-px text-xs">
             ${item?.prices?.[0]}
