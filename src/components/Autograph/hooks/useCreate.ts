@@ -139,6 +139,8 @@ const useCreate = (
       collectionDetails?.dropId?.trim() == "" ||
       collectionDetails.title?.trim() == "" ||
       collectionDetails.description?.trim() == "" ||
+      collectionDetails.description?.length > 2000 ||
+      collectionDetails.prompt?.length > 2000 ||
       (collectionSettings?.media == "static" &&
         (!collectionDetails.images || collectionDetails.images?.length < 1)) ||
       (collectionSettings?.media === "audio" &&
@@ -665,7 +667,6 @@ const useCreate = (
       getAllCollections();
     }
   }, [screenDisplay, lensConnected?.id, address]);
-
 
   return {
     createCase,
