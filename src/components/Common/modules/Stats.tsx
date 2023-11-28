@@ -13,12 +13,12 @@ const Stats: FunctionComponent<StatsProps> = ({
   return (
     <div
       className={`relative flex flex-row h-fit items-between justify-between gap-4 text-pez text-xxs font-bit ${
-        layoutAmount === 4 ? "flex-wrap w-full" : "flex-wrap w-full tablet:flex-nowrap tablet:w-fit"
+        layoutAmount === 4 ? "flex-wrap w-full" : "flex-wrap w-full lg:flex-nowrap lg:w-fit"
       }`}
     >
       <div
         className={`relative flex gap-2 items-between justify-between ${
-          layoutAmount === 4 ? "flex-row" : "flex-row tablet:flex-col"
+          layoutAmount === 4 ? "flex-row" : "flex-row lg:flex-col"
         }`}
       >
         {[
