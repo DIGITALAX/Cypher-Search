@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Profile } from "../../../../graphql/generated";
 import { getOneDrop } from "../../../../graphql/subgraph/queries/getDrops";
 import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
-import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 import collectionFixer from "../../../../lib/helpers/collectionFixer";
 
 const useDrop = (drop: string, profile: Profile | undefined) => {

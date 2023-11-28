@@ -83,142 +83,155 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                       ></div>
                     );
                   })
-                : allCollections
-                    ?.sort(() => Math.random() - 0.5)
-                    ?.map((item: Creation, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className="relative w-40 h-40 rounded-sm p-px cursor-pointer"
-                          id="pfp"
-                          onClick={() => {
-                            setCreateCase("collection");
-                            setCollectionSettings((prev) => ({
-                              ...prev,
-                              origin: "chromadin",
-                              media: item?.audio
-                                ? "audio"
-                                : item?.video
-                                ? "video"
-                                : "static",
-                            }));
-                            setCollectionDetails({
-                              title: item?.title,
-                              profileId: item?.profileId,
-                              pubId: item?.pubId,
-                              description: item?.description,
-                              collectionId: item?.collectionId,
-                              price: item?.prices?.[0],
-                              acceptedTokens: item?.acceptedTokens,
-                              images: [
-                                {
-                                  media: item?.images?.[0],
-                                  type: item?.mediaTypes?.[0],
-                                },
-                              ],
-                              video: item?.video,
-                              audio: item?.audio,
-                              tags: item?.tags
-                                ? item?.tags?.join(", ") + ","
-                                : "",
-                              cover: "",
-                              prompt: item?.prompt,
-                              amount: item?.amount,
-                              visibility: item?.visibility,
-                              sizes: item?.sizes,
-                              colors: item?.colors,
-                              profileHandle: item?.profileHandle,
-                              microbrand: {
-                                microbrand: item?.microbrand,
-                                microbrandCover: item?.microbrandCover,
+                : allCollections?.map((item: Creation, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className="relative w-40 h-40 rounded-sm p-px cursor-pointer"
+                        id="pfp"
+                        onClick={() => {
+                          setCreateCase("collection");
+                          setCollectionSettings((prev) => ({
+                            ...prev,
+                            origin: "chromadin",
+                            media: item?.collectionMetadata?.audio
+                              ? "audio"
+                              : item?.collectionMetadata?.video
+                              ? "video"
+                              : "static",
+                          }));
+                          setCollectionDetails({
+                            title: item?.collectionMetadata?.title,
+                            profileId: item?.profileId,
+                            pubId: item?.pubId,
+                            description: item?.collectionMetadata?.description,
+                            collectionId: item?.collectionId,
+                            price: item?.prices?.[0],
+                            acceptedTokens: item?.acceptedTokens,
+                            images: [
+                              {
+                                media: item?.collectionMetadata?.images?.[0],
+                                type: item?.collectionMetadata?.mediaTypes?.[0],
                               },
-                              access: item?.access
-                                ? item?.access?.join(", ")
-                                : "",
-                              dropTitle: item?.dropTitle,
-                              dropCover: item?.dropCover,
-                              dropCollectionIds: item?.dropCollectionIds,
-                              dropId: item?.dropId,
-                              communities: item?.communities
-                                ? item?.communities?.join(", ")
-                                : "",
-                            });
-                          }}
-                        >
-                          <div className="relative w-full h-full flex">
-                            <MediaSwitch
-                              type={
-                                item.mediaTypes?.[0] == "video"
-                                  ? "video"
-                                  : item.mediaTypes?.[0] == "audio"
-                                  ? "audio"
-                                  : "image"
-                              }
-                              hidden
-                              classNameImage={
-                                "rounded-md w-full h-full flex relative"
-                              }
-                              classNameAudio={"rounded-md w-full h-full flex relative"}
-
-                              classNameVideo={
-                                "object-cover w-full h-full flex items-center justify-center rounded-md relative"
-                              }
-                              srcUrl={
-                                item.mediaTypes?.[0] == "video"
-                                  ? `${INFURA_GATEWAY}/ipfs/${
-                                      item?.video?.split("ipfs://")?.[1]
-                                    }`
-                                  : item.mediaTypes?.[0] == "audio"
-                                  ? `${INFURA_GATEWAY}/ipfs/${
-                                      item?.audio?.split("ipfs://")?.[1]
-                                    }`
-                                  : `${INFURA_GATEWAY}/ipfs/${
-                                      item?.images?.[0]?.split("ipfs://")?.[1]
-                                    }`
-                              }
-                              srcCover={
-                                item?.mediaCover
-                                  ? `${INFURA_GATEWAY}/ipfs/${
-                                      item?.mediaCover?.split("ipfs://")?.[1]
-                                    }`
-                                  : undefined
-                              }
+                            ],
+                            video: item?.collectionMetadata?.video,
+                            audio: item?.collectionMetadata?.audio,
+                            tags: item?.collectionMetadata?.tags
+                              ? item?.collectionMetadata?.tags?.join(", ") + ","
+                              : "",
+                            cover: "",
+                            prompt: item?.collectionMetadata?.prompt,
+                            amount: item?.amount,
+                            visibility: item?.collectionMetadata?.visibility,
+                            sizes: item?.collectionMetadata?.sizes,
+                            colors: item?.collectionMetadata?.colors,
+                            profileHandle:
+                              item?.collectionMetadata?.profileHandle,
+                            microbrand: {
+                              microbrand: item?.collectionMetadata?.microbrand,
+                              microbrandCover:
+                                item?.collectionMetadata?.microbrandCover,
+                            },
+                            access: item?.collectionMetadata?.access
+                              ? item?.collectionMetadata?.access?.join(", ")
+                              : "",
+                            dropTitle: item?.dropMetadata?.dropTitle,
+                            dropCover: item?.dropMetadata?.dropCover,
+                            dropCollectionIds: item?.dropCollectionIds,
+                            dropId: item?.dropId,
+                            communities: item?.collectionMetadata?.communities
+                              ? item?.collectionMetadata?.communities?.join(
+                                  ", "
+                                )
+                              : "",
+                          });
+                        }}
+                      >
+                        <div className="relative w-full h-full flex">
+                          <MediaSwitch
+                            type={
+                              item.collectionMetadata?.mediaTypes?.[0] ==
+                              "video"
+                                ? "video"
+                                : item.collectionMetadata?.mediaTypes?.[0] ==
+                                  "audio"
+                                ? "audio"
+                                : "image"
+                            }
+                            hidden
+                            classNameImage={
+                              "rounded-md w-full h-full flex relative"
+                            }
+                            classNameAudio={
+                              "rounded-md w-full h-full flex relative"
+                            }
+                            classNameVideo={
+                              "object-cover w-full h-full flex items-center justify-center rounded-md relative"
+                            }
+                            srcUrl={
+                              item.collectionMetadata?.mediaTypes?.[0] ==
+                              "video"
+                                ? `${INFURA_GATEWAY}/ipfs/${
+                                    item?.collectionMetadata?.video?.split(
+                                      "ipfs://"
+                                    )?.[1]
+                                  }`
+                                : item.collectionMetadata?.mediaTypes?.[0] ==
+                                  "audio"
+                                ? `${INFURA_GATEWAY}/ipfs/${
+                                    item?.collectionMetadata?.audio?.split(
+                                      "ipfs://"
+                                    )?.[1]
+                                  }`
+                                : `${INFURA_GATEWAY}/ipfs/${
+                                    item?.collectionMetadata?.images?.[0]?.split(
+                                      "ipfs://"
+                                    )?.[1]
+                                  }`
+                            }
+                            srcCover={
+                              item?.collectionMetadata?.mediaCover
+                                ? `${INFURA_GATEWAY}/ipfs/${
+                                    item?.collectionMetadata?.mediaCover?.split(
+                                      "ipfs://"
+                                    )?.[1]
+                                  }`
+                                : undefined
+                            }
+                          />
+                        </div>
+                        <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
+                          <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">
+                            {item?.collectionMetadata?.title}
+                          </div>
+                          <div
+                            className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
+                            title="Go to Collection"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(
+                                `/item/${
+                                  numberToItemTypeMap[Number(item?.origin)]
+                                }/${
+                                  "0x" +
+                                  toHexWithLeadingZero(Number(item?.profileId))
+                                }-${
+                                  "0x" +
+                                  toHexWithLeadingZero(Number(item?.pubId))
+                                }`
+                              );
+                            }}
+                          >
+                            <Image
+                              draggable={false}
+                              layout="fill"
+                              src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
                             />
                           </div>
-                          <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
-                            <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">
-                              {item?.title}
-                            </div>
-                            <div
-                              className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
-                              title="Go to Collection"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                router.push(
-                                  `/item/${
-                                    numberToItemTypeMap[Number(item?.origin)]
-                                  }/${
-                                    "0x" +
-                                    toHexWithLeadingZero(
-                                      Number(item?.profileId)
-                                    )
-                                  }-${
-                                    "0x" +
-                                    toHexWithLeadingZero(Number(item?.pubId))
-                                  }`
-                                );
-                              }}
-                            >
-                              <Image
-                                draggable={false}
-                                layout="fill"
-                                src={`${INFURA_GATEWAY}/ipfs/QmRkAoLMAh2hxZfh5WvaxuxRUMhs285umdJWuvLa5wt6Ht`}
-                              />
-                            </div>
-                          </div>
                         </div>
-                      );
-                    })}
+                      </div>
+                    );
+                  })}
             </div>
           </div>
         </div>

@@ -6,24 +6,37 @@ const COLLECTIONS = `
   query($where: FilterInput, $first: Int, $skip: Int) {
     collectionCreateds(where: $where, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
       amount
-      title
-      tags
+      dropMetadata {
+        dropCover
+        dropTitle
+      }
+      collectionMetadata {
+        access
+        visibility
+        video
+        title
+        tags
+        prompt
+        profileHandle
+        sizes
+        microbrand
+        mediaTypes
+        mediaCover
+        id
+        description
+        audio
+        colors
+        communities
+        images
+        microbrandCover
+      }
       pubId
-      video
-      audio
-      prompt
       profileId
       acceptedTokens
-      visibility
       uri
-      profileHandle
       printType
       prices
-      mediaTypes
       owner
-      microbrandCover
-      microbrand
-      images
       soldTokens
       fulfillerPercent
       fulfillerBase
@@ -31,16 +44,8 @@ const COLLECTIONS = `
       designerPercent
       dropId
       dropCollectionIds
-      dropCover
-      dropTitle
-      description
-      communities
-      mediaCover
       collectionId
-      access
       unlimited
-      colors
-      sizes
       origin
       blockTimestamp
     }

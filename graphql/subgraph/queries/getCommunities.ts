@@ -4,8 +4,10 @@ import { graphPrintClient } from "../../../lib/graph/client";
 const FILTER = `
   query {
     communityCreateds {
-        name
-        cover
+        communityMetadata {
+          name
+          cover
+        }
         communityId
       }
   }
@@ -13,11 +15,7 @@ const FILTER = `
 
 const COMMUNITY = `
   query($name: String!) {
-    communityCreateds(where: {name: $name}) {
-        name
-        cover
-        description
-        subTopic
+    communityCreateds(where: { communityMetadata_: { name: $name }}) {
         validPrintTypes
         validOrigins
         validCreators
@@ -27,6 +25,12 @@ const COMMUNITY = `
         steward
         blockTimestamp
         communityId
+        communityMetadata {
+          name
+          cover
+          description
+          subTopic
+        }
       }
   }
 `;

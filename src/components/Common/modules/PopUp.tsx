@@ -4,7 +4,6 @@ import { INFURA_GATEWAY, itemTypeToString } from "../../../../lib/constants";
 import { PopUpProps } from "../types/common.types";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
-import { PrintType } from "@/components/Tiles/types/tiles.types";
 import { setCypherStorageCart } from "../../../../lib/utils";
 
 const PopUp: FunctionComponent<PopUpProps> = ({
@@ -40,8 +39,8 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             price: Number(cartItem?.prices?.[0]),
             level,
             type,
-            color: cartItem?.colors?.[0],
-            size: cartItem?.sizes?.[0],
+            color: cartItem?.collectionMetadata?.colors?.[0],
+            size: cartItem?.collectionMetadata?.sizes?.[0],
             purchased: false,
             chosenIndex: 0,
           };

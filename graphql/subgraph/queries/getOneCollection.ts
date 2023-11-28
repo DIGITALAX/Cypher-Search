@@ -5,41 +5,46 @@ const COLLECTION = `
   query($collectionId: String!) {
     collectionCreateds(where: {collectionId: $collectionId}, first: 1) {
       amount
-      title
-      tags
+      dropMetadata {
+        dropCover
+        dropTitle
+      }
+      collectionMetadata {
+        access
+        visibility
+        video
+        title
+        tags
+        prompt
+        profileHandle
+        sizes
+        microbrand
+        mediaTypes
+        mediaCover
+        id
+        description
+        audio
+        colors
+        communities
+        images
+        microbrandCover
+      }
       pubId
-      prompt
-      uri
       profileId
-      profileHandle
+      acceptedTokens
+      uri
       printType
       prices
       owner
-      microbrandCover
-      microbrand
-      images
-      mediaTypes
-      visibility
       soldTokens
       fulfillerPercent
       fulfillerBase
       fulfiller
-      video
-      audio
       designerPercent
       dropId
       dropCollectionIds
-      dropCover
-      dropTitle
-      description
-      communities
       collectionId
-      access
-      mediaCover
-      acceptedTokens
       unlimited
-      colors
-      sizes
       origin
       blockTimestamp
     }
@@ -49,52 +54,60 @@ const COLLECTION = `
 export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
   collectionCreateds(where: {origin: $origin, profileId: $profileId} first: 1) {
     amount
+    dropMetadata {
+      dropCover
+      dropTitle
+    }
+    collectionMetadata {
+      access
+      visibility
+      video
       title
       tags
-      pubId
       prompt
-      profileId
       profileHandle
-      printType
-      prices
-      owner
-      microbrandCover
-      microbrand
-      images
-      mediaTypes
-      visibility
-      fulfillerPercent
-      fulfillerBase
-      fulfiller
-      designerPercent
-      dropId
-      dropCollectionIds
-      dropCover
-      video
-      audio
-      dropTitle
-      description
-      communities
-      collectionId
-      soldTokens
-      access
-      acceptedTokens
-      unlimited
-      mediaCover
-      colors
       sizes
-      origin
-      blockTimestamp
+      microbrand
+      mediaTypes
+      mediaCover
+      id
+      description
+      audio
+      colors
+      communities
+      images
+      microbrandCover
+    }
+    pubId
+    profileId
+    acceptedTokens
+    uri
+    printType
+    prices
+    owner
+    soldTokens
+    fulfillerPercent
+    fulfillerBase
+    fulfiller
+    designerPercent
+    dropId
+    dropCollectionIds
+    collectionId
+    unlimited
+    origin
+    blockTimestamp
   }
 }`;
 
 const COLLECTION_ORDER = `
   query($collectionId: String!) {
     collectionCreateds(where: {collectionId: $collectionId}, first: 1) {
-      title
-      images
       origin
       pubId
+      collectionMetadata {
+        title
+        images
+      }
     }
   }
 `;
@@ -102,54 +115,61 @@ const COLLECTION_ORDER = `
 const COLLECTION_QUICK = `
   query($collectionId: String!) {
     collectionCreateds(where: {collectionId: $collectionId}, first: 1) {
-      title
-      images
       collectionId
+      collectionMetadata {
+        title
+        images
+      }
     }
   }
 `;
 
 const COLLECTION_TITLE = `
   query($title: String!) {
-    collectionCreateds(where: {title_contains_nocase: $title}, first: 1) {
+    collectionCreateds(where: {collectionMetadata_: { title_contains_nocase: $title }}, first: 1) {
       amount
-      title
-      mediaCover
-      tags
+      dropMetadata {
+        dropCover
+        dropTitle
+      }
+      collectionMetadata {
+        access
+        visibility
+        video
+        title
+        tags
+        prompt
+        profileHandle
+        sizes
+        microbrand
+        mediaTypes
+        mediaCover
+        id
+        description
+        audio
+        colors
+        communities
+        images
+        microbrandCover
+      }
       pubId
-      prompt
       profileId
-      profileHandle
+      acceptedTokens
+      uri
       printType
       prices
-      soldTokens
       owner
-      microbrandCover
-      microbrand
-      images
-      mediaTypes
-      visibility
+      soldTokens
       fulfillerPercent
       fulfillerBase
       fulfiller
       designerPercent
       dropId
-      uri
-      video
-      audio
       dropCollectionIds
-      dropCover
-      dropTitle
-      description
-      communities
       collectionId
-      access
       unlimited
-      colors
-      sizes
       origin
       blockTimestamp
-      acceptedTokens
     }
   }
 `;

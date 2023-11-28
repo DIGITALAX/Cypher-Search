@@ -371,7 +371,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                           index: number,
                           id: string
                         ) => Promise<void>
-                      )(indexTwo, publication?.id))
+                      )(index, publication?.id))
                 }
               >
                 {loaders[indexTwo] ? (

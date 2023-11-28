@@ -204,13 +204,13 @@ const Cart: FunctionComponent<CartProps> = ({
                       )}
                     </div>
                     <div className="relative w-full h-fit text-center items-center justify-center flex font-bit text-white">
-                      {currentItem?.item?.title}
+                      {currentItem?.item?.collectionMetadata?.title}
                     </div>
                     <div className="relative w-2/3 h-72 flex items-center justify-center border border-white rounded-md">
                       <Image
                         layout="fill"
                         draggable={false}
-                        src={`${INFURA_GATEWAY}/ipfs/${currentItem?.item?.images?.[0]}`}
+                        src={`${INFURA_GATEWAY}/ipfs/${currentItem?.item?.collectionMetadata?.images?.[0]}`}
                         objectFit="cover"
                         className="rounded-md"
                         onError={(e) => handleImageError(e)}
@@ -223,7 +223,7 @@ const Cart: FunctionComponent<CartProps> = ({
                         </div>
                         <div className="relative flex flex-col items-center justify-center w-fit h-fit">
                           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-                            {currentItem?.item?.sizes?.map(
+                            {currentItem?.item?.collectionMetadata?.sizes?.map(
                               (size: string, index: number) => {
                                 return (
                                   <div
@@ -268,7 +268,7 @@ const Cart: FunctionComponent<CartProps> = ({
                             )}
                           </div>
                           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-                            {currentItem?.item?.colors?.map(
+                            {currentItem?.item?.collectionMetadata?.colors?.map(
                               (color: string, index: number) => {
                                 return (
                                   <div

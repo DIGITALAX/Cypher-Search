@@ -385,7 +385,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                               allDrops?.find(
                                 (item) =>
                                   item.dropId === collectionDetails?.dropId
-                              )?.title
+                              )?.dropDetails?.dropTitle
                             }
                           </div>
                         </div>
@@ -418,7 +418,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                 >
                                   <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
                                     <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
-                                      {item?.title}
+                                      {item?.dropDetails?.dropTitle}
                                     </div>
                                   </div>
                                 </div>

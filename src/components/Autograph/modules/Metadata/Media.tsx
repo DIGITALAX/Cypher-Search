@@ -13,7 +13,7 @@ const Media: FunctionComponent<ImageProps> = ({
   encrypted,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-full flex flex-col justify-start items-center gap-3 break-words max-w-full">
+    <div className="relative w-full h-fit flex flex-col justify-start items-center gap-3 break-words max-w-full">
       {((metadata?.content && metadata?.content?.trim() !== "") ||
         (encrypted &&
           !encrypted?.decrypted &&

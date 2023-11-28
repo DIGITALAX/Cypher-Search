@@ -23,17 +23,33 @@ const useDisplaySearch = (
   const [sortedGallery, setSortedGallery] = useState<
     {
       collectionId: string;
-      images: string[];
-      mediaCover: string;
-      title: string;
+      collectionMetadata: {
+        images: string[];
+        mediaCover: string;
+        title: string;
+      };
     }[]
   >();
   const [selectedItem, setSelectedItem] = useState<Creation>();
   const [galleryLoading, setGalleryLoading] = useState<boolean>(false);
   const [gallery, setGallery] = useState<
     | {
-        collected: Creation[];
-        created: Creation[];
+        collected: {
+          collectionId: string;
+          collectionMetadata: {
+            images: string[];
+            mediaCover: string;
+            title: string;
+          };
+        }[];
+        created: {
+          collectionId: string;
+          collectionMetadata: {
+            images: string[];
+            mediaCover: string;
+            title: string;
+          };
+        }[];
       }
     | undefined
   >();
@@ -70,23 +86,27 @@ const useDisplaySearch = (
 
   const handleSortGallery = () => {
     setSortedGallery(
-      [...(gallery?.collected || []), ...(gallery?.created || [])]?.filter(
-        (item: {
-          collectionId: string;
-          images: string[];
-          title: string;
-          mediaCover: string;
-        }) => item?.title?.includes(itemSearch)
-      )
+      [...(gallery?.collected || []), ...(gallery?.created || [])]
+        .filter((item) => item?.collectionMetadata?.title?.includes(itemSearch))
+        .map((item) => ({
+          collectionId: item.collectionId,
+          collectionMetadata: {
+            images: item.collectionMetadata?.images || [],
+            mediaCover: item?.collectionMetadata?.mediaCover || "",
+            title: item?.collectionMetadata?.title || "",
+          },
+        }))
     );
   };
 
   const handleItemSelect = async (
     selected: {
       collectionId: string;
-      images: string[];
-      title: string;
-      mediaCover: string;
+      collectionMetadata: {
+        images: string[];
+        title: string;
+        mediaCover: string;
+      };
     },
     type: SortType,
     value: number

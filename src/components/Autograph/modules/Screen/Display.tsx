@@ -41,9 +41,11 @@ const Display: FunctionComponent<DisplayProps> = ({
             {displayType?.main && (
               <MediaSwitch
                 type={
-                  displayType?.main?.mediaTypes?.[0] == "video"
+                  displayType?.main?.collectionMetadata?.mediaTypes?.[0] ==
+                  "video"
                     ? "video"
-                    : displayType?.main?.mediaTypes?.[0] == "audio"
+                    : displayType?.main?.collectionMetadata?.mediaTypes?.[0] ==
+                      "audio"
                     ? "audio"
                     : "image"
                 }
@@ -54,22 +56,32 @@ const Display: FunctionComponent<DisplayProps> = ({
                 }
                 classNameAudio={"w-full h-full flex relative"}
                 srcUrl={
-                  displayType?.main?.mediaTypes?.[0] == "video"
+                  displayType?.main?.collectionMetadata?.mediaTypes?.[0] ==
+                  "video"
                     ? `${INFURA_GATEWAY}/ipfs/${
-                        displayType?.main?.video?.split("ipfs://")?.[1]
+                        displayType?.main?.collectionMetadata?.video?.split(
+                          "ipfs://"
+                        )?.[1]
                       }`
-                    : displayType?.main?.mediaTypes?.[0] == "audio"
+                    : displayType?.main?.collectionMetadata?.mediaTypes?.[0] ==
+                      "audio"
                     ? `${INFURA_GATEWAY}/ipfs/${
-                        displayType?.main?.audio?.split("ipfs://")?.[1]
+                        displayType?.main?.collectionMetadata?.audio?.split(
+                          "ipfs://"
+                        )?.[1]
                       }`
                     : `${INFURA_GATEWAY}/ipfs/${
-                        displayType?.main?.images?.[0]?.split("ipfs://")?.[1]
+                        displayType?.main?.collectionMetadata?.images?.[0]?.split(
+                          "ipfs://"
+                        )?.[1]
                       }`
                 }
                 srcCover={
-                  displayType?.main?.mediaCover
+                  displayType?.main?.collectionMetadata?.mediaCover
                     ? `${INFURA_GATEWAY}/ipfs/${
-                        displayType?.main?.mediaCover?.split("ipfs://")?.[1]
+                        displayType?.main?.collectionMetadata?.mediaCover?.split(
+                          "ipfs://"
+                        )?.[1]
                       }`
                     : undefined
                 }
@@ -126,10 +138,11 @@ const Display: FunctionComponent<DisplayProps> = ({
                   {displayType?.side?.[index] && (
                     <MediaSwitch
                       type={
-                        displayType?.side?.[index]?.mediaTypes?.[0] == "video"
+                        displayType?.side?.[index]?.collectionMetadata
+                          ?.mediaTypes?.[0] == "video"
                           ? "video"
-                          : displayType?.side?.[index]?.mediaTypes?.[0] ==
-                            "audio"
+                          : displayType?.side?.[index]?.collectionMetadata
+                              ?.mediaTypes?.[0] == "audio"
                           ? "audio"
                           : "image"
                       }
@@ -140,29 +153,39 @@ const Display: FunctionComponent<DisplayProps> = ({
                         "object-cover w-full h-full flex items-center justify-center relative rounded-lg"
                       }
                       srcUrl={
-                        displayType?.side?.[index]?.mediaTypes?.[0] == "video"
+                        displayType?.side?.[index]?.collectionMetadata
+                          ?.mediaTypes?.[0] == "video"
                           ? `${INFURA_GATEWAY}/ipfs/${
-                              displayType?.side?.[index]?.video?.split(
+                              displayType?.side?.[
+                                index
+                              ]?.collectionMetadata?.video?.split(
                                 "ipfs://"
                               )?.[1]
                             }`
-                          : displayType?.side?.[index]?.mediaTypes?.[0] ==
-                            "audio"
+                          : displayType?.side?.[index]?.collectionMetadata
+                              ?.mediaTypes?.[0] == "audio"
                           ? `${INFURA_GATEWAY}/ipfs/${
-                              displayType?.side?.[index]?.audio?.split(
+                              displayType?.side?.[
+                                index
+                              ]?.collectionMetadata?.audio?.split(
                                 "ipfs://"
                               )?.[1]
                             }`
                           : `${INFURA_GATEWAY}/ipfs/${
-                              displayType?.side?.[index]?.images?.[0]?.split(
+                              displayType?.side?.[
+                                index
+                              ]?.collectionMetadata?.images?.[0]?.split(
                                 "ipfs://"
                               )?.[1]
                             }`
                       }
                       srcCover={
-                        displayType?.side?.[index]?.mediaCover
+                        displayType?.side?.[index]?.collectionMetadata
+                          ?.mediaCover
                           ? `${INFURA_GATEWAY}/ipfs/${
-                              displayType?.side?.[index]?.mediaCover?.split(
+                              displayType?.side?.[
+                                index
+                              ]?.collectionMetadata?.mediaCover?.split(
                                 "ipfs://"
                               )?.[1]
                             }`

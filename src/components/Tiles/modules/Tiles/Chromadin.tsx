@@ -57,19 +57,23 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               dispatch(
                 setImageViewer({
                   actionValue: true,
-                  actionType: publication?.mediaTypes?.[0],
+                  actionType: publication?.collectionMetadata?.mediaTypes?.[0],
                   actionImage: `${INFURA_GATEWAY}/ipfs/${
-                    publication?.images?.[0]?.split("ipfs://")?.[1]
+                    publication?.collectionMetadata?.images?.[0]?.split(
+                      "ipfs://"
+                    )?.[1]
                   }`,
                 })
               )
             }
           >
-            {publication?.images && (
+            {publication?.collectionMetadata?.images && (
               <Image
                 layout="fill"
                 src={`${INFURA_GATEWAY}/ipfs/${
-                  publication?.images?.[0]?.split("ipfs://")?.[1]
+                  publication?.collectionMetadata?.images?.[0]?.split(
+                    "ipfs://"
+                  )?.[1]
                 }`}
                 objectFit="cover"
                 draggable={false}
@@ -110,7 +114,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         <div className="relative flex flex-row justify-between gap-2 w-full h-fit items-center">
           <div className="relative gap-1 flex flex-col items-start justify-center">
             <div className="relative flex w-fit h-fit break-words text-nuba font-bit text-lg uppercase">
-              {publication?.title}
+              {publication?.collectionMetadata?.title}
             </div>
             <div
               className="relative w-fit h-fit flex text-mos text-sm font-bit uppercase cursor-pointer"

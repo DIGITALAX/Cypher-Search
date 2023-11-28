@@ -5,66 +5,100 @@ import { FilterInput } from "@/components/Tiles/types/tiles.types";
 const TEXT = `
   query($text: String, $first: Int, $skip: Int) {
     cyphersearch(text: $text, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
-        amount
+      amount
+      dropMetadata {
+        dropCover
+        dropTitle
+      }
+      collectionMetadata {
+        access
+        visibility
+        video
         title
         tags
-        pubId
         prompt
-        profileId
         profileHandle
-        printType
-        prices
-        owner
-        microbrandCover
-        microbrand
-        images
-        fulfillerPercent
-        fulfillerBase
-        fulfiller
-        designerPercent
-        drop
-        description
-        communities
-        collectionId
-        access
-        unlimited
-        colors
         sizes
-        origin
+        microbrand
+        mediaTypes
+        mediaCover
+        id
+        description
+        audio
+        colors
+        communities
+        images
+        microbrandCover
       }
+      pubId
+      profileId
+      acceptedTokens
+      uri
+      printType
+      prices
+      owner
+      soldTokens
+      fulfillerPercent
+      fulfillerBase
+      fulfiller
+      designerPercent
+      dropId
+      dropCollectionIds
+      collectionId
+      unlimited
+      origin
+      blockTimestamp
+    }
   }
 `;
 
 const TEXT_WHERE = `
 query($text: String, $where: FilterInput, $first: Int, $skip: Int) {
   cyphersearch(text: $text, where: $where, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
-      amount
+    amount
+    dropMetadata {
+      dropCover
+      dropTitle
+    }
+    collectionMetadata {
+      access
+      visibility
+      video
       title
       tags
-      pubId
       prompt
-      profileId
       profileHandle
-      printType
-      prices
-      owner
-      microbrandCover
-      microbrand
-      images
-      fulfillerPercent
-      fulfillerBase
-      fulfiller
-      designerPercent
-      drop
-      description
-      communities
-      collectionId
-      access
-      unlimited
-      colors
       sizes
-      origin
+      microbrand
+      mediaTypes
+      mediaCover
+      id
+      description
+      audio
+      colors
+      communities
+      images
+      microbrandCover
     }
+    pubId
+    profileId
+    acceptedTokens
+    uri
+    printType
+    prices
+    owner
+    soldTokens
+    fulfillerPercent
+    fulfillerBase
+    fulfiller
+    designerPercent
+    dropId
+    dropCollectionIds
+    collectionId
+    unlimited
+    origin
+    blockTimestamp
+  }
 }
 `;
 

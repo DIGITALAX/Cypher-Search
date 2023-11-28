@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Drop, ScreenDisplay } from "../types/autograph.types";
+import { Drop } from "../types/autograph.types";
 import { Profile } from "../../../../graphql/generated";
 import { Dispatch } from "redux";
 import { getDrops } from "../../../../graphql/subgraph/queries/getDrops";

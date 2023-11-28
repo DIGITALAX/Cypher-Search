@@ -328,7 +328,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   content={
                     itemData?.type === "chromadin" ||
                     itemData?.type === "coinop"
-                      ? (itemData.post as Creation)?.description
+                      ? (itemData.post as Creation)?.collectionMetadata?.description
                       : (itemData?.post as Mirror)?.__typename === "Mirror"
                       ? (
                           (itemData?.post as Mirror)?.mirrorOn

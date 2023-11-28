@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import whoReactedPublication from "../../../../graphql/lens/queries/whoReacted";
-import { LimitType, Profile } from "../../../../graphql/generated";
+import { LimitType, Profile, Quote } from "../../../../graphql/generated";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import whoActedPublication from "../../../../graphql/lens/queries/whoActed";
 import following from "../../../../graphql/lens/queries/following";
@@ -13,7 +13,11 @@ const useWho = (
 ) => {
   const [dataLoading, setDataLoading] = useState<boolean>(false);
   const [reactors, setReactors] = useState<any[]>([]);
-  const [quoters, setQuoters] = useState<any[]>([]);
+  const [quoters, setQuoters] = useState<
+    (Quote & {
+      decrypted: any;
+    })[]
+  >([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [hasMoreQuote, setHasMoreQuote] = useState<boolean>(true);
   const [pageInfo, setPageInfo] = useState<string>();
@@ -88,18 +92,29 @@ const useWho = (
         lensConnected?.id
       );
 
+      setQuoters(
+        (quoteData?.data?.publications?.items || []) as (Quote & {
+          decrypted: any;
+        })[]
+      );
+      setPageInfoQuote(quoteData?.data?.publications.pageInfo.next);
+
       if (
         !quoteData?.data?.publications?.items ||
         quoteData?.data?.publications?.items?.length < 10
       ) {
         setHasMoreQuote(false);
         setDataLoading(false);
-        return;
       } else if (quoteData?.data?.publications?.items?.length === 10) {
         setHasMoreQuote(true);
       }
-      setQuoters(quoteData?.data?.publications?.items);
-      setPageInfoQuote(quoteData?.data?.publications.pageInfo.next);
+
+      if (
+        (mirrorData?.data?.publications?.items || [])?.length < 1 &&
+        (quoteData?.data?.publications?.items || [])?.length > 0
+      ) {
+        setMirrorQuote(true);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
@@ -127,7 +142,6 @@ const useWho = (
       ) {
         setHasMore(false);
         setDataLoading(false);
-        return;
       } else if (data?.data?.whoActedOnPublication?.items?.length === 10) {
         setHasMore(true);
       }
@@ -158,7 +172,6 @@ const useWho = (
       ) {
         setHasMore(false);
         setDataLoading(false);
-        return;
       } else if (data?.data?.following?.items?.length === 10) {
         setHasMore(true);
       }
@@ -368,7 +381,9 @@ const useWho = (
         setQuoters([
           ...quoters,
           ...(quoteData?.data?.publications?.items || []),
-        ]);
+        ] as (Quote & {
+          decrypted: any;
+        })[]);
         setPageInfoQuote(quoteData?.data?.publications.pageInfo.next);
 
         if (

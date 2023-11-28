@@ -23,14 +23,14 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
       <Bar title={`Collect Lvl.${index}`} />
       <div className="relative w-full h-110 flex flex-col bg-virg gap-6 justify-between items-center p-2 border-b border-x rounded-b-sm border-black">
         <div className="relative w-52 h-52 rounded-sm border border-black flex items-center justify-center">
-          {item?.images && (
+          {item?.collectionMetadata?.images && (
             <Image
               className="rounded-sm"
               layout="fill"
               objectFit="cover"
               draggable={false}
               src={`${INFURA_GATEWAY}/ipfs/${
-                item?.images?.[0]?.split("ipfs://")?.[1]
+                item?.collectionMetadata?.images?.[0]?.split("ipfs://")?.[1]
               }`}
               onError={(e) => handleImageError(e)}
             />
@@ -38,7 +38,7 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
         </div>
         <div className="relative w-fit h-fit flex flex-col gap-3 items-center justify-center text-center break-words">
           <div className="relative flex items-center items-center justify-center w-fit text-sm font-net">
-            {item?.title}
+            {item?.collectionMetadata?.title}
           </div>
         </div>
         <div className="relative flex flex-col gap-1.5 justify-start items-center text-black font-dog text-xxs">

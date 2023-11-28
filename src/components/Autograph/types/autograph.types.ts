@@ -1562,8 +1562,10 @@ export type DropProps = {
 
 export interface Drop {
   creator: string;
-  title: string;
-  cover: string;
+  dropDetails: {
+    dropTitle: string;
+    dropCover: string;
+  };
   dropId: string;
   collectionIds: string[];
 }

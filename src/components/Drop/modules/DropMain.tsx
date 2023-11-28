@@ -32,16 +32,20 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                     router.push(
                       `/item/${
                         numberToItemTypeMap[Number(collection?.origin)]
-                      }/${collection?.title?.replaceAll(" ", "_")}`
+                      }/${collection?.collectionMetadata?.title?.replaceAll(
+                        " ",
+                        "_"
+                      )}`
                     )
                   }
                 >
                   <MediaSwitch
                     hidden
                     type={
-                      collection.mediaTypes?.[0] == "video"
+                      collection.collectionMetadata?.mediaTypes?.[0] == "video"
                         ? "video"
-                        : collection.mediaTypes?.[0] == "audio"
+                        : collection.collectionMetadata?.mediaTypes?.[0] ==
+                          "audio"
                         ? "audio"
                         : "image"
                     }
@@ -51,22 +55,31 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                     }
                     classNameAudio={"rounded-sm w-full h-full flex relative"}
                     srcUrl={
-                      collection.mediaTypes?.[0] == "video"
+                      collection.collectionMetadata?.mediaTypes?.[0] == "video"
                         ? `${INFURA_GATEWAY}/ipfs/${
-                            collection?.video?.split("ipfs://")?.[1]
+                            collection?.collectionMetadata?.video?.split(
+                              "ipfs://"
+                            )?.[1]
                           }`
-                        : collection.mediaTypes?.[0] == "audio"
+                        : collection.collectionMetadata?.mediaTypes?.[0] ==
+                          "audio"
                         ? `${INFURA_GATEWAY}/ipfs/${
-                            collection?.audio?.split("ipfs://")?.[1]
+                            collection?.collectionMetadata?.audio?.split(
+                              "ipfs://"
+                            )?.[1]
                           }`
                         : `${INFURA_GATEWAY}/ipfs/${
-                            collection?.images?.[0]?.split("ipfs://")?.[1]
+                            collection?.collectionMetadata?.images?.[0]?.split(
+                              "ipfs://"
+                            )?.[1]
                           }`
                     }
                     srcCover={
-                      collection?.mediaCover
+                      collection?.collectionMetadata?.mediaCover
                         ? `${INFURA_GATEWAY}/ipfs/${
-                            collection?.mediaCover?.split("ipfs://")?.[1]
+                            collection?.collectionMetadata?.mediaCover?.split(
+                              "ipfs://"
+                            )?.[1]
                           }`
                         : undefined
                     }
@@ -74,9 +87,10 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                 </div>
                 <div className="absolute bottom-0 right-0 w-full h-12 bg-offBlack flex items-center justify-between px-3 z-2">
                   <div className="relative w-fit h-fit flex items-center justify-start text-sm font-bit text-white top-px">
-                    {collection?.title?.length > 20
-                      ? collection?.title?.slice(0, 20) + "..."
-                      : collection?.title}
+                    {collection?.collectionMetadata?.title?.length > 20
+                      ? collection?.collectionMetadata?.title?.slice(0, 20) +
+                        "..."
+                      : collection?.collectionMetadata?.title}
                   </div>
                   <div className="relative flex flex-row gap-2 ml-auto items-center justify-center">
                     <div className="relative w-fit h-fit flex items-center justify-start text-sm font-bit text-white top-px">
@@ -91,8 +105,8 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                           amount: 1,
                           price: Number(collection?.prices?.[0]),
                           type: numberToItemTypeMap[Number(collection?.origin)],
-                          color: collection?.colors?.[0],
-                          size: collection?.sizes?.[0],
+                          color: collection?.collectionMetadata?.colors?.[0],
+                          size: collection?.collectionMetadata?.sizes?.[0],
                           purchased: false,
                           chosenIndex: 0,
                         };

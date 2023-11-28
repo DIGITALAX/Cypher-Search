@@ -61,10 +61,12 @@ const useItem = (
   const [isApprovedSpend, setIsApprovedSpend] = useState<boolean>(false);
   const [relatedData, setRelatedData] = useState<{
     collections: Creation[];
-    microbrand: [{
-      microbrand: string;
-      microbrandCover: string;
-    }];
+    microbrand: [
+      {
+        microbrand: string;
+        microbrandCover: string;
+      }
+    ];
   }>();
   const [purchaseDetails, setPurchaseDetails] = useState<PurchaseDetails>({
     color: "",
@@ -110,9 +112,9 @@ const useItem = (
             type,
           });
           setPurchaseDetails({
-            color: coll?.colors?.[0],
+            color: coll?.collectionMetadata?.colors?.[0],
             currency: coll?.acceptedTokens?.[0],
-            size: coll?.sizes?.[0],
+            size: coll?.collectionMetadata?.sizes?.[0],
             price: coll?.prices?.[0],
             imageIndex: 0,
             priceIndex: 0,
@@ -141,9 +143,9 @@ const useItem = (
             type,
           });
           setPurchaseDetails({
-            color: collection?.colors?.[0],
+            color: collection?.collectionMetadata?.colors?.[0],
             currency: collection?.acceptedTokens?.[0],
-            size: collection?.sizes?.[0],
+            size: collection?.collectionMetadata?.sizes?.[0],
             price: collection?.prices?.[0],
             imageIndex: 0,
             priceIndex: 0,
@@ -294,30 +296,33 @@ const useItem = (
         const collections = data?.data?.collectionCreateds?.map(
           (collection: any) => ({
             ...collection,
-            sizes: collection?.sizes
-              ?.split(",")
-              .map((word: string) => word.trim())
-              .filter((word: string) => word.length > 0),
-            colors: collection?.colors
-              ?.split(",")
-              .map((word: string) => word.trim())
-              .filter((word: string) => word.length > 0),
-            mediaTypes: collection?.mediaTypes
-              ?.split(",")
-              .map((word: string) => word.trim())
-              .filter((word: string) => word.length > 0),
-            access: collection?.access
-              ?.split(",")
-              .map((word: string) => word.trim())
-              .filter((word: string) => word.length > 0),
-            communities: collection?.communities
-              ?.split(",")
-              .map((word: string) => word.trim())
-              .filter((word: string) => word.length > 0),
-            tags: collection?.tags
-              ?.split(",")
-              .map((word: string) => word.trim())
-              .filter((word: string) => word.length > 0),
+            collectionMetadata: {
+              ...collection?.collectionMetadata,
+              sizes: collection?.sizes
+                ?.split(",")
+                .map((word: string) => word.trim())
+                .filter((word: string) => word.length > 0),
+              colors: collection?.colors
+                ?.split(",")
+                .map((word: string) => word.trim())
+                .filter((word: string) => word.length > 0),
+              mediaTypes: collection?.mediaTypes
+                ?.split(",")
+                .map((word: string) => word.trim())
+                .filter((word: string) => word.length > 0),
+              access: collection?.access
+                ?.split(",")
+                .map((word: string) => word.trim())
+                .filter((word: string) => word.length > 0),
+              communities: collection?.communities
+                ?.split(",")
+                .map((word: string) => word.trim())
+                .filter((word: string) => word.length > 0),
+              tags: collection?.tags
+                ?.split(",")
+                .map((word: string) => word.trim())
+                .filter((word: string) => word.length > 0),
+            },
             prices: collection?.prices?.map((price: string) =>
               String(Number(price) / 10 ** 18)
             ),
@@ -632,7 +637,7 @@ const useItem = (
     decryptLoading,
     handleDecrypt,
     setItemData,
-    setRelatedData
+    setRelatedData,
   };
 };
 
