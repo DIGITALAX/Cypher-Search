@@ -21,11 +21,13 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className="relative w-full h-fit flex items-center justify-center flex flex-row rounded-sm border border-sol p-4 gap-4"
+      className={`relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4 gap-4 ${
+        layoutAmount === 4 ? "flex-col" : "flex-col lg:flex-row"
+      }`}
       id={publication?.txHash}
     >
       <div className="relative p-px rounded-sm border border-pez w-full h-20 flex-row gap-6 items-center justify-start flex bg-white">
-        <div className="relative w-full h-full opacity-70 flex">
+        <div className="absolute top-0 left-0 w-full h-full opacity-70 flex rounded-sm">
           <Image
             layout="fill"
             src={`${INFURA_GATEWAY}/ipfs/QmVaK6MVXPzdGb7XSBXqP4bXGzrsbtd1yECafztTT4dvjp`}
@@ -35,7 +37,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
           />
         </div>
         <div
-          className="absolute top-2 left-2 flex flex-row gap-4 w-10 h-10 items-center justify-start cursor-pointer"
+          className="relative flex flex-row gap-4 w-10 h-10 items-center justify-start cursor-pointer"
           onClick={() =>
             router.push(
               `/item/microbrand/${
@@ -89,7 +91,11 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
           {(publication as any)?.microbandName}
         </div>
       </div>
-      <Stats layoutAmount={layoutAmount} dispatch={dispatch} profile={publication} />
+      <Stats
+        layoutAmount={layoutAmount}
+        dispatch={dispatch}
+        profile={publication}
+      />
     </div>
   );
 };

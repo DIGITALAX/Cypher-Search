@@ -24,7 +24,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
   return (
     <div
       className={`relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4 gap-4 ${
-        layoutAmount === 4 ? "flex-col" : "flex-col tablet:flex-row"
+        layoutAmount === 4 ? "flex-col" : "flex-col lg:flex-row"
       }`}
       id={publication?.ownedBy?.address}
     >
@@ -104,7 +104,11 @@ const Profile: FunctionComponent<ProfileProps> = ({
           {publication?.handle?.suggestedFormatted?.localName}
         </div>
       </div>
-      <Stats layoutAmount={layoutAmount} dispatch={dispatch} profile={publication} />
+      <Stats
+        layoutAmount={layoutAmount}
+        dispatch={dispatch}
+        profile={publication}
+      />
     </div>
   );
 };

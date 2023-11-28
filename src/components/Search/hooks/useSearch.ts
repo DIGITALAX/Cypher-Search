@@ -56,6 +56,7 @@ import { NextRouter } from "next/router";
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -260,9 +261,9 @@ const useSearch = (
         const data = await getMicrobrands(
           {
             where: {
-              profileIds: [
-                filterConstants?.microbrands?.map((item) => item[3]),
-              ],
+              profileIds: filterConstants?.microbrands?.map(
+                (item) => "0x" + toHexWithLeadingZero(Number(item[2]))
+              ),
             },
           },
           lensConnected?.id
