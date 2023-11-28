@@ -33,7 +33,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
       <div className="relative w-full h-full p-4 flex items-start justify-start">
         <div className="relative flex flex-wrap items-start justify-start w-full h-full font-aust text-white gap-4">
           <div className="relative flex flex-col items-start justify-start gap-4">
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
+            <div className="flex flex-col items-start justify-start w-fit h-fit gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
                 Collection Title
               </div>
@@ -48,10 +48,11 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 }
               />
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
+            <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 relative">
               <div className="relative w-fit h-fit text-sm break-words">
                 Collection Description
               </div>
+
               <textarea
                 value={collectionDetails?.description || ""}
                 onChange={(e) =>
@@ -65,8 +66,15 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   resize: "none",
                 }}
               ></textarea>
+              <div
+                className={`absolute flex items-center justify-center bottom-1 z-10 right-1 text-xs font-bit ${
+                  collectionDetails?.description?.length > 1990
+                    ? "text-sol"
+                    : "text-white"
+                }`}
+              >{`${collectionDetails?.description?.length}/2000`}</div>
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
+            <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 relative">
               <div className="relative w-fit h-fit text-sm break-words">
                 Profilerate Your Creation. Share your prompt?
               </div>
@@ -83,10 +91,17 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   resize: "none",
                 }}
               ></textarea>
+              <div
+                className={`absolute flex items-center justify-center bottom-1 z-10 right-1 text-xs font-bit ${
+                  collectionDetails?.prompt?.length > 1990
+                    ? "text-sol"
+                    : "text-white"
+                }`}
+              >{`${collectionDetails?.prompt?.length}/2000`}</div>
             </div>
           </div>
           <div className="relative flex flex-col items-start justify-start gap-4">
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1">
+            <div className="flex flex-col items-start justify-start w-fit h-fit gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
                 Artwork{" "}
                 {collectionSettings?.media === "static"
@@ -214,7 +229,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   )}
               </div>
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
+            <div className="flex flex-col items-start justify-start w-fit h-fit gap-3">
               <div className="relative w-fit h-fit text-sm break-words">
                 Connect Microbrand?
               </div>
@@ -359,7 +374,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 )}
               </div>
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-3">
+            <div className="flex flex-col items-start justify-start w-fit h-fit gap-3">
               <div className="relative w-fit h-fit text-sm break-words">
                 Select Drop
               </div>
@@ -524,7 +539,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 }}
               />
             </div>
-            <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 relative">
+            <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 relative">
               <div className="relative w-fit h-fit text-sm break-words">
                 Discovery Tags
               </div>

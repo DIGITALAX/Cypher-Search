@@ -23,7 +23,7 @@ import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSl
 import { Profile } from "../../../../graphql/generated";
 import { OracleData } from "../types/checkout.types";
 import { ethers } from "ethers";
-import { setCypherStorageCart } from "../../../../lib/utils";
+import { removeCypherStorageCart, setCypherStorageCart } from "../../../../lib/utils";
 
 const useCheckout = (
   publicClient: PublicClient,
@@ -180,7 +180,7 @@ const useCheckout = (
       ) {
         setGroupedByPubId({});
         dispatch(setCartItems([]));
-        setCypherStorageCart(JSON.stringify([]));
+        removeCypherStorageCart();
         setEncryptedStrings([]);
         setDetails({
           name: "",

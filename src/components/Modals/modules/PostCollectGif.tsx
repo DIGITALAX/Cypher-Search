@@ -81,7 +81,7 @@ const PostCollectGif: FunctionComponent<PostCollectGifProps> = ({
                 </div>
               </div>
               <div className="relative flex items-start justify-center overflow-y-scroll w-full h-fit">
-                <div className="flex flex-wrap item-start justify-center gap-3 w-fit h-fit">
+                <div className="flex flex-wrap items-start justify-center gap-3 w-fit h-fit">
                   {openMeasure.searchedGifs?.map((gif: any, index: number) => {
                     return (
                       <div

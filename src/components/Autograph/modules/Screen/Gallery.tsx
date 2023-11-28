@@ -294,7 +294,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-4">
                 <div className="relative w-full h-fit flex flex-col items-center justify-start gap-4">
                   <div className="relative w-fit h-fit flex items-center justify-center flex-col gap-2">
-                    <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 font-aust text-white">
+                    <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 font-aust text-white">
                       <div className="relative w-fit h-fit text-sm">
                         Drop Title
                       </div>
@@ -348,7 +348,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     </label>
                     {dropDetails?.dropId !== "" && (
                       <>
-                        <div className="flex flex-col items-start justif-start w-fit h-fit gap-1 font-aust text-white relative">
+                        <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 font-aust text-white relative">
                           <div className="relative w-fit h-fit text-sm">
                             Add Collections
                           </div>

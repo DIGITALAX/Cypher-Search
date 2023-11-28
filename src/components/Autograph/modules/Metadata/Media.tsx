@@ -20,7 +20,7 @@ const Media: FunctionComponent<ImageProps> = ({
           metadata?.title &&
           metadata?.title?.trim() !== "")) && (
         <div
-          className={`relative w-full h-fit max-h-[12rem] font-aust  text-left item-start justify-start break-words flex overflow-y-scroll p-3 text-sm whitespace-preline ${
+          className={`relative w-full h-fit max-h-[12rem] font-aust  text-left items-start justify-start break-words flex overflow-y-scroll p-3 text-sm whitespace-preline ${
             metadata?.__typename === "ImageMetadataV3"
               ? "bg-offBlack text-white"
               : metadata?.__typename === "VideoMetadataV3"
