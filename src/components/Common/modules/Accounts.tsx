@@ -2,13 +2,10 @@ import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
 import Image from "next/legacy/image";
 import { AiOutlineLoading } from "react-icons/ai";
-import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
-import { AccountsProps, CartItem } from "../types/common.types";
+import { AccountsProps } from "../types/common.types";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
-import { setCypherStorageCart } from "../../../../lib/utils";
 import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
-import { ImCross } from "react-icons/im";
 import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 import CartList from "./CartList";
@@ -79,7 +76,10 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer active:scale-95"
           id={cartAnim ? "cartAnim" : ""}
           title="Cart"
-          onClick={() => setCartListOpen(!cartListOpen)}
+          onClick={() => {
+            setOpenAccount(false);
+            setCartListOpen(!cartListOpen);
+          }}
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/QmT5ewiqFhfo8EHxSYiFwFR67pBpg7xesdtwAu9oWBoqqu`}
@@ -144,7 +144,10 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           <div
             className="relative w-8 h-4/5 flex items-center justify-center cursor-pointer rounded-full"
             id="pfp"
-            onClick={() => lensConnected && setOpenAccount(!openAccount)}
+            onClick={() => {
+              lensConnected && setOpenAccount(!openAccount);
+              setCartListOpen(false);
+            }}
           >
             {profilePicture && (
               <Image
@@ -160,7 +163,11 @@ const Accounts: FunctionComponent<AccountsProps> = ({
         )}
       </div>
       {openAccount && (
-        <div className="absolute w-32 h-fit right-3 top-14 tablet:top-16 flex items-center justify-center text-sol flex-col font-bit rounded-sm bg-black text-xs z-30 border border-sol">
+        <div
+          className={`absolute w-32 h-fit right-3 top-14  tablet:top-16 flex items-center justify-center text-sol flex-col font-bit rounded-sm bg-black text-xs z-30 border border-sol ${
+            router.asPath?.includes("/checkout") ? "sm:top-14" : "sm:top-24"
+          }`}
+        >
           <div
             className="relative w-full h-full flex items-center justify-center border-sol cursor-pointer hover:opacity-80 border-b"
             onClick={() => {

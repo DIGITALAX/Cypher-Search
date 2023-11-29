@@ -264,8 +264,6 @@ const useGallery = (
     setGalleryLoading(false);
   };
 
-  console.log({gallery})
-
   const getMoreGallery = async () => {
     if (!cursorInfo?.hasMore) return;
     try {

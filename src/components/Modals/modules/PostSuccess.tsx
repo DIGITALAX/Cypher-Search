@@ -40,7 +40,8 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
                 : successType === "deleted"
                 ? "Deleted"
                 : "Updated"}
-              ! It may take a few moments for your creations to show live correctly, don&apos;t fret, check back in a bit.
+              ! It may take a few moments for your creations to show correctly,
+              don&apos;t fret, check back in a bit.
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] lex items-center justify-center rounded-sm p-px cursor-pointer active:scale-95"
@@ -60,15 +61,13 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
               }}
               id="success"
             >
-              <div className="relative w-full h-full rounded-sm flex items-center justify-center">
-                <Image
-                  className="rounded-sm"
-                  layout="fill"
-                  objectFit="cover"
-                  src={`${INFURA_GATEWAY}/ipfs/QmYyXPbudbytpn8jfd4qXJpzKhtgnCKnLj7FLdYYQT1Mur`}
-                  draggable={false}
-                />
-              </div>
+              <Image
+                className="rounded-sm"
+                layout="fill"
+                objectFit="cover"
+                src={`${INFURA_GATEWAY}/ipfs/QmdnSk6P3DobsEbAjaTGgGkDD3HkwYrtFWAkts6RjTtZw9`}
+                draggable={false}
+              />
             </div>
           </div>
         </div>

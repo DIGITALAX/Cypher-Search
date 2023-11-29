@@ -313,3 +313,7 @@ export type PostSuccessProps = {
   handle: string;
   successType: string;
 };
+
+export type InsufficientBalanceProps = {
+  dispatch: Dispatch<AnyAction>
+}

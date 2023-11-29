@@ -67,7 +67,7 @@ const pollUntilIndexed = async (
           case LensTransactionStatusType.Processing:
             count += 1;
             await new Promise((resolve) => setTimeout(resolve, 6000));
-            if (count == 11) return true;
+            if (count == 10) return true;
             break;
           default:
             throw new Error("Unexpected status");

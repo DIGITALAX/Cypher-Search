@@ -168,7 +168,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           <div
             className={`relative w-fit h-fit rounded-full flex items-center text-xs`}
           >
-            {`${Number((total / rate)?.toFixed(3))} ${
+            {`${Number(((total * 10 ** 18) / rate)?.toFixed(3))} ${
               ACCEPTED_TOKENS_MUMBAI?.find(
                 (item) => item[2] === checkoutCurrency
               )?.[1]
@@ -180,7 +180,11 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
             Checkout Token
           </div>
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-            {ACCEPTED_TOKENS_MUMBAI?.map((item: string[], indexTwo: number) => {
+            {ACCEPTED_TOKENS_MUMBAI?.filter((value) =>
+              cartItems
+                ?.find((item) => item?.item?.pubId === chooseCartItem)
+                ?.item?.acceptedTokens?.includes(value?.[2])
+            )?.map((item: string[], indexTwo: number) => {
               return (
                 <div
                   className={`relative w-fit h-fit rounded-full flex items-center cursor-pointer active:scale-95 ${
@@ -209,8 +213,18 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit text-sol">
             {`${Number(
               (
-                (cartItems?.find((item) => item?.item?.pubId === chooseCartItem)
-                  ?.price || 0) / rate
+                Number(
+                  ((cartItems?.find(
+                    (item) => item?.item?.pubId === chooseCartItem
+                  )?.price || 0) *
+                    10 ** 18) /
+                    rate
+                ) *
+                Number(
+                  cartItems?.find(
+                    (item) => item?.item?.pubId === chooseCartItem
+                  )?.amount
+                )
               )?.toFixed(3)
             )} ${
               ACCEPTED_TOKENS_MUMBAI?.find(

@@ -37,15 +37,13 @@ const SuccessCheckout: FunctionComponent<SuccessCheckoutProps> = ({
               }}
               id="success"
             >
-              <div className="relative w-full h-full rounded-sm flex items-center justify-center">
-                <Image
-                  className="rounded-sm"
-                  layout="fill"
-                  objectFit="cover"
-                  src={`${INFURA_GATEWAY}/ipfs/QmPFrktu3pFVVwQnQjPziSbBLyKHvvyww49VV5YwerbhG9`}
-                  draggable={false}
-                />
-              </div>
+              <Image
+                className="rounded-sm"
+                layout="fill"
+                objectFit="cover"
+                src={`${INFURA_GATEWAY}/ipfs/QmTsxHiaDsis5h17fy5THtR57gdK397QL5H4PbYe6xB8CQ`}
+                draggable={false}
+              />
             </div>
           </div>
         </div>

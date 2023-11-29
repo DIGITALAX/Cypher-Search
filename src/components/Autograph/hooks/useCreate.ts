@@ -182,7 +182,9 @@ const useCreate = (
           )
           .filter((tag) => tag !== undefined) as string[],
         collectionDetails?.visibility === "private" ? true : false,
-        collectionDetails?.cover
+        collectionSettings?.media === "static"
+          ? undefined
+          : collectionDetails?.cover
       );
 
       const communityIds = collectionDetails?.communities
@@ -424,8 +426,6 @@ const useCreate = (
       console.error(err.message);
     }
   };
-
-  console.log({ allCollections });
 
   const handleMedia = async (e: ChangeEvent<HTMLInputElement>, id: string) => {
     const file = e.target?.files?.[0];
@@ -669,8 +669,6 @@ const useCreate = (
       getAllCollections();
     }
   }, [screenDisplay, lensConnected?.id, address]);
-
-  console.log({collectionDetails})
 
   return {
     createCase,

@@ -109,11 +109,12 @@ const useSuggested = (
   };
 
   const getMoreSuggested = async () => {
-    if (!suggestedFeed?.hasMore) return;
+    if (!suggestedFeed?.hasMore || !pageProfile?.id) return;
     setLoaders((prev) => ({
       ...prev,
       moreSuggestedLoading: true,
     }));
+
     let collections: Creation[] = [],
       publications: (Post | Comment | Quote | Mirror)[] = [],
       pubCursor: string | undefined;
@@ -201,7 +202,7 @@ const useSuggested = (
     getMoreSuggested,
     suggestedFeed,
     loaders,
-    setSuggestedFeed
+    setSuggestedFeed,
   };
 };
 

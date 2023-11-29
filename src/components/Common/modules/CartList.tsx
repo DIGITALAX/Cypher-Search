@@ -18,7 +18,11 @@ const CartList: FunctionComponent<CartListProps> = ({
   return (
     <div
       className={`absolute z-30 w-60 h-72 rounded-sm bg-black flex flex-col p-3 border border-sol items-between justify-start ${
-        page ? "right-1 sm:right-3 bottom-16" : "right-3 top-14 tablet:top-16"
+        page
+          ? "right-1 sm:right-3 bottom-16"
+          : `right-3 top-14 tablet:top-16 ${
+              router.asPath?.includes("/checkout") ? "sm:top-14" : "sm:top-24"
+            }`
       }`}
       id="milestone"
     >
