@@ -22,8 +22,12 @@ import {
 import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSlice";
 import { Profile } from "../../../../graphql/generated";
 import { OracleData } from "../types/checkout.types";
-import { ethers } from "ethers";
-import { removeCypherStorageCart, setCypherStorageCart } from "../../../../lib/utils";
+import {
+  removeCypherStorageCart,
+  setCypherStorageCart,
+} from "../../../../lib/utils";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
+import findBalance from "../../../../lib/helpers/findBalance";
 
 const useCheckout = (
   publicClient: PublicClient,
@@ -132,6 +136,33 @@ const useCheckout = (
       return arr;
     });
     try {
+      const balance = await findBalance(
+        publicClient,
+        checkoutCurrency,
+        address
+      );
+
+      if (
+        Number(balance) <
+        ((Number(cartItems[index]?.price) * 10 ** 18) /
+          Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency?.toLowerCase() ===
+                checkoutCurrency?.toLowerCase()
+            )?.rate
+          )) *
+          10 ** 18
+      ) {
+        dispatch(setInsufficientBalance(true));
+        setCollectPostLoading((prev) => {
+          const arr = [...prev];
+          arr[index] = false;
+          return arr;
+        });
+        return;
+      }
+
       const clientWallet = createWalletClient({
         chain: polygonMumbai,
         transport: custom((window as any).ethereum),
@@ -140,7 +171,6 @@ const useCheckout = (
       const unknownOpenAction = encodeActData(
         cartItems[index],
         encryptedStrings[index],
-        address,
         checkoutCurrency as `0x${string}`
       );
 
@@ -299,7 +329,8 @@ const useCheckout = (
                   )?.[2]
               )?.rate
             )) *
-            10 ** 18) as any,
+            10 ** 18 *
+            1.3) as any,
         ],
         account: address,
       });
@@ -318,9 +349,7 @@ const useCheckout = (
       );
 
       const data = await publicClient.readContract({
-        address: ACCEPTED_TOKENS_MUMBAI.filter(
-          (token) => token[2].toLowerCase() === checkoutCurrency?.toLowerCase()
-        )?.[0]?.[1] as `0x${string}`,
+        address: checkoutCurrency?.toLowerCase() as `0x${string}`,
         abi: [
           {
             inputs: [
@@ -438,16 +467,28 @@ const useCheckout = (
     }
 
     setGroupedByPubId(grouped);
+    setChooseCartItem(
+      cartItems?.find((item) => item?.item?.pubId == Object.keys(grouped)[0])
+        ?.item?.pubId!
+    );
+    setCompletedPurchases(
+      Array.from({ length: Object.keys(grouped).length }, () => ({
+        completed: false,
+        open: true,
+      }))
+    );
   };
 
   useEffect(() => {
     if (lensConnected?.id) {
       checkApproved();
     }
-  }, [checkoutCurrency]);
+  }, [checkoutCurrency, chooseCartItem]);
 
   useEffect(() => {
-    handleGroupByPubId();
+    if (cartItems?.length > 0) {
+      handleGroupByPubId();
+    }
   }, [cartItems]);
 
   return {

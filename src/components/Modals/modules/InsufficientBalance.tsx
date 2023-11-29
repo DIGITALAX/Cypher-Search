@@ -1,11 +1,11 @@
 import { FunctionComponent } from "react";
-import { InteractErrorProps } from "../types/modals.types";
+import { InsufficientBalanceProps } from "../types/modals.types";
 import { ImCross } from "react-icons/im";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
-import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import Image from "next/legacy/image";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 
-const InteractError: FunctionComponent<InteractErrorProps> = ({
+const InsufficientBalance: FunctionComponent<InsufficientBalanceProps> = ({
   dispatch,
 }): JSX.Element => {
   return (
@@ -16,12 +16,12 @@ const InteractError: FunctionComponent<InteractErrorProps> = ({
             <ImCross
               color="#FBDB86"
               size={10}
-              onClick={() => dispatch(setInteractError(false))}
+              onClick={() => dispatch(setInsufficientBalance(false))}
             />
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
-              Something Went Wrong Indexing Your Interaction. Try Again?
+              Pockets Empty. Need to top up?
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] flex items-center justify-center rounded-sm p-px"
@@ -30,7 +30,7 @@ const InteractError: FunctionComponent<InteractErrorProps> = ({
               <Image
                 className="rounded-sm"
                 layout="fill"
-                src={`${INFURA_GATEWAY}/ipfs/QmQm9cBxuMfTynK6HvPu3438izzcapuGLt3brdctdWBfKw`}
+                src={`${INFURA_GATEWAY}/ipfs/QmNnAjWNwDkTb5wSE5bf5fcPAtFTSALBfwziWankco4M2j`}
                 draggable={false}
                 objectFit="cover"
               />
@@ -42,4 +42,4 @@ const InteractError: FunctionComponent<InteractErrorProps> = ({
   );
 };
 
-export default InteractError;
+export default InsufficientBalance;

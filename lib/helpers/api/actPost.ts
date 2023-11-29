@@ -1,6 +1,6 @@
 import { AnyAction, Dispatch } from "redux";
 import { ActOnOpenActionInput } from "../../../graphql/generated";
-import {collectPost} from "../../../graphql/lens/mutations/collect";
+import { collectPost } from "../../../graphql/lens/mutations/collect";
 import { omit } from "lodash";
 import { WalletClient, PublicClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
@@ -17,7 +17,7 @@ const actPost = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient
-) => {
+): Promise<boolean | void> => {
   try {
     const { data } = await collectPost({
       for: pubId,
@@ -39,7 +39,9 @@ const actPost = async (
       signature,
     });
 
-    if (broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess") {
+    if (
+      broadcastResult?.data?.broadcastOnchain?.__typename === "RelaySuccess"
+    ) {
       await handleIndexCheck(
         {
           forTxId: broadcastResult?.data?.broadcastOnchain.txId,
@@ -64,7 +66,6 @@ const actPost = async (
             actionModuleData: typedData?.value.actionModuleData,
           },
         ],
-        account: address,
       });
       const res = await clientWallet.writeContract(request);
       const tx = await publicClient.waitForTransactionReceipt({ hash: res });
@@ -89,6 +90,7 @@ const actPost = async (
         actionMessage: undefined,
       })
     );
+    return true;
   } catch (err: any) {
     console.error(err.message);
   }

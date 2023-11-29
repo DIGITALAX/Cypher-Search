@@ -704,7 +704,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             onClick={() => {
               const newItem = {
                 item: itemData,
-                amount: 0,
+                amount: 1,
                 price: Number(purchaseDetails.price),
                 type: itemStringToType[type.toLowerCase().trim()],
                 color: purchaseDetails.color,

@@ -57,9 +57,9 @@ const Creation: FunctionComponent<CreationProps> = ({
         <div className="relative w-full h-full flex">
           <MediaSwitch
             type={
-              item.collectionMetadata?.mediaTypes?.[0] == "video"
+              item?.collectionMetadata?.mediaTypes?.[0] == "video"
                 ? "video"
-                : item.collectionMetadata?.mediaTypes?.[0] == "audio"
+                : item?.collectionMetadata?.mediaTypes?.[0] == "audio"
                 ? "audio"
                 : "image"
             }
@@ -70,11 +70,11 @@ const Creation: FunctionComponent<CreationProps> = ({
             }
             classNameAudio={"rounded-md w-full h-full flex relative"}
             srcUrl={
-              item.collectionMetadata?.mediaTypes?.[0] == "video"
+              item?.collectionMetadata?.mediaTypes?.[0] == "video"
                 ? `${INFURA_GATEWAY}/ipfs/${
                     item?.collectionMetadata?.video?.split("ipfs://")?.[1]
                   }`
-                : item.collectionMetadata?.mediaTypes?.[0] == "audio"
+                : item?.collectionMetadata?.mediaTypes?.[0] == "audio"
                 ? `${INFURA_GATEWAY}/ipfs/${
                     item?.collectionMetadata?.audio?.split("ipfs://")?.[1]
                   }`

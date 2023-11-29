@@ -156,7 +156,10 @@ const Checkout: NextPage<{
           openDropdown={openDropdown}
           setOpenDropdown={setOpenDropdown}
           encryptedStrings={encryptedStrings}
-          total={cartItems?.reduce((sum, item) => sum + Number(item.price), 0)}
+          total={cartItems?.reduce(
+            (sum, item) => sum + Number(item.price) * Number(item?.amount),
+            0
+          )}
           checkoutCurrency={checkoutCurrency}
           rate={Number(
             oracleData?.find(

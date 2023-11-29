@@ -25,6 +25,7 @@ import PostCollectGif from "./PostCollectGif";
 import FollowCollect from "./FollowCollect";
 import SuccessCheckout from "./SuccessCheckout";
 import PostSuccess from "./PostSuccess";
+import InsufficientBalance from "./InsufficientBalance";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -45,6 +46,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   );
   const followCollect = useSelector(
     (state: RootState) => state.app.followCollectReducer
+  );
+  const insufficientBalance = useSelector(
+    (state: RootState) => state.app.insufficientBalanceReducer
   );
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
@@ -347,6 +351,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           gifs={postCollectGif?.gifs}
           searchGifLoading={searchGifLoading}
         />
+      )}
+      {insufficientBalance?.value && (
+        <InsufficientBalance dispatch={dispatch} />
       )}
       {interactError?.value && <InteractError dispatch={dispatch} />}
       {successCheckout?.value && (

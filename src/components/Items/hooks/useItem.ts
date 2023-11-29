@@ -31,7 +31,6 @@ import {
 } from "../../../../lib/constants";
 import { PurchaseDetails } from "../types/item.types";
 import { OracleData } from "@/components/Checkout/types/checkout.types";
-import { CartItem } from "@/components/Common/types/common.types";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { polygon, polygonMumbai } from "viem/chains";
 import encodeActData from "../../../../lib/helpers/encodeActData";
@@ -42,6 +41,8 @@ import { NextRouter } from "next/router";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
+import findBalance from "../../../../lib/helpers/findBalance";
 
 const useItem = (
   type: string,
@@ -356,6 +357,32 @@ const useItem = (
   const handleInstantPurchase = async () => {
     setInstantLoading(true);
     try {
+      const balance = await findBalance(
+        publicClient,
+        purchaseDetails?.currency,
+        address as `0x${string}`
+      );
+
+      if (
+        Number(balance) <
+        ((Number(
+          (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
+        ) *
+          10 ** 18) /
+          Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency?.toLowerCase() ===
+                purchaseDetails?.currency?.toLowerCase()
+            )?.rate
+          )) *
+          10 ** 18
+      ) {
+        dispatch(setInsufficientBalance(true));
+        setInstantLoading(false);
+        return;
+      }
+
       const clientWallet = createWalletClient({
         chain: polygonMumbai,
         transport: custom((window as any).ethereum),
@@ -367,19 +394,24 @@ const useItem = (
           color: purchaseDetails?.color,
           size: purchaseDetails?.size,
           price: Number(purchaseDetails?.price),
-          chosenIndex: 0,
+          chosenIndex: purchaseDetails?.priceIndex,
           chosenIndexes: [],
           amount: 1,
           type: itemStringToType[type.toLowerCase().trim()],
           purchased: false,
         },
         "",
-        address!,
         purchaseDetails?.currency as `0x${string}`
       );
 
-      await actPost(
-        (itemData?.post as Creation)?.publication?.id,
+      const complete = await actPost(
+        `${
+          "0x" +
+          toHexWithLeadingZero(Number((itemData?.post as Creation)?.profileId))
+        }-${
+          "0x" +
+          toHexWithLeadingZero(Number((itemData?.post as Creation)?.pubId))
+        }`,
         {
           unknownOpenAction,
         },
@@ -388,10 +420,13 @@ const useItem = (
         clientWallet,
         publicClient
       );
+      if (complete) {
+        dispatch(setSuccessCheckout(true));
+      }
     } catch (err: any) {
       console.error(err.messgae);
     }
-    dispatch(setSuccessCheckout(true));
+
     setInstantLoading(false);
   };
 
@@ -417,6 +452,21 @@ const useItem = (
         chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
+
+      console.log(
+        ((Number(
+          (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
+        ) *
+          10 ** 18) /
+          Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency?.toLowerCase() ===
+                purchaseDetails?.currency?.toLowerCase()
+            )?.rate
+          )) *
+          10 ** 18
+      );
 
       const { request } = await publicClient.simulateContract({
         address: purchaseDetails?.currency as `0x${string}`,
@@ -499,10 +549,8 @@ const useItem = (
             Number(
               oracleData?.find(
                 (oracle) =>
-                  oracle.currency ===
-                  ACCEPTED_TOKENS_MUMBAI.find(
-                    (item) => item[2] === purchaseDetails?.currency
-                  )?.[2]
+                  oracle.currency?.toLowerCase() ===
+                  purchaseDetails?.currency?.toLowerCase()
               )?.rate
             )) *
             10 ** 18) as any,
@@ -570,7 +618,7 @@ const useItem = (
         ],
       });
 
-      if (data && address) {
+      if (address) {
         if (
           Number((data as any)?.toString()) /
             Number(
@@ -600,6 +648,8 @@ const useItem = (
         } else {
           setIsApprovedSpend(false);
         }
+      } else {
+        setIsApprovedSpend(false);
       }
     } catch (err: any) {
       console.error(err.message);

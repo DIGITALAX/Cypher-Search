@@ -11,7 +11,6 @@ import { CartItem } from "@/components/Common/types/common.types";
 const encodeActData = (
   cartItem: CartItem,
   encryptedFulfillment: string,
-  address: `0x${string}`,
   currency: `0x${string}`
 ): UnknownOpenActionModuleInput | undefined => {
   let unknownOpenAction: UnknownOpenActionModuleInput | undefined;
@@ -21,7 +20,7 @@ const encodeActData = (
     case "chromadin":
       unknownOpenAction = {
         address: CHROMADIN_OPEN_ACTION,
-        data: coder.encode(["address", "uint256"], [address, cartItem.amount]),
+        data: coder.encode(["address", "uint256"], [currency, cartItem.amount]),
       };
       break;
 
