@@ -162,8 +162,8 @@ const useOrders = (
           details,
           subOrders: orders[index]?.subOrders.map((item, index) => ({
             ...item,
-            size: details.sizes[index],
-            color: details.colors[index],
+            size: details.sizes[details.sizes.length - 1 - index],
+            color: details.colors[details.colors.length - 1 - index],
           })),
           decrypted: true,
         };

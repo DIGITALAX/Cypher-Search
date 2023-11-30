@@ -5,6 +5,7 @@ import { PopUpProps } from "../types/common.types";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 
 const PopUp: FunctionComponent<PopUpProps> = ({
   router,
@@ -30,9 +31,35 @@ const PopUp: FunctionComponent<PopUpProps> = ({
       }}
     >
       <div
-        className="relative flex w-8 h-8 items-center justify-center rounded-full cursor-pointer active:scale-95 hover:opacity-70"
+        className={`relative flex w-8 h-8 items-center justify-center rounded-full ${
+          cartItem?.amount == cartItem?.soldTokens
+            ? "opacity-70"
+            : "cursor-pointer active:scale-95"
+        } hover:opacity-70`}
         title="Add to Cart"
         onClick={() => {
+          if (cartItem?.amount == cartItem?.soldTokens) return;
+
+          if (
+            Number(cartItem?.soldTokens) +  Number(
+              cartItems
+                ?.filter((value) => cartItem?.pubId == value?.item?.pubId)
+                ?.map((item) => item?.amount)
+                ?.reduce((sum, item) => sum + Number(item), 0)
+            ) +
+              1 >
+            Number(cartItem?.amount)
+          ) {
+            dispatch(
+              setInsufficientBalance({
+                actionValue: true,
+                actionMessage:
+                  "We know you're eager, but you've reached this creation's collect limit!",
+              })
+            );
+            return;
+          }
+
           const newItem = {
             item: cartItem,
             amount: 1,

@@ -737,6 +737,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             title="Add to Cart"
             onClick={() => {
               if (itemData?.amount == itemData?.soldTokens) return;
+
               const newItem = {
                 item: itemData,
                 amount: 1,

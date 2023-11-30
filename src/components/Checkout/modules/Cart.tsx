@@ -94,14 +94,20 @@ const Cart: FunctionComponent<CartProps> = ({
                                   (item) =>
                                     item?.pubId == chooseCartItem?.item?.pubId
                                 ) &&
-                                chooseCartItem?.item?.origin !== "1")
+                                  chooseCartItem?.item?.origin !== "1")
                               )
                                 return;
 
-                       console.log(chooseCartItem?.item?.amount, chooseCartItem?.item?.soldTokens)
                               if (
-                                Number(chooseCartItem?.item?.amount) + 1 >=
-                                Number(chooseCartItem?.item?.soldTokens)
+                                Number(chooseCartItem?.item?.soldTokens) +
+                                  1 +
+                                  groupedByPubId[
+                                    chooseCartItem?.item?.pubId!
+                                  ]?.amounts?.reduce(
+                                    (sum, item) => sum + Number(item),
+                                    0
+                                  ) >
+                                Number(chooseCartItem?.item?.amount)
                               ) {
                                 dispatch(
                                   setInsufficientBalance({
@@ -497,23 +503,6 @@ const Cart: FunctionComponent<CartProps> = ({
                                 className={`relative w-fit h-fit py-1 px-2 flex items-center justify-center font-bit text-white text-xxs border border-white rounded-sm cursor-pointer active:scale-95`}
                                 onClick={() => {
                                   const newCartItems = [...cartItems];
-                                  console.log(
-                                    currentItem?.item?.amount,
-                                    currentItem?.item?.soldTokens
-                                  );
-                                  if (
-                                    currentItem?.item?.amount + 1 >=
-                                    currentItem?.item?.soldTokens
-                                  ) {
-                                    dispatch(
-                                      setInsufficientBalance({
-                                        actionValue: true,
-                                        actionMessage:
-                                          "We know you're eager, but you've reached this creation's collect limit!",
-                                      })
-                                    );
-                                    return;
-                                  }
 
                                   if (
                                     !chosenVariation[
@@ -554,12 +543,33 @@ const Cart: FunctionComponent<CartProps> = ({
                                   );
 
                                   if (existingItemIndex != -1) {
-                                    newCartItems[existingItemIndex] = {
-                                      ...newCartItems[existingItemIndex],
-                                      amount:
-                                        newCartItems[existingItemIndex]
-                                          ?.amount + 1,
-                                    };
+                                    if (
+                                      Number(currentItem?.item?.soldTokens) +
+                                        groupedByPubId[
+                                          chooseCartItem?.item?.pubId!
+                                        ]?.amounts?.reduce(
+                                          (sum, item) => sum + Number(item),
+                                          0
+                                        ) +
+                                        1 <
+                                      Number(currentItem?.item?.amount)
+                                    ) {
+                                      newCartItems[existingItemIndex] = {
+                                        ...newCartItems[existingItemIndex],
+                                        amount:
+                                          newCartItems[existingItemIndex]
+                                            ?.amount + 1,
+                                      };
+                                    } else {
+                                      dispatch(
+                                        setInsufficientBalance({
+                                          actionValue: true,
+                                          actionMessage:
+                                            "We know you're eager, but you've reached this creation's collect limit!",
+                                        })
+                                      );
+                                      return;
+                                    }
                                   } else {
                                     const newIndex =
                                       currentItem?.item?.printType !== "0" &&
@@ -579,7 +589,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                               ]?.size?.toLowerCase()
                                           );
 
-                                    newCartItems.push({
+                                    const newItem = {
                                       ...currentItem,
                                       amount: 1,
                                       chosenIndex: newIndex,
@@ -600,7 +610,23 @@ const Cart: FunctionComponent<CartProps> = ({
                                             key === chooseCartItem?.item?.pubId
                                         )
                                       ]?.size,
-                                    });
+                                    };
+
+                                    if (
+                                      Number(currentItem?.item?.soldTokens) +
+                                        groupedByPubId[
+                                          chooseCartItem?.item?.pubId!
+                                        ]?.amounts?.reduce(
+                                          (sum, item) => sum + Number(item),
+                                          0
+                                        ) +
+                                        1 <
+                                      Number(currentItem?.item?.amount)
+                                    ) {
+                                      newCartItems.push(newItem);
+                                    } else {
+                                      newCartItems[index] = newItem;
+                                    }
                                   }
 
                                   dispatch(setCartItems(newCartItems));

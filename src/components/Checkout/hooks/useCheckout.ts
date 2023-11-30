@@ -525,7 +525,7 @@ const useCheckout = (
     if (lensConnected?.id) {
       checkApproved();
     }
-  }, [checkoutCurrency, chooseCartItem]);
+  }, [checkoutCurrency, chooseCartItem, lensConnected?.id]);
 
   useEffect(() => {
     handleGroupByPubId();

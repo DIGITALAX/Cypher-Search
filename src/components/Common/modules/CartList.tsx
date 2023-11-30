@@ -116,13 +116,25 @@ const CartList: FunctionComponent<CartListProps> = ({
 
                           const cartIndex = cartItems?.findIndex(
                             (value: CartItem) =>
-                              value?.item?.collectionId ===
-                              item?.item?.collectionId
+                              value?.item?.pubId === item?.item?.pubId &&
+                              value?.color == item?.color &&
+                              value?.size == item?.size
                           );
 
                           if (
-                            allItems[cartIndex]?.item?.amount + 1 >=
-                            allItems[cartIndex]?.item?.soldTokens
+                            Number(allItems[cartIndex]?.item?.soldTokens) +
+                              1 +
+                              Number(
+                                allItems
+                                  ?.filter(
+                                    (item) =>
+                                      item?.item?.pubId ==
+                                      allItems[cartIndex]?.item?.pubId
+                                  )
+                                  ?.map((item) => item?.amount)
+                                  ?.reduce((sum, item) => sum + Number(item), 0)
+                              ) >
+                            Number(allItems[cartIndex]?.item?.amount)
                           ) {
                             dispatch(
                               setInsufficientBalance({

@@ -40,7 +40,7 @@ const SubOrder: FunctionComponent<SubOrderProps> = ({
       </div>
       <div className="relative w-full h-fit flex items-center justify-between gap-3 flex-wrap md:flex-nowrap">
         <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white cursor-pointer">
-          ${item?.price}
+          ${Number(item?.price) / Number(item?.amount)}
         </div>
         <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white cursor-pointer">
           {item?.isFulfilled || !details ? "Fulfilled" : "Fulfilling"}
