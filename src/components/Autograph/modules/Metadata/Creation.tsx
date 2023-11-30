@@ -13,6 +13,7 @@ import createProfilePicture from "../../../../../lib/helpers/createProfilePictur
 import { setCypherStorageCart } from "../../../../../lib/utils";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
+import { setInsufficientBalance } from "../../../../../redux/reducers/insufficientBalanceSlice";
 
 const Creation: FunctionComponent<CreationProps> = ({
   item,
@@ -109,6 +110,27 @@ const Creation: FunctionComponent<CreationProps> = ({
             }`}
             onClick={() => {
               if (item?.amount == item?.soldTokens) return;
+
+              if (
+                Number(item?.soldTokens) +
+                  Number(
+                    cartItems
+                      ?.filter((value) => item?.pubId == value?.item?.pubId)
+                      ?.map((item) => item?.amount)
+                      ?.reduce((sum, item) => sum + Number(item), 0)
+                  ) +
+                  1 >
+                Number(item?.amount)
+              ) {
+                dispatch(
+                  setInsufficientBalance({
+                    actionValue: true,
+                    actionMessage:
+                      "We know you're eager, but you've reached this creation's collect limit!",
+                  })
+                );
+                return;
+              }
               const newItem = {
                 item,
                 amount: 1,

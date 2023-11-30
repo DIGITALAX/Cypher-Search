@@ -7,6 +7,7 @@ import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 
 const DropMain: FunctionComponent<DropMainProps> = ({
   collections,
@@ -96,9 +97,39 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                       ${Number(collection?.prices?.[0])}
                     </div>
                     <div
-                      className="relative w-6 h-6 justify-end flex items-center cursor-pointer active:scale-95"
+                      className={`relative w-6 h-6 justify-end flex items-center ${
+                        collection?.amount == collection?.soldTokens
+                          ? "opacity-70"
+                          : "cursor-pointer active:scale-95"
+                      }`}
                       title="Add to Cart"
                       onClick={() => {
+                        if (collection?.amount == collection?.soldTokens)
+                          return;
+
+                        if (
+                          Number(collection?.soldTokens) +   Number(
+                            cartItems
+                              ?.filter(
+                                (value) =>
+                                  collection?.pubId == value?.item?.pubId
+                              )
+                              ?.map((item) => item?.amount)
+                              ?.reduce((sum, item) => sum + Number(item), 0)
+                          ) +
+                            1 >
+                          Number(collection?.amount)
+                        ) {
+                          dispatch(
+                            setInsufficientBalance({
+                              actionValue: true,
+                              actionMessage:
+                                "We know you're eager, but you've reached this creation's collect limit!",
+                            })
+                          );
+                          return;
+                        }
+
                         const newItem = {
                           item: collection,
                           amount: 1,

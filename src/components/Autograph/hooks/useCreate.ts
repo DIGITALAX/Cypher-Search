@@ -162,7 +162,7 @@ const useCreate = (
       collectionDetails.price?.trim() == "" ||
       !collectionDetails.acceptedTokens ||
       collectionDetails.acceptedTokens?.length < 1 ||
-      Number(collectionDetails?.amount) < 0 ||
+      Number(collectionDetails?.amount) <= 0 ||
       !address
     )
       return;

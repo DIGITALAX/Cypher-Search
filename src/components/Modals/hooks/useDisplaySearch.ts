@@ -71,7 +71,12 @@ const useDisplaySearch = (
         ...(collectedData?.data?.nftonlyOrderCreateds || []),
       ].flatMap((item) => item?.subOrderCollectionIds || []);
 
-      let collectedPromises = subOrderCollectionIds
+      const uniqueCreatedCollectionIds = new Set(subOrderCollectionIds);
+      const filteredCollectedData = subOrderCollectionIds?.filter(
+        (item: any) => !uniqueCreatedCollectionIds.has(item)
+      ) as any[];
+
+      let collectedPromises = filteredCollectedData
         .map(async (id) => {
           if (!existingCollectionIds.includes(id)) {
             const res = await getOneCollectionQuick(id);
