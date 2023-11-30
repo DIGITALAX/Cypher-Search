@@ -79,7 +79,7 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
               </div>
             </div>
             <div
-              className={`relative w-fit h-fit text-sm flex items-center justify-center text-white font-bit top-px`}
+              className={`relative w-fit h-fit text-xs flex items-center justify-center text-white font-bit top-px`}
             >
               {quote?.by?.handle?.suggestedFormatted?.localName
                 ? quote?.by?.handle?.suggestedFormatted?.localName.length > 25
@@ -93,7 +93,7 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
           </div>
           <div className="relative w-fit h-fit flex items-center justify-center">
             <div
-              className={`relative w-fit h-fit text-white font-bit items-center justify-center flex text-sm ml-auto top-px`}
+              className={`relative w-fit h-fit text-white font-bit items-center justify-center flex text-xs ml-auto top-px`}
             >
               {quote?.createdAt && moment(`${quote?.createdAt}`).fromNow()}
             </div>

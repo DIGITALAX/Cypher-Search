@@ -8,7 +8,7 @@ const decodeReturnedData = async (encodedData: ethers.BytesLike) => {
     return;
   }
 
-  let decodedData: any[] = [];
+  let decodedData = [];
 
   try {
     decodedData = coder.decode(
@@ -19,12 +19,18 @@ const decodeReturnedData = async (encodedData: ethers.BytesLike) => {
     console.error(err.message);
   }
 
-  const data = await fetchIPFSJSON(decodedData?.[2]);
+  const uint256Array = Object.values(decodedData[0])?.map((item) =>
+    String(Number(item) / 10 ** 18)
+  );
+  const addressArray = Object.values(decodedData[1]);
 
+  const data = await fetchIPFSJSON(decodedData?.[2]);
   return {
-    prices: decodedData?.[0],
-    acceptedTokens: decodedData?.[1],
-    ...data,
+    prices: uint256Array,
+    acceptedTokens: addressArray,
+    collectionMetadata: {
+      ...data,
+    },
   };
 };
 

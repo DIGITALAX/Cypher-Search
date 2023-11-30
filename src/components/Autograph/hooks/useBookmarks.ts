@@ -153,6 +153,7 @@ const useBookmarks = (
   };
 
   const bookmarkComment = async (id: string) => {
+    if (!lensConnected?.id) return;
     const index = allBookmarks?.findIndex((pub) => pub.id === id);
 
     if (index === -1) {
@@ -206,6 +207,7 @@ const useBookmarks = (
         publicClient,
         () => clearComment(index)
       );
+      updateInteractions(index!, {}, "comments", true);
       const gifs = { ...postCollectGif.gifs };
       delete gifs[id];
       const cts = { ...postCollectGif.collectTypes };
@@ -217,7 +219,11 @@ const useBookmarks = (
         })
       );
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(
+        err,
+        () => updateInteractions(index!, {}, "comments", true),
+        dispatch
+      );
     }
 
     setInteractionsLoadingBookmark((prev) => {
@@ -245,6 +251,7 @@ const useBookmarks = (
   };
 
   const bookmarkMirror = async (id: string) => {
+    if (!lensConnected?.id) return;
     const index = allBookmarks?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
@@ -300,6 +307,7 @@ const useBookmarks = (
   };
 
   const bookmarkLike = async (id: string, hasReacted: boolean) => {
+    if (!lensConnected?.id) return;
     const index = allBookmarks?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
@@ -410,6 +418,7 @@ const useBookmarks = (
   };
 
   const handleHidePostForBookmark = async (id: string, index: number) => {
+    if (!lensConnected?.id) return;
     setInteractionsLoadingBookmark((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], hide: true };
@@ -428,6 +437,7 @@ const useBookmarks = (
   };
 
   const handleBookmarkForBookmark = async (on: string, index: number) => {
+    if (!lensConnected?.id) return;
     setInteractionsLoadingBookmark((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], bookmark: true };
@@ -466,6 +476,7 @@ const useBookmarks = (
   };
 
   const followProfileBookmark = async (id: string) => {
+    if (!lensConnected?.id) return;
     const index = allBookmarks?.findIndex((pub) =>
       (pub as Post | Quote | Mirror)?.__typename === "Mirror"
         ? (pub as Mirror).mirrorOn.id
@@ -508,6 +519,7 @@ const useBookmarks = (
   };
 
   const unfollowProfileBookmark = async (id: string) => {
+    if (!lensConnected?.id) return;
     const index = allBookmarks?.findIndex((pub) =>
       (pub as Post | Quote | Mirror)?.__typename === "Mirror"
         ? (pub as Mirror).mirrorOn.id
@@ -549,6 +561,7 @@ const useBookmarks = (
   };
 
   const handleDecryptBookmark = async (post: Post | Quote | Comment) => {
+    if (!lensConnected?.id) return;
     const index = allBookmarks?.findIndex((item) => (item.id = post.id));
     if (index == -1) {
       return;

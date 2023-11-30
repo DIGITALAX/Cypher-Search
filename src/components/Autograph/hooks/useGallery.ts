@@ -220,19 +220,33 @@ const useGallery = (
         25,
         cursorInfo.created
       );
-      let collected: Creation[] = [];
 
-      const collData = [
+      const existingCollectionIds =
+        createdData?.data?.collectionCreateds?.map(
+          (item: any) => item?.collectionId
+        ) || [];
+
+      const subOrderCollectionIds = [
         ...(collectedData?.data?.orderCreateds || []),
-        ...(collectedData?.data?.nFTOnlyOrderCreateds || []),
-      ]?.map((item: { subOrderCollectionIds: string[] }) => {
-        (item?.subOrderCollectionIds || [])?.map(async (item: string) => {
-          const res = await getOneCollection(item);
-          collected.push(res?.data?.collectionCreateds?.[0]);
-        });
-      });
+        ...(collectedData?.data?.nftonlyOrderCreateds || []),
+      ].flatMap((item) => item?.subOrderCollectionIds || []);
 
-      await Promise.all(collData);
+      let collectedPromises = subOrderCollectionIds
+        .map(async (id) => {
+          if (!existingCollectionIds.includes(id)) {
+            const res = await getOneCollection(id);
+            return res?.data?.collectionCreateds?.[0];
+          }
+          return null;
+        })
+        .filter((promise) => promise !== null);
+
+      let collected = await Promise.all(collectedPromises);
+      collected =
+        (await handleCollectionProfilesAndPublications(
+          collected,
+          lensConnected
+        )) || [];
 
       const created =
         (await handleCollectionProfilesAndPublications(
@@ -240,24 +254,14 @@ const useGallery = (
           lensConnected
         )) || [];
 
-      collected =
-        (await handleCollectionProfilesAndPublications(
-          collected,
-          lensConnected
-        )) || [];
-
       setCursorInfo({
         collected: cursorInfo?.collected + 25,
         created: cursorInfo?.created + 25,
-        hasMore:
-          collected?.length == 25 || created?.length == 25 ? true : false,
+        hasMore: collected?.length === 25 || created?.length === 25,
       });
 
-      await getDisplayData([...(created || []), ...(collected || [])]);
-      setGallery({
-        collected,
-        created,
-      });
+      await getDisplayData([...created, ...collected]);
+      setGallery({ collected, created });
     } catch (err: any) {
       console.error(err.message);
     }
@@ -281,7 +285,7 @@ const useGallery = (
 
         const collData = [
           ...(collectedData?.data?.orderCreateds || []),
-          ...(collectedData?.data?.nFTOnlyOrderCreateds || []),
+          ...(collectedData?.data?.nftonlyOrderCreateds || []),
         ]?.map((item: { subOrderCollectionIds: string[] }) => {
           (item?.subOrderCollectionIds || [])?.map(async (item: string) => {
             const res = await getOneCollection(item);
@@ -328,6 +332,7 @@ const useGallery = (
   };
 
   const handleSetDisplay = async () => {
+    if (!lensConnected?.id) return;
     setDisplayLoading(true);
     try {
       let attributes = [...(lensConnected?.metadata?.attributes || [])];
@@ -428,6 +433,7 @@ const useGallery = (
   };
 
   const galleryLike = async (id: string, hasReacted: boolean) => {
+    if (!lensConnected?.id) return;
     const index = [
       ...(gallery?.collected || []),
       ...(gallery?.created || []),
@@ -475,6 +481,7 @@ const useGallery = (
   };
 
   const galleryMirror = async (id: string) => {
+    if (!lensConnected?.id) return;
     const index = [
       ...(gallery?.collected || []),
       ...(gallery?.created || []),
@@ -536,6 +543,7 @@ const useGallery = (
     id: string,
     hasReacted: boolean
   ) => {
+    if (!lensConnected?.id) return;
     setInteractionsDisplayLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], like: true };
@@ -580,6 +588,7 @@ const useGallery = (
   };
 
   const displayMirror = async (index: number, id: string) => {
+    if (!lensConnected?.id) return;
     setInteractionsDisplayLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], mirror: true };
@@ -644,7 +653,7 @@ const useGallery = (
     if (display) {
       const newDisplay = JSON.parse(JSON.stringify(profileDisplay));
 
-      Object.keys(newDisplay!).forEach((categoryKey) => {
+      Object.keys(newDisplay!)?.forEach((categoryKey) => {
         if (
           (categoryKey == "private" && sortType == 1) ||
           (categoryKey == "public" && sortType == 2) ||
@@ -724,7 +733,7 @@ const useGallery = (
       let newCollected: Creation[] = [],
         newCreated: Creation[] = [];
 
-      allGallery.forEach((item) => {
+      allGallery?.forEach((item) => {
         if (
           gallery?.collected?.some(
             (collectedItem) =>

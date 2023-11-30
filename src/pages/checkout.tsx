@@ -98,6 +98,7 @@ const Checkout: NextPage<{
     completedPurchases,
     groupedByPubId,
     setCompletedPurchases,
+    approveLoading,
   } = useCheckout(
     publicClient,
     dispatch,
@@ -105,7 +106,8 @@ const Checkout: NextPage<{
     lensConnected,
     client,
     oracleData,
-    cartItems
+    cartItems,
+    router
   );
 
   useEffect(() => {
@@ -146,7 +148,7 @@ const Checkout: NextPage<{
         dispatch={dispatch}
         includeSearch={false}
       />
-      <div className="relative w-full h-fit flex items-start justify-start flex-row px-4">
+      <div className="relative w-full h-fit flex items-start justify-start flex-col md:flex-row gap-4 md:flex-nowrap flex-wrap px-4 md:pt-auto pt-32">
         <Fulfillment
           collectPostLoading={collectPostLoading}
           details={details}
@@ -157,7 +159,7 @@ const Checkout: NextPage<{
           setOpenDropdown={setOpenDropdown}
           encryptedStrings={encryptedStrings}
           total={cartItems?.reduce(
-            (sum, item) => sum + Number(item.price) * Number(item?.amount),
+            (sum, item) => sum + Number(item?.price) * Number(item?.amount),
             0
           )}
           checkoutCurrency={checkoutCurrency}
@@ -176,6 +178,7 @@ const Checkout: NextPage<{
           isApprovedSpend={isApprovedSpend}
           approveSpend={approveSpend}
           chooseCartItem={chooseCartItem}
+          approveLoading={approveLoading}
         />
         <Cart
           router={router}

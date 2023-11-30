@@ -453,20 +453,6 @@ const useItem = (
         transport: custom((window as any).ethereum),
       });
 
-      console.log(
-        ((Number(
-          (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
-        ) *
-          10 ** 18) /
-          Number(
-            oracleData?.find(
-              (oracle) =>
-                oracle.currency?.toLowerCase() ===
-                purchaseDetails?.currency?.toLowerCase()
-            )?.rate
-          )) *
-          10 ** 18
-      );
 
       const { request } = await publicClient.simulateContract({
         address: purchaseDetails?.currency as `0x${string}`,

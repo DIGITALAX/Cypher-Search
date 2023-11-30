@@ -253,4 +253,5 @@ export type CartListProps = {
   dispatch: Dispatch<AnyAction>;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
   page?: boolean;
+  searchActive: boolean;
 };

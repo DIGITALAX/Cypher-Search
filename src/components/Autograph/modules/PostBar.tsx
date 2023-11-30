@@ -25,6 +25,7 @@ import decodeReturnedData from "../../../../lib/helpers/decodeReturned";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
+import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -404,8 +405,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                         ?.openActionModules?.[0] as UnknownOpenActionModuleSettings
                     )?.openActionModuleReturnData
                   );
+
                   const newItem = {
-                    ...returned,
                     amount: 1,
                     price: Number(returned?.prices?.[0]),
                     type: meta?.openActionModules?.[0]?.contract?.address
@@ -417,14 +418,34 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                           ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
                       ? "coinop"
                       : "listener",
-                    color: returned?.colors?.split(",")?.[0],
-                    size: returned?.sizes?.split(",")?.[0],
+                    color: returned?.collectionMetadata?.colors?.[0],
+                    size: returned?.collectionMetadata?.sizes?.[0],
                     purchased: false,
                     chosenIndex: 0,
+                    item: {
+                      ...returned,
+                      pubId:
+                        item?.__typename == "Mirror"
+                          ? item?.mirrorOn?.id
+                          : item?.id,
+                      profileId:
+                        item?.__typename == "Mirror"
+                          ? item?.mirrorOn?.by?.id
+                          : item?.by?.id,
+                      profile:
+                        item?.__typename == "Mirror"
+                          ? item?.mirrorOn?.by
+                          : item?.by,
+                    },
                   };
 
                   const existingItem = cartItems?.find(
-                    (value) => value?.item?.pubId === returned?.pubId
+                    (value) =>
+                      value?.item?.pubId === returned?.collectionMetadata?.pubId
+                  );
+
+                  const newItemDeepCopy = await JSON.parse(
+                    JSON.stringify(newItem)
                   );
 
                   if (existingItem) {
@@ -432,8 +453,8 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     const itemIndex = newCartItems?.indexOf(existingItem);
 
                     if (
-                      existingItem?.color === newItem?.color &&
-                      existingItem?.size === newItem?.size
+                      existingItem?.color === newItemDeepCopy?.color &&
+                      existingItem?.size === newItemDeepCopy?.size
                     ) {
                       newCartItems[itemIndex] = {
                         ...existingItem,
@@ -441,15 +462,15 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       };
                     } else {
                       newCartItems.splice(itemIndex, 1);
-                      newCartItems.push(newItem);
+                      newCartItems.push(newItemDeepCopy);
                     }
 
                     dispatch(setCartItems(newCartItems));
                     setCypherStorageCart(JSON.stringify(newCartItems));
                   } else {
-                    dispatch(setCartItems([...cartItems, newItem]));
+                    dispatch(setCartItems([...cartItems, newItemDeepCopy]));
                     setCypherStorageCart(
-                      JSON.stringify([...cartItems, newItem])
+                      JSON.stringify([...cartItems, newItemDeepCopy])
                     );
                   }
 

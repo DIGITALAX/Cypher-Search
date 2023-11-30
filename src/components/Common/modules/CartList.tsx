@@ -14,6 +14,7 @@ const CartList: FunctionComponent<CartListProps> = ({
   dispatch,
   setCartListOpen,
   page,
+  searchActive
 }): JSX.Element => {
   return (
     <div
@@ -21,7 +22,8 @@ const CartList: FunctionComponent<CartListProps> = ({
         page
           ? "right-1 sm:right-3 bottom-16"
           : `right-3 top-14 tablet:top-16 ${
-              router.asPath?.includes("/checkout") ? "sm:top-14" : "sm:top-24"
+              router.asPath?.includes("/checkout") ||
+              (!searchActive && router.asPath == "/") ? "sm:top-14" : "sm:top-24"
             }`
       }`}
       id="milestone"
@@ -42,10 +44,10 @@ const CartList: FunctionComponent<CartListProps> = ({
                     <MediaSwitch
                       hidden
                       type={
-                        item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                        item?.item?.collectionMetadata?.mediaTypes?.[0] ==
                         "video"
                           ? "video"
-                          : item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                          : item?.item?.collectionMetadata?.mediaTypes?.[0] ==
                             "audio"
                           ? "audio"
                           : "image"
@@ -56,14 +58,14 @@ const CartList: FunctionComponent<CartListProps> = ({
                       }
                       classNameAudio={"rounded-sm w-full h-full flex relative"}
                       srcUrl={
-                        item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                        item?.item?.collectionMetadata?.mediaTypes?.[0] ==
                         "video"
                           ? `${INFURA_GATEWAY}/ipfs/${
                               item?.item?.collectionMetadata?.video?.split(
                                 "ipfs://"
                               )?.[1]
                             }`
-                          : item?.item.collectionMetadata?.mediaTypes?.[0] ==
+                          : item?.item?.collectionMetadata?.mediaTypes?.[0] ==
                             "audio"
                           ? `${INFURA_GATEWAY}/ipfs/${
                               item?.item?.collectionMetadata?.audio?.split(
@@ -165,13 +167,13 @@ const CartList: FunctionComponent<CartListProps> = ({
                     </div>
                     <div className="relative flex flex-row items-center justify-between gap-2 w-fit h-fit font-vcr text-sm">
                       <div className="relative w-fit h-fit items-center justify-center text-white break-words text-center">
-                        {item.amount}
+                        {item?.amount}
                       </div>
                       <div className="relative w-fit h-fit items-center justify-center text-sol break-words text-center">
                         x
                       </div>
                       <div className="relative w-fit h-fit items-center justify-center text-white break-words text-center">
-                        ${item.price}
+                        ${item?.price}
                       </div>
                     </div>
                   </div>

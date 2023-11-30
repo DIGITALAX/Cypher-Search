@@ -61,17 +61,27 @@ const useDisplaySearch = (
       const collectedData = await getOrdersQuick(address!);
       const createdData = await getCollectionsQuick(address!);
 
-      const promises = [
-        ...(collectedData?.data?.orderCreateds || []),
-        ...(collectedData?.data?.nFTOnlyOrderCreateds || []),
-      ]?.map((item: { subOrderCollectionIds: string[] }) => {
-        item?.subOrderCollectionIds?.map(async (item: string) => {
-          const res = await getOneCollectionQuick(item);
-          collected.push(res?.data?.collectionCreateds?.[0]);
-        });
-      });
+      const existingCollectionIds =
+        createdData?.data?.collectionCreateds?.map(
+          (item: any) => item?.collectionId
+        ) || [];
 
-      const collected = await Promise.all(promises);
+      const subOrderCollectionIds = [
+        ...(collectedData?.data?.orderCreateds || []),
+        ...(collectedData?.data?.nftonlyOrderCreateds || []),
+      ].flatMap((item) => item?.subOrderCollectionIds || []);
+
+      let collectedPromises = subOrderCollectionIds
+        .map(async (id) => {
+          if (!existingCollectionIds.includes(id)) {
+            const res = await getOneCollectionQuick(id);
+            return res?.data?.collectionCreateds?.[0];
+          }
+          return null;
+        })
+        .filter((promise) => promise !== null);
+
+      const collected = await Promise.all(collectedPromises);
 
       setGallery({
         collected: collected as any,

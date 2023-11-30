@@ -73,7 +73,7 @@ const buildQuery = (filters: Filter): FilterInput => {
 
   const collectionMetadata: any = {};
 
-  collectionFields.forEach((field) => {
+  collectionFields?.forEach((field) => {
     if (typeof filters[field] === "string") {
       const values =
         field === "format"

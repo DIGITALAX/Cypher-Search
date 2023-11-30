@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { Sale, ScreenDisplay } from "../types/autograph.types";
-import { getSalesHistory } from "../../../../graphql/subgraph/queries/getSales";
-import getDefaultProfile from "../../../../graphql/lens/queries/default";
+import {
+  getNFTOrderById,
+  getOrderById,
+  getSalesHistory,
+} from "../../../../graphql/subgraph/queries/getSales";
 import { Profile } from "../../../../graphql/generated";
+import getProfile from "../../../../graphql/lens/queries/profile";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 
 const useSales = (
   address: `0x${string}` | undefined,
@@ -20,30 +25,63 @@ const useSales = (
     try {
       const data = await getSalesHistory(address);
 
-      if (
-        data &&
-        (data?.data?.orderCreateds?.length > 0 ||
-          data?.data?.nFTOnlyOrderCreateds?.length > 0)
-      ) {
-        const promises = [
-          ...(data?.data?.orderCreateds || []),
-          ...(data?.data?.nFTOnlyOrderCreateds || []),
-        ]?.map(async (item: any) => {
-          const buyer = await getDefaultProfile(
-            {
-              for: item?.buyer,
-            },
-            lensConnected?.id
+      const promises = data?.data?.collectionCreateds?.map(
+        async (item: {
+          collectionMetadata: {
+            mediaCover: string;
+            images: string[];
+          };
+          orderIds: string[];
+          buyerProfileIds: string;
+          origin: string;
+        }) => {
+          if (!item.orderIds || item.orderIds.length === 0) return;
+
+          const results = await Promise.all(
+            item.orderIds.map(async (orderId: string, index: number) => {
+              let data;
+              if (Number(item.origin) == 1) {
+                const order = await getNFTOrderById(orderId);
+                data = order?.data?.nftonlyOrderCreateds?.[0];
+              } else {
+                const order = await getOrderById(orderId);
+                data = order?.data?.orderCreateds?.[0];
+              }
+
+              if (data) {
+                const profileBuyer = await getProfile(
+                  {
+                    forProfileId:
+                      "0x" +
+                      toHexWithLeadingZero(
+                        Number(item.buyerProfileIds?.[index])
+                      ),
+                  },
+                  lensConnected?.id
+                );
+
+                return {
+                  orderId: data?.orderId,
+                  pubId: data?.pubId,
+                  profileId: data?.profileId,
+                  transactionHash: data?.transactionHash,
+                  currency: data?.currency,
+                  buyer: profileBuyer?.data?.profile,
+                  totalPrice: data?.totalPrice,
+                  images: data?.images,
+                  blockTimestamp: data?.blockTimestamp,
+                  amount: data?.subOrderAmount?.[0],
+                };
+              }
+            })
           );
 
-          return {
-            ...item,
-            buyer,
-          };
-        });
+          return results.filter((result) => result);
+        }
+      );
 
-        setAllSales(await Promise.all(promises));
-      }
+      const finalResults = (await Promise.all(promises)).flat();
+      setAllSales(finalResults);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -52,14 +90,14 @@ const useSales = (
 
   useEffect(() => {
     if (
-      allSales?.length < 0 &&
+      allSales?.length < 1 &&
       screenDisplay === ScreenDisplay.Sales &&
       isDesigner &&
       lensConnected?.handle?.fullHandle === pageProfile?.handle?.fullHandle
     ) {
       handleAllSales();
     }
-  }, []);
+  }, [pageProfile?.id, screenDisplay, lensConnected?.id]);
 
   return {
     salesLoading,

@@ -1308,7 +1308,7 @@ export interface Order {
   images: string[];
   names: string[];
   messages: string[];
-  details: Details | EncryptedDetails | string;
+  details?: Details | EncryptedDetails | string;
   subOrders: Sub[];
   decrypted: boolean;
 }
@@ -1338,6 +1338,7 @@ export type SubOrderProps = {
   item: Sub;
   router: NextRouter;
   decrypted: boolean;
+  details: boolean;
 };
 
 export interface Sub {
@@ -1370,7 +1371,8 @@ export interface Sale {
   transactionHash: string;
   currency: string;
   buyer: Profile;
-  price: string;
+  totalPrice: string;
+  amount: string;
   images: string[];
   blockTimestamp: string;
 }
@@ -1630,3 +1632,10 @@ export type DecryptProps = {
   canDecrypt: boolean;
   toDecrypt: Post | Comment | Quote;
 };
+
+export interface AuthSig {
+  sig: any;
+  derivedVia: string;
+  signedMessage: string;
+  address: string;
+}

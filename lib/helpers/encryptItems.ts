@@ -1,6 +1,5 @@
-import { Details } from "@/components/Autograph/types/autograph.types";
+import { AuthSig, Details } from "@/components/Autograph/types/autograph.types";
 import { LitNodeClient, encryptString } from "@lit-protocol/lit-node-client";
-import { AuthSig } from "@lit-protocol/types";
 
 export const encryptItems = async (
   client: LitNodeClient,
@@ -35,7 +34,7 @@ export const encryptItems = async (
     let encryptedItems: string[] = [];
     for (const [pubId, item] of Object.entries(groupedByPubId)) {
       let fulfillerEditions: any[] = [];
-      uniqueFulfillerAddressesByGroup[pubId].forEach((address: string) => {
+      uniqueFulfillerAddressesByGroup[pubId]?.forEach((address: string) => {
         fulfillerEditions.push({
           contractAddress: "",
           standardContractType: "",

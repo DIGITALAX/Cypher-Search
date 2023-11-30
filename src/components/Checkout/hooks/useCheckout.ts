@@ -1,4 +1,7 @@
-import { Details } from "@/components/Autograph/types/autograph.types";
+import {
+  Details,
+  ScreenDisplay,
+} from "@/components/Autograph/types/autograph.types";
 import { CartItem } from "@/components/Common/types/common.types";
 import { useEffect, useState } from "react";
 import { AnyAction, Dispatch } from "redux";
@@ -28,6 +31,9 @@ import {
 } from "../../../../lib/utils";
 import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 import findBalance from "../../../../lib/helpers/findBalance";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
+import { setScreenDisplay } from "../../../../redux/reducers/screenDisplaySlice";
+import { NextRouter } from "next/router";
 
 const useCheckout = (
   publicClient: PublicClient,
@@ -36,7 +42,8 @@ const useCheckout = (
   lensConnected: Profile | undefined,
   client: LitNodeClient,
   oracleData: OracleData[],
-  cartItems: CartItem[]
+  cartItems: CartItem[],
+  router: NextRouter
 ) => {
   const [details, setDetails] = useState<Details>({
     name: "",
@@ -61,20 +68,15 @@ const useCheckout = (
     };
   }>({});
   const [encryptedStrings, setEncryptedStrings] = useState<string[]>([]);
-  const [chooseCartItem, setChooseCartItem] = useState<string>(
-    cartItems?.find(
-      (item) => item?.item?.pubId == Object.keys(groupedByPubId)[0]
-    )?.item?.pubId!
-  );
+  const [chooseCartItem, setChooseCartItem] = useState<string>("");
   const [isApprovedSpend, setApprovedSpend] = useState<boolean>(false);
   const [completedPurchases, setCompletedPurchases] = useState<
     {
-      completed: boolean;
+      completed?: CartItem;
       open: boolean;
     }[]
   >(
     Array.from({ length: Object.keys(groupedByPubId).length }, () => ({
-      completed: false,
       open: true,
     }))
   );
@@ -86,6 +88,7 @@ const useCheckout = (
   const [collectPostLoading, setCollectPostLoading] = useState<boolean[]>(
     Array.from({ length: cartItems?.length }, () => false)
   );
+  const [approveLoading, setApproveLoading] = useState<boolean>(false);
 
   const encryptFulfillment = async () => {
     if (
@@ -124,7 +127,12 @@ const useCheckout = (
   };
 
   const collectItem = async () => {
-    if (encryptedStrings?.length < 1) return;
+    if (
+      encryptedStrings?.length < 1 &&
+      cartItems?.find((item) => item?.item?.pubId === chooseCartItem)?.item
+        ?.origin !== "1"
+    )
+      return;
     const index = cartItems?.findIndex(
       (item) => item?.item?.pubId === chooseCartItem
     );
@@ -175,7 +183,11 @@ const useCheckout = (
       );
 
       await actPost(
-        cartItems[index]?.item?.publication?.id,
+        "0x" +
+          toHexWithLeadingZero(Number(cartItems[index]?.item?.profileId)) +
+          "-" +
+          "0x" +
+          toHexWithLeadingZero(Number(cartItems[index]?.item?.pubId)),
         {
           unknownOpenAction,
         },
@@ -186,28 +198,27 @@ const useCheckout = (
       );
 
       const newItems = [...cartItems];
-      cartItems[index] = {
-        ...cartItems[index],
+      newItems[index] = {
+        ...newItems[index],
         purchased: true,
       };
-      dispatch(setCartItems(newItems));
-      setCypherStorageCart(JSON.stringify(newItems));
 
       setCompletedPurchases((prev) => {
         const arr = [...prev];
         arr[index] = {
           ...arr[index],
-          completed: true,
+          completed: newItems[index],
           open: false,
         };
         return arr;
       });
 
-      if (
-        completedPurchases
-          ?.slice(0, -1)
-          ?.every((value) => value.completed === true)
-      ) {
+      delete newItems[index];
+
+      dispatch(setCartItems(newItems?.filter(Boolean)));
+      setCypherStorageCart(JSON.stringify(newItems?.filter(Boolean)));
+      setChooseCartItem(newItems?.filter(Boolean)?.[0]?.item?.pubId);
+      if (completedPurchases?.slice(0, -1)?.every((value) => value.completed)) {
         setGroupedByPubId({});
         dispatch(setCartItems([]));
         removeCypherStorageCart();
@@ -224,6 +235,12 @@ const useCheckout = (
           sizes: [],
         });
         dispatch(setSuccessCheckout(true));
+        dispatch(setScreenDisplay(ScreenDisplay.Orders));
+        router.push(
+          `/autograph/${
+            lensConnected?.handle?.suggestedFormatted?.localName?.split("@")?.[1]
+          }`
+        );
       }
     } catch (err: any) {
       console.error(err.message);
@@ -237,6 +254,7 @@ const useCheckout = (
   };
 
   const approveSpend = async () => {
+    setApproveLoading(true);
     try {
       const clientWallet = createWalletClient({
         chain: polygonMumbai,
@@ -319,7 +337,7 @@ const useCheckout = (
             : item?.type === "coinop"
             ? COIN_OP_OPEN_ACTION
             : LEGEND_OPEN_ACTION,
-          (((Number(item?.price) * 10 ** 18) /
+          (((Number(item?.price) * Number(item?.amount) * 10 ** 18) /
             Number(
               oracleData?.find(
                 (oracle) =>
@@ -340,6 +358,7 @@ const useCheckout = (
     } catch (err: any) {
       console.error(err.message);
     }
+    setApproveLoading(false);
   };
 
   const checkApproved = async () => {
@@ -389,27 +408,17 @@ const useCheckout = (
         ],
       });
 
-      if (data && address) {
+      if (address) {
         if (
           Number((data as any)?.toString()) /
             Number(
-              oracleData?.find(
-                (oracle) =>
-                  oracle.currency ===
-                  ACCEPTED_TOKENS_MUMBAI.find(
-                    (item) => item[2] === checkoutCurrency
-                  )?.[2]
-              )?.wei
+              oracleData?.find((oracle) => oracle.currency === checkoutCurrency)
+                ?.wei
             ) >=
-          (Number(item?.price) * 10 ** 18) /
+          (Number(item?.price) * Number(item?.amount) * 10 ** 18) /
             Number(
-              oracleData?.find(
-                (oracle) =>
-                  oracle.currency ===
-                  ACCEPTED_TOKENS_MUMBAI.find(
-                    (item) => item[2] === checkoutCurrency
-                  )?.[2]
-              )?.rate
+              oracleData?.find((oracle) => oracle.currency === checkoutCurrency)
+                ?.rate
             )
         ) {
           setApprovedSpend(true);
@@ -434,8 +443,9 @@ const useCheckout = (
         fulfillerAddress: string[];
       };
     } = {};
+    if (cartItems?.length < 1) setGroupedByPubId({});
     for (const item of cartItems) {
-      const pubId = item.item.pubId;
+      const pubId = item?.item?.pubId;
 
       if (!grouped[pubId]) {
         grouped[pubId] = {
@@ -450,33 +460,23 @@ const useCheckout = (
       }
 
       grouped[pubId] = {
-        colors: [...grouped[pubId].colors, item.color],
-        sizes: [...grouped[pubId].sizes, item.size],
-        amounts: [...grouped[pubId].amounts, item.amount],
+        colors: [...grouped[pubId]?.colors, item?.color],
+        sizes: [...grouped[pubId]?.sizes, item?.size],
+        amounts: [...grouped[pubId]?.amounts, item?.amount],
         collectionIds: [
-          ...grouped[pubId].collectionIds,
-          item.item.collectionId,
+          ...grouped[pubId]?.collectionIds,
+          item?.item?.collectionId,
         ],
-        types: [...grouped[pubId].types, item.type],
-        prices: [...grouped[pubId].prices, item.price],
+        types: [...grouped[pubId]?.types, item?.type],
+        prices: [...grouped[pubId]?.prices, item?.price],
         fulfillerAddress: [
-          ...grouped[pubId].fulfillerAddress,
-          item.item.fulfiller,
+          ...grouped[pubId]?.fulfillerAddress,
+          item?.item?.fulfiller,
         ],
       };
     }
 
     setGroupedByPubId(grouped);
-    setChooseCartItem(
-      cartItems?.find((item) => item?.item?.pubId == Object.keys(grouped)[0])
-        ?.item?.pubId!
-    );
-    setCompletedPurchases(
-      Array.from({ length: Object.keys(grouped).length }, () => ({
-        completed: false,
-        open: true,
-      }))
-    );
   };
 
   useEffect(() => {
@@ -486,10 +486,22 @@ const useCheckout = (
   }, [checkoutCurrency, chooseCartItem]);
 
   useEffect(() => {
-    if (cartItems?.length > 0) {
-      handleGroupByPubId();
-    }
+    handleGroupByPubId();
   }, [cartItems]);
+
+  useEffect(() => {
+    if (cartItems?.length > 0 && chooseCartItem == "") {
+      setChooseCartItem(cartItems?.[0]?.item?.pubId);
+      setCollectPostLoading(
+        Array.from({ length: cartItems?.length }, () => false)
+      );
+      setCompletedPurchases(
+        Array.from({ length: cartItems?.length }, () => ({
+          open: true,
+        }))
+      );
+    }
+  }, [cartItems?.length]);
 
   return {
     encryptFulfillment,
@@ -510,6 +522,7 @@ const useCheckout = (
     isApprovedSpend,
     groupedByPubId,
     setCompletedPurchases,
+    approveLoading,
   };
 };
 

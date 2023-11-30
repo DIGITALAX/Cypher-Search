@@ -32,7 +32,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
               }
             />
           </div>
-          <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3">
+          <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3 pb-4">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
               Your {type === "collection" ? "Collection" : "Drop"} is{" "}
               {successType === "created"
