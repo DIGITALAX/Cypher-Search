@@ -24,7 +24,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   dispatch,
   allDrops,
   setCreateCase,
-  edit
+  edit,
 }): JSX.Element => {
   const microBrands = lensConnected?.metadata?.attributes?.find(
     (item) => item?.key === "microbrandCypher"
@@ -463,6 +463,10 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
               <div className="relative w-fit h-fit flex text-white font-aust text-sm">
                 Price {`( USD )`}
+                {collectionSettings?.origin !== "chromadin" &&
+                  (collectionDetails?.printType === "sticker" ||
+                    collectionDetails?.printType === "poster") &&
+                  ` ${collectionDetails?.sizes?.split(/,\s*/)?.[0]}`}
               </div>
               <input
                 type="number"
@@ -478,6 +482,40 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   resize: "none",
                 }}
               />
+              {collectionSettings?.origin !== "chromadin" &&
+                (collectionDetails?.printType === "sticker" ||
+                  collectionDetails?.printType === "poster") &&
+                collectionDetails?.sizes
+                  ?.split(/,\s*/)
+                  ?.slice(1)
+                  ?.filter(Boolean)?.length > 0 &&
+                collectionDetails?.sizes
+                  ?.split(/,\s*/)
+                  ?.slice(1)
+                  ?.filter(Boolean)
+                  .map((size: string, index: number) => (
+                    <div key={index}>
+                      <div className="relative w-fit h-fit flex text-white font-aust text-sm">
+                        Price {`( USD ) ( ${size} )`}
+                      </div>
+                      <input
+                        type="number"
+                        value={collectionDetails?.otherPrices?.[index] || ""}
+                        onChange={(e) => {
+                          const updatedPrices = [
+                            ...collectionDetails?.otherPrices,
+                          ];
+                          updatedPrices[index] = e.target.value;
+                          setCollectionDetails((prev) => ({
+                            ...prev,
+                            otherPrices: updatedPrices,
+                          }));
+                        }}
+                        className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60 max-w-[15rem]"
+                        style={{ resize: "none" }}
+                      />
+                    </div>
+                  ))}
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
               <div className="relative w-fit h-fit flex text-white font-aust text-sm">
@@ -852,6 +890,290 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
             )}
           </div>
+          {collectionSettings?.origin !== "chromadin" && (
+            <div className="relative w-fit h-fit flex flex-wrap gap-4">
+              <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                <div className="relative w-fit h-fit text-sm break-words">
+                  Sizes
+                </div>
+                <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                  <div
+                    className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                    onClick={() =>
+                      setCollectionSettings((prev) => ({
+                        ...prev,
+                        sizeOpen: !prev.sizeOpen,
+                      }))
+                    }
+                  >
+                    <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                      {collectionDetails?.sizes}
+                    </div>
+                    <div className="relative w-4 h-3 flex items-center justify-center">
+                      <Image
+                        layout="fill"
+                        draggable={false}
+                        src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                      />
+                    </div>
+                  </div>
+                  {collectionSettings?.sizeOpen && (
+                    <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                      <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                        {filterConstants?.sizes?.[
+                          collectionDetails?.printType !== "sticker" &&
+                          collectionDetails?.printType !== "poster"
+                            ? "apparel"
+                            : collectionDetails?.printType == "sticker"
+                            ? "sticker"
+                            : "poster"
+                        ]?.map((item: string, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                              onClick={() => {
+                                setCollectionSettings((prev) => ({
+                                  ...prev,
+                                  sizeOpen: !prev.sizeOpen,
+                                }));
+
+                                const allArray = collectionDetails?.sizes
+                                  ?.split(/,\s*/)
+                                  ?.map((t) => t.trim());
+
+                                if (!allArray.includes(item.trim())) {
+                                  const sizeArray =
+                                    collectionDetails?.sizes?.split(/,\s*/);
+                                  sizeArray[sizeArray.length - 1] = item;
+
+                                  if (
+                                    collectionDetails?.printType ===
+                                      "sticker" ||
+                                    collectionDetails?.printType === "poster"
+                                  ) {
+                                    sizeArray?.sort(
+                                      (a, b) =>
+                                        filterConstants?.sizes[
+                                          (collectionDetails?.printType as "poster") ||
+                                            "sticker"
+                                        ].indexOf(a) -
+                                        filterConstants?.sizes[
+                                          (collectionDetails?.printType as "poster") ||
+                                            "sticker"
+                                        ].indexOf(b)
+                                    );
+                                  } else {
+                                    sizeArray?.sort(
+                                      (a, b) =>
+                                        filterConstants?.sizes[
+                                          "apparel"
+                                        ].indexOf(a) -
+                                        filterConstants?.sizes[
+                                          "apparel"
+                                        ].indexOf(b)
+                                    );
+                                  }
+
+                                  setCollectionDetails((prev) => ({
+                                    ...prev,
+                                    sizes: sizeArray.join(", ") + ", ",
+                                  }));
+                                }
+                              }}
+                            >
+                              <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                {item}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                <div className="relative w-fit h-fit text-sm break-words">
+                  Base Colors
+                </div>
+                <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                  <div
+                    className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                    onClick={() =>
+                      setCollectionSettings((prev) => ({
+                        ...prev,
+                        colorOpen: !prev.colorOpen,
+                      }))
+                    }
+                  >
+                    <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                      {collectionDetails?.colors}
+                    </div>
+                    <div className="relative w-4 h-3 flex items-center justify-center">
+                      <Image
+                        layout="fill"
+                        draggable={false}
+                        src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                      />
+                    </div>
+                  </div>
+                  {collectionSettings?.colorOpen && (
+                    <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                      <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                        {filterConstants?.colors?.map(
+                          (item: string, index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                                onClick={() => {
+                                  setCollectionSettings((prev) => ({
+                                    ...prev,
+                                    colorOpen: !prev.colorOpen,
+                                  }));
+
+                                  const allArray = collectionDetails?.colors
+                                    ?.split(/,\s*/)
+                                    ?.map((t) => t.trim());
+
+                                  if (!allArray.includes(item.trim())) {
+                                    const colorArray =
+                                      collectionDetails?.colors?.split(/,\s*/);
+                                    colorArray[colorArray.length - 1] = item;
+
+                                    setCollectionDetails((prev) => ({
+                                      ...prev,
+                                      colors: colorArray.join(", ") + ", ",
+                                    }));
+                                  }
+                                }}
+                              >
+                                <div
+                                  className="relative w-5 h-5 flex items-center rounded-full justify-center border border-white"
+                                  style={{
+                                    backgroundColor: item,
+                                  }}
+                                ></div>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                <div className="relative w-fit h-fit text-sm break-words">
+                  Print Type
+                </div>
+                <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                  <div
+                    className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                    onClick={() =>
+                      setCollectionSettings((prev) => ({
+                        ...prev,
+                        printOpen: !prev.printOpen,
+                      }))
+                    }
+                  >
+                    <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                      {collectionDetails?.printType}
+                    </div>
+                    <div className="relative w-4 h-3 flex items-center justify-center">
+                      <Image
+                        layout="fill"
+                        draggable={false}
+                        src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                      />
+                    </div>
+                  </div>
+                  {collectionSettings?.printOpen && (
+                    <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                      <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                        {[
+                          "sticker",
+                          "hoodie",
+                          "sleeve",
+                          "crop",
+                          "shirt",
+                          "poster",
+                        ]?.map((item: string, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                              onClick={() => {
+                                setCollectionSettings((prev) => ({
+                                  ...prev,
+                                  printOpen: !prev.printOpen,
+                                }));
+
+                                let sizes = collectionDetails?.sizes;
+
+                                if (
+                                  (item !== "poster" &&
+                                    item !== "sticker" &&
+                                    collectionDetails?.sizes
+                                      ?.split(/,\s*/)
+                                      ?.some(
+                                        (item) =>
+                                          filterConstants?.sizes?.sticker?.includes(
+                                            item
+                                          ) ||
+                                          filterConstants?.sizes?.poster?.includes(
+                                            item
+                                          )
+                                      )) ||
+                                  (item === "sticker" &&
+                                    collectionDetails?.sizes
+                                      ?.split(/,\s*/)
+                                      ?.some(
+                                        (item) =>
+                                          filterConstants?.sizes?.apparel?.includes(
+                                            item
+                                          ) ||
+                                          filterConstants?.sizes?.poster?.includes(
+                                            item
+                                          )
+                                      )) ||
+                                  (item === "poster" &&
+                                    collectionDetails?.sizes
+                                      ?.split(/,\s*/)
+                                      ?.some(
+                                        (item) =>
+                                          filterConstants?.sizes?.apparel?.includes(
+                                            item
+                                          ) ||
+                                          filterConstants?.sizes?.sticker?.includes(
+                                            item
+                                          )
+                                      ))
+                                ) {
+                                  sizes = "";
+                                }
+
+                                setCollectionDetails((prev) => ({
+                                  ...prev,
+                                  printType: item,
+                                  sizes,
+                                }));
+                              }}
+                            >
+                              <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                {item}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

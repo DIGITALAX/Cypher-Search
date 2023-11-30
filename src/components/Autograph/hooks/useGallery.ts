@@ -33,7 +33,6 @@ const useGallery = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  postSuccess: string | undefined,
   pageProfile: Profile | undefined
 ) => {
   const [sortType, setSortType] = useState<SortType>(SortType.Public);
@@ -737,16 +736,16 @@ const useGallery = (
         if (
           gallery?.collected?.some(
             (collectedItem) =>
-              collectedItem.pubId === item.pubId &&
-              item.profileId === collectedItem.profileId
+              collectedItem?.pubId === item?.pubId &&
+              item?.profileId === collectedItem?.profileId
           )
         ) {
           newCollected.push(item);
         } else if (
           gallery?.created?.some(
             (createdItem) =>
-              createdItem.pubId === item.pubId &&
-              item.profileId === createdItem.profileId
+              createdItem?.pubId === item?.pubId &&
+              item?.profileId === createdItem?.profileId
           )
         ) {
           newCreated.push(item);
@@ -768,13 +767,12 @@ const useGallery = (
     ) {
       getGallery();
     }
-  }, [pageProfile?.ownedBy?.address, lensConnected?.id]);
-
-  useEffect(() => {
-    if (postSuccess) {
-      getGallery();
-    }
-  }, [postSuccess]);
+  }, [
+    pageProfile?.ownedBy?.address,
+    lensConnected?.id,
+    gallery?.collected?.length,
+    gallery?.created?.length,
+  ]);
 
   useEffect(() => {
     if (

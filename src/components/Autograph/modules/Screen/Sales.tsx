@@ -56,7 +56,7 @@ const Sales: FunctionComponent<SalesProps> = ({
                         <div className="relative justify-center items-start flex flex-col font-ignite gap-2">
                           <div className="relative w-fit h-fit gap-2 flex items-center justify-center flex-row">
                             <div className="relative justify-center items-center flex w-fit h-fit text-white text-xl">
-                              Order {sale?.orderId}
+                              Order {allSales?.length - index}
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center text-sol">
                               Qty. {sale?.amount}
@@ -85,6 +85,7 @@ const Sales: FunctionComponent<SalesProps> = ({
                           </div>
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-white text-sm">
                             <div
+                              id="pfp"
                               className="relative flex flex-row w-6 h-6 items-center justify-start rounded-full border border-offWhite cursor-pointer"
                               onClick={() =>
                                 router.push(

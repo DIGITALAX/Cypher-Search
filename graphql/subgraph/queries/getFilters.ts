@@ -5,8 +5,6 @@ const FILTER = `
   query {
     collectionCreateds {
         collectionMetadata {
-          colors
-          sizes
           tags
           microbrandCover
           microbrand

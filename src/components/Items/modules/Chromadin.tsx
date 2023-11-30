@@ -5,6 +5,7 @@ import {
   ACCEPTED_TOKENS_MUMBAI,
   INFURA_GATEWAY,
   itemStringToType,
+  printTypeToString,
 } from "../../../../lib/constants";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -20,6 +21,7 @@ import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 import { setImageViewer } from "../../../../redux/reducers/ImageLargeSlice";
 import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
+import { PrintType } from "@/components/Tiles/types/tiles.types";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   itemData,
@@ -303,7 +305,12 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     src={`${INFURA_GATEWAY}/ipfs/${
                       filterConstants?.origin?.find(
                         (item) =>
-                          item[0]?.toLowerCase()?.trim() === type?.toLowerCase()
+                          item[0]?.toLowerCase()?.trim() ===
+                            type?.toLowerCase() ||
+                          (item[0]?.toLowerCase()?.trim() == "coin op" &&
+                            type?.toLowerCase() == "coinop") ||
+                          (item[0]?.toLowerCase()?.trim() == "lit listener" &&
+                            type?.toLowerCase() == "listener")
                       )?.[1]
                     }`}
                     onError={(e) => handleImageError(e)}
@@ -395,6 +402,15 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-5xl mt-0">
             {itemData?.collectionMetadata?.title}
           </div>
+          {itemData?.origin !== "1" && (
+            <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-sm mt-0">
+              {`( ${
+                printTypeToString[
+                  Number(itemData?.printType) as unknown as PrintType
+                ]
+              } )`}
+            </div>
+          )}
           <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-center justify-center">
             <div className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end font-aust text-white break-words text-sm cursor-pointer">
               <div
@@ -458,9 +474,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               {Number(itemData?.amount) - Number(itemData?.soldTokens) > 0 ||
               !itemData?.soldTokens
                 ? `${
-                    itemData?.soldTokens
-                      ? Number(itemData?.soldTokens)
-                      : Number(itemData?.amount)
+                    itemData?.soldTokens ? Number(itemData?.soldTokens) : 0
                   }/${Number(itemData?.amount)}`
                 : "SOLD OUT"}
             </div>
@@ -600,7 +614,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               )}
             </div>
           </div>
-          {type === "coinop" && (
+          {(type === "coinop" || type === "listener") && (
             <div className="relative w-fit h-fit flex flex-row gap-6 items-end justify-end text-white font-bit text-xxs pt-4">
               <div className="relative flex items-end w-fit h-fit justify-end items-center justify-center flex-col gap-1.5 ml-auto">
                 <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
@@ -614,8 +628,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           key={index}
                           className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer active:scale-95 border ${
                             item === purchaseDetails?.color
-                              ? "border-black opacity-100"
-                              : "border-white opacity-70"
+                              ? "border-sol opacity-70"
+                              : "border-white opacity-100"
                           }`}
                           style={{
                             backgroundColor: item,
@@ -642,10 +656,23 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                       return (
                         <div
                           key={index}
-                          className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
-                            item === purchaseDetails?.color
-                              ? "border-black opacity-100"
-                              : "border-white opacity-70"
+                          className={`${
+                            printTypeToString[
+                              Number(
+                                itemData?.printType
+                              ) as unknown as PrintType
+                            ] == "poster" ||
+                            printTypeToString[
+                              Number(
+                                itemData?.printType
+                              ) as unknown as PrintType
+                            ] == "sticker"
+                              ? "w-fit px-1.5 py-1 rounded-sm"
+                              : "w-6 rounded-full"
+                          }relative flex h-6 items-center justify-center cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
+                            item === purchaseDetails?.size
+                              ? "border-sol opacity-70"
+                              : "border-white opacity-100"
                           }`}
                           onClick={() =>
                             setPurchaseDetails((prev) => ({
@@ -670,13 +697,14 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           {type == "chromadin" && (
             <div
               className={`relative w-32 text-sm h-8 rounded-sm flex items-center justify-center border border-white text-black font-bit text-xs bg-sol px-2 py-1 ${
-                !lensConnected?.id
+                !lensConnected?.id || itemData?.amount == itemData?.soldTokens
                   ? "opacity-70"
-                  : "cursor-pointer active:scale-95"
+                  : !instantLoading && "cursor-pointer active:scale-95"
               }`}
               onClick={() =>
                 lensConnected?.id &&
                 !instantLoading &&
+                itemData?.amount != itemData?.soldTokens &&
                 (isApprovedSpend ? handleInstantPurchase() : approveSpend())
               }
               title="Instant Checkout"
@@ -688,6 +716,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               >
                 {instantLoading ? (
                   <AiOutlineLoading size={15} color="white" />
+                ) : itemData?.amount == itemData?.soldTokens ? (
+                  "SOLD OUT"
                 ) : !lensConnected?.id ? (
                   "Connect"
                 ) : !isApprovedSpend ? (
@@ -699,9 +729,14 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             </div>
           )}
           <div
-            className="relative w-10 h-10 justify-end flex items-center cursor-pointer active:scale-95"
+            className={`relative w-10 h-10 justify-end flex items-center ${
+              itemData?.amount == itemData?.soldTokens
+                ? "opacity-70"
+                : "cursor-pointer active:scale-95"
+            }`}
             title="Add to Cart"
             onClick={() => {
+              if (itemData?.amount == itemData?.soldTokens) return;
               const newItem = {
                 item: itemData,
                 amount: 1,
@@ -730,7 +765,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     amount: existingItem?.amount + 1,
                   };
                 } else {
-                  newCartItems?.splice(itemIndex, 1);
+                  // newCartItems?.splice(itemIndex, 1);
                   newCartItems?.push(newItem);
                 }
 

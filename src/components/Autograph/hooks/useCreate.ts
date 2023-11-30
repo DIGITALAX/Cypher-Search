@@ -20,9 +20,13 @@ import {
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import {
   CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
   COLLECTION_CREATOR,
+  DIGITALAX_ADDRESS,
+  LISTENER_OPEN_ACTION,
   NFT_CREATOR_ADDRESS,
   ZERO_ADDRESS,
+  printStringToNumber,
 } from "../../../../lib/constants";
 import { ethers } from "ethers";
 import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
@@ -73,6 +77,9 @@ const useCreate = (
     accessOpen: boolean;
     visibilityOpen: boolean;
     dropOpen: boolean;
+    printOpen: boolean;
+    colorOpen: boolean;
+    sizeOpen: boolean;
   }>({
     media: "static",
     origin: "chromadin",
@@ -81,6 +88,9 @@ const useCreate = (
     accessOpen: false,
     visibilityOpen: false,
     dropOpen: false,
+    printOpen: false,
+    colorOpen: false,
+    sizeOpen: false,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
     {
@@ -95,14 +105,15 @@ const useCreate = (
       profileId: "",
       pubId: "",
       images: [],
+      otherPrices: [],
       video: "",
       audio: "",
       tags: "",
       prompt: "",
       amount: "1",
       visibility: "public",
-      sizes: [],
-      colors: [],
+      sizes: "",
+      colors: "",
       profileHandle: "",
       microbrand: {
         microbrand: "",
@@ -115,6 +126,7 @@ const useCreate = (
       dropCollectionIds: [],
       communities: "",
       cover: "",
+      printType: "",
     }
   );
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
@@ -152,6 +164,18 @@ const useCreate = (
       collectionDetails.acceptedTokens?.length < 1 ||
       Number(collectionDetails?.amount) < 0 ||
       !address
+    )
+      return;
+    if (
+      collectionSettings?.origin !== "chromadin" &&
+      (collectionDetails?.sizes?.trim() == "" ||
+        collectionDetails?.colors?.trim() == "" ||
+        collectionDetails?.printType?.trim() == "" ||
+        ((collectionDetails?.printType === "sticker" ||
+          collectionDetails?.printType === "poster") &&
+          collectionDetails?.otherPrices?.length !==
+            collectionDetails?.sizes?.split(/,\s*/)?.slice(1).filter(Boolean)
+              ?.length))
     )
       return;
     setCreationLoading(true);
@@ -223,41 +247,73 @@ const useCreate = (
 
       let uri: string = postContentURI?.string!;
       if (collectionDetails?.visibility === "private") {
+        await client.connect();
         uri = (await handleEncrypt(
           clientWallet,
           postContentURI?.object!
         )) as string;
       }
 
+      const prices =
+        collectionSettings?.origin == "chromadin"
+          ? [`${Number(collectionDetails?.price) * 10 ** 18}`]
+          : [
+              `${Number(collectionDetails?.price) * 10 ** 18}`,
+              ...collectionDetails?.otherPrices?.map(
+                (price) => `${Number(price) * 10 ** 18}`
+              ),
+            ];
+
+      const dataObject = {
+        prices: prices,
+        communityIds,
+        acceptedTokens: collectionDetails?.acceptedTokens,
+        uri: contentURI,
+        fulfiller:
+          collectionSettings?.origin == "chromadin"
+            ? ZERO_ADDRESS
+            : DIGITALAX_ADDRESS,
+        creatorAddress: address,
+        amount: Number(collectionDetails?.amount),
+        dropId: Number(collectionDetails?.dropId),
+        unlimited: false,
+        encrypted: collectionDetails?.visibility === "private" ? true : false,
+      };
+
+      const encoded =
+        collectionSettings?.origin == "chromadin"
+          ? coder.encode(
+              [
+                "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, address creatorAddress, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
+              ],
+              [dataObject]
+            )
+          : coder.encode(
+              [
+                "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, address creatorAddress, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
+                "uint8",
+              ],
+              [
+                dataObject,
+                printStringToNumber[
+                  collectionDetails?.printType.charAt(0).toUpperCase() +
+                    collectionDetails?.printType.slice(1).toLowerCase()
+                ],
+              ]
+            );
       await lensPost(
         uri,
         dispatch,
         [
           {
             unknownOpenAction: {
-              address: CHROMADIN_OPEN_ACTION,
-              data: coder.encode(
-                [
-                  "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, address creatorAddress, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
-                ],
-                [
-                  {
-                    prices: [`${Number(collectionDetails?.price) * 10 ** 18}`],
-                    communityIds,
-                    acceptedTokens: collectionDetails?.acceptedTokens,
-                    uri: contentURI,
-                    fulfiller: ZERO_ADDRESS,
-                    creatorAddress: address,
-                    amount: Number(collectionDetails?.amount),
-                    dropId: Number(collectionDetails?.dropId),
-                    unlimited: false,
-                    encrypted:
-                      collectionDetails?.visibility === "private"
-                        ? true
-                        : false,
-                  },
-                ]
-              ),
+              address:
+                collectionSettings?.origin == "chromadin"
+                  ? CHROMADIN_OPEN_ACTION
+                  : collectionSettings?.origin == "listener"
+                  ? LISTENER_OPEN_ACTION
+                  : COIN_OP_OPEN_ACTION,
+              data: encoded,
             },
           },
         ],
@@ -281,7 +337,7 @@ const useCreate = (
 
       await cleanCollection(
         edit ? "updated" : "created",
-        data?.publications?.items?.[0]?.id
+        collectionDetails?.title
       );
     } catch (err: any) {
       if (
@@ -382,6 +438,7 @@ const useCreate = (
           "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
         ],
         images: [],
+        otherPrices: [],
         profileId: "",
         pubId: "",
         video: "",
@@ -390,8 +447,8 @@ const useCreate = (
         prompt: "",
         amount: "",
         visibility: "public",
-        sizes: [],
-        colors: [],
+        sizes: "",
+        colors: "",
         profileHandle: "",
         microbrand: {
           microbrand: "",
@@ -404,6 +461,7 @@ const useCreate = (
         dropCollectionIds: [],
         communities: "",
         cover: "",
+        printType: "",
       });
       setCollectionSettings({
         media: "static",
@@ -413,6 +471,9 @@ const useCreate = (
         accessOpen: false,
         visibilityOpen: false,
         dropOpen: false,
+        printOpen: false,
+        colorOpen: false,
+        sizeOpen: false,
       });
       dispatch(
         setPostSuccess({
@@ -509,6 +570,10 @@ const useCreate = (
         video,
         cover,
         acceptedTokens,
+        printType,
+        otherPrices,
+        colors,
+        sizes,
         ...restOfCollectionDetails
       } = collectionDetails;
 
@@ -546,6 +611,18 @@ const useCreate = (
           lensConnected?.handle?.suggestedFormatted?.localName?.split("@")?.[1],
         microbrand: collectionDetails?.microbrand?.microbrand,
         microbrandCover: collectionDetails?.microbrand?.microbrandCover,
+        colors:
+          collectionSettings?.origin === "chromadin"
+            ? []
+            : collectionDetails?.colors
+                ?.split(/,\s*/)
+                ?.filter((color) => color.trim() !== ""),
+        sizes:
+          collectionSettings?.origin === "chromadin"
+            ? []
+            : collectionDetails?.sizes
+                ?.split(/,\s*/)
+                ?.filter((size) => size.trim() !== ""),
       };
 
       if (encrypted) {

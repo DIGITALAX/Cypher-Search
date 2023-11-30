@@ -9,6 +9,7 @@ import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { polygon, polygonMumbai } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
+import { setInsufficientBalance } from "../../../redux/reducers/insufficientBalanceSlice";
 
 const actPost = async (
   pubId: string,
@@ -67,6 +68,7 @@ const actPost = async (
           },
         ],
       });
+
       const res = await clientWallet.writeContract(request);
       const tx = await publicClient.waitForTransactionReceipt({ hash: res });
 
@@ -83,15 +85,23 @@ const actPost = async (
         },
         dispatch
       );
+
+      dispatch(
+        setIndexer({
+          actionOpen: false,
+          actionMessage: undefined,
+        })
+      );
     }
-    dispatch(
-      setIndexer({
-        actionOpen: false,
-        actionMessage: undefined,
-      })
-    );
     return true;
   } catch (err: any) {
+    dispatch(
+      setInsufficientBalance({
+        actionMessage:
+          "There was an issue estimating the tx gas. Try reducing the number of tokens you collect at once!",
+        actionValue: true,
+      })
+    );
     console.error(err.message);
   }
 };

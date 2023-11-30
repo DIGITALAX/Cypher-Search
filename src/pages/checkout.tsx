@@ -13,8 +13,6 @@ import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import { useAccount } from "wagmi";
 import { polygon, polygonMumbai } from "viem/chains";
 import { createPublicClient, http } from "viem";
-import { ACCEPTED_TOKENS_MUMBAI } from "../../lib/constants";
-import { useEffect } from "react";
 
 const Checkout: NextPage<{
   router: NextRouter;
@@ -95,10 +93,10 @@ const Checkout: NextPage<{
     isApprovedSpend,
     chooseCartItem,
     setChooseCartItem,
-    completedPurchases,
     groupedByPubId,
-    setCompletedPurchases,
     approveLoading,
+    chosenVariation,
+    setChosenVariation,
   } = useCheckout(
     publicClient,
     dispatch,
@@ -110,17 +108,9 @@ const Checkout: NextPage<{
     router
   );
 
-  useEffect(() => {
-    if (client) {
-      async () => {
-        await client.connect();
-      };
-    }
-  }, [client]);
-
   return (
     <div
-      className={`relative w-full flex flex-col items-start justify-center h-full min-h-screen`}
+      className={`relative w-full flex flex-col items-start justify-center h-fit overflow-y-scroll grow`}
     >
       <Head>
         <title>Checkout</title>
@@ -164,13 +154,8 @@ const Checkout: NextPage<{
           )}
           checkoutCurrency={checkoutCurrency}
           rate={Number(
-            oracleData?.find(
-              (oracle) =>
-                oracle.currency ===
-                ACCEPTED_TOKENS_MUMBAI.find(
-                  (item) => item[2] === checkoutCurrency
-                )?.[2]
-            )?.rate
+            oracleData?.find((oracle) => oracle.currency === checkoutCurrency)
+              ?.rate
           )}
           setCheckoutCurrency={setCheckoutCurrency}
           cartItems={cartItems}
@@ -179,6 +164,7 @@ const Checkout: NextPage<{
           approveSpend={approveSpend}
           chooseCartItem={chooseCartItem}
           approveLoading={approveLoading}
+          groupedByPubId={groupedByPubId}
         />
         <Cart
           router={router}
@@ -186,10 +172,11 @@ const Checkout: NextPage<{
           chooseCartItem={chooseCartItem}
           setChooseCartItem={setChooseCartItem}
           collectPostLoading={collectPostLoading}
-          completedPurchases={completedPurchases}
           groupedByPubId={groupedByPubId}
           dispatch={dispatch}
-          setCompletedPurchases={setCompletedPurchases}
+          chosenVariation={chosenVariation}
+          setChosenVariation={setChosenVariation}
+          encryptedStrings={encryptedStrings}
         />
       </div>
     </div>

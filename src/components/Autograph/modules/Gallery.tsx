@@ -114,7 +114,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                     index={index}
                     created={
                       gallery?.created?.find(
-                        (value) => item.pubId === value.pubId
+                        (value) => item?.pubId === value?.pubId
                       )
                         ? true
                         : false

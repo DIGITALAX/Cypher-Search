@@ -109,6 +109,9 @@ export type WebProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     dropOpen: boolean;
+    printOpen: boolean;
+    sizeOpen: boolean;
+    colorOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -119,6 +122,9 @@ export type WebProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       dropOpen: boolean;
+      printOpen: boolean;
+      sizeOpen: boolean;
+      colorOpen: boolean;
     }>
   ) => void;
 
@@ -461,6 +467,9 @@ export type GalleryScreenProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     dropOpen: boolean;
+    printOpen: boolean;
+    sizeOpen: boolean;
+    colorOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -471,6 +480,9 @@ export type GalleryScreenProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       dropOpen: boolean;
+      printOpen: boolean;
+      sizeOpen: boolean;
+      colorOpen: boolean;
     }>
   ) => void;
 };
@@ -581,6 +593,9 @@ export type ScreenSwitchProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     dropOpen: boolean;
+    printOpen: boolean;
+    sizeOpen: boolean;
+    colorOpen: boolean;
   };
   lensConnected: Profile | undefined;
   setCollectionSettings: (
@@ -592,6 +607,9 @@ export type ScreenSwitchProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       dropOpen: boolean;
+      printOpen: boolean;
+      sizeOpen: boolean;
+      colorOpen: boolean;
     }>
   ) => void;
 
@@ -1395,6 +1413,9 @@ export type DispatchProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     dropOpen: boolean;
+    printOpen: boolean;
+    sizeOpen: boolean;
+    colorOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1405,6 +1426,9 @@ export type DispatchProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       dropOpen: boolean;
+      printOpen: boolean;
+      sizeOpen: boolean;
+      colorOpen: boolean;
     }>
   ) => void;
 };
@@ -1415,17 +1439,19 @@ export interface CollectionDetails {
   collectionId: string;
   price: string;
   amount: string;
+  otherPrices: string[]
   profileId: string;
   pubId: string;
   cover: string;
+  printType: string;
   acceptedTokens: string[];
   images: { media: string; type: string }[];
   video: string;
   audio: string;
   tags: string;
   prompt: string;
-  sizes: string[];
-  colors: string[];
+  sizes: string;
+  colors: string;
   profileHandle: string;
   microbrand: {
     microbrand: string;
@@ -1522,6 +1548,9 @@ export type SwitchCreateProps = {
     accessOpen: boolean;
     visibilityOpen: boolean;
     dropOpen: boolean;
+    printOpen: boolean;
+    sizeOpen: boolean;
+    colorOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1532,6 +1561,9 @@ export type SwitchCreateProps = {
       accessOpen: boolean;
       visibilityOpen: boolean;
       dropOpen: boolean;
+      printOpen: boolean;
+      sizeOpen: boolean;
+      colorOpen: boolean;
     }>
   ) => void;
   edit: boolean;

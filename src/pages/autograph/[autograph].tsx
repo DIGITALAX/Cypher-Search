@@ -169,8 +169,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     profile,
     dispatch,
     publicClient,
-    address,
-    postSuccess
+    address
   );
   const {
     galleryLike,
@@ -203,7 +202,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     dispatch,
     publicClient,
     address,
-    postSuccess,
     profile
   );
   const {
@@ -372,14 +370,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     lensConnected,
     profile
   );
-
-  useEffect(() => {
-    if (client) {
-      async () => {
-        await client.connect();
-      };
-    }
-  }, [client]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

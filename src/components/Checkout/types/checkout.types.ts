@@ -12,22 +12,12 @@ export type FulfillmentProps = {
   setDetails: (e: SetStateAction<Details>) => void;
   openDropdown: boolean;
   setOpenDropdown: (e: SetStateAction<boolean>) => void;
-  encryptedStrings: string[];
+  encryptedStrings: {
+    pubId: string;
+    data: string;
+  }[];
   total: number;
   checkoutCurrency: string;
-  setCheckoutCurrency: (e: SetStateAction<string>) => void;
-  rate: number;
-  cartItems: CartItem[];
-  isApprovedSpend: boolean;
-  approveSpend: () => Promise<void>;
-  collectItem: () => Promise<void>;
-  chooseCartItem: string;
-  collectPostLoading: boolean[];
-};
-
-export type CartProps = {
-  router: NextRouter;
-  dispatch: Dispatch<AnyAction>;
   groupedByPubId: {
     [key: string]: {
       colors: string[];
@@ -37,24 +27,54 @@ export type CartProps = {
       types: string[];
       prices: number[];
       fulfillerAddress: string[];
+      originalIndices: number[];
     };
   };
+  setCheckoutCurrency: (e: SetStateAction<string>) => void;
+  rate: number;
   cartItems: CartItem[];
-  chooseCartItem: string;
-  collectPostLoading: boolean[];
-  setChooseCartItem: (e: SetStateAction<string>) => void;
-  completedPurchases: {
-    completed?: CartItem;
-    open: boolean;
+  isApprovedSpend: boolean;
+  approveSpend: () => Promise<void>;
+  collectItem: () => Promise<void>;
+  chooseCartItem: CartItem | undefined;
+  collectPostLoading: boolean;
+};
+
+export type CartProps = {
+  router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
+  encryptedStrings: {
+    pubId: string;
+    data: string;
   }[];
-  setCompletedPurchases: (
+  groupedByPubId: {
+    [key: string]: {
+      colors: string[];
+      sizes: string[];
+      amounts: number[];
+      collectionIds: string[];
+      types: string[];
+      prices: number[];
+      fulfillerAddress: string[];
+      originalIndices: number[];
+    };
+  };
+  chosenVariation: {
+    size: string;
+    color: string;
+  }[];
+  setChosenVariation: (
     e: SetStateAction<
       {
-        completed?: CartItem;
-        open: boolean;
+        size: string;
+        color: string;
       }[]
     >
   ) => void;
+  cartItems: CartItem[];
+  chooseCartItem: CartItem | undefined;
+  collectPostLoading: boolean;
+  setChooseCartItem: (e: SetStateAction<CartItem | undefined>) => void;
 };
 
 export interface OracleData {

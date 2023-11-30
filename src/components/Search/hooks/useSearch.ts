@@ -48,7 +48,6 @@ import { Dispatch } from "redux";
 import { getFilters } from "../../../../graphql/subgraph/queries/getFilters";
 import {
   aggregateMicrobrands,
-  aggregateSizes,
   aggregateUniqueValues,
 } from "../../../../lib/helpers/aggregators";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
@@ -689,12 +688,6 @@ const useSearch = (
         microbrands: string[][];
         dropsSuggested: string[];
         hashtags: string[];
-        colors: string[];
-        sizes: {
-          poster: string[];
-          sticker: string[];
-          apparel: string[];
-        };
         communities: string[][];
       }
     | undefined
@@ -710,8 +703,6 @@ const useSearch = (
           "dropTitle"
         ),
         hashtags: aggregateUniqueValues(data?.data?.collectionCreateds, "tags"),
-        colors: aggregateUniqueValues(data?.data?.collectionCreateds, "colors"),
-        sizes: aggregateSizes(data?.data?.collectionCreateds),
         communities: community?.data?.communityCreateds?.map?.(
           (item: { name: string; cover: string; communityId: string }) => {
             return [item.name, item.cover, item.communityId];
@@ -726,7 +717,7 @@ const useSearch = (
   const handleFilterConstants = async () => {
     try {
       const json: FilterValues = (await fetchIpfsJson(
-        "QmR5RwqvyMvRbkGr4zFizeSoBp6SoBFjyyskq2u6c7dMKA"
+        "QmTMYLHn9i4s2CXDqC53Traen7uU9bRCRgzdJRsDRwXEjq"
       )) as any;
 
       const data = await getFilterValues();
@@ -737,8 +728,6 @@ const useSearch = (
           () => Math.random() - 0.5
         ),
         dropsSuggested: data?.dropsSuggested!,
-        colors: data?.colors!,
-        sizes: data?.sizes!,
         community: data?.communities!,
       };
 

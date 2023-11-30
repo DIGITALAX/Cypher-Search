@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
 import { CartProps } from "../types/checkout.types";
 import Image from "next/legacy/image";
-import { INFURA_GATEWAY } from "../../../../lib/constants";
-import { ImArrowUp, ImCross } from "react-icons/im";
+import { INFURA_GATEWAY, printTypeToString } from "../../../../lib/constants";
+import { ImCross } from "react-icons/im";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import lodash from "lodash";
 import { setCypherStorageCart } from "../../../../lib/utils";
@@ -10,57 +10,78 @@ import { CartItem } from "@/components/Common/types/common.types";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 import createProfilePicture from "../../../../lib/helpers/createProfilePicture";
+import { PrintType } from "@/components/Tiles/types/tiles.types";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 
 const Cart: FunctionComponent<CartProps> = ({
   cartItems,
   chooseCartItem,
   setChooseCartItem,
   collectPostLoading,
-  completedPurchases,
   groupedByPubId,
   dispatch,
-  setCompletedPurchases,
+  chosenVariation,
+  setChosenVariation,
+  encryptedStrings,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-[70vh] relative flex items-start justify-center flex-row gap-4 lg:flex-nowrap flex-wrap">
-      <div className="relative w-full h-fit flex flex-col items-center justify-start">
-        <div className="relative w-full flex h-fit max-h-[14rem] items-start justify-start flex overflow-y-scroll">
+    <div className="relative w-full h-[95vh]  relative flex items-start justify-center flex-row gap-4 xl:flex-nowrap flex-wrap overflow-y-scroll">
+      <div className="relative w-full h-fit max-h-[14rem] xl:max-h-full xl:h-full flex flex-col items-center justify-start overflow-y-scroll ">
+        <div className="relative w-full flex h-fit items-start justify-start flex">
           <div className="relative items-center justify-start flex flex-col gap-3 h-fit w-full">
             {
               // chooseCartItem !==
               //   completedPurchases?.[
               //     Object.keys(groupedByPubId)?.indexOf(chooseCartItem)
               //   ]?.completed?.item?.pubId &&
-              groupedByPubId[chooseCartItem]?.collectionIds?.map(
+              groupedByPubId[chooseCartItem?.item?.pubId!]?.collectionIds?.map(
                 (_, index: number) => {
-                  const mainIndex = cartItems?.findIndex(
-                    (item) => item?.item?.pubId == chooseCartItem
-                  );
-
+                  const mainIndex =
+                    groupedByPubId[chooseCartItem?.item?.pubId!]
+                      ?.originalIndices[index];
                   return (
                     <div
                       key={index}
                       className={`relative w-full h-12 flex flex-row gap-5 font-bit text-white text-xs justify-between items-center px-1.5 bg-sol/20 rounded-md`}
                     >
-                      {groupedByPubId[chooseCartItem]?.colors[index] && (
+                      {groupedByPubId[chooseCartItem?.item?.pubId!]?.colors[
+                        index
+                      ] && (
                         <div
                           className="relative w-4 h-4 border border-ligero flex justify-start items-center rounded-full"
                           style={{
                             backgroundColor:
-                              groupedByPubId[chooseCartItem]?.colors[index],
+                              groupedByPubId[chooseCartItem?.item?.pubId!]
+                                ?.colors[index],
                           }}
                         ></div>
                       )}
-                      {groupedByPubId[chooseCartItem]?.sizes[index] && (
+                      {groupedByPubId[chooseCartItem?.item?.pubId!]?.sizes[
+                        index
+                      ] && (
                         <div className="relative w-fit h-fit flex justify-start items-center uppercase">
-                          {groupedByPubId[chooseCartItem]?.sizes[index]}
+                          {
+                            groupedByPubId[chooseCartItem?.item?.pubId!]?.sizes[
+                              index
+                            ]
+                          }
                         </div>
                       )}
                       <div className="relative w-fit h-fit text-ama flex whitespace-nowrap items-center justify-center">
-                        USD {groupedByPubId[chooseCartItem]?.prices[index]}
+                        USD{" "}
+                        {
+                          groupedByPubId[chooseCartItem?.item?.pubId!]?.prices[
+                            index
+                          ]
+                        }
                       </div>
                       <div className="relative w-fit h-fit text-ama flex items-center justify-center">
-                        Qty. x {groupedByPubId[chooseCartItem]?.amounts[index]}
+                        Qty. x{" "}
+                        {
+                          groupedByPubId[chooseCartItem?.item?.pubId!]?.amounts[
+                            index
+                          ]
+                        }
                       </div>
                       <div className="relative w-fit h-full flex items-center justify-center ml-auto gap-3">
                         <div className="relative w-fit h-full flex flex-row items-center justify-center gap-1.5">
@@ -68,11 +89,29 @@ const Cart: FunctionComponent<CartProps> = ({
                             className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
                             onClick={() => {
                               if (
-                                collectPostLoading?.[mainIndex]
-                                // ||
-                                // completedPurchases?.[mainIndex]?.completed
+                                collectPostLoading ||
+                                (encryptedStrings?.find(
+                                  (item) =>
+                                    item?.pubId == chooseCartItem?.item?.pubId
+                                ) &&
+                                chooseCartItem?.item?.origin !== "1")
                               )
                                 return;
+
+                       console.log(chooseCartItem?.item?.amount, chooseCartItem?.item?.soldTokens)
+                              if (
+                                Number(chooseCartItem?.item?.amount) + 1 >=
+                                Number(chooseCartItem?.item?.soldTokens)
+                              ) {
+                                dispatch(
+                                  setInsufficientBalance({
+                                    actionValue: true,
+                                    actionMessage:
+                                      "We know you're eager, but you've reached this creation's collect limit!",
+                                  })
+                                );
+                                return;
+                              }
                               dispatch(
                                 setCartItems([
                                   ...cartItems.slice(0, mainIndex),
@@ -106,9 +145,12 @@ const Cart: FunctionComponent<CartProps> = ({
                             className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center rotate-90"
                             onClick={() => {
                               if (
-                                collectPostLoading?.[mainIndex]
-                                // ||
-                                // completedPurchases?.[mainIndex]?.completed
+                                collectPostLoading ||
+                                (encryptedStrings?.find(
+                                  (item) =>
+                                    item?.pubId == chooseCartItem?.item?.pubId
+                                ) &&
+                                  chooseCartItem?.item?.origin !== "1")
                               )
                                 return;
                               const newCart =
@@ -139,12 +181,7 @@ const Cart: FunctionComponent<CartProps> = ({
                         <div
                           className="justify-end items-center w-fit h-fit flex cursor-pointer active:scale-95"
                           onClick={() => {
-                            if (
-                              collectPostLoading?.[mainIndex]
-                              //  ||
-                              // completedPurchases?.[mainIndex]?.completed
-                            )
-                              return;
+                            if (collectPostLoading) return;
                             const newCart = lodash.concat(
                               lodash.slice([...cartItems], 0, mainIndex),
                               lodash.slice([...cartItems], mainIndex + 1)
@@ -166,7 +203,9 @@ const Cart: FunctionComponent<CartProps> = ({
       </div>
       <div className="relative w-full h-full relative flex items-start justify-center overflow-y-scroll">
         <div className="relative w-full h-fit flex flex-col items-center justify-start gap-5">
-          {cartItems?.map((currentItem: CartItem, index: number) => {
+          {Array.from(
+            new Map(cartItems.map((item) => [item?.item?.pubId, item])).values()
+          )?.map((currentItem: CartItem, index: number) => {
             const profilePicture = createProfilePicture(
               currentItem?.item?.profile?.metadata?.picture
             );
@@ -174,7 +213,8 @@ const Cart: FunctionComponent<CartProps> = ({
               <div
                 key={index}
                 className={`relative w-full h-fit flex flex-col items-center justify-center border border-sol rounded-md gap-3 p-4 cursor-pointer bg-black ${
-                  currentItem?.item?.pubId !== chooseCartItem && "opacity-50"
+                  currentItem?.item?.pubId !== chooseCartItem?.item?.pubId! &&
+                  "opacity-50"
                 } 
             
                 `}
@@ -189,7 +229,9 @@ const Cart: FunctionComponent<CartProps> = ({
                   //       return arr;
                   //     })
                   //   :
-                  setChooseCartItem(currentItem?.item?.pubId!)
+                  {
+                    setChooseCartItem(currentItem);
+                  }
                 }
               >
                 {
@@ -228,7 +270,7 @@ const Cart: FunctionComponent<CartProps> = ({
                         // )
                       }
                     </div> */}
-                    <div className="relative w-4/5 h-fit flex items-center justify-between gap-2">
+                    <div className="relative w-4/5 h-fit flex items-center flex-col sm:flex-row justify-center sm:justify-between gap-2">
                       {currentItem?.item?.profile?.handle?.suggestedFormatted
                         ?.localName && (
                         <div className="relative w-fit h-fit gap-2 flex items-center justify-start flex-row text-sm">
@@ -257,8 +299,14 @@ const Cart: FunctionComponent<CartProps> = ({
                           </div>
                         </div>
                       )}
-                      <div className="relative w-fit h-fit text-center items-center justify-end ml-auto flex font-bit text-white top-px">
-                        {currentItem?.item?.collectionMetadata?.title}
+                      <div className="relative w-fit h-fit text-center items-center justify-end sm:ml-auto flex font-bit text-white top-px text-sm sm:text-base">
+                        {currentItem?.item?.collectionMetadata?.title?.length >
+                        20
+                          ? currentItem?.item?.collectionMetadata?.title?.slice(
+                              0,
+                              20
+                            ) + "..."
+                          : currentItem?.item?.collectionMetadata?.title}
                       </div>
                     </div>
                     <div className="relative w-4/5 h-72 flex items-center justify-center border border-white rounded-md">
@@ -319,108 +367,255 @@ const Cart: FunctionComponent<CartProps> = ({
                       (currentItem?.item?.collectionMetadata?.colors?.length >
                         0 ||
                         currentItem?.item?.collectionMetadata?.sizes?.length >
-                          0) && (
-                        <div className="relative flex flex-col gap-2 w-full h-fit items-center justify-center font-bit text-white z-1 pt-4">
-                          <div className="relative flex items-center justify-center w-fit h-fit text-sm">
-                            Add Variation
-                          </div>
-                          <div className="relative flex flex-col items-center justify-center w-fit h-fit">
-                            <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-                              {currentItem?.item?.collectionMetadata?.sizes?.map(
-                                (size: string, index: number) => {
-                                  return (
-                                    <div
-                                      key={index}
-                                      className="relative w-5 h-5 border border-white rounded-full p-px cursor-pointer active:scale-95 hover:opacity-70"
-                                      onClick={(e) => {
-                                        if (
-                                          collectPostLoading[index]
-                                          // ||
-                                          // completedPurchases[index]?.completed
-                                        )
-                                          return;
-                                        e.stopPropagation();
-
-                                        const newCartItems = [...cartItems];
-                                        const itemIndex =
-                                          newCartItems.indexOf(currentItem);
-
-                                        if (
-                                          currentItem.color ===
-                                            currentItem.color &&
-                                          currentItem.size === currentItem.size
-                                        ) {
-                                          newCartItems[itemIndex] = {
-                                            ...currentItem,
-                                            amount: currentItem.amount + 1,
-                                          };
-                                        } else {
-                                          newCartItems.splice(itemIndex, 1);
-                                          newCartItems.push(currentItem);
+                          0) &&
+                        !encryptedStrings?.find(
+                          (item) => item?.pubId == currentItem?.item?.pubId
+                        ) && (
+                          <div className="relative flex flex-col gap-2 w-full h-fit items-center justify-center font-bit text-white z-1 pt-4">
+                            <div className="relative flex flex-col items-center justify-center w-fit h-fit gap-3">
+                              <div className="relative flex flex-row flex-wrap items-center justify-center gap-2 w-full h-fit">
+                                {currentItem?.item?.collectionMetadata?.sizes?.map(
+                                  (size: string, index: number) => {
+                                    return (
+                                      <div
+                                        key={index}
+                                        className={`relative h-6 border border-white p-px cursor-pointer flex items-center text-xxs justify-center active:scale-95 hover:opacity-70 ${
+                                          chosenVariation[
+                                            Object.keys(
+                                              groupedByPubId
+                                            ).findIndex(
+                                              (key) =>
+                                                key ===
+                                                chooseCartItem?.item?.pubId
+                                            )
+                                          ]?.size == size
+                                            ? "opacity-60"
+                                            : "opacity-100"
+                                        } ${
+                                          printTypeToString[
+                                            Number(
+                                              currentItem?.item?.printType
+                                            ) as unknown as PrintType
+                                          ] == "poster" ||
+                                          printTypeToString[
+                                            Number(
+                                              currentItem?.item?.printType
+                                            ) as unknown as PrintType
+                                          ] == "sticker"
+                                            ? "w-fit rounded-sm px-1.5 py-1"
+                                            : "w-6 rounded-full"
+                                        }`}
+                                        onClick={() =>
+                                          setChosenVariation((prev) => {
+                                            const arr = [...prev];
+                                            arr[
+                                              Object.keys(
+                                                groupedByPubId
+                                              ).findIndex(
+                                                (key) =>
+                                                  key ===
+                                                  chooseCartItem?.item?.pubId
+                                              )
+                                            ] = {
+                                              ...arr[
+                                                Object.keys(
+                                                  groupedByPubId
+                                                ).findIndex(
+                                                  (key) =>
+                                                    key ===
+                                                    chooseCartItem?.item?.pubId
+                                                )
+                                              ],
+                                              size,
+                                            };
+                                            return arr;
+                                          })
                                         }
-
-                                        dispatch(setCartItems(newCartItems));
-                                        setCypherStorageCart(
-                                          JSON.stringify(newCartItems)
-                                        );
-                                      }}
-                                    >
-                                      {size}
-                                    </div>
-                                  );
-                                }
-                              )}
-                            </div>
-                            <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-                              {currentItem?.item?.collectionMetadata?.colors?.map(
-                                (color: string, index: number) => {
-                                  return (
-                                    <div
-                                      key={index}
-                                      className="relative w-5 h-5 border border-white rounded-full p-px cursor-pointer active:scale-95 hover:opacity-70"
-                                      onClick={(e) => {
-                                        if (
-                                          collectPostLoading[index]
-                                          // ||
-                                          // completedPurchases[index]?.completed
-                                        )
-                                          return;
-                                        e.stopPropagation();
-
-                                        const newCartItems = [...cartItems];
-                                        const itemIndex =
-                                          newCartItems.indexOf(currentItem);
-
-                                        if (
-                                          currentItem.color ===
-                                            currentItem.color &&
-                                          currentItem.size === currentItem.size
-                                        ) {
-                                          newCartItems[itemIndex] = {
-                                            ...currentItem,
-                                            amount: currentItem.amount + 1,
-                                          };
-                                        } else {
-                                          newCartItems.splice(itemIndex, 1);
-                                          newCartItems.push(currentItem);
+                                      >
+                                        <div className="relative w-fit h-fit flex items-center justify-center">
+                                          {size}
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                              <div className="relative flex flex-row flex-wrap items-center justify-center gap-2 w-full h-fit">
+                                {currentItem?.item?.collectionMetadata?.colors?.map(
+                                  (color: string, index: number) => {
+                                    return (
+                                      <div
+                                        key={index}
+                                        className={`relative w-6 h-6 flex items-center justify-center border border-white rounded-full p-px cursor-pointer active:scale-95 hover:opacity-70 ${
+                                          chosenVariation[
+                                            Object.keys(
+                                              groupedByPubId
+                                            ).findIndex(
+                                              (key) =>
+                                                key ===
+                                                chooseCartItem?.item?.pubId
+                                            )
+                                          ]?.color == color
+                                            ? "opacity-60"
+                                            : "opacity-100"
+                                        }`}
+                                        onClick={() =>
+                                          setChosenVariation((prev) => {
+                                            const arr = [...prev];
+                                            arr[
+                                              Object.keys(
+                                                groupedByPubId
+                                              ).findIndex(
+                                                (key) =>
+                                                  key ===
+                                                  chooseCartItem?.item?.pubId
+                                              )
+                                            ] = {
+                                              ...arr[
+                                                Object.keys(
+                                                  groupedByPubId
+                                                ).findIndex(
+                                                  (key) =>
+                                                    key ===
+                                                    chooseCartItem?.item?.pubId
+                                                )
+                                              ],
+                                              color,
+                                            };
+                                            return arr;
+                                          })
                                         }
-
-                                        dispatch(setCartItems(newCartItems));
-                                        setCypherStorageCart(
-                                          JSON.stringify(newCartItems)
-                                        );
-                                      }}
-                                      style={{
-                                        backgroundColor: color,
-                                      }}
-                                    ></div>
+                                        style={{
+                                          backgroundColor: color,
+                                        }}
+                                      ></div>
+                                    );
+                                  }
+                                )}
+                              </div>
+                              <div
+                                className={`relative w-fit h-fit py-1 px-2 flex items-center justify-center font-bit text-white text-xxs border border-white rounded-sm cursor-pointer active:scale-95`}
+                                onClick={() => {
+                                  const newCartItems = [...cartItems];
+                                  console.log(
+                                    currentItem?.item?.amount,
+                                    currentItem?.item?.soldTokens
                                   );
-                                }
-                              )}
+                                  if (
+                                    currentItem?.item?.amount + 1 >=
+                                    currentItem?.item?.soldTokens
+                                  ) {
+                                    dispatch(
+                                      setInsufficientBalance({
+                                        actionValue: true,
+                                        actionMessage:
+                                          "We know you're eager, but you've reached this creation's collect limit!",
+                                      })
+                                    );
+                                    return;
+                                  }
+
+                                  if (
+                                    !chosenVariation[
+                                      Object.keys(groupedByPubId).findIndex(
+                                        (key) =>
+                                          key === chooseCartItem?.item?.pubId
+                                      )
+                                    ]?.color ||
+                                    !chosenVariation[
+                                      Object.keys(groupedByPubId).findIndex(
+                                        (key) =>
+                                          key === chooseCartItem?.item?.pubId
+                                      )
+                                    ]?.size
+                                  )
+                                    return;
+
+                                  const existingItemIndex = cartItems.findIndex(
+                                    (item) =>
+                                      item.item.pubId ===
+                                        chooseCartItem?.item?.pubId &&
+                                      item.color ===
+                                        chosenVariation[
+                                          Object.keys(groupedByPubId).findIndex(
+                                            (key) =>
+                                              key ===
+                                              chooseCartItem?.item?.pubId
+                                          )
+                                        ]?.color &&
+                                      item.size ===
+                                        chosenVariation[
+                                          Object.keys(groupedByPubId).findIndex(
+                                            (key) =>
+                                              key ===
+                                              chooseCartItem?.item?.pubId
+                                          )
+                                        ]?.size
+                                  );
+
+                                  if (existingItemIndex != -1) {
+                                    newCartItems[existingItemIndex] = {
+                                      ...newCartItems[existingItemIndex],
+                                      amount:
+                                        newCartItems[existingItemIndex]
+                                          ?.amount + 1,
+                                    };
+                                  } else {
+                                    const newIndex =
+                                      currentItem?.item?.printType !== "0" &&
+                                      currentItem?.item?.printType !== "1"
+                                        ? 0
+                                        : currentItem?.item?.collectionMetadata?.sizes?.findIndex(
+                                            (item) =>
+                                              item?.toLowerCase() ==
+                                              chosenVariation[
+                                                Object.keys(
+                                                  groupedByPubId
+                                                ).findIndex(
+                                                  (key) =>
+                                                    key ===
+                                                    chooseCartItem?.item?.pubId
+                                                )
+                                              ]?.size?.toLowerCase()
+                                          );
+
+                                    newCartItems.push({
+                                      ...currentItem,
+                                      amount: 1,
+                                      chosenIndex: newIndex,
+                                      price: Number(
+                                        currentItem?.item?.prices[newIndex]
+                                      ),
+                                      color:
+                                        chosenVariation[
+                                          Object.keys(groupedByPubId).findIndex(
+                                            (key) =>
+                                              key ===
+                                              chooseCartItem?.item?.pubId
+                                          )
+                                        ]?.color,
+                                      size: chosenVariation[
+                                        Object.keys(groupedByPubId).findIndex(
+                                          (key) =>
+                                            key === chooseCartItem?.item?.pubId
+                                        )
+                                      ]?.size,
+                                    });
+                                  }
+
+                                  dispatch(setCartItems(newCartItems));
+                                  setCypherStorageCart(
+                                    JSON.stringify(newCartItems)
+                                  );
+                                }}
+                              >
+                                <div className="relative w-fit h-fit flex items-center justify-center">
+                                  Add Variation
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )
+                        )
                     }
                   </>
                   // : (

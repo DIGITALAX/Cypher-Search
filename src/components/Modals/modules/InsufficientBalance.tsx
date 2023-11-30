@@ -7,6 +7,7 @@ import { setInsufficientBalance } from "../../../../redux/reducers/insufficientB
 
 const InsufficientBalance: FunctionComponent<InsufficientBalanceProps> = ({
   dispatch,
+  message
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -16,12 +17,14 @@ const InsufficientBalance: FunctionComponent<InsufficientBalanceProps> = ({
             <ImCross
               color="#FBDB86"
               size={10}
-              onClick={() => dispatch(setInsufficientBalance(false))}
+              onClick={() => dispatch(setInsufficientBalance({
+                actionValue: false
+              }))}
             />
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3 pb-4">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
-              Pockets Empty. Need to top up?
+             {message}
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] flex items-center justify-center rounded-sm p-px"

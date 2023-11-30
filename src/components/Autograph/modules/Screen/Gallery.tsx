@@ -169,6 +169,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                           "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
                           "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
                         ],
+                        otherPrices: [],
+                        printType: "",
                         cover: "",
                         images: [],
                         profileId: "",
@@ -179,8 +181,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         prompt: "",
                         amount: "",
                         visibility: "public",
-                        sizes: [],
-                        colors: [],
+                        sizes: "",
+                        colors: "",
                         profileHandle: "",
                         microbrand: {
                           microbrand: "",
@@ -201,6 +203,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         accessOpen: false,
                         visibilityOpen: false,
                         dropOpen: false,
+                        printOpen: false,
+                        colorOpen: false,
+                        sizeOpen: false,
                       });
                     }
                   }}
@@ -229,6 +234,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     {[
                       "chromadin",
                       "coinop",
+                      "listener",
                       "autograph quarterly",
                       "legend",
                       "the dial",
@@ -241,12 +247,15 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                               ? "border-2"
                               : "border"
                           } ${
-                            index !== 0
+                            (index !== 0 && index !== 1 && index !== 2) ||
+                            (createCase === "collection" &&
+                              collectionDetails?.collectionId !== "")
                               ? "opacity-50"
                               : "cursor-pointer active:scale-95"
                           }`}
                           onClick={() =>
-                            index === 0 &&
+                            (index === 0 || index === 1 || index === 2) &&
+                            collectionDetails?.collectionId == "" &&
                             setCollectionSettings((prev) => ({
                               ...prev,
                               origin: item,
@@ -271,12 +280,17 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         return (
                           <div
                             key={index}
-                            className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center cursor-pointer active:scale-95 justify-center text-white font-bit text-sm ${
+                            className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
                               collectionSettings?.media === item
                                 ? "border-2"
                                 : "border"
+                            } ${
+                              collectionSettings?.origin == "chromadin"
+                                ? "cursor-pointer active:scale-95"
+                                : "opacity-50"
                             }`}
                             onClick={() =>
+                              collectionSettings?.origin == "chromadin" &&
                               setCollectionSettings((prev) => ({
                                 ...prev,
                                 media: item,

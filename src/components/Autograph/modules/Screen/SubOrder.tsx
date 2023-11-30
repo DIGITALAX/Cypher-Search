@@ -49,7 +49,15 @@ const SubOrder: FunctionComponent<SubOrderProps> = ({
           Qty.{item?.amount}
         </div>
         {details && (
-          <div className="relative flex w-7 h-7 border border-white p-px rounded-full items-center justify-center text-sm font-bit text-white cursor-pointer">
+          <div
+            className={`relative flex h-7 border border-white p-px items-center justify-center font-bit text-white cursor-pointer ${
+              ["xs", "s", "m", "l", "xl", "2xl"].includes(
+                item?.size?.toLowerCase() || ""
+              ) || !decrypted
+                ? "rounded-full w-7 text-sm"
+                : "w-fit px-1 rounded-sm text-xxs"
+            }`}
+          >
             {item?.size && decrypted ? item?.size : "??"}
           </div>
         )}

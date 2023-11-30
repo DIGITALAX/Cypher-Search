@@ -4,9 +4,11 @@ import Dispatch from "./Dispatch";
 import Image from "next/legacy/image";
 import {
   INFURA_GATEWAY,
+  itemTypeToString,
   numberToItemTypeMap,
+  printTypeToString,
 } from "../../../../../lib/constants";
-import { Creation } from "@/components/Tiles/types/tiles.types";
+import { Creation, PrintType } from "@/components/Tiles/types/tiles.types";
 import Drop from "./Drop";
 import toHexWithLeadingZero from "../../../../../lib/helpers/leadingZero";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
@@ -95,12 +97,20 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                           setCreateCase("collection");
                           setCollectionSettings((prev) => ({
                             ...prev,
-                            origin: "chromadin",
-                            media: item?.collectionMetadata?.audio
-                              ? "audio"
-                              : item?.collectionMetadata?.video
-                              ? "video"
-                              : "static",
+                            origin:
+                              itemTypeToString[
+                                numberToItemTypeMap[Number(item?.origin)]
+                              ],
+                            media:
+                              itemTypeToString[
+                                numberToItemTypeMap[Number(item?.origin)]
+                              ] === "chromadin"
+                                ? item?.collectionMetadata?.audio
+                                  ? "audio"
+                                  : item?.collectionMetadata?.video
+                                  ? "video"
+                                  : "static"
+                                : "static",
                           }));
                           setCollectionDetails({
                             title: item?.collectionMetadata?.title,
@@ -109,6 +119,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             description: item?.collectionMetadata?.description,
                             collectionId: item?.collectionId,
                             price: item?.prices?.[0],
+                            otherPrices: item?.prices?.slice(1),
                             acceptedTokens: item?.acceptedTokens,
                             images: item?.collectionMetadata?.images?.[0]
                               ? [
@@ -129,8 +140,14 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             prompt: item?.collectionMetadata?.prompt,
                             amount: item?.amount,
                             visibility: item?.collectionMetadata?.visibility,
-                            sizes: item?.collectionMetadata?.sizes,
-                            colors: item?.collectionMetadata?.colors,
+                            sizes: item?.collectionMetadata?.sizes
+                              ? item?.collectionMetadata?.sizes?.join(", ") +
+                                ","
+                              : "",
+                            colors: item?.collectionMetadata?.colors
+                              ? item?.collectionMetadata?.colors?.join(", ") +
+                                ","
+                              : "",
                             profileHandle:
                               item?.collectionMetadata?.profileHandle,
                             microbrand: {
@@ -145,6 +162,10 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             dropCover: item?.dropMetadata?.dropCover,
                             dropCollectionIds: item?.dropCollectionIds,
                             dropId: item?.dropId,
+                            printType:
+                              printTypeToString[
+                                Number(item?.printType) as unknown as PrintType
+                              ],
                             communities: item?.collectionMetadata?.communities
                               ? item?.collectionMetadata?.communities?.join(
                                   ", "
