@@ -168,7 +168,6 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     relatedData?.collections,
     itemData,
     setItemData,
-    type as string,
     setRelatedData
   );
   const { getMoreSuggested, suggestedFeed, loaders, setSuggestedFeed } =

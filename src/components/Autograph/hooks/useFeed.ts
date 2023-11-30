@@ -153,6 +153,7 @@ const useFeed = (
   };
 
   const feedComment = async (id: string) => {
+    if (!lensConnected?.id) return;
     const index = profileFeed?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
@@ -179,7 +180,7 @@ const useFeed = (
         makeCommentFeed[index]?.images || [],
         makeCommentFeed[index]?.videos || [],
         [],
-        postCollectGif?.gifs?.[id]!
+        postCollectGif?.gifs?.[id] || []
       );
 
       const clientWallet = createWalletClient({
@@ -205,8 +206,13 @@ const useFeed = (
         publicClient,
         () => clearComment(index)
       );
+      updateInteractions(index!, {}, "comments", true);
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(
+        err,
+        () => updateInteractions(index!, {}, "comments", true),
+        dispatch
+      );
     }
 
     setInteractionsFeedLoading((prev) => {
@@ -215,7 +221,6 @@ const useFeed = (
       return updatedArray;
     });
   };
-
   const clearComment = (index: number) => {
     setMakeCommentFeed((prev) => {
       const updatedArray = [...prev];
@@ -234,6 +239,7 @@ const useFeed = (
   };
 
   const feedLike = async (id: string, hasReacted: boolean) => {
+    if (!lensConnected?.id) return;
     const index = profileFeed?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
@@ -278,6 +284,7 @@ const useFeed = (
   };
 
   const feedCollect = async (id: string, type: string) => {
+    if (!lensConnected?.id) return;
     const index = profileFeed?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
@@ -343,6 +350,7 @@ const useFeed = (
   };
 
   const feedMirror = async (id: string) => {
+    if (!lensConnected?.id) return;
     const index = profileFeed?.findIndex((pub) => pub.id === id);
     if (index === -1) {
       return;
@@ -397,6 +405,7 @@ const useFeed = (
   };
 
   const handleHidePost = async (id: string, index: number) => {
+    if (!lensConnected?.id) return;
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[index] = { ...updatedArray[index], hide: true };
@@ -453,6 +462,7 @@ const useFeed = (
   };
 
   const handleDecrypt = async (post: Post | Quote | Comment) => {
+    if (!lensConnected?.id) return;
     const index = profileFeed?.findIndex((item) => (item.id = post.id));
     if (index == -1) {
       return;

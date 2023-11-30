@@ -22,7 +22,7 @@ const ORDERS = `
         subOrderIsFulfilled
         subOrderAmount
     }
-    nFTOnlyOrderCreateds(where: {buyer: $buyer}) {
+    nftonlyOrderCreateds(where: {buyer: $buyer}) {
       orderId
       totalPrice
       currency
@@ -34,11 +34,8 @@ const ORDERS = `
       images
       names
       messages
-      details
       subOrderPrice
-      subOrderStatus
       subOrderCollectionIds
-      subOrderIsFulfilled
       subOrderAmount
   }
   }
@@ -47,9 +44,9 @@ const ORDERS = `
 const ORDERS_PAGINATED = `
   query($buyer: String!, $first: Int, $skip: Int) {
     orderCreateds(where: {buyer: $buyer}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
-        subOrderCollectionIds
+      subOrderCollectionIds
     }
-    nFTOnlyOrderCreateds(where: {buyer: $buyer}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
+    nftonlyOrderCreateds(where: {buyer: $buyer}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
       subOrderCollectionIds
   }
   }
@@ -58,9 +55,9 @@ const ORDERS_PAGINATED = `
 const ORDERS_QUICK = `
   query($buyer: String!) {
     orderCreateds(where: {buyer: $buyer}) {
-        subOrderCollectionIds
+      subOrderCollectionIds
     }
-    nFTOnlyOrderCreateds(where: {buyer: $buyer}) {
+    nftonlyOrderCreateds(where: {buyer: $buyer}) {
       subOrderCollectionIds
   }
   }

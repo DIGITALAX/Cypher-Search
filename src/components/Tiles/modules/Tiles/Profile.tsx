@@ -24,7 +24,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
   return (
     <div
       className={`relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4 gap-4 ${
-        layoutAmount === 4 ? "flex-col" : "flex-col lg:flex-row"
+        layoutAmount === 4 ? "flex-col" : "flex-col xl:flex-row"
       }`}
       id={publication?.ownedBy?.address}
     >

@@ -31,7 +31,6 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   fullScreenVideo,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(lensConnected?.metadata?.picture);
-
   return (
     <>
       <div
@@ -165,7 +164,10 @@ const Accounts: FunctionComponent<AccountsProps> = ({
       {openAccount && (
         <div
           className={`absolute w-32 h-fit right-3 top-14  tablet:top-16 flex items-center justify-center text-sol flex-col font-bit rounded-sm bg-black text-xs z-30 border border-sol ${
-            router.asPath?.includes("/checkout") ? "sm:top-14" : "sm:top-24"
+            router.asPath?.includes("/checkout") ||
+            (!searchActive && router.asPath == "/")
+              ? "sm:top-14"
+              : "sm:top-24"
           }`}
         >
           <div
@@ -207,6 +209,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           router={router}
           cartItems={cartItems}
           setCartListOpen={setCartListOpen}
+          searchActive={searchActive}
         />
       )}
     </>

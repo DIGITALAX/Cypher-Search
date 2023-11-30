@@ -39,39 +39,73 @@ const useOrders = (
       if (
         data?.data &&
         (data?.data?.orderCreateds?.length > 0 ||
-          data?.data?.nFTOnlyOrderCreateds?.length > 0)
+          data?.data?.nftonlyOrderCreateds?.length > 0)
       ) {
         const promises = [
           ...(data?.data?.orderCreateds || []),
-          ...(data?.data?.nFTOnlyOrderCreateds || []),
-        ]?.map(async (item: any) => ({
-          ...item,
-          details: await JSON.parse(
-            await fetchIPFSJSON(item?.details as string)
-          ),
-          decrypted: false,
-          subOrders: await Promise.all(
-            item.subOrderAmounts.map(async (item: any, index: number) => {
-              const collection = await getCollectionOrder(
-                item.subOrderCollectionsIds[index]
-              );
+          ...(data?.data?.nftonlyOrderCreateds || []),
+        ]?.map(
+          async (item: {
+            orderId: string;
+            totalPrice: string;
+            currency: string;
+            pubId: string;
+            profileId: string;
+            buyer: string;
+            blockTimestamp: string;
+            transactionHash: string;
+            images: string[];
+            names: string[];
+            messages: string[];
+            details: string;
+            subOrderPrice: string[];
+            subOrderStatus: string[];
+            subOrderCollectionIds: string[];
+            subOrderIsFulfilled: boolean[];
+            subOrderAmount: string[];
+          }) => ({
+            ...item,
+            totalPrice: String(Number(item?.totalPrice) / 10 ** 18),
+            details:
+              item?.details &&
+              (await JSON.parse(await fetchIPFSJSON(item?.details as string))),
+            decrypted: false,
+            subOrders: await Promise.all(
+              item?.subOrderCollectionIds?.map(
+                async (collectionId: string, index: number) => {
+                  const collection = await getCollectionOrder(collectionId);
 
-              return {
-                collection: {
-                  name: collection?.data?.collectionCreateds?.[0].title,
-                  image: collection?.data?.collectionCreateds?.[0].images?.[0],
-                  origin: collection?.data?.collectionCreateds?.[0].origin,
-                  pubId: collection?.data?.collectionCreateds?.[0]?.pubId,
-                },
-                isFulfilled: item.subOrderisFulfilled[index],
-                fulfillerAddress: item.subOrderFulfillerAddresses[index],
-                amount: item.subOrderAmounts[index],
-              };
-            })
-          ),
-        }));
+                  return {
+                    collection: {
+                      name: collection?.data?.collectionCreateds?.[0]
+                        ?.collectionMetadata?.title as string,
+                      image: collection?.data?.collectionCreateds?.[0]
+                        ?.collectionMetadata?.images?.[0]
+                        ? collection?.data?.collectionCreateds?.[0]
+                            ?.collectionMetadata?.images?.[0]
+                        : (collection?.data?.collectionCreateds?.[0]
+                            ?.collectionMetadata?.cover as string),
+                      origin: collection?.data?.collectionCreateds?.[0]
+                        ?.origin as string,
+                      pubId: collection?.data?.collectionCreateds?.[0]
+                        ?.pubId as string,
+                    },
+                    price: String(
+                      Number(item?.subOrderPrice?.[index]) / 10 ** 18
+                    ) as string,
+                    status: item?.subOrderStatus?.[index] as string,
+                    isFulfilled: item?.subOrderIsFulfilled?.[index],
+                    fulfillerAddress: "",
+                    amount: item?.subOrderAmount?.[index] as string,
+                  };
+                }
+              )
+            ),
+          })
+        );
 
-        setAllOrders(await Promise.all(promises));
+        const orders = await Promise.all(promises);
+        setAllOrders(orders as Order[]);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -155,7 +189,7 @@ const useOrders = (
     ) {
       getAllOrders();
     }
-  }, []);
+  }, [screenDisplay, lensConnected?.id, pageProfile?.id]);
 
   return {
     allOrders,

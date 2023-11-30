@@ -6,6 +6,7 @@ import { AnyAction, Dispatch } from "redux";
 
 export type FulfillmentProps = {
   details: Details;
+  approveLoading: boolean;
   encryptionLoading: boolean;
   encryptFulfillment: () => Promise<void>;
   setDetails: (e: SetStateAction<Details>) => void;
@@ -43,13 +44,13 @@ export type CartProps = {
   collectPostLoading: boolean[];
   setChooseCartItem: (e: SetStateAction<string>) => void;
   completedPurchases: {
-    completed: boolean;
+    completed?: CartItem;
     open: boolean;
   }[];
   setCompletedPurchases: (
     e: SetStateAction<
       {
-        completed: boolean;
+        completed?: CartItem;
         open: boolean;
       }[]
     >

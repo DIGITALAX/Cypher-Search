@@ -502,7 +502,7 @@ const Web: FunctionComponent<WebProps> = ({
           )}
         </div>
       ) : (
-        <div className="relative w-fit h-fit items-center justify-center flex flex-col gap-5">
+        <div className="relative w-full xl:w-fit h-fit items-center justify-start flex flex-row xl:flex-col gap-6 tablet:gap-4 xl:order-2 order-1 flex-wrap xl:flex-nowrap">
           {[
             {
               image: !walletConnected
@@ -543,7 +543,7 @@ const Web: FunctionComponent<WebProps> = ({
                 router.push("/");
               },
               width: "8",
-              height: "8",
+              height: "7",
             },
           ].map(
             (

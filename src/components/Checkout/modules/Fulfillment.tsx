@@ -26,13 +26,15 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   approveSpend,
   collectItem,
   chooseCartItem,
+  approveLoading,
+  collectPostLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit relative flex items-start justify-start p-2 flex-col gap-6">
       <div className="relative w-fit h-fit flex items-center justify-center font-aust text-3xl text-white">
         Checkout
       </div>
-      <div className="relative w-96 h-fit flex items-center justify-center break-words font-bit text-white text-xs">
+      <div className="relative w-fit md:w-96 h-fit flex items-center justify-center break-words font-bit text-white text-xs">
         Claim your cart. Each Lens collect is unique like you—one by one
         checkouts give them that personal touch. No batch buys at this time.
       </div>
@@ -210,36 +212,44 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           <div className="relative w-fit h-fit flex text-xl text-white">
             Selected Item
           </div>
-          <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit text-sol">
-            {`${Number(
-              (
-                Number(
-                  ((cartItems?.find(
-                    (item) => item?.item?.pubId === chooseCartItem
-                  )?.price || 0) *
-                    10 ** 18) /
-                    rate
-                ) *
-                Number(
-                  cartItems?.find(
-                    (item) => item?.item?.pubId === chooseCartItem
-                  )?.amount
-                )
-              )?.toFixed(3)
-            )} ${
-              ACCEPTED_TOKENS_MUMBAI?.find(
-                (item) => item[2] === checkoutCurrency
-              )?.[1]
-            }`}
-          </div>
+          {cartItems?.find((item) => item?.item?.pubId === chooseCartItem)
+            ?.price && (
+            <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit text-sol">
+              {`${Number(
+                (
+                  Number(
+                    ((cartItems?.find(
+                      (item) => item?.item?.pubId === chooseCartItem
+                    )?.price || 0) *
+                      10 ** 18) /
+                      rate
+                  ) *
+                  Number(
+                    cartItems?.find(
+                      (item) => item?.item?.pubId === chooseCartItem
+                    )?.amount
+                  )
+                )?.toFixed(3)
+              )} ${
+                ACCEPTED_TOKENS_MUMBAI?.find(
+                  (item) => item[2] === checkoutCurrency
+                )?.[1]
+              }`}
+            </div>
+          )}
         </div>
       </div>
       <div
         className={`relative w-48 px-2 h-12 text-center py-1 border border-white rounded-md flex items-center justify-center text-white font-aust text-sm ${
-          !encryptionLoading && "cursor-pointer active:scale-95"
+          !encryptionLoading &&
+          !approveLoading &&
+          !collectPostLoading?.some((element) => element === true) &&
+          "cursor-pointer active:scale-95"
         }`}
         onClick={() =>
           !encryptionLoading &&
+          !approveLoading &&
+          !collectPostLoading?.some((element) => element === true) &&
           (cartItems?.find((item) => item?.item?.origin !== "1") &&
           encryptedStrings?.length < 1
             ? encryptFulfillment()
@@ -250,10 +260,15 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
       >
         <div
           className={`${
-            encryptionLoading && "animate-spin"
+            (encryptionLoading ||
+              approveLoading ||
+              collectPostLoading?.some((element) => element === true)) &&
+            "animate-spin"
           } flex items-center justify-center`}
         >
-          {encryptionLoading ? (
+          {encryptionLoading ||
+          approveLoading ||
+          collectPostLoading?.some((element) => element === true) ? (
             <AiOutlineLoading size={15} color="white" />
           ) : cartItems?.find((item) => item?.item?.origin !== "1") &&
             encryptedStrings?.length < 1 ? (

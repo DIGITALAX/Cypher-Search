@@ -60,7 +60,11 @@ const useSuggested = (
         {
           limit: LimitType.TwentyFive,
           where: {
-            from: [pageProfile?.id],
+            from: [
+              pageProfile?.id?.includes("-")
+                ? pageProfile?.id?.split("-")?.[0]
+                : pageProfile?.id,
+            ],
             publicationTypes: [PublicationType?.Post],
           },
         },
@@ -136,7 +140,11 @@ const useSuggested = (
         {
           limit: LimitType.TwentyFive,
           where: {
-            from: [pageProfile?.id],
+            from: [
+              pageProfile?.id?.includes("-")
+                ? pageProfile?.id?.split("-")?.[0]
+                : pageProfile?.id,
+            ],
             publicationTypes: [PublicationType?.Post],
           },
           cursor: suggestedFeed?.lensPubCursor,

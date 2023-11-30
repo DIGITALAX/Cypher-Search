@@ -50,12 +50,17 @@ const Sales: FunctionComponent<SalesProps> = ({
                   return (
                     <div
                       key={index}
-                      className="relative w-full h-fit flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack gap-3"
+                      className="relative w-full h-fit flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack"
                     >
-                      <div className="relative w-full h-44 flex flex-row justify-between items-center p-2">
+                      <div className="relative w-full h-fit md:h-44 flex md:flex-nowrap flex-wrap flex-row justify-between items-center p-2  gap-6">
                         <div className="relative justify-center items-start flex flex-col font-ignite gap-2">
-                          <div className="relative justify-center items-center flex w-fit h-fit text-white text-xl">
-                            Order {sale?.orderId}
+                          <div className="relative w-fit h-fit gap-2 flex items-center justify-center flex-row">
+                            <div className="relative justify-center items-center flex w-fit h-fit text-white text-xl">
+                              Order {sale?.orderId}
+                            </div>
+                            <div className="relative w-fit h-fit flex items-center justify-center text-sol">
+                              Qty. {sale?.amount}
+                            </div>
                           </div>
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-sol text-sm">
                             <div className="relative w-fit h-fit flex items-center justify-center text-white">
@@ -73,9 +78,9 @@ const Sales: FunctionComponent<SalesProps> = ({
                               target="_blank"
                               rel="noreferrer"
                               href={`https://polygonscan.com/tx/${sale?.transactionHash}`}
-                              className="relative w-fit h-fit flex items-center justify-center cursor-pointer"
+                              className="relative w-fit h-fit flex items-center justify-center cursor-pointer break-all"
                             >
-                              {sale?.transactionHash?.slice(0, 10) + "..."}
+                              {sale?.transactionHash?.slice(0, 30) + "..."}
                             </Link>
                           </div>
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-white text-sm">
@@ -83,7 +88,11 @@ const Sales: FunctionComponent<SalesProps> = ({
                               className="relative flex flex-row w-6 h-6 items-center justify-start rounded-full border border-offWhite cursor-pointer"
                               onClick={() =>
                                 router.push(
-                                  `/autograph/${sale?.buyer?.handle?.suggestedFormatted?.localName}`
+                                  `/autograph/${
+                                    sale?.buyer?.handle?.suggestedFormatted?.localName?.split(
+                                      "@"
+                                    )?.[1]
+                                  }`
                                 )
                               }
                             >
@@ -108,26 +117,26 @@ const Sales: FunctionComponent<SalesProps> = ({
                           <div className="relative justify-center w-fit h-full items-end flex flex-col font-ignite gap-1">
                             <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-white text-sm">
                               <div className="relative w-fit h-fit flex items-center justify-center">
-                                {sale?.price}
+                                ${Number(sale?.totalPrice) / 10 ** 18}
                               </div>
                               <div className="relative w-fit h-fit flex items-center justify-center">
-                                {
+                                {`Currency (${
                                   ACCEPTED_TOKENS_MUMBAI.find(
                                     (item) => item[2] === sale?.currency
                                   )?.[1]
-                                }
+                                })`}
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div className="relative w-fit h-fit flex flex-row flex items-center justify-center gap-3">
+                        <div className="relative w-full md:w-fit h-fit flex flex-row flex items-center justify-start gap-3">
                           {sale?.images
 
                             ?.slice(0, 2)
                             ?.map((image: string, index: number) => {
                               return (
                                 <div
-                                  className="relative w-40 h-40 rounded-md border border-white flex items-center cursor-pointer justify-center"
+                                  className="relative w-full sm:w-40 h-40 rounded-md border border-white flex items-center cursor-pointer justify-center"
                                   key={index}
                                   onClick={() =>
                                     router.push(
@@ -145,6 +154,7 @@ const Sales: FunctionComponent<SalesProps> = ({
                                     }`}
                                     className="rounded-md"
                                     onError={(e) => handleImageError(e)}
+                                    draggable={false}
                                   />
                                 </div>
                               );

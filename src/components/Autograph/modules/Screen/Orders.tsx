@@ -49,9 +49,9 @@ const Orders: FunctionComponent<OrdersProps> = ({
                   return (
                     <div
                       key={index}
-                      className="relative w-full h-fit flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack gap-3"
+                      className="relative w-full h-fit flex flex-col items-center justify-start border border-humor rounded-sm bg-offBlack"
                     >
-                      <div className="relative w-full h-24 flex flex-row justify-between items-center p-2">
+                      <div className="relative w-full h-fit md:h-28 flex md:flex-nowrap flex-wrap flex-row justify-between items-center p-2 gap-6">
                         <div className="relative justify-center items-start flex flex-col font-ignite gap-2">
                           <div className="relative justify-center items-center flex w-fit h-fit text-white text-xl">
                             Order {order?.orderId}
@@ -72,29 +72,32 @@ const Orders: FunctionComponent<OrdersProps> = ({
                               target="_blank"
                               rel="noreferrer"
                               href={`https://polygonscan.com/tx/${order?.transactionHash}`}
-                              className="relative w-fit h-fit flex items-center justify-center cursor-pointer"
+                              className="relative w-fit h-fit flex items-center justify-center cursor-pointer break-all"
                             >
-                              {order?.transactionHash?.slice(0, 10) + "..."}
+                              {order?.transactionHash?.slice(0, 30) + "..."}
                             </Link>
                           </div>
                         </div>
-                        <div className="relative justify-between w-fit h-full items-end flex flex-col font-ignite gap-1">
+                        <div className="relative justify-between w-fit h-full items-start md:items-end flex flex-col font-ignite gap-1">
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-white text-sm">
                             <div className="relative w-fit h-fit flex items-center justify-center">
-                              {order?.totalPrice}
+                              ${order?.totalPrice}
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center">
-                              {
+                              ||
+                            </div>
+                            <div className="relative w-fit h-fit flex items-center justify-center">
+                              {`Currency ( ${
                                 ACCEPTED_TOKENS_MUMBAI.find(
                                   (item) => item[2] === order?.currency
                                 )?.[1]
-                              }
+                              } )`}
                             </div>
                           </div>
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-sol text-sm">
                             <div className="relative w-fit h-fit flex items-center justify-center">
                               {order?.subOrders?.reduce(
-                                (sum, item) => sum + Number(item.amount),
+                                (sum, item) => sum + Number(item?.amount),
                                 0
                               )}
                             </div>
@@ -141,6 +144,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                       }`}
                                       className="rounded-md"
                                       onError={(e) => handleImageError(e)}
+                                      draggable={false}
                                     />
                                   </div>
                                 );
@@ -152,63 +156,67 @@ const Orders: FunctionComponent<OrdersProps> = ({
                         <div className="relative w-full h-fit flex items-start justify-start flex-col p-2 gap-5">
                           <div className="relative w-full h-px bg-white"></div>
                           <div className="relative w-full h-fit flex flex-col items-start justify-start font-aust text-white gap-7">
-                            <div className="relative w-full h-fit flex flex-col items-start justify-start font-aust text-white gap-4">
-                              <div className="relative w-fit h-fit flex items-start justify-start">
-                                Order Details
-                              </div>
-                              <div className="relative flex flex-row items-start justify-between w-full h-fit gap-6">
-                                <div className="relative w-fit h-fit flex items-start justify-start flex-row flex-wrap gap-4">
-                                  {[
-                                    "Name",
-                                    "Contact",
-                                    "Address",
-                                    "Zip",
-                                    "City",
-                                    "State",
-                                    "Country",
-                                  ].map((item: string, indexTwo: number) => {
-                                    return (
-                                      <div
-                                        key={indexTwo}
-                                        className="relative w-fit h-fit flex flex-col items-start justify-start gap-1"
-                                      >
-                                        <div className="relative w-fit h-fit flex text-sol text-xs">
-                                          {item}
-                                        </div>
-                                        <div className="relative w-fit h-fit flex text-xxs">
-                                          {order?.decrypted
-                                            ? (order?.details as any)?.[
-                                                item?.toLowerCase()
-                                              ]
-                                            : "%$70hg$LeeTdf"}
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
+                            {order?.details && (
+                              <div className="relative w-full h-fit flex flex-col items-start justify-start font-aust text-white gap-4">
+                                <div className="relative w-fit h-fit flex items-start justify-start">
+                                  Order Details
                                 </div>
-                                <div
-                                  className={`relative h-8 w-20 border border-white bg-sol/50 text-white font-aust flex items-center justify-center text-sm ${
-                                    !orderActions?.[index]?.decryptLoading &&
-                                    !order?.decrypted
-                                      ? "cursor-pointer active:scale-95"
-                                      : "opacity-70"
-                                  }`}
-                                  onClick={() =>
-                                    !orderActions?.[index]?.decryptLoading &&
-                                    !order?.decrypted &&
-                                    decryptOrder(order?.orderId)
-                                  }
-                                >
+                                <div className="relative flex flex-row items-start justify-between w-full h-fit gap-6">
+                                  <div className="relative w-fit h-fit flex items-start justify-start flex-row flex-wrap gap-4">
+                                    {[
+                                      "Name",
+                                      "Contact",
+                                      "Address",
+                                      "Zip",
+                                      "City",
+                                      "State",
+                                      "Country",
+                                    ].map((item: string, indexTwo: number) => {
+                                      return (
+                                        <div
+                                          key={indexTwo}
+                                          className="relative w-fit h-fit flex flex-col items-start justify-start gap-1"
+                                        >
+                                          <div className="relative w-fit h-fit flex text-sol text-xs break-words">
+                                            {item}
+                                          </div>
+                                          <div className="relative w-fit h-fit flex text-xxs">
+                                            {order?.decrypted
+                                              ? (order?.details as any)?.[
+                                                  item?.toLowerCase()
+                                                ]
+                                              : "%$70hg$LeeTdf"}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
                                   <div
-                                    className={`${
-                                      orderActions?.[index]?.decryptLoading &&
-                                      "animate-spin"
-                                    } w-fit h-fit flex items-center justify-center`}
-                                  ></div>
-                                  {!order?.decrypted ? "Decrypt" : "Decrypted"}
+                                    className={`relative h-8 w-20 border border-white bg-sol/50 text-white font-aust flex items-center justify-center text-sm ${
+                                      !orderActions?.[index]?.decryptLoading &&
+                                      !order?.decrypted
+                                        ? "cursor-pointer active:scale-95"
+                                        : "opacity-70"
+                                    }`}
+                                    onClick={() =>
+                                      !orderActions?.[index]?.decryptLoading &&
+                                      !order?.decrypted &&
+                                      decryptOrder(order?.orderId)
+                                    }
+                                  >
+                                    <div
+                                      className={`${
+                                        orderActions?.[index]?.decryptLoading &&
+                                        "animate-spin"
+                                      } w-fit h-fit flex items-center justify-center`}
+                                    ></div>
+                                    {!order?.decrypted
+                                      ? "Decrypt"
+                                      : "Decrypted"}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            )}
                             <div className="relative w-full h-fit flex flex-col items-start justify-start font-aust text-white gap-4">
                               <div className="relative w-fit h-fit flex items-start justify-start">
                                 Messages
@@ -248,6 +256,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                 item={item}
                                 key={index}
                                 decrypted={order?.decrypted}
+                                details={order?.details ? true : false}
                               />
                             );
                           })}

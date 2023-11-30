@@ -35,7 +35,6 @@ const useComment = (
   collections: Creation[] | undefined,
   itemData: Publication | undefined,
   setItemData: (e: SetStateAction<Publication | undefined>) => void,
-  type: string,
   setRelatedData: (
     e: SetStateAction<
       | {
@@ -210,6 +209,7 @@ const useComment = (
   };
 
   const handleHidePost = async (id: string, index: number, main?: boolean) => {
+    if (!lensConnected?.id) return;
     if (main) {
       setMainInteractionsLoading((prev) => {
         const updatedArray = [...prev];
@@ -252,6 +252,7 @@ const useComment = (
   };
 
   const handleBookmark = async (on: string, index: number, main?: boolean) => {
+    if (!lensConnected?.id) return;
     if (main) {
       setMainInteractionsLoading((prev) => {
         const updatedArray = [...prev];
@@ -317,6 +318,7 @@ const useComment = (
   };
 
   const simpleCollect = async (id: string, type: string, main: boolean) => {
+    if (!lensConnected?.id) return;
     const index = main
       ? undefined
       : allComments?.length > 0
@@ -407,6 +409,7 @@ const useComment = (
   };
 
   const comment = async (id: string, main?: boolean) => {
+    if (!lensConnected?.id) return;
     let content: string | undefined,
       images:
         | {
@@ -481,10 +484,14 @@ const useComment = (
         publicClient,
         () => clearComment(index, main!)
       );
-
+      updateInteractions(index!, {}, "comments", true, main!);
       await getComments();
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(
+        err,
+        () => updateInteractions(index!, {}, "comments", true, main!),
+        dispatch
+      );
     }
 
     handleLoaders(false, main!, index, "comment");
@@ -561,6 +568,7 @@ const useComment = (
   };
 
   const mirror = async (id: string, main?: boolean) => {
+    if (!lensConnected?.id) return;
     const index = main
       ? undefined
       : allComments?.length > 0
@@ -611,6 +619,7 @@ const useComment = (
   };
 
   const like = async (id: string, hasReacted: boolean, main?: boolean) => {
+    if (!lensConnected?.id) return;
     const index = main
       ? undefined
       : allComments?.length > 0
@@ -618,7 +627,6 @@ const useComment = (
       : collections?.findIndex((pub) => pub.publication?.id === id);
     if (!main && index == -1) return;
     handleLoaders(false, main!, index, "like");
-
     try {
       await lensLike(id, dispatch, hasReacted);
       updateInteractions(
@@ -767,39 +775,42 @@ const useComment = (
               }
             : {
                 ...itemData,
-                post: type?.includes("V3")
-                  ? {
-                      ...(itemData?.post as Post),
-                      operations: {
-                        ...(itemData?.post as Post)?.operations,
-                        ...valueToUpdate,
-                      },
-                      stats: {
-                        ...(itemData?.post as Post)?.stats,
-                        [statToUpdate]:
-                          (itemData?.post as Post)?.stats?.[
-                            statToUpdate as keyof PublicationStats
-                          ] + (increase ? 1 : -1),
-                      },
-                    }
-                  : {
-                      ...(itemData?.post as Creation),
-                      publication: {
-                        ...(itemData?.post as Creation)?.publication,
+                post:
+                  itemData?.type?.includes("V3") ||
+                  itemData?.type?.includes("pub")
+                    ? {
+                        ...(itemData?.post as Post),
                         operations: {
-                          ...(itemData?.post as Creation)?.publication
-                            ?.operations,
+                          ...(itemData?.post as Post)?.operations,
                           ...valueToUpdate,
                         },
                         stats: {
-                          ...(itemData?.post as Creation)?.publication?.stats,
+                          ...(itemData?.post as Post)?.stats,
                           [statToUpdate]:
-                            (itemData?.post as Creation)?.publication?.stats?.[
+                            (itemData?.post as Post)?.stats?.[
                               statToUpdate as keyof PublicationStats
                             ] + (increase ? 1 : -1),
                         },
+                      }
+                    : {
+                        ...(itemData?.post as Creation),
+                        publication: {
+                          ...(itemData?.post as Creation)?.publication,
+                          operations: {
+                            ...(itemData?.post as Creation)?.publication
+                              ?.operations,
+                            ...valueToUpdate,
+                          },
+                          stats: {
+                            ...(itemData?.post as Creation)?.publication?.stats,
+                            [statToUpdate]:
+                              (itemData?.post as Creation)?.publication
+                                ?.stats?.[
+                                statToUpdate as keyof PublicationStats
+                              ] + (increase ? 1 : -1),
+                          },
+                        },
                       },
-                    },
               }) as Publication
         );
     } else if (allComments?.length > 0) {
