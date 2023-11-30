@@ -46,6 +46,7 @@ import {
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { CHROMADIN_ID, INFURA_GATEWAY } from "../../../../lib/constants";
 import Draggable from "react-draggable";
+import { ethers } from "ethers";
 
 const useQuote = (
   availableCurrencies: Erc20[],
@@ -527,7 +528,7 @@ const useQuote = (
         to: data?.generateModuleCurrencyApprovalData?.to as `0x${string}`,
         account: data?.generateModuleCurrencyApprovalData
           ?.from as `0x${string}`,
-        value: BigInt(data?.generateModuleCurrencyApprovalData?.data as string),
+        value: data?.generateModuleCurrencyApprovalData?.data,
       });
       const tx = await publicClient.waitForTransactionReceipt({ hash: res });
       await handleIndexCheck(

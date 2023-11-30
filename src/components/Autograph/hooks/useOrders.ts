@@ -67,8 +67,7 @@ const useOrders = (
             ...item,
             totalPrice: String(Number(item?.totalPrice) / 10 ** 18),
             details:
-              item?.details &&
-              (await JSON.parse(await fetchIPFSJSON(item?.details as string))),
+              item?.details && (await JSON.parse(item?.details as string)),
             decrypted: false,
             subOrders: await Promise.all(
               item?.subOrderCollectionIds?.map(
@@ -125,7 +124,6 @@ const useOrders = (
     });
 
     const order = allOrders[index];
-
     try {
       if (
         !(order?.details as EncryptedDetails)?.ciphertext ||
@@ -139,6 +137,8 @@ const useOrders = (
       const authSig = await checkAndSignAuthMessage({
         chain: "mumbai",
       });
+
+      await client.connect();
 
       const decryptedString = await decryptToString(
         {

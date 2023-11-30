@@ -54,7 +54,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                       <div className="relative w-full h-fit md:h-28 flex md:flex-nowrap flex-wrap flex-row justify-between items-center p-2 gap-6">
                         <div className="relative justify-center items-start flex flex-col font-ignite gap-2">
                           <div className="relative justify-center items-center flex w-fit h-fit text-white text-xl">
-                            Order {order?.orderId}
+                            Order {allOrders?.length - index}
                           </div>
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-sol text-sm">
                             <div className="relative w-fit h-fit flex items-center justify-center text-white">

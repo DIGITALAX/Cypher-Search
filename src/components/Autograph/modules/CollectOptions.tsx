@@ -163,7 +163,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
             {
               type: "input",
               title: "Referral?",
-              chosenValue: String(collectTypes?.[id]?.referralFee) || "0",
+              chosenValue: String(collectTypes?.[id]?.referralFee || "0"),
               showObject: openMeasure.award === "Yes" ? true : false,
 
               setValue: (item: string) => {

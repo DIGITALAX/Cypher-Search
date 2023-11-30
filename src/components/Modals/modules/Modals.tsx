@@ -353,7 +353,10 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
         />
       )}
       {insufficientBalance?.value && (
-        <InsufficientBalance dispatch={dispatch} />
+        <InsufficientBalance
+          dispatch={dispatch}
+          message={insufficientBalance?.message!}
+        />
       )}
       {interactError?.value && <InteractError dispatch={dispatch} />}
       {successCheckout?.value && (

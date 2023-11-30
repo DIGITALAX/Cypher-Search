@@ -3,7 +3,7 @@ import { graphPrintClient } from "../../../lib/graph/client";
 
 const HISTORY = `
 query($owner: String!) {
-  collectionCreateds(where: {owner: $owner, soldTokens_gt: "0"}) {
+  collectionCreateds(where: {owner: $owner, soldTokens_gt: "0"}, orderDirection: desc, orderBy: blockTimestamp) {
     collectionMetadata {
       mediaCover
       images
@@ -17,7 +17,7 @@ query($owner: String!) {
 
 const SINGLE_ORDER_NFT = `
 query($orderId: String!) {
-  nftonlyOrderCreateds(where: {orderId: $orderId}) {
+  nftonlyOrderCreateds(where: {orderId: $orderId}, orderDirection: desc, orderBy: blockTimestamp) {
     orderId
     totalPrice
     currency
@@ -34,7 +34,7 @@ query($orderId: String!) {
 
 const SINGLE_ORDER = `
 query($orderId: String!) {
-  orderCreateds(where: {orderId: $orderId}) {
+  orderCreateds(where: {orderId: $orderId}, orderDirection: desc, orderBy: blockTimestamp) {
     orderId
     totalPrice
     currency

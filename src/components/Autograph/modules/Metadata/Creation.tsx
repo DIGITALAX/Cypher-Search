@@ -97,17 +97,18 @@ const Creation: FunctionComponent<CreationProps> = ({
           <div className="relative w-fit h-fit flex items-center justify-center top-px">
             {item?.amount == item?.soldTokens
               ? "SOLD OUT"
-              : `${item?.soldTokens ? item?.soldTokens : item?.amount}/${
-                  item?.amount
-                }`}
+              : `${item?.soldTokens ? item?.soldTokens : 0}/${item?.amount}`}
           </div>
         </div>
       </div>
       <div className="relative flex w-full h-fit flex flex-row justify-between gap-2">
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">
           <div
-            className="relative w-7 h-7 items-center justify-center flex cursor-pointer"
+            className={`relative w-7 h-7 items-center justify-center flex ${
+              item?.amount == item?.soldTokens ? "opacity-70" : "cursor-pointer"
+            }`}
             onClick={() => {
+              if (item?.amount == item?.soldTokens) return;
               const newItem = {
                 item,
                 amount: 1,

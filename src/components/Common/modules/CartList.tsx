@@ -1,12 +1,11 @@
 import { FunctionComponent } from "react";
 import { ImCross } from "react-icons/im";
 import { CartItem, CartListProps } from "../types/common.types";
-import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
-import handleImageError from "../../../../lib/helpers/handleImageError";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import MediaSwitch from "./MediaSwitch";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 
 const CartList: FunctionComponent<CartListProps> = ({
   cartItems,
@@ -14,7 +13,7 @@ const CartList: FunctionComponent<CartListProps> = ({
   dispatch,
   setCartListOpen,
   page,
-  searchActive
+  searchActive,
 }): JSX.Element => {
   return (
     <div
@@ -23,7 +22,9 @@ const CartList: FunctionComponent<CartListProps> = ({
           ? "right-1 sm:right-3 bottom-16"
           : `right-3 top-14 tablet:top-16 ${
               router.asPath?.includes("/checkout") ||
-              (!searchActive && router.asPath == "/") ? "sm:top-14" : "sm:top-24"
+              (!searchActive && router.asPath == "/")
+                ? "sm:top-14"
+                : "sm:top-24"
             }`
       }`}
       id="milestone"
@@ -119,6 +120,20 @@ const CartList: FunctionComponent<CartListProps> = ({
                               item?.item?.collectionId
                           );
 
+                          if (
+                            allItems[cartIndex]?.item?.amount + 1 >=
+                            allItems[cartIndex]?.item?.soldTokens
+                          ) {
+                            dispatch(
+                              setInsufficientBalance({
+                                actionValue: true,
+                                actionMessage:
+                                  "We know you're eager, but you've reached this creation's collect limit!",
+                              })
+                            );
+                            return;
+                          }
+
                           allItems[cartIndex] = {
                             ...allItems[cartIndex],
                             amount: allItems[cartIndex]?.amount + 1,
@@ -165,6 +180,7 @@ const CartList: FunctionComponent<CartListProps> = ({
                         </div>
                       </div>
                     </div>
+
                     <div className="relative flex flex-row items-center justify-between gap-2 w-fit h-fit font-vcr text-sm">
                       <div className="relative w-fit h-fit items-center justify-center text-white break-words text-center">
                         {item?.amount}
@@ -177,6 +193,19 @@ const CartList: FunctionComponent<CartListProps> = ({
                       </div>
                     </div>
                   </div>
+                  {item?.size && item?.color && (
+                    <div className="relative flex flex-row items-center justify-center gap-2 w-fit h-fit font-vcr text-xxs ml-auto">
+                      <div className="relative w-fit h-fit items-center justify-center text-white break-words text-center">
+                        {item?.size}
+                      </div>
+                      <div
+                        className="relative w-3 h-3 items-center justify-center flex rounded-full border border-white"
+                        style={{
+                          backgroundColor: item?.color,
+                        }}
+                      ></div>
+                    </div>
+                  )}
                 </div>
               );
             })}

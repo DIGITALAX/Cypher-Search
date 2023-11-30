@@ -14,9 +14,9 @@ export const NFT_CREATOR_ADDRESS: `0x${string}` =
 export const CHROMADIN_OPEN_ACTION: `0x${string}` =
   "0x23Bace2E9571B7A8598c3314e5f0d8C12DBc674A";
 export const LISTENER_OPEN_ACTION: `0x${string}` =
-  "0x5e0020A21D61ec18467a92428a5bE6Faf32C412b";
+  "0xB7F7cAAf50Bff0d53E5a66134ed218C3B77555F9";
 export const COIN_OP_OPEN_ACTION: `0x${string}` =
-  "0xF73023577E11e3f791c4c7638BD4061a9a181bB5";
+  "0x9785444E0C3718B499226b89CFb002AB6F31Fc15";
 export const LEGEND_OPEN_ACTION: `0x${string}` =
   "0xb998D9FdE369327B23f471416070d4E70315B30D";
 export const PRINT_ACCESS_CONTROL: `0x${string}` =
@@ -145,6 +145,16 @@ export const numberToPrintType: { [key in number]: PrintType } = {
   4: PrintType.Sleeve,
   5: PrintType.Crop,
   6: PrintType.NFTOnly,
+};
+
+export const printTypeToString: { [key in PrintType]: string } = {
+  [PrintType.Sticker]: "sticker",
+  [PrintType.Poster]: "poster",
+  [PrintType.Shirt]: "shirt",
+  [PrintType.Hoodie]: "hoodie",
+  [PrintType.Sleeve]: "sleeve",
+  [PrintType.Crop]: "crop",
+  [PrintType.NFTOnly]: "nftOnly",
 };
 
 export const printStringToNumber: { [key: string]: string } = {

@@ -299,27 +299,27 @@ const useItem = (
             ...collection,
             collectionMetadata: {
               ...collection?.collectionMetadata,
-              sizes: collection?.sizes
+              sizes: collection?.collectionMetadata?.sizes
                 ?.split(",")
                 .map((word: string) => word.trim())
                 .filter((word: string) => word.length > 0),
-              colors: collection?.colors
+              colors: collection?.collectionMetadata?.colors
                 ?.split(",")
                 .map((word: string) => word.trim())
                 .filter((word: string) => word.length > 0),
-              mediaTypes: collection?.mediaTypes
+              mediaTypes: collection?.collectionMetadata?.mediaTypes
                 ?.split(",")
                 .map((word: string) => word.trim())
                 .filter((word: string) => word.length > 0),
-              access: collection?.access
+              access: collection?.collectionMetadata?.access
                 ?.split(",")
                 .map((word: string) => word.trim())
                 .filter((word: string) => word.length > 0),
-              communities: collection?.communities
+              communities: collection?.collectionMetadata?.communities
                 ?.split(",")
                 .map((word: string) => word.trim())
                 .filter((word: string) => word.length > 0),
-              tags: collection?.tags
+              tags: collection?.collectionMetadata?.tags
                 ?.split(",")
                 .map((word: string) => word.trim())
                 .filter((word: string) => word.length > 0),
@@ -378,7 +378,12 @@ const useItem = (
           )) *
           10 ** 18
       ) {
-        dispatch(setInsufficientBalance(true));
+        dispatch(
+          setInsufficientBalance({
+            actionValue: true,
+            actionMessage: "Pockets Empty. Need to top up?",
+          })
+        );
         setInstantLoading(false);
         return;
       }
@@ -400,6 +405,7 @@ const useItem = (
           type: itemStringToType[type.toLowerCase().trim()],
           purchased: false,
         },
+        undefined,
         "",
         purchaseDetails?.currency as `0x${string}`
       );
@@ -452,7 +458,6 @@ const useItem = (
         chain: polygonMumbai,
         transport: custom((window as any).ethereum),
       });
-
 
       const { request } = await publicClient.simulateContract({
         address: purchaseDetails?.currency as `0x${string}`,

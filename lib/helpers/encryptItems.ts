@@ -12,12 +12,19 @@ export const encryptItems = async (
       types: string[];
       prices: number[];
       fulfillerAddress: string[];
+      originalIndices: number[];
     };
   },
   fulfillmentDetails: Details,
   address: `0x${string}`,
   authSig: AuthSig
-): Promise<string[] | undefined> => {
+): Promise<
+  | {
+      pubId: string;
+      data: string;
+    }[]
+  | undefined
+> => {
   try {
     const uniqueFulfillerAddressesByGroup: { [key: string]: string[] } = {};
 
@@ -31,62 +38,74 @@ export const encryptItems = async (
       uniqueFulfillerAddressesByGroup[pubId] = Array.from(uniqueAddresses);
     }
 
-    let encryptedItems: string[] = [];
+    let encryptedItems: {
+      pubId: string;
+      data: string;
+    }[] = [];
     for (const [pubId, item] of Object.entries(groupedByPubId)) {
-      let fulfillerEditions: any[] = [];
-      uniqueFulfillerAddressesByGroup[pubId]?.forEach((address: string) => {
-        fulfillerEditions.push({
-          contractAddress: "",
-          standardContractType: "",
-          chain: "polygon",
-          method: "",
-          parameters: [":userAddress"],
-          returnValueTest: {
-            comparator: "=",
-            value: address.toLowerCase(),
-          },
+      if (
+        item?.colors?.filter(Boolean)?.length &&
+        item?.sizes?.filter(Boolean)?.length
+      ) {
+
+        let fulfillerEditions: any[] = [];
+        uniqueFulfillerAddressesByGroup[pubId]?.forEach((address: string) => {
+          fulfillerEditions.push({
+            contractAddress: "",
+            standardContractType: "",
+            chain: "mumbai",
+            method: "",
+            parameters: [":userAddress"],
+            returnValueTest: {
+              comparator: "=",
+              value: address.toLowerCase(),
+            },
+          });
+
+          fulfillerEditions.push({
+            operator: "or",
+          });
         });
 
-        fulfillerEditions.push({
-          operator: "or",
-        });
-      });
-
-      const accessControlConditions = [
-        ...fulfillerEditions,
-        {
-          contractAddress: "",
-          standardContractType: "",
-          chain: "polygon",
-          method: "",
-          parameters: [":userAddress"],
-          returnValueTest: {
-            comparator: "=",
-            value: address?.toLowerCase() as string,
+        const accessControlConditions = [
+          ...fulfillerEditions,
+          {
+            contractAddress: "",
+            standardContractType: "",
+            chain: "mumbai",
+            method: "",
+            parameters: [":userAddress"],
+            returnValueTest: {
+              comparator: "=",
+              value: address?.toLowerCase() as string,
+            },
           },
-        },
-      ];
+        ];
 
-      const { ciphertext, dataToEncryptHash } = await encryptString(
-        {
-          accessControlConditions,
-          authSig,
-          chain: "polygon",
-          dataToEncrypt: JSON.stringify({
-            ...fulfillmentDetails,
-            ...item,
+        const { originalIndices, ...rest } = item;
+
+        const { ciphertext, dataToEncryptHash } = await encryptString(
+          {
+            accessControlConditions,
+            authSig,
+            chain: "mumbai",
+            dataToEncrypt: JSON.stringify({
+              ...fulfillmentDetails,
+              ...rest,
+            }),
+          },
+          client!
+        );
+
+        encryptedItems.push({
+          pubId,
+          data: JSON.stringify({
+            ciphertext,
+            dataToEncryptHash,
+            accessControlConditions,
           }),
-        },
-        client!
-      );
-
-      encryptedItems.push(
-        JSON.stringify({
-          ciphertext,
-          dataToEncryptHash,
-          accessControlConditions,
-        })
-      );
+        });
+      }
     }
 
     return encryptedItems;

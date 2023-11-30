@@ -28,6 +28,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   chooseCartItem,
   approveLoading,
   collectPostLoading,
+  groupedByPubId,
 }): JSX.Element => {
   return (
     <div className="relative w-fit h-fit relative flex items-start justify-start p-2 flex-col gap-6">
@@ -81,7 +82,12 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                   <div
                     key={index}
                     className={`relative w-fit h-fit flex items-start justify-center flex-col gap-2 ${
-                      encryptedStrings?.length > 0 && "opacity-20"
+                      ((encryptedStrings?.find(
+                        (item) => item?.pubId == chooseCartItem?.item?.pubId
+                      ) &&
+                        chooseCartItem?.item?.origin !== "1") ||
+                        chooseCartItem?.item?.origin == "1") &&
+                      "opacity-20"
                     }`}
                   >
                     <div className="relative w-fit h-fit flex text-white font-aust text-base">
@@ -91,7 +97,12 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                       <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                         <div
                           className={`relative h-10 flex flex-row justify-between p-2 w-40 items-center justify-center border border-white rounded-md ${
-                            encryptedStrings?.length < 1
+                            (encryptedStrings?.find(
+                              (item) =>
+                                item?.pubId == chooseCartItem?.item?.pubId
+                            ) &&
+                              chooseCartItem?.item?.origin !== "1") ||
+                            chooseCartItem?.item?.origin == "1"
                               ? "cursor-pointer"
                               : "opacity-70"
                           }`}
@@ -184,7 +195,9 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
             {ACCEPTED_TOKENS_MUMBAI?.filter((value) =>
               cartItems
-                ?.find((item) => item?.item?.pubId === chooseCartItem)
+                ?.find(
+                  (item) => item?.item?.pubId === chooseCartItem?.item?.pubId
+                )
                 ?.item?.acceptedTokens?.includes(value?.[2])
             )?.map((item: string[], indexTwo: number) => {
               return (
@@ -209,28 +222,30 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           </div>
         </div>
         <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3 font-aust">
-          <div className="relative w-fit h-fit flex text-xl text-white">
-            Selected Item
+          <div className="relative w-fit h-fit flex text-xl text-white break-words">
+            Selected Item Total
           </div>
-          {cartItems?.find((item) => item?.item?.pubId === chooseCartItem)
-            ?.price && (
+          {groupedByPubId[chooseCartItem?.item?.pubId!] && (
             <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit text-sol">
-              {`${Number(
+              {`${parseFloat(
                 (
                   Number(
-                    ((cartItems?.find(
-                      (item) => item?.item?.pubId === chooseCartItem
-                    )?.price || 0) *
-                      10 ** 18) /
-                      rate
-                  ) *
-                  Number(
-                    cartItems?.find(
-                      (item) => item?.item?.pubId === chooseCartItem
-                    )?.amount
-                  )
-                )?.toFixed(3)
-              )} ${
+                    groupedByPubId[
+                      chooseCartItem?.item?.pubId!
+                    ]?.prices?.reduce(
+                      (sum, item, index) =>
+                        sum +
+                        Number(item) *
+                          Number(
+                            groupedByPubId[chooseCartItem?.item?.pubId!]
+                              ?.amounts?.[index]
+                          ),
+                      0
+                    ) *
+                      10 ** 18
+                  ) / rate
+                ).toFixed(3)
+              ).toString()} ${
                 ACCEPTED_TOKENS_MUMBAI?.find(
                   (item) => item[2] === checkoutCurrency
                 )?.[1]
@@ -239,19 +254,28 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           )}
         </div>
       </div>
+      {chooseCartItem?.item?.amount == chooseCartItem?.item?.soldTokens && (
+        <div className="relative w-3/4 h-fit flex items-center justify-center break-words text-white text-xs font-bit">
+          It looks like this creation was sold before you got to it! Remove it
+          from your cart and collect something else?
+        </div>
+      )}
       <div
         className={`relative w-48 px-2 h-12 text-center py-1 border border-white rounded-md flex items-center justify-center text-white font-aust text-sm ${
           !encryptionLoading &&
           !approveLoading &&
-          !collectPostLoading?.some((element) => element === true) &&
+          !collectPostLoading &&
+          chooseCartItem?.item?.amount != chooseCartItem?.item?.soldTokens &&
           "cursor-pointer active:scale-95"
         }`}
         onClick={() =>
           !encryptionLoading &&
           !approveLoading &&
-          !collectPostLoading?.some((element) => element === true) &&
-          (cartItems?.find((item) => item?.item?.origin !== "1") &&
-          encryptedStrings?.length < 1
+          !collectPostLoading &&
+          chooseCartItem?.item?.amount != chooseCartItem?.item?.soldTokens &&
+          (!encryptedStrings?.find(
+            (item) => item?.pubId == chooseCartItem?.item?.pubId
+          ) && chooseCartItem?.item?.origin !== "1"
             ? encryptFulfillment()
             : !isApprovedSpend
             ? approveSpend()
@@ -260,18 +284,20 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
       >
         <div
           className={`${
-            (encryptionLoading ||
-              approveLoading ||
-              collectPostLoading?.some((element) => element === true)) &&
+            (encryptionLoading || approveLoading || collectPostLoading) &&
             "animate-spin"
           } flex items-center justify-center`}
         >
-          {encryptionLoading ||
-          approveLoading ||
-          collectPostLoading?.some((element) => element === true) ? (
+          {encryptionLoading || approveLoading || collectPostLoading ? (
             <AiOutlineLoading size={15} color="white" />
+          ) : chooseCartItem?.item?.amount ==
+            chooseCartItem?.item?.soldTokens ? (
+            "SOLD OUT"
           ) : cartItems?.find((item) => item?.item?.origin !== "1") &&
-            encryptedStrings?.length < 1 ? (
+            !encryptedStrings?.find(
+              (item) => item?.pubId == chooseCartItem?.item?.pubId
+            ) &&
+            chooseCartItem?.item?.origin !== "1" ? (
             "Encrypt Fulfillment"
           ) : !isApprovedSpend ? (
             "Approve Spend"

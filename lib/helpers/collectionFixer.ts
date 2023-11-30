@@ -3,7 +3,7 @@ import fetchIPFSJSON from "./fetchIpfsJson";
 
 const collectionFixer = async (collection: Creation): Promise<Creation> => {
   let ipfs = {};
-  if (!collection?.collectionMetadata?.title) {
+  if (!collection?.collectionMetadata?.title && collection?.pubId) {
     let data = await fetchIPFSJSON(collection?.uri);
     const { cover, ...rest } = data;
     ipfs = {

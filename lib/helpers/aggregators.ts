@@ -1,14 +1,9 @@
-import { PrintType } from "@/components/Tiles/types/tiles.types";
-import { INFURA_GATEWAY } from "../constants";
-
 export const aggregateMicrobrands = (
   collection: {
     collectionMetadata: {
       tags: string;
       microbrandCover: string;
       microbrand: string;
-      colors: string;
-      sizes: string;
     };
     dropMetadata: {
       dropTitle: string;
@@ -42,8 +37,6 @@ export const aggregateUniqueValues = (
       tags: string;
       microbrandCover: string;
       microbrand: string;
-      colors: string;
-      sizes: string;
     };
     dropMetadata: {
       dropTitle: string;
@@ -69,69 +62,10 @@ export const aggregateUniqueValues = (
       tagsArray?.forEach((tag) => uniqueValues.add(tag));
     } else if (key === "dropTitle") {
       uniqueValues.add(item?.dropMetadata?.[key]?.toString());
-    } else if (item?.collectionMetadata?.[key]) {
-      uniqueValues.add(item?.collectionMetadata?.[key]?.toString());
     }
   });
 
   return Array.from(uniqueValues);
 };
 
-export const aggregateSizes = (
-  collection: {
-    collectionMetadata: {
-      tags: string;
-      microbrandCover: string;
-      microbrand: string;
-      colors: string;
-      sizes: string;
-    };
-    dropMetadata: {
-      dropTitle: string;
-    };
-    printType: string;
-    profileId: string;
-  }[]
-): {
-  poster: string[];
-  sticker: string[];
-  apparel: string[];
-} => {
-  const sizes = {
-    poster: new Set<string>(),
-    sticker: new Set<string>(),
-    apparel: new Set<string>(),
-  };
 
-  collection?.forEach((item) => {
-    switch (item.printType) {
-      case PrintType.Sticker:
-        item?.collectionMetadata.sizes
-          ?.toString()
-          ?.split(",")
-          ?.forEach((size) => sizes.sticker.add(size));
-        break;
-      case PrintType.Poster:
-        item?.collectionMetadata.sizes
-          ?.toString()
-          ?.split(",")
-          ?.forEach((size) => sizes.poster.add(size));
-        break;
-      case PrintType.Shirt:
-      case PrintType.Hoodie:
-      case PrintType.Sleeve:
-      case PrintType.Crop:
-        item?.collectionMetadata.sizes
-          ?.toString()
-          ?.split(",")
-          ?.forEach((size) => sizes.apparel.add(size));
-        break;
-    }
-  });
-
-  return {
-    poster: Array.from(sizes.poster),
-    sticker: Array.from(sizes.sticker),
-    apparel: Array.from(sizes.apparel),
-  };
-};

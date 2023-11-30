@@ -315,5 +315,6 @@ export type PostSuccessProps = {
 };
 
 export type InsufficientBalanceProps = {
-  dispatch: Dispatch<AnyAction>
-}
+  dispatch: Dispatch<AnyAction>;
+  message: string;
+};

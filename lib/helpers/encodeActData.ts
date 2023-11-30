@@ -10,6 +10,18 @@ import { CartItem } from "@/components/Common/types/common.types";
 
 const encodeActData = (
   cartItem: CartItem,
+  groupedByPubId:
+    | {
+        colors: string[];
+        sizes: string[];
+        amounts: number[];
+        collectionIds: string[];
+        types: string[];
+        prices: number[];
+        fulfillerAddress: string[];
+        originalIndices: number[];
+      }
+    | undefined,
   encryptedFulfillment: string,
   currency: `0x${string}`
 ): UnknownOpenActionModuleInput | undefined => {
@@ -32,10 +44,18 @@ const encodeActData = (
             ? LISTENER_OPEN_ACTION
             : COIN_OP_OPEN_ACTION,
         data: coder.encode(
-          ["uint256", "uint256", "string", "address", "bool"],
+          ["uint256[]", "uint256[]", "string", "address", "bool"],
           [
-            cartItem.chosenIndex,
-            cartItem.amount,
+            cartItem?.item?.printType !== "0" &&
+            cartItem?.item?.printType! == "1"
+              ? Array.from(
+                  { length: groupedByPubId?.amounts?.length! },
+                  () => 0
+                )
+              : groupedByPubId?.prices.map((item: number) =>
+                  cartItem?.item?.prices.indexOf(String(item))
+                ),
+            groupedByPubId?.amounts,
             encryptedFulfillment,
             currency,
             false,

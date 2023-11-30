@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface InsufficientBalanceState {
   value: boolean;
+  message?: string;
 }
 
 const initialInsufficientBalanceState: InsufficientBalanceState = {
@@ -14,9 +15,10 @@ export const InsufficientBalanceSlice = createSlice({
   reducers: {
     setInsufficientBalance: (
       state: InsufficientBalanceState,
-      action: PayloadAction<boolean>
+      { payload: { actionMessage, actionValue } }
     ) => {
-      state.value = action.payload;
+      state.message = actionMessage;
+      state.value = actionValue;
     },
   },
 });
