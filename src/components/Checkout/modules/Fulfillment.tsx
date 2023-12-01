@@ -254,7 +254,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
       </div>
       {chooseCartItem?.item?.amount == chooseCartItem?.item?.soldTokens && (
         <div className="relative w-3/4 h-fit flex items-center justify-center break-words text-white text-xs font-bit">
-          Just missed it! This creation was snapped up by another collector. Time to update your cart. Change of plans? Maybe it&apos;s for the best."
+          Just missed it! This creation was snapped up by another collector. Time to update your cart. Change of plans? Maybe it&apos;s for the best.
         </div>
       )}
       <div
