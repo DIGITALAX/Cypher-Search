@@ -22,7 +22,7 @@ import useBookmarks from "@/components/Autograph/hooks/useBookmarks";
 import usePost from "@/components/Autograph/hooks/usePost";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import useOrders from "@/components/Autograph/hooks/useOrders";
 import useSales from "@/components/Autograph/hooks/useSales";
 import useCreate from "@/components/Autograph/hooks/useCreate";
@@ -39,9 +39,9 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(
-      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+      `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
   const { autograph } = router.query;

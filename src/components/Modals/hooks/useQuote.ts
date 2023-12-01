@@ -3,7 +3,7 @@ import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import lensQuote from "../../../../lib/helpers/api/quotePost";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import {
   PostBoxState,
   setPostBox,
@@ -155,7 +155,7 @@ const useQuote = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -520,7 +520,7 @@ const useQuote = (
       });
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -548,7 +548,7 @@ const useQuote = (
     setTransactionLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -578,7 +578,7 @@ const useQuote = (
     setTransactionLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 

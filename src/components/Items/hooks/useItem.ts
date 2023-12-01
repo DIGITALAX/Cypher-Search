@@ -20,7 +20,7 @@ import { getCollectionsPaginated } from "../../../../graphql/subgraph/queries/ge
 import { getCommunityName } from "../../../../graphql/subgraph/queries/getCommunities";
 import getProfiles from "../../../../graphql/lens/queries/profiles";
 import {
-  ACCEPTED_TOKENS_MUMBAI,
+  ACCEPTED_TOKENS,
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
   LEGEND_OPEN_ACTION,
@@ -32,7 +32,7 @@ import {
 import { PurchaseDetails } from "../types/item.types";
 import { OracleData } from "@/components/Checkout/types/checkout.types";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import encodeActData from "../../../../lib/helpers/encodeActData";
 import actPost from "../../../../lib/helpers/api/actPost";
 import { setSuccessCheckout } from "../../../../redux/reducers/successCheckoutSlice";
@@ -389,7 +389,7 @@ const useItem = (
       }
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -440,7 +440,7 @@ const useItem = (
     setDecryptLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -455,7 +455,7 @@ const useItem = (
     setInstantLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -524,7 +524,7 @@ const useItem = (
               },
         ],
         functionName: "approve",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [
           type === "chromadin"
             ? CHROMADIN_OPEN_ACTION
@@ -566,7 +566,7 @@ const useItem = (
       )
         return;
       const data = await publicClient.readContract({
-        address: ACCEPTED_TOKENS_MUMBAI.filter(
+        address: ACCEPTED_TOKENS.filter(
           (token) =>
             token[2].toLowerCase() === purchaseDetails?.currency?.toLowerCase()
         )?.[0]?.[2] as `0x${string}`,
@@ -616,7 +616,7 @@ const useItem = (
               oracleData?.find(
                 (oracle) =>
                   oracle.currency ===
-                  ACCEPTED_TOKENS_MUMBAI.find(
+                  ACCEPTED_TOKENS.find(
                     (item) => item[2] === purchaseDetails?.currency
                   )?.[2]
               )?.wei
@@ -629,7 +629,7 @@ const useItem = (
               oracleData?.find(
                 (oracle) =>
                   oracle.currency ===
-                  ACCEPTED_TOKENS_MUMBAI.find(
+                  ACCEPTED_TOKENS.find(
                     (item) => item[2] === purchaseDetails?.currency
                   )?.[2]
               )?.rate

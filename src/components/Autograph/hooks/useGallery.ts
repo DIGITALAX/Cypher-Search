@@ -14,7 +14,7 @@ import {
   PublicationStats,
 } from "../../../../graphql/generated";
 import { createWalletClient, custom, PublicClient } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import setMeta from "../../../../lib/helpers/api/setMeta";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { Dispatch } from "redux";
@@ -415,7 +415,7 @@ const useGallery = (
         const responseJSON = await response.json();
 
         const clientWallet = createWalletClient({
-          chain: polygonMumbai,
+          chain: polygon,
           transport: custom((window as any).ethereum),
         });
 
@@ -502,7 +502,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -602,7 +602,7 @@ const useGallery = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(

@@ -13,7 +13,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 import merge from "lodash.merge";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { polygon, polygonMumbai } from "wagmi/chains";
+import { polygon } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import Modals from "@/components/Modals/modules/Modals";
 import RouterChange from "@/components/Common/modules/RouterChange";
@@ -30,7 +30,7 @@ const walletTheme = merge(darkTheme(), {
 } as Theme);
 
 const { chains, publicClient } = configureChains(
-  [polygonMumbai],
+  [polygon],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })]
 );
 

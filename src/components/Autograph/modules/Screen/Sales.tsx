@@ -3,7 +3,7 @@ import { Sale, SalesProps } from "../../types/autograph.types";
 import Image from "next/legacy/image";
 import Link from "next/link";
 import {
-  ACCEPTED_TOKENS_MUMBAI,
+  ACCEPTED_TOKENS,
   INFURA_GATEWAY,
   numberToItemTypeMap,
 } from "../../../../../lib/constants";
@@ -122,7 +122,7 @@ const Sales: FunctionComponent<SalesProps> = ({
                               </div>
                               <div className="relative w-fit h-fit flex items-center justify-center">
                                 {`Currency (${
-                                  ACCEPTED_TOKENS_MUMBAI.find(
+                                  ACCEPTED_TOKENS.find(
                                     (item) => item[2] === sale?.currency
                                   )?.[1]
                                 })`}

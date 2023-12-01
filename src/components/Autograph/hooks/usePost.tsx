@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MakePostComment } from "../types/autograph.types";
 import { createWalletClient, custom } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { PublicClient } from "wagmi";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
 import lensPost from "../../../../lib/helpers/api/postChain";
@@ -59,7 +59,7 @@ const usePost = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -120,7 +120,6 @@ const usePost = (
             })
           );
         }, 3000);
-
       }
     }
     setPostLoading([false]);

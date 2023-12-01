@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygonMumbai } from "viem/chains";
-import { Creation, Publication } from "../types/tiles.types";
-import {
-  Mirror,
-  Post,
-  Profile,
-  Quote,
-  Comment,
-} from "../../../../graphql/generated";
+import { polygon } from "viem/chains";
+import { Publication } from "../types/tiles.types";
+import { Profile } from "../../../../graphql/generated";
 import { Dispatch } from "redux";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
@@ -41,7 +35,7 @@ const useTiles = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -98,7 +92,7 @@ const useTiles = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 

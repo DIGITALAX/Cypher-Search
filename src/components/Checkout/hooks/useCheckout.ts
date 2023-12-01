@@ -11,12 +11,12 @@ import {
   checkAndSignAuthMessage,
 } from "@lit-protocol/lit-node-client";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import encodeActData from "../../../../lib/helpers/encodeActData";
 import actPost from "../../../../lib/helpers/api/actPost";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import {
-  ACCEPTED_TOKENS_MUMBAI,
+  ACCEPTED_TOKENS,
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
   DIGITALAX_ADDRESS,
@@ -75,7 +75,7 @@ const useCheckout = (
   const [chooseCartItem, setChooseCartItem] = useState<CartItem>();
   const [isApprovedSpend, setApprovedSpend] = useState<boolean>(false);
   const [checkoutCurrency, setCheckoutCurrency] = useState<string>(
-    ACCEPTED_TOKENS_MUMBAI[1][2]
+    ACCEPTED_TOKENS[1][2]
   );
   const [encryptionLoading, setEncryptionLoading] = useState<boolean>(false);
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
@@ -102,7 +102,7 @@ const useCheckout = (
     setEncryptionLoading(true);
     try {
       const authSig = await checkAndSignAuthMessage({
-        chain: "mumbai",
+        chain: "polygon",
       });
 
       await client.connect();
@@ -179,7 +179,7 @@ const useCheckout = (
       }
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -267,7 +267,7 @@ const useCheckout = (
     setApproveLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -338,7 +338,7 @@ const useCheckout = (
               },
         ],
         functionName: "approve",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [
           item?.type === "chromadin"
             ? CHROMADIN_OPEN_ACTION
@@ -365,7 +365,7 @@ const useCheckout = (
               oracleData?.find(
                 (oracle) =>
                   oracle.currency ===
-                  ACCEPTED_TOKENS_MUMBAI.find(
+                  ACCEPTED_TOKENS.find(
                     (item) => item[2] === checkoutCurrency
                   )?.[2]
               )?.rate

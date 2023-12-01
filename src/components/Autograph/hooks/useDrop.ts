@@ -5,7 +5,7 @@ import { Dispatch } from "redux";
 import { getDrops } from "../../../../graphql/subgraph/queries/getDrops";
 import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
 import { PublicClient, createWalletClient, custom } from "viem";
-import { polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { COLLECTION_CREATOR } from "../../../../lib/constants";
 import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
 import convertToFile from "../../../../lib/helpers/convertToFile";
@@ -47,7 +47,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -75,7 +75,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "updateDrop",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [
           dropDetails?.collectionIds?.map((item) => Number(item)),
           "ipfs://" + dropURI?.cid,
@@ -97,7 +97,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -105,7 +105,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "removeDrop",
-        chain: polygonMumbai,
+        chain: polygon,
         args: [Number(dropDetails?.dropId)],
         account: address,
       });
@@ -123,7 +123,7 @@ const useDrop = (
     setCreateDropLoading(true);
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -146,7 +146,7 @@ const useDrop = (
         address: COLLECTION_CREATOR,
         abi: CollectionCreatorAbi,
         functionName: "createDrop",
-        chain: polygonMumbai,
+        chain: polygon,
         args: ["ipfs://" + dropURI?.cid],
         account: address,
       });

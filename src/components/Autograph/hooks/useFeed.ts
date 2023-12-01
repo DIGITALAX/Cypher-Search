@@ -15,7 +15,7 @@ import lensLike from "../../../../lib/helpers/api/likePost";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import getPublications from "../../../../graphql/lens/queries/publications";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { createWalletClient, custom } from "viem";
 import { PublicClient } from "wagmi";
 import lensBookmark from "../../../../lib/helpers/api/bookmarkPost";
@@ -32,7 +32,7 @@ const useFeed = (
   profile: Profile | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined,
+  address: `0x${string}` | undefined
 ) => {
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []
@@ -183,7 +183,7 @@ const useFeed = (
       );
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -297,7 +297,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -362,7 +362,7 @@ const useFeed = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
       await lensMirror(
@@ -473,7 +473,7 @@ const useFeed = (
     });
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 

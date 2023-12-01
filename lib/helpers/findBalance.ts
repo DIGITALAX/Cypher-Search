@@ -1,5 +1,4 @@
 import { PublicClient } from "viem";
-import { ACCEPTED_TOKENS_MUMBAI } from "../constants";
 
 const findBalance = async (
   publicClient: PublicClient,
