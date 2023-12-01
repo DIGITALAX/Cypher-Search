@@ -10,9 +10,10 @@ import {
   Profile,
   PublicationType,
 } from "../../../../graphql/generated";
-import { getTextSearch } from "../../../../graphql/subgraph/queries/getTextSearch";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
+import buildTextQuery from "../../../../lib/helpers/buildTextQuery";
+import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 
 const useSuggested = (
   routerPath: string | undefined,
@@ -43,17 +44,17 @@ const useSuggested = (
       publications: (Post | Comment | Quote | Mirror)[] = [],
       pubCursor: string | undefined;
     try {
-      const searchItems = await getTextSearch(
-        pageProfile?.handle?.localName!,
-        25,
-        0
-      );
-      if (searchItems?.data?.cyphersearch?.length > 0) {
-        collections =
-          (await handleCollectionProfilesAndPublications(
-            searchItems?.data?.cyphersearch,
-            lensConnected
-          )) || [];
+      const textWhere = buildTextQuery(pageProfile?.handle?.localName!);
+      if (textWhere) {
+        const searchItems = await getAllCollections(textWhere, 25, 0);
+
+        if (searchItems?.data?.collectionCreateds?.length > 0) {
+          collections =
+            (await handleCollectionProfilesAndPublications(
+              searchItems?.data?.collectionCreateds,
+              lensConnected
+            )) || [];
+        }
       }
 
       const relatedPubs = await getPublications(
@@ -123,17 +124,20 @@ const useSuggested = (
       publications: (Post | Comment | Quote | Mirror)[] = [],
       pubCursor: string | undefined;
     try {
-      const searchItems = await getTextSearch(
-        pageProfile?.handle?.localName!,
-        25,
-        suggestedFeed?.graphCursor!
-      );
-      if (searchItems?.data?.cyphersearch?.length > 0) {
-        collections =
-          (await handleCollectionProfilesAndPublications(
-            searchItems?.data?.cyphersearch,
-            lensConnected
-          )) || [];
+      const textWhere = buildTextQuery(pageProfile?.handle?.localName!);
+      if (textWhere) {
+        const searchItems = await getAllCollections(
+          textWhere,
+          25,
+          suggestedFeed?.graphCursor!
+        );
+        if (searchItems?.data?.collectionCreateds?.length > 0) {
+          collections =
+            (await handleCollectionProfilesAndPublications(
+              searchItems?.data?.collectionCreateds,
+              lensConnected
+            )) || [];
+        }
       }
 
       const relatedPubs = await getPublications(

@@ -48,11 +48,12 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         simpleCollect={undefined}
         dispatch={dispatch}
         router={router}
+        creation
       />
       <div className="relative flex flex-col items-center justify-start w-full h-fit gap-5">
         <div className="relative flex flex-row w-full justifty-between items-start h-fit gap-4">
           <div
-            className="w-full h-72 rounded-sm bg-amo/30 border border-white cursor-pointer"
+            className="w-full h-72 rounded-sm bg-amo/30 border border-white cursor-pointer relative"
             onClick={() =>
               dispatch(
                 setImageViewer({
@@ -82,7 +83,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             )}
           </div>
           <div className="relative flex flex-col gap-2 justify-start items-center w-fit h-full mt-0">
-            <div className="relative w-10 h-10 flex items-center justify-center">
+            <div className="relative w-5 tablet:w-10 h-5 tablet:h-10 flex items-center justify-center">
               <Image
                 layout="fill"
                 src={`${INFURA_GATEWAY}/ipfs/${
@@ -94,7 +95,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               />
             </div>
             <div
-              className="relative w-10 h-10 flex items-center justify-center cursor-pointer active:scale-95"
+              className="relative w-5 tablet:w-10 h-5 tablet:h-10 flex items-center justify-center cursor-pointer active:scale-95"
               onClick={() =>
                 setApparel((prev) => {
                   const newArray = [...prev];
@@ -142,8 +143,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 parentId={publication?.pubId}
                 top={"auto"}
                 bottom={"2px"}
-                left={"auto"}
-                right={"2px"}
+                left={"2px"}
+                right={"auto"}
               />
             )}
           </div>

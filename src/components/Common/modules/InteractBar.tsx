@@ -1,6 +1,11 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../lib/constants";
+import {
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  INFURA_GATEWAY,
+  LISTENER_OPEN_ACTION,
+} from "../../../../lib/constants";
 import { InteractBarProps } from "../types/common.types";
 import numeral from "numeral";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -42,10 +47,11 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
   handleBookmark,
   display,
   gallery,
+  creation,
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-full h-fit rounded-sm border border-frio font-vcr text-mar flex gap-4 p-2 items-center justify-center bg-fuego ${
+      className={`relative w-full h-fit rounded-sm border border-frio font-vcr text-mar flex gap-4 p-2 items-center justify-center bg-fuego tablet:flex-nowrap flex-wrap ${
         col || layoutAmount ? "flex-col" : "flex-row"
       } ${gallery || display ? "text-xxs" : "text-base"}`}
     >
@@ -110,6 +116,23 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                   )?.operations?.hasReacted,
                   main
                 )
+              : creation
+              ? (
+                  like as (
+                    id: string,
+                    hasReacted: boolean,
+                    creation?: boolean
+                  ) => Promise<void>
+                )(
+                  publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn?.id
+                    : publication?.id,
+                  (publication?.__typename === "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.operations?.hasReacted,
+                  creation
+                )
               : (like as (id: string, hasReacted: boolean) => Promise<void>)(
                   publication?.__typename === "Mirror"
                     ? publication?.mirrorOn?.id
@@ -138,6 +161,51 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             ? () =>
                 router.push(
                   `/item/${display}/${(
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
+            : (publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+              )?.openActionModules?.[0]?.contract?.address
+                ?.toLowerCase()
+                ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+            ? () =>
+                router.push(
+                  `/item/chromadin/${(
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
+            : (publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+              )?.openActionModules?.[0]?.contract?.address
+                ?.toLowerCase()
+                ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+            ? () =>
+                router.push(
+                  `/item/coinop/${(
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
+            : (publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+              )?.openActionModules?.[0]?.contract?.address
+                ?.toLowerCase()
+                ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+            ? () =>
+                router.push(
+                  `/item/listener/${(
                     (publication?.__typename === "Mirror"
                       ? publication?.mirrorOn
                       : (publication as Post)
@@ -259,7 +327,9 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                   ? "cursor-pointer active:scale-95"
                   : "opacity-70"
               }`}
-              onClick={() => functions[indexTwo] && functions[indexTwo]?.()}
+              onClick={async () =>
+                functions[indexTwo] && (functions[indexTwo] as () => void)?.()
+              }
             >
               {loaders[indexTwo] ? (
                 <div className="relative w-fit h-fit animate-spin flex items-center justify-center">
@@ -299,7 +369,49 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 }`}
                 onClick={() => {
                   if (image[1] === "Comments") {
-                    router.push(`/item/pub/${publication?.id}`);
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/chromadin/${(
+                            (publication?.__typename === "Mirror"
+                              ? publication?.mirrorOn
+                              : (publication as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/coinop/${(
+                            (publication?.__typename === "Mirror"
+                              ? publication?.mirrorOn
+                              : (publication as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/listener/${(
+                            (publication?.__typename === "Mirror"
+                              ? publication?.mirrorOn
+                              : (publication as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : router.push(`/item/pub/${publication?.id}`);
                   } else {
                     stats?.[indexTwo] &&
                       Number(stats?.[indexTwo]) > 0 &&
@@ -323,7 +435,11 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
         );
       })}
       {openMirrorChoice?.[index] && (
-        <div className="absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-black/80 rounded-sm left-2 -top-6">
+        <div
+          className={`absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-black/80 rounded-sm -top-6 ${
+            col || layoutAmount ? "left-auto" : "left-auto tablet:left-2"
+          }`}
+        >
           {[
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
             "QmfDNH347Vph4b1tEuegydufjMU2QwKzYnMZCjygGvvUMM",
@@ -359,6 +475,13 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                     ? (functions[indexTwo] as (id: string) => Promise<void>)(
                         publication?.id
                       )
+                    : creation
+                    ? (
+                        functions[indexTwo] as (
+                          id: string,
+                          creation?: boolean
+                        ) => Promise<void>
+                      )(publication?.id, creation)
                     : router.asPath.includes("item")
                     ? (
                         functions[indexTwo] as (

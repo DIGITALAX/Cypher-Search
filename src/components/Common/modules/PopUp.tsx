@@ -36,17 +36,20 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             ? "opacity-70"
             : "cursor-pointer active:scale-95"
         } hover:opacity-70`}
-        title="Add to Cart"
+        title={
+          cartItem?.amount == cartItem?.soldTokens ? "Sold Out" : "Add to Cart"
+        }
         onClick={() => {
           if (cartItem?.amount == cartItem?.soldTokens) return;
 
           if (
-            Number(cartItem?.soldTokens) +  Number(
-              cartItems
-                ?.filter((value) => cartItem?.pubId == value?.item?.pubId)
-                ?.map((item) => item?.amount)
-                ?.reduce((sum, item) => sum + Number(item), 0)
-            ) +
+            Number(cartItem?.soldTokens) +
+              Number(
+                cartItems
+                  ?.filter((value) => cartItem?.pubId == value?.item?.pubId)
+                  ?.map((item) => item?.amount)
+                  ?.reduce((sum, item) => sum + Number(item), 0)
+              ) +
               1 >
             Number(cartItem?.amount)
           ) {

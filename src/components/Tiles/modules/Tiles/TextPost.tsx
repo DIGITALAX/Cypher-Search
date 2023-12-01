@@ -1,10 +1,15 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import {
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  INFURA_GATEWAY,
+  LISTENER_OPEN_ACTION,
+} from "../../../../../lib/constants";
 import { TextPostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
-import { Post } from "../../../../../graphql/generated";
+import { ImageMetadataV3, Post } from "../../../../../graphql/generated";
 import moment from "moment";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 import createProfilePicture from "../../../../../lib/helpers/createProfilePicture";
@@ -112,9 +117,13 @@ const TextPost: FunctionComponent<TextPostProps> = ({
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">
               <div className="relative w-full h-fit items-end justify-start flex flex-col">
-                <div className={`relative flex items-center justify-center text-right break-words text-white font-bit uppercase ${
-                  layoutAmount < 4 ? "text-xs 2xl:text-sm" : "text-sm 2xl:text-base"
-                }`}>
+                <div
+                  className={`relative flex items-center justify-center text-right break-words text-white font-bit uppercase ${
+                    layoutAmount < 4
+                      ? "text-xs 2xl:text-sm"
+                      : "text-sm 2xl:text-base"
+                  }`}
+                >
                   {
                     (publication?.__typename === "Mirror"
                       ? publication?.mirrorOn
@@ -162,7 +171,53 @@ const TextPost: FunctionComponent<TextPostProps> = ({
               </div>
               <div
                 className="relative w-6 h-6 flex items-center justify-center cursor-pointer active:scale-95"
-                onClick={() => router.push(`/item/pub/${publication?.id}`)}
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  (publication?.__typename == "Mirror"
+                    ? publication?.mirrorOn
+                    : (publication as Post)
+                  )?.openActionModules?.[0]?.contract?.address
+                    ?.toLowerCase()
+                    ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                    ? router.push(
+                        `/item/chromadin/${(
+                          (publication?.__typename == "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.title?.replaceAll(" ", "_")}`
+                      )
+                    : (publication?.__typename == "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.openActionModules?.[0]?.contract?.address
+                        ?.toLowerCase()
+                        ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                    ? router.push(
+                        `/item/coinop/${(
+                          (publication?.__typename == "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.title?.replaceAll(" ", "_")}`
+                      )
+                    : (publication?.__typename == "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.openActionModules?.[0]?.contract?.address
+                        ?.toLowerCase()
+                        ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                    ? router.push(
+                        `/item/listener/${(
+                          (publication?.__typename == "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.title?.replaceAll(" ", "_")}`
+                      )
+                    : router.push(`/item/pub/${publication?.id}`);
+                }}
               >
                 <Image
                   layout="fill"

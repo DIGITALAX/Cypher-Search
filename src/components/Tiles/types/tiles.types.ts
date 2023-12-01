@@ -431,23 +431,6 @@ export type MicrobrandProps = {
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
 };
 
-export interface FilterInput {
-  access_contains_nocase?: String;
-  communities_contains_nocase?: String;
-  description_contains_nocase?: String;
-  dropTitle_contains_nocase?: String;
-  microbrand_contains_nocase?: String;
-  printType_contains_nocase?: String;
-  prompt_contains_nocase?: String;
-  tags_contains_nocase?: String;
-  title_contains_nocase?: String;
-  visibility_contains_nocase?: String;
-  mediaTypes_contains_nocase?: String;
-  unlimited?: Boolean;
-  amount_gte?: String;
-  amount_lte?: String;
-}
-
 export enum ERC20Tokens {
   MONA = "MONA",
   USDT = "USDT",

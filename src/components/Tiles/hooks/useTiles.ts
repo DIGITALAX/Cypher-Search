@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PublicClient, createWalletClient, custom } from "viem";
 import { polygonMumbai } from "viem/chains";
-import { Publication } from "../types/tiles.types";
+import { Creation, Publication } from "../types/tiles.types";
 import {
   Mirror,
   Post,
@@ -28,17 +28,14 @@ const useTiles = (
   const [profileHovers, setProfileHovers] = useState<boolean[]>([]);
   const [followLoading, setFollowLoading] = useState<boolean[]>([]);
 
-  const followProfile = async (id: string) => {
-    const index = allSearchItems.findIndex(
-      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
-    );
+  const followProfile = async (id: string, index?: number) => {
     if (index === -1) {
       return;
     }
 
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = true;
+      updatedArray[index!] = true;
       return updatedArray;
     });
 
@@ -84,22 +81,19 @@ const useTiles = (
     }
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = false;
+      updatedArray[index!] = false;
       return updatedArray;
     });
   };
 
-  const unfollowProfile = async (id: string) => {
-    const index = allSearchItems.findIndex(
-      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
-    );
+  const unfollowProfile = async (id: string, index?: number) => {
     if (index === -1) {
       return;
     }
 
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = true;
+      updatedArray[index!] = true;
       return updatedArray;
     });
     try {
@@ -143,7 +137,7 @@ const useTiles = (
     }
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
-      updatedArray[index] = false;
+      updatedArray[index!] = false;
       return updatedArray;
     });
   };
