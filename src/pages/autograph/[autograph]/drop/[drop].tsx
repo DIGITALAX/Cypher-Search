@@ -7,7 +7,7 @@ import Head from "next/head";
 import { NextRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
 import { RootState } from "../../../../../redux/store";
 import { useEffect, useState } from "react";
@@ -22,9 +22,9 @@ import NotFound from "@/components/Common/modules/NotFound";
 
 const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(
-      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+      `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
   const { autograph, drop } = router.query;

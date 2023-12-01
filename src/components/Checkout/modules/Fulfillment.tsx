@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { FulfillmentProps } from "../types/checkout.types";
 import { AiOutlineLoading } from "react-icons/ai";
 import {
-  ACCEPTED_TOKENS_MUMBAI,
+  ACCEPTED_TOKENS,
   COUNTRIES,
   INFURA_GATEWAY,
 } from "../../../../lib/constants";
@@ -182,9 +182,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
             className={`relative w-fit h-fit rounded-full flex items-center text-xs`}
           >
             {`${Number(((total * 10 ** 18) / rate)?.toFixed(3))} ${
-              ACCEPTED_TOKENS_MUMBAI?.find(
-                (item) => item[2] === checkoutCurrency
-              )?.[1]
+              ACCEPTED_TOKENS?.find((item) => item[2] === checkoutCurrency)?.[1]
             }`}
           </div>
         </div>
@@ -193,7 +191,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
             Checkout Token
           </div>
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-            {ACCEPTED_TOKENS_MUMBAI?.filter((value) =>
+            {ACCEPTED_TOKENS?.filter((value) =>
               cartItems
                 ?.find(
                   (item) => item?.item?.pubId === chooseCartItem?.item?.pubId
@@ -246,7 +244,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                   ) / rate
                 ).toFixed(3)
               ).toString()} ${
-                ACCEPTED_TOKENS_MUMBAI?.find(
+                ACCEPTED_TOKENS?.find(
                   (item) => item[2] === checkoutCurrency
                 )?.[1]
               }`}
@@ -256,8 +254,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
       </div>
       {chooseCartItem?.item?.amount == chooseCartItem?.item?.soldTokens && (
         <div className="relative w-3/4 h-fit flex items-center justify-center break-words text-white text-xs font-bit">
-          It looks like this creation was sold before you got to it! Remove it
-          from your cart and collect something else?
+          Just missed it! This creation was snapped up by another collector. Time to update your cart. Change of plans? Maybe it&apos;s for the best."
         </div>
       )}
       <div

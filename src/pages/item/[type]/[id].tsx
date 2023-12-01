@@ -7,7 +7,7 @@ import Head from "next/head";
 import { NextRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import useSuggested from "@/components/Common/hooks/useSuggested";
@@ -32,9 +32,9 @@ import { ItemType } from "@/components/Common/types/common.types";
 
 const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(
-      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+      `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
   const { type, id } = router.query;
@@ -224,7 +224,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address,
     lensConnected,
-    setSuggestedFeed,
+    setSuggestedFeed
   );
   const {
     followProfile: followItemProfile,
@@ -327,7 +327,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   content={
                     itemData?.type === "chromadin" ||
                     itemData?.type === "coinop"
-                      ? (itemData.post as Creation)?.collectionMetadata?.description
+                      ? (itemData.post as Creation)?.collectionMetadata
+                          ?.description
                       : (itemData?.post as Mirror)?.__typename === "Mirror"
                       ? (
                           (itemData?.post as Mirror)?.mirrorOn

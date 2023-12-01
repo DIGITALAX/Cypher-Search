@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { DecodedMessage, Client, Conversation } from "@xmtp/react-sdk";
 import { DIGITALAX_ADDRESS } from "../../../../lib/constants";
 import { createWalletClient, custom } from "viem";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { ScreenDisplay } from "../types/autograph.types";
 import { LimitType, Profile } from "../../../../graphql/generated";
 import { fetchQuery } from "@airstack/airstack-react";
@@ -125,7 +125,7 @@ const useConversations = (
     try {
       const clientWallet = createWalletClient({
         account: address,
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 

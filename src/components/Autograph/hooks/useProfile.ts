@@ -9,7 +9,7 @@ import {
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { Dispatch } from "redux";
 import { createWalletClient, custom, PublicClient } from "viem";
@@ -70,7 +70,7 @@ const useProfile = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -133,7 +133,7 @@ const useProfile = (
 
     try {
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 

@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { ChromadinProps } from "../types/item.types";
 import Image from "next/legacy/image";
 import {
-  ACCEPTED_TOKENS_MUMBAI,
+  ACCEPTED_TOKENS,
   INFURA_GATEWAY,
   itemStringToType,
   printTypeToString,
@@ -568,7 +568,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   )
                 )?.toFixed(3)
               )} ${
-                ACCEPTED_TOKENS_MUMBAI?.filter((item) =>
+                ACCEPTED_TOKENS?.filter((item) =>
                   itemData?.acceptedTokens?.includes(item?.[2]?.toLowerCase())
                 )?.find(
                   (item) =>
@@ -597,7 +597,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     >
                       <Image
                         src={`${INFURA_GATEWAY}/ipfs/${
-                          ACCEPTED_TOKENS_MUMBAI?.find(
+                          ACCEPTED_TOKENS?.find(
                             (value) =>
                               value[2]?.toLowerCase() == item?.toLowerCase()
                           )?.[0]

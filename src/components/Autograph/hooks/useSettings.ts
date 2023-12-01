@@ -17,7 +17,7 @@ import setFollowModule from "../../../../graphql/lens/mutations/followModule";
 import createSetFollowModule from "../../../../lib/helpers/createSetFollowModule";
 import { createWalletClient, custom } from "viem";
 import LensHubProxy from "./../../../../abis/LensHubProxy.json";
-import { polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { PublicClient } from "wagmi";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../../../lib/constants";
 import broadcast from "../../../../graphql/lens/mutations/broadcast";
@@ -240,7 +240,7 @@ const useSettings = (
         const responseJSON = await response.json();
 
         const clientWallet = createWalletClient({
-          chain: polygonMumbai,
+          chain: polygon,
           transport: custom((window as any).ethereum),
         });
 
@@ -277,7 +277,7 @@ const useSettings = (
       const typedData = data?.createSetFollowModuleTypedData.typedData;
 
       const clientWallet = createWalletClient({
-        chain: polygonMumbai,
+        chain: polygon,
         transport: custom((window as any).ethereum),
       });
 
@@ -301,7 +301,7 @@ const useSettings = (
           address: LENS_HUB_PROXY_ADDRESS_MATIC,
           abi: LensHubProxy,
           functionName: "setFollowModule",
-          chain: polygonMumbai,
+          chain: polygon,
           args: [
             typedData?.value.profileId,
             typedData?.value.followModule,

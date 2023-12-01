@@ -4,7 +4,7 @@ import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
 import { OpenActionModuleInput, InputMaybe } from "../../../graphql/generated";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
-import {  polygonMumbai } from "viem/chains";
+import {  polygon } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
@@ -82,7 +82,7 @@ const lensQuote = async (
       address: LENS_HUB_PROXY_ADDRESS_MATIC,
       abi: LensHubProxy,
       functionName: "quote",
-      chain: polygonMumbai,
+      chain: polygon,
       args: [
         {
           profileId: typedData?.value.profileId,

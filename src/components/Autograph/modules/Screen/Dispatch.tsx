@@ -6,7 +6,7 @@ import {
 } from "../../types/autograph.types";
 import Image from "next/legacy/image";
 import {
-  ACCEPTED_TOKENS_MUMBAI,
+  ACCEPTED_TOKENS,
   INFURA_GATEWAY,
 } from "../../../../../lib/constants";
 import { setScreenDisplay } from "../../../../../redux/reducers/screenDisplaySlice";
@@ -522,7 +522,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 Purchase Tokens
               </div>
               <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-                {ACCEPTED_TOKENS_MUMBAI?.map(
+                {ACCEPTED_TOKENS?.map(
                   (item: string[], indexTwo: number) => {
                     return (
                       <div

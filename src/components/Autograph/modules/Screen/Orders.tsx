@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { Order, OrdersProps, Sub } from "../../types/autograph.types";
 import Link from "next/link";
 import {
-  ACCEPTED_TOKENS_MUMBAI,
+  ACCEPTED_TOKENS,
   INFURA_GATEWAY,
 } from "../../../../../lib/constants";
 import Image from "next/legacy/image";
@@ -88,7 +88,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center">
                               {`Currency ( ${
-                                ACCEPTED_TOKENS_MUMBAI.find(
+                                ACCEPTED_TOKENS.find(
                                   (item) => item[2] === order?.currency
                                 )?.[1]
                               } )`}

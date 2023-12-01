@@ -11,7 +11,7 @@ import useSignIn from "@/components/Layout/hooks/useSignIn";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import { useAccount } from "wagmi";
-import { polygon, polygonMumbai } from "viem/chains";
+import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
 
 const Checkout: NextPage<{
@@ -21,9 +21,9 @@ const Checkout: NextPage<{
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: polygon,
     transport: http(
-      `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MUMBAI}`
+      `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
   const walletConnected = useSelector(
