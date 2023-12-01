@@ -145,7 +145,20 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
                           actionFollower: publication,
                         })
                       )
-                    : followProfile(publication?.id, feed, main);
+                    : feed || main
+                    ? (
+                        followProfile as (
+                          id: string,
+                          feed?: boolean,
+                          main?: boolean
+                        ) => Promise<void>
+                      )(publication?.id, feed, main)
+                    : (
+                        followProfile as (
+                          id: string,
+                          index?: number
+                        ) => Promise<void>
+                      )(publication?.id, index);
                 }}
               >
                 {followLoading[index] &&
@@ -179,7 +192,20 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
                     return;
                   e.stopPropagation();
                   publication?.operations?.isFollowedByMe?.value &&
-                    unfollowProfile(publication?.id, feed, main);
+                    (feed || main
+                      ? (
+                          unfollowProfile as (
+                            id: string,
+                            feed?: boolean,
+                            main?: boolean
+                          ) => Promise<void>
+                        )(publication?.id, feed, main)
+                      : (
+                          unfollowProfile as (
+                            id: string,
+                            index?: number
+                          ) => Promise<void>
+                        )(publication?.id, index));
                 }}
               >
                 {followLoading[index] &&

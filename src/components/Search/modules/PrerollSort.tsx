@@ -6,6 +6,7 @@ import DropDown from "./DropDown";
 import { setMap } from "../../../../redux/reducers/mapSlice";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 
 const PrerollSort: FunctionComponent<PrerollSortProps> = ({
   openDropDown,
@@ -58,6 +59,17 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                 }
                 title={image[0]}
                 onClick={() => {
+                  if (
+                    filterValues?.printType !==
+                    (filterValues.printType.includes(image[0])
+                      ? filterValues.printType.filter(
+                          (item: string) => item !== image[0]
+                        )
+                      : [...filterValues.printType, image[0]])
+                  ) {
+                    dispatch(setFilterChange(true));
+                  }
+
                   dispatch(
                     setFilter({
                       ...filterValues,
@@ -110,6 +122,17 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                           <div
                             className="relative bg-offBlack w-full h-full flex items-center justify-center text-center"
                             onClick={() => {
+                              if (
+                                filterValues?.size?.apparel !==
+                                (filterValues.size.apparel.includes(size)
+                                  ? filterValues.size.apparel.filter(
+                                      (item: string) => item !== size
+                                    )
+                                  : [...filterValues.size.apparel, size])
+                              ) {
+                                dispatch(setFilterChange(true));
+                              }
+
                               dispatch(
                                 setFilter({
                                   ...filterValues,
@@ -169,6 +192,17 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                                 : "tiles"
                             }
                             onClick={() => {
+                              if (
+                                filterValues?.size?.poster !==
+                                (filterValues.size.poster.includes(size)
+                                  ? filterValues.size.poster.filter(
+                                      (item: string) => item !== size
+                                    )
+                                  : [...filterValues.size.poster, size])
+                              ) {
+                                dispatch(setFilterChange(true));
+                              }
+
                               dispatch(
                                 setFilter({
                                   ...filterValues,
@@ -211,6 +245,17 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                                 : "tiles"
                             }
                             onClick={() => {
+                              if (
+                                filterValues?.size?.sticker !==
+                                (filterValues.size.sticker.includes(size)
+                                  ? filterValues.size.sticker.filter(
+                                      (item: string) => item !== size
+                                    )
+                                  : [...filterValues.size.sticker, size])
+                              ) {
+                                dispatch(setFilterChange(true));
+                              }
+
                               dispatch(
                                 setFilter({
                                   ...filterValues,
@@ -258,6 +303,17 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                       filterValues.color.includes(color) ? "preroll" : "tiles"
                     }
                     onClick={() => {
+                      if (
+                        filterValues?.color !==
+                        (filterValues.color.includes(color)
+                          ? filterValues.color.filter(
+                              (item: string) => item !== color
+                            )
+                          : [...filterValues.color, color])
+                      ) {
+                        dispatch(setFilterChange(true));
+                      }
+
                       dispatch(
                         setFilter({
                           ...filterValues,
@@ -296,6 +352,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                   type="number"
                   placeholder={String(filterValues.price.min)}
                   onChange={(e) => {
+                    if (
+                      Number(filterValues?.price?.min) !==
+                      Number(e.target.value)
+                    ) {
+                      dispatch(setFilterChange(true));
+                    }
+
                     dispatch(
                       setFilter({
                         ...filterValues,
@@ -321,6 +384,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                   type="number"
                   placeholder={String(filterValues.price.max)}
                   onChange={(e) => {
+                    if (
+                      Number(filterValues?.price?.max) !==
+                      Number(e.target.value)
+                    ) {
+                      dispatch(setFilterChange(true));
+                    }
+
                     dispatch(
                       setFilter({
                         ...filterValues,
@@ -341,6 +411,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             title={"Token"}
             value={filterValues?.token}
             onChange={(e: ChangeEvent) => {
+              if (
+                filterValues?.token !==
+                (e.target as HTMLInputElement).value.toLowerCase()
+              ) {
+                dispatch(setFilterChange(true));
+              }
+
               setFilteredDropDownValues({
                 ...filteredDropDownValues,
                 token: filterConstants!.token.filter((value) =>
@@ -394,6 +471,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                   newValues = filterValues.token + ` ${value},`;
                 }
 
+                if (
+                  filterValues?.token !==
+                  newValues
+                ) {
+                  dispatch(setFilterChange(true));
+                }
+
                 dispatch(
                   setFilter({
                     ...filterValues,
@@ -415,12 +499,20 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
               placeholder={"find by drop name"}
               value={filterValues.drop}
               onChange={(e) =>
-                dispatch(
+             {  
+              if (
+                filterValues?.drop !==
+                (e.target as HTMLInputElement).value.toLowerCase()
+              ) {
+                dispatch(setFilterChange(true));
+              }
+              
+              dispatch(
                   setFilter({
                     ...filterValues,
                     drop: (e.target as HTMLInputElement).value.toLowerCase(),
                   })
-                )
+                )}
               }
             />
           </div>
@@ -431,6 +523,14 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             title={"Find by Local Fulfiller"}
             value={filterValues?.fulfiller}
             onChange={(e: ChangeEvent) => {
+              if (
+                filterValues?.fulfiller !==
+                (e.target as HTMLInputElement).value.toLowerCase()
+              ) {
+                dispatch(setFilterChange(true));
+              }
+           
+           
               setFilteredDropDownValues({
                 ...filteredDropDownValues,
                 fulfiller: filterConstants!.fulfiller.filter((value) =>
@@ -471,6 +571,9 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             }}
             onDropDownChoose={(value: string) => {
               if (!filterValues.fulfiller.includes(value)) {
+              
+              
+              
                 const allValues = filterValues.fulfiller.split(",");
                 const isPartialEntry =
                   allValues[allValues.length - 1].trim() !== "";
@@ -482,6 +585,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                   newValues = allValues.join(", ").trim();
                 } else {
                   newValues = filterValues.fulfiller + ` ${value},`;
+                }
+
+                if (
+                  filterValues?.fulfiller !==
+                  newValues
+                ) {
+                  dispatch(setFilterChange(true));
                 }
 
                 dispatch(

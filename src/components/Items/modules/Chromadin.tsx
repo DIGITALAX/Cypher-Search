@@ -734,7 +734,11 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 ? "opacity-70"
                 : "cursor-pointer active:scale-95"
             }`}
-            title="Add to Cart"
+            title={
+              itemData?.amount == itemData?.soldTokens
+                ? "Sold Out"
+                : "Add to Cart"
+            }
             onClick={() => {
               if (itemData?.amount == itemData?.soldTokens) return;
 

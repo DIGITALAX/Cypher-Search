@@ -172,7 +172,9 @@ const Creation: FunctionComponent<CreationProps> = ({
 
               dispatch(setCartAnim(true));
             }}
-            title="Add to Cart"
+            title={
+              item?.amount == item?.soldTokens ? "Sold Out" : "Add to Cart"
+            }
           >
             <Image
               layout="fill"

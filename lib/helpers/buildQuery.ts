@@ -1,5 +1,4 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { FilterInput } from "@/components/Tiles/types/tiles.types";
 
 type FilterField =
   | "format"
@@ -9,44 +8,17 @@ type FilterField =
   | "access"
   | "color";
 
-interface AndBlock {
-  and?: {
-    [key: string]: string;
-  };
-}
-
-const buildQuery = (filters: Filter): FilterInput => {
+const buildQuery = (filters: Filter) => {
   const splitString = (value: string): string[] => {
-    return value.split(",").map((item) => item.trim());
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item);
   };
 
-  const buildAndBlock = (
-    values: string[],
-    fieldName: string,
-    prefix: string
-  ): AndBlock => {
-    return values.slice(1).reduce<AndBlock>(
-      (acc, value) => {
-        return {
-          and: {
-            ...(acc.and || {}),
-            [`${prefix}${fieldName}_contains_nocase`]: value,
-          },
-        };
-      },
-      { [`${prefix}${fieldName}_contains_nocase`]: values[0] }
-    );
-  };
-
-  let query: any = {};
-
-  if (filters.drop) {
-    const values = [filters.drop];
-    query = {
-      ...query,
-      ...buildAndBlock(values, "dropTitle", "dropMetadata_"),
-    };
-  }
+  let query: any = { or: [] };
+  let collectionMetadataOrConditions: any[] = [];
+  let otherOrConditions: any[] = [];
 
   const mapFormats = (format: string) => {
     switch (format) {
@@ -70,16 +42,17 @@ const buildQuery = (filters: Filter): FilterInput => {
     "access",
     "color",
   ];
-
-  const collectionMetadata: any = {};
-
-  collectionFields?.forEach((field) => {
-    if (typeof filters[field] === "string") {
+  collectionFields.forEach((field) => {
+    if (
+      typeof filters[field] === "string" &&
+      (filters[field] as string).trim() !== ""
+    ) {
       const values =
         field === "format"
-          ? Array.from(new Set(splitString(filters[field]).map(mapFormats)))
+          ? Array.from(
+              new Set(splitString(filters[field] as string).map(mapFormats))
+            )
           : splitString(filters[field] as string);
-
       const fieldName =
         field === "hashtag"
           ? "tags"
@@ -88,58 +61,46 @@ const buildQuery = (filters: Filter): FilterInput => {
           : field === "format"
           ? "mediaTypes"
           : field;
-
-      const fieldQuery = buildAndBlock(
-        values,
-        fieldName,
-        "collectionMetadata_"
-      );
-      collectionMetadata.and = { ...collectionMetadata.and, ...fieldQuery.and };
+      values.forEach((value) => {
+        collectionMetadataOrConditions.push({
+          [`${fieldName}_contains_nocase`]: value,
+        });
+      });
     }
   });
 
-  if (Object.keys(collectionMetadata).length > 0) {
-    query.collectionMetadata_ = collectionMetadata;
-  }
-
   if (filters.size) {
-    const sizes = [
+    const combinedSizes = [
       ...filters.size.apparel,
       ...filters.size.poster,
       ...filters.size.sticker,
-    ];
-    if (sizes.length > 0) {
-      query = {
-        ...query,
-        ...buildAndBlock(sizes, "sizes", "collectionMetadata_"),
-      };
-    }
+    ].filter(Boolean);
+    combinedSizes.forEach((size) => {
+      collectionMetadataOrConditions.push({ sizes_contains_nocase: size });
+    });
+  }
+
+  if (collectionMetadataOrConditions.length > 0) {
+    query.or.push({
+      collectionMetadata_: { or: collectionMetadataOrConditions },
+    });
   }
 
   if (filters?.editions !== undefined) {
-    query.editions = filters.editions;
-  }
-
-  if (filters.price) {
-    query.price_gte = filters.price.min;
-    query.price_lte = filters.price.max;
+    otherOrConditions.push({
+      amount: Math.max(1, Math.floor(Number(filters.editions) || 1)),
+    });
   }
 
   if (filters.printType && filters.printType.length > 0) {
-    const printTypeValues = splitString(filters.printType.join(","));
-    query = {
-      ...query,
-      ...buildAndBlock(printTypeValues, "printType", "collectionMetadata_"),
-    };
+    filters.printType.forEach((printType) => {
+      otherOrConditions.push({ printType_contains_nocase: printType });
+    });
   }
 
-  if (filters.token) {
-    const tokenValues = splitString(filters.token);
-    query = {
-      ...query,
-      ...buildAndBlock(tokenValues, "acceptedTokens", "collectionMetadata_"),
-    };
-  }
+  otherOrConditions.forEach((condition) => {
+    query.or.push(condition);
+  });
 
   return query;
 };

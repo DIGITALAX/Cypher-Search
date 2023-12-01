@@ -7,6 +7,7 @@ const errorChoice = async (
   runner: (() => Promise<void>) | (() => void),
   dispatch: Dispatch<AnyAction>
 ) => {
+  if (err?.message?.includes("User rejected the request")) return;
   if (
     !err?.messages?.includes("Block at number") &&
     !err?.message?.includes("could not be found")

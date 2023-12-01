@@ -1,6 +1,12 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY, IPFS_REGEX } from "../../../../../lib/constants";
+import {
+  CHROMADIN_OPEN_ACTION,
+  COIN_OP_OPEN_ACTION,
+  INFURA_GATEWAY,
+  IPFS_REGEX,
+  LISTENER_OPEN_ACTION,
+} from "../../../../../lib/constants";
 import { ImagePostProps } from "../../types/tiles.types";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
@@ -162,7 +168,9 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               />
             )}
           </div>
-          <div className={`flex flex-row w-full h-full justify-between gap-2 items-between xl:flex-row flex-col`}>
+          <div
+            className={`flex flex-row w-full h-full justify-between gap-2 items-between xl:flex-row flex-col`}
+          >
             <div
               className={`relative flex flex-wrap items-start justify-start gap-2 w-full h-full`}
             >
@@ -875,7 +883,53 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   </div>
                   <div
                     className="relative w-6 h-6 flex items-center justify-center cursor-pointer active:scale-95"
-                    onClick={() => router.push(`/item/pub/${publication?.id}`)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+
+                      (publication?.__typename == "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.openActionModules?.[0]?.contract?.address
+                        ?.toLowerCase()
+                        ?.includes(CHROMADIN_OPEN_ACTION.toLowerCase())
+                        ? router.push(
+                            `/item/chromadin/${(
+                              (publication?.__typename == "Mirror"
+                                ? publication?.mirrorOn
+                                : (publication as Post)
+                              )?.metadata as ImageMetadataV3
+                            )?.title?.replaceAll(" ", "_")}`
+                          )
+                        : (publication?.__typename == "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.openActionModules?.[0]?.contract?.address
+                            ?.toLowerCase()
+                            ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                        ? router.push(
+                            `/item/coinop/${(
+                              (publication?.__typename == "Mirror"
+                                ? publication?.mirrorOn
+                                : (publication as Post)
+                              )?.metadata as ImageMetadataV3
+                            )?.title?.replaceAll(" ", "_")}`
+                          )
+                        : (publication?.__typename == "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.openActionModules?.[0]?.contract?.address
+                            ?.toLowerCase()
+                            ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                        ? router.push(
+                            `/item/listener/${(
+                              (publication?.__typename == "Mirror"
+                                ? publication?.mirrorOn
+                                : (publication as Post)
+                              )?.metadata as ImageMetadataV3
+                            )?.title?.replaceAll(" ", "_")}`
+                          )
+                        : router.push(`/item/pub/${publication?.id}`);
+                    }}
                   >
                     <Image
                       layout="fill"

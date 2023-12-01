@@ -53,6 +53,7 @@ export type InteractBarProps = {
   col?: boolean;
   layoutAmount?: number;
   index: number;
+  creation?: boolean;
   hideComment?: boolean;
   display?: string;
   gallery?: boolean;
@@ -91,10 +92,10 @@ export type InteractBarProps = {
 export type HoverProfileProps = {
   followLoading: boolean[];
   unfollowProfile:
-    | ((id: string) => Promise<void>)
+    | ((id: string, index?: number) => Promise<void>)
     | ((id: string, feed?: boolean, main?: boolean) => Promise<void>);
   followProfile:
-    | ((id: string) => Promise<void>)
+    | ((id: string, index?: number) => Promise<void>)
     | ((id: string, feed?: boolean, main?: boolean) => Promise<void>);
   publication: Profile;
   parentId: string;

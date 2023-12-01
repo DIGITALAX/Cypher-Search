@@ -86,7 +86,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             draggable={false}
           />
         </div>
-        {cartItems?.length > 0 && (
+        {cartItems?.length > 0 && lensConnected?.id && (
           <div className="absolute rounded-full border border-mar bg-black w-5 flex items-center justify-center right-[8.5rem] -bottom-1 h-5 p-1 font-vcr text-mar text-xxs z-1">
             {cartItems?.length}
           </div>

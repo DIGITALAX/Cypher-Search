@@ -39,18 +39,18 @@ const SubOrder: FunctionComponent<SubOrderProps> = ({
         </div>
       </div>
       <div className="relative w-full h-fit flex items-center justify-between gap-3 flex-wrap md:flex-nowrap">
-        <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white cursor-pointer">
+        <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white">
           ${Number(item?.price) / Number(item?.amount)}
         </div>
-        <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white cursor-pointer">
+        <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white">
           {item?.isFulfilled || !details ? "Fulfilled" : "Fulfilling"}
         </div>
-        <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white cursor-pointer">
+        <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white">
           Qty.{item?.amount}
         </div>
         {details && (
           <div
-            className={`relative flex h-7 border border-white p-px items-center justify-center font-bit text-white cursor-pointer ${
+            className={`relative flex h-7 border border-white p-px items-center justify-center font-bit text-white ${
               ["xs", "s", "m", "l", "xl", "2xl"].includes(
                 item?.size?.toLowerCase() || ""
               ) || !decrypted
@@ -63,7 +63,7 @@ const SubOrder: FunctionComponent<SubOrderProps> = ({
         )}
         {details && (
           <div
-            className={`relative flex w-7 h-7 border border-white p-px rounded-full items-center justify-center text-sm font-bit text-white cursor-pointer`}
+            className={`relative flex w-7 h-7 border border-white p-px rounded-full items-center justify-center text-sm font-bit text-white`}
             style={{
               backgroundColor:
                 item?.color && decrypted ? `${item?.color}` : "#131313",

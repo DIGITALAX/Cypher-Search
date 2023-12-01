@@ -39,11 +39,15 @@ const useInteractions = (
     }[]
   >([]);
 
-  const like = async (id: string, hasReacted: boolean) => {
+  const like = async (id: string, hasReacted: boolean, creation?: boolean) => {
     if (!lensConnected?.id) return;
     const index = allSearchItems?.items?.findIndex(
-      (pub) => (pub?.post as Post | Comment | Mirror | Quote)?.id === id
+      (pub) =>
+        (!creation
+          ? (pub?.post as Post | Comment | Mirror | Quote)?.id
+          : (pub?.post as Creation)?.publication?.id) === id
     );
+
     if (index === -1) {
       return;
     }
@@ -156,10 +160,13 @@ const useInteractions = (
     });
   };
 
-  const mirror = async (id: string) => {
+  const mirror = async (id: string, creation?: boolean) => {
     if (!lensConnected?.id) return;
     const index = allSearchItems?.items?.findIndex(
-      (pub) => (pub.post as Post | Comment | Mirror | Quote)?.id === id
+      (pub) =>
+        (!creation
+          ? (pub?.post as Post | Comment | Mirror | Quote)?.id
+          : (pub?.post as Creation)?.publication?.id) === id
     );
     if (index === -1) {
       return;

@@ -19,10 +19,6 @@ import {
   SearchPublicationType,
   PublicationType,
 } from "../../../../graphql/generated";
-import {
-  getTextFilterSearch,
-  getTextSearch,
-} from "../../../../graphql/subgraph/queries/getTextSearch";
 import filterEmpty from "../../../../lib/helpers/filterEmpty";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
 import { DropDown, Filter, FilterValues } from "../types/search.types";
@@ -56,6 +52,7 @@ import getPublications from "../../../../graphql/lens/queries/publications";
 import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
+import buildTextQuery, { combineQueryObjects } from "../../../../lib/helpers/buildTextQuery";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -125,17 +122,16 @@ const useSearch = (
         (click && allSearchItems?.searchInput.trim() !== "")
       ) {
         if (filterEmpty(filters) && !backup) {
-          const searchItems = await getTextSearch(
-            allSearchItems?.searchInput!,
-            10,
-            0
-          );
+          const where = buildTextQuery(allSearchItems?.searchInput!);
+          if (where) {
+            const searchItems = await getAllCollections(where, 10, 0);
 
-          if (searchItems?.data?.cyphersearch?.length > 0)
-            collections = await handleCollectionProfilesAndPublications(
-              searchItems?.data?.cyphersearch,
-              lensConnected
-            );
+            if (searchItems?.data?.collectionCreateds?.length > 0)
+              collections = await handleCollectionProfilesAndPublications(
+                searchItems?.data?.collectionCreateds,
+                lensConnected
+              );
+          }
         } else {
           collections = await filterSearch(0);
         }
@@ -337,23 +333,22 @@ const useSearch = (
 
     try {
       if (allSearchItems?.searchInput.trim() !== "") {
-        const searchItems = await getTextFilterSearch(
-          allSearchItems?.searchInput!,
-          where,
-          10,
-          cursor
-        );
-        collections = searchItems?.data?.cyphersearch;
+        const textWhere = buildTextQuery(allSearchItems?.searchInput!);
+        const combinedWhere = combineQueryObjects(textWhere, where);
+        const searchItems = await getAllCollections(combinedWhere, 10, cursor);
+
+        collections = searchItems?.data?.collectionCreateds;
       } else {
         const searchItems = await getAllCollections(where, 10, cursor);
         collections = searchItems?.data?.collectionCreateds;
       }
 
-      if (collections?.length > 0)
+      if (collections?.length > 0) {
         collections = await handleCollectionProfilesAndPublications(
           collections,
           lensConnected
         );
+      }
 
       return collections || [];
     } catch (err: any) {
@@ -385,16 +380,20 @@ const useSearch = (
     try {
       if (filterEmpty(filters) && allSearchItems?.searchInput) {
         if (allSearchItems?.graphCursor) {
-          const searchItems = await getTextSearch(
-            allSearchItems?.searchInput,
-            10,
-            allSearchItems?.graphCursor
-          );
-          if (searchItems?.data?.cyphersearch?.length > 0)
-            collections = await handleCollectionProfilesAndPublications(
-              searchItems?.data?.cyphersearch,
-              lensConnected
+          const where = buildTextQuery(allSearchItems?.searchInput!);
+          if (where) {
+            const searchItems = await getAllCollections(
+              where,
+              10,
+              allSearchItems?.graphCursor
             );
+
+            if (searchItems?.data?.collectionCreateds?.length > 0)
+              collections = await handleCollectionProfilesAndPublications(
+                searchItems?.data?.collectionCreateds,
+                lensConnected
+              );
+          }
         }
 
         query = allSearchItems?.searchInput;

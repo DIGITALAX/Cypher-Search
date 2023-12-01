@@ -25,7 +25,6 @@ import decodeReturnedData from "../../../../lib/helpers/decodeReturned";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
-import { getOneCollection } from "../../../../graphql/subgraph/queries/getOneCollection";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -133,7 +132,49 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                         actionOpen: false,
                       })
                     );
-                    router.push(`/item/pub/${item?.id}`);
+                    (item?.__typename === "Mirror"
+                      ? item?.mirrorOn
+                      : (item as Post)
+                    )?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/chromadin/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/coinop/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/listener/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : router.push(`/item/pub/${item?.id}`);
                   } else {
                     if (functions[indexTwo]) {
                       if (image[1] !== "Likes") {
@@ -209,7 +250,49 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                         actionOpen: false,
                       })
                     );
-                    router.push(`/item/pub/${item?.id}`);
+                    (item?.__typename === "Mirror"
+                      ? item?.mirrorOn
+                      : (item as Post)
+                    )?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/chromadin/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/coinop/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/listener/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : router.push(`/item/pub/${item?.id}`);
                   } else {
                     stats[indexTwo] > 0 && image[1] !== "Comments"
                       ? dispatch(
@@ -222,7 +305,50 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                             actionType: image[1],
                           })
                         )
-                      : !main && router.push(`/item/pub/${item?.id}`);
+                      : !main &&
+                        ((item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                          ? router.push(
+                              `/item/chromadin/${(
+                                (item?.__typename === "Mirror"
+                                  ? item?.mirrorOn
+                                  : (item as Post)
+                                )?.metadata as ImageMetadataV3
+                              )?.title?.replaceAll(" ", "_")}`
+                            )
+                          : (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.openActionModules?.[0]?.contract?.address
+                              ?.toLowerCase()
+                              ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                          ? router.push(
+                              `/item/coinop/${(
+                                (item?.__typename === "Mirror"
+                                  ? item?.mirrorOn
+                                  : (item as Post)
+                                )?.metadata as ImageMetadataV3
+                              )?.title?.replaceAll(" ", "_")}`
+                            )
+                          : (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.openActionModules?.[0]?.contract?.address
+                              ?.toLowerCase()
+                              ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                          ? router.push(
+                              `/item/listener/${(
+                                (item?.__typename === "Mirror"
+                                  ? item?.mirrorOn
+                                  : (item as Post)
+                                )?.metadata as ImageMetadataV3
+                              )?.title?.replaceAll(" ", "_")}`
+                            )
+                          : router.push(`/item/pub/${item?.id}`));
                   }
                 }}
               >
@@ -267,8 +393,49 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                         actionOpen: false,
                       })
                     );
-
-                    router.push(`/item/pub/${item?.id}`);
+                    (item?.__typename === "Mirror"
+                      ? item?.mirrorOn
+                      : (item as Post)
+                    )?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/chromadin/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/coinop/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/listener/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
+                      : router.push(`/item/pub/${item?.id}`);
                   } else {
                     !loaders[indexTwo] &&
                       (main

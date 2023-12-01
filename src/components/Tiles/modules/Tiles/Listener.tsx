@@ -52,6 +52,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
           index={index}
           publication={publication?.publication}
           simpleCollect={undefined}
+          creation
         />
         <div
           className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
@@ -87,11 +88,13 @@ const Listener: FunctionComponent<ListenerProps> = ({
           <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
             <div
               className={`relative items-start justify-center uppercase break-words font-ignite w-fit h-fit ${
-                layoutAmount === 4 ? "text-lg" : "text-2xl"
+                layoutAmount === 4 ? "text-lg" : "text-xl"
               }`}
               id="noCode"
             >
-              {publication?.collectionMetadata?.title}
+              {publication?.collectionMetadata?.title?.length > 20
+                ? publication?.collectionMetadata?.title?.slice(0, 20) + "..."
+                : publication?.collectionMetadata?.title}
             </div>
             <div
               className={`relative w-fit h-fit flex text-white font-vcr uppercase ${
@@ -120,9 +123,9 @@ const Listener: FunctionComponent<ListenerProps> = ({
                 lensConnected={lensConnected}
                 parentId={publication?.pubId}
                 top={"auto"}
-                bottom={"2px"}
-                left={"auto"}
-                right={"2px"}
+                bottom={"10px"}
+                left={"2px"}
+                right={"auto"}
               />
             )}
             <div className="relative flex flex-row justify-start items-center w-fit h-fit gap-2">
@@ -158,16 +161,16 @@ const Listener: FunctionComponent<ListenerProps> = ({
                   layoutAmount === 4 ? "text-xl" : "text-2xl"
                 }`}
               >
-                ${Number(publication?.prices?.[0] || 0) / 10 ** 18}
+                ${Number(publication?.prices?.[0] || 0)}
               </div>
             </div>
           </div>
-          <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
-            {publication?.collectionMetadata?.images && (
+          {publication?.collectionMetadata?.images?.slice(1)?.length > 0 && (
+            <div className="relative ml-auto flex items-center justify-center w-20 h-20 rounded-sm border border-white bg-amo/30">
               <Image
                 layout="fill"
                 src={`${INFURA_GATEWAY}/ipfs/${
-                  publication?.collectionMetadata?.images?.[0]?.split(
+                  publication?.collectionMetadata?.images?.[1]?.split(
                     "ipfs://"
                   )?.[1]
                 }`}
@@ -175,8 +178,8 @@ const Listener: FunctionComponent<ListenerProps> = ({
                 draggable={false}
                 onError={(e) => handleImageError(e)}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
