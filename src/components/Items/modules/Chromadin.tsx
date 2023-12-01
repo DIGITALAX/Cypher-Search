@@ -21,7 +21,8 @@ import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 import { setImageViewer } from "../../../../redux/reducers/ImageLargeSlice";
 import { setAllSearchItems } from "../../../../redux/reducers/searchItemsSlice";
-import { PrintType } from "@/components/Tiles/types/tiles.types";
+import { PrintType as PrintTagType } from "@/components/Tiles/types/tiles.types";
+import PrintType from "@/components/Common/modules/PrintType";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   itemData,
@@ -404,11 +405,13 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           </div>
           {itemData?.origin !== "1" && (
             <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-sm mt-0">
-              {`( ${
-                printTypeToString[
-                  Number(itemData?.printType) as unknown as PrintType
-                ]
-              } )`}
+              <PrintType
+                printType={
+                  printTypeToString[
+                    Number(itemData?.printType) as unknown as PrintTagType
+                  ]
+                }
+              />
             </div>
           )}
           <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-center justify-center">
@@ -660,12 +663,12 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                             printTypeToString[
                               Number(
                                 itemData?.printType
-                              ) as unknown as PrintType
+                              ) as unknown as PrintTagType
                             ] == "poster" ||
                             printTypeToString[
                               Number(
                                 itemData?.printType
-                              ) as unknown as PrintType
+                              ) as unknown as PrintTagType
                             ] == "sticker"
                               ? "w-fit px-1.5 py-1 rounded-sm"
                               : "w-6 rounded-full"

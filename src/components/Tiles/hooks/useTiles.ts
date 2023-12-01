@@ -49,6 +49,7 @@ const useTiles = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      if (err?.message?.includes("User rejected the request")) return;
       if (
         !err?.messages?.includes("Block at number") &&
         !err?.message?.includes("could not be found")
@@ -105,6 +106,7 @@ const useTiles = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
+      if (err?.message?.includes("User rejected the request")) return;
       if (
         !err?.messages?.includes("Block at number") &&
         !err?.message?.includes("could not be found")
