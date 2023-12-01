@@ -115,7 +115,9 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
                       ? 3
                       : 4)
                     ? layoutAmount + 1
-                    : 1
+                    : window.innerWidth < 1200
+                    ? 1
+                    : 2
                 )
               )
             }

@@ -256,3 +256,7 @@ export type CartListProps = {
   page?: boolean;
   searchActive: boolean;
 };
+
+export type PrintTypeProps = {
+  printType: string;
+};

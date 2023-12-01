@@ -1,13 +1,20 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
-import { CoinOpProps } from "../../types/tiles.types";
+import {
+  INFURA_GATEWAY,
+  printTypeToString,
+} from "../../../../../lib/constants";
+import {
+  CoinOpProps,
+  PrintType as PrintTagType,
+} from "../../types/tiles.types";
 import PopUp from "@/components/Common/modules/PopUp";
 import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import { ItemType } from "@/components/Common/types/common.types";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
+import PrintType from "@/components/Common/modules/PrintType";
 
 const CoinOp: FunctionComponent<CoinOpProps> = ({
   layoutAmount,
@@ -60,7 +67,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           )
         }
       >
-        {publication?.collectionMetadata?.images && (
+        {publication?.collectionMetadata?.images?.[0] && (
           <Image
             layout="fill"
             src={`${INFURA_GATEWAY}/ipfs/${
@@ -73,6 +80,15 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             onError={(e) => handleImageError(e)}
           />
         )}
+        <div className="absolute right-2 top-2 w-fit h-fit">
+          <PrintType
+            printType={
+              printTypeToString[
+                Number(publication?.printType) as unknown as PrintTagType
+              ]
+            }
+          />
+        </div>
       </div>
       <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">
         <div className="relative flex flex-col items-start justify-center w-fit h-fit mr-auto gap-2">
