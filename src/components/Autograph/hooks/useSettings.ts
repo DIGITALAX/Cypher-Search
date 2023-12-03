@@ -121,6 +121,7 @@ const useSettings = (
   };
   const handleSettingsUpdate = async () => {
     setSettingsUpdateLoading(true);
+   
     try {
       let newImages: string[] = [];
       let hasNewCoverImage = coverImage !== undefined;
@@ -209,14 +210,20 @@ const useSettings = (
         settingsData;
       const metadata = {
         ...filteredSettingsData,
-        attributes: newAttributes?.map((item) => ({
-          ...item,
-          type:
-            item.type.toLowerCase() === "json"
-              ? "JSON"
-              : item.type.charAt(0).toUpperCase() +
-                item.type.slice(1).toLowerCase(),
-        })),
+        attributes: newAttributes
+          ?.map((item) => ({
+            ...item,
+            type:
+              item.type.toLowerCase() === "json"
+                ? "JSON"
+                : item.type.charAt(0).toUpperCase() +
+                  item.type.slice(1).toLowerCase(),
+          }))
+          ?.filter((item) => {
+            return Object.values(item).every(
+              (value) => value.toString().trim() !== ""
+            );
+          }),
         picture: hasNewPfpImage
           ? newImages[hasNewCoverImage ? 1 : 0]
           : settingsData.picture,

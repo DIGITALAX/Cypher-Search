@@ -23,6 +23,7 @@ import {
   ACCEPTED_TOKENS,
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
+  F3M_OPEN_ACTION,
   LEGEND_OPEN_ACTION,
   LISTENER_OPEN_ACTION,
   itemStringToType,
@@ -86,6 +87,7 @@ const useItem = (
         case "chromadin":
         case "listener":
         case "coinop":
+        case "f3m":
           const coll = (await getCollection(
             id?.replaceAll("_", " ")
           )) as Creation;
@@ -301,27 +303,27 @@ const useItem = (
               ...collection?.collectionMetadata,
               sizes: collection?.collectionMetadata?.sizes
                 ?.split(",")
-                .map((word: string) => word.trim())
+                .map((word: string) => word?.trim())
                 .filter((word: string) => word.length > 0),
               colors: collection?.collectionMetadata?.colors
                 ?.split(",")
-                .map((word: string) => word.trim())
+                .map((word: string) => word?.trim())
                 .filter((word: string) => word.length > 0),
               mediaTypes: collection?.collectionMetadata?.mediaTypes
                 ?.split(",")
-                .map((word: string) => word.trim())
+                .map((word: string) => word?.trim())
                 .filter((word: string) => word.length > 0),
               access: collection?.collectionMetadata?.access
                 ?.split(",")
-                .map((word: string) => word.trim())
+                .map((word: string) => word?.trim())
                 .filter((word: string) => word.length > 0),
               communities: collection?.collectionMetadata?.communities
                 ?.split(",")
-                .map((word: string) => word.trim())
+                .map((word: string) => word?.trim())
                 .filter((word: string) => word.length > 0),
               tags: collection?.collectionMetadata?.tags
                 ?.split(",")
-                .map((word: string) => word.trim())
+                .map((word: string) => word?.trim())
                 .filter((word: string) => word.length > 0),
             },
             prices: collection?.prices?.map((price: string) =>
@@ -402,7 +404,7 @@ const useItem = (
           chosenIndex: purchaseDetails?.priceIndex,
           chosenIndexes: [],
           amount: 1,
-          type: itemStringToType[type.toLowerCase().trim()],
+          type: itemStringToType[type?.toLowerCase()?.trim()],
           purchased: false,
         },
         undefined,
@@ -463,7 +465,7 @@ const useItem = (
         address: purchaseDetails?.currency as `0x${string}`,
         abi: [
           purchaseDetails?.currency ===
-          "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30"
+          "0x6968105460f67c3bf751be7c15f92f5286fd0ce5"
             ? {
                 inputs: [
                   {
@@ -485,7 +487,7 @@ const useItem = (
                 type: "function",
               }
             : purchaseDetails?.currency ===
-              "0x3cf7283c025d82390e86d2feb96eda32a393036b"
+              "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
             ? {
                 constant: false,
                 inputs: [
@@ -532,6 +534,8 @@ const useItem = (
             ? LISTENER_OPEN_ACTION
             : type === "coinop"
             ? COIN_OP_OPEN_ACTION
+            : type === "f3m"
+            ? F3M_OPEN_ACTION
             : LEGEND_OPEN_ACTION,
           (((Number(
             (itemData?.post as Creation)?.prices?.[purchaseDetails?.priceIndex]
@@ -605,6 +609,8 @@ const useItem = (
             ? LISTENER_OPEN_ACTION
             : type === "coinop"
             ? COIN_OP_OPEN_ACTION
+            : type === "f3m"
+            ? F3M_OPEN_ACTION
             : LEGEND_OPEN_ACTION,
         ],
       });
@@ -652,7 +658,8 @@ const useItem = (
       lensConnected?.id &&
       (router.asPath.includes("chromadin") ||
         router.asPath.includes("listener") ||
-        router.asPath.includes("coinop"))
+        router.asPath.includes("coinop") ||
+        router.asPath.includes("item/f3m"))
     ) {
       checkApproved();
     }

@@ -20,6 +20,8 @@ const COLLECTION = `
         sizes
         microbrand
         mediaTypes
+        sex
+        style
         mediaCover
         id
         description
@@ -76,6 +78,8 @@ export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
       colors
       communities
       images
+      sex
+      style
       microbrandCover
     }
     pubId
@@ -151,6 +155,8 @@ const COLLECTION_TITLE = `
         communities
         images
         microbrandCover
+        sex
+        style
       }
       pubId
       profileId

@@ -20,6 +20,7 @@ import {
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
   DIGITALAX_ADDRESS,
+  F3M_OPEN_ACTION,
   LEGEND_OPEN_ACTION,
   LISTENER_OPEN_ACTION,
 } from "../../../../lib/constants";
@@ -278,7 +279,7 @@ const useCheckout = (
       const { request } = await publicClient.simulateContract({
         address: checkoutCurrency as `0x${string}`,
         abi: [
-          checkoutCurrency === "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30"
+          checkoutCurrency === "0x6968105460f67c3bf751be7c15f92f5286fd0ce5"
             ? {
                 inputs: [
                   {
@@ -299,7 +300,7 @@ const useCheckout = (
                 stateMutability: "nonpayable",
                 type: "function",
               }
-            : checkoutCurrency === "0x3cf7283c025d82390e86d2feb96eda32a393036b"
+            : checkoutCurrency === "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
             ? {
                 constant: false,
                 inputs: [
@@ -346,6 +347,8 @@ const useCheckout = (
             ? LISTENER_OPEN_ACTION
             : item?.type === "coinop"
             ? COIN_OP_OPEN_ACTION
+            : item?.type === "f3m"
+            ? F3M_OPEN_ACTION
             : LEGEND_OPEN_ACTION,
           ((Number(
             groupedByPubId[chooseCartItem?.item?.pubId!]?.prices?.reduce(
@@ -427,6 +430,8 @@ const useCheckout = (
             ? LISTENER_OPEN_ACTION
             : item?.type === "coinop"
             ? COIN_OP_OPEN_ACTION
+            : item?.type === "f3m"
+            ? F3M_OPEN_ACTION
             : LEGEND_OPEN_ACTION,
         ],
       });

@@ -48,6 +48,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   setProfileHovers,
   simpleCollect,
   lensConnected,
+  filterConstants
 }) => {
   if (type?.toLowerCase() == "loader") {
     return <LoadTile index={index} />;
@@ -160,13 +161,14 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     );
   }
 
-  if (type?.toLowerCase() == "coinop") {
+  if (type?.toLowerCase() == "coinop" || type?.toLowerCase() == "f3m") {
     return (
       <CoinOp
         lensConnected={lensConnected}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         popUpOpen={popUpOpen}
+        filterConstants={filterConstants}
         setPopUpOpen={setPopUpOpen}
         layoutAmount={layoutAmount}
         index={index}
@@ -201,7 +203,6 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         mirror={mirror}
         like={like}
         interactionsLoading={interactionsLoading?.[index]}
-  
       />
     );
   }

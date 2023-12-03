@@ -24,6 +24,8 @@ export const getAllCollections = async (
           visibility
           video
           title
+          sex
+          style
           tags
           prompt
           profileHandle

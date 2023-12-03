@@ -317,13 +317,20 @@ const useComment = (
     }
   };
 
-  const simpleCollect = async (id: string, type: string, main: boolean) => {
+  const simpleCollect = async (
+    id: string,
+    type: string,
+    main: boolean,
+    mirror?: string
+  ) => {
     if (!lensConnected?.id) return;
     const index = main
       ? undefined
       : allComments?.length > 0
       ? allComments?.findIndex((pub) => pub.id === id)
-      : collections?.findIndex((pub) => pub.publication?.id === id);
+      : collections?.findIndex(
+          (pub) => pub.publication?.id === (mirror ? mirror : id)
+        );
     if (main) {
       setMainInteractionsLoading((prev) => {
         const updatedArray = [...prev];
@@ -408,7 +415,7 @@ const useComment = (
     }
   };
 
-  const comment = async (id: string, main?: boolean) => {
+  const comment = async (id: string, main?: boolean, mirror?: string) => {
     if (!lensConnected?.id) return;
     let content: string | undefined,
       images:
@@ -423,7 +430,9 @@ const useComment = (
       ? undefined
       : allComments?.length > 0
       ? allComments?.findIndex((pub) => pub.id === id)
-      : collections?.findIndex((pub) => pub.publication?.id === id);
+      : collections?.findIndex(
+          (pub) => pub.publication?.id === (mirror ? mirror : id)
+        );
 
     if (!main) {
       if (
@@ -567,13 +576,15 @@ const useComment = (
     }
   };
 
-  const mirror = async (id: string, main?: boolean) => {
+  const mirror = async (id: string, main?: boolean, mirror?: string) => {
     if (!lensConnected?.id) return;
     const index = main
       ? undefined
       : allComments?.length > 0
       ? allComments?.findIndex((pub) => pub.id === id)
-      : collections?.findIndex((pub) => pub.publication?.id === id);
+      : collections?.findIndex(
+          (pub) => pub.publication?.id === (mirror ? mirror : id)
+        );
     if (!main && index == -1) return;
     handleLoaders(true, main!, index, "mirror");
 
@@ -618,13 +629,20 @@ const useComment = (
     handleLoaders(false, main!, index, "mirror");
   };
 
-  const like = async (id: string, hasReacted: boolean, main?: boolean) => {
+  const like = async (
+    id: string,
+    hasReacted: boolean,
+    main?: boolean,
+    mirror?: string
+  ) => {
     if (!lensConnected?.id) return;
     const index = main
       ? undefined
       : allComments?.length > 0
       ? allComments?.findIndex((pub) => pub.id === id)
-      : collections?.findIndex((pub) => pub.publication?.id === id);
+      : collections?.findIndex(
+          (pub) => pub.publication?.id === (mirror ? mirror : id)
+        );
     if (!main && index == -1) return;
     handleLoaders(false, main!, index, "like");
     try {
@@ -667,6 +685,7 @@ const useComment = (
         pubId &&
         (router.asPath?.includes("coinop") ||
           router.asPath?.includes("listener") ||
+          router.asPath?.includes("item/f3m") ||
           (router.asPath?.includes("chromadin") && commentSwitch)))
     ) {
       getComments();

@@ -18,6 +18,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
   setMakePostComment,
   commentPostLoading,
   id,
+  itemId,
   height,
   imageHeight,
   imageWidth,
@@ -34,6 +35,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
   lensConnected,
   caretCoord,
   setCaretCoord,
+  router,
 }): JSX.Element => {
   const textElement = useRef(null);
   return (
@@ -231,11 +233,18 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
             }`}
             onClick={() =>
               !commentPostLoading &&
-              (main
-                ? commentPost(id, main)
-                : id
-                ? (commentPost as (id: string) => Promise<void>)!(id)
-                : (commentPost as () => Promise<void>)())
+              (main || router.asPath?.includes("item")
+                ? (
+                    commentPost as (
+                      id: string,
+                      main?: boolean,
+                      mirror?: string
+                    ) => Promise<void>
+                  )(itemId ? itemId : id, main, id)
+                : (commentPost as (
+                    id: string,
+                    mirror?: string
+                  ) => Promise<void>)!(itemId ? itemId : id, id))
             }
           >
             <div

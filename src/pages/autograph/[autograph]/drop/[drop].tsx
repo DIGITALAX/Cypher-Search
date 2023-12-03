@@ -324,6 +324,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
                 moreSearchLoading={loaders?.moreSuggestedLoading}

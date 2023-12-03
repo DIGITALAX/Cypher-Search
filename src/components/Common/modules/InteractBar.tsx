@@ -51,7 +51,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`relative w-full h-fit rounded-sm border border-frio font-vcr text-mar flex gap-4 p-2 items-center justify-center bg-fuego tablet:flex-nowrap flex-wrap ${
+      className={`relative w-full h-fit rounded-sm border border-frio font-vcr text-mar flex gap-4 p-2 items-center justify-center bg-fuego tablet:flex-nowrap flex-wrap z-10 ${
         col || layoutAmount ? "flex-col" : "flex-row"
       } ${gallery || display ? "text-xxs" : "text-base"}`}
     >
@@ -444,13 +444,58 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
             "QmfDNH347Vph4b1tEuegydufjMU2QwKzYnMZCjygGvvUMM",
           ].map((image: string, indexTwo: number) => {
-            const functions: (
-              | ((id: string) => Promise<void>)
-              | ((index: number, id: string) => Promise<void>)
-              | ((id: string, main: boolean) => Promise<void>)
-              | (() => void)
-            )[] = [
-              mirror,
+            const functions: ((() => Promise<void>) | (() => void))[] = [
+              isSingleArgFunction(
+                mirror as
+                  | ((id: string) => Promise<void>)
+                  | ((index: number, id: string) => Promise<void>)
+                  | ((id: string, main: boolean) => Promise<void>)
+              )
+                ? () =>
+                    (mirror as (id: string) => Promise<void>)(
+                      publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn?.id
+                        : publication?.id
+                    )
+                : display
+                ? () =>
+                    (mirror as (index: number, id: string) => Promise<void>)(
+                      index,
+                      publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn?.id
+                        : publication?.id
+                    )
+                : creation
+                ? () =>
+                    (
+                      mirror as (
+                        id: string,
+                        creation?: boolean,
+                        mirror?: string
+                      ) => Promise<void>
+                    )(
+                      publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn?.id
+                        : publication?.id,
+                      creation,
+                      publication?.__typename === "Mirror"
+                        ? publication?.id
+                        : undefined
+                    )
+                : () =>
+                    (
+                      mirror as (
+                        id: string,
+                        main: boolean,
+                        mirror?: string
+                      ) => Promise<void>
+                    )(
+                      publication?.id,
+                      main!,
+                      publication?.__typename === "Mirror"
+                        ? publication?.id
+                        : undefined
+                    ),
               () =>
                 dispatch(
                   setPostBox({
@@ -464,38 +509,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
               <div
                 key={indexTwo}
                 className="relative w-fit h-fit flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
-                onClick={() =>
-                  !loaders[indexTwo] &&
-                  (isSingleArgFunction(
-                    functions[indexTwo] as
-                      | ((id: string) => Promise<void>)
-                      | ((index: number, id: string) => Promise<void>)
-                      | ((id: string, main: boolean) => Promise<void>)
-                  )
-                    ? (functions[indexTwo] as (id: string) => Promise<void>)(
-                        publication?.id
-                      )
-                    : creation
-                    ? (
-                        functions[indexTwo] as (
-                          id: string,
-                          creation?: boolean
-                        ) => Promise<void>
-                      )(publication?.id, creation)
-                    : router.asPath.includes("item")
-                    ? (
-                        functions[indexTwo] as (
-                          id: string,
-                          main: boolean
-                        ) => Promise<void>
-                      )(publication?.id, main!)
-                    : (
-                        functions[indexTwo] as (
-                          index: number,
-                          id: string
-                        ) => Promise<void>
-                      )(index, publication?.id))
-                }
+                onClick={() => !loaders[indexTwo] && functions[indexTwo]()}
               >
                 {loaders[indexTwo] ? (
                   <div className="relative w-fit h-fit animate-spin flex items-center justify-center">

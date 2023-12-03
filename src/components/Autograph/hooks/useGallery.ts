@@ -231,10 +231,9 @@ const useGallery = (
       ].flatMap((item) => item?.subOrderCollectionIds || []);
 
       const uniqueCreatedCollectionIds = new Set(subOrderCollectionIds);
-      const filteredCollectedData =
-      subOrderCollectionIds?.filter(
-          (item: any) => !uniqueCreatedCollectionIds.has(item)
-        ) as any[];
+      const filteredCollectedData = subOrderCollectionIds?.filter(
+        (item: any) => !uniqueCreatedCollectionIds.has(item)
+      ) as any[];
 
       let collectedPromises = filteredCollectedData
         .map(async (id) => {
@@ -383,14 +382,20 @@ const useGallery = (
       const test = ProfileMetadataSchema.safeParse({
         $schema: "https://json-schemas.lens.dev/profile/2.0.0.json",
         lens: {
-          attributes: attributes?.map((item) => ({
-            ...item,
-            type:
-              item.type.toLowerCase() === "json"
-                ? "JSON"
-                : item.type.charAt(0).toUpperCase() +
-                  item.type.slice(1).toLowerCase(),
-          })),
+          attributes: attributes
+            ?.map((item) => ({
+              ...item,
+              type:
+                item.type.toLowerCase() === "json"
+                  ? "JSON"
+                  : item.type.charAt(0).toUpperCase() +
+                    item.type.slice(1).toLowerCase(),
+            }))
+            ?.filter((item) => {
+              return Object.values(item).every(
+                (value) => value.toString().trim() !== ""
+              );
+            }),
           bio: lensConnected?.metadata?.bio,
           coverPicture:
             lensConnected?.metadata?.coverPicture?.__typename === "ImageSet"

@@ -142,48 +142,49 @@ const Bio: FunctionComponent<BioProps> = ({
         {profile?.metadata?.attributes?.find(
           (item) => item?.key === "microbrandCypher"
         )?.value && (
-            <div className="relative w-full hit flex flex-row gap-2 flex-wrap">
-              {JSON.parse(
-                profile?.metadata?.attributes?.[
-                  profile?.metadata?.attributes?.findIndex(
-                    (item) => item?.key === "microbrandCypher"
-                  )
-                ].value
-              )?.map(
-                (
-                  item: {
-                    microbrand: string;
-                    microbrandCover: string;
-                  },
-                  index: number
-                ) => {
-                  return (
-                    <div
-                      key={index}
-                      className="relative w-5 h-5 cursor-pointer active:scale-95 rounded-full"
-                      id="pfp"
-                      onClick={() =>
-                        router.push(`/item/microbrand/${item?.microbrand}`)
-                      }
-                    >
-                      {item?.microbrandCover && (
-                        <Image
-                          layout="fill"
-                          src={`${INFURA_GATEWAY}/ipfs/${
-                            item?.microbrandCover?.split("ipfs://")?.[1]
-                          }`}
-                          draggable={false}
-                          className="rounded-full"
-                          objectFit="cover"
-                          onError={(e) => handleImageError(e)}
-                        />
-                      )}
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          )}
+          <div className="relative w-full hit flex flex-row gap-2 flex-wrap">
+            {JSON.parse(
+              profile?.metadata?.attributes?.[
+                profile?.metadata?.attributes?.findIndex(
+                  (item) => item?.key === "microbrandCypher"
+                )
+              ].value
+            )?.map(
+              (
+                item: {
+                  microbrand: string;
+                  microbrandCover: string;
+                },
+                index: number
+              ) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative w-5 h-5 cursor-pointer active:scale-95 rounded-full"
+                    id="pfp"
+                    onClick={() =>
+                      router.push(`/item/microbrand/${item?.microbrand}`)
+                    }
+                    title={item?.microbrand}
+                  >
+                    {item?.microbrandCover && (
+                      <Image
+                        layout="fill"
+                        src={`${INFURA_GATEWAY}/ipfs/${
+                          item?.microbrandCover?.split("ipfs://")?.[1]
+                        }`}
+                        draggable={false}
+                        className="rounded-full"
+                        objectFit="cover"
+                        onError={(e) => handleImageError(e)}
+                      />
+                    )}
+                  </div>
+                );
+              }
+            )}
+          </div>
+        )}
       </div>
       <div className="relative w-full h-fit flex items-end justify-end sm:justify-center flex-col gap-3 sm:overflow-x-hidden">
         <div className="font-beb text-white text-4xl sm:text-6xl tablet:text-9xl w-fit h-fit relative flex items-center justify-end break-words">

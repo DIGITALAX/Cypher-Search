@@ -3,6 +3,7 @@ import { UnknownOpenActionModuleInput } from "../../graphql/generated";
 import {
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
+  F3M_OPEN_ACTION,
   LEGEND_OPEN_ACTION,
   LISTENER_OPEN_ACTION,
 } from "../constants";
@@ -38,10 +39,13 @@ const encodeActData = (
 
     case "listener":
     case "coinop":
+    case "f3m":
       unknownOpenAction = {
         address:
           cartItem.type === "listener"
             ? LISTENER_OPEN_ACTION
+            : cartItem.type === "f3m"
+            ? F3M_OPEN_ACTION
             : COIN_OP_OPEN_ACTION,
         data: coder.encode(
           ["uint256[]", "uint256[]", "string", "address", "bool"],

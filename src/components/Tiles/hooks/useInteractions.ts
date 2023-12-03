@@ -39,13 +39,18 @@ const useInteractions = (
     }[]
   >([]);
 
-  const like = async (id: string, hasReacted: boolean, creation?: boolean) => {
+  const like = async (
+    id: string,
+    hasReacted: boolean,
+    creation?: boolean,
+    mirror?: boolean
+  ) => {
     if (!lensConnected?.id) return;
     const index = allSearchItems?.items?.findIndex(
       (pub) =>
         (!creation
           ? (pub?.post as Post | Comment | Mirror | Quote)?.id
-          : (pub?.post as Creation)?.publication?.id) === id
+          : (pub?.post as Creation)?.publication?.id) === (mirror ? mirror : id)
     );
 
     if (index === -1) {
@@ -91,10 +96,12 @@ const useInteractions = (
     });
   };
 
-  const collect = async (id: string, type: string) => {
+  const collect = async (id: string, type: string, mirror?: string) => {
     if (!lensConnected?.id) return;
     const index = allSearchItems?.items?.findIndex(
-      (pub) => (pub?.post as Post | Comment | Mirror | Quote)?.id === id
+      (pub) =>
+        (pub?.post as Post | Comment | Mirror | Quote)?.id ===
+        (mirror ? mirror : id)
     );
     if (index === -1) {
       return;
@@ -160,13 +167,13 @@ const useInteractions = (
     });
   };
 
-  const mirror = async (id: string, creation?: boolean) => {
+  const mirror = async (id: string, creation?: boolean, mirror?: boolean) => {
     if (!lensConnected?.id) return;
     const index = allSearchItems?.items?.findIndex(
       (pub) =>
         (!creation
           ? (pub?.post as Post | Comment | Mirror | Quote)?.id
-          : (pub?.post as Creation)?.publication?.id) === id
+          : (pub?.post as Creation)?.publication?.id) === (mirror ? mirror : id)
     );
     if (index === -1) {
       return;

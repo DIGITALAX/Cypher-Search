@@ -57,7 +57,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
   left,
   right,
 }): JSX.Element => {
-  const profilePicture = createProfilePicture(item?.by?.metadata?.picture);
+  const profilePicture = createProfilePicture(
+    (item?.__typename == "Mirror" ? item?.mirrorOn : (item as Post))?.by
+      ?.metadata?.picture
+  );
   return (
     <div className="relative w-full justify-between flex flex-col sm:flex-row items-between sm:items-center gap-2">
       <div className="relative w-fit h-fit flex flex-row items-start sm:items-center gap-2 justify-center">
@@ -178,38 +181,63 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   } else {
                     if (functions[indexTwo]) {
                       if (image[1] !== "Likes") {
-                        main
-                          ? functions[indexTwo]!(item?.id, main)
-                          : (
-                              functions[indexTwo]! as (
-                                id: string
-                              ) => Promise<void>
-                            )(item?.id);
+                        router.asPath?.includes("item") || main
+                          ? (functions[indexTwo] as (
+                              id: string,
+                              main: boolean,
+                              mirror?: string
+                            ) => Promise<void>)!(
+                              item?.__typename === "Mirror"
+                                ? item?.mirrorOn?.id
+                                : item?.id,
+                              main!,
+                              item?.__typename === "Mirror"
+                                ? item?.id
+                                : undefined
+                            )
+                          : (functions[indexTwo]! as any)(
+                              item?.__typename === "Mirror"
+                                ? item?.mirrorOn?.id
+                                : item?.id,
+                              item?.__typename === "Mirror"
+                                ? item?.id
+                                : undefined
+                            );
                       } else {
                         main
                           ? (functions[indexTwo] as (
                               id: string,
                               hasReacted: boolean,
-                              main: boolean
+                              main: boolean,
+                              mirror?: string
                             ) => Promise<void>)!(
-                              item?.id,
+                              item?.__typename === "Mirror"
+                                ? item?.mirrorOn?.id
+                                : item?.id,
                               (item?.__typename === "Mirror"
                                 ? item?.mirrorOn
                                 : (item as Post)
                               )?.operations?.hasReacted,
-                              main
+                              main,
+                              item?.__typename === "Mirror"
+                                ? item?.id
+                                : undefined
                             )
                           : (
                               functions[indexTwo]! as (
                                 id: string,
-                                hasReacted: boolean
+                                hasReacted: boolean,
+                                mirror?: string
                               ) => Promise<void>
                             )(
                               item?.id,
                               (item?.__typename === "Mirror"
                                 ? item?.mirrorOn
                                 : (item as Post)
-                              )?.operations?.hasReacted
+                              )?.operations?.hasReacted,
+                              item?.__typename === "Mirror"
+                                ? item?.id
+                                : undefined
                             );
                       }
                     }
@@ -360,19 +388,35 @@ const PostBar: FunctionComponent<PostBarProps> = ({
       </div>
       {openMirrorChoice?.[index] && (
         <div
-          className={`absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-lirio/80 rounded-sm left-2 -top-8 border border-white`}
+          className={`absolute w-fit h-fit flex flex-row gap-4 p-2 items-center justify-center bg-lirio/80 rounded-sm left-2 -top-8 border border-white z-10`}
         >
           {[
             "QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3",
             "QmfDNH347Vph4b1tEuegydufjMU2QwKzYnMZCjygGvvUMM",
           ].map((image: string, indexTwo: number) => {
-            const functions: (
-              | ((id: string) => Promise<void>)
-              | ((index: number, id: string) => Promise<void>)
-              | ((id: string, main: boolean) => Promise<void>)
-              | (() => void)
-            )[] = [
-              mirror!,
+            const functions: ((() => void) | (() => Promise<void>))[] = [
+              main
+                ? () =>
+                    (
+                      mirror as (
+                        id: string,
+                        main: boolean,
+                        mirror?: string
+                      ) => Promise<void>
+                    )(
+                      item?.__typename === "Mirror"
+                        ? item?.mirrorOn?.id
+                        : item?.id,
+                      main,
+                      item?.__typename === "Mirror" ? item?.id : undefined
+                    )
+                : () =>
+                    (mirror as (id: string, mirror?: string) => Promise<void>)(
+                      item?.__typename === "Mirror"
+                        ? item?.mirrorOn?.id
+                        : item?.id,
+                      item?.__typename === "Mirror" ? item?.id : undefined
+                    ),
               () =>
                 dispatch(
                   setPostBox({
@@ -437,17 +481,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                         )
                       : router.push(`/item/pub/${item?.id}`);
                   } else {
-                    !loaders[indexTwo] &&
-                      (main
-                        ? (
-                            functions[indexTwo] as (
-                              id: string,
-                              main: boolean
-                            ) => Promise<void>
-                          )(item?.id, main)
-                        : (
-                            functions[indexTwo] as (id: string) => Promise<void>
-                          )(item?.id));
+                    !loaders[indexTwo] && functions[indexTwo]();
                   }
                 }}
               >
@@ -584,7 +618,11 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                           ?.toLowerCase()
                           ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
                       ? "coinop"
-                      : "listener",
+                      : meta?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                      ? "listener"
+                      : "f3m",
                     color: returned?.collectionMetadata?.colors?.[0],
                     size: returned?.collectionMetadata?.sizes?.[0],
                     purchased: false,
@@ -672,7 +710,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
             followProfile={followProfile!}
             unfollowProfile={unfollowProfile!}
             router={router}
-            publication={item?.by}
+            publication={
+              (item.__typename == "Mirror" ? item?.mirrorOn : (item as Post))
+                ?.by
+            }
             index={index}
             setProfileHovers={setProfileHovers!}
             feed
@@ -717,7 +758,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                 dispatch(
                   setReportPub({
                     actionOpen: true,
-                    actionFor: item?.id,
+                    actionFor:
+                      item.__typename == "Mirror"
+                        ? item?.mirrorOn
+                        : (item as Post),
                   })
                 ),
               () =>
@@ -777,13 +821,24 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                               index: number,
                               main: boolean
                             ) => Promise<void>
-                          )(item?.id, index, main)
+                          )(
+                            item?.__typename === "Mirror"
+                              ? item?.mirrorOn?.id
+                              : item?.id,
+                            index,
+                            main
+                          )
                         : (
                             functions[indexTwo] as (
                               id: string,
                               index: number
                             ) => Promise<void>
-                          )(item?.id, index));
+                          )(
+                            item?.__typename === "Mirror"
+                              ? item?.mirrorOn?.id
+                              : item?.id,
+                            index
+                          ));
                   } else {
                     (functions[indexTwo] as () => void)();
                   }

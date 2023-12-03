@@ -17,6 +17,8 @@ export const LISTENER_OPEN_ACTION: `0x${string}` =
   "0x897fD9cBC9b5aC57F2594231F25EB24BcF577ea2";
 export const COIN_OP_OPEN_ACTION: `0x${string}` =
   "0x5515aEc4dE195Fd7effEA443b7A5D39025Effc0f";
+export const F3M_OPEN_ACTION: `0x${string}` =
+  "0x41F910439554cF699a198FBC7d2d586580dbed1b";
 export const LEGEND_OPEN_ACTION: `0x${string}` =
   "0xb998D9FdE369327B23f471416070d4E70315B30D";
 export const PRINT_ACCESS_CONTROL: `0x${string}` =
@@ -27,6 +29,8 @@ export const DIGITALAX_ADDRESS: `0x${string}` =
   "0xAA3e5ee4fdC831e5274FE7836c95D670dC2502e6";
 export const ZERO_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000";
+export const F3M_ADDRESS: `0x${string}` =
+  "0xbE20D3f61f6995996a5B8dd58B036ADa7cf30945";
 
 export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|ba[A-Za-z2-7]{57})\b/;
 export const PLACEHOLDERS: string[] = [
@@ -97,6 +101,8 @@ export const numberToItemTypeMap: { [key: number]: ItemType } = {
   1: ItemType.Chromadin,
   2: ItemType.Legend,
   3: ItemType.Listener,
+  4: ItemType.F3M,
+  5: ItemType.Other,
 };
 
 export const itemTypeToNumber: { [key in ItemType]: string } = {
@@ -104,6 +110,8 @@ export const itemTypeToNumber: { [key in ItemType]: string } = {
   [ItemType.Chromadin]: "1",
   [ItemType.Legend]: "2",
   [ItemType.Listener]: "3",
+  [ItemType.F3M]: "4",
+  [ItemType.Other]: "5",
 };
 
 export const itemStringToNumber: { [key: string]: string } = {
@@ -125,6 +133,8 @@ export const itemTypeToString: { [key in ItemType]: string } = {
   [ItemType.Chromadin]: "chromadin",
   [ItemType.Legend]: "legend",
   [ItemType.Listener]: "listener",
+  [ItemType.F3M]: "f3m",
+  [ItemType.Other]: "other",
 };
 
 export const printTypeToNumber: { [key in PrintType]: string } = {
@@ -135,6 +145,8 @@ export const printTypeToNumber: { [key in PrintType]: string } = {
   [PrintType.Sleeve]: "4",
   [PrintType.Crop]: "5",
   [PrintType.NFTOnly]: "6",
+  [PrintType.Custom]: "7",
+  [PrintType.Other]: "8",
 };
 
 export const numberToPrintType: { [key in number]: PrintType } = {
@@ -145,6 +157,8 @@ export const numberToPrintType: { [key in number]: PrintType } = {
   4: PrintType.Sleeve,
   5: PrintType.Crop,
   6: PrintType.NFTOnly,
+  7: PrintType.Custom,
+  8: PrintType.Other,
 };
 
 export const printTypeToString: { [key in PrintType]: string } = {
@@ -155,6 +169,8 @@ export const printTypeToString: { [key in PrintType]: string } = {
   [PrintType.Sleeve]: "sleeve",
   [PrintType.Crop]: "crop",
   [PrintType.NFTOnly]: "nftOnly",
+  [PrintType.Custom]: "custom",
+  [PrintType.Other]: "other",
 };
 
 export const printStringToNumber: { [key: string]: string } = {

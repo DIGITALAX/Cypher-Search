@@ -133,6 +133,12 @@ const Pub: FunctionComponent<PublicationProps> = ({
             ) : (
               <div className="relative w-full md:w-5/6 h-[37rem] flex flex-col gap-10 justify-start items-center">
                 <PostComment
+                  itemId={
+                    itemData?.__typename === "Mirror"
+                      ? itemData?.mirrorOn?.id
+                      : undefined
+                  }
+                  router={router}
                   caretCoord={caretCoordMain}
                   profilesOpen={profilesOpenMain?.[0]}
                   mentionProfiles={mentionProfilesMain}

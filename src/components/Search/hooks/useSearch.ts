@@ -52,7 +52,9 @@ import getPublications from "../../../../graphql/lens/queries/publications";
 import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
-import buildTextQuery, { combineQueryObjects } from "../../../../lib/helpers/buildTextQuery";
+import buildTextQuery, {
+  combineQueryObjects,
+} from "../../../../lib/helpers/buildTextQuery";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -716,7 +718,7 @@ const useSearch = (
   const handleFilterConstants = async () => {
     try {
       const json: FilterValues = (await fetchIpfsJson(
-        "QmTMYLHn9i4s2CXDqC53Traen7uU9bRCRgzdJRsDRwXEjq"
+        "QmXDcoVTy1qkbNQ1HVpUJGyxMXPTPGhcyxYyX31g2EuEGc"
       )) as any;
 
       const data = await getFilterValues();

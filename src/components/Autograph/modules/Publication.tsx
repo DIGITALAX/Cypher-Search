@@ -13,6 +13,7 @@ import {
 } from "../../../../lib/constants";
 import {
   Comment,
+  ImageMetadataV3,
   Mirror,
   Post,
   Quote,
@@ -102,7 +103,37 @@ const Publication: FunctionComponent<PublicationProps> = ({
             className={`relative w-fit h-fit row-start-1 items-center justify-end flex flex-row gap-2 font-bit text-xxs`}
           >
             <div
-              className={`relative w-fit h-fit col-start-1 place-self-center break-words font-dosis text-offWhite`}
+              className={`relative w-fit h-fit col-start-1 place-self-center break-words font-dosis text-offWhite ${
+                item?.__typename === "Mirror" && "cursor-pointer"
+              }`}
+              onClick={() =>
+                item?.__typename === "Mirror" &&
+                (item?.mirrorOn?.openActionModules?.[0]?.contract?.address
+                  ?.toLowerCase()
+                  ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                  ? router.push(
+                      `/item/chromadin/${(
+                        item?.mirrorOn?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
+                    )
+                  : item?.mirrorOn?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(COIN_OP_OPEN_ACTION?.toLowerCase())
+                  ? router.push(
+                      `/item/coinop/${(
+                        item?.mirrorOn?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
+                    )
+                  : item?.mirrorOn?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
+                  ? router.push(
+                      `/item/listener/${(
+                        item?.mirrorOn?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
+                    )
+                  : router.push(`/item/pub/${item?.mirrorOn?.id}`))
+              }
             >
               {item?.__typename === "Comment"
                 ? `Comment on ${
@@ -205,6 +236,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
       {commentsOpen?.[index] && (
         <PostComment
           caretCoord={caretCoord!}
+          router={router}
           profilesOpen={profilesOpen?.[index]!}
           mentionProfiles={mentionProfiles!}
           setMentionProfiles={setMentionProfiles!}
@@ -215,6 +247,9 @@ const Publication: FunctionComponent<PublicationProps> = ({
           setMakePostComment={setMakePostComment!}
           commentPost={comment!}
           id={item?.id}
+          itemId={
+            item?.__typename === "Mirror" ? item?.mirrorOn?.id : undefined
+          }
           commentPostLoading={interactionsLoading?.[index]?.comment!}
           height="5rem"
           imageHeight="1.25rem"

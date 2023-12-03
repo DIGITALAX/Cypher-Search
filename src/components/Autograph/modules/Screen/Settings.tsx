@@ -170,7 +170,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     value={
                       settingsData?.attributes?.find(
                         (item) => item?.key === "location"
-                      )?.value
+                      )?.value || ""
                     }
                     className="bg-piloto p-1 flex w-full h-10 items-start rounded-sm justify-start border border-fuera"
                   />
@@ -209,7 +209,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                       value={
                         settingsData?.attributes?.find(
                           (item) => item?.key === "website"
-                        )?.value
+                        )?.value || ""
                       }
                       className="bg-piloto p-1 flex w-full h-10 items-start rounded-sm justify-start border border-fuera"
                     />

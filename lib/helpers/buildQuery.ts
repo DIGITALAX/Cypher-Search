@@ -11,9 +11,9 @@ type FilterField =
 const buildQuery = (filters: Filter) => {
   const splitString = (value: string): string[] => {
     return value
-      .split(",")
-      .map((item) => item.trim())
-      .filter((item) => item);
+      ?.split(",")
+      ?.map((item) => item?.trim())
+      ?.filter((item) => item);
   };
 
   let query: any = { or: [] };
@@ -45,7 +45,7 @@ const buildQuery = (filters: Filter) => {
   collectionFields.forEach((field) => {
     if (
       typeof filters[field] === "string" &&
-      (filters[field] as string).trim() !== ""
+      (filters[field] as string)?.trim() !== ""
     ) {
       const values =
         field === "format"

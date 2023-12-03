@@ -10,7 +10,7 @@ import {
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
-import { Origin } from "@/components/Search/types/search.types";
+import { FilterValues, Origin } from "@/components/Search/types/search.types";
 
 export interface Creation {
   amount: string;
@@ -60,6 +60,8 @@ export interface Creation {
     images: string[];
     video: string;
     audio: string;
+    sex: string;
+    style: string;
   };
 }
 
@@ -83,7 +85,7 @@ export type TilesProps = {
   moreSearchLoading: boolean;
   searchActive: boolean;
   filtersOpen: boolean;
-
+  filterConstants: FilterValues | undefined;
   searchItems: AllSearchItemsState | undefined;
   layoutAmount: number;
   popUpOpen: boolean[];
@@ -118,6 +120,7 @@ export type TileSwitchProps = {
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   layoutAmount: number;
   popUpOpen: boolean[];
+  filterConstants: FilterValues | undefined;
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   apparel: boolean[];
   setApparel: (e: SetStateAction<boolean[]>) => void;
@@ -125,8 +128,8 @@ export type TileSwitchProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
-  mirror: (id: string) => Promise<void>;
-  like: (id: string, hasReacted: boolean) => Promise<void>;
+  mirror: (id: string, mirror?: boolean) => Promise<void>;
+  like: (id: string, hasReacted: boolean, mirror?: boolean) => Promise<void>;
   simpleCollect?: (id: string, type: string) => Promise<void>;
   interactionsLoading: {
     like: boolean;
@@ -273,6 +276,7 @@ export type CoinOpProps = {
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
   index: number;
+  filterConstants: FilterValues | undefined;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   publication: Creation;
@@ -401,6 +405,8 @@ export enum PrintType {
   Sleeve = "4",
   Crop = "5",
   NFTOnly = "6",
+  Custom = "7",
+  Other = "8",
 }
 
 export type ProfileProps = {

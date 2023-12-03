@@ -155,6 +155,8 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                               microbrandCover:
                                 item?.collectionMetadata?.microbrandCover,
                             },
+                            sex: item?.collectionMetadata?.sex,
+                            style: item?.collectionMetadata?.style,
                             access: item?.collectionMetadata?.access
                               ? item?.collectionMetadata?.access?.join(", ")
                               : "",
