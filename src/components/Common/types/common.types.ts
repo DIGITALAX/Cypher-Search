@@ -17,6 +17,7 @@ import {
 } from "react";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
+import { FilterValues } from "@/components/Search/types/search.types";
 
 export type BarProps = {
   title: string;
@@ -163,6 +164,8 @@ export enum ItemType {
   Chromadin = "chromadin",
   Legend = "legend",
   Listener = "listener",
+  F3M = "f3m",
+  Other = "other",
 }
 
 export type CartItem = {
@@ -187,6 +190,7 @@ export type SuggestedProps = {
   router: NextRouter;
   fullScreenVideo: FullScreenVideoState;
   cartAnim: boolean;
+  filterConstants: FilterValues | undefined;
   layoutAmount?: number;
   handleSearch?: (
     e: KeyboardEvent | MouseEvent,

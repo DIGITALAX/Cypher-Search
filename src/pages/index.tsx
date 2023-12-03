@@ -174,6 +174,7 @@ export default function Home({ router }: { router: NextRouter }) {
         />
         {searchActive && (
           <Tiles
+            filterConstants={filterConstants}
             searchItems={allSearchItems}
             layoutAmount={layoutAmount}
             filtersOpen={filtersOpen?.value}

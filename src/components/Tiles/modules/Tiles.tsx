@@ -40,6 +40,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   searchItems,
   moreSearchLoading,
   lensConnected,
+  filterConstants
 }): JSX.Element => {
   const interactionsLoadingMemo = useDeepMemoize(interactionsLoading);
   const searchItemsMemo = useDeepMemoize(searchItems?.items || []);
@@ -57,6 +58,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
       return (
         <TileSwitchMemo
           type={data?.type}
+          filterConstants={filterConstants}
           lensConnected={lensConnected}
           publication={data}
           cartItems={cartItems}

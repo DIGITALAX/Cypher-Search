@@ -19,7 +19,8 @@ const collectLogic = (
     (pub?.openActionModules?.[0]?.__typename !==
       "SimpleCollectOpenActionSettings" &&
       pub?.openActionModules?.[0]?.__typename !==
-        "MultirecipientFeeCollectOpenActionSettings")
+        "MultirecipientFeeCollectOpenActionSettings") ||
+    !simpleCollect
   )
     return;
 

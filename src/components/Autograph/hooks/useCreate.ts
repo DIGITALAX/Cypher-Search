@@ -80,6 +80,8 @@ const useCreate = (
     printOpen: boolean;
     colorOpen: boolean;
     sizeOpen: boolean;
+    sexOpen: boolean;
+    styleOpen: boolean;
   }>({
     media: "static",
     origin: "chromadin",
@@ -91,6 +93,8 @@ const useCreate = (
     printOpen: false,
     colorOpen: false,
     sizeOpen: false,
+    styleOpen: false,
+    sexOpen: false,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
     {
@@ -99,8 +103,8 @@ const useCreate = (
       collectionId: "",
       price: "",
       acceptedTokens: [
-        "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
-        "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
+        "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+        "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
       ],
       profileId: "",
       pubId: "",
@@ -127,6 +131,8 @@ const useCreate = (
       communities: "",
       cover: "",
       printType: "",
+      sex: "",
+      style: "",
     }
   );
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
@@ -167,15 +173,18 @@ const useCreate = (
     )
       return;
     if (
-      collectionSettings?.origin !== "chromadin" &&
-      (collectionDetails?.sizes?.trim() == "" ||
-        collectionDetails?.colors?.trim() == "" ||
-        collectionDetails?.printType?.trim() == "" ||
-        ((collectionDetails?.printType === "sticker" ||
-          collectionDetails?.printType === "poster") &&
-          collectionDetails?.otherPrices?.length !==
-            collectionDetails?.sizes?.split(/,\s*/)?.slice(1).filter(Boolean)
-              ?.length))
+      (collectionSettings?.origin !== "chromadin" &&
+        (collectionDetails?.sizes?.trim() == "" ||
+          collectionDetails?.colors?.trim() == "" ||
+          collectionDetails?.printType?.trim() == "" ||
+          ((collectionDetails?.printType === "sticker" ||
+            collectionDetails?.printType === "poster") &&
+            collectionDetails?.otherPrices?.length !==
+              collectionDetails?.sizes?.split(/,\s*/)?.slice(1).filter(Boolean)
+                ?.length))) ||
+      (collectionSettings?.origin === "f3m" &&
+        (collectionDetails?.sex?.trim() == "" ||
+          collectionDetails?.style?.trim() == ""))
     )
       return;
     setCreationLoading(true);
@@ -434,8 +443,8 @@ const useCreate = (
         collectionId: "",
         price: "",
         acceptedTokens: [
-          "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
-          "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
+          "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+          "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
         ],
         images: [],
         otherPrices: [],
@@ -462,6 +471,8 @@ const useCreate = (
         communities: "",
         cover: "",
         printType: "",
+        sex: "",
+        style: "",
       });
       setCollectionSettings({
         media: "static",
@@ -474,6 +485,8 @@ const useCreate = (
         printOpen: false,
         colorOpen: false,
         sizeOpen: false,
+        styleOpen: false,
+        sexOpen: false,
       });
       dispatch(
         setPostSuccess({
@@ -574,6 +587,8 @@ const useCreate = (
         otherPrices,
         colors,
         sizes,
+        sex,
+        style,
         ...restOfCollectionDetails
       } = collectionDetails;
 
@@ -585,6 +600,15 @@ const useCreate = (
           (value: { type: string; item: string }) => value?.item
         ) || []),
       ];
+
+      let other = {};
+
+      if (collectionSettings?.origin == "f3m") {
+        other = {
+          sex: collectionDetails?.sex,
+          style: collectionDetails?.style,
+        };
+      }
 
       let toHash: Object = {
         ...restOfCollectionDetails,
@@ -623,6 +647,7 @@ const useCreate = (
             : collectionDetails?.sizes
                 ?.split(/,\s*/)
                 ?.filter((size) => size.trim() !== ""),
+        ...other,
       };
 
       if (encrypted) {

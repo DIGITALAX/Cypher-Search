@@ -152,9 +152,11 @@ const useBookmarks = (
     setBookmarksLoading(false);
   };
 
-  const bookmarkComment = async (id: string) => {
+  const bookmarkComment = async (id: string, mirror?: string) => {
     if (!lensConnected?.id) return;
-    const index = allBookmarks?.findIndex((pub) => pub.id === id);
+    const index = allBookmarks?.findIndex(
+      (pub) => pub?.id === (mirror ? mirror : id)
+    );
 
     if (index === -1) {
       return;
@@ -250,9 +252,11 @@ const useBookmarks = (
     });
   };
 
-  const bookmarkMirror = async (id: string) => {
+  const bookmarkMirror = async (id: string, mirror?: string) => {
     if (!lensConnected?.id) return;
-    const index = allBookmarks?.findIndex((pub) => pub.id === id);
+    const index = allBookmarks?.findIndex(
+      (pub) => pub?.id === (mirror ? mirror : id)
+    );
     if (index === -1) {
       return;
     }
@@ -306,9 +310,15 @@ const useBookmarks = (
     });
   };
 
-  const bookmarkLike = async (id: string, hasReacted: boolean) => {
+  const bookmarkLike = async (
+    id: string,
+    hasReacted: boolean,
+    mirror?: string
+  ) => {
     if (!lensConnected?.id) return;
-    const index = allBookmarks?.findIndex((pub) => pub.id === id);
+    const index = allBookmarks?.findIndex(
+      (pub) => pub?.id === (mirror ? mirror : id)
+    );
     if (index === -1) {
       return;
     }
@@ -351,8 +361,10 @@ const useBookmarks = (
     });
   };
 
-  const bookmarkCollect = async (id: string, type: string) => {
-    const index = allBookmarks?.findIndex((pub) => pub.id === id);
+  const bookmarkCollect = async (id: string, type: string, mirror?: string) => {
+    const index = allBookmarks?.findIndex(
+      (pub) => pub?.id === (mirror ? mirror : id)
+    );
     if (index === -1) {
       return;
     }
@@ -477,10 +489,11 @@ const useBookmarks = (
 
   const followProfileBookmark = async (id: string) => {
     if (!lensConnected?.id) return;
-    const index = allBookmarks?.findIndex((pub) =>
-      (pub as Post | Quote | Mirror)?.__typename === "Mirror"
-        ? (pub as Mirror).mirrorOn.id
-        : (pub as Post | Quote).id
+    const index = allBookmarks?.findIndex(
+      (pub) =>
+        ((pub as Post | Quote | Mirror)?.__typename === "Mirror"
+          ? (pub as Mirror).mirrorOn.id
+          : (pub as Post | Quote).id) == id
     );
     if (index === -1) {
       return;
@@ -520,10 +533,11 @@ const useBookmarks = (
 
   const unfollowProfileBookmark = async (id: string) => {
     if (!lensConnected?.id) return;
-    const index = allBookmarks?.findIndex((pub) =>
-      (pub as Post | Quote | Mirror)?.__typename === "Mirror"
-        ? (pub as Mirror).mirrorOn.id
-        : (pub as Post | Quote).id
+    const index = allBookmarks?.findIndex(
+      (pub) =>
+        ((pub as Post | Quote | Mirror)?.__typename === "Mirror"
+          ? (pub as Mirror).mirrorOn.id
+          : (pub as Post | Quote).id) == id
     );
     if (index === -1) {
       return;

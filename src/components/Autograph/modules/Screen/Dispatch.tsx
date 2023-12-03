@@ -5,10 +5,7 @@ import {
   ScreenDisplay,
 } from "../../types/autograph.types";
 import Image from "next/legacy/image";
-import {
-  ACCEPTED_TOKENS,
-  INFURA_GATEWAY,
-} from "../../../../../lib/constants";
+import { ACCEPTED_TOKENS, INFURA_GATEWAY } from "../../../../../lib/constants";
 import { setScreenDisplay } from "../../../../../redux/reducers/screenDisplaySlice";
 import Waveform from "./Waveform";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
@@ -397,13 +394,21 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         }}
                       >
                         <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
-                          <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
-                            {
-                              allDrops?.find(
-                                (item) =>
-                                  item.dropId === collectionDetails?.dropId
-                              )?.dropDetails?.dropTitle
-                            }
+                          <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                            {(allDrops?.find(
+                              (item) =>
+                                item.dropId === collectionDetails?.dropId
+                            )?.dropDetails?.dropTitle?.length || 0) > 20
+                              ? allDrops
+                                  ?.find(
+                                    (item) =>
+                                      item.dropId === collectionDetails?.dropId
+                                  )
+                                  ?.dropDetails?.dropTitle?.slice(0, 17) + "..."
+                              : allDrops?.find(
+                                  (item) =>
+                                    item.dropId === collectionDetails?.dropId
+                                )?.dropDetails?.dropTitle}
                           </div>
                         </div>
                         <div className="relative w-4 h-3 flex items-center justify-center">
@@ -436,8 +441,13 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                   }}
                                 >
                                   <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
-                                    <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-sm">
-                                      {item?.dropDetails?.dropTitle}
+                                    <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                      {item?.dropDetails?.dropTitle?.length > 20
+                                        ? item?.dropDetails?.dropTitle?.slice(
+                                            0,
+                                            17
+                                          ) + "..."
+                                        : item?.dropDetails?.dropTitle}
                                     </div>
                                   </div>
                                 </div>
@@ -522,44 +532,42 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 Purchase Tokens
               </div>
               <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
-                {ACCEPTED_TOKENS?.map(
-                  (item: string[], indexTwo: number) => {
-                    return (
-                      <div
-                        className={`relative w-fit h-fit rounded-full flex items-center cursor-pointer active:scale-95 ${
-                          collectionDetails?.acceptedTokens?.includes(item[2])
-                            ? "opacity-100"
-                            : "opacity-50"
-                        }`}
-                        key={indexTwo}
-                        onClick={() => {
-                          setCollectionDetails((prev) => {
-                            const newAcceptedTokens =
-                              prev?.acceptedTokens?.includes(item[2])
-                                ? prev.acceptedTokens.filter(
-                                    (token) => token !== item[2]
-                                  )
-                                : [...(prev?.acceptedTokens || []), item[2]];
+                {ACCEPTED_TOKENS?.map((item: string[], indexTwo: number) => {
+                  return (
+                    <div
+                      className={`relative w-fit h-fit rounded-full flex items-center cursor-pointer active:scale-95 ${
+                        collectionDetails?.acceptedTokens?.includes(item[2])
+                          ? "opacity-100"
+                          : "opacity-50"
+                      }`}
+                      key={indexTwo}
+                      onClick={() => {
+                        setCollectionDetails((prev) => {
+                          const newAcceptedTokens =
+                            prev?.acceptedTokens?.includes(item[2])
+                              ? prev.acceptedTokens.filter(
+                                  (token) => token !== item[2]
+                                )
+                              : [...(prev?.acceptedTokens || []), item[2]];
 
-                            return {
-                              ...prev,
-                              acceptedTokens: newAcceptedTokens,
-                            };
-                          });
-                        }}
-                      >
-                        <Image
-                          onError={(e) => handleImageError(e)}
-                          src={`${INFURA_GATEWAY}/ipfs/${item[0]}`}
-                          className="flex rounded-full"
-                          draggable={false}
-                          width={30}
-                          height={35}
-                        />
-                      </div>
-                    );
-                  }
-                )}
+                          return {
+                            ...prev,
+                            acceptedTokens: newAcceptedTokens,
+                          };
+                        });
+                      }}
+                    >
+                      <Image
+                        onError={(e) => handleImageError(e)}
+                        src={`${INFURA_GATEWAY}/ipfs/${item[0]}`}
+                        className="flex rounded-full"
+                        draggable={false}
+                        width={30}
+                        height={35}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
@@ -890,7 +898,8 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
             )}
           </div>
-          {collectionSettings?.origin !== "chromadin" && (
+          {collectionSettings?.origin !== "chromadin" &&
+          collectionSettings?.origin !== "f3m" ? (
             <div className="relative w-fit h-fit flex flex-wrap gap-4">
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
@@ -1173,6 +1182,127 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 </div>
               </div>
             </div>
+          ) : (
+            collectionSettings?.origin == "f3m" && (
+              <div className="relative w-fit h-fit flex flex-wrap gap-4">
+                <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                  <div className="relative w-fit h-fit text-sm break-words">
+                    Sex
+                  </div>
+                  <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                    <div
+                      className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                      onClick={() =>
+                        setCollectionSettings((prev) => ({
+                          ...prev,
+                          sexOpen: !prev.sexOpen,
+                        }))
+                      }
+                    >
+                      <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                        {collectionDetails?.sex}
+                      </div>
+                      <div className="relative w-4 h-3 flex items-center justify-center">
+                        <Image
+                          layout="fill"
+                          draggable={false}
+                          src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                        />
+                      </div>
+                    </div>
+                    {collectionSettings?.sexOpen && (
+                      <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                        <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                          {filterConstants?.sexes?.map(
+                            (item: string, index: number) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                                  onClick={() => {
+                                    setCollectionSettings((prev) => ({
+                                      ...prev,
+                                      sexOpen: !prev.sexOpen,
+                                    }));
+
+                                    setCollectionDetails((prev) => ({
+                                      ...prev,
+                                      sex: item,
+                                    }));
+                                  }}
+                                >
+                                  <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                    {item}
+                                  </div>
+                                </div>
+                              );
+                            }
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                  <div className="relative w-fit h-fit text-sm break-words">
+                    Style
+                  </div>
+                  <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                    <div
+                      className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                      onClick={() =>
+                        setCollectionSettings((prev) => ({
+                          ...prev,
+                          styleOpen: !prev.styleOpen,
+                        }))
+                      }
+                    >
+                      <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                        {collectionDetails?.style}
+                      </div>
+                      <div className="relative w-4 h-3 flex items-center justify-center">
+                        <Image
+                          layout="fill"
+                          draggable={false}
+                          src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                        />
+                      </div>
+                    </div>
+                    {collectionSettings?.styleOpen && (
+                      <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                        <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                          {filterConstants?.styles
+                            ?.map((item) => item?.[0])
+                            ?.map((item: string, index: number) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                                  onClick={() => {
+                                    setCollectionSettings((prev) => ({
+                                      ...prev,
+                                      styleOpen: !prev.styleOpen,
+                                    }));
+
+                                    setCollectionDetails((prev) => ({
+                                      ...prev,
+                                      style: item,
+                                    }));
+                                  }}
+                                >
+                                  <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                    {item}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
           )}
         </div>
       </div>

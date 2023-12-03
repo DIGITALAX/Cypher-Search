@@ -52,7 +52,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                     .split(",")
                     [
                       (e.target as HTMLInputElement).value.split(",").length - 1
-                    ].trim()
+                    ]?.trim()
                     .toLowerCase()
                 )
             ),
@@ -90,13 +90,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           if (!filterValues.hashtag.includes(value)) {
             const allValues = filterValues.hashtag.split(",");
             const isPartialEntry =
-              allValues[allValues.length - 1].trim() !== "";
+              allValues[allValues.length - 1]?.trim() !== "";
 
             let newValues: string;
 
             if (isPartialEntry) {
               allValues[allValues.length - 1] = ` ${value},`;
-              newValues = allValues.join(", ").trim();
+              newValues = allValues.join(", ")?.trim();
             } else {
               newValues = filterValues.hashtag + ` ${value},`;
             }
@@ -129,7 +129,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                     .split(",")
                     [
                       (e.target as HTMLInputElement).value.split(",").length - 1
-                    ].trim()
+                    ]?.trim()
                     .toLowerCase()
                 )
             ),
@@ -167,13 +167,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           if (!filterValues?.community.includes(value)) {
             const allValues = filterValues?.community.split(",");
             const isPartialEntry =
-              allValues[allValues?.length - 1].trim() !== "";
+              allValues[allValues?.length - 1]?.trim() !== "";
 
             let newValues: string;
 
             if (isPartialEntry) {
               allValues[allValues.length - 1] = ` ${value},`;
-              newValues = allValues.join(", ").trim();
+              newValues = allValues.join(", ")?.trim();
             } else {
               newValues = filterValues.community + ` ${value},`;
             }
@@ -244,7 +244,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           if (!filterValues?.microbrand?.includes(value)) {
             const allValues = filterValues?.microbrand?.split(",");
             const isPartialEntry =
-              allValues[allValues?.length - 1].trim() !== "";
+              allValues[allValues?.length - 1]?.trim() !== "";
 
             let newValues: string;
 
@@ -317,7 +317,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                       [
                         (e.target as HTMLInputElement).value.split(",").length -
                           1
-                      ].trim()
+                      ]?.trim()
                       .toLowerCase()
                   )
               ),
@@ -355,7 +355,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             if (!filterValues?.origin?.includes(value)) {
               const allValues = filterValues?.origin?.split(",");
               const isPartialEntry =
-                allValues[allValues?.length - 1].trim() !== "";
+                allValues[allValues?.length - 1]?.trim() !== "";
 
               let newValues: string;
 
@@ -395,7 +395,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                     .split(",")
                     [
                       (e.target as HTMLInputElement).value.split(",").length - 1
-                    ].trim()
+                    ]?.trim()
                     .toLowerCase()
                 )
             ),
@@ -433,7 +433,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           if (!filterValues?.format?.includes(value)) {
             const allValues = filterValues?.format.split(",");
             const isPartialEntry =
-              allValues[allValues?.length - 1].trim() !== "";
+              allValues[allValues?.length - 1]?.trim() !== "";
 
             let newValues: string;
 
@@ -472,7 +472,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                     .split(",")
                     [
                       (e.target as HTMLInputElement).value.split(",").length - 1
-                    ].trim()
+                    ]?.trim()
                     .toLowerCase()
                 )
             ),
@@ -549,7 +549,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                     .split(",")
                     [
                       (e.target as HTMLInputElement).value.split(",").length - 1
-                    ].trim()
+                    ]?.trim()
                     .toLowerCase()
                 )
             ),
@@ -587,7 +587,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           if (!filterValues?.access?.includes(value)) {
             const allValues = filterValues?.access?.split(",");
             const isPartialEntry =
-              allValues[allValues?.length - 1].trim() !== "";
+              allValues[allValues?.length - 1]?.trim() !== "";
 
             let newValues: string;
 

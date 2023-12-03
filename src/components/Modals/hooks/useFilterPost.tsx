@@ -9,9 +9,16 @@ import lensFollow from "../../../../lib/helpers/api/followProfile";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { AnyAction, Dispatch } from "redux";
-import { Profile } from "../../../../graphql/generated";
+import {
+  Profile,
+  PublicationOperations,
+  PublicationStats,
+} from "../../../../graphql/generated";
 import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import lensLike from "../../../../lib/helpers/api/likePost";
+import errorChoice from "../../../../lib/helpers/errorChoice";
+import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 
 const useFilterPost = (
   filtersOpen: FiltersOpenState,
@@ -73,15 +80,44 @@ const useFilterPost = (
     )
   );
 
-  const mirror = async () => {
+  const mirror = async (id: string, creation = true) => {
     setInteractionsLoading((prev) => {
       const arr = [...interactionsLoading];
       arr[0] = { ...arr[0], mirror: true };
       return arr;
     });
     try {
+      const clientWallet = createWalletClient({
+        chain: polygon,
+        transport: custom((window as any).ethereum),
+      });
+      await lensMirror(
+        id,
+        dispatch,
+        address as `0x${string}`,
+        clientWallet,
+        publicClient
+      );
+      updateInteractions(
+        {
+          hasMirrored: true,
+        },
+        "mirrors",
+        true
+      );
     } catch (err: any) {
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            {
+              hasMirrored: true,
+            },
+            "mirrors",
+            true
+          ),
+        dispatch
+      );
     }
     setInteractionsLoading((prev) => {
       const arr = [...prev];
@@ -90,19 +126,38 @@ const useFilterPost = (
     });
   };
 
-  const like = async () => {
+  const like = async (id: string, hasReacted: boolean, creation?: boolean) => {
     setInteractionsLoading((prev) => {
       const arr = [...prev];
       arr[0] = { ...arr[0], like: true };
       return arr;
     });
     try {
+      await lensLike(id, dispatch, hasReacted);
+      updateInteractions(
+        {
+          hasReacted: hasReacted ? false : true,
+        },
+        "reactions",
+        hasReacted ? false : true
+      );
     } catch (err: any) {
-      console.error(err.message);
+      errorChoice(
+        err,
+        () =>
+          updateInteractions(
+            {
+              hasReacted: hasReacted ? false : true,
+            },
+            "reactions",
+            hasReacted ? false : true
+          ),
+        dispatch
+      );
     }
     setInteractionsLoading((prev) => {
       const arr = [...prev];
-      arr[0] = { ...arr[0], like: true };
+      arr[0] = { ...arr[0], like: false };
       return arr;
     });
   };
@@ -152,8 +207,6 @@ const useFilterPost = (
             })
           );
         }, 3000);
-
-
       }
     }
 
@@ -210,7 +263,6 @@ const useFilterPost = (
             })
           );
         }, 3000);
-
       }
     }
 
@@ -223,12 +275,14 @@ const useFilterPost = (
 
   const getCollection = async () => {
     try {
-      const origin = ["chromadin", "coinop", "listener"][
+      const origin = ["chromadin", "coinop", "listener", "f3m"][
         Math.floor(Math.random() * 3)
       ];
       const data = await getOneRandomCollection(
         origin,
-        ["chromadin", "coinop", "listener"][Math.floor(Math.random() * 3)]
+        ["chromadin", "coinop", "listener", "f3m"][
+          Math.floor(Math.random() * 3)
+        ]
       );
       if (!data?.data?.collectionCreateds) return;
       const pubData = await getPublication(
@@ -257,6 +311,36 @@ const useFilterPost = (
       setPublication(undefined);
     }
   }, [filtersOpen?.value, lensConnected?.id]);
+
+  const updateInteractions = (
+    valueToUpdate: Object,
+    statToUpdate: string,
+    increase: boolean
+  ) => {
+    setPublication(
+      (prev) =>
+        ({
+          ...prev,
+          post: {
+            ...(prev?.post as Creation),
+            publication: {
+              ...(prev?.post as Creation)?.publication,
+              operations: {
+                ...(prev?.post as Creation)?.publication?.operations,
+                ...valueToUpdate,
+              } as PublicationOperations,
+              stats: {
+                ...(prev?.post as Creation)?.publication?.stats,
+                [statToUpdate]:
+                  (prev?.post as Creation)?.publication?.stats?.[
+                    statToUpdate as keyof PublicationStats
+                  ] + (increase ? 1 : -1),
+              },
+            },
+          } as Creation,
+        } as Publication)
+    );
+  };
 
   return {
     popUpOpen,

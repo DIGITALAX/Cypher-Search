@@ -31,7 +31,7 @@ const Filters: FunctionComponent<FilterProps> = ({
   followLoading,
   profileHovers,
   setProfileHovers,
-  lensConnected
+  lensConnected,
 }): JSX.Element => {
   return (
     <div
@@ -41,8 +41,11 @@ const Filters: FunctionComponent<FilterProps> = ({
       <div className="relative flex flex-col lg:flex-row gap-10 mx-auto w-full p-4 h-fit lg:items-start items-center justify-start lg:justify-center">
         <TileSwitch
           type={
-            ["chromadin", "coinop", "listener"][Math.floor(Math.random() * 3)]
+            ["chromadin", "coinop", "listener", "f3m"][
+              Math.floor(Math.random() * 3)
+            ]
           }
+          filterConstants={filterConstants}
           lensConnected={lensConnected}
           publication={publication}
           layoutAmount={layoutAmount}

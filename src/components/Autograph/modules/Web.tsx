@@ -18,6 +18,7 @@ const Web: FunctionComponent<WebProps> = ({
   handleLogout,
   screenDisplay,
   sortType,
+  address,
   setSortType,
   mirror,
   comment,
@@ -220,6 +221,7 @@ const Web: FunctionComponent<WebProps> = ({
           }
         </div>
         <ScreenSwitch
+          address={address}
           handleMessageImage={handleMessageImage}
           messageImage={messageImage}
           setCaretCoord={setCaretCoord}

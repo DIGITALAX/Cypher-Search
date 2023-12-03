@@ -32,6 +32,7 @@ export type WebProps = {
   deleteCollection: () => Promise<void>;
   creationLoading: boolean;
   isDesigner: boolean;
+  address: `0x${string}` | undefined;
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   profilesOpen: boolean[];
@@ -112,6 +113,8 @@ export type WebProps = {
     printOpen: boolean;
     sizeOpen: boolean;
     colorOpen: boolean;
+    styleOpen: boolean;
+    sexOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -125,6 +128,8 @@ export type WebProps = {
       printOpen: boolean;
       sizeOpen: boolean;
       colorOpen: boolean;
+      styleOpen: boolean;
+      sexOpen: boolean;
     }>
   ) => void;
 
@@ -442,6 +447,7 @@ export type GalleryScreenProps = {
   dropsLoading: boolean;
   collectionLoading: boolean;
   allDrops: Drop[];
+  address: `0x${string}` | undefined;
   createDropLoading: boolean;
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
@@ -470,6 +476,8 @@ export type GalleryScreenProps = {
     printOpen: boolean;
     sizeOpen: boolean;
     colorOpen: boolean;
+    styleOpen: boolean;
+    sexOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -483,6 +491,8 @@ export type GalleryScreenProps = {
       printOpen: boolean;
       sizeOpen: boolean;
       colorOpen: boolean;
+      styleOpen: boolean;
+      sexOpen: boolean;
     }>
   ) => void;
 };
@@ -496,6 +506,7 @@ export type ScreenSwitchProps = {
     x: number;
     y: number;
   };
+  address: `0x${string}` | undefined;
   messageImage: {
     image: string;
     type: string;
@@ -596,6 +607,8 @@ export type ScreenSwitchProps = {
     printOpen: boolean;
     sizeOpen: boolean;
     colorOpen: boolean;
+    styleOpen: boolean;
+    sexOpen: boolean;
   };
   lensConnected: Profile | undefined;
   setCollectionSettings: (
@@ -610,6 +623,8 @@ export type ScreenSwitchProps = {
       printOpen: boolean;
       sizeOpen: boolean;
       colorOpen: boolean;
+      styleOpen: boolean;
+      sexOpen: boolean;
     }>
   ) => void;
 
@@ -1180,6 +1195,7 @@ export type PostCommentProps = {
       y: number;
     }>
   ) => void;
+  router: NextRouter;
   mentionProfiles: Profile[];
   profilesOpen: boolean;
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
@@ -1188,6 +1204,7 @@ export type PostCommentProps = {
   postCollectGif: PostCollectGifState;
   setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
   main?: boolean | undefined;
+  itemId: string | undefined;
   commentPost:
     | ((id: string) => Promise<void>)
     | (() => Promise<void>)
@@ -1230,6 +1247,7 @@ export type ScreenPostProps = {
       y: number;
     }>
   ) => void;
+  router: NextRouter;
   lensConnected: Profile | undefined;
   profilesOpen: boolean[];
   mentionProfiles: Profile[];
@@ -1416,6 +1434,8 @@ export type DispatchProps = {
     printOpen: boolean;
     sizeOpen: boolean;
     colorOpen: boolean;
+    styleOpen: boolean;
+    sexOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1429,6 +1449,8 @@ export type DispatchProps = {
       printOpen: boolean;
       sizeOpen: boolean;
       colorOpen: boolean;
+      styleOpen: boolean;
+      sexOpen: boolean;
     }>
   ) => void;
 };
@@ -1439,7 +1461,7 @@ export interface CollectionDetails {
   collectionId: string;
   price: string;
   amount: string;
-  otherPrices: string[]
+  otherPrices: string[];
   profileId: string;
   pubId: string;
   cover: string;
@@ -1451,6 +1473,8 @@ export interface CollectionDetails {
   tags: string;
   prompt: string;
   sizes: string;
+  sex: string;
+  style: string;
   colors: string;
   profileHandle: string;
   microbrand: {
@@ -1551,6 +1575,8 @@ export type SwitchCreateProps = {
     printOpen: boolean;
     sizeOpen: boolean;
     colorOpen: boolean;
+    styleOpen: boolean;
+    sexOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1564,6 +1590,8 @@ export type SwitchCreateProps = {
       printOpen: boolean;
       sizeOpen: boolean;
       colorOpen: boolean;
+      styleOpen: boolean;
+      sexOpen: boolean;
     }>
   ) => void;
   edit: boolean;

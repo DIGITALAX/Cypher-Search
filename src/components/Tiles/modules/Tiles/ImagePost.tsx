@@ -296,25 +296,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 }
                 router={router}
                 dispatch={dispatch}
-                simpleCollect={
-                  (
-                    publication?.__typename === "Mirror"
-                      ? !publication?.mirrorOn.operations?.actedOn &&
-                        (publication?.mirrorOn?.openActionModules?.[0]
-                          ?.__typename === "SimpleCollectOpenActionSettings" ||
-                          publication?.mirrorOn?.openActionModules?.[0]
-                            ?.__typename ===
-                            "MultirecipientFeeCollectOpenActionSettings")
-                      : !(publication as Post)?.operations?.actedOn &&
-                        ((publication as Post)?.openActionModules?.[0]
-                          ?.__typename !== "SimpleCollectOpenActionSettings" ||
-                          (publication as Post)?.openActionModules?.[0]
-                            ?.__typename ===
-                            "MultirecipientFeeCollectOpenActionSettings")
-                  )
-                    ? simpleCollect
-                    : undefined
-                }
+                simpleCollect={simpleCollect}
               />
               <div className="relative mb-0 flex flex-row items-center justify-between gap-2 w-full h-fit">
                 <div className="relative w-6 h-6 items-center justify-center flex">
@@ -593,25 +575,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     : publication
                 }
                 dispatch={dispatch}
-                simpleCollect={
-                  (
-                    publication?.__typename === "Mirror"
-                      ? !publication?.mirrorOn.operations?.actedOn &&
-                        (publication?.mirrorOn?.openActionModules?.[0]
-                          ?.__typename === "SimpleCollectOpenActionSettings" ||
-                          publication?.mirrorOn?.openActionModules?.[0]
-                            ?.__typename ===
-                            "MultirecipientFeeCollectOpenActionSettings")
-                      : !(publication as Post)?.operations?.actedOn &&
-                        ((publication as Post)?.openActionModules?.[0]
-                          ?.__typename !== "SimpleCollectOpenActionSettings" ||
-                          (publication as Post)?.openActionModules?.[0]
-                            ?.__typename ===
-                            "MultirecipientFeeCollectOpenActionSettings")
-                  )
-                    ? simpleCollect
-                    : undefined
-                }
+                simpleCollect={simpleCollect}
               />
             </div>
           </div>

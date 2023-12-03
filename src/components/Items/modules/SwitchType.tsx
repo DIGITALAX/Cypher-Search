@@ -94,6 +94,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
     case "chromadin":
     case "coinop":
     case "listener":
+    case "f3m":
       return (
         <Chromadin
           allSearchItems={allSearchItems}

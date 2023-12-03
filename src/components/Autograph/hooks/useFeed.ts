@@ -151,9 +151,11 @@ const useFeed = (
     }
   };
 
-  const feedComment = async (id: string) => {
+  const feedComment = async (id: string, mirror?: string) => {
     if (!lensConnected?.id) return;
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    const index = profileFeed?.findIndex(
+      (pub) => pub.id === (mirror ? mirror : id)
+    );
     if (index === -1) {
       return;
     }
@@ -181,6 +183,7 @@ const useFeed = (
         [],
         postCollectGif?.gifs?.[id] || []
       );
+
 
       const clientWallet = createWalletClient({
         chain: polygon,
@@ -237,9 +240,11 @@ const useFeed = (
     });
   };
 
-  const feedLike = async (id: string, hasReacted: boolean) => {
+  const feedLike = async (id: string, hasReacted: boolean, mirror?: string) => {
     if (!lensConnected?.id) return;
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    const index = profileFeed?.findIndex(
+      (pub) => pub.id === (mirror ? mirror : id)
+    );
     if (index === -1) {
       return;
     }
@@ -282,9 +287,11 @@ const useFeed = (
     });
   };
 
-  const feedCollect = async (id: string, type: string) => {
+  const feedCollect = async (id: string, type: string, mirror?: string) => {
     if (!lensConnected?.id) return;
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    const index = profileFeed?.findIndex(
+      (pub) => pub.id === (mirror ? mirror : id)
+    );
     if (index === -1) {
       return;
     }
@@ -348,9 +355,11 @@ const useFeed = (
     });
   };
 
-  const feedMirror = async (id: string) => {
+  const feedMirror = async (id: string, mirror?: string) => {
     if (!lensConnected?.id) return;
-    const index = profileFeed?.findIndex((pub) => pub.id === id);
+    const index = profileFeed?.findIndex(
+      (pub) => pub.id === (mirror ? mirror : id)
+    );
     if (index === -1) {
       return;
     }

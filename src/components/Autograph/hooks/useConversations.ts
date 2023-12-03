@@ -153,11 +153,7 @@ const useConversations = (
         digitalax ? DIGITALAX_ADDRESS : selectedUser?.address?.toLowerCase()!
       );
 
-      if (
-        messageImage?.image?.trim() !== "" &&
-        messageImage?.type?.trim() !== "" &&
-        !digitalax
-      ) {
+      if (messageImage?.image?.trim() !== "" && !digitalax) {
         const response = await fetch("/api/ipfs", {
           method: "POST",
           body: convertToFile(messageImage?.image, messageImage?.type),
@@ -178,34 +174,38 @@ const useConversations = (
         }
       } else if (currentMessage?.trim() !== "" && !digitalax) {
         const data = conversation.send(currentMessage);
+        (await data)?.sent;
+      }
 
-        if ((await data).sent) {
-          setCurrentMessage("");
-          setMessageImage({
-            image: "",
-            type: "",
+      if (
+        !digitalax &&
+        (currentMessage?.trim() !== "" || messageImage?.image?.trim() !== "")
+      ) {
+        setCurrentMessage("");
+        setMessageImage({
+          image: "",
+          type: "",
+        });
+
+        const newMessages = await conversation.messages();
+        setMessages(newMessages);
+        const index = conversations?.findIndex(
+          (item) =>
+            item?.peerAddress?.toLowerCase() ===
+            conversation?.peerAddress?.toLowerCase()
+        );
+
+        if (index != -1) {
+          setConversations((prev) => {
+            const arr = [...prev];
+
+            arr[index] = {
+              ...arr[index],
+              recordedMessages: newMessages,
+            };
+
+            return arr;
           });
-
-          const newMessages = await conversation.messages();
-          setMessages(newMessages);
-          const index = conversations?.findIndex(
-            (item) =>
-              item?.peerAddress?.toLowerCase() ===
-              conversation?.peerAddress?.toLowerCase()
-          );
-
-          if (index != -1) {
-            setConversations((prev) => {
-              const arr = [...prev];
-
-              arr[index] = {
-                ...arr[index],
-                recordedMessages: newMessages,
-              };
-
-              return arr;
-            });
-          }
         }
       }
     } catch (err: any) {

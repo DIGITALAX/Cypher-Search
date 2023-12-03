@@ -3,7 +3,7 @@ import { GalleryScreenProps } from "../../types/autograph.types";
 import { AiOutlineLoading } from "react-icons/ai";
 import SwitchCreate from "./SwitchCreate";
 import Image from "next/legacy/image";
-import { INFURA_GATEWAY } from "../../../../../lib/constants";
+import { F3M_ADDRESS, INFURA_GATEWAY } from "../../../../../lib/constants";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
@@ -41,6 +41,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   deleteCollection,
   allCollections,
   collectionLoading,
+  address,
 }): JSX.Element => {
   return (
     <div className="relative flex flex-col tablet:flex-row gap-4 items-start justify-center w-full h-full">
@@ -166,8 +167,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         collectionId: "",
                         price: "",
                         acceptedTokens: [
-                          "0x566d63f1cc7f45bfc9b2bdc785ffcc6f858f0997",
-                          "0xf87b6343c172720ac9cc7d1c9465d63454a8ef30",
+                          "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+                          "0x6968105460f67c3bf751be7c15f92f5286fd0ce5",
                         ],
                         otherPrices: [],
                         printType: "",
@@ -194,6 +195,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         dropCover: "",
                         dropCollectionIds: [],
                         communities: "",
+                        sex: "",
+                        style: "",
                       });
                       setCollectionSettings({
                         media: "static",
@@ -206,6 +209,8 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         printOpen: false,
                         colorOpen: false,
                         sizeOpen: false,
+                        sexOpen: false,
+                        styleOpen: false,
                       });
                     }
                   }}
@@ -230,44 +235,54 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                   <div className="relative w-fit h-fit font-bit text-white text-sm">
                     Choose Origin
                   </div>
-                  <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
-                    {[
-                      "chromadin",
-                      "coinop",
-                      "listener",
-                      "autograph quarterly",
-                      "legend",
-                      "the dial",
-                    ]?.map((item: string, index: number) => {
-                      return (
-                        <div
-                          key={index}
-                          className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
-                            item === collectionSettings?.origin
-                              ? "border-2"
-                              : "border"
-                          } ${
-                            (index !== 0 && index !== 1 && index !== 2) ||
-                            (createCase === "collection" &&
-                              collectionDetails?.collectionId !== "")
-                              ? "opacity-50"
-                              : "cursor-pointer active:scale-95"
-                          }`}
-                          onClick={() =>
-                            (index === 0 || index === 1 || index === 2) &&
-                            collectionDetails?.collectionId == "" &&
-                            setCollectionSettings((prev) => ({
-                              ...prev,
-                              origin: item,
-                            }))
-                          }
-                        >
-                          <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                            {item}
+                  <div className="relative w-full h-fit flex overflow-y-scroll max-h-[14rem]">
+                    <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
+                      {[
+                        "chromadin",
+                        "coinop",
+                        "listener",
+                        "autograph quarterly",
+                        "legend",
+                        "the dial",
+                        "f3m",
+                      ]?.map((item: string, index: number) => {
+                        return (
+                          <div
+                            key={index}
+                            className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
+                              item === collectionSettings?.origin
+                                ? "border-2"
+                                : "border"
+                            } ${
+                              (index !== 0 &&
+                                index !== 1 &&
+                                index !== 2 &&
+                                address === F3M_ADDRESS &&
+                                index !== 6) ||
+                              (createCase === "collection" &&
+                                collectionDetails?.collectionId !== "")
+                                ? "opacity-50"
+                                : "cursor-pointer active:scale-95"
+                            }`}
+                            onClick={() =>
+                              (index === 0 ||
+                                index === 1 ||
+                                index === 2 ||
+                                (index === 6 && address === F3M_ADDRESS)) &&
+                              collectionDetails?.collectionId == "" &&
+                              setCollectionSettings((prev) => ({
+                                ...prev,
+                                origin: item,
+                              }))
+                            }
+                          >
+                            <div className="relative w-fit h-fit items-center justify-center flex top-1">
+                              {item}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
                 <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">

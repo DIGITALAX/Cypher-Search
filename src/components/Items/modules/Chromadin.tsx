@@ -139,6 +139,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               ) : (
                 <div className="relative w-5/6 h-full flex flex-col gap-10 justify-start items-center">
                   <PostComment
+                    itemId={undefined}
+                    router={router}
                     setCaretCoord={setCaretCoordMain}
                     caretCoord={caretCoordMain}
                     profilesOpen={profilesOpenMain?.[0]}
@@ -311,7 +313,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           (item[0]?.toLowerCase()?.trim() == "coin op" &&
                             type?.toLowerCase() == "coinop") ||
                           (item[0]?.toLowerCase()?.trim() == "lit listener" &&
-                            type?.toLowerCase() == "listener")
+                            type?.toLowerCase() == "listener") ||
+                          (item[0]?.toLowerCase()?.trim() == "f3m" &&
+                            type?.toLowerCase() == "f3m")
                       )?.[1]
                     }`}
                     onError={(e) => handleImageError(e)}
@@ -405,13 +409,40 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           </div>
           {itemData?.origin !== "1" && (
             <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-sm mt-0">
-              <PrintType
-                printType={
-                  printTypeToString[
-                    Number(itemData?.printType) as unknown as PrintTagType
-                  ]
-                }
-              />
+              {itemData?.origin !== "4" ? (
+                <PrintType
+                  printType={
+                    printTypeToString[
+                      Number(itemData?.printType) as unknown as PrintTagType
+                    ]
+                  }
+                />
+              ) : (
+                <div className="relative flex flex-row w-fit px-1.5 py-1 h-fit text-white font-aust gap-1 items-center justify-center">
+                  <div className="relative text-xxs rounded-full flex items-center justify-center">
+                    {
+                      filterConstants?.styles?.filter(
+                        (item) =>
+                          item?.[0]?.toLowerCase() ==
+                          itemData?.collectionMetadata?.style?.toLowerCase()
+                      )?.[0]
+                    }
+                  </div>
+                  <div className="relative w-fit h-fit flex items-center justify-center w-5 h-5 hover:rotate-45">
+                    <Image
+                      layout="fill"
+                      draggable={false}
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        filterConstants?.styles?.filter(
+                          (item) =>
+                            item?.[0]?.toLowerCase() ==
+                            itemData?.collectionMetadata?.style?.toLowerCase()
+                        )?.[1]
+                      }`}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
           <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-center justify-center">

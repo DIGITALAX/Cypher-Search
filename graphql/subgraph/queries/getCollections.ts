@@ -15,6 +15,8 @@ const COLLECTIONS = `
         video
         title
         tags
+        sex
+        style
         prompt
         profileHandle
         sizes
@@ -63,6 +65,8 @@ const COLLECTIONS_PAGINATED = `
         access
         visibility
         video
+        sex
+        style
         title
         tags
         prompt

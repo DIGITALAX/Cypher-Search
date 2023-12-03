@@ -1,6 +1,6 @@
 const buildTextQuery = (inputText: string): Object | void => {
-  const trimmedInputText = inputText.trim();
-  if (trimmedInputText === "") return;
+  const trimmedInputText = inputText?.trim();
+  if (trimmedInputText === "" || !trimmedInputText) return;
 
   const commonWords = new Set([
     "a",
@@ -28,17 +28,17 @@ const buildTextQuery = (inputText: string): Object | void => {
   ];
 
   const searchWords = trimmedInputText
-    .split(/\s+/)
-    .map((word) => word.trim())
-    .filter(
+    ?.split(/\s+/)
+    ?.map((word) => word?.trim())
+    ?.filter(
       (word) =>
-        word && (word.length > 1 || trimmedInputText.split(/\s+/).length === 1)
+        word && (word.length > 1 || trimmedInputText?.split(/\s+/).length === 1)
     )
-    .filter((word) => !commonWords.has(word.toLowerCase()));
+    ?.filter((word) => !commonWords.has(word.toLowerCase()));
 
   let orConditions: any[] = [];
-  fieldsToSearch.forEach((field) => {
-    searchWords.forEach((word) => {
+  fieldsToSearch?.forEach((field) => {
+    searchWords?.forEach((word) => {
       orConditions.push({ [`${field}_contains_nocase`]: word });
     });
   });

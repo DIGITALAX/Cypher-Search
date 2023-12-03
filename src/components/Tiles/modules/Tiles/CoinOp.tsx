@@ -36,6 +36,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   followProfile,
   unfollowProfile,
   lensConnected,
+  filterConstants
 }): JSX.Element => {
   return (
     <div
@@ -81,13 +82,40 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           />
         )}
         <div className="absolute right-2 top-2 w-fit h-fit">
-          <PrintType
-            printType={
-              printTypeToString[
-                Number(publication?.printType) as unknown as PrintTagType
-              ]
-            }
-          />
+          {publication?.origin !== "4" ? (
+            <PrintType
+              printType={
+                printTypeToString[
+                  Number(publication?.printType) as unknown as PrintTagType
+                ]
+              }
+            />
+          ) : (
+            <div className="relative flex flex-row w-fit px-1.5 py-1 h-fit text-white font-aust gap-1 items-center justify-center">
+              <div className="relative text-xxs rounded-full flex items-center justify-center">
+                {
+                  filterConstants?.styles?.filter(
+                    (item) =>
+                      item?.[0]?.toLowerCase() ==
+                      publication?.collectionMetadata?.style?.toLowerCase()
+                  )?.[0]
+                }
+              </div>
+              <div className="relative w-fit h-fit flex items-center justify-center w-5 h-5 hover:rotate-45">
+                <Image
+                  layout="fill"
+                  draggable={false}
+                  src={`${INFURA_GATEWAY}/ipfs/${
+                    filterConstants?.styles?.filter(
+                      (item) =>
+                        item?.[0]?.toLowerCase() ==
+                        publication?.collectionMetadata?.style?.toLowerCase()
+                    )?.[1]
+                  }`}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div className="relative flex flex-row justify-between items-center w-full h-fit gap-1.5">

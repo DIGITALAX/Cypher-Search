@@ -429,7 +429,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                         [
                           (e.target as HTMLInputElement).value.split(",")
                             .length - 1
-                        ].trim()
+                        ]?.trim()
                         .toLowerCase()
                     )
                 ),
@@ -460,13 +460,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
               if (!filterValues.token.includes(value)) {
                 const allValues = filterValues.token.split(",");
                 const isPartialEntry =
-                  allValues[allValues.length - 1].trim() !== "";
+                  allValues[allValues.length - 1]?.trim() !== "";
 
                 let newValues: string;
 
                 if (isPartialEntry) {
                   allValues[allValues.length - 1] = ` ${value},`;
-                  newValues = allValues.join(", ").trim();
+                  newValues = allValues.join(", ")?.trim();
                 } else {
                   newValues = filterValues.token + ` ${value},`;
                 }
@@ -542,7 +542,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                         [
                           (e.target as HTMLInputElement).value.split(",")
                             .length - 1
-                        ].trim()
+                        ]?.trim()
                         .toLowerCase()
                     )
                 ),
@@ -576,13 +576,13 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
               
                 const allValues = filterValues.fulfiller.split(",");
                 const isPartialEntry =
-                  allValues[allValues.length - 1].trim() !== "";
+                  allValues[allValues.length - 1]?.trim() !== "";
 
                 let newValues: string;
 
                 if (isPartialEntry) {
                   allValues[allValues.length - 1] = ` ${value},`;
-                  newValues = allValues.join(", ").trim();
+                  newValues = allValues.join(", ")?.trim();
                 } else {
                   newValues = filterValues.fulfiller + ` ${value},`;
                 }

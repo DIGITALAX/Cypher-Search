@@ -156,7 +156,10 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   } = useComment(
     address,
     publicClient,
-    type === "chromadin" || type === "coinop"
+    type === "chromadin" ||
+      type === "coinop" ||
+      type === "listener" ||
+      type === "f3m"
       ? (itemData?.post as Creation)?.publication?.id
       : (itemData?.post as Mirror)?.__typename === "Mirror"
       ? (itemData?.post as Mirror)?.mirrorOn?.id
@@ -173,7 +176,10 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const { getMoreSuggested, suggestedFeed, loaders, setSuggestedFeed } =
     useSuggested(
       id as string,
-      type === "chromadin" || type === "coinop" || type === "listener"
+      type === "chromadin" ||
+        type === "coinop" ||
+        type === "listener" ||
+        type === "f3m"
         ? (itemData?.post as Creation)?.profile
         : (itemData?.post as Mirror)?.__typename === "Mirror"
         ? (itemData?.post as Mirror)?.mirrorOn?.by
@@ -326,7 +332,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   name="og:description"
                   content={
                     itemData?.type === "chromadin" ||
-                    itemData?.type === "coinop"
+                    itemData?.type === "coinop" ||
+                    itemData?.type === "listener" ||
+                    itemData?.type === "f3m"
                       ? (itemData.post as Creation)?.collectionMetadata
                           ?.description
                       : (itemData?.post as Mirror)?.__typename === "Mirror"
@@ -449,6 +457,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
                 moreSearchLoading={loaders?.moreSuggestedLoading}

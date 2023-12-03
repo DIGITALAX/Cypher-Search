@@ -25,7 +25,6 @@ import { PublicClient } from "viem";
 import { PRINT_ACCESS_CONTROL } from "../../../../lib/constants";
 import { setIsDesigner } from "../../../../redux/reducers/isDesignerSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
-import createProfile from "../../../../graphql/lens/mutations/create";
 
 const useSignIn = (
   publicClient: PublicClient,

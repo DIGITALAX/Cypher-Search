@@ -18,6 +18,7 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
   caretCoord,
   lensConnected,
   setCaretCoord,
+  router
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -30,6 +31,8 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
             <div className="relative flex items-center justify-center w-full tablet:w-2/3 h-full">
               <PostComment
                 setCaretCoord={setCaretCoord}
+                router={router}
+                itemId={undefined}
                 caretCoord={caretCoord}
                 profilesOpen={profilesOpen?.[0]}
                 mentionProfiles={mentionProfiles}

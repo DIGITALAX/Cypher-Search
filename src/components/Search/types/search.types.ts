@@ -26,6 +26,8 @@ export interface FilterValues {
     apparel: string[];
   };
   token: string[];
+  sexes: string[];
+  styles: string[][];
   fulfiller: string[];
 }
 
@@ -161,8 +163,8 @@ export type FilterProps = {
   setApparel: (e: SetStateAction<boolean[]>) => void;
   router: NextRouter;
   cartItems: CartItem[];
-  mirror: (id: string) => Promise<void>;
-  like: (id: string, hasReacted: boolean) => Promise<void>;
+  mirror: (id: string, creation?: boolean) => Promise<void>;
+  like: (id: string, hasReacted: boolean, creation?: boolean) => Promise<void>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;

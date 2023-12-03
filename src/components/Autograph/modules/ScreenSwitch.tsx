@@ -140,201 +140,223 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   setCaretCoordBookmark,
   messageImage,
   handleMessageImage,
-  cartItems
+  cartItems,
+  address
 }): JSX.Element => {
-  switch (screenDisplay) {
-    case ScreenDisplay.Circuits:
-      return <Circuits />;
+  if (!owner) {
+    return (
+      <Display
+        dispatch={dispatch}
+        mirror={mirror}
+        like={like}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+        interactionsLoading={interactionsLoading}
+        sortType={sortType}
+        display={display}
+        handleSetDisplay={handleSetDisplay}
+        displayLoading={displayLoading}
+        owner={owner}
+        router={router}
+      />
+    );
+  } else {
+    switch (screenDisplay) {
+      case ScreenDisplay.Circuits:
+        return <Circuits />;
 
-    case ScreenDisplay.Gallery:
-      return (
-        <Gallery
-          allCollections={allCollections}
-          editDrop={editDrop}
-          deleteDrop={deleteDrop}
-          dispatch={dispatch}
-          deleteCollection={deleteCollection}
-          searchCollection={searchCollection}
-          setSearchCollection={setSearchCollection}
-          dropsLoading={dropsLoading}
-          collectionLoading={collectionLoading}
-          allDrops={allDrops}
-          createDropLoading={createDropLoading}
-          dropDetails={dropDetails}
-          setDropDetails={setDropDetails}
-          handleMedia={handleMedia}
-          handleSendMessage={handleSendMessage}
-          digiMessage={digiMessage}
-          setDigiMessage={setDigiMessage}
-          filterConstants={filterConstants}
-          digiMessageLoading={digiMessageLoading}
-          setCollectionDetails={setCollectionDetails}
-          collectionDetails={collectionDetails}
-          createCollection={createCollection}
-          createDrop={createDrop}
-          creationLoading={creationLoading}
-          createCase={createCase}
-          setCreateCase={setCreateCase}
-          router={router}
-          setCollectionSettings={setCollectionSettings}
-          collectionSettings={collectionSettings}
-          isDesigner={isDesigner}
-          lensConnected={lensConnected}
-        />
-      );
+      case ScreenDisplay.Gallery:
+        return (
+          <Gallery
+            address={address}
+            allCollections={allCollections}
+            editDrop={editDrop}
+            deleteDrop={deleteDrop}
+            dispatch={dispatch}
+            deleteCollection={deleteCollection}
+            searchCollection={searchCollection}
+            setSearchCollection={setSearchCollection}
+            dropsLoading={dropsLoading}
+            collectionLoading={collectionLoading}
+            allDrops={allDrops}
+            createDropLoading={createDropLoading}
+            dropDetails={dropDetails}
+            setDropDetails={setDropDetails}
+            handleMedia={handleMedia}
+            handleSendMessage={handleSendMessage}
+            digiMessage={digiMessage}
+            setDigiMessage={setDigiMessage}
+            filterConstants={filterConstants}
+            digiMessageLoading={digiMessageLoading}
+            setCollectionDetails={setCollectionDetails}
+            collectionDetails={collectionDetails}
+            createCollection={createCollection}
+            createDrop={createDrop}
+            creationLoading={creationLoading}
+            createCase={createCase}
+            setCreateCase={setCreateCase}
+            router={router}
+            setCollectionSettings={setCollectionSettings}
+            collectionSettings={collectionSettings}
+            isDesigner={isDesigner}
+            lensConnected={lensConnected}
+          />
+        );
 
-    case ScreenDisplay.Post:
-      return (
-        <ScreenPost
-          makePost={makePost}
-          post={post}
-          setMakePost={setMakePost}
-          postLoading={postLoading}
-          contentLoading={postContentLoading}
-          dispatch={dispatch}
-          postCollectGif={postCollectGif}
-          setContentLoading={setPostContentLoading}
-          setMentionProfiles={setMentionProfiles}
-          setProfilesOpen={setProfilesOpen}
-          profilesOpen={profilesOpen}
-          mentionProfiles={mentionProfiles}
-          lensConnected={lensConnected}
-          caretCoord={caretCoord}
-          setCaretCoord={setCaretCoord}
-        />
-      );
+      case ScreenDisplay.Post:
+        return (
+          <ScreenPost
+            makePost={makePost}
+            post={post}
+            router={router}
+            setMakePost={setMakePost}
+            postLoading={postLoading}
+            contentLoading={postContentLoading}
+            dispatch={dispatch}
+            postCollectGif={postCollectGif}
+            setContentLoading={setPostContentLoading}
+            setMentionProfiles={setMentionProfiles}
+            setProfilesOpen={setProfilesOpen}
+            profilesOpen={profilesOpen}
+            mentionProfiles={mentionProfiles}
+            lensConnected={lensConnected}
+            caretCoord={caretCoord}
+            setCaretCoord={setCaretCoord}
+          />
+        );
 
-    case ScreenDisplay.Bookmarks:
-      return (
-        <Bookmarks
-          cartItems={cartItems}
-          setCaretCoord={setCaretCoordBookmark}
-          caretCoord={caretCoordBookmark}
-          setMentionProfiles={setMentionProfilesBookmark}
-          setProfilesOpen={setProfilesOpenBookmark}
-          mentionProfiles={mentionProfilesBookmark}
-          profilesOpen={profilesOpenBookmark}
-          handleDecrypt={handleDecrypt}
-          decryptLoading={decryptLoading}
-          bookmarks={bookmarks}
-          lensConnected={lensConnected}
-          bookmarksLoading={bookmarksLoading}
-          simpleCollect={simpleCollect}
-          mirror={mirrorBookmark}
-          like={likeBookmark}
-          comment={comment}
-          handleBookmark={handleBookmark}
-          interactionsLoading={interactionsLoadingBookmark}
-          openMirrorChoice={openMirrorChoiceBookmark}
-          setOpenMirrorChoice={setOpenMirrorChoiceBookmark}
-          setProfileHovers={setProfileHovers}
-          profileHovers={profileHovers}
-          openMoreOptions={openMoreOptions}
-          setOpenMoreOptions={setOpenMoreOptions}
-          dispatch={dispatch}
-          router={router}
-          followLoading={followLoading}
-          unfollowProfile={unfollowProfile}
-          followProfile={followProfile}
-          handleHidePost={handleHidePost}
-          handleMoreBookmarks={handleMoreBookmarks}
-          hasMoreBookmarks={hasMoreBookmarks}
-          setMakeComment={setMakeComment}
-          makeComment={makeComment}
-          setCommentsOpen={setCommentsOpen}
-          commentsOpen={commentsOpen}
-          contentLoading={commentContentLoading}
-          setContentLoading={setCommentContentLoading}
-          postCollectGif={postCollectGif}
-        />
-      );
+      case ScreenDisplay.Bookmarks:
+        return (
+          <Bookmarks
+            cartItems={cartItems}
+            setCaretCoord={setCaretCoordBookmark}
+            caretCoord={caretCoordBookmark}
+            setMentionProfiles={setMentionProfilesBookmark}
+            setProfilesOpen={setProfilesOpenBookmark}
+            mentionProfiles={mentionProfilesBookmark}
+            profilesOpen={profilesOpenBookmark}
+            handleDecrypt={handleDecrypt}
+            decryptLoading={decryptLoading}
+            bookmarks={bookmarks}
+            lensConnected={lensConnected}
+            bookmarksLoading={bookmarksLoading}
+            simpleCollect={simpleCollect}
+            mirror={mirrorBookmark}
+            like={likeBookmark}
+            comment={comment}
+            handleBookmark={handleBookmark}
+            interactionsLoading={interactionsLoadingBookmark}
+            openMirrorChoice={openMirrorChoiceBookmark}
+            setOpenMirrorChoice={setOpenMirrorChoiceBookmark}
+            setProfileHovers={setProfileHovers}
+            profileHovers={profileHovers}
+            openMoreOptions={openMoreOptions}
+            setOpenMoreOptions={setOpenMoreOptions}
+            dispatch={dispatch}
+            router={router}
+            followLoading={followLoading}
+            unfollowProfile={unfollowProfile}
+            followProfile={followProfile}
+            handleHidePost={handleHidePost}
+            handleMoreBookmarks={handleMoreBookmarks}
+            hasMoreBookmarks={hasMoreBookmarks}
+            setMakeComment={setMakeComment}
+            makeComment={makeComment}
+            setCommentsOpen={setCommentsOpen}
+            commentsOpen={commentsOpen}
+            contentLoading={commentContentLoading}
+            setContentLoading={setCommentContentLoading}
+            postCollectGif={postCollectGif}
+          />
+        );
 
-    case ScreenDisplay.Settings:
-      return (
-        <Settings
-          isDesigner={isDesigner}
-          settingsData={settingsData}
-          setSettingsData={setSettingsData}
-          handleSettingsUpdate={handleSettingsUpdate}
-          settingsUpdateLoading={settingsUpdateLoading}
-          handleImage={handleImage}
-          pfpImage={pfpImage}
-          coverImage={coverImage}
-          handleFollowUpdate={handleFollowUpdate}
-          followUpdateLoading={followUpdateLoading}
-          followData={followData}
-          setFollowData={setFollowData}
-          openType={openType}
-          setOpenType={setOpenType}
-          setCurrencyOpen={setCurrencyOpen}
-          currencyOpen={currencyOpen}
-          currencies={currencies}
-        />
-      );
+      case ScreenDisplay.Settings:
+        return (
+          <Settings
+            isDesigner={isDesigner}
+            settingsData={settingsData}
+            setSettingsData={setSettingsData}
+            handleSettingsUpdate={handleSettingsUpdate}
+            settingsUpdateLoading={settingsUpdateLoading}
+            handleImage={handleImage}
+            pfpImage={pfpImage}
+            coverImage={coverImage}
+            handleFollowUpdate={handleFollowUpdate}
+            followUpdateLoading={followUpdateLoading}
+            followData={followData}
+            setFollowData={setFollowData}
+            openType={openType}
+            setOpenType={setOpenType}
+            setCurrencyOpen={setCurrencyOpen}
+            currencyOpen={currencyOpen}
+            currencies={currencies}
+          />
+        );
 
-    case ScreenDisplay.Messages:
-      return (
-        <Messages
-          messageImage={messageImage}
-          handleMessageImage={handleMessageImage}
-          dispatch={dispatch}
-          sendMessageLoading={sendMessageLoading}
-          selectedUser={selectedUser}
-          handleSearchUser={handleSearchUser}
-          searchedProfiles={searchedProfiles}
-          userSearch={userSearch}
-          setSelectedUser={setSelectedUser}
-          conversations={conversations}
-          messages={messages}
-          handleConversations={handleConversations}
-          client={client}
-          conversationsLoading={conversationsLoading}
-          currentMessage={currentMessage}
-          setCurrentMessage={setCurrentMessage}
-          handleSendMessage={handleSendMessage}
-          handleSelected={handleSelected}
-          canMessage={canMessage}
-        />
-      );
+      case ScreenDisplay.Messages:
+        return (
+          <Messages
+            messageImage={messageImage}
+            handleMessageImage={handleMessageImage}
+            dispatch={dispatch}
+            sendMessageLoading={sendMessageLoading}
+            selectedUser={selectedUser}
+            handleSearchUser={handleSearchUser}
+            searchedProfiles={searchedProfiles}
+            userSearch={userSearch}
+            setSelectedUser={setSelectedUser}
+            conversations={conversations}
+            messages={messages}
+            handleConversations={handleConversations}
+            client={client}
+            conversationsLoading={conversationsLoading}
+            currentMessage={currentMessage}
+            setCurrentMessage={setCurrentMessage}
+            handleSendMessage={handleSendMessage}
+            handleSelected={handleSelected}
+            canMessage={canMessage}
+          />
+        );
 
-    case ScreenDisplay.Orders:
-      return (
-        <Orders
-          allOrders={allOrders}
-          decryptOrder={decryptOrder}
-          orderActions={orderActions}
-          ordersLoading={ordersLoading}
-          setOrderActions={setOrderActions}
-          router={router}
-        />
-      );
+      case ScreenDisplay.Orders:
+        return (
+          <Orders
+            allOrders={allOrders}
+            decryptOrder={decryptOrder}
+            orderActions={orderActions}
+            ordersLoading={ordersLoading}
+            setOrderActions={setOrderActions}
+            router={router}
+          />
+        );
 
-    case ScreenDisplay.Sales:
-      return (
-        <Sales
-          allSales={allSales}
-          salesLoading={salesLoading}
-          router={router}
-        />
-      );
+      case ScreenDisplay.Sales:
+        return (
+          <Sales
+            allSales={allSales}
+            salesLoading={salesLoading}
+            router={router}
+          />
+        );
 
-    default:
-      return (
-        <Display
-          dispatch={dispatch}
-          mirror={mirror}
-          like={like}
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          interactionsLoading={interactionsLoading}
-          sortType={sortType}
-          display={display}
-          handleSetDisplay={handleSetDisplay}
-          displayLoading={displayLoading}
-          owner={owner}
-          router={router}
-        />
-      );
+      default:
+        return (
+          <Display
+            dispatch={dispatch}
+            mirror={mirror}
+            like={like}
+            openMirrorChoice={openMirrorChoice}
+            setOpenMirrorChoice={setOpenMirrorChoice}
+            interactionsLoading={interactionsLoading}
+            sortType={sortType}
+            display={display}
+            handleSetDisplay={handleSetDisplay}
+            displayLoading={displayLoading}
+            owner={owner}
+            router={router}
+          />
+        );
+    }
   }
 };
 

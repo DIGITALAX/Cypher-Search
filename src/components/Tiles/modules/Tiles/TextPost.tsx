@@ -94,25 +94,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
             publication={
               publication?.__typename === "Mirror" ? publication : publication
             }
-            simpleCollect={
-              (
-                publication?.__typename === "Mirror"
-                  ? !publication?.mirrorOn.operations?.actedOn &&
-                    (publication?.mirrorOn?.openActionModules?.[0]
-                      ?.__typename === "SimpleCollectOpenActionSettings" ||
-                      publication?.mirrorOn?.openActionModules?.[0]
-                        ?.__typename ===
-                        "MultirecipientFeeCollectOpenActionSettings")
-                  : !(publication as Post)?.operations?.actedOn &&
-                    ((publication as Post)?.openActionModules?.[0]
-                      ?.__typename !== "SimpleCollectOpenActionSettings" ||
-                      (publication as Post)?.openActionModules?.[0]
-                        ?.__typename ===
-                        "MultirecipientFeeCollectOpenActionSettings")
-              )
-                ? simpleCollect
-                : undefined
-            }
+            simpleCollect={simpleCollect}
           />
           <div className="relative w-full h-fit flex flex-col items-center justify-start justify-between p-1 gap-3">
             <div className="relative w-full h-fit items-end justify-start flex flex-col gap-3">

@@ -548,6 +548,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
               </Head>
               <Web
                 cartItems={cartItems}
+                address={address}
                 handleMessageImage={handleMessageImage}
                 messageImage={messageImage}
                 setCaretCoord={setCaretCoordBookmark}
