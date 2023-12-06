@@ -13,12 +13,10 @@ import {
   Erc20,
   FeeFollowModuleSettings,
   LimitType,
-  Post,
   Profile,
   PublicationMetadataMainFocusType,
   PublicationType,
   SimpleCollectOpenActionModuleInput,
-  VideoMetadataV3,
 } from "../../../../graphql/generated";
 import { setAvailableCurrencies } from "../../../../redux/reducers/availableCurrenciesSlice";
 import { Dispatch } from "redux";
@@ -44,9 +42,8 @@ import {
   setFullScreenVideo,
 } from "../../../../redux/reducers/fullScreenVideoSlice";
 import getPublications from "../../../../graphql/lens/queries/publications";
-import { CHROMADIN_ID, INFURA_GATEWAY } from "../../../../lib/constants";
+import { CHROMADIN_ID } from "../../../../lib/constants";
 import Draggable from "react-draggable";
-import { ethers } from "ethers";
 
 const useQuote = (
   availableCurrencies: Erc20[],

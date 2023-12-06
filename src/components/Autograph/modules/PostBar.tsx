@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 import {
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
+  F3M_OPEN_ACTION,
   INFURA_GATEWAY,
   LISTENER_OPEN_ACTION,
 } from "../../../../lib/constants";
@@ -177,6 +178,20 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                             )?.metadata as ImageMetadataV3
                           )?.title?.replaceAll(" ", "_")}`
                         )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/f3m/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
                       : router.push(`/item/pub/${item?.id}`);
                   } else {
                     if (functions[indexTwo]) {
@@ -320,6 +335,20 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                             )?.metadata as ImageMetadataV3
                           )?.title?.replaceAll(" ", "_")}`
                         )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/f3m/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
                       : router.push(`/item/pub/${item?.id}`);
                   } else {
                     stats[indexTwo] > 0 && image[1] !== "Comments"
@@ -370,6 +399,20 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                               ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
                           ? router.push(
                               `/item/listener/${(
+                                (item?.__typename === "Mirror"
+                                  ? item?.mirrorOn
+                                  : (item as Post)
+                                )?.metadata as ImageMetadataV3
+                              )?.title?.replaceAll(" ", "_")}`
+                            )
+                          : (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.openActionModules?.[0]?.contract?.address
+                              ?.toLowerCase()
+                              ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+                          ? router.push(
+                              `/item/f3m/${(
                                 (item?.__typename === "Mirror"
                                   ? item?.mirrorOn
                                   : (item as Post)
@@ -479,6 +522,20 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                             )?.metadata as ImageMetadataV3
                           )?.title?.replaceAll(" ", "_")}`
                         )
+                      : (item?.__typename === "Mirror"
+                          ? item?.mirrorOn
+                          : (item as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+                      ? router.push(
+                          `/item/f3m/${(
+                            (item?.__typename === "Mirror"
+                              ? item?.mirrorOn
+                              : (item as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.title?.replaceAll(" ", "_")}`
+                        )
                       : router.push(`/item/pub/${item?.id}`);
                   } else {
                     !loaders[indexTwo] && functions[indexTwo]();
@@ -567,6 +624,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               CHROMADIN_OPEN_ACTION,
               LISTENER_OPEN_ACTION,
               COIN_OP_OPEN_ACTION,
+              F3M_OPEN_ACTION,
             ]?.some((value) =>
               (item?.__typename === "Mirror"
                 ? item?.mirrorOn
@@ -587,6 +645,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               CHROMADIN_OPEN_ACTION,
               LISTENER_OPEN_ACTION,
               COIN_OP_OPEN_ACTION,
+              F3M_OPEN_ACTION,
             ]?.some((value) =>
               (item?.__typename === "Mirror"
                 ? item?.mirrorOn
@@ -786,6 +845,14 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
                   ? router.push(
                       `/item/listener/${(
+                        meta?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
+                    )
+                  : meta?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+                  ? router.push(
+                      `/item/f3m/${(
                         meta?.metadata as ImageMetadataV3
                       )?.title?.replaceAll(" ", "_")}`
                     )

@@ -180,6 +180,9 @@ export const printStringToNumber: { [key: string]: string } = {
   ["Hoodie"]: "3",
   ["Sleeve"]: "4",
   ["Crop"]: "5",
+  ["NFTOnly"]: "6",
+  ["Custom"]: "7",
+  ["Other"]: "8",
 };
 
 export const COUNTRIES: string[] = [
