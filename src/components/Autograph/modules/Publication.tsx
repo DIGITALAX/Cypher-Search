@@ -8,6 +8,7 @@ import Image from "next/legacy/image";
 import {
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
+  F3M_OPEN_ACTION,
   INFURA_GATEWAY,
   LISTENER_OPEN_ACTION,
 } from "../../../../lib/constants";
@@ -77,6 +78,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
               CHROMADIN_OPEN_ACTION,
               LISTENER_OPEN_ACTION,
               COIN_OP_OPEN_ACTION,
+              F3M_OPEN_ACTION,
             ]?.some((value) =>
               (item?.__typename === "Mirror"
                 ? item?.mirrorOn
@@ -129,6 +131,14 @@ const Publication: FunctionComponent<PublicationProps> = ({
                       ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
                   ? router.push(
                       `/item/listener/${(
+                        item?.mirrorOn?.metadata as ImageMetadataV3
+                      )?.title?.replaceAll(" ", "_")}`
+                    )
+                  : item?.mirrorOn?.openActionModules?.[0]?.contract?.address
+                      ?.toLowerCase()
+                      ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+                  ? router.push(
+                      `/item/f3m/${(
                         item?.mirrorOn?.metadata as ImageMetadataV3
                       )?.title?.replaceAll(" ", "_")}`
                     )

@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import {
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
+  F3M_OPEN_ACTION,
   INFURA_GATEWAY,
   LISTENER_OPEN_ACTION,
 } from "../../../../../lib/constants";
@@ -192,6 +193,20 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                         ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
                     ? router.push(
                         `/item/listener/${(
+                          (publication?.__typename == "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.title?.replaceAll(" ", "_")}`
+                      )
+                    : (publication?.__typename == "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.openActionModules?.[0]?.contract?.address
+                        ?.toLowerCase()
+                        ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+                    ? router.push(
+                        `/item/f3m/${(
                           (publication?.__typename == "Mirror"
                             ? publication?.mirrorOn
                             : (publication as Post)

@@ -9,6 +9,7 @@ import { ImageMetadataV3 } from "../../../../graphql/generated";
 import {
   CHROMADIN_OPEN_ACTION,
   COIN_OP_OPEN_ACTION,
+  F3M_OPEN_ACTION,
   LISTENER_OPEN_ACTION,
 } from "../../../../lib/constants";
 
@@ -53,6 +54,14 @@ const PostQuote: FunctionComponent<PostQuoteProps> = ({
                   ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
               ? router.push(
                   `/item/listener/${(
+                    quote?.metadata as ImageMetadataV3
+                  )?.title?.replaceAll(" ", "_")}`
+                )
+              : quote?.openActionModules?.[0]?.contract?.address
+                  ?.toLowerCase()
+                  ?.includes(F3M_OPEN_ACTION?.toLowerCase())
+              ? router.push(
+                  `/item/f3m/${(
                     quote?.metadata as ImageMetadataV3
                   )?.title?.replaceAll(" ", "_")}`
                 )

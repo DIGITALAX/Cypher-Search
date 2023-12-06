@@ -11,7 +11,7 @@
   "dependencies": {
     "@airstack/airstack-react": "^0.5.7",
     "@apollo/client": "^3.8.5",
-    "@lens-protocol/client": "^2.0.0-alpha.21",
+    "@lens-protocol/client": "^2.0.0-alpha.25",
     "@lens-protocol/metadata": "^1.0.5",
     "@lit-protocol/lit-node-client": "^3.0.22",
     "@popperjs/core": "^2.11.8",

@@ -23,6 +23,7 @@ import {
   COIN_OP_OPEN_ACTION,
   COLLECTION_CREATOR,
   DIGITALAX_ADDRESS,
+  F3M_OPEN_ACTION,
   LISTENER_OPEN_ACTION,
   NFT_CREATOR_ADDRESS,
   ZERO_ADDRESS,
@@ -165,7 +166,8 @@ const useCreate = (
         collectionDetails?.audio == "") ||
       (collectionSettings?.media === "video" &&
         collectionDetails?.video == "") ||
-      collectionDetails.price?.trim() == "" ||
+      (collectionDetails.price?.trim() == "" &&
+        Number(collectionDetails.price) > 0) ||
       !collectionDetails.acceptedTokens ||
       collectionDetails.acceptedTokens?.length < 1 ||
       Number(collectionDetails?.amount) <= 0 ||
@@ -174,6 +176,7 @@ const useCreate = (
       return;
     if (
       (collectionSettings?.origin !== "chromadin" &&
+        collectionSettings?.origin !== "f3m" &&
         (collectionDetails?.sizes?.trim() == "" ||
           collectionDetails?.colors?.trim() == "" ||
           collectionDetails?.printType?.trim() == "" ||
@@ -304,12 +307,15 @@ const useCreate = (
               ],
               [
                 dataObject,
-                printStringToNumber[
-                  collectionDetails?.printType.charAt(0).toUpperCase() +
-                    collectionDetails?.printType.slice(1).toLowerCase()
-                ],
+                collectionSettings?.origin == "f3m"
+                  ? 7
+                  : printStringToNumber[
+                      collectionDetails?.printType.charAt(0).toUpperCase() +
+                        collectionDetails?.printType.slice(1).toLowerCase()
+                    ],
               ]
             );
+
       await lensPost(
         uri,
         dispatch,
@@ -321,6 +327,8 @@ const useCreate = (
                   ? CHROMADIN_OPEN_ACTION
                   : collectionSettings?.origin == "listener"
                   ? LISTENER_OPEN_ACTION
+                  : collectionSettings?.origin == "f3m"
+                  ? F3M_OPEN_ACTION
                   : COIN_OP_OPEN_ACTION,
               data: encoded,
             },
