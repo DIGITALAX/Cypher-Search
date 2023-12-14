@@ -4,7 +4,6 @@ import {
   CHROMADIN_ID,
   PLACEHOLDERS,
   TAGS,
-  itemStringToNumber,
   numberToItemTypeMap,
   printStringToNumber,
 } from "../../../../lib/constants";
@@ -421,10 +420,13 @@ const useSearch = (
                 publicationTypes: [SearchPublicationType.Post],
                 metadata: {
                   publishedOn: filters?.origin
-                    ? filters?.origin
-                        ?.split(",")
-                        .map((word) => word.trim())
-                        .filter((word: string) => word.length > 0)
+                    ? [
+                        ...filters?.origin
+                          ?.split(",")
+                          .map((word) => word.trim())
+                          .filter((word: string) => word.length > 0),
+                        "cyphersearch",
+                      ]
                     : [
                         "chromadin",
                         "legend",
@@ -594,28 +596,50 @@ const useSearch = (
     dispatch(
       setFilter({
         hashtag: getRandomElement(filterConstants?.hashtags!),
-        community: getRandomElement(
-          filterConstants?.community?.map((item) => item?.[0])!
-        ),
-        microbrand: getRandomElement(
-          filterConstants?.microbrands?.map((item) => item?.[0])!
-        ),
+        community:
+          filterConstants?.community?.length &&
+          filterConstants?.community?.length > 0
+            ? getRandomElement(
+                filterConstants?.community?.map((item) => item?.[0])!
+              )
+            : "",
+        microbrand:
+          filterConstants?.microbrands?.length &&
+          filterConstants?.microbrands?.length > 0
+            ? getRandomElement(
+                filterConstants?.microbrands?.map((item) => item?.[0])!
+              )
+            : "",
         catalog: getRandomElement(filterConstants?.catalog!),
-        access: getRandomElement(
-          filterConstants?.origin?.map(
-            (item) => itemStringToNumber[item?.[0]?.toUpperCase()]
-          )!
-        ),
+        access:
+          filterConstants?.access?.length && filterConstants?.access?.length > 0
+            ? getRandomElement(
+                filterConstants?.access?.map((item) =>
+                  item?.[0]?.toUpperCase()
+                )!
+              )
+            : "",
         format: getRandomElement(filterConstants?.format!),
-        origin: getRandomElement(
-          filterConstants?.origin?.map(
-            (item) => itemStringToNumber[item?.[0]?.toUpperCase()]
-          )!
-        ),
+        origin:
+          filterConstants?.origin?.length && filterConstants?.origin?.length > 0
+            ? getRandomElement(
+                filterConstants?.origin?.map((item) =>
+                  item?.[0]?.toUpperCase()
+                )!
+              )
+            : "",
         editions: getRandomNumber(1, 10),
         available: true,
-        fulfiller: getRandomElement(filterConstants?.fulfiller!),
-        drop: getRandomElement(filterConstants?.dropsSuggested!),
+        fulfiller:
+          filterConstants?.fulfiller?.length &&
+          filterConstants?.fulfiller?.length > 0
+            ? getRandomElement(filterConstants?.fulfiller!)
+            : "",
+        drop:
+          filterConstants?.dropsSuggested?.length &&
+          filterConstants?.dropsSuggested?.length > 0
+            ? getRandomElement(filterConstants?.dropsSuggested!)
+            : "",
         size: {
           apparel: getRandomArrayElement(filterConstants?.sizes?.apparel!),
           poster: getRandomArrayElement(filterConstants?.sizes?.poster!),

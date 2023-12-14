@@ -1,4 +1,6 @@
 import { Filter } from "@/components/Search/types/search.types";
+import { itemTypeToString } from "../constants";
+import { ItemType } from "@/components/Common/types/common.types";
 
 type FilterField =
   | "format"
@@ -96,6 +98,19 @@ const buildQuery = (filters: Filter) => {
     filters.printType.forEach((printType) => {
       otherOrConditions.push({ printType_contains_nocase: printType });
     });
+  }
+
+  if (filters.origin && filters.origin.length > 0) {
+    filters.origin
+      ?.split(",")
+      ?.map((tag) => tag?.trim())
+      ?.filter((tag) => tag.length > 0)
+      ?.forEach((origin) => {
+        otherOrConditions.push({
+          origin_contains_nocase:
+            itemTypeToString[origin?.replaceAll(" ", "") as ItemType],
+        });
+      });
   }
 
   otherOrConditions.forEach((condition) => {

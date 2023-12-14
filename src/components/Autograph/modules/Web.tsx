@@ -526,14 +526,18 @@ const Web: FunctionComponent<WebProps> = ({
             {
               image: "QmP7ESx5WEVSxyvKvsWBCWYhpWJytVt2Eozr6wqMnyb3M5",
               text: "home",
-              function: () =>
-                router.push(
-                  `/autograph/${
-                    lensConnected?.handle?.suggestedFormatted?.localName?.split(
-                      "@"
-                    )?.[1]
-                  }`
-                ),
+              function: lensConnected?.handle?.suggestedFormatted?.localName
+                ? () =>
+                    router.push(
+                      `/autograph/${
+                        lensConnected?.handle?.suggestedFormatted?.localName?.split(
+                          "@"
+                        )?.[1]
+                      }`
+                    )
+                : !walletConnected
+                ? openConnectModal!
+                : () => handleLensConnect(),
               width: "9",
               height: "7",
             },

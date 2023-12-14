@@ -16,13 +16,14 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
 }): JSX.Element => {
   switch (type?.toLowerCase()) {
     case "video":
+      const keyValueVideo = srcUrl + Math.random().toString();
       return (
         <>
           <video
             draggable={false}
             controls={false}
             playsInline
-            id={srcUrl}
+            id={keyValueVideo}
             className={classNameVideo}
             poster={srcCover}
             autoPlay={hidden}
@@ -35,7 +36,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
             <Waveform
               audio={srcUrl}
               type={"video"}
-              keyValue={srcUrl}
+              keyValue={keyValueVideo}
               video={srcUrl}
             />
           )}
@@ -43,6 +44,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
       );
 
     case "audio":
+      const keyValueAudio = srcUrl + Math.random().toString();
       return (
         <>
           <Image
@@ -57,7 +59,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
             <Waveform
               audio={srcUrl}
               type={"audio"}
-              keyValue={srcUrl}
+              keyValue={keyValueAudio}
               video={srcUrl}
             />
           )}

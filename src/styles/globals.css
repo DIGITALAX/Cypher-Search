@@ -58,7 +58,7 @@
   src: url("/fonts/Dogica.ttf");
 }
 
-body {
+html {
   background-color: #111313;
 }
 

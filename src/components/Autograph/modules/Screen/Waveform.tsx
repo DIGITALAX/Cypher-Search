@@ -84,6 +84,7 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
         className="relative flex w-fit h-fit items-center justify-center flex cursor-pointer active:scale-95"
         onClick={(e) => {
           e.stopPropagation();
+          e.preventDefault();
           handlePlayPause(keyValue, wavesurfer, type);
         }}
       >
