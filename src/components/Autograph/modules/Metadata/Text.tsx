@@ -2,7 +2,10 @@ import { FunctionComponent } from "react";
 import { TextProps } from "../../types/autograph.types";
 import descriptionRegex from "../../../../../lib/helpers/descriptionRegex";
 
-const Text: FunctionComponent<TextProps> = ({ metadata }): JSX.Element => {
+const Text: FunctionComponent<TextProps> = ({
+  metadata,
+  encrypted,
+}): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-col justify-start items-center gap-3">
       <div
@@ -14,7 +17,9 @@ const Text: FunctionComponent<TextProps> = ({ metadata }): JSX.Element => {
         }`}
         dangerouslySetInnerHTML={{
           __html: descriptionRegex(
-            metadata?.content,
+            encrypted && !encrypted?.decrypted
+              ? "Decrypt Post."
+              : metadata?.content,
             metadata?.__typename !== "TextOnlyMetadataV3" &&
               metadata?.content?.length > 200
               ? false

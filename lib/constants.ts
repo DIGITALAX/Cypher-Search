@@ -119,6 +119,8 @@ export const itemStringToNumber: { [key: string]: string } = {
   ["Chromadin"]: "1",
   ["Legend"]: "2",
   ["Listener"]: "3",
+  ["F3M"]: "4",
+  ["Other"]: "5",
 };
 
 export const itemStringToType: { [key: string]: ItemType } = {
@@ -126,6 +128,8 @@ export const itemStringToType: { [key: string]: ItemType } = {
   ["chromadin"]: ItemType.Chromadin,
   ["legend"]: ItemType.Legend,
   ["listener"]: ItemType.Listener,
+  ["f3m"]: ItemType.F3M,
+  ["other"]: ItemType.Other,
 };
 
 export const itemTypeToString: { [key in ItemType]: string } = {
