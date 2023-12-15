@@ -57,16 +57,22 @@ const actPost = async (
         chain: polygon,
         args: [
           {
-            publicationActedProfileId:
+            publicationActedProfileId: parseInt(
               typedData?.value.publicationActedProfileId,
-            publicationActedId: typedData?.value.publicationActedId,
-            actorProfileId: typedData?.value.actorProfileId,
+              16
+            ),
+            publicationActedId: parseInt(
+              typedData?.value.publicationActedId,
+              16
+            ),
+            actorProfileId: parseInt(typedData?.value.actorProfileId, 16),
             referrerProfileIds: typedData?.value.referrerProfileIds,
             referrerPubIds: typedData?.value.referrerPubIds,
             actionModuleAddress: typedData?.value.actionModuleAddress,
             actionModuleData: typedData?.value.actionModuleData,
           },
         ],
+        account: address,
       });
 
       const res = await clientWallet.writeContract(request);

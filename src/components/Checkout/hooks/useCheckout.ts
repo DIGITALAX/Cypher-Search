@@ -121,7 +121,6 @@ const useCheckout = (
       );
 
       encryptedItems && setEncryptedStrings(encryptedItems);
-      console.log("after", { encryptedItems });
     } catch (err: any) {
       console.error(err.message);
     }
@@ -169,7 +168,13 @@ const useCheckout = (
                 checkoutCurrency?.toLowerCase()
             )?.rate
           )) *
-          10 ** 18
+          Number(
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency?.toLowerCase() ===
+                checkoutCurrency?.toLowerCase()
+            )?.wei
+          )
       ) {
         dispatch(
           setInsufficientBalance({
