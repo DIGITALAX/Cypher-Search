@@ -84,7 +84,7 @@ const lensPost = async (
       chain: polygon,
       args: [
         {
-          profileId: (typedData?.value.profileId),
+          profileId: parseInt(typedData?.value.profileId,16),
           contentURI: typedData?.value.contentURI,
           actionModules: typedData?.value?.actionModules,
           actionModulesInitDatas: typedData?.value?.actionModulesInitDatas,
