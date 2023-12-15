@@ -85,7 +85,6 @@ export const encryptItems = async (
 
         const { originalIndices, ...rest } = item;
 
-        console.log({ item });
 
         const { ciphertext, dataToEncryptHash } = await encryptString(
           {
@@ -110,8 +109,6 @@ export const encryptItems = async (
         });
       }
     }
-
-    console.log({ encryptedItems });
 
     return encryptedItems;
   } catch (err: any) {
