@@ -50,7 +50,6 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
       : (publication as Post)
     )?.by?.metadata?.picture
   );
-
   return (
     <div
       className={`relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4 gap-4 flex-col`}
@@ -175,111 +174,123 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
             <div
               className={`relative flex flex-wrap items-start justify-start gap-2 w-full h-full`}
             >
-              {(
-                (publication?.__typename === "Mirror"
+              {(!(
+                publication?.__typename === "Mirror"
                   ? publication?.mirrorOn
                   : (publication as Post)
-                )?.metadata as ImageMetadataV3
-              )?.attachments &&
-              Number(
-                (
+              )?.isEncrypted ||
+                ((publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.isEncrypted &&
+                  (
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)) as any
+                  )?.decrypted)) &&
+                ((
                   (publication?.__typename === "Mirror"
                     ? publication?.mirrorOn
                     : (publication as Post)
                   )?.metadata as ImageMetadataV3
-                )?.attachments?.length
-              ) > 0
-                ? (
+                )?.attachments &&
+                Number(
+                  (
                     (publication?.__typename === "Mirror"
                       ? publication?.mirrorOn
                       : (publication as Post)
                     )?.metadata as ImageMetadataV3
-                  )?.attachments?.map(
-                    (item: PublicationMetadataMedia, index: number) => {
-                      const media = metadataMedia(item);
-                      return (
-                        <div
-                          className="relative w-24 h-24 flex border border-white rounded-sm cursor-pointer bg-amo/30"
-                          onClick={() =>
-                            dispatch(
-                              setImageViewer({
-                                actionValue: true,
-                                actionType: "png",
-                                actionImage: media?.url,
-                              })
-                            )
-                          }
-                          key={index}
-                        >
-                          {media?.url && (
-                            <MediaSwitch
-                              type={media?.type}
-                              srcUrl={media?.url}
-                              srcCover={media?.cover}
-                              classNameVideo={
-                                "rounded-sm absolute w-full h-full object-cover"
-                              }
-                              classNameImage={"rounded-sm"}
-                              classNameAudio={"rounded-md"}
-                            />
-                          )}
-                        </div>
-                      );
-                    }
-                  )
-                : (publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn
-                    : (publication as Post)
-                  )?.isEncrypted &&
-                  !(
-                    (publication?.__typename === "Mirror"
+                  )?.attachments?.length
+                ) > 0
+                  ? (
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.metadata as ImageMetadataV3
+                    )?.attachments?.map(
+                      (item: PublicationMetadataMedia, index: number) => {
+                        const media = metadataMedia(item);
+                        return (
+                          <div
+                            className="relative w-24 h-24 flex border border-white rounded-sm cursor-pointer bg-amo/30"
+                            onClick={() =>
+                              dispatch(
+                                setImageViewer({
+                                  actionValue: true,
+                                  actionType: "png",
+                                  actionImage: media?.url,
+                                })
+                              )
+                            }
+                            key={index}
+                          >
+                            {media?.url && (
+                              <MediaSwitch
+                                type={media?.type}
+                                srcUrl={media?.url}
+                                srcCover={media?.cover}
+                                classNameVideo={
+                                  "rounded-sm absolute w-full h-full object-cover"
+                                }
+                                classNameImage={"rounded-sm"}
+                                classNameAudio={"rounded-md"}
+                              />
+                            )}
+                          </div>
+                        );
+                      }
+                    )
+                  : (publication?.__typename === "Mirror"
                       ? publication?.mirrorOn
                       : (publication as Post)
-                    )?.metadata as any
-                  )?.decrypted
-                ? (
-                    (publication?.__typename === "Mirror"
-                      ? publication?.mirrorOn
-                      : (publication as Post)
-                    )?.metadata as any
-                  )?.title?.length > 0
-                : (
-                    (publication?.__typename === "Mirror"
-                      ? publication?.mirrorOn
-                      : (publication as Post)
-                    )?.metadata as any
-                  )?.content?.length > 0 && (
-                    <div
-                      className="relative w-full h-40 rounded-sm border border-mosgu bg-fuego p-2 font-bit text-nuba text-sm text-left break-words flex justify-center items-start overflow-y-scroll whitespace-preline"
-                      dangerouslySetInnerHTML={{
-                        __html: descriptionRegex(
-                          (publication?.__typename === "Mirror"
-                            ? publication?.mirrorOn
-                            : (publication as Post)
-                          )?.isEncrypted &&
-                            !(
-                              (publication?.__typename === "Mirror"
-                                ? publication?.mirrorOn
-                                : (publication as Post)
-                              )?.metadata as any
-                            )?.decrypted
-                            ? (
+                    )?.isEncrypted &&
+                    !(
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)) as any
+                    )?.decrypted
+                  ? (
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.metadata as any
+                    )?.title?.length > 0
+                  : (
+                      (publication?.__typename === "Mirror"
+                        ? publication?.mirrorOn
+                        : (publication as Post)
+                      )?.metadata as any
+                    )?.content?.length > 0 && (
+                      <div
+                        className="relative w-full h-40 rounded-sm border border-mosgu bg-fuego p-2 font-bit text-nuba text-sm text-left break-words flex justify-center items-start overflow-y-scroll whitespace-preline"
+                        dangerouslySetInnerHTML={{
+                          __html: descriptionRegex(
+                            (publication?.__typename === "Mirror"
+                              ? publication?.mirrorOn
+                              : (publication as Post)
+                            )?.isEncrypted &&
+                              !(
                                 (publication?.__typename === "Mirror"
                                   ? publication?.mirrorOn
-                                  : (publication as Post)
-                                )?.metadata as any
-                              )?.title
-                            : (
-                                (publication?.__typename === "Mirror"
-                                  ? publication?.mirrorOn
-                                  : (publication as Post)
-                                )?.metadata as any
-                              )?.content,
-                          false
-                        ),
-                      }}
-                    ></div>
-                  )}
+                                  : (publication as Post)) as any
+                              )?.decrypted
+                              ? (
+                                  (publication?.__typename === "Mirror"
+                                    ? publication?.mirrorOn
+                                    : (publication as Post)
+                                  )?.metadata as any
+                                )?.title
+                              : (
+                                  (publication?.__typename === "Mirror"
+                                    ? publication?.mirrorOn
+                                    : (publication as Post)
+                                  )?.metadata as any
+                                )?.content,
+                            false
+                          ),
+                        }}
+                      ></div>
+                    ))}
             </div>
             <div className="relative h-full w-fit items-center justify-between flex flex-col gap-4">
               <InteractBar
@@ -402,41 +413,52 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                         : (publication as Post)
                       )?.metadata as ImageMetadataV3
                     )?.asset?.image?.raw?.mimeType,
-                    actionImage: (
+                    actionImage:
                       (publication?.__typename === "Mirror"
                         ? publication?.mirrorOn
                         : (publication as Post)
-                      )?.metadata as ImageMetadataV3
-                    )?.asset.image?.raw?.uri?.includes("ipfs://")
-                      ? `${INFURA_GATEWAY}/ipfs/${
-                          (
+                      )?.isEncrypted &&
+                      !(
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)) as any
+                      ).decrypted
+                        ? `${INFURA_GATEWAY}/ipfs/QmPSiDStf42xy3WgLuz8zb9PEiJVg48NTV311jjd9Drs46`
+                        : (
                             (publication?.__typename === "Mirror"
                               ? publication?.mirrorOn
                               : (publication as Post)
                             )?.metadata as ImageMetadataV3
-                          )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
-                        }`
-                      : (
-                          (publication?.__typename === "Mirror"
-                            ? publication?.mirrorOn
-                            : (publication as Post)
-                          )?.metadata as ImageMetadataV3
-                        )?.asset.image?.raw?.uri?.includes("ar://")
-                      ? `https://arweave.net/${(
-                          (publication?.__typename === "Mirror"
-                            ? publication?.mirrorOn
-                            : (publication as Post)
-                          )?.metadata as ImageMetadataV3
-                        )?.asset.image?.raw?.uri
-                          ?.split("ar://")?.[1]
-                          ?.replace(/"/g, "")
-                          ?.trim()}`
-                      : (
-                          (publication?.__typename === "Mirror"
-                            ? publication?.mirrorOn
-                            : (publication as Post)
-                          )?.metadata as ImageMetadataV3
-                        )?.asset.image?.raw?.uri,
+                          )?.asset.image?.raw?.uri?.includes("ipfs://")
+                        ? `${INFURA_GATEWAY}/ipfs/${
+                            (
+                              (publication?.__typename === "Mirror"
+                                ? publication?.mirrorOn
+                                : (publication as Post)
+                              )?.metadata as ImageMetadataV3
+                            )?.asset.image?.raw?.uri?.split("ipfs://")?.[1]
+                          }`
+                        : (
+                            (publication?.__typename === "Mirror"
+                              ? publication?.mirrorOn
+                              : (publication as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.asset.image?.raw?.uri?.includes("ar://")
+                        ? `https://arweave.net/${(
+                            (publication?.__typename === "Mirror"
+                              ? publication?.mirrorOn
+                              : (publication as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.asset.image?.raw?.uri
+                            ?.split("ar://")?.[1]
+                            ?.replace(/"/g, "")
+                            ?.trim()}`
+                        : (
+                            (publication?.__typename === "Mirror"
+                              ? publication?.mirrorOn
+                              : (publication as Post)
+                            )?.metadata as ImageMetadataV3
+                          )?.asset.image?.raw?.uri,
                   })
                 )
               }
@@ -451,12 +473,22 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   layout="fill"
                   onError={(e) => handleImageError(e)}
                   src={
-                    (
+                    (publication?.__typename === "Mirror"
+                      ? publication?.mirrorOn
+                      : (publication as Post)
+                    )?.isEncrypted &&
+                    !(
                       (publication?.__typename === "Mirror"
                         ? publication?.mirrorOn
-                        : (publication as Post)
-                      )?.metadata as ImageMetadataV3
-                    )?.asset.image?.raw?.uri?.includes("ipfs://")
+                        : (publication as Post)) as any
+                    ).decrypted
+                      ? `${INFURA_GATEWAY}/ipfs/QmPSiDStf42xy3WgLuz8zb9PEiJVg48NTV311jjd9Drs46`
+                      : (
+                          (publication?.__typename === "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.metadata as ImageMetadataV3
+                        )?.asset.image?.raw?.uri?.includes("ipfs://")
                       ? `${INFURA_GATEWAY}/ipfs/${
                           (
                             (publication?.__typename === "Mirror"
@@ -581,169 +613,185 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
             </div>
           </div>
           <div className="relative w-full h-full flex flex-col md:flex-row gap-5 items-center justify-center">
-            {(publication?.__typename === "Mirror"
+            {(((publication?.__typename === "Mirror"
               ? publication?.mirrorOn
               : (publication as Post)
             )?.isEncrypted &&
-            !(
-              (publication?.__typename === "Mirror"
-                ? publication?.mirrorOn
-                : (publication as Post)
-              )?.metadata as any
-            )?.decrypted
-              ? (
-                  (publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn
-                    : (publication as Post)
-                  )?.metadata as any
-                )?.title?.length > 0
-              : (
-                  (publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn
-                    : (publication as Post)
-                  )?.metadata as any
-                )?.content?.length > 0 && (
-                  <div
-                    className="relative w-full h-80 rounded-sm border border-mosgu bg-fuego p-1.5 font-bit text-nuba text-sm text-left break-words flex justify-center items-start overflow-y-scroll whitespace-preline"
-                    dangerouslySetInnerHTML={{
-                      __html: descriptionRegex(
-                        (publication?.__typename === "Mirror"
-                          ? publication?.mirrorOn
-                          : (publication as Post)
-                        )?.isEncrypted &&
-                          !(
-                            (publication?.__typename === "Mirror"
-                              ? publication?.mirrorOn
-                              : (publication as Post)
-                            )?.metadata as any
-                          )?.decrypted
-                          ? (
-                              (publication?.__typename === "Mirror"
-                                ? publication?.mirrorOn
-                                : (publication as Post)
-                              )?.metadata as any
-                            )?.title
-                          : (
-                              (publication?.__typename === "Mirror"
-                                ? publication?.mirrorOn
-                                : (publication as Post)
-                              )?.metadata as any
-                            )?.content,
-                        false
-                      ),
-                    }}
-                  ></div>
-                )}
-            <div
-              className={`relative h-full flex items-center justify-start gap-5 ${
+              !(
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)) as any
+              )?.decrypted &&
+              (
                 (publication?.__typename === "Mirror"
                   ? publication?.mirrorOn
                   : (publication as Post)
-                )?.isEncrypted &&
-                !(
+                )?.metadata as any
+              )?.title?.length > 0) ||
+              (
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.metadata as any
+              )?.content?.length > 0 ||
+              (!(
+                publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+              )?.isEncrypted &&
+                (
                   (publication?.__typename === "Mirror"
                     ? publication?.mirrorOn
                     : (publication as Post)
                   )?.metadata as any
-                )?.decrypted
-                  ? (
-                      (publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn
-                        : (publication as Post)
-                      )?.metadata as any
-                    )?.title?.length > 0
-                  : (
-                      (publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn
-                        : (publication as Post)
-                      )?.metadata as any
-                    )?.content?.length > 0
-                  ? "w-full md:w-36"
-                  : "w-full flex-row"
-              }`}
-            >
+                )?.title?.length > 0) ||
+              (
+                (publication?.__typename === "Mirror"
+                  ? publication?.mirrorOn
+                  : (publication as Post)
+                )?.metadata as any
+              )?.content?.length > 0) && (
               <div
-                className={`relative w-full flex p-1 ${
-                  (publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn
-                    : (publication as Post)
-                  )?.isEncrypted &&
-                  !(
-                    (publication?.__typename === "Mirror"
-                      ? publication?.mirrorOn
-                      : (publication as Post)
-                    )?.metadata as any
-                  )?.decrypted
-                    ? (
-                        (publication?.__typename === "Mirror"
-                          ? publication?.mirrorOn
-                          : (publication as Post)
-                        )?.metadata as any
-                      )?.title?.length > 0
-                    : (
-                        (publication?.__typename === "Mirror"
-                          ? publication?.mirrorOn
-                          : (publication as Post)
-                        )?.metadata as any
-                      )?.content?.length > 0
-                    ? "h-fit gap-1.5 md:gap-0 md:h-80 flex-col items-center justify-start"
-                    : "h-fit flex-row items-end justify-start gap-4"
-                }`}
-              >
-                <div
-                  className={`relative w-full h-full flex flex-row md:flex-col gap-3 ${
+                className="relative w-full h-80 rounded-sm border border-mosgu bg-fuego p-1.5 font-bit text-nuba text-sm text-left break-words flex justify-start items-start overflow-y-scroll whitespace-preline"
+                dangerouslySetInnerHTML={{
+                  __html: descriptionRegex(
                     (publication?.__typename === "Mirror"
                       ? publication?.mirrorOn
                       : (publication as Post)
                     )?.isEncrypted &&
-                    !(
-                      (publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn
-                        : (publication as Post)
-                      )?.metadata as any
-                    )?.decrypted
+                      !(
+                        (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)) as any
+                      )?.decrypted
                       ? (
                           (publication?.__typename === "Mirror"
                             ? publication?.mirrorOn
                             : (publication as Post)
                           )?.metadata as any
-                        )?.title?.length > 0
+                        )?.title +
+                          "<br /><br /> ... This post is encrypted. Do you hold the keys to unlock its secrets?"
                       : (
                           (publication?.__typename === "Mirror"
                             ? publication?.mirrorOn
                             : (publication as Post)
                           )?.metadata as any
-                        )?.content?.length > 0
-                      ? "items-end justify-start"
-                      : "justify-between"
+                        )?.content,
+                    false
+                  ),
+                }}
+              ></div>
+            )}
+            <div
+              className={`relative h-full flex items-center justify-start gap-5 ${
+                // (publication?.__typename === "Mirror"
+                //   ? publication?.mirrorOn
+                //   : (publication as Post)
+                // )?.isEncrypted &&
+                // !(
+                //   (publication?.__typename === "Mirror"
+                //     ? publication?.mirrorOn
+                //     : (publication as Post)) as any
+                // )?.decrypted
+                //   ? (
+                //       (publication?.__typename === "Mirror"
+                //         ? publication?.mirrorOn
+                //         : (publication as Post)
+                //       )?.metadata as any
+                //     )?.title?.length > 0
+                //   : (
+                //       (publication?.__typename === "Mirror"
+                //         ? publication?.mirrorOn
+                //         : (publication as Post)
+                //       )?.metadata as any
+                //     )?.content?.length > 0
+                //   ?
+                "w-full md:w-36"
+                // : "w-full flex-row"
+              }`}
+            >
+              <div
+                className={`relative w-full flex p-1 ${
+                  // (publication?.__typename === "Mirror"
+                  //   ? publication?.mirrorOn
+                  //   : (publication as Post)
+                  // )?.isEncrypted &&
+                  // !(
+                  //   (publication?.__typename === "Mirror"
+                  //     ? publication?.mirrorOn
+                  //     : (publication as Post)) as any
+                  // )?.decrypted &&
+                  // ((
+                  //   (publication?.__typename === "Mirror"
+                  //     ? publication?.mirrorOn
+                  //     : (publication as Post)
+                  //   )?.metadata as any
+                  // )?.title?.length > 0 ||
+                  //   (
+                  //     (publication?.__typename === "Mirror"
+                  //       ? publication?.mirrorOn
+                  //       : (publication as Post)
+                  //     )?.metadata as any
+                  //   )?.content?.length > 0)
+                  //   ? "h-fit flex-row items-end justify-between w-full gap-4"
+                  // :
+                  "h-fit gap-1.5 md:gap-3 md:h-80 flex-col items-center justify-start"
+                }`}
+              >
+                <div
+                  className={`relative w-full h-full flex flex-row md:flex-col gap-3 ${
+                    // (publication?.__typename === "Mirror"
+                    //   ? publication?.mirrorOn
+                    //   : (publication as Post)
+                    // )?.isEncrypted &&
+                    // !(
+                    //   (publication?.__typename === "Mirror"
+                    //     ? publication?.mirrorOn
+                    //     : (publication as Post)) as any
+                    // )?.decrypted &&
+                    // ((
+                    //   (publication?.__typename === "Mirror"
+                    //     ? publication?.mirrorOn
+                    //     : (publication as Post)
+                    //   )?.metadata as any
+                    // )?.title?.length > 0 ||
+                    //   (
+                    //     (publication?.__typename === "Mirror"
+                    //       ? publication?.mirrorOn
+                    //       : (publication as Post)
+                    //     )?.metadata as any
+                    //   )?.content?.length > 0)
+                    //   ? "items-end justify-start"
+                    //   :
+                    "justify-between"
                   }`}
                 >
                   <div
                     className={`relative w-full h-full flex flex-col ${
-                      (publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn
-                        : (publication as Post)
-                      )?.isEncrypted &&
-                      !(
-                        (publication?.__typename === "Mirror"
-                          ? publication?.mirrorOn
-                          : (publication as Post)
-                        )?.metadata as any
-                      )?.decrypted
-                        ? (
-                            (publication?.__typename === "Mirror"
-                              ? publication?.mirrorOn
-                              : (publication as Post)
-                            )?.metadata as any
-                          )?.title?.length > 0
-                        : (
-                            (publication?.__typename === "Mirror"
-                              ? publication?.mirrorOn
-                              : (publication as Post)
-                            )?.metadata as any
-                          )?.content?.length > 0
-                        ? "justify-start items-end"
-                        : "items-start justify-end"
+                      // (publication?.__typename === "Mirror"
+                      //   ? publication?.mirrorOn
+                      //   : (publication as Post)
+                      // )?.isEncrypted &&
+                      // !(
+                      //   (publication?.__typename === "Mirror"
+                      //     ? publication?.mirrorOn
+                      //     : (publication as Post)) as any
+                      // )?.decrypted &&
+                      // ((
+                      //   (publication?.__typename === "Mirror"
+                      //     ? publication?.mirrorOn
+                      //     : (publication as Post)
+                      //   )?.metadata as any
+                      // )?.title?.length > 0 ||
+                      //   (
+                      //     (publication?.__typename === "Mirror"
+                      //       ? publication?.mirrorOn
+                      //       : (publication as Post)
+                      //     )?.metadata as any
+                      //   )?.content?.length > 0)
+                      //   ? "justify-start items-end"
+                      //   :
+                      "items-start justify-end"
                     }`}
                   >
                     <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-sm 2xl:text-base">
@@ -765,30 +813,30 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   </div>
                   <div
                     className={`relative w-full h-full flex flex-col ${
-                      (publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn
-                        : (publication as Post)
-                      )?.isEncrypted &&
-                      !(
-                        (publication?.__typename === "Mirror"
-                          ? publication?.mirrorOn
-                          : (publication as Post)
-                        )?.metadata as any
-                      )?.decrypted
-                        ? (
-                            (publication?.__typename === "Mirror"
-                              ? publication?.mirrorOn
-                              : (publication as Post)
-                            )?.metadata as any
-                          )?.title?.length > 0
-                        : (
-                            (publication?.__typename === "Mirror"
-                              ? publication?.mirrorOn
-                              : (publication as Post)
-                            )?.metadata as any
-                          )?.content?.length > 0
-                        ? "justify-start items-end"
-                        : "items-start justify-end"
+                      // (publication?.__typename === "Mirror"
+                      //   ? publication?.mirrorOn
+                      //   : (publication as Post)
+                      // )?.isEncrypted &&
+                      // !(
+                      //   (publication?.__typename === "Mirror"
+                      //     ? publication?.mirrorOn
+                      //     : (publication as Post)) as any
+                      // )?.decrypted &&
+                      // ((
+                      //   (publication?.__typename === "Mirror"
+                      //     ? publication?.mirrorOn
+                      //     : (publication as Post)
+                      //   )?.metadata as any
+                      // )?.title?.length > 0 ||
+                      //   (
+                      //     (publication?.__typename === "Mirror"
+                      //       ? publication?.mirrorOn
+                      //       : (publication as Post)
+                      //     )?.metadata as any
+                      //   )?.content?.length > 0)
+                      //   ? "justify-start items-end"
+                      //   :
+                      "items-start justify-end"
                     }`}
                   >
                     <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-sm">
@@ -812,30 +860,30 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 </div>
                 <div
                   className={`relative mb-0 flex flex-row items-center  gap-2 w-full h-fit  ${
-                    (publication?.__typename === "Mirror"
-                      ? publication?.mirrorOn
-                      : (publication as Post)
-                    )?.isEncrypted &&
-                    !(
-                      (publication?.__typename === "Mirror"
-                        ? publication?.mirrorOn
-                        : (publication as Post)
-                      )?.metadata as any
-                    )?.decrypted
-                      ? (
-                          (publication?.__typename === "Mirror"
-                            ? publication?.mirrorOn
-                            : (publication as Post)
-                          )?.metadata as any
-                        )?.title?.length > 0
-                      : (
-                          (publication?.__typename === "Mirror"
-                            ? publication?.mirrorOn
-                            : (publication as Post)
-                          )?.metadata as any
-                        )?.content?.length > 0
-                      ? "justify-end md:justify-between"
-                      : "justify-end"
+                    // (publication?.__typename === "Mirror"
+                    //   ? publication?.mirrorOn
+                    //   : (publication as Post)
+                    // )?.isEncrypted &&
+                    // !(
+                    //   (publication?.__typename === "Mirror"
+                    //     ? publication?.mirrorOn
+                    //     : (publication as Post)) as any
+                    // )?.decrypted &&
+                    // ((
+                    //   (publication?.__typename === "Mirror"
+                    //     ? publication?.mirrorOn
+                    //     : (publication as Post)
+                    //   )?.metadata as any
+                    // )?.title?.length > 0 ||
+                    //   (
+                    //     (publication?.__typename === "Mirror"
+                    //       ? publication?.mirrorOn
+                    //       : (publication as Post)
+                    //     )?.metadata as any
+                    //   )?.content?.length > 0)
+                    //   ? "justify-end md:justify-between"
+                    //   :
+                    "justify-end"
                   }`}
                 >
                   <div className="relative w-6 h-6 items-center justify-center flex">

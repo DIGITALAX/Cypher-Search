@@ -25,11 +25,13 @@ const decodeReturnedData = async (encodedData: ethers.BytesLike) => {
   const addressArray = Object.values(decodedData[1]);
 
   const data = await fetchIPFSJSON(decodedData?.[2]);
+  const { amount, ...rest } = data;
   return {
     prices: uint256Array,
     acceptedTokens: addressArray,
+    amount,
     collectionMetadata: {
-      ...data,
+      ...rest,
     },
   };
 };

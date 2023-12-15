@@ -13,6 +13,7 @@ export const encryptItems = async (
       prices: number[];
       fulfillerAddress: string[];
       originalIndices: number[];
+      origin: string;
     };
   },
   fulfillmentDetails: Details,
@@ -44,10 +45,10 @@ export const encryptItems = async (
     }[] = [];
     for (const [pubId, item] of Object.entries(groupedByPubId)) {
       if (
-        item?.colors?.filter(Boolean)?.length &&
-        item?.sizes?.filter(Boolean)?.length
+        (item?.colors?.filter(Boolean)?.length &&
+          item?.sizes?.filter(Boolean)?.length) ||
+        item?.origin == "4"
       ) {
-
         let fulfillerEditions: any[] = [];
         uniqueFulfillerAddressesByGroup[pubId]?.forEach((address: string) => {
           fulfillerEditions.push({
@@ -84,6 +85,8 @@ export const encryptItems = async (
 
         const { originalIndices, ...rest } = item;
 
+        console.log({ item });
+
         const { ciphertext, dataToEncryptHash } = await encryptString(
           {
             accessControlConditions,
@@ -107,6 +110,8 @@ export const encryptItems = async (
         });
       }
     }
+
+    console.log({ encryptedItems });
 
     return encryptedItems;
   } catch (err: any) {

@@ -11,10 +11,17 @@ const Decrypt: FunctionComponent<DecryptProps> = ({
   toDecrypt,
 }): JSX.Element => {
   return (
-    <div className="relative w-full p-1.5 h-10 flex items-center justify-end">
+    <div
+      className="relative w-full p-1.5 h-10 flex items-center justify-end"
+      title={
+        canDecrypt
+          ? "Decrypt Post"
+          : "You don't hold the keys to Decrypt this post yet."
+      }
+    >
       <div
-        className={`relative w-5 h-5 flex items-center justify-end ml-auto ${
-          canDecrypt ? "cursor-pointer active:scale-95" : "opacity-60"
+        className={`relative w-5 h-5 flex items-center justify-end ml-auto cursor-pointer  ${
+          canDecrypt ? "active:scale-95" : "opacity-60"
         }`}
         onClick={() =>
           canDecrypt && !decryptLoading && handleDecrypt(toDecrypt)

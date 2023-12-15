@@ -18,12 +18,12 @@ const DropMain: FunctionComponent<DropMainProps> = ({
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex-row pt-52 sm:pt-40 md:pt-36 px-2 sm:px-10">
       <div className="relative w-full h-fit flex items-center justify-start">
-        <div className="relative w-fit h-fit flex items-center justify-start flex-wrap gap-5">
+        <div className="relative w-full pre:w-fit h-fit flex items-center justify-start flex-wrap gap-5">
           {collections?.map((collection: Creation, index: number) => {
             return (
               <div
                 key={index}
-                className="relative w-96 h-96 flex items-center justify-center bg-offBlack p-3 rounded-sm"
+                className="relative w-full h-72 pre:w-96 sm:h-96 flex items-center justify-center bg-offBlack p-3 rounded-sm"
               >
                 <div
                   className="relative w-full h-full rounded-sm hover:opacity-70 cursor-pointer"
@@ -108,15 +108,16 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                           return;
 
                         if (
-                          Number(collection?.soldTokens) +   Number(
-                            cartItems
-                              ?.filter(
-                                (value) =>
-                                  collection?.pubId == value?.item?.pubId
-                              )
-                              ?.map((item) => item?.amount)
-                              ?.reduce((sum, item) => sum + Number(item), 0)
-                          ) +
+                          Number(collection?.soldTokens || 0) +
+                            Number(
+                              cartItems
+                                ?.filter(
+                                  (value) =>
+                                    collection?.pubId == value?.item?.pubId
+                                )
+                                ?.map((item) => item?.buyAmount)
+                                ?.reduce((sum, item) => sum + Number(item), 0)
+                            ) +
                             1 >
                           Number(collection?.amount)
                         ) {
@@ -132,7 +133,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
 
                         const newItem = {
                           item: collection,
-                          amount: 1,
+                          buyAmount: 1,
                           price: Number(collection?.prices?.[0]),
                           type: numberToItemTypeMap[Number(collection?.origin)],
                           color: collection?.collectionMetadata?.colors?.[0],
@@ -155,7 +156,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                           ) {
                             newCartItems[itemIndex] = {
                               ...(existingItem || {}),
-                              amount: existingItem?.amount + 1,
+                              buyAmount: existingItem?.buyAmount + 1,
                             };
                           } else {
                             newCartItems?.splice(itemIndex, 1);

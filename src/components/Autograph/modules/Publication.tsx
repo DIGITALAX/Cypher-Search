@@ -93,7 +93,14 @@ const Publication: FunctionComponent<PublicationProps> = ({
       id={item?.id}
     >
       <div className="relative w-full h-fit flex items-center justify-between flex-row">
-        <div className="relative w-fit h-fit flex items-center justify-start font-bit text-white text-xxs">
+        <div
+          className={`relative w-fit h-fit flex items-center justify-start font-bit text-xxs ${
+            (item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post))
+              ?.isEncrypted
+              ? "text-black"
+              : "text-white"
+          }`}
+        >
           <div className={`relative w-fit h-fit flex`}>
             {item?.createdAt && moment(`${item?.createdAt}`).fromNow()}
           </div>

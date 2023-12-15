@@ -96,7 +96,9 @@ const Creation: FunctionComponent<CreationProps> = ({
           className={`absolute right-2 top-2 text-xxs text-white font-bit bg-offBlack flex items-center justify-center border border-white px-1 py-px  w-fit h-fit`}
         >
           <div className="relative w-fit h-fit flex items-center justify-center top-px">
-            {item?.amount == item?.soldTokens
+            {item?.amount !== undefined &&
+            item?.soldTokens !== undefined &&
+            item?.amount == item?.soldTokens
               ? "SOLD OUT"
               : `${item?.soldTokens ? item?.soldTokens : 0}/${item?.amount}`}
           </div>
@@ -112,11 +114,11 @@ const Creation: FunctionComponent<CreationProps> = ({
               if (item?.amount == item?.soldTokens) return;
 
               if (
-                Number(item?.soldTokens) +
+                Number(item?.soldTokens || 0) +
                   Number(
                     cartItems
                       ?.filter((value) => item?.pubId == value?.item?.pubId)
-                      ?.map((item) => item?.amount)
+                      ?.map((item) => item?.buyAmount)
                       ?.reduce((sum, item) => sum + Number(item), 0)
                   ) +
                   1 >
@@ -133,7 +135,7 @@ const Creation: FunctionComponent<CreationProps> = ({
               }
               const newItem = {
                 item,
-                amount: 1,
+                buyAmount: 1,
                 price: Number(item?.prices?.[0]),
                 type: numberToItemTypeMap[Number(item?.origin)],
                 color: item?.collectionMetadata?.colors?.[0],
@@ -143,7 +145,7 @@ const Creation: FunctionComponent<CreationProps> = ({
               };
 
               const existingItem = cartItems?.find(
-                (value) => value?.item?.pubId === item?.pubId
+                (value) => Number(value?.item?.pubId) === Number(item?.pubId)
               );
 
               if (existingItem) {
@@ -156,7 +158,7 @@ const Creation: FunctionComponent<CreationProps> = ({
                 ) {
                   newCartItems[itemIndex] = {
                     ...existingItem,
-                    amount: existingItem?.amount + 1,
+                    buyAmount: existingItem?.buyAmount + 1,
                   };
                 } else {
                   newCartItems.splice(itemIndex, 1);

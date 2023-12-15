@@ -26,6 +26,8 @@ import decodeReturnedData from "../../../../lib/helpers/decodeReturned";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
   index,
@@ -667,7 +669,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   );
 
                   const newItem = {
-                    amount: 1,
+                    buyAmount: 1,
                     price: Number(returned?.prices?.[0]),
                     type: meta?.openActionModules?.[0]?.contract?.address
                       ?.toLowerCase()
@@ -688,14 +690,18 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     chosenIndex: 0,
                     item: {
                       ...returned,
-                      pubId:
+                      pubId: parseInt(
                         item?.__typename == "Mirror"
-                          ? item?.mirrorOn?.id
-                          : item?.id,
-                      profileId:
+                          ? item?.mirrorOn?.id?.split("-")?.[1]
+                          : item?.id?.split("-")?.[1],
+                        16
+                      ),
+                      profileId: parseInt(
                         item?.__typename == "Mirror"
                           ? item?.mirrorOn?.by?.id
                           : item?.by?.id,
+                        16
+                      ),
                       profile:
                         item?.__typename == "Mirror"
                           ? item?.mirrorOn?.by
@@ -705,8 +711,24 @@ const PostBar: FunctionComponent<PostBarProps> = ({
 
                   const existingItem = cartItems?.find(
                     (value) =>
-                      value?.item?.pubId === returned?.collectionMetadata?.pubId
+                      Number(value?.item?.pubId) ===
+                      Number(newItem?.item?.pubId)
                   );
+                  if (
+                    Number(existingItem?.item?.soldTokens || 0) +
+                      Number(existingItem?.buyAmount) +
+                      1 >
+                    Number(existingItem?.item?.amount)
+                  ) {
+                    dispatch(
+                      setInsufficientBalance({
+                        actionValue: true,
+                        actionMessage:
+                          "We know you're eager, but you've reached this creation's collect limit!",
+                      })
+                    );
+                    return;
+                  }
 
                   const newItemDeepCopy = await JSON.parse(
                     JSON.stringify(newItem)
@@ -722,7 +744,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     ) {
                       newCartItems[itemIndex] = {
                         ...existingItem,
-                        amount: existingItem?.amount + 1,
+                        buyAmount: existingItem?.buyAmount + 1,
                       };
                     } else {
                       newCartItems.splice(itemIndex, 1);

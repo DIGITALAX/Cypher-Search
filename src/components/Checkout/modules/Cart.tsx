@@ -99,7 +99,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                 return;
 
                               if (
-                                Number(chooseCartItem?.item?.soldTokens) +
+                                Number(chooseCartItem?.item?.soldTokens || 0) +
                                   1 +
                                   groupedByPubId[
                                     chooseCartItem?.item?.pubId!
@@ -107,7 +107,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                     (sum, item) => sum + Number(item),
                                     0
                                   ) >
-                                Number(chooseCartItem?.item?.amount)
+                                Number(chooseCartItem?.buyAmount)
                               ) {
                                 dispatch(
                                   setInsufficientBalance({
@@ -123,7 +123,8 @@ const Cart: FunctionComponent<CartProps> = ({
                                   ...cartItems.slice(0, mainIndex),
                                   {
                                     ...cartItems[mainIndex],
-                                    amount: cartItems[mainIndex]?.amount + 1,
+                                    buyAmount:
+                                      cartItems[mainIndex]?.buyAmount + 1,
                                   },
                                   ...cartItems.slice(mainIndex + 1),
                                 ])
@@ -134,7 +135,8 @@ const Cart: FunctionComponent<CartProps> = ({
                                   ...cartItems.slice(0, mainIndex),
                                   {
                                     ...cartItems[mainIndex],
-                                    amount: cartItems[mainIndex]?.amount + 1,
+                                    buyAmount:
+                                      cartItems[mainIndex]?.buyAmount + 1,
                                   },
                                   ...cartItems.slice(mainIndex + 1),
                                 ])
@@ -160,12 +162,13 @@ const Cart: FunctionComponent<CartProps> = ({
                               )
                                 return;
                               const newCart =
-                                cartItems[mainIndex].amount > 1
+                                cartItems[mainIndex].buyAmount > 1
                                   ? [
                                       ...cartItems.slice(0, mainIndex),
                                       {
                                         ...cartItems[mainIndex],
-                                        amount: cartItems[mainIndex].amount - 1,
+                                        buyAmount:
+                                          cartItems[mainIndex].buyAmount - 1,
                                       },
                                       ...cartItems.slice(mainIndex + 1),
                                     ]
@@ -544,7 +547,9 @@ const Cart: FunctionComponent<CartProps> = ({
 
                                   if (existingItemIndex != -1) {
                                     if (
-                                      Number(currentItem?.item?.soldTokens) +
+                                      Number(
+                                        currentItem?.item?.soldTokens || 0
+                                      ) +
                                         groupedByPubId[
                                           chooseCartItem?.item?.pubId!
                                         ]?.amounts?.reduce(
@@ -552,13 +557,13 @@ const Cart: FunctionComponent<CartProps> = ({
                                           0
                                         ) +
                                         1 <
-                                      Number(currentItem?.item?.amount)
+                                      Number(currentItem?.buyAmount)
                                     ) {
                                       newCartItems[existingItemIndex] = {
                                         ...newCartItems[existingItemIndex],
-                                        amount:
+                                        buyAmount:
                                           newCartItems[existingItemIndex]
-                                            ?.amount + 1,
+                                            ?.buyAmount + 1,
                                       };
                                     } else {
                                       dispatch(
@@ -591,7 +596,7 @@ const Cart: FunctionComponent<CartProps> = ({
 
                                     const newItem = {
                                       ...currentItem,
-                                      amount: 1,
+                                      buyAmount: 1,
                                       chosenIndex: newIndex,
                                       price: Number(
                                         currentItem?.item?.prices[newIndex]
@@ -613,7 +618,9 @@ const Cart: FunctionComponent<CartProps> = ({
                                     };
 
                                     if (
-                                      Number(currentItem?.item?.soldTokens) +
+                                      Number(
+                                        currentItem?.item?.soldTokens || 0
+                                      ) +
                                         groupedByPubId[
                                           chooseCartItem?.item?.pubId!
                                         ]?.amounts?.reduce(
@@ -621,7 +628,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                           0
                                         ) +
                                         1 <
-                                      Number(currentItem?.item?.amount)
+                                      Number(currentItem?.buyAmount)
                                     ) {
                                       newCartItems.push(newItem);
                                     } else {
