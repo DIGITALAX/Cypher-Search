@@ -308,7 +308,7 @@ const useCreate = (
               [
                 dataObject,
                 collectionSettings?.origin == "f3m"
-                  ? 7
+                  ? "7"
                   : printStringToNumber[
                       collectionDetails?.printType.charAt(0).toUpperCase() +
                         collectionDetails?.printType.slice(1).toLowerCase()
