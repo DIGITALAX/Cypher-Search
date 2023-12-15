@@ -176,7 +176,7 @@ export type CartItem = {
   chosenIndex?: number;
   chosenIndexes?: number[];
   level?: number;
-  amount: number;
+  buyAmount: number;
   type: ItemType;
   purchased: boolean;
 };

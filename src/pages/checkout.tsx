@@ -107,7 +107,6 @@ const Checkout: NextPage<{
     cartItems,
     router
   );
-
   return (
     <div
       className={`relative w-full flex flex-col items-start justify-center h-fit overflow-y-scroll grow`}
@@ -149,13 +148,16 @@ const Checkout: NextPage<{
           setOpenDropdown={setOpenDropdown}
           encryptedStrings={encryptedStrings}
           total={cartItems?.reduce(
-            (sum, item) => sum + Number(item?.price) * Number(item?.amount),
+            (sum, item) => sum + Number(item?.price) * Number(item?.buyAmount),
             0
           )}
           checkoutCurrency={checkoutCurrency}
           rate={Number(
-            oracleData?.find((oracle) => oracle.currency === checkoutCurrency)
-              ?.rate
+            oracleData?.find(
+              (oracle) =>
+                oracle.currency?.toLowerCase() ===
+                checkoutCurrency?.toLowerCase()
+            )?.rate
           )}
           setCheckoutCurrency={setCheckoutCurrency}
           cartItems={cartItems}

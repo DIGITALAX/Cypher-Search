@@ -124,7 +124,7 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
             const newItem = {
               ...collectChoice[index - 1],
               item,
-              amount: Number(item?.amount),
+              buyAmount: Number(item?.amount),
               level: index,
               // chosenIndexes: item,
               type: ItemType.Legend,

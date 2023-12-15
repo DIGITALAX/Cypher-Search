@@ -1,68 +1,55 @@
 const descriptionRegex = (description: string, colorChange: boolean) => {
+  const specialPhrase =
+    "... This post is encrypted. Do you hold the keys to unlock its secrets?";
   const replacedDescription = description?.replace(/\n\n/g, "\n \n");
   const lines = replacedDescription?.split(/[\r\n]+/);
+
   const styledLines = lines?.map((line: string) => {
-    const words = line.split(/(?=[@#])|\s+/);
-    const styledWords = words.map((word: string) => {
-      if (word[0] === "#") {
-        if (colorChange) {
-          return `<em id="hashtags" style="color: #f9ed00; font-style: normal; word-break: break-all; margin-right: 4px;">${word}</em>`;
+    if (line.includes(specialPhrase)) {
+      const parts = line.split(specialPhrase);
+      const styledSpecialPhrase =
+        parts[0] +
+        specialPhrase
+          .split(" ")
+          .map((word) => `<span style="color: #FF0000;">${word}</span>`)
+          .join(" ") +
+        parts[1];
+      return `<span>${styledSpecialPhrase}</span>`;
+    } else {
+      const words = line.split(/(?=[@#])|\s+/);
+      const styledWords = words.map((word) => {
+        if (word[0] === "#") {
+          return colorChange
+            ? `<em id="hashtags" style="color: #f9ed00; font-style: normal; word-break: break-all; margin-right: 4px;">${word}</em>`
+            : `<em id="hashtags" style="color: #81A8F8; font-style: normal; word-break: break-all; margin-right: 4px;">${word}</em>`;
+        } else if (word[0] === "@") {
+          const link = `https://cypher.digitalax.xyz/autograph/${
+            word?.includes(".lens")
+              ? word?.replace(".lens", "").replace("@", "")
+              : word?.replace("@", "")
+          }`;
+          return colorChange
+            ? ` <a href="${link}" rel="noreferrer" target="_blank" style="word-break: break-all; margin-right: 4px;"> <span style="color: #f9ed00;">${word}</span> </a> `
+            : ` <a href="${link}" target="_blank" rel="noreferrer" style="word-break: break-all; margin-right: 4px;"> <span style="color: #81A8F8;">${word}</span> </a> `;
+        } else if (
+          word.startsWith("http") ||
+          word.startsWith("www.") ||
+          word.endsWith(".xyz") ||
+          word.endsWith(".com")
+        ) {
+          const url = word?.includes("//") ? word : `//${word}`;
+          return colorChange
+            ? ` <a href="${url}" style="word-break: break-all; margin-right: 4px;" target="_blank" rel="noreferrer"> <span style="color: #f9ed00;">${word}</span> </a> `
+            : ` <a href="${url}" style="word-break: break-all; margin-right: 4px;" target="_blank" rel="noreferrer"> <span style="color: #81A8F8;">${word}</span> </a> `;
         } else {
-          return `<em id="hashtags" style="color: #81A8F8; font-style: normal; word-break: break-all; margin-right: 4px;">${word}</em>`;
+          return word;
         }
-      } else if (word[0] === "@") {
-        if (colorChange) {
-          return `
-              <a href="${`https://cypher.digitalax.xyz/autograph/${
-                word?.includes(".lens")
-                  ? word?.replace(".lens", "")?.replace("@", "")
-                  : word?.replace("@", "")
-              }`}" rel="noreferrer" target="_blank" style="word-break: break-all; margin-right: 4px;">
-                <span style="color: #f9ed00;">${word}</span>
-              </a>
-            `;
-        } else {
-          return `
-              <a href="${`https://cypher.digitalax.xyz/autograph/${
-                word?.includes(".lens")
-                  ? word?.replace(".lens", "")?.replace("@", "")
-                  : word?.replace("@", "")
-              }`}" target="_blank" rel="noreferrer" style="word-break: break-all; margin-right: 4px;">
-                <span style="color: #81A8F8;">${word}</span>
-              </a>
-            `;
-        }
-      } else if (
-        word.startsWith("http") ||
-        word.startsWith("www.") ||
-        word.endsWith(".xyz") ||
-        word.endsWith(".com")
-      ) {
-        if (colorChange) {
-          return `
-              <a href=${
-                word?.includes("//") ? word : `//${word}`
-              } style="word-break: break-all; margin-right: 4px;" target="_blank" rel="noreferrer">
-                <span style="color: #f9ed00;">${word}</span>
-              </a>
-            `;
-        } else {
-          return `
-              <a href=${
-                word?.includes("//") ? word : `//${word}`
-              } style="word-break: break-all; margin-right: 4px;" target="_blank" rel="noreferrer">
-                <span style="color: #81A8F8;">${word}</span>
-              </a>
-            `;
-        }
-      } else {
-        return word;
-      }
-    });
-    const styledLine = `<span>${styledWords?.join(" ")}</span>`;
-    return styledLine;
+      });
+      return `<span>${styledWords.join(" ")}</span>`;
+    }
   });
-  const formattedDescription = styledLines?.join("<br />");
+
+  const formattedDescription = styledLines.join("<br />");
   return `<div style="word-wrap: break-word; max-width: 100%;">${formattedDescription}</div>`;
 };
 

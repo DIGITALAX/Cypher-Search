@@ -68,6 +68,7 @@ const useCheckout = (
       prices: number[];
       fulfillerAddress: string[];
       originalIndices: number[];
+      origin: string;
     };
   }>({});
   const [encryptedStrings, setEncryptedStrings] = useState<
@@ -120,6 +121,7 @@ const useCheckout = (
       );
 
       encryptedItems && setEncryptedStrings(encryptedItems);
+      console.log("after", { encryptedItems });
     } catch (err: any) {
       console.error(err.message);
     }
@@ -196,7 +198,7 @@ const useCheckout = (
       );
 
       const success = await actPost(
-        "0x" +
+        "0x0" +
           toHexWithLeadingZero(Number(cartItems[index]?.item?.profileId)) +
           "-" +
           "0x" +
@@ -483,6 +485,7 @@ const useCheckout = (
         prices: number[];
         fulfillerAddress: string[];
         originalIndices: number[];
+        origin: string;
       };
     } = {};
     if (cartItems?.length < 1) setGroupedByPubId({});
@@ -499,12 +502,13 @@ const useCheckout = (
           prices: [],
           fulfillerAddress: [],
           originalIndices: [],
+          origin: cartItems[index]?.item?.origin,
         };
       }
 
       grouped[pubId].colors.push(cartItems[index]?.color);
       grouped[pubId].sizes.push(cartItems[index]?.size);
-      grouped[pubId].amounts.push(cartItems[index]?.amount);
+      grouped[pubId].amounts.push(cartItems[index]?.buyAmount);
       grouped[pubId].collectionIds.push(cartItems[index]?.item?.collectionId);
       grouped[pubId].types.push(cartItems[index]?.type);
       grouped[pubId].prices.push(cartItems[index]?.price);

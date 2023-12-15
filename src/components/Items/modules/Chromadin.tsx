@@ -505,10 +505,10 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           </div>
           <div className="relative flex items-center sm:items-end w-fit h-fit justify-end text-sol font-bit justify-center flex-col gap-1.5 sm:ml-auto">
             <div className="relative w-full h-fit items-center sm:items-end justify-end text-base ml-auto">
-              {Number(itemData?.amount) - Number(itemData?.soldTokens) > 0 ||
+              {Number(itemData?.amount) - Number(itemData?.soldTokens || 0) > 0 ||
               !itemData?.soldTokens
                 ? `${
-                    itemData?.soldTokens ? Number(itemData?.soldTokens) : 0
+                    itemData?.soldTokens ? Number(itemData?.soldTokens || 0) : 0
                   }/${Number(itemData?.amount)}`
                 : "SOLD OUT"}
             </div>
@@ -750,7 +750,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               >
                 {instantLoading ? (
                   <AiOutlineLoading size={15} color="white" />
-                ) : itemData?.amount == itemData?.soldTokens ? (
+                ) : itemData?.amount !== undefined &&
+                  itemData?.soldTokens !== undefined &&
+                  itemData?.amount == itemData?.soldTokens ? (
                   "SOLD OUT"
                 ) : !lensConnected?.id ? (
                   "Connect"
@@ -778,7 +780,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
 
               const newItem = {
                 item: itemData,
-                amount: 1,
+                buyAmount: 1,
                 price: Number(purchaseDetails.price),
                 type: itemStringToType[type.toLowerCase().trim()],
                 color: purchaseDetails.color,
@@ -801,7 +803,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 ) {
                   newCartItems[itemIndex] = {
                     ...(existingItem || {}),
-                    amount: existingItem?.amount + 1,
+                    buyAmount: existingItem?.buyAmount + 1,
                   };
                 } else {
                   // newCartItems?.splice(itemIndex, 1);

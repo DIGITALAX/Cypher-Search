@@ -214,7 +214,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                   </div>
                 )}
                 {displayType?.side?.[index] && (
-                  <div className="absolute bottom-2 left-2 flex items-center justify-center">
+                  <div className="absolute bottom-2 left-2 flex items-center justify-center sm:hidden tablet:flex">
                     <InteractBar
                       router={router}
                       dispatch={dispatch}

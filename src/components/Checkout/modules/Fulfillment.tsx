@@ -83,7 +83,9 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                     key={index}
                     className={`relative w-fit h-fit flex items-start justify-center flex-col gap-2 ${
                       ((encryptedStrings?.find(
-                        (item) => item?.pubId == chooseCartItem?.item?.pubId
+                        (item) =>
+                          Number(item?.pubId) ==
+                          Number(chooseCartItem?.item?.pubId)
                       ) &&
                         chooseCartItem?.item?.origin !== "1") ||
                         chooseCartItem?.item?.origin == "1") &&
@@ -99,12 +101,13 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                           className={`relative h-10 flex flex-row justify-between p-2 w-40 items-center justify-center border border-white rounded-md ${
                             (encryptedStrings?.find(
                               (item) =>
-                                item?.pubId == chooseCartItem?.item?.pubId
+                                Number(item?.pubId) ==
+                                Number(chooseCartItem?.item?.pubId)
                             ) &&
                               chooseCartItem?.item?.origin !== "1") ||
                             chooseCartItem?.item?.origin == "1"
-                              ? "cursor-pointer"
-                              : "opacity-70"
+                              ? "opacity-70"
+                              : "cursor-pointer"
                           }`}
                           onClick={() => setOpenDropdown(!openDropdown)}
                         >
@@ -182,7 +185,10 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
             className={`relative w-fit h-fit rounded-full flex items-center text-xs`}
           >
             {`${Number(((total * 10 ** 18) / rate)?.toFixed(3))} ${
-              ACCEPTED_TOKENS?.find((item) => item[2] === checkoutCurrency)?.[1]
+              ACCEPTED_TOKENS?.find(
+                (item) =>
+                  item[2]?.toLowerCase() === checkoutCurrency?.toLowerCase()
+              )?.[1]
             }`}
           </div>
         </div>
@@ -196,12 +202,15 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                 ?.find(
                   (item) => item?.item?.pubId === chooseCartItem?.item?.pubId
                 )
-                ?.item?.acceptedTokens?.includes(value?.[2])
+                ?.item?.acceptedTokens?.map((item) => item.toLowerCase())
+                ?.includes(value?.[2])
             )?.map((item: string[], indexTwo: number) => {
               return (
                 <div
                   className={`relative w-fit h-fit rounded-full flex items-center cursor-pointer active:scale-95 ${
-                    checkoutCurrency === item[2] ? "opacity-50" : "opacity-100"
+                    checkoutCurrency?.toLowerCase() === item[2]?.toLowerCase()
+                      ? "opacity-50"
+                      : "opacity-100"
                   }`}
                   key={indexTwo}
                   onClick={() => setCheckoutCurrency(item[2])}
@@ -245,16 +254,20 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                 ).toFixed(3)
               ).toString()} ${
                 ACCEPTED_TOKENS?.find(
-                  (item) => item[2] === checkoutCurrency
+                  (item) =>
+                    item[2]?.toLowerCase() === checkoutCurrency?.toLowerCase()
                 )?.[1]
               }`}
             </div>
           )}
         </div>
       </div>
-      {chooseCartItem?.item?.amount == chooseCartItem?.item?.soldTokens && (
+      {Number(chooseCartItem?.item?.amount) ==
+        Number(chooseCartItem?.item?.soldTokens) && (
         <div className="relative w-3/4 h-fit flex items-center justify-center break-words text-white text-xs font-bit">
-          Just missed it! This creation was snapped up by another collector. Time to update your cart. Change of plans? Maybe it&apos;s for the best.
+          Just missed it! This creation was snapped up by another collector.
+          Time to update your cart. Change of plans? Maybe it&apos;s for the
+          best.
         </div>
       )}
       <div
@@ -262,14 +275,18 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           !encryptionLoading &&
           !approveLoading &&
           !collectPostLoading &&
-          chooseCartItem?.item?.amount != chooseCartItem?.item?.soldTokens &&
+          Number(chooseCartItem?.item?.amount) !=
+            Number(chooseCartItem?.item?.soldTokens || 0) &&
           "cursor-pointer active:scale-95"
         }`}
         onClick={() =>
           !encryptionLoading &&
           !approveLoading &&
           !collectPostLoading &&
-          chooseCartItem?.item?.amount != chooseCartItem?.item?.soldTokens &&
+          chooseCartItem?.item?.amount !== undefined &&
+          chooseCartItem?.item?.soldTokens !== undefined &&
+          Number(chooseCartItem?.item?.amount) !=
+            Number(chooseCartItem?.item?.soldTokens || 0) &&
           (!encryptedStrings?.find(
             (item) => item?.pubId == chooseCartItem?.item?.pubId
           ) && chooseCartItem?.item?.origin !== "1"
@@ -287,8 +304,10 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
         >
           {encryptionLoading || approveLoading || collectPostLoading ? (
             <AiOutlineLoading size={15} color="white" />
-          ) : chooseCartItem?.item?.amount ==
-            chooseCartItem?.item?.soldTokens ? (
+          ) : chooseCartItem?.item?.amount !== undefined &&
+            chooseCartItem?.item?.soldTokens !== undefined &&
+            Number(chooseCartItem?.item?.amount) ==
+              Number(chooseCartItem?.item?.soldTokens || 0) ? (
             "SOLD OUT"
           ) : cartItems?.find((item) => item?.item?.origin !== "1") &&
             !encryptedStrings?.find(

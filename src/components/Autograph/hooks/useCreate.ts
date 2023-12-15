@@ -241,7 +241,7 @@ const useCreate = (
       if (edit) {
         await lensHide(
           `${
-            "0x" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
+            "0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
           }-${"0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
           dispatch
         );
@@ -395,7 +395,7 @@ const useCreate = (
       });
 
       await lensHide(
-        `${"0x" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
+        `${"0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
           "0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))
         }`,
         dispatch
@@ -413,7 +413,7 @@ const useCreate = (
       await publicClient.waitForTransactionReceipt({ hash: res });
       await cleanCollection(
         "deleted",
-        `${"0x" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
+        `${"0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
           "0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))
         }`
       );

@@ -21,6 +21,7 @@ const encodeActData = (
         prices: number[];
         fulfillerAddress: string[];
         originalIndices: number[];
+        origin: string
       }
     | undefined,
   encryptedFulfillment: string,
@@ -33,7 +34,10 @@ const encodeActData = (
     case "chromadin":
       unknownOpenAction = {
         address: CHROMADIN_OPEN_ACTION,
-        data: coder.encode(["address", "uint256"], [currency, cartItem.amount]),
+        data: coder.encode(
+          ["address", "uint256"],
+          [currency, cartItem.buyAmount]
+        ),
       };
       break;
 

@@ -28,6 +28,7 @@ export type FulfillmentProps = {
       prices: number[];
       fulfillerAddress: string[];
       originalIndices: number[];
+      origin: string
     };
   };
   setCheckoutCurrency: (e: SetStateAction<string>) => void;
@@ -57,6 +58,7 @@ export type CartProps = {
       prices: number[];
       fulfillerAddress: string[];
       originalIndices: number[];
+      origin: string
     };
   };
   chosenVariation: {

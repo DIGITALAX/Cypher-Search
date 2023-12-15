@@ -37,17 +37,21 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             : "cursor-pointer active:scale-95"
         } hover:opacity-70`}
         title={
-          cartItem?.amount == cartItem?.soldTokens ? "Sold Out" : "Add to Cart"
+          cartItem?.amount !== undefined &&
+          cartItem?.soldTokens !== undefined &&
+          cartItem?.amount == cartItem?.soldTokens
+            ? "Sold Out"
+            : "Add to Cart"
         }
         onClick={() => {
           if (cartItem?.amount == cartItem?.soldTokens) return;
 
           if (
-            Number(cartItem?.soldTokens) +
+            Number(cartItem?.soldTokens || 0) +
               Number(
                 cartItems
                   ?.filter((value) => cartItem?.pubId == value?.item?.pubId)
-                  ?.map((item) => item?.amount)
+                  ?.map((item) => item?.buyAmount)
                   ?.reduce((sum, item) => sum + Number(item), 0)
               ) +
               1 >
@@ -65,7 +69,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
 
           const newItem = {
             item: cartItem,
-            amount: 1,
+            buyAmount: 1,
             price: Number(cartItem?.prices?.[0]),
             level,
             type,
@@ -89,7 +93,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             ) {
               newCartItems[itemIndex] = {
                 ...(existingItem || {}),
-                amount: existingItem?.amount + 1,
+                buyAmount: existingItem?.buyAmount + 1,
               };
             } else {
               newCartItems?.splice(itemIndex, 1);

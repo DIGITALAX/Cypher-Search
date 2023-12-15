@@ -122,7 +122,7 @@ const CartList: FunctionComponent<CartListProps> = ({
                           );
 
                           if (
-                            Number(allItems[cartIndex]?.item?.soldTokens) +
+                            Number(allItems[cartIndex]?.item?.soldTokens || 0) +
                               1 +
                               Number(
                                 allItems
@@ -131,10 +131,10 @@ const CartList: FunctionComponent<CartListProps> = ({
                                       item?.item?.pubId ==
                                       allItems[cartIndex]?.item?.pubId
                                   )
-                                  ?.map((item) => item?.amount)
+                                  ?.map((item) => item?.buyAmount)
                                   ?.reduce((sum, item) => sum + Number(item), 0)
                               ) >
-                            Number(allItems[cartIndex]?.item?.amount)
+                            Number(allItems[cartIndex]?.buyAmount)
                           ) {
                             dispatch(
                               setInsufficientBalance({
@@ -148,7 +148,7 @@ const CartList: FunctionComponent<CartListProps> = ({
 
                           allItems[cartIndex] = {
                             ...allItems[cartIndex],
-                            amount: allItems[cartIndex]?.amount + 1,
+                            buyAmount: allItems[cartIndex]?.buyAmount + 1,
                           };
 
                           dispatch(setCartItems(allItems));
@@ -170,7 +170,7 @@ const CartList: FunctionComponent<CartListProps> = ({
                               item?.item?.collectionId
                           );
 
-                          if (allItems[cartIndex]?.amount - 1 == 0) {
+                          if (allItems[cartIndex]?.buyAmount - 1 == 0) {
                             allItems = allItems?.filter(
                               (value: CartItem) =>
                                 value?.item?.collectionId !==
@@ -179,7 +179,7 @@ const CartList: FunctionComponent<CartListProps> = ({
                           } else {
                             allItems[cartIndex] = {
                               ...allItems[cartIndex],
-                              amount: allItems[cartIndex]?.amount - 1,
+                              buyAmount: allItems[cartIndex]?.buyAmount - 1,
                             };
                           }
 
@@ -195,7 +195,7 @@ const CartList: FunctionComponent<CartListProps> = ({
 
                     <div className="relative flex flex-row items-center justify-between gap-2 w-fit h-fit font-vcr text-sm">
                       <div className="relative w-fit h-fit items-center justify-center text-white break-words text-center">
-                        {item?.amount}
+                        {item?.buyAmount}
                       </div>
                       <div className="relative w-fit h-fit items-center justify-center text-sol break-words text-center">
                         x
