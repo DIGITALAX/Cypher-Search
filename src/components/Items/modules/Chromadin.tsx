@@ -487,10 +487,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     )
                   }
                 >
-                  <div
-                    className="relative flex flex-row gap-4 w-5 h-5 items-center justify-start rounded-full border border-offWhite"
-                    id="pfp"
-                  >
+                  <div className="relative flex flex-row gap-4 w-5 h-5 items-center justify-start">
                     {itemData?.collectionMetadata?.microbrandCover && (
                       <Image
                         layout="fill"
@@ -501,8 +498,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           )?.[1]
                         }`}
                         onError={(e) => handleImageError(e)}
-                        objectFit="cover"
-                        className="rounded-full"
+                        objectFit="contain"
                       />
                     )}
                   </div>

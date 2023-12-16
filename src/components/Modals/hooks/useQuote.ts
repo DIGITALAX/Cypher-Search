@@ -208,7 +208,10 @@ const useQuote = (
         })
       );
     } catch (err: any) {
-      if (err?.message?.includes("User rejected the request")) return;
+      if (err?.message?.includes("User rejected the request")) {
+        setQuoteLoading([false]);
+        return;
+      }
       if (
         !err?.messages?.includes("Block at number") &&
         !err?.message?.includes("could not be found")

@@ -26,6 +26,7 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
   right,
   left,
   top,
+  gallery,
 }): JSX.Element => {
   const [popperElement, setPopperElement] = useState<HTMLElement | null>();
   const popperRef = useRef<HTMLDivElement>(null);
@@ -145,14 +146,15 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
                           actionFollower: publication,
                         })
                       )
-                    : feed || main
+                    : feed || main || gallery
                     ? (
                         followProfile as (
                           id: string,
+                          index: number,
                           feed?: boolean,
                           main?: boolean
                         ) => Promise<void>
-                      )(publication?.id, feed, main)
+                      )(publication?.id, index, feed, main)
                     : (
                         followProfile as (
                           id: string,
@@ -169,6 +171,7 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
                     layout="fill"
                     src={`${INFURA_GATEWAY}/ipfs/QmadanZQr9dxDXQFG41d2gZrhbKgVvnVnG64qAzMhXyxmG`}
                     draggable={false}
+                    priority
                   />
                 )}
               </div>
@@ -192,14 +195,15 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
                     return;
                   e.stopPropagation();
                   publication?.operations?.isFollowedByMe?.value &&
-                    (feed || main
+                    (feed || main || gallery
                       ? (
                           unfollowProfile as (
                             id: string,
+                            index: number,
                             feed?: boolean,
                             main?: boolean
                           ) => Promise<void>
-                        )(publication?.id, feed, main)
+                        )(publication?.id, index, feed, main)
                       : (
                           unfollowProfile as (
                             id: string,
@@ -216,6 +220,7 @@ const HoverProfile: FunctionComponent<HoverProfileProps> = ({
                     layout="fill"
                     src={`${INFURA_GATEWAY}/ipfs/QmSWjjhXh1VAEkNzhfzEojqg1dfSJ69Xf9ezxbKpwTRjZC`}
                     draggable={false}
+                    priority
                   />
                 )}
               </div>

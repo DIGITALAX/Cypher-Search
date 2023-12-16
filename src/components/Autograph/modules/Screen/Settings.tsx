@@ -135,7 +135,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                       resize: "none",
                     }}
                     className="bg-piloto p-1 flex w-full h-full items-start justify-start"
-                    value={settingsData?.bio}
+                    value={settingsData?.bio || ""}
                   ></textarea>
                 </div>
               </div>
