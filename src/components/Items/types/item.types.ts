@@ -27,6 +27,7 @@ export type SwitchTypeProps = {
   handleDecrypt: (post: Post | Comment | Quote) => Promise<void>;
   filterConstants: FilterValues | undefined;
   router: NextRouter;
+  galleryFollowLoading: boolean[];
   caretCoord: {
     x: number;
     y: number;
@@ -110,8 +111,8 @@ export type SwitchTypeProps = {
     hide: boolean;
   }[];
   followLoading: boolean[];
-  unfollowProfile: (id: string) => Promise<void>;
-  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string, index: number) => Promise<void>;
+  followProfile: (id: string, index: number) => Promise<void>;
   postCollectGif: PostCollectGifState;
   makeComment: MakePostComment[];
   setContentLoading: (
@@ -242,8 +243,8 @@ export type ChromadinProps = {
     hide: boolean;
   }[];
   followLoading: boolean[];
-  unfollowProfile: (id: string) => Promise<void>;
-  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string, index: number) => Promise<void>;
+  followProfile: (id: string, index: number) => Promise<void>;
   postCollectGif: PostCollectGifState;
   setContentLoading: (
     e: SetStateAction<
@@ -374,8 +375,8 @@ export type PublicationProps = {
   setMainOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   simpleCollect: (id: string, type: string, main: boolean) => Promise<void>;
   followMainLoading: boolean[];
-  followProfile: (id: string) => Promise<void>;
-  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string, index: number) => Promise<void>;
+  unfollowProfile: (id: string, index: number) => Promise<void>;
   setMainOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
   openMainMoreOptions: boolean[];
   handleBookmark: (id: string, index: number, main: boolean) => Promise<void>;
@@ -424,8 +425,8 @@ export type MicrobrandProps = {
   }[];
   openInteractions: boolean[];
   setOpenInteractions: (e: SetStateAction<boolean[]>) => void;
-  followProfile: (id: string) => Promise<void>;
-  unfollowProfile: (id: string) => Promise<void>;
+  followProfile: (id: string, index: number) => Promise<void>;
+  unfollowProfile: (id: string, index: number) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;

@@ -245,8 +245,11 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     setMainOpenMoreOptions,
     hoverPrompt,
     setHoverPrompt,
+    galleryFollowLoading,
   } = useProfile(
-    relatedData?.collections ? relatedData?.collections : allComments,
+    router.asPath?.includes("item/microbrand/")
+      ? relatedData?.collections || []
+      : allComments,
     {
       collected: [],
       created: [],
@@ -254,7 +257,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     lensConnected,
     dispatch,
     publicClient,
-    address
+    address,
+    router
   );
   const {
     setPopUpOpen,
@@ -540,6 +544,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                     caretCoordMain={caretCoordMain}
                     profilesOpen={profilesOpen}
                     profilesOpenMain={profilesOpenMain}
+                    galleryFollowLoading={galleryFollowLoading}
                   />
                 }
                 handleSearch={handleSearch}

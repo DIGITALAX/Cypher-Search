@@ -15,6 +15,7 @@ import { Dispatch } from "redux";
 import { createWalletClient, custom, PublicClient } from "viem";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import { NextRouter } from "next/router";
 
 const useProfile = (
   profileFeed: (Post | Quote | Mirror | Comment)[] | Creation[],
@@ -27,7 +28,8 @@ const useProfile = (
   lensConnected: Profile | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  router: NextRouter
 ) => {
   const [feedProfileHovers, setFeedProfileHovers] = useState<boolean[]>([]);
   const [feedFollowLoading, setFeedFollowLoading] = useState<boolean[]>([]);
@@ -235,11 +237,29 @@ const useProfile = (
           () => false
         )
       );
+    } else if (router.asPath?.includes("/item/microbrand/")) {
+      setGalleryFollowLoading(
+        Array.from(
+          {
+            length: profileFeed?.length,
+          },
+          () => false
+        )
+      );
+      setGalleryProfileHovers(
+        Array.from(
+          {
+            length: profileFeed?.length,
+          },
+          () => false
+        )
+      );
     }
   }, [
     galleryItems?.collected?.length,
     galleryItems?.created?.length,
     profileFeed?.length,
+    router.asPath,
   ]);
 
   return {

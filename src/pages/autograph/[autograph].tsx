@@ -219,7 +219,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     lensConnected,
     dispatch,
     publicClient,
-    address
+    address,
+    router
   );
   const {
     createDrop,
