@@ -89,7 +89,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
             loader={<></>}
             hasMore={hasMoreGallery}
             next={getMoreGallery}
-            className="w-full h-fit items-start justify-center md:justify-between flex flex-row flex-wrap gap-8"
+            className="w-full h-fit items-start justify-center md:justify-start flex flex-row flex-wrap gap-8"
           >
             {getGallerySort(selectedOption, gallery)?.map(
               (item: CreationType, index: number) => {
@@ -130,7 +130,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
       }
       {allDrops && allDrops?.length > 0 && (
         <div className="relative w-full h-fit flex items-start justify-start overflow-x-scroll max-h-[40rem] otro:max-h-[60rem]">
-          <div className="w-full h-fit items-start justify-center md:justify-between flex flex-row flex-wrap gap-8">
+          <div className="w-full h-fit items-start justify-center md:justify-start flex flex-row flex-wrap gap-8">
             {allDrops?.map((item: Drop, index: number) => {
               return (
                 item?.collectionIds?.length > 0 && (

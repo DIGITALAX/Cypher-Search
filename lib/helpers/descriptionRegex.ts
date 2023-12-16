@@ -1,6 +1,6 @@
 const descriptionRegex = (description: string, colorChange: boolean) => {
   const specialPhrase =
-    "... This post is encrypted. Do you hold the keys to unlock its secrets?";
+    "... This post is encrypted. Do you hold the keys to unlock its' secrets?";
   const replacedDescription = description?.replace(/\n\n/g, "\n \n");
   const lines = replacedDescription?.split(/[\r\n]+/);
 

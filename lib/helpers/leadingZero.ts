@@ -1,6 +1,9 @@
-const toHexWithLeadingZero = (number: Number) => {
-  const hex = Number(number).toString(16);
-  return hex.length === 1 ? "0" + hex : hex;
+const toHexWithLeadingZero = (number: number) => {
+  let hex = number.toString(16);
+  if (hex.length % 2 !== 0) {
+    hex = "0" + hex;
+  }
+  return "0x" + hex;
 };
 
 export default toHexWithLeadingZero;

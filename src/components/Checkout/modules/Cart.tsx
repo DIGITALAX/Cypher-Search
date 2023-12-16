@@ -334,7 +334,7 @@ const Cart: FunctionComponent<CartProps> = ({
                           "rounded-md w-full h-full flex relative"
                         }
                         classNameVideo={
-                          "object-cover w-full h-[252px] flex items-center justify-center rounded-md relative"
+                          "object-cover w-full h-[18rem] flex items-center justify-center rounded-md relative"
                         }
                         classNameAudio={
                           "rounded-md w-full h-full flex relative"

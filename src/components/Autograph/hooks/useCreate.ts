@@ -242,9 +242,9 @@ const useCreate = (
 
       if (edit) {
         await lensHide(
-          `${
-            "0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
-          }-${"0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
+          `${toHexWithLeadingZero(
+            Number(collectionDetails?.profileId)
+          )}-${toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
           dispatch
         );
         const { request } = await publicClient.simulateContract({
@@ -395,9 +395,9 @@ const useCreate = (
       });
 
       await lensHide(
-        `${
-          "0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
-        }-${"0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
+        `${toHexWithLeadingZero(
+          Number(collectionDetails?.profileId)
+        )}-${toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
         dispatch
       );
 
@@ -413,9 +413,9 @@ const useCreate = (
       await publicClient.waitForTransactionReceipt({ hash: res });
       await cleanCollection(
         "deleted",
-        `${
-          "0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
-        }-${"0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))}`
+        `${toHexWithLeadingZero(
+          Number(collectionDetails?.profileId)
+        )}-${toHexWithLeadingZero(Number(collectionDetails?.pubId))}`
       );
     } catch (err: any) {
       if (
@@ -613,7 +613,7 @@ const useCreate = (
         ...((postContentURI?.object as any)?.lens?.attachments?.map(
           (value: { type: string; item: string }) => value?.item
         ) || []),
-      ];
+      ]?.filter(Boolean);
 
       let other = {};
 
