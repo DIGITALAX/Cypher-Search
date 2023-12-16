@@ -10,6 +10,7 @@ import { setInteractError } from "../../../../redux/reducers/interactErrorSlice"
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import { AnyAction, Dispatch } from "redux";
 import {
+  Post,
   Profile,
   PublicationOperations,
   PublicationStats,
@@ -19,6 +20,13 @@ import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import errorChoice from "../../../../lib/helpers/errorChoice";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
+import { FilterValues } from "@/components/Search/types/search.types";
+import {
+  itemStringToNumber,
+  numberToItemTypeMap,
+} from "../../../../lib/constants";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
+import collectionFixer from "../../../../lib/helpers/collectionFixer";
 
 const useFilterPost = (
   filtersOpen: FiltersOpenState,
@@ -275,29 +283,34 @@ const useFilterPost = (
 
   const getCollection = async () => {
     try {
-      const origin = ["chromadin", "coinop", "listener", "f3m"][
-        Math.floor(Math.random() * 3)
+      const origin = ["Chromadin", "CoinOp", "Listener", "F3M"][
+        Math.floor(Math.random() * 4)
       ];
-      const data = await getOneRandomCollection(
-        origin,
-        ["chromadin", "coinop", "listener", "f3m"][
-          Math.floor(Math.random() * 3)
-        ]
-      );
+      const data = await getOneRandomCollection(itemStringToNumber[origin]);
       if (!data?.data?.collectionCreateds) return;
       const pubData = await getPublication(
         {
-          forId: data?.data?.collectionCreateds?.[0]?.pubId,
+          forId:
+            "0x0" +
+            toHexWithLeadingZero(
+              data?.data?.collectionCreateds?.[0]?.profileId
+            ) +
+            "-0x" +
+            toHexWithLeadingZero(data?.data?.collectionCreateds?.[0]?.pubId),
         },
         lensConnected?.id
       );
+      const coll = await collectionFixer(data?.data?.collectionCreateds?.[0]);
       setPublication({
         publishedOn: origin,
         post: {
-          ...data?.data?.collectionCreateds?.[0],
-          publication: pubData?.data?.publication,
+          ...coll,
+          publication: pubData?.data?.publication as Post & {
+            decrypted: any;
+          },
+          profile: pubData?.data?.publication?.by as Profile,
         },
-        type: "Post",
+        type: numberToItemTypeMap[Number(itemStringToNumber[origin])],
       });
     } catch (err: any) {
       console.error(err.message);
@@ -341,6 +354,7 @@ const useFilterPost = (
         } as Publication)
     );
   };
+
 
   return {
     popUpOpen,

@@ -85,7 +85,8 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
           <div
             className="relative tablet:w-9 w-6 h-5 tablet:h-7 flex cursor-pointer items-center justify-center active:scale-95 hover:opacity-70"
             onClick={() => {
-              if (router.asPath !== "/" && filtersOpen) router.push("/");
+              if (router.asPath !== "/" && filtersOpen && filterChange)
+                router.push("/");
               dispatch(
                 setFiltersOpen({
                   actionValue: !filtersOpen,

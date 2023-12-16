@@ -14,6 +14,7 @@ import { setCypherStorageCart } from "../../../../../lib/utils";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 import { setInsufficientBalance } from "../../../../../redux/reducers/insufficientBalanceSlice";
+import { setFiltersOpen } from "../../../../../redux/reducers/filtersOpenSlice";
 
 const Creation: FunctionComponent<CreationProps> = ({
   item,
@@ -46,13 +47,19 @@ const Creation: FunctionComponent<CreationProps> = ({
         className={`relative w-full h-full flex items-center justify-center hover:opacity-90 rounded-md cursor-pointer border-2 ${
           created ? "border-lirio" : "border-olor"
         }`}
-        onClick={() =>
+        onClick={() => {
+          dispatch(
+            setFiltersOpen({
+              actionValue: false,
+              actionAllow: false,
+            })
+          );
           router.push(
             `/item/${
               numberToItemTypeMap[Number(item?.origin)]
             }/${item?.collectionMetadata?.title?.replaceAll(" ", "_")}`
-          )
-        }
+          );
+        }}
         id="staticLoad"
       >
         <div className="relative w-full h-full flex">

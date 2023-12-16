@@ -158,7 +158,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     dispatch,
     address,
     publicClient,
-    lensConnected
+    lensConnected,
   );
   const {
     makeQuote,

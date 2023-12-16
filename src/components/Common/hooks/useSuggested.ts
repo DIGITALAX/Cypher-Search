@@ -14,6 +14,7 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 import buildTextQuery from "../../../../lib/helpers/buildTextQuery";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
+import { numberToItemTypeMap } from "../../../../lib/constants";
 
 const useSuggested = (
   routerPath: string | undefined,
@@ -85,7 +86,7 @@ const useSuggested = (
         items: [
           ...(collections?.map((item) => ({
             post: item,
-            type: item.origin,
+            type: numberToItemTypeMap[Number(item.origin)],
           })) || []),
           ...(publications?.map((item) => ({
             post: item,
@@ -171,7 +172,7 @@ const useSuggested = (
           ...[
             ...(collections?.map((item) => ({
               post: item,
-              type: item.origin,
+              type: numberToItemTypeMap[Number(item.origin)],
             })) || []),
             ...(publications?.map((item) => ({
               post: item,

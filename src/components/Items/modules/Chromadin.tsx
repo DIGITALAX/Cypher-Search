@@ -425,10 +425,10 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                         (item) =>
                           item?.[0]?.toLowerCase() ==
                           itemData?.collectionMetadata?.style?.toLowerCase()
-                      )?.[0]
+                      )?.[0]?.[0]
                     }
                   </div>
-                  <div className="relative w-fit h-fit flex items-center justify-center w-5 h-5 hover:rotate-45">
+                  <div className="relative flex items-center justify-center w-5 h-5 hover:rotate-45">
                     <Image
                       layout="fill"
                       draggable={false}
@@ -437,7 +437,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           (item) =>
                             item?.[0]?.toLowerCase() ==
                             itemData?.collectionMetadata?.style?.toLowerCase()
-                        )?.[1]
+                        )?.[0]?.[1]
                       }`}
                     />
                   </div>
@@ -445,7 +445,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               )}
             </div>
           )}
-          <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-center justify-center">
+          <div className="relative w-fit h-fit gap-4 flex-row flex flex-wrap items-end justify-end">
             <div className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end font-aust text-white break-words text-sm cursor-pointer">
               <div
                 className="relative flex flex-row gap-4 w-5 h-5 items-center justify-start rounded-full border border-offWhite"
@@ -472,41 +472,48 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               </div>
             </div>
             {itemData?.collectionMetadata?.microbrandCover && (
-              <div className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end font-aust text-white break-words text-sm cursor-pointer">
+              <div className="relative w-fit h-fit flex flex-col gap-px items-end justify-end font-aust text-white break-words text-sm">
+                <div className="relative w-fit h-fit items-center justify-center flex text-xxs">
+                  Microbrand
+                </div>
                 <div
-                  className="relative flex flex-row gap-4 w-5 h-5 items-center justify-start rounded-full border border-offWhite"
-                  id="pfp"
+                  className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end break-words text-sm cursor-pointer"
                   onClick={() =>
                     router.push(
                       `/item/microbrand/${itemData?.collectionMetadata?.microbrand}`
                     )
                   }
                 >
-                  {itemData?.collectionMetadata?.microbrandCover && (
-                    <Image
-                      layout="fill"
-                      draggable={false}
-                      src={`${INFURA_GATEWAY}/ipfs/${
-                        itemData?.collectionMetadata?.microbrandCover?.split(
-                          "ipfs://"
-                        )?.[1]
-                      }`}
-                      onError={(e) => handleImageError(e)}
-                      objectFit="cover"
-                      className="rounded-full"
-                    />
-                  )}
-                </div>
-                <div className="relative w-fit h-fit items-center justify-center flex">
-                  {itemData?.collectionMetadata?.microbrand}
+                  <div
+                    className="relative flex flex-row gap-4 w-5 h-5 items-center justify-start rounded-full border border-offWhite"
+                    id="pfp"
+                  >
+                    {itemData?.collectionMetadata?.microbrandCover && (
+                      <Image
+                        layout="fill"
+                        draggable={false}
+                        src={`${INFURA_GATEWAY}/ipfs/${
+                          itemData?.collectionMetadata?.microbrandCover?.split(
+                            "ipfs://"
+                          )?.[1]
+                        }`}
+                        onError={(e) => handleImageError(e)}
+                        objectFit="cover"
+                        className="rounded-full"
+                      />
+                    )}
+                  </div>
+                  <div className="relative w-fit h-fit items-center justify-center flex">
+                    {itemData?.collectionMetadata?.microbrand}
+                  </div>
                 </div>
               </div>
             )}
           </div>
           <div className="relative flex items-center sm:items-end w-fit h-fit justify-end text-sol font-bit justify-center flex-col gap-1.5 sm:ml-auto">
             <div className="relative w-full h-fit items-center sm:items-end justify-end text-base ml-auto">
-              {Number(itemData?.amount) - Number(itemData?.soldTokens || 0) > 0 ||
-              !itemData?.soldTokens
+              {Number(itemData?.amount) - Number(itemData?.soldTokens || 0) >
+                0 || !itemData?.soldTokens
                 ? `${
                     itemData?.soldTokens ? Number(itemData?.soldTokens || 0) : 0
                   }/${Number(itemData?.amount)}`

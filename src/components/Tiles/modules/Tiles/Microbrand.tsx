@@ -36,35 +36,38 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
             draggable={false}
           />
         </div>
-        <div
-          className="relative flex flex-row gap-4 w-10 h-10 items-center justify-start cursor-pointer"
-          onClick={() =>
-            router.push(
-              `/item/microbrand/${
-                publication?.handle?.suggestedFormatted?.localName?.split(
-                  "@"
-                )[1]
-              }`
-            )
-          }
-          onMouseEnter={() =>
-            setProfileHovers((prev) => {
-              const updatedArray = [...prev];
-              updatedArray[index] = true;
-              return updatedArray;
-            })
-          }
-        >
-          <Image
-            layout="fill"
-            draggable={false}
-            src={`${INFURA_GATEWAY}/ipfs/${
-              (publication as any)?.microbandCover
-            }`}
-            objectFit="contain"
-            onError={(e) => handleImageError(e)}
-          />
+        <div className="relative flex p-1.5 items-center justify-start">
+          <div
+            className="relative flex flex-row gap-4 w-10 h-10 items-center justify-start cursor-pointer"
+            onClick={() =>
+              router.push(
+                `/item/microbrand/${
+                  publication?.handle?.suggestedFormatted?.localName?.split(
+                    "@"
+                  )[1]
+                }`
+              )
+            }
+            onMouseEnter={() =>
+              setProfileHovers((prev) => {
+                const updatedArray = [...prev];
+                updatedArray[index] = true;
+                return updatedArray;
+              })
+            }
+          >
+            <Image
+              layout="fill"
+              draggable={false}
+              src={`${INFURA_GATEWAY}/ipfs/${
+                (publication as any)?.microbandCover
+              }`}
+              objectFit="contain"
+              onError={(e) => handleImageError(e)}
+            />
+          </div>
         </div>
+
         {profileHovers?.[index] && (
           <HoverProfile
             router={router}
