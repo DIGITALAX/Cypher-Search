@@ -89,6 +89,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   hoverPrompt,
   setHoverPrompt,
   allSearchItems,
+  galleryFollowLoading,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -248,7 +249,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
           cartItems={cartItems}
           mirror={mirror}
           like={like}
-          followLoading={followLoading}
+          followLoading={galleryFollowLoading}
           followProfile={followProfile}
           unfollowProfile={unfollowProfile}
           openMirrorChoice={openMirrorChoice}
