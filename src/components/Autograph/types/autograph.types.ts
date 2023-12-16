@@ -115,6 +115,7 @@ export type WebProps = {
     colorOpen: boolean;
     styleOpen: boolean;
     sexOpen: boolean;
+    imageIndex: number;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -130,6 +131,7 @@ export type WebProps = {
       colorOpen: boolean;
       styleOpen: boolean;
       sexOpen: boolean;
+      imageIndex: number;
     }>
   ) => void;
 
@@ -478,6 +480,7 @@ export type GalleryScreenProps = {
     colorOpen: boolean;
     styleOpen: boolean;
     sexOpen: boolean;
+    imageIndex: number;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -493,6 +496,7 @@ export type GalleryScreenProps = {
       colorOpen: boolean;
       styleOpen: boolean;
       sexOpen: boolean;
+      imageIndex: number;
     }>
   ) => void;
 };
@@ -609,6 +613,7 @@ export type ScreenSwitchProps = {
     colorOpen: boolean;
     styleOpen: boolean;
     sexOpen: boolean;
+    imageIndex: number;
   };
   lensConnected: Profile | undefined;
   setCollectionSettings: (
@@ -625,6 +630,7 @@ export type ScreenSwitchProps = {
       colorOpen: boolean;
       styleOpen: boolean;
       sexOpen: boolean;
+      imageIndex: number;
     }>
   ) => void;
 
@@ -1436,6 +1442,7 @@ export type DispatchProps = {
     colorOpen: boolean;
     styleOpen: boolean;
     sexOpen: boolean;
+    imageIndex: number;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1451,6 +1458,7 @@ export type DispatchProps = {
       colorOpen: boolean;
       styleOpen: boolean;
       sexOpen: boolean;
+      imageIndex: number;
     }>
   ) => void;
 };
@@ -1577,6 +1585,7 @@ export type SwitchCreateProps = {
     colorOpen: boolean;
     styleOpen: boolean;
     sexOpen: boolean;
+    imageIndex: number;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1592,6 +1601,7 @@ export type SwitchCreateProps = {
       colorOpen: boolean;
       styleOpen: boolean;
       sexOpen: boolean;
+      imageIndex: number;
     }>
   ) => void;
   edit: boolean;

@@ -211,6 +211,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         sizeOpen: false,
                         sexOpen: false,
                         styleOpen: false,
+                        imageIndex: 0,
                       });
                     }
                   }}
@@ -273,6 +274,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                               setCollectionSettings((prev) => ({
                                 ...prev,
                                 origin: item,
+                                imageIndex: 0,
                               }))
                             }
                           >

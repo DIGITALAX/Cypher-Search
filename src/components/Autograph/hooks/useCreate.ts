@@ -83,6 +83,7 @@ const useCreate = (
     sizeOpen: boolean;
     sexOpen: boolean;
     styleOpen: boolean;
+    imageIndex: number;
   }>({
     media: "static",
     origin: "chromadin",
@@ -96,6 +97,7 @@ const useCreate = (
     sizeOpen: false,
     styleOpen: false,
     sexOpen: false,
+    imageIndex: 0,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
     {
@@ -316,8 +318,6 @@ const useCreate = (
               ]
             );
 
-  
-
       await lensPost(
         uri,
         dispatch,
@@ -395,9 +395,9 @@ const useCreate = (
       });
 
       await lensHide(
-        `${"0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
-          "0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))
-        }`,
+        `${
+          "0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
+        }-${"0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
         dispatch
       );
 
@@ -413,9 +413,9 @@ const useCreate = (
       await publicClient.waitForTransactionReceipt({ hash: res });
       await cleanCollection(
         "deleted",
-        `${"0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))}-${
-          "0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))
-        }`
+        `${
+          "0x0" + toHexWithLeadingZero(Number(collectionDetails?.profileId))
+        }-${"0x" + toHexWithLeadingZero(Number(collectionDetails?.pubId))}`
       );
     } catch (err: any) {
       if (
@@ -497,6 +497,7 @@ const useCreate = (
         sizeOpen: false,
         styleOpen: false,
         sexOpen: false,
+        imageIndex: 0,
       });
       dispatch(
         setPostSuccess({
@@ -553,15 +554,18 @@ const useCreate = (
             cover: e.target?.result as string,
           }));
         } else {
-          setCollectionDetails((prev) => ({
-            ...prev,
-            images: [
-              {
-                media: e.target?.result as string,
-                type: file.type,
-              },
-            ],
-          }));
+          setCollectionDetails((prev) => {
+            const obj = { ...prev };
+            const allImages = [...obj.images];
+            allImages[collectionSettings?.imageIndex] = {
+              media: e.target?.result as string,
+              type: file.type,
+            };
+            return {
+              ...obj,
+              images: allImages,
+            };
+          });
         }
       };
       reader.readAsDataURL(file);
