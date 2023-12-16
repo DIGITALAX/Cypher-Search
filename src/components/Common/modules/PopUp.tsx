@@ -6,6 +6,7 @@ import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
+import { setFiltersOpen } from "../../../../redux/reducers/filtersOpenSlice";
 
 const PopUp: FunctionComponent<PopUpProps> = ({
   router,
@@ -22,7 +23,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className="absolute z-10 flex w-fit h-fit rounded-sm p-2 bg-offBlack flex-row gap-3 items-center justify-center border border-white"
+      className="absolute z-30 flex w-fit h-fit rounded-sm p-2 bg-offBlack flex-row gap-3 items-center justify-center border border-white"
       style={{
         top,
         left,
@@ -106,7 +107,12 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             dispatch(setCartItems([...cartItems, newItem]));
             setCypherStorageCart(JSON.stringify([...cartItems, newItem]));
           }
-
+          // dispatch(
+          //   setFiltersOpen({
+          //     actionValue: false,
+          //     actionAllow: false,
+          //   })
+          // );
           dispatch(setCartAnim(true));
         }}
       >
@@ -119,9 +125,19 @@ const PopUp: FunctionComponent<PopUpProps> = ({
       </div>
       <div
         className="relative flex w-8 h-8 items-center justify-center rounded-full cursor-pointer active:scale-95 hover:opacity-70"
-        onClick={() =>
-          router.push(`/item/${itemTypeToString[type]}/${cartItem?.pubId}`)
-        }
+        onClick={() => {
+          dispatch(
+            setFiltersOpen({
+              actionValue: false,
+              actionAllow: false,
+            })
+          );
+          router.push(
+            `/item/${
+              itemTypeToString[type]
+            }/${cartItem?.collectionMetadata?.title?.replaceAll(" ", "_")}`
+          );
+        }}
         title="View Item"
       >
         <Image

@@ -53,8 +53,8 @@ const COLLECTION = `
   }
 `;
 
-export const COLLECTION_RANDOM = `query($origin: String!, $profileId: String!) {
-  collectionCreateds(where: {origin: $origin, profileId: $profileId} first: 1) {
+export const COLLECTION_RANDOM = `query($origin: String!) {
+  collectionCreateds(where: {origin: $origin} first: 1) {
     amount
     dropMetadata {
       dropCover
@@ -209,15 +209,13 @@ export const getOneCollection = async (
 };
 
 export const getOneRandomCollection = async (
-  origin: string,
-  profileId: string
+  origin: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION_RANDOM),
     variables: {
       origin,
-      profileId,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

@@ -36,7 +36,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   followProfile,
   unfollowProfile,
   lensConnected,
-  filterConstants
+  filterConstants,
 }): JSX.Element => {
   return (
     <div
@@ -91,17 +91,17 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
               }
             />
           ) : (
-            <div className="relative flex flex-row w-fit px-1.5 py-1 h-fit text-white font-aust gap-1 items-center justify-center">
-              <div className="relative text-xxs rounded-full flex items-center justify-center">
-                {
+            <div className="relative flex w-fit px-1.5 py-1 h-fit text-white font-aust gap-1 items-center justify-center">
+              <div
+                className="relative flex items-center justify-center w-7 h-7 hover:rotate-45"
+                title={
                   filterConstants?.styles?.filter(
                     (item) =>
                       item?.[0]?.toLowerCase() ==
                       publication?.collectionMetadata?.style?.toLowerCase()
-                  )?.[0]
+                  )?.[0]?.[0]
                 }
-              </div>
-              <div className="relative w-fit h-fit flex items-center justify-center w-5 h-5 hover:rotate-45">
+              >
                 <Image
                   layout="fill"
                   draggable={false}
@@ -110,7 +110,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
                       (item) =>
                         item?.[0]?.toLowerCase() ==
                         publication?.collectionMetadata?.style?.toLowerCase()
-                    )?.[1]
+                    )?.[0]?.[1]
                   }`}
                 />
               </div>
@@ -187,7 +187,9 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
                 level={undefined}
                 bottom={"50px"}
                 left={"-10px"}
-                type={ItemType.CoinOp}
+                type={
+                  publication?.origin == "4" ? ItemType.F3M : ItemType.CoinOp
+                }
                 cartItems={cartItems}
               />
             )}

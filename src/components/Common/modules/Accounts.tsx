@@ -161,7 +161,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           </div>
         )}
       </div>
-      {openAccount && (
+      {openAccount && !filtersOpen && (
         <div
           className={`absolute w-32 h-fit right-3 top-14  tablet:top-16 flex items-center justify-center text-sol flex-col font-bit rounded-sm bg-black text-xs z-30 border border-sol ${
             router.asPath?.includes("/checkout") ||
@@ -203,7 +203,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           </div>
         </div>
       )}
-      {cartListOpen && (
+      {cartListOpen && !filtersOpen && (
         <CartList
           dispatch={dispatch}
           router={router}
