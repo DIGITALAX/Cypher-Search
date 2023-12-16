@@ -219,7 +219,9 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       type={collectionSettings?.media}
                       video={collectionDetails?.video}
                       audio={collectionDetails?.audio}
-                      upload
+                      upload={
+                        collectionSettings?.media === "audio" ? true : false
+                      }
                       keyValue={
                         collectionDetails?.audio || collectionDetails?.video
                       }
