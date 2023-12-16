@@ -30,16 +30,20 @@ const uploadPostContent = async (
     $schema = "https://json-schemas.lens.dev/publications/text-only/3.0.0.json";
     mainContentFocus = PublicationMetadataMainFocusType.TextOnly;
   } else {
-    const cleanedGifs = images?.map((item) => {
-      if (item.type !== "image/png") {
-        return item.media;
-      }
-    });
-    const cleanedImages = images?.map((item) => {
-      if (item?.type !== "image/gif") {
-        return item.media;
-      }
-    });
+    const cleanedGifs = images
+      ?.map((item) => {
+        if (item.type !== "image/png") {
+          return item.media;
+        }
+      })
+      ?.filter(Boolean);
+    const cleanedImages = images
+      ?.map((item) => {
+        if (item?.type !== "image/gif") {
+          return item.media;
+        }
+      })
+      ?.filter(Boolean);
 
     const mediaWithKeys = [
       ...(audio || []).map((audio) => ({

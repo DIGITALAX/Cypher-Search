@@ -50,7 +50,6 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               <div className="relative w-fit h-fit text-sm break-words">
                 Collection Description
               </div>
-
               <textarea
                 value={collectionDetails?.description || ""}
                 onChange={(e) =>
@@ -119,17 +118,28 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       <Image
                         layout="fill"
                         src={
-                          collectionDetails?.images?.[0]?.media?.includes(
-                            "ipfs://"
-                          )
+                          collectionDetails?.images?.[
+                            collectionSettings?.origin !== "f3m" &&
+                            collectionSettings?.origin !== "chromadin"
+                              ? collectionSettings?.imageIndex
+                              : 0
+                          ]?.media?.includes("ipfs://")
                             ? `${INFURA_GATEWAY}/ipfs/${
-                                collectionDetails?.images?.[0]?.media?.split(
-                                  "ipfs://"
-                                )?.[1]
+                                collectionDetails?.images?.[
+                                  collectionSettings?.origin !== "f3m" &&
+                                  collectionSettings?.origin !== "chromadin"
+                                    ? collectionSettings?.imageIndex
+                                    : 0
+                                ]?.media?.split("ipfs://")?.[1]
                               }`
-                            : collectionDetails?.images?.[0]?.media
+                            : collectionDetails?.images?.[
+                                collectionSettings?.origin !== "f3m" &&
+                                collectionSettings?.origin !== "chromadin"
+                                  ? collectionSettings?.imageIndex
+                                  : 0
+                              ]?.media
                         }
-                        onError={(e) => handleImageError(e)}
+                        // onError={(e) => handleImageError(e)}
                         objectFit="cover"
                         draggable={false}
                         className="relative rounded-sm w-full h-full flex"
@@ -204,6 +214,47 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                         )
                       }
                     />
+                    {collectionSettings?.origin !== "f3m" &&
+                      collectionSettings?.origin !== "chromadin" && (
+                        <div className="absolute z-2 right-2 top-2 w-fit h-fit flex flex-row items-center justify-center gap-1.5 z-10">
+                          <div
+                            className="relative w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setCollectionSettings((prev) => ({
+                                ...prev,
+                                imageIndex:
+                                  prev.imageIndex > 0 ? prev.imageIndex - 1 : 2,
+                              }));
+                            }}
+                          >
+                            <Image
+                              src={`${INFURA_GATEWAY}/ipfs/Qma3jm41B4zYQBxag5sJSmfZ45GNykVb8TX9cE3syLafz2`}
+                              layout="fill"
+                              draggable={false}
+                            />
+                          </div>
+                          <div
+                            className="relative  w-5 h-5 cursor-pointer active:scale-95 flex items-center justify-center"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setCollectionSettings((prev) => ({
+                                ...prev,
+                                imageIndex:
+                                  prev.imageIndex < 2 ? prev.imageIndex + 1 : 0,
+                              }));
+                            }}
+                          >
+                            <Image
+                              src={`${INFURA_GATEWAY}/ipfs/QmcBVNVZWGBDcAxF4i564uSNGZrUvzhu5DKkXESvhY45m6`}
+                              layout="fill"
+                              draggable={false}
+                            />
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </label>
                 {(collectionDetails?.audio ||
