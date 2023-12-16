@@ -237,9 +237,11 @@ const Creation: FunctionComponent<CreationProps> = ({
             lensConnected={lensConnected}
             parentId={item?.pubId}
             top={"auto"}
+            feed={false}
             bottom={"2px"}
             left={"2px"}
             right={"auto"}
+            gallery
           />
         )}
         <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">

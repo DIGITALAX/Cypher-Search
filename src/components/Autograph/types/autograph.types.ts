@@ -960,8 +960,8 @@ export type FeedProps = {
   getMoreFeed: () => Promise<void>;
   router: NextRouter;
   followLoading: boolean[];
-  unfollowProfile: (id: string, feed?: boolean) => Promise<void>;
-  followProfile: (id: string, feed?: boolean) => Promise<void>;
+  unfollowProfile: (id: string, index: number, feed?: boolean) => Promise<void>;
+  followProfile: (id: string, index: number, feed?: boolean) => Promise<void>;
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   dispatch: Dispatch<AnyAction>;
@@ -989,8 +989,8 @@ export type GalleryProps = {
     hide: boolean;
   }[];
   followLoading: boolean[];
-  unfollowProfile: (id: string, feed?: boolean) => Promise<void>;
-  followProfile: (id: string, feed?: boolean) => Promise<void>;
+  unfollowProfile: (id: string, index: number, feed?: boolean) => Promise<void>;
+  followProfile: (id: string, index: number, feed?: boolean) => Promise<void>;
   router: NextRouter;
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
@@ -1010,8 +1010,8 @@ export type CreationProps = {
   index: number;
   dispatch: Dispatch<AnyAction>;
   followLoading: boolean[];
-  unfollowProfile: (id: string) => Promise<void>;
-  followProfile: (id: string) => Promise<void>;
+  unfollowProfile: (id: string, index: number) => Promise<void>;
+  followProfile: (id: string, index: number) => Promise<void>;
   router: NextRouter;
   lensConnected: Profile | undefined;
   cartItems: CartItem[];

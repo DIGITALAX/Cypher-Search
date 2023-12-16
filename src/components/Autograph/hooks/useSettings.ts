@@ -31,6 +31,7 @@ import { v4 as uuidv4 } from "uuid";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import convertToFile from "../../../../lib/helpers/convertToFile";
 import errorChoice from "../../../../lib/helpers/errorChoice";
+import cleanObject from "../../../../lib/helpers/cleanObject";
 
 const useSettings = (
   lensConnected: Profile | undefined,
@@ -121,7 +122,7 @@ const useSettings = (
   };
   const handleSettingsUpdate = async () => {
     setSettingsUpdateLoading(true);
-   
+
     try {
       let newImages: string[] = [];
       let hasNewCoverImage = coverImage !== undefined;
@@ -208,8 +209,11 @@ const useSettings = (
 
       const { tempMicro, microbrands, attributes, ...filteredSettingsData } =
         settingsData;
-      const metadata = {
+
+      let metadata = {
         ...filteredSettingsData,
+        bio: !filteredSettingsData?.bio ? " " : filteredSettingsData?.bio,
+        name: !filteredSettingsData?.name ? " " : filteredSettingsData?.name,
         attributes: newAttributes
           ?.map((item) => ({
             ...item,
@@ -238,6 +242,7 @@ const useSettings = (
         $schema: "https://json-schemas.lens.dev/profile/2.0.0.json",
         lens: metadata,
       });
+
 
       if (test?.success) {
         const response = await fetch("/api/ipfs", {

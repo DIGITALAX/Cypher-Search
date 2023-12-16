@@ -160,8 +160,7 @@ const Bio: FunctionComponent<BioProps> = ({
                 return (
                   <div
                     key={index}
-                    className="relative w-5 h-5 cursor-pointer active:scale-95 rounded-full"
-                    id="pfp"
+                    className="relative w-5 h-5 cursor-pointer active:scale-95"
                     onClick={() =>
                       router.push(`/item/microbrand/${item?.microbrand}`)
                     }
@@ -174,8 +173,7 @@ const Bio: FunctionComponent<BioProps> = ({
                           item?.microbrandCover?.split("ipfs://")?.[1]
                         }`}
                         draggable={false}
-                        className="rounded-full"
-                        objectFit="cover"
+                        objectFit="contain"
                         onError={(e) => handleImageError(e)}
                       />
                     )}

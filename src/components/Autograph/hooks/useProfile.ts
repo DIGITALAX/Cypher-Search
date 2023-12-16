@@ -48,24 +48,12 @@ const useProfile = (
     false,
   ]);
 
-  const followProfile = async (id: string, feed?: boolean, main?: boolean) => {
-    const index = main
-      ? undefined
-      : (feed
-          ? profileFeed
-          : [
-              ...(galleryItems?.collected || []),
-              ...(galleryItems?.created || []),
-            ]
-        )?.findIndex(
-          (pub) =>
-            (feed
-              ? (pub as Post | Quote | Mirror)?.__typename === "Mirror"
-                ? (pub as Mirror).mirrorOn.id
-                : (pub as Post | Quote).id
-              : (pub as Creation)?.pubId) === id
-        );
-    if (index == -1) return;
+  const followProfile = async (
+    id: string,
+    index: number,
+    feed?: boolean,
+    main?: boolean
+  ) => {
     handleLoaders(true, main!, feed!, index);
 
     try {
@@ -84,7 +72,10 @@ const useProfile = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      if (err?.message?.includes("User rejected the request")) return;
+      if (err?.message?.includes("User rejected the request")) {
+        handleLoaders(false, main!, feed!, index);
+        return;
+      }
       if (
         !err?.messages?.includes("Block at number") &&
         !err?.message?.includes("could not be found")
@@ -114,22 +105,10 @@ const useProfile = (
 
   const unfollowProfile = async (
     id: string,
+    index: number,
     feed?: boolean,
     main?: boolean
   ) => {
-    const index = (
-      feed
-        ? profileFeed
-        : [...(galleryItems?.collected || []), ...(galleryItems?.created || [])]
-    )?.findIndex(
-      (pub) =>
-        (feed
-          ? (pub as Post | Quote | Mirror)?.__typename === "Mirror"
-            ? (pub as Mirror).mirrorOn.id
-            : (pub as Post | Quote).id
-          : (pub as Creation)?.pubId) === id
-    );
-    if (index == -1) return;
     handleLoaders(true, main!, feed!, index);
 
     try {
@@ -147,7 +126,10 @@ const useProfile = (
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      if (err?.message?.includes("User rejected the request")) return;
+      if (err?.message?.includes("User rejected the request")) {
+        handleLoaders(false, main!, feed!, index);
+        return;
+      }
       if (
         !err?.messages?.includes("Block at number") &&
         !err?.message?.includes("could not be found")
@@ -231,7 +213,7 @@ const useProfile = (
       (galleryItems?.collected && galleryItems?.collected?.length > 0) ||
       (galleryItems?.created && galleryItems?.created?.length > 0)
     ) {
-      setFeedFollowLoading(
+      setGalleryFollowLoading(
         Array.from(
           {
             length:
@@ -242,7 +224,7 @@ const useProfile = (
           () => false
         )
       );
-      setFeedProfileHovers(
+      setGalleryProfileHovers(
         Array.from(
           {
             length:

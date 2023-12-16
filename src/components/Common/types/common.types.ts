@@ -94,10 +94,20 @@ export type HoverProfileProps = {
   followLoading: boolean[];
   unfollowProfile:
     | ((id: string, index?: number) => Promise<void>)
-    | ((id: string, feed?: boolean, main?: boolean) => Promise<void>);
+    | ((
+        id: string,
+        index: number,
+        feed?: boolean,
+        main?: boolean
+      ) => Promise<void>);
   followProfile:
     | ((id: string, index?: number) => Promise<void>)
-    | ((id: string, feed?: boolean, main?: boolean) => Promise<void>);
+    | ((
+        id: string,
+        index: number,
+        feed?: boolean,
+        main?: boolean
+      ) => Promise<void>);
   publication: Profile;
   parentId: string;
   router: NextRouter;
@@ -106,6 +116,7 @@ export type HoverProfileProps = {
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   feed?: boolean;
   main?: boolean;
+  gallery?: boolean;
   lensConnected: Profile | undefined;
   bottom: string;
   top: string;
