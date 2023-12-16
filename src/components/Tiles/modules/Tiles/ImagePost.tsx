@@ -670,7 +670,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             : (publication as Post)
                           )?.metadata as any
                         )?.title +
-                          "<br /><br /> ... This post is encrypted. Do you hold the keys to unlock its secrets?"
+                          "<br /><br /> ... This post is encrypted. Do you hold the keys to unlock its' secrets?"
                       : (
                           (publication?.__typename === "Mirror"
                             ? publication?.mirrorOn

@@ -291,11 +291,9 @@ const useFilterPost = (
       const pubData = await getPublication(
         {
           forId:
-            "0x0" +
             toHexWithLeadingZero(
               data?.data?.collectionCreateds?.[0]?.profileId
             ) +
-            "-0x" +
             toHexWithLeadingZero(data?.data?.collectionCreateds?.[0]?.pubId),
         },
         lensConnected?.id
@@ -354,7 +352,6 @@ const useFilterPost = (
         } as Publication)
     );
   };
-
 
   return {
     popUpOpen,

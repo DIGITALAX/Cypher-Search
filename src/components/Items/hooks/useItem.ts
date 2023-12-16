@@ -93,9 +93,9 @@ const useItem = (
           )) as Creation;
 
           pub = (await getPub(
-            `${"0x0" + toHexWithLeadingZero(Number(coll?.profileId))}-${
-              "0x" + toHexWithLeadingZero(Number(coll?.pubId))
-            }`
+            `${toHexWithLeadingZero(
+              Number(coll?.profileId)
+            )}-${toHexWithLeadingZero(Number(coll?.pubId))}`
           )) as Post;
 
           setItemData({
@@ -201,7 +201,7 @@ const useItem = (
       );
       const data = await getProfile(
         {
-          forProfileId: "0x0" + toHexWithLeadingZero(Number(item?.[2])),
+          forProfileId: toHexWithLeadingZero(Number(item?.[2])),
         },
         lensConnected?.id
       );
@@ -413,13 +413,11 @@ const useItem = (
       );
 
       const complete = await actPost(
-        `${
-          "0x0" +
-          toHexWithLeadingZero(Number((itemData?.post as Creation)?.profileId))
-        }-${
-          "0x" +
-          toHexWithLeadingZero(Number((itemData?.post as Creation)?.pubId))
-        }`,
+        `${toHexWithLeadingZero(
+          Number((itemData?.post as Creation)?.profileId)
+        )}-${toHexWithLeadingZero(
+          Number((itemData?.post as Creation)?.pubId)
+        )}`,
         {
           unknownOpenAction,
         },

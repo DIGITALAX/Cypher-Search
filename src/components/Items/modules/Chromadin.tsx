@@ -267,7 +267,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           ...prev,
                           imageIndex:
                             prev.imageIndex + 1 >
-                            itemData?.collectionMetadata?.images?.length
+                            itemData?.collectionMetadata?.images?.length - 1
                               ? 0
                               : prev.imageIndex + 1,
                         }))
@@ -285,7 +285,10 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                         setPurchaseDetails((prev) => ({
                           ...prev,
                           imageIndex:
-                            prev.imageIndex - 1 == 0 ? prev.imageIndex - 1 : 0,
+                            prev.imageIndex > 0
+                              ? prev.imageIndex - 1
+                              : itemData?.collectionMetadata?.images?.length -
+                                1,
                         }))
                       }
                     >
@@ -375,9 +378,9 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                             "ipfs://"
                           )?.[1]
                         : `${INFURA_GATEWAY}/ipfs/${
-                            itemData?.collectionMetadata?.images?.[0]?.split(
-                              "ipfs://"
-                            )?.[1]
+                            itemData?.collectionMetadata?.images?.[
+                              purchaseDetails?.imageIndex
+                            ]?.split("ipfs://")?.[1]
                           }`
                     }
                     srcCover={
@@ -538,7 +541,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           index % 3 === 0
                             ? "#078fd6"
                             : index % 4 === 0
-                            ? "#FFDCFF"
+                            ? "#e981ff"
                             : "#81A8F8",
                       }}
                       onClick={() =>

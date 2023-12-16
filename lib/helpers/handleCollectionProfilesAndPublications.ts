@@ -11,12 +11,11 @@ const handleCollectionProfilesAndPublications = async (
   try {
     const promises = collections?.map(async (collection: Creation) => {
       if (collection?.profileId && collection?.pubId) {
-
         const publication = await getPublication(
           {
-            forId: `${
-              "0x0" + toHexWithLeadingZero(Number(collection?.profileId))
-            }-${"0x" + toHexWithLeadingZero(Number(collection?.pubId))}`,
+            forId: `${toHexWithLeadingZero(
+              Number(collection?.profileId)
+            )}-${toHexWithLeadingZero(Number(collection?.pubId))}`,
           },
           lens?.id
         );

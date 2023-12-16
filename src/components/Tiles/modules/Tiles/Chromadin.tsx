@@ -8,6 +8,7 @@ import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import { ItemType } from "@/components/Common/types/common.types";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
+import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
   layoutAmount,
@@ -68,19 +69,42 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               )
             }
           >
-            {publication?.collectionMetadata?.images && (
-              <Image
-                layout="fill"
-                src={`${INFURA_GATEWAY}/ipfs/${
-                  publication?.collectionMetadata?.images?.[0]?.split(
-                    "ipfs://"
-                  )?.[1]
-                }`}
-                objectFit="cover"
-                draggable={false}
-                onError={(e) => handleImageError(e)}
-              />
-            )}
+            <MediaSwitch
+              type={publication?.collectionMetadata?.mediaTypes?.[0]}
+              srcUrl={
+                publication?.collectionMetadata?.mediaTypes?.[0] == "video"
+                  ? `${INFURA_GATEWAY}/ipfs/${
+                      publication?.collectionMetadata?.video?.split(
+                        "ipfs://"
+                      )?.[1]
+                    }`
+                  : publication?.collectionMetadata?.mediaTypes?.[0] == "audio"
+                  ? `${INFURA_GATEWAY}/ipfs/${
+                      publication?.collectionMetadata?.audio?.split(
+                        "ipfs://"
+                      )?.[1]
+                    }`
+                  : `${INFURA_GATEWAY}/ipfs/${
+                      publication?.collectionMetadata?.images?.[0]?.split(
+                        "ipfs://"
+                      )?.[1]
+                    }`
+              }
+              classNameVideo={
+                "object-cover w-full h-full flex items-center justify-center"
+              }
+              srcCover={
+                publication?.collectionMetadata?.mediaTypes?.[0] == "video" ||
+                publication?.collectionMetadata?.mediaTypes?.[0] == "audio"
+                  ? `${INFURA_GATEWAY}/ipfs/${
+                      publication?.collectionMetadata?.mediaCover?.split(
+                        "ipfs://"
+                      )?.[1]
+                    }`
+                  : undefined
+              }
+              hidden
+            />
           </div>
           <div className="relative flex flex-col gap-2 justify-start items-center w-fit h-full mt-0">
             <div className="relative w-5 tablet:w-10 h-5 tablet:h-10 flex items-center justify-center">

@@ -203,10 +203,8 @@ const useCheckout = (
       );
 
       const success = await actPost(
-        "0x0" +
-          toHexWithLeadingZero(Number(cartItems[index]?.item?.profileId)) +
+        toHexWithLeadingZero(Number(cartItems[index]?.item?.profileId)) +
           "-" +
-          "0x" +
           toHexWithLeadingZero(Number(cartItems[index]?.item?.pubId)),
         {
           unknownOpenAction,
