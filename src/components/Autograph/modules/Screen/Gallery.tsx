@@ -247,7 +247,6 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         "the dial",
                         "f3m",
                       ]?.map((item: string, index: number) => {
-                        console.log({ address, F3M_ADDRESS, index });
                         return (
                           <div
                             key={index}
