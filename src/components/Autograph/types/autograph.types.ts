@@ -1003,6 +1003,7 @@ export type GalleryProps = {
   getMoreGallery: () => Promise<void>;
   openInteractions: boolean[];
   setOpenInteractions: (e: SetStateAction<boolean[]>) => void;
+  moreGalleryLoading: boolean;
 };
 
 export type CreationProps = {
@@ -1159,7 +1160,11 @@ export type PublicationProps = {
   openMirrorChoice?: boolean[];
   router: NextRouter;
   followLoading?: boolean[];
-  unfollowProfile?: (id: string, index: number, feed?: boolean) => Promise<void>;
+  unfollowProfile?: (
+    id: string,
+    index: number,
+    feed?: boolean
+  ) => Promise<void>;
   followProfile?: (id: string, index: number, feed?: boolean) => Promise<void>;
   profileHovers?: boolean[];
   setProfileHovers?: (e: SetStateAction<boolean[]>) => void;

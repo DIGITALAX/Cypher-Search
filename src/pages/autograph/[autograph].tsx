@@ -196,6 +196,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     setSortType,
     gallery,
     cursorInfo,
+    moreGalleryLoading,
   } = useGallery(
     lensConnected,
     profileDisplay,
@@ -734,6 +735,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   lensConnected={lensConnected}
                   mirror={galleryMirror}
                   like={galleryLike}
+                  moreGalleryLoading={moreGalleryLoading}
                   openMirrorChoice={openMirrorGalleryChoice}
                   setOpenMirrorChoice={setOpenMirrorGalleryChoice}
                   interactionsLoading={interactionsGalleryLoading}
