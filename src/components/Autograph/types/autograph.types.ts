@@ -1076,8 +1076,8 @@ export type PostBarProps = {
   setProfileHovers?: (e: SetStateAction<boolean[]>) => void;
   profileHovers?: boolean[];
   followLoading?: boolean[];
-  unfollowProfile?: (id: string) => Promise<void>;
-  followProfile?: (id: string) => Promise<void>;
+  unfollowProfile?: (id: string, index: number) => Promise<void>;
+  followProfile?: (id: string, index: number) => Promise<void>;
   dispatch: Dispatch<AnyAction>;
 };
 
