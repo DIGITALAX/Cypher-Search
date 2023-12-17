@@ -35,7 +35,7 @@ const useDrop = (
   const getAllDrops = async () => {
     setDropsLoading(true);
     try {
-      const data = await getDrops(address!);
+      const data = await getDrops(pageProfile?.ownedBy?.address!);
       setAllDrops(data?.data?.dropCreateds);
     } catch (err: any) {
       console.error(err.message);
