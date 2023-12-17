@@ -18,7 +18,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex-row pt-52 sm:pt-40 md:pt-36 px-2 sm:px-10">
       <div className="relative w-full h-fit flex items-center justify-start">
-        <div className="relative w-full pre:w-fit h-fit flex items-center justify-start flex-wrap gap-5">
+        <div className="relative w-full pre:w-fit h-fit flex items-center justify-center flex-wrap gap-5">
           {collections?.map((collection: Creation, index: number) => {
             return (
               <div

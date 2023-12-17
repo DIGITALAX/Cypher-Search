@@ -44,6 +44,7 @@ const useGallery = (
       hide: boolean;
     }[]
   >([]);
+  const [moreGalleryLoading, setMoreGalleryLoading] = useState<boolean>(false);
   const [gallery, setGallery] = useState<{
     collected: Creation[];
     created: Creation[];
@@ -274,6 +275,7 @@ const useGallery = (
 
   const getMoreGallery = async () => {
     if (!cursorInfo?.hasMore) return;
+    setMoreGalleryLoading(true);
     try {
       let collected: Creation[] = [],
         created: Creation[] = [];
@@ -333,6 +335,7 @@ const useGallery = (
     } catch (err: any) {
       console.error(err.message);
     }
+    setMoreGalleryLoading(false);
   };
 
   const handleSetDisplay = async () => {
@@ -852,6 +855,7 @@ const useGallery = (
     setSortType,
     gallery,
     cursorInfo,
+    moreGalleryLoading,
   };
 };
 

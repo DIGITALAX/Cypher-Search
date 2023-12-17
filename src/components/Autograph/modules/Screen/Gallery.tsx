@@ -247,6 +247,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                         "the dial",
                         "f3m",
                       ]?.map((item: string, index: number) => {
+                        console.log({ address, F3M_ADDRESS, index });
                         return (
                           <div
                             key={index}
@@ -255,15 +256,16 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                                 ? "border-2"
                                 : "border"
                             } ${
-                              (index !== 0 &&
-                                index !== 1 &&
-                                index !== 2 &&
-                                address === F3M_ADDRESS &&
-                                index !== 6) ||
-                              (createCase === "collection" &&
-                                collectionDetails?.collectionId !== "")
-                                ? "opacity-50"
-                                : "cursor-pointer active:scale-95"
+                              ((index === 6 &&
+                                address?.toLowerCase() ==
+                                  F3M_ADDRESS?.toLowerCase()) ||
+                                index == 0 ||
+                                index == 1 ||
+                                index == 2) &&
+                              createCase === "collection" &&
+                              collectionDetails?.collectionId == ""
+                                ? "cursor-pointer active:scale-95"
+                                : "opacity-50"
                             }`}
                             onClick={() =>
                               (index === 0 ||

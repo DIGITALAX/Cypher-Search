@@ -33,6 +33,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   allDrops,
   lensConnected,
   hasMoreGallery,
+  moreGalleryLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col gap-10 items-start justify-start flex-grow otro:order-2 order-1 sm:pt-0 pt-10">
@@ -84,47 +85,63 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           <InfiniteScroll
             dataLength={
               [...(gallery?.collected || []), ...(gallery?.created || [])]
-                ?.length
+                ?.length + (moreGalleryLoading ? 10 : 0)
             }
             loader={<></>}
             hasMore={hasMoreGallery}
             next={getMoreGallery}
             className="w-full h-fit items-start justify-center md:justify-start flex flex-row flex-wrap gap-8"
           >
-            {getGallerySort(selectedOption, gallery)?.map(
-              (item: CreationType, index: number) => {
-                return (
-                  <Creation
-                    lensConnected={lensConnected}
-                    dispatch={dispatch}
-                    cartItems={cartItems}
-                    key={index}
-                    followProfile={followProfile}
-                    unfollowProfile={unfollowProfile}
-                    followLoading={followLoading}
-                    profileHovers={profileHovers}
-                    setProfileHovers={setProfileHovers}
-                    mirror={mirror}
-                    like={like}
-                    openMirrorChoice={openMirrorChoice}
-                    setOpenMirrorChoice={setOpenMirrorChoice}
-                    interactionsLoading={interactionsLoading?.[index]}
-                    router={router}
-                    item={item}
-                    index={index}
-                    created={
-                      gallery?.created?.find(
-                        (value) => item?.pubId === value?.pubId
-                      )
-                        ? true
-                        : false
-                    }
-                    openInteractions={openInteractions}
-                    setOpenInteractions={setOpenInteractions}
-                  />
-                );
-              }
-            )}
+            {(moreGalleryLoading
+              ? [
+                  ...getGallerySort(selectedOption, gallery),
+                  ...Array.from({ length: 20 }),
+                ]
+              : getGallerySort(selectedOption, gallery)
+            )?.map((item: any, index: number) => {
+              return moreGalleryLoading &&
+                index >
+                  gallery?.collected?.length + gallery?.created?.length - 1 ? (
+                <div
+                  className="relative w-80 h-80 bg-piloto flex items-center justify-start flex-col p-2 gap-4"
+                  key={index}
+                >
+                  <div
+                    className={`relative w-full h-full flex items-center justify-center hover:opacity-90 rounded-md cursor-pointer border-2 border-olor`}
+                    id="staticLoad"
+                  ></div>
+                </div>
+              ) : (
+                <Creation
+                  lensConnected={lensConnected}
+                  dispatch={dispatch}
+                  cartItems={cartItems}
+                  key={index}
+                  followProfile={followProfile}
+                  unfollowProfile={unfollowProfile}
+                  followLoading={followLoading}
+                  profileHovers={profileHovers}
+                  setProfileHovers={setProfileHovers}
+                  mirror={mirror}
+                  like={like}
+                  openMirrorChoice={openMirrorChoice}
+                  setOpenMirrorChoice={setOpenMirrorChoice}
+                  interactionsLoading={interactionsLoading?.[index]}
+                  router={router}
+                  item={item}
+                  index={index}
+                  created={
+                    gallery?.created?.find(
+                      (value) => item?.pubId === value?.pubId
+                    )
+                      ? true
+                      : false
+                  }
+                  openInteractions={openInteractions}
+                  setOpenInteractions={setOpenInteractions}
+                />
+              );
+            })}
           </InfiniteScroll>
         </div>
       }

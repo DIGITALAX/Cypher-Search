@@ -766,6 +766,15 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                     ...prev,
                                     access: accessArray.join(", ") + ", ",
                                   }));
+                                } else {
+                                  const index = allArray.indexOf(item.trim());
+                                  if (index > -1) {
+                                    allArray.splice(index, 1);
+                                  }
+                                  setCollectionDetails((prev) => ({
+                                    ...prev,
+                                    access: allArray.join(", "),
+                                  }));
                                 }
                               }}
                             >
@@ -1041,6 +1050,15 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                     ...prev,
                                     sizes: sizeArray.join(", ") + ", ",
                                   }));
+                                } else {
+                                  const index = allArray.indexOf(item.trim());
+                                  if (index > -1) {
+                                    allArray.splice(index, 1);
+                                  }
+                                  setCollectionDetails((prev) => ({
+                                    ...prev,
+                                    sizes: allArray.join(", "),
+                                  }));
                                 }
                               }}
                             >
@@ -1107,6 +1125,15 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                     setCollectionDetails((prev) => ({
                                       ...prev,
                                       colors: colorArray.join(", ") + ", ",
+                                    }));
+                                  } else {
+                                    const index = allArray.indexOf(item.trim());
+                                    if (index > -1) {
+                                      allArray.splice(index, 1);
+                                    }
+                                    setCollectionDetails((prev) => ({
+                                      ...prev,
+                                      colors: allArray.join(", "),
                                     }));
                                   }
                                 }}
