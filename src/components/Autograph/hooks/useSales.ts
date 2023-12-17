@@ -51,11 +51,9 @@ const useSales = (
               if (data) {
                 const profileBuyer = await getProfile(
                   {
-                    forProfileId:
-                      "0x" +
-                      toHexWithLeadingZero(
-                        Number(item.buyerProfileIds?.[index])
-                      ),
+                    forProfileId: toHexWithLeadingZero(
+                      Number(item.buyerProfileIds?.[index])
+                    ),
                   },
                   lensConnected?.id
                 );

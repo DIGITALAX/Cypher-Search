@@ -241,13 +241,9 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                               router.push(
                                 `/item/${
                                   numberToItemTypeMap[Number(item?.origin)]
-                                }/${
-                                  "0x" +
-                                  toHexWithLeadingZero(Number(item?.profileId))
-                                }-${
-                                  "0x" +
-                                  toHexWithLeadingZero(Number(item?.pubId))
-                                }`
+                                }/${toHexWithLeadingZero(
+                                  Number(item?.profileId)
+                                )}-${toHexWithLeadingZero(Number(item?.pubId))}`
                               );
                             }}
                           >

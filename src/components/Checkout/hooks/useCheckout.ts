@@ -439,6 +439,7 @@ const useCheckout = (
             ? F3M_OPEN_ACTION
             : LEGEND_OPEN_ACTION,
         ],
+        account: address,
       });
 
       if (address) {
