@@ -231,7 +231,10 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                         </div>
                         <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
                           <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">
-                            {item?.collectionMetadata?.title}
+                            {item?.collectionMetadata?.title?.length > 15
+                              ? item?.collectionMetadata?.title?.slice(0, 12) +
+                                "..."
+                              : item?.collectionMetadata?.title}
                           </div>
                           <div
                             className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"

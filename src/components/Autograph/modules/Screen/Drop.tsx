@@ -71,7 +71,9 @@ const Drop: FunctionComponent<DropProps> = ({
                     </div>
                     <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
                       <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">
-                        {item?.dropDetails?.dropTitle}
+                        {item?.dropDetails?.dropTitle?.length > 15
+                          ? item?.dropDetails?.dropTitle?.slice(0, 12) + "..."
+                          : item?.dropDetails?.dropTitle}
                       </div>
                       <div
                         className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
