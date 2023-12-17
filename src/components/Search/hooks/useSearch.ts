@@ -727,7 +727,10 @@ const useSearch = (
           data?.data?.collectionCreateds,
           "dropTitle"
         ),
-        hashtags: aggregateUniqueValues(data?.data?.collectionCreateds, "tags"),
+        hashtags: aggregateUniqueValues(
+          [...data?.data?.collectionCreateds, ...TAGS],
+          "tags"
+        ),
         communities: community?.data?.communityCreateds?.map?.(
           (item: { name: string; cover: string; communityId: string }) => {
             return [item.name, item.cover, item.communityId];
@@ -749,9 +752,7 @@ const useSearch = (
       const filters: FilterValues = {
         ...json,
         microbrands: data?.microbrands!,
-        hashtags: [...(data?.hashtags! || []), ...TAGS]?.sort(
-          () => Math.random() - 0.5
-        ),
+        hashtags: (data?.hashtags! || [])?.sort(() => Math.random() - 0.5),
         dropsSuggested: data?.dropsSuggested!,
         community: data?.communities!,
       };
