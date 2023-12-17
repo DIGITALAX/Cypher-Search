@@ -26,7 +26,6 @@ import decodeReturnedData from "../../../../lib/helpers/decodeReturned";
 import { setCartItems } from "../../../../redux/reducers/cartItemsSlice";
 import { setCypherStorageCart } from "../../../../lib/utils";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
-import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 
 const PostBar: FunctionComponent<PostBarProps> = ({
