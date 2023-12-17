@@ -30,6 +30,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   collectPostLoading,
   groupedByPubId,
 }): JSX.Element => {
+  console.log({ cartItems });
   return (
     <div className="relative w-fit h-fit relative flex items-start justify-start p-2 flex-col gap-6">
       <div className="relative w-fit h-fit flex items-center justify-center font-aust text-3xl text-white">
@@ -44,6 +45,13 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           <div className="relative w-fit h-fit flex text-white font-aust text-2xl">
             Fulfillment Details
           </div>
+          {chooseCartItem?.item?.origin == "4" && (
+            <div className="relative w-fit h-fit flex text-sol font-aust text-xs opacity-90">
+              These NFTs extend beyond screens. When collected, you've unlocked
+              IRL customization. Encrypt your parameters and fulfillment details
+              to get started.
+            </div>
+          )}
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
             {[
               {
