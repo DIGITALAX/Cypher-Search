@@ -258,7 +258,7 @@ const useSearch = (
           {
             where: {
               profileIds: filterConstants?.microbrands?.map((item) =>
-                toHexWithLeadingZero(Number(item[2]))
+                `${toHexWithLeadingZero(Number(item[2]))}`
               ),
             },
           },

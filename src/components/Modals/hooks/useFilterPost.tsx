@@ -134,7 +134,7 @@ const useFilterPost = (
     });
   };
 
-  const like = async (id: string, hasReacted: boolean, creation?: boolean) => {
+  const like = async (id: string, hasReacted: boolean) => {
     setInteractionsLoading((prev) => {
       const arr = [...prev];
       arr[0] = { ...arr[0], like: true };
@@ -304,11 +304,11 @@ const useFilterPost = (
       if (!data?.data?.collectionCreateds) return;
       const pubData = await getPublication(
         {
-          forId:
-            toHexWithLeadingZero(
-              data?.data?.collectionCreateds?.[0]?.profileId
-            ) +
-            toHexWithLeadingZero(data?.data?.collectionCreateds?.[0]?.pubId),
+          forId: `${toHexWithLeadingZero(
+            Number(data?.data?.collectionCreateds?.[0]?.profileId)
+          )}-${toHexWithLeadingZero(
+            Number(data?.data?.collectionCreateds?.[0]?.pubId)
+          )}`,
         },
         lensConnected?.id
       );

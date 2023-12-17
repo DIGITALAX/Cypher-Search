@@ -201,7 +201,7 @@ const useItem = (
       );
       const data = await getProfile(
         {
-          forProfileId: toHexWithLeadingZero(Number(item?.[2])),
+          forProfileId: `${toHexWithLeadingZero(Number(item?.[2]))}`,
         },
         lensConnected?.id
       );

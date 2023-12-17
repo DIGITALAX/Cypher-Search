@@ -203,9 +203,9 @@ const useCheckout = (
       );
 
       const success = await actPost(
-        toHexWithLeadingZero(Number(cartItems[index]?.item?.profileId)) +
-          "-" +
-          toHexWithLeadingZero(Number(cartItems[index]?.item?.pubId)),
+        `${toHexWithLeadingZero(
+          Number(cartItems[index]?.item?.profileId)
+        )}-${toHexWithLeadingZero(Number(cartItems[index]?.item?.pubId))}`,
         {
           unknownOpenAction,
         },
