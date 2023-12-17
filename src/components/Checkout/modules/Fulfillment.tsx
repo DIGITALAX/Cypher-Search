@@ -30,7 +30,6 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   collectPostLoading,
   groupedByPubId,
 }): JSX.Element => {
-  console.log({ cartItems });
   return (
     <div className="relative w-fit h-fit relative flex items-start justify-start p-2 flex-col gap-6">
       <div className="relative w-fit h-fit flex items-center justify-center font-aust text-3xl text-white">
