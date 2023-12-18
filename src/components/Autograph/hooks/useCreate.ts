@@ -248,8 +248,6 @@ const useCreate = (
         postContentURI
       );
 
-      console.log({ contentURI, postContentURI });
-
       if (edit) {
         await lensHide(
           `${toHexWithLeadingZero(
