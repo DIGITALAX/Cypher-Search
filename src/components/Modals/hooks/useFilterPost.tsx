@@ -44,14 +44,6 @@ const useFilterPost = (
       () => false
     )
   );
-  const [apparel, setApparel] = useState<boolean[]>(
-    Array.from(
-      {
-        length: 1,
-      },
-      () => false
-    )
-  );
   const [interactionsLoading, setInteractionsLoading] = useState<
     {
       like: boolean;
@@ -369,8 +361,6 @@ const useFilterPost = (
 
   return {
     popUpOpen,
-    setApparel,
-    apparel,
     mirror,
     like,
     setPopUpOpen,

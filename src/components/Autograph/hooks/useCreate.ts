@@ -84,6 +84,7 @@ const useCreate = (
     sexOpen: boolean;
     styleOpen: boolean;
     imageIndex: number;
+    chromadinOpen: boolean;
   }>({
     media: "static",
     origin: "chromadin",
@@ -98,6 +99,7 @@ const useCreate = (
     styleOpen: false,
     sexOpen: false,
     imageIndex: 0,
+    chromadinOpen: false,
   });
   const [collectionDetails, setCollectionDetails] = useState<CollectionDetails>(
     {
@@ -121,6 +123,7 @@ const useCreate = (
       visibility: "public",
       sizes: "",
       colors: "",
+      onChromadin: "no",
       profileHandle: "",
       microbrand: {
         microbrand: "",
@@ -203,7 +206,12 @@ const useCreate = (
         collectionSettings?.media === "video" ? [collectionDetails?.video] : [],
         collectionSettings?.media === "audio" ? [collectionDetails?.audio] : [],
         [],
-        collectionDetails?.title?.trim() == "" ? " " : collectionDetails?.title,
+        collectionDetails?.title?.trim() == ""
+          ? " "
+          : collectionSettings?.origin == "coinop" &&
+            collectionDetails?.onChromadin === "yes"
+          ? collectionDetails?.title + " (Print)"
+          : collectionDetails?.title,
         Array.from(
           new Set(
             (
@@ -239,6 +247,8 @@ const useCreate = (
         collectionDetails?.visibility === "private" ? true : false,
         postContentURI
       );
+
+      console.log({ contentURI, postContentURI });
 
       if (edit) {
         await lensHide(
@@ -342,17 +352,6 @@ const useCreate = (
       );
 
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
-
-      const { data } = await getPublications(
-        {
-          limit: LimitType.Ten,
-          where: {
-            from: lensConnected?.id,
-            publicationTypes: [PublicationType.Post],
-          },
-        },
-        true
-      );
 
       await cleanCollection(
         edit ? "updated" : "created",
@@ -475,6 +474,7 @@ const useCreate = (
         },
         access: "",
         dropId: "",
+        onChromadin: "no",
         dropTitle: "",
         dropCover: "",
         dropCollectionIds: [],
@@ -498,6 +498,7 @@ const useCreate = (
         styleOpen: false,
         sexOpen: false,
         imageIndex: 0,
+        chromadinOpen: false,
       });
       dispatch(
         setPostSuccess({
@@ -603,6 +604,8 @@ const useCreate = (
         sizes,
         sex,
         style,
+        title,
+        onChromadin,
         ...restOfCollectionDetails
       } = collectionDetails;
 
@@ -624,11 +627,22 @@ const useCreate = (
         };
       }
 
+      if (collectionSettings?.origin == "coinop") {
+        other = {
+          onChromadin: onChromadin?.trim() === "" ? "no" : onChromadin,
+        };
+      }
+
       let toHash: Object = {
         ...restOfCollectionDetails,
         images: newImages,
         audio: newAudio,
         video: newVideo,
+        title:
+          collectionSettings?.origin == "coinop" &&
+          collectionDetails?.onChromadin === "yes"
+            ? title + " (Print)"
+            : title,
         cover:
           collectionSettings?.media === "audio"
             ? (postContentURI?.object as any)?.lens?.audio?.cover

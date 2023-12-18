@@ -60,6 +60,7 @@ export interface Creation {
     images: string[];
     video: string;
     audio: string;
+    onChromadin: string;
     sex: string;
     style: string;
   };
@@ -90,8 +91,6 @@ export type TilesProps = {
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
-  apparel: boolean[];
-  setApparel: (e: SetStateAction<boolean[]>) => void;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
@@ -122,8 +121,6 @@ export type TileSwitchProps = {
   popUpOpen: boolean[];
   filterConstants: FilterValues | undefined;
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
-  apparel: boolean[];
-  setApparel: (e: SetStateAction<boolean[]>) => void;
   index: number;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
@@ -246,8 +243,6 @@ export type CollectItemProps = {
 
 export type ChromadinProps = {
   layoutAmount: number;
-  apparel: boolean[];
-  setApparel: (e: SetStateAction<boolean[]>) => void;
   index: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;

@@ -24,6 +24,7 @@ export const getAllCollections = async (
           visibility
           video
           title
+          onChromadin
           sex
           style
           tags

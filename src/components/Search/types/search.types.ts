@@ -159,8 +159,6 @@ export type FilterProps = {
   layoutAmount: number;
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
-  apparel: boolean[];
-  setApparel: (e: SetStateAction<boolean[]>) => void;
   router: NextRouter;
   cartItems: CartItem[];
   mirror: (id: string, creation?: boolean) => Promise<void>;

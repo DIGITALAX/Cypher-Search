@@ -116,6 +116,7 @@ export type WebProps = {
     styleOpen: boolean;
     sexOpen: boolean;
     imageIndex: number;
+    chromadinOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -132,6 +133,7 @@ export type WebProps = {
       styleOpen: boolean;
       sexOpen: boolean;
       imageIndex: number;
+      chromadinOpen: boolean;
     }>
   ) => void;
 
@@ -481,6 +483,7 @@ export type GalleryScreenProps = {
     styleOpen: boolean;
     sexOpen: boolean;
     imageIndex: number;
+    chromadinOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -497,6 +500,7 @@ export type GalleryScreenProps = {
       styleOpen: boolean;
       sexOpen: boolean;
       imageIndex: number;
+      chromadinOpen: boolean;
     }>
   ) => void;
 };
@@ -614,6 +618,7 @@ export type ScreenSwitchProps = {
     styleOpen: boolean;
     sexOpen: boolean;
     imageIndex: number;
+    chromadinOpen: boolean;
   };
   lensConnected: Profile | undefined;
   setCollectionSettings: (
@@ -631,6 +636,7 @@ export type ScreenSwitchProps = {
       styleOpen: boolean;
       sexOpen: boolean;
       imageIndex: number;
+      chromadinOpen: boolean;
     }>
   ) => void;
 
@@ -1448,6 +1454,7 @@ export type DispatchProps = {
     styleOpen: boolean;
     sexOpen: boolean;
     imageIndex: number;
+    chromadinOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1464,6 +1471,7 @@ export type DispatchProps = {
       styleOpen: boolean;
       sexOpen: boolean;
       imageIndex: number;
+      chromadinOpen: boolean;
     }>
   ) => void;
 };
@@ -1482,6 +1490,7 @@ export interface CollectionDetails {
   acceptedTokens: string[];
   images: { media: string; type: string }[];
   video: string;
+  onChromadin: string;
   audio: string;
   tags: string;
   prompt: string;
@@ -1591,6 +1600,7 @@ export type SwitchCreateProps = {
     styleOpen: boolean;
     sexOpen: boolean;
     imageIndex: number;
+    chromadinOpen: boolean;
   };
   setCollectionSettings: (
     e: SetStateAction<{
@@ -1607,6 +1617,7 @@ export type SwitchCreateProps = {
       styleOpen: boolean;
       sexOpen: boolean;
       imageIndex: number;
+      chromadinOpen: boolean;
     }>
   ) => void;
   edit: boolean;

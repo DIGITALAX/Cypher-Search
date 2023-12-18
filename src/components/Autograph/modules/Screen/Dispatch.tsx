@@ -1261,6 +1261,64 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   )}
                 </div>
               </div>
+              {collectionSettings?.origin == "coinop" && (
+                <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                  <div className="relative w-fit h-fit text-sm break-words">
+                    On Chromadin?
+                  </div>
+                  <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
+                    <div
+                      className={`relative h-10 flex flex-row justify-between p-2 w-60 max-w-[15rem] items-center justify-center border border-sol rounded-md cursor-pointer bg-offBlack gap-1`}
+                      onClick={() =>
+                        setCollectionSettings((prev) => ({
+                          ...prev,
+                          chromadinOpen: !prev.chromadinOpen,
+                        }))
+                      }
+                    >
+                      <div className="relative w-full whitespace-nowrap h-full flex items-center justify-start font-aust text-white text-xs overflow-x-scroll">
+                        {collectionDetails?.onChromadin}
+                      </div>
+                      <div className="relative w-4 h-3 flex items-center justify-center">
+                        <Image
+                          layout="fill"
+                          draggable={false}
+                          src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
+                        />
+                      </div>
+                    </div>
+                    {collectionSettings?.chromadinOpen && (
+                      <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
+                        <div className="relative w-full h-fit flex flex-col items-center justify-start">
+                          {["yes", "no"]?.map((item: string, index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                                onClick={() => {
+                                  setCollectionSettings((prev) => ({
+                                    ...prev,
+                                    chromadinOpen: !prev.chromadinOpen,
+                                  }));
+
+                                  setCollectionDetails((prev) => ({
+                                    ...prev,
+                                    onChromadin: item,
+                                  }));
+                                }}
+                              >
+                                <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                  {item}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             collectionSettings?.origin == "f3m" && (

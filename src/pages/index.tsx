@@ -116,8 +116,6 @@ export default function Home({ router }: { router: NextRouter }) {
   const {
     setPopUpOpen,
     popUpOpen,
-    apparel,
-    setApparel,
     profileHovers,
     setProfileHovers,
     followLoading,
@@ -182,8 +180,6 @@ export default function Home({ router }: { router: NextRouter }) {
             handleMoreSearch={handleMoreSearch}
             popUpOpen={popUpOpen}
             setPopUpOpen={setPopUpOpen}
-            apparel={apparel}
-            setApparel={setApparel}
             dispatch={dispatch}
             moreSearchLoading={loaders?.moreSearchLoading}
             router={router}

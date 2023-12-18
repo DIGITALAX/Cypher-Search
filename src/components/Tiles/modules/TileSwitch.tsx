@@ -30,8 +30,6 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   layoutAmount,
   popUpOpen,
   setPopUpOpen,
-  apparel,
-  setApparel,
   index,
   dispatch,
   router,
@@ -142,8 +140,6 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         popUpOpen={popUpOpen}
         setPopUpOpen={setPopUpOpen}
         layoutAmount={layoutAmount}
-        apparel={apparel}
-        setApparel={setApparel}
         index={index}
         dispatch={dispatch}
         router={router}
