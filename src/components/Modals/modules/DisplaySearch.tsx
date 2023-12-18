@@ -71,11 +71,11 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                           ...(gallery?.created || []),
                         ]
                     )
-                      ?.filter((item) =>
-                        item?.collectionMetadata?.title
-                          ?.toLowerCase()
-                          ?.includes(itemSearch?.toLowerCase())
-                      )
+                      // ?.filter((item) =>
+                      //   item?.collectionMetadata?.title
+                      //     ?.toLowerCase()
+                      //     ?.includes(itemSearch?.toLowerCase())
+                      // )
                       ?.map(
                         (
                           item: {

@@ -108,7 +108,7 @@ const COLLECTIONS_PAGINATED = `
 `;
 
 const COLLECTIONS_QUICK = `
-  query($owner: String!, $first: Int, $skip: Int) {
+  query($owner: String!, $skip: Int!, $first: Int!) {
     collectionCreateds(where: {owner: $owner}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
       collectionId
       collectionMetadata {
@@ -181,13 +181,17 @@ export const getCollectionsPaginated = async (
 };
 
 export const getCollectionsQuick = async (
-  owner: string
+  owner: string,
+  skip: number,
+  first: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTIONS_QUICK),
     variables: {
       owner,
+      skip,
+      first
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

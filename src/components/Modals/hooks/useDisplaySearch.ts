@@ -59,7 +59,7 @@ const useDisplaySearch = (
 
     try {
       const collectedData = await getOrdersQuick(address!);
-      const createdData = await getCollectionsQuick(address!);
+      const createdData = await getCollectionsQuick(address!, 0, 1000);
 
       const existingCollectionIds =
         createdData?.data?.collectionCreateds?.map(
