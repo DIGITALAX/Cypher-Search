@@ -18,7 +18,6 @@ const useTiles = (
   address: `0x${string}` | undefined
 ) => {
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>([]);
-  const [apparel, setApparel] = useState<boolean[]>([]);
   const [profileHovers, setProfileHovers] = useState<boolean[]>([]);
   const [followLoading, setFollowLoading] = useState<boolean[]>([]);
 
@@ -166,8 +165,6 @@ const useTiles = (
   return {
     popUpOpen,
     setPopUpOpen,
-    apparel,
-    setApparel,
     followProfile,
     unfollowProfile,
     followLoading,

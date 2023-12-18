@@ -21,6 +21,7 @@ const COLLECTION = `
         microbrand
         mediaTypes
         sex
+        onChromadin
         style
         mediaCover
         id
@@ -66,6 +67,7 @@ export const COLLECTION_RANDOM = `query($origin: String!) {
       video
       title
       tags
+      onChromadin
       prompt
       profileHandle
       sizes
@@ -143,6 +145,7 @@ const COLLECTION_TITLE = `
         title
         tags
         prompt
+        onChromadin
         profileHandle
         sizes
         microbrand

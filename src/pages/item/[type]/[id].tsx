@@ -263,8 +263,6 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const {
     setPopUpOpen,
     popUpOpen,
-    apparel,
-    setApparel,
     profileHovers,
     setProfileHovers,
     followLoading,
@@ -570,8 +568,6 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 handleMoreSearch={getMoreSuggested}
                 popUpOpen={popUpOpen}
                 setPopUpOpen={setPopUpOpen}
-                apparel={apparel}
-                setApparel={setApparel}
                 mirror={mirror}
                 like={like}
                 simpleCollect={collect}

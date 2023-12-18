@@ -37,10 +37,8 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   filtersOpen,
   layoutAmount,
   cartItems,
-  setApparel,
   popUpOpen,
   setPopUpOpen,
-  apparel,
   cartAnim,
   searchItems,
   moreSearchLoading,
@@ -90,8 +88,6 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
         moreSearchLoading={moreSearchLoading}
         popUpOpen={popUpOpen}
         setPopUpOpen={setPopUpOpen}
-        apparel={apparel}
-        setApparel={setApparel}
         dispatch={dispatch}
         router={router}
         cartItems={cartItems}

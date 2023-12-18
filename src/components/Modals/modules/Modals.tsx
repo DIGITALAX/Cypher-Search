@@ -139,8 +139,6 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   } = useWho(lensConnected, reactBox);
   const {
     popUpOpen,
-    setApparel,
-    apparel,
     mirror,
     like,
     setPopUpOpen,
@@ -236,8 +234,6 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           layoutAmount={layoutAmount}
           popUpOpen={popUpOpen}
           setPopUpOpen={setPopUpOpen}
-          apparel={apparel}
-          setApparel={setApparel}
           publication={publication!}
           router={router}
           cartItems={cartItems}

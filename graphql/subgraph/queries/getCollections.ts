@@ -16,6 +16,7 @@ const COLLECTIONS = `
         title
         tags
         sex
+        onChromadin
         style
         prompt
         profileHandle
@@ -70,6 +71,7 @@ const COLLECTIONS_PAGINATED = `
         title
         tags
         prompt
+        onChromadin
         profileHandle
         sizes
         microbrand

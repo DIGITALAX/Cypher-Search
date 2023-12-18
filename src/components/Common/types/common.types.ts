@@ -228,8 +228,6 @@ export type SuggestedProps = {
   searchLoading: boolean;
   popUpOpen: boolean[];
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
-  apparel: boolean[];
-  setApparel: (e: SetStateAction<boolean[]>) => void;
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
   simpleCollect: (id: string, type: string) => Promise<void>;

@@ -410,6 +410,38 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
           <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-5xl mt-0">
             {itemData?.collectionMetadata?.title}
           </div>
+          {itemData?.collectionMetadata?.onChromadin === "yes" &&
+            itemData?.origin === "1" && (
+              <div
+                className="relative flex flex-row gap-2 justify-start items-center w-fit h-full mt-0 cursor-pointer active:scale-95"
+                title="Go To Matching Print"
+                onClick={() =>
+                  router.push(
+                    `/item/coinop/${
+                      itemData?.collectionMetadata?.title?.replaceAll(
+                        " ",
+                        "_"
+                      ) + "_(Print)"
+                    }`
+                  )
+                }
+              >
+                <div className="relative w-5 h-5 flex items-center justify-center">
+                  <Image
+                    layout="fill"
+                    src={`${INFURA_GATEWAY}/ipfs/QmcK1EJdp5HFuqPUds3WjgoSPmoomiWfiroRFa3bQUh5Xj`}
+                    draggable={false}
+                  />
+                </div>
+                <div className="relative w-5 h-5 flex items-center justify-center">
+                  <Image
+                    layout="fill"
+                    src={`${INFURA_GATEWAY}/ipfs/QmYzbyMb3okS1RKhxogJZWT56kCFjVcXZWk1aJiA8Ch2xi`}
+                    draggable={false}
+                  />
+                </div>
+              </div>
+            )}
           {itemData?.origin !== "1" && (
             <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-sm mt-0">
               {itemData?.origin !== "4" ? (

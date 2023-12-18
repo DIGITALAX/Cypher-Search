@@ -15,8 +15,6 @@ const Filters: FunctionComponent<FilterProps> = ({
   filterConstants,
   publication,
   layoutAmount,
-  setApparel,
-  apparel,
   mirror,
   like,
   router,
@@ -47,8 +45,6 @@ const Filters: FunctionComponent<FilterProps> = ({
           layoutAmount={layoutAmount}
           popUpOpen={popUpOpen}
           setPopUpOpen={setPopUpOpen}
-          apparel={apparel}
-          setApparel={setApparel}
           index={0}
           dispatch={dispatch}
           router={router}

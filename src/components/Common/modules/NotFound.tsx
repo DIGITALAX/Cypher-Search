@@ -23,7 +23,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   dispatch,
   handleShuffleSearch,
   cartAnim,
-  fullScreenVideo
+  fullScreenVideo,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center">
@@ -49,6 +49,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
           objectFit="contain"
           src={`${INFURA_GATEWAY}/ipfs/Qma4968Gu8irNB74GJqg9xMqs8g4aDYqsx5pTUgJAUBD28`}
           draggable={false}
+          priority
         />
       </div>
       <div className="absolute right-2 top-2 flex">

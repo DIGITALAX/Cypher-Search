@@ -19,8 +19,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
   layoutAmount,
   popUpOpen,
   setPopUpOpen,
-  apparel,
-  setApparel,
   dispatch,
   router,
   cartItems,
@@ -65,8 +63,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
           layoutAmount={layoutAmount}
           popUpOpen={popUpOpen}
           setPopUpOpen={setPopUpOpen}
-          apparel={apparel}
-          setApparel={setApparel}
           index={index}
           dispatch={dispatch}
           router={router}
@@ -87,7 +83,6 @@ const Tiles: FunctionComponent<TilesProps> = ({
     [
       interactionsLoadingMemo,
       profileHovers,
-      apparel,
       openMirrorChoice,
       followLoading,
       popUpOpen,

@@ -160,6 +160,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             access: item?.collectionMetadata?.access
                               ? item?.collectionMetadata?.access?.join(", ")
                               : "",
+                            onChromadin: item?.collectionMetadata?.onChromadin,
                             dropTitle: item?.dropMetadata?.dropTitle,
                             dropCover: item?.dropMetadata?.dropCover,
                             dropCollectionIds: item?.dropCollectionIds,
