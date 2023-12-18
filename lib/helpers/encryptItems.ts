@@ -85,7 +85,6 @@ export const encryptItems = async (
 
         const { originalIndices, ...rest } = item;
 
-
         const { ciphertext, dataToEncryptHash } = await encryptString(
           {
             accessControlConditions,
