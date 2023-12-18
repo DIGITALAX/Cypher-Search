@@ -46,7 +46,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           </div>
           {chooseCartItem?.item?.origin == "4" && (
             <div className="relative w-fit h-fit flex text-sol font-aust text-xs opacity-90">
-              These NFTs extend beyond screens. When collected, you've unlocked
+              These NFTs extend beyond screens. When collected, you&apos;ve unlocked
               IRL customization. Encrypt your parameters and fulfillment details
               to get started.
             </div>
