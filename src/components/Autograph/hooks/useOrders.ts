@@ -10,7 +10,6 @@ import {
   checkAndSignAuthMessage,
   decryptToString,
 } from "@lit-protocol/lit-node-client";
-import fetchIPFSJSON from "../../../../lib/helpers/fetchIpfsJson";
 import { getCollectionOrder } from "../../../../graphql/subgraph/queries/getOneCollection";
 import { Profile } from "../../../../graphql/generated";
 
@@ -150,7 +149,7 @@ const useOrders = (
             .dataToEncryptHash,
           chain: "polygon",
         },
-        client
+        client!
       );
 
       const details = await JSON.parse(decryptedString);

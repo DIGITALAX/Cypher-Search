@@ -12,11 +12,7 @@ import {
 import { AnyAction, Dispatch } from "redux";
 import { polygon } from "viem/chains";
 import uploadPostContent from "../../../../lib/helpers/uploadPostContent";
-import {
-  LimitType,
-  Profile,
-  PublicationType,
-} from "../../../../graphql/generated";
+import { Profile } from "../../../../graphql/generated";
 import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import {
   CHROMADIN_OPEN_ACTION,
@@ -32,9 +28,9 @@ import {
 import { ethers } from "ethers";
 import { setPostSuccess } from "../../../../redux/reducers/postSuccessSlice";
 import CollectionCreatorAbi from "./../../../../abis/CollectionCreatorAbi.json";
-import getPublications from "../../../../graphql/lens/queries/publications";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { getCollections } from "../../../../graphql/subgraph/queries/getCollections";
+
 import lensHide from "../../../../lib/helpers/api/hidePost";
 import { LensClient, production } from "@lens-protocol/client/gated";
 import {
