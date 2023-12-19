@@ -98,7 +98,7 @@ const useGallery = (
 
   const getDisplayData = async (collections: Creation[]) => {
     try {
-      const displayItems = lensConnected?.metadata?.attributes?.find(
+      const displayItems = pageProfile?.metadata?.attributes?.find(
         (item) => item?.key === "cypherDisplay"
       );
       let display: Display | undefined;
