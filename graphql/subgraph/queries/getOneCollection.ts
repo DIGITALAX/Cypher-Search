@@ -131,8 +131,8 @@ const COLLECTION_QUICK = `
 `;
 
 const COLLECTION_TITLE = `
-  query($title: String!) {
-    collectionCreateds(where: {collectionMetadata_: { title_contains_nocase: $title }}, first: 1) {
+  query($title: String!, $origin: String!) {
+    collectionCreateds(where: {collectionMetadata_: { title_contains_nocase: $title }, origin: $origin}, first: 1) {
       amount
       dropMetadata {
         dropCover
@@ -296,13 +296,15 @@ export const getOneCollectionQuick = async (
 };
 
 export const getOneCollectionTitle = async (
-  title: string
+  title: string,
+  origin: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(COLLECTION_TITLE),
     variables: {
       title,
+      origin,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",

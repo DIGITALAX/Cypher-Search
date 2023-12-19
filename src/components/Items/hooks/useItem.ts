@@ -27,6 +27,7 @@ import {
   LEGEND_OPEN_ACTION,
   LISTENER_OPEN_ACTION,
   itemStringToType,
+  itemTypeToNumber,
   numberToItemTypeMap,
   numberToPrintType,
 } from "../../../../lib/constants";
@@ -89,7 +90,8 @@ const useItem = (
         case "coinop":
         case "f3m":
           const coll = (await getCollection(
-            id?.replaceAll("_", " ")
+            id?.replaceAll("_", " "),
+            type
           )) as Creation;
 
           pub = (await getPub(
@@ -127,7 +129,8 @@ const useItem = (
         case "pub":
           pub = (await getPub(id)) as Post;
           const collection = (await getCollection(
-            (pub?.metadata as ImageMetadataV3)?.title
+            (pub?.metadata as ImageMetadataV3)?.title,
+            type
           )) as Creation;
           setItemData({
             post: collection
@@ -290,10 +293,14 @@ const useItem = (
   };
 
   const getCollection = async (
-    title: string
+    title: string,
+    type: string
   ): Promise<Creation | undefined> => {
     try {
-      const data = await getOneCollectionTitle(title);
+      const data = await getOneCollectionTitle(
+        title,
+        itemTypeToNumber[itemStringToType[type]]
+      );
 
       if (data?.data?.collectionCreateds) {
         const collections = data?.data?.collectionCreateds?.map(

@@ -1,10 +1,7 @@
 import { FunctionComponent } from "react";
 import { Order, OrdersProps, Sub } from "../../types/autograph.types";
 import Link from "next/link";
-import {
-  ACCEPTED_TOKENS,
-  INFURA_GATEWAY,
-} from "../../../../../lib/constants";
+import { ACCEPTED_TOKENS, INFURA_GATEWAY } from "../../../../../lib/constants";
 import Image from "next/legacy/image";
 import SubOrder from "./SubOrder";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
