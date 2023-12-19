@@ -103,37 +103,6 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               hidden
             />
           </div>
-          {publication?.collectionMetadata?.onChromadin === "yes" &&
-            publication?.origin === "1" && (
-              <div
-                className="relative flex flex-col gap-2 justify-start items-center w-fit h-full mt-0 cursor-pointer active:scale-95"
-                onClick={() =>
-                  router.push(
-                    `/item/coinop/${
-                      publication?.collectionMetadata?.title?.replaceAll(
-                        " ",
-                        "_"
-                      ) + "_(Print)"
-                    }`
-                  )
-                }
-              >
-                <div className="relative w-5 tablet:w-10 h-5 tablet:h-10 flex items-center justify-center">
-                  <Image
-                    layout="fill"
-                    src={`${INFURA_GATEWAY}/ipfs/QmcK1EJdp5HFuqPUds3WjgoSPmoomiWfiroRFa3bQUh5Xj`}
-                    draggable={false}
-                  />
-                </div>
-                <div className="relative w-5 tablet:w-10 h-5 tablet:h-10 flex items-center justify-center">
-                  <Image
-                    layout="fill"
-                    src={`${INFURA_GATEWAY}/ipfs/QmYzbyMb3okS1RKhxogJZWT56kCFjVcXZWk1aJiA8Ch2xi`}
-                    draggable={false}
-                  />
-                </div>
-              </div>
-            )}
         </div>
         <div className="relative flex flex-row justify-between gap-2 w-full h-fit items-center">
           <div className="relative gap-1 flex flex-col items-start justify-center">

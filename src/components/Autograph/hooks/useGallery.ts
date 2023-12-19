@@ -399,13 +399,17 @@ const useGallery = (
                 (value) => value.toString().trim() !== ""
               );
             }),
-          bio: lensConnected?.metadata?.bio,
+          bio: !lensConnected?.metadata?.bio
+            ? undefined
+            : lensConnected?.metadata?.bio,
           coverPicture:
             lensConnected?.metadata?.coverPicture?.__typename === "ImageSet"
               ? lensConnected?.metadata?.coverPicture?.raw?.uri
               : (lensConnected?.metadata?.coverPicture as unknown as NftImage)
                   ?.image?.raw?.uri,
-          name: lensConnected?.metadata?.displayName as string,
+          name: !lensConnected?.metadata?.displayName
+            ? undefined
+            : lensConnected?.metadata?.displayName,
           picture:
             lensConnected?.metadata?.picture?.__typename === "ImageSet"
               ? lensConnected?.metadata?.picture?.raw?.uri
@@ -415,11 +419,13 @@ const useGallery = (
         },
       });
 
+
       if (test?.success) {
         const response = await fetch("/api/ipfs", {
           method: "POST",
           body: JSON.stringify(test?.data),
         });
+        
         const responseJSON = await response.json();
 
         const clientWallet = createWalletClient({

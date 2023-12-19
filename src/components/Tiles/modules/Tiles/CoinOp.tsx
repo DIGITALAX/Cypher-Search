@@ -83,13 +83,44 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
         )}
         <div className="absolute right-2 top-2 w-fit h-fit">
           {publication?.origin !== "4" ? (
-            <PrintType
-              printType={
-                printTypeToString[
-                  Number(publication?.printType) as unknown as PrintTagType
-                ]
-              }
-            />
+            <>
+              <PrintType
+                printType={
+                  printTypeToString[
+                    Number(publication?.printType) as unknown as PrintTagType
+                  ]
+                }
+              />
+              {publication?.collectionMetadata?.onChromadin == "yes" && (
+                <div
+                  className="relative flex pt-3 flex-row gap-2 justify-start items-center w-fit h-full cursor-pointer active:scale-95"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    router.push(
+                      `/item/chromadin/${publication?.collectionMetadata?.title
+                        ?.replaceAll(" ", "_")
+                        ?.replaceAll("_(Print)", "")}`
+                    );
+                  }}
+                >
+                  <div className="relative w-5 h-5 flex items-center justify-center">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/QmcK1EJdp5HFuqPUds3WjgoSPmoomiWfiroRFa3bQUh5Xj`}
+                      draggable={false}
+                    />
+                  </div>
+                  <div className="relative w-5 h-5 flex items-center justify-center">
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/QmYzbyMb3okS1RKhxogJZWT56kCFjVcXZWk1aJiA8Ch2xi`}
+                      draggable={false}
+                    />
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
             <div className="relative flex w-fit px-1.5 py-1 h-fit text-white font-aust gap-1 items-center justify-center">
               <div
