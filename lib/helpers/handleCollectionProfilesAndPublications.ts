@@ -9,25 +9,27 @@ const handleCollectionProfilesAndPublications = async (
   lens: Profile | undefined
 ): Promise<Creation[] | undefined> => {
   try {
-    const promises = collections?.map(async (collection: Creation) => {
-      if (collection?.profileId && collection?.pubId) {
-        const publication = await getPublication(
-          {
-            forId: `${toHexWithLeadingZero(
-              Number(collection?.profileId)
-            )}-${toHexWithLeadingZero(Number(collection?.pubId))}`,
-          },
-          lens?.id
-        );
+    const promises = [...(collections || [])]?.map(
+      async (collection: Creation) => {
+        if (collection?.profileId && collection?.pubId) {
+          const publication = await getPublication(
+            {
+              forId: `${toHexWithLeadingZero(
+                Number(collection?.profileId)
+              )}-${toHexWithLeadingZero(Number(collection?.pubId))}`,
+            },
+            lens?.id
+          );
 
-        const coll = await collectionFixer(collection);
-        return {
-          ...coll,
-          profile: publication?.data?.publication?.by as Profile,
-          publication: publication?.data?.publication,
-        } as Creation;
+          const coll = await collectionFixer(collection);
+          return {
+            ...coll,
+            profile: publication?.data?.publication?.by as Profile,
+            publication: publication?.data?.publication,
+          } as Creation;
+        }
       }
-    });
+    );
     const colls = await Promise.all(promises);
     return colls?.filter(Boolean) as Creation[];
   } catch (err: any) {

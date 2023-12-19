@@ -3,7 +3,7 @@ import { graphPrintClient } from "../../../lib/graph/client";
 
 const FILTER = `
   query {
-    collectionCreateds {
+    collectionCreateds(first: 1000, skip: 0) {
         collectionMetadata {
           tags
           microbrandCover
