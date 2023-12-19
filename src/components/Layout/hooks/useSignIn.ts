@@ -173,7 +173,7 @@ const useSignIn = (
     if (!lensConnected?.id) {
       handleIsCreator();
     }
-  }, []);
+  }, [lensConnected?.id, isConnected, address]);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
