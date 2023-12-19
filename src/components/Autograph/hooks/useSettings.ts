@@ -212,22 +212,40 @@ const useSettings = (
 
       let metadata = {
         ...filteredSettingsData,
-        bio: !filteredSettingsData?.bio ? " " : filteredSettingsData?.bio,
-        name: !filteredSettingsData?.name ? " " : filteredSettingsData?.name,
-        attributes: newAttributes
-          ?.map((item) => ({
-            ...item,
-            type:
-              item.type.toLowerCase() === "json"
-                ? "JSON"
-                : item.type.charAt(0).toUpperCase() +
-                  item.type.slice(1).toLowerCase(),
-          }))
-          ?.filter((item) => {
-            return Object.values(item).every(
-              (value) => value.toString().trim() !== ""
-            );
-          }),
+        bio: !filteredSettingsData?.bio ? undefined : filteredSettingsData?.bio,
+        name: !filteredSettingsData?.name
+          ? undefined
+          : filteredSettingsData?.name,
+        attributes:
+          newAttributes
+            ?.map((item) => ({
+              ...item,
+              type:
+                item.type.toLowerCase() === "json"
+                  ? "JSON"
+                  : item.type.charAt(0).toUpperCase() +
+                    item.type.slice(1).toLowerCase(),
+            }))
+            ?.filter((item) => {
+              return Object.values(item).every(
+                (value) => value.toString().trim() !== ""
+              );
+            })?.length < 1
+            ? undefined
+            : newAttributes
+                ?.map((item) => ({
+                  ...item,
+                  type:
+                    item.type.toLowerCase() === "json"
+                      ? "JSON"
+                      : item.type.charAt(0).toUpperCase() +
+                        item.type.slice(1).toLowerCase(),
+                }))
+                ?.filter((item) => {
+                  return Object.values(item).every(
+                    (value) => value.toString().trim() !== ""
+                  );
+                }),
         picture: hasNewPfpImage
           ? newImages[hasNewCoverImage ? 1 : 0]
           : settingsData.picture,
@@ -242,7 +260,6 @@ const useSettings = (
         $schema: "https://json-schemas.lens.dev/profile/2.0.0.json",
         lens: metadata,
       });
-
 
       if (test?.success) {
         const response = await fetch("/api/ipfs", {
