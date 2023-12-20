@@ -745,7 +745,7 @@ const useSearch = (
   const handleFilterConstants = async () => {
     try {
       const json: FilterValues = (await fetchIpfsJson(
-        "QmR7BUWKbSggQAra7qEfvkb4cYyLWG7Hv4pe6Hub2wtR1w"
+        "QmcEdqLsLBFF4Woh6KDVK5R4dx3PgpCC2ZW5MwhrVP5m1x"
       )) as any;
 
       const data = await getFilterValues();
