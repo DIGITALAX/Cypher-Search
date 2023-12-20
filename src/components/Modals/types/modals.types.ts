@@ -20,7 +20,6 @@ import {
   SimpleCollectOpenActionModuleInput,
   SimpleCollectOpenActionSettings,
 } from "../../../../graphql/generated";
-import { Creation } from "@/components/Tiles/types/tiles.types";
 import {
   MakePostComment,
   SortType,
