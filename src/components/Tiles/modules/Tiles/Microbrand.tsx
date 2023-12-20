@@ -41,11 +41,9 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
             className="relative flex flex-row gap-4 w-10 h-10 items-center justify-start cursor-pointer"
             onClick={() =>
               router.push(
-                `/item/microbrand/${
-                  publication?.handle?.suggestedFormatted?.localName?.split(
-                    "@"
-                  )[1]
-                }`
+                `/item/microbrand/${(
+                  publication as any
+                )?.microbrandName?.replaceAll(" ", "_")}`
               )
             }
             onMouseEnter={() =>

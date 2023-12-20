@@ -200,8 +200,7 @@ const useItem = (
       if (!filterConstants) return;
       const item = filterConstants?.microbrands?.find(
         (item) =>
-          item[0]?.toLowerCase() ===
-          (id?.includes("put2") ? id : id?.replaceAll("_", " ")?.toLowerCase())
+          item[0]?.toLowerCase() === id?.replaceAll("_", " ")?.toLowerCase()
       );
       const data = await getProfile(
         {
