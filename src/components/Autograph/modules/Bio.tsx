@@ -162,7 +162,7 @@ const Bio: FunctionComponent<BioProps> = ({
                     key={index}
                     className="relative w-5 h-5 cursor-pointer active:scale-95"
                     onClick={() =>
-                      router.push(`/item/microbrand/${item?.microbrand}`)
+                      router.push(`/item/microbrand/${item?.microbrand?.replaceAll(" ", "_")}`)
                     }
                     title={item?.microbrand}
                   >

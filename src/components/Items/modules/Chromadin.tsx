@@ -511,7 +511,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end break-words text-sm cursor-pointer"
                   onClick={() =>
                     router.push(
-                      `/item/microbrand/${itemData?.collectionMetadata?.microbrand}`
+                      `/item/microbrand/${itemData?.collectionMetadata?.microbrand?.replaceAll(" ", "_")}`
                     )
                   }
                 >
