@@ -227,8 +227,7 @@ const useSearch = (
 
       if (
         filters?.format?.toLowerCase()?.includes("video") ||
-        !filters?.format ||
-        filters?.format?.trim() == ""
+        publications?.length + profiles?.length < 20
       ) {
         const data = await getPublications(
           {
@@ -257,8 +256,8 @@ const useSearch = (
         const data = await getMicrobrands(
           {
             where: {
-              profileIds: filterConstants?.microbrands?.map((item) =>
-                `${toHexWithLeadingZero(Number(item[2]))}`
+              profileIds: filterConstants?.microbrands?.map(
+                (item) => `${toHexWithLeadingZero(Number(item[2]))}`
               ),
             },
           },
@@ -508,8 +507,7 @@ const useSearch = (
 
       if (
         (filters?.format?.toLowerCase()?.includes("video") ||
-          !filters?.format ||
-          filters?.format?.trim() == "") &&
+          publications?.length + profiles?.length < 20) &&
         allSearchItems?.videoCursor
       ) {
         const data = await getPublications(
