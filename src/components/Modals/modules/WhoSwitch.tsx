@@ -26,7 +26,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
         <InfiniteScroll
           dataLength={quoters?.length}
           loader={<></>}
-          hasMore={hasMore}
+          hasMore={hasMoreQuote}
           next={showMore}
           className="w-fit h-fit items-start justify-start flex flex-col gap-10"
         >

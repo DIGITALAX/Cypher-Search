@@ -121,6 +121,7 @@ const useWho = (
     setDataLoading(false);
   };
 
+
   const showActors = async () => {
     if (!reactBox.id) return;
     setDataLoading(true);
@@ -411,6 +412,10 @@ const useWho = (
         showMoreActors();
         break;
 
+      case "Acts":
+        showMoreActors();
+        break;
+
       case "Mirrors":
         showMoreQuoteMirrors();
         break;
@@ -422,6 +427,8 @@ const useWho = (
       case "Following":
         showMoreFollowing();
         break;
+
+     
     }
   };
 
@@ -447,6 +454,8 @@ const useWho = (
         case "Following":
           reactors?.length < 1 && showFollowing();
           break;
+
+     
       }
     } else {
       setPageInfo(undefined);
