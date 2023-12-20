@@ -34,7 +34,7 @@ import {
   AllSearchItemsState,
   setAllSearchItems,
 } from "../../../../redux/reducers/searchItemsSlice";
-import { Creation } from "@/components/Tiles/types/tiles.types";
+import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import buildQuery from "../../../../lib/helpers/buildQuery";
@@ -54,6 +54,7 @@ import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import buildTextQuery, {
   combineQueryObjects,
 } from "../../../../lib/helpers/buildTextQuery";
+import mixArrays from "../../../../lib/helpers/mixArrays";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -272,11 +273,11 @@ const useSearch = (
       }
 
       const allItems = [
-        ...(collections?.map((item) => ({
+        collections?.map((item) => ({
           post: item,
           type: numberToItemTypeMap[Number(item.origin)],
-        })) || []),
-        ...[
+        })) || [],
+        [
           ...(profiles?.map((item) => ({
             post: item,
             type: "Profile",
@@ -286,19 +287,19 @@ const useSearch = (
             type: "Microbrand",
           })) || []),
         ],
-        ...(publications?.map((item) => ({
+        publications?.map((item) => ({
           post: item,
           publishedOn: item?.publishedOn,
           type:
             item?.__typename !== "Mirror"
               ? (item as Post | Comment | Quote)?.metadata?.__typename
               : item?.mirrorOn?.metadata?.__typename,
-        })) || []),
-      ];
+        })) || [],
+      ] as Publication[][];
 
       dispatch(
         setAllSearchItems({
-          actionItems: allItems?.sort(() => Math.random() - 0.5),
+          actionItems: mixArrays(allItems),
           actionGraphCursor: collections?.length == 10 ? 10 : undefined,
           actionPubProfileCursor: pubProfileCursor,
           actionLensProfileCursor: profileCursor,
@@ -531,11 +532,11 @@ const useSearch = (
       }
 
       const newItems = [
-        ...(collections?.map((item) => ({
+        collections?.map((item) => ({
           post: item,
           type: numberToItemTypeMap[Number(item.origin)],
-        })) || []),
-        ...[
+        })) || [],
+        [
           ...(profiles?.map((item) => ({
             post: item,
             type: "Profile",
@@ -545,22 +546,19 @@ const useSearch = (
             type: "Microbrand",
           })) || []),
         ],
-        ...([...publications, ...moreData]?.map((item) => ({
+        [...publications, ...moreData]?.map((item) => ({
           post: item,
           publishedOn: item?.publishedOn,
           type:
             item?.__typename !== "Mirror"
               ? (item as Post | Comment | Quote)?.metadata?.__typename
               : item?.mirrorOn?.metadata?.__typename,
-        })) || []),
-      ];
+        })) || [],
+      ] as Publication[][];
 
       dispatch(
         setAllSearchItems({
-          actionItems: [
-            ...allSearchItems?.items!,
-            ...newItems?.sort(() => Math.random() - 0.5),
-          ],
+          actionItems: [...allSearchItems?.items!, ...mixArrays(newItems)],
           actionGraphCursor: allSearchItems?.graphCursor
             ? collections?.length == allSearchItems?.graphCursor + 10
               ? allSearchItems?.graphCursor + 10
