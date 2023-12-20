@@ -21,7 +21,7 @@ const encodeActData = (
         prices: number[];
         fulfillerAddress: string[];
         originalIndices: number[];
-        origin: string
+        origin: string;
       }
     | undefined,
   encryptedFulfillment: string,

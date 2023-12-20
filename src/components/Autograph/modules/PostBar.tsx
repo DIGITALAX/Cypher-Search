@@ -723,7 +723,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                       setInsufficientBalance({
                         actionValue: true,
                         actionMessage:
-                          "We know you're eager, but you've reached this creation's collect limit!",
+                          "We know you're eager, but you've reached this creations' collect limit!",
                       })
                     );
                     return;
