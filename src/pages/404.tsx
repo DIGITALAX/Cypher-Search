@@ -93,6 +93,7 @@ const Custom404: NextPage<{
         <title>Page Not Found</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <NotFound
         fullScreenVideo={fullScreenVideo}
         router={router}
