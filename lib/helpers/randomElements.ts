@@ -1,5 +1,4 @@
-export const getRandomElement = (arr: string[]): string => {
-  console.log({arr})
+export const getRandomElement = (arr: string[] = []): string => {
   const filteredArr = arr?.filter((item) => item.trim() !== "");
 
   const numberOfElements = Math.floor(Math.random() * 4) + 1;
