@@ -673,8 +673,11 @@ const useCreate = (
       };
 
       if (encrypted) {
+        let nonce = client.getLatestBlockhash();
+
         const authSig = await checkAndSignAuthMessage({
           chain: "polygon",
+          nonce: nonce!,
         });
 
         const accessControlConditions = [
@@ -712,7 +715,7 @@ const useCreate = (
             chain: "polygon",
             dataToEncrypt: JSON.stringify(toHash),
           },
-          client!
+          client! as any
         );
 
         toHash = {

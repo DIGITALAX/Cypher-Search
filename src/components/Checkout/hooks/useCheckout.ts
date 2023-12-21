@@ -103,10 +103,12 @@ const useCheckout = (
       return;
     setEncryptionLoading(true);
     try {
+      let nonce = client.getLatestBlockhash();
+
       const authSig = await checkAndSignAuthMessage({
         chain: "polygon",
+        nonce: nonce!,
       });
-
       await client.connect();
 
       const encryptedItems = await encryptItems(
