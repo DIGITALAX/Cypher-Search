@@ -95,7 +95,7 @@ export const encryptItems = async (
               ...rest,
             }),
           },
-          client!
+          client! as any
         );
 
         encryptedItems.push({
