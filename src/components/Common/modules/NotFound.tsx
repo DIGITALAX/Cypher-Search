@@ -26,7 +26,11 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   fullScreenVideo,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-center">
+    <div className="relative w-full h-screen flex flex-col items-center justify-center gap-5">
+      <div className="relative w-1/2 text-center h-fit flex items-center justify-center font-bit text-white text-sm">
+        Like a new friend, getting in sync takes time. This item is still
+        getting indexed on chain. For now, click to shuffle search.
+      </div>
       <Link
         className={`absolute top-2 left-2 w-10 h-10 flex cursor-pointer active:scale-95 items-center justify-center`}
         href={"/"}
