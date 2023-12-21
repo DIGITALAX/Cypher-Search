@@ -649,7 +649,7 @@ const useSearch = (
         token: getRandomElement(filterConstants?.token!),
         printType: getRandomArrayElement(
           ["sticker", "hoodie", "sleeve", "crop", "shirt", "poster"]?.map(
-            (item) => printStringToNumber[item.toUpperCase()]
+            (item) => printStringToNumber[item?.toUpperCase()]
           )
         ),
       })
