@@ -55,9 +55,9 @@ export const aggregateUniqueValues = (
   collection?.forEach((item) => {
     if (key === "tags" && item?.collectionMetadata?.[key]) {
       const tagsArray = item.collectionMetadata.tags
-        .split(",")
-        .map((tag) => tag?.trim())
-        .filter((tag) => tag.length > 0);
+        ?.split(",")
+        ?.map((tag) => tag?.trim())
+        ?.filter((tag) => tag.length > 0);
 
       tagsArray?.forEach((tag) => uniqueValues.add(tag));
     } else if (key === "dropTitle") {
