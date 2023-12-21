@@ -76,7 +76,7 @@ const buildQuery = (filters: Filter) => {
       ...filters.size.apparel,
       ...filters.size.poster,
       ...filters.size.sticker,
-    ].filter(Boolean);
+    ]?.filter(Boolean);
     combinedSizes.forEach((size) => {
       collectionMetadataOrConditions.push({ sizes_contains_nocase: size });
     });

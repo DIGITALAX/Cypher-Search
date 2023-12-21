@@ -1,17 +1,17 @@
 export const getRandomElement = (arr: string[]): string => {
-  const filteredArr = arr.filter(item => item.trim() !== '');
+  const filteredArr = arr?.filter((item) => item.trim() !== "");
 
   const numberOfElements = Math.floor(Math.random() * 4) + 1;
-  const tempArr = [...filteredArr];
+  const tempArr = [...(filteredArr || [])];
   const selectedElements: string[] = [];
 
   for (let i = 0; i < numberOfElements; i++) {
-    if (tempArr.length === 0) {
-      break; 
+    if (tempArr?.length === 0) {
+      break;
     }
 
-    const randomIndex = Math.floor(Math.random() * tempArr.length);
-    selectedElements.push(tempArr.splice(randomIndex, 1)[0]);
+    const randomIndex = Math.floor(Math.random() * tempArr?.length);
+    selectedElements.push(tempArr?.splice(randomIndex, 1)[0]);
   }
 
   return selectedElements.join(", ");
@@ -21,8 +21,8 @@ export const getRandomArrayElement = (arr: string[]): string[] => {
   const tempArr = [...(arr || [])];
   const selectedElements: string[] = [];
   for (let i = 0; i < numberOfElements; i++) {
-    const randomIndex = Math.floor(Math.random() * tempArr.length);
-    selectedElements.push(tempArr.splice(randomIndex, 1)[0]);
+    const randomIndex = Math.floor(Math.random() * tempArr?.length);
+    selectedElements.push(tempArr?.splice(randomIndex, 1)[0]);
   }
   return selectedElements;
 };
