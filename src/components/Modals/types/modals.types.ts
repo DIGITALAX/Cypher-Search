@@ -99,6 +99,10 @@ export type InteractErrorProps = {
   dispatch: Dispatch<AnyAction>;
 };
 
+export type ClaimProfileProps = {
+  dispatch: Dispatch<AnyAction>;
+};
+
 export type SuccessCheckoutProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;

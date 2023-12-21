@@ -5,6 +5,7 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
 import availableCurrenciesReducer from "./reducers/availableCurrenciesSlice";
+import claimProfileReducer from "./reducers/claimProfileSlice";
 import insufficientBalanceReducer from "./reducers/insufficientBalanceSlice";
 import filterChangeReducer from "./reducers/filterChangeSlice";
 import profileDisplayReducer from "./reducers/profileDisplaySlice";
@@ -61,7 +62,8 @@ const reducer = combineReducers({
   postSuccessReducer,
   profileDisplayReducer,
   filterChangeReducer,
-  insufficientBalanceReducer
+  insufficientBalanceReducer,
+  claimProfileReducer,
 });
 
 export const store = configureStore({

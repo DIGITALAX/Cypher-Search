@@ -26,6 +26,7 @@ import FollowCollect from "./FollowCollect";
 import SuccessCheckout from "./SuccessCheckout";
 import PostSuccess from "./PostSuccess";
 import InsufficientBalance from "./InsufficientBalance";
+import ClaimProfile from "./ClaimProfile";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -49,6 +50,9 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   );
   const insufficientBalance = useSelector(
     (state: RootState) => state.app.insufficientBalanceReducer
+  );
+  const claimProfile = useSelector(
+    (state: RootState) => state.app.claimProfileReducer
   );
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
@@ -156,7 +160,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     dispatch,
     address,
     publicClient,
-    lensConnected,
+    lensConnected
   );
   const {
     makeQuote,
@@ -378,6 +382,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           }
         />
       )}
+      {claimProfile?.value && <ClaimProfile dispatch={dispatch} />}
       {indexer?.open && <Index message={indexer?.message} />}
     </>
   );
