@@ -1,5 +1,5 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { itemTypeToString } from "../constants";
+import { itemTypeToString, printStringToNumber } from "../constants";
 import { ItemType } from "@/components/Common/types/common.types";
 
 type FilterField =
@@ -96,7 +96,17 @@ const buildQuery = (filters: Filter) => {
 
   if (filters.printType && filters.printType.length > 0) {
     filters.printType.forEach((printType) => {
-      otherOrConditions.push({ printType_contains_nocase: printType });
+      otherOrConditions.push({
+        printType_contains_nocase:
+          printStringToNumber[
+            printType
+              ?.split(" ")
+              .map(
+                (palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1)
+              )
+              .join(" ")
+          ],
+      });
     });
   }
 
@@ -108,7 +118,9 @@ const buildQuery = (filters: Filter) => {
       ?.forEach((origin) => {
         otherOrConditions.push({
           origin_contains_nocase:
-            itemTypeToString[origin?.replaceAll(" ", "") as ItemType],
+            itemTypeToString[
+              origin?.replaceAll(" ", "")?.toLowerCase() as ItemType
+            ],
         });
       });
   }
