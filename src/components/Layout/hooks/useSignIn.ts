@@ -25,6 +25,7 @@ import { PublicClient } from "viem";
 import { PRINT_ACCESS_CONTROL } from "../../../../lib/constants";
 import { setIsDesigner } from "../../../../redux/reducers/isDesignerSlice";
 import { setCartAnim } from "../../../../redux/reducers/cartAnimSlice";
+import { setClaimProfile } from "../../../../redux/reducers/claimProfileSlice";
 
 const useSignIn = (
   publicClient: PublicClient,
@@ -56,20 +57,25 @@ const useSignIn = (
         },
         lensConnected?.id
       );
-      const challengeResponse = await generateChallenge({
-        for: profile?.data?.defaultProfile?.id,
-        signedBy: address,
-      });
-      const signature = await signMessageAsync({
-        message: challengeResponse.data?.challenge.text!,
-      });
-      const accessTokens = await authenticate({
-        id: challengeResponse.data?.challenge.id,
-        signature: signature,
-      });
-      if (accessTokens) {
-        setAuthenticationToken({ token: accessTokens.data?.authenticate! });
-        dispatch(setLensConnected(profile?.data?.defaultProfile as Profile));
+      if (profile?.data?.defaultProfile?.id) {
+        const challengeResponse = await generateChallenge({
+          for: profile?.data?.defaultProfile?.id,
+          signedBy: address,
+        });
+        const signature = await signMessageAsync({
+          message: challengeResponse.data?.challenge.text!,
+        });
+        const accessTokens = await authenticate({
+          id: challengeResponse.data?.challenge.id,
+          signature: signature,
+        });
+        if (accessTokens) {
+          setAuthenticationToken({ token: accessTokens.data?.authenticate! });
+          dispatch(setLensConnected(profile?.data?.defaultProfile as Profile));
+        }
+      } else {
+        dispatch(setLensConnected(undefined));
+        dispatch(setClaimProfile(true));
       }
     } catch (err: any) {
       console.error(err.message);
