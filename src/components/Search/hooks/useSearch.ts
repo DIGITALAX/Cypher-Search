@@ -330,6 +330,8 @@ const useSearch = (
   ): Promise<Creation[] | undefined> => {
     const where = buildQuery(filters);
 
+    console.log({ where });
+
     let collections;
 
     try {
@@ -589,6 +591,72 @@ const useSearch = (
   };
 
   const handleShuffleSearch = async () => {
+    console.log(
+      { filterConstants },
+      {
+        hashtag: getRandomElement(filterConstants?.hashtags!),
+        community:
+          filterConstants?.community?.length &&
+          filterConstants?.community?.length > 0
+            ? getRandomElement(
+                filterConstants?.community?.map((item) => item?.[0])!
+              )
+            : "",
+        microbrand:
+          filterConstants?.microbrands?.length &&
+          filterConstants?.microbrands?.length > 0
+            ? getRandomElement(
+                filterConstants?.microbrands?.map((item) => item?.[0])!
+              )
+            : "",
+        catalog: getRandomElement(filterConstants?.catalog!),
+        access:
+          filterConstants?.access?.length && filterConstants?.access?.length > 0
+            ? getRandomElement(
+                filterConstants?.access?.map((item) =>
+                  item?.[0]?.toUpperCase()
+                )!
+              )
+            : "",
+        format: getRandomElement(filterConstants?.format!),
+        origin:
+          filterConstants?.origin?.length && filterConstants?.origin?.length > 0
+            ? getRandomElement(
+                filterConstants?.origin?.map((item) =>
+                  item?.[0]?.toUpperCase()
+                )!
+              )
+            : "",
+        editions: getRandomNumber(1, 10),
+        available: true,
+        fulfiller:
+          filterConstants?.fulfiller?.length &&
+          filterConstants?.fulfiller?.length > 0
+            ? getRandomElement(filterConstants?.fulfiller!)
+            : "",
+        drop:
+          filterConstants?.dropsSuggested?.length &&
+          filterConstants?.dropsSuggested?.length > 0
+            ? getRandomElement(filterConstants?.dropsSuggested!)
+            : "",
+        size: {
+          apparel: getRandomArrayElement(filterConstants?.sizes?.apparel!),
+          poster: getRandomArrayElement(filterConstants?.sizes?.poster!),
+          sticker: getRandomArrayElement(filterConstants?.sizes?.sticker!),
+        },
+        color: getRandomArrayElement(filterConstants?.colors!),
+        price: {
+          min: getRandomNumber(1, 100),
+          max: getRandomNumber(50, 500),
+        },
+        token: getRandomElement(filterConstants?.token!),
+        printType: getRandomArrayElement(
+          ["sticker", "hoodie", "sleeve", "crop", "shirt", "poster"]?.map(
+            (item) => printStringToNumber[item?.toUpperCase()]
+          )
+        ),
+      }
+    );
     dispatch(
       setFilter({
         hashtag: getRandomElement(filterConstants?.hashtags!),
