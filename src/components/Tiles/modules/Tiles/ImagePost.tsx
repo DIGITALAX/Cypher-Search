@@ -791,7 +791,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                       //   )?.content?.length > 0)
                       //   ? "justify-start items-end"
                       //   :
-                      "items-start justify-end"
+                      "items-end justify-end"
                     }`}
                   >
                     <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-sm 2xl:text-base">
@@ -836,13 +836,13 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                       //   )?.content?.length > 0)
                       //   ? "justify-start items-end"
                       //   :
-                      "items-start justify-end"
+                      "items-end justify-end"
                     }`}
                   >
-                    <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-sm">
+                    <div className="relative flex items-end justify-end text-right break-words text-white font-bit uppercase text-sm">
                       posted
                     </div>
-                    <div className="relative flex items-center justify-center text-right break-words text-white/70 font-bit uppercase text-sm">
+                    <div className="relative flex items-end justify-end text-right break-words text-white/70 font-bit uppercase text-sm">
                       {(publication?.__typename === "Mirror"
                         ? publication?.mirrorOn
                         : (publication as Post)
