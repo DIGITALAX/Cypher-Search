@@ -133,10 +133,12 @@ const useOrders = (
         return;
       }
 
+      let nonce = client.getLatestBlockhash();
+
       const authSig = await checkAndSignAuthMessage({
         chain: "polygon",
+        nonce: nonce!,
       });
-
       await client.connect();
 
       const decryptedString = await decryptToString(
@@ -149,7 +151,7 @@ const useOrders = (
             .dataToEncryptHash,
           chain: "polygon",
         },
-        client!
+        client! as any
       );
 
       const details = await JSON.parse(decryptedString);
