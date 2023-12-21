@@ -654,7 +654,7 @@ const useSearch = (
           ["sticker", "hoodie", "sleeve", "crop", "shirt", "poster"]?.map(
             (item) => printStringToNumber[item?.toUpperCase()]
           )
-        ),
+        )?.filter(Boolean),
       }
     );
     dispatch(
