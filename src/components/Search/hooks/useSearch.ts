@@ -5,7 +5,6 @@ import {
   PLACEHOLDERS,
   TAGS,
   numberToItemTypeMap,
-  printStringToNumber,
 } from "../../../../lib/constants";
 import {
   LimitType,
@@ -227,8 +226,14 @@ const useSearch = (
       }
 
       if (
-        filters?.format?.toLowerCase()?.includes("video") ||
-        publications?.length + profiles?.length < 20
+        (filters?.format?.toLowerCase()?.includes("video") ||
+          publications?.length + profiles?.length < 20) &&
+        publications?.filter(
+          (item) =>
+            (item as Post)?.metadata?.__typename == "VideoMetadataV3" ||
+            item?.by?.id?.toLowerCase() == CHROMADIN_ID?.toLowerCase()
+        )?.length < 10 &&
+        query?.trim() == ""
       ) {
         const data = await getPublications(
           {
@@ -329,7 +334,6 @@ const useSearch = (
     cursor: number
   ): Promise<Creation[] | undefined> => {
     const where = buildQuery(filters);
-
     let collections;
 
     try {
@@ -337,7 +341,6 @@ const useSearch = (
         const textWhere = buildTextQuery(allSearchItems?.searchInput!);
         const combinedWhere = combineQueryObjects(textWhere, where);
         const searchItems = await getAllCollections(combinedWhere, 10, cursor);
-
         collections = searchItems?.data?.collectionCreateds;
       } else {
         const searchItems = await getAllCollections(where, 10, cursor);
@@ -509,7 +512,10 @@ const useSearch = (
       if (
         (filters?.format?.toLowerCase()?.includes("video") ||
           publications?.length + profiles?.length < 20) &&
-        allSearchItems?.videoCursor
+        allSearchItems?.videoCursor &&
+        publications?.filter(
+          (item) => (item as Post)?.metadata?.__typename == "VideoMetadataV3"
+        )?.length < 10
       ) {
         const data = await getPublications(
           {
@@ -555,12 +561,11 @@ const useSearch = (
               : item?.mirrorOn?.metadata?.__typename,
         })) || [],
       ] as Publication[][];
-
       dispatch(
         setAllSearchItems({
           actionItems: [...allSearchItems?.items!, ...mixArrays(newItems)],
           actionGraphCursor: allSearchItems?.graphCursor
-            ? collections?.length == allSearchItems?.graphCursor + 10
+            ? collections?.length == 10
               ? allSearchItems?.graphCursor + 10
               : undefined
             : undefined,

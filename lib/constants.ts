@@ -19,8 +19,7 @@ export const COIN_OP_OPEN_ACTION: `0x${string}` =
   "0x179ACb90575CfF001c6c767b197FFe100B6ADc3a";
 export const F3M_OPEN_ACTION: `0x${string}` =
   "0xb92725B5Bea87C7Ed856898AaC3122548aBA6349";
-export const LEGEND_OPEN_ACTION: `0x${string}` =
-  "0x";
+export const LEGEND_OPEN_ACTION: `0x${string}` = "0x";
 export const PRINT_ACCESS_CONTROL: `0x${string}` =
   "0x4931896d9bF48C670FAb6f1b6189DDC122Ff7e2E";
 export const COLLECTION_CREATOR: `0x${string}` =
@@ -112,6 +111,8 @@ export const itemTypeToNumber: { [key in ItemType]: string } = {
   [ItemType.Listener]: "3",
   [ItemType.F3M]: "4",
   [ItemType.Other]: "5",
+  [ItemType.Kinora]: "6",
+  [ItemType.TheDial]: "7",
 };
 
 export const itemStringToNumber: { [key: string]: string } = {
@@ -121,6 +122,8 @@ export const itemStringToNumber: { [key: string]: string } = {
   ["Listener"]: "3",
   ["F3M"]: "4",
   ["Other"]: "5",
+  ["Kinora"]: "6",
+  ["Dial"]: "7",
 };
 
 export const itemStringToType: { [key: string]: ItemType } = {
@@ -130,6 +133,8 @@ export const itemStringToType: { [key: string]: ItemType } = {
   ["listener"]: ItemType.Listener,
   ["f3m"]: ItemType.F3M,
   ["other"]: ItemType.Other,
+  ["kinora"]: ItemType.Kinora,
+  ["dial"]: ItemType.TheDial,
 };
 
 export const itemTypeToString: { [key in ItemType]: string } = {
@@ -139,6 +144,8 @@ export const itemTypeToString: { [key in ItemType]: string } = {
   [ItemType.Listener]: "listener",
   [ItemType.F3M]: "f3m",
   [ItemType.Other]: "other",
+  [ItemType.Kinora]: "kinora",
+  [ItemType.TheDial]: "dial",
 };
 
 export const printTypeToNumber: { [key in PrintType]: string } = {

@@ -177,6 +177,8 @@ export enum ItemType {
   Listener = "listener",
   F3M = "f3m",
   Other = "other",
+  Kinora = "kinora",
+  TheDial = "dial"
 }
 
 export type CartItem = {
