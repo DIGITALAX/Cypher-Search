@@ -12,8 +12,10 @@ const ORDERS = `
         buyer
         blockTimestamp
         transactionHash
-        images
-        names
+        orderMetadata {
+          images
+          names
+        }
         messages
         details
         subOrderPrice
@@ -31,8 +33,10 @@ const ORDERS = `
       buyer
       blockTimestamp
       transactionHash
-      images
-      names
+      orderMetadata {
+        images
+        names
+      }
       messages
       subOrderPrice
       subOrderCollectionIds
