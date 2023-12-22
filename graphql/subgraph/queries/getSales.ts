@@ -27,7 +27,10 @@ query($orderId: String!) {
     buyer
     blockTimestamp
     transactionHash
-    images
+    orderMetadata {
+      images
+      names
+    }
 }
 }
 `;
@@ -44,7 +47,10 @@ query($orderId: String!) {
     buyer
     blockTimestamp
     transactionHash
-    images
+    orderMetadata {
+      images
+      names
+    }
   }
 }
 `;
