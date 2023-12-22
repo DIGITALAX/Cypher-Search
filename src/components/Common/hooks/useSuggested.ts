@@ -188,7 +188,7 @@ const useSuggested = (
         lensProfileCursor: undefined,
         lensPubCursor: publications?.length == 25 ? pubCursor : undefined,
         hasMore:
-          collections?.length == 25 && publications?.length == 25
+          collections?.length == 25 || publications?.length == 25
             ? true
             : false,
       });
