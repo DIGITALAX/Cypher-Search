@@ -20,7 +20,6 @@ import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import lensLike from "../../../../lib/helpers/api/likePost";
 import errorChoice from "../../../../lib/helpers/errorChoice";
 import lensMirror from "../../../../lib/helpers/api/mirrorPost";
-import { FilterValues } from "@/components/Search/types/search.types";
 import {
   itemStringToNumber,
   numberToItemTypeMap,

@@ -1,5 +1,5 @@
 import { Filter } from "@/components/Search/types/search.types";
-import { itemTypeToString, printStringToNumber } from "../constants";
+import { itemStringToType, printStringToNumber } from "../constants";
 import { ItemType } from "@/components/Common/types/common.types";
 
 type FilterField =
@@ -118,8 +118,12 @@ const buildQuery = (filters: Filter) => {
       ?.forEach((origin) => {
         otherOrConditions.push({
           origin_contains_nocase:
-            itemTypeToString[
-              origin?.replaceAll(" ", "")?.toLowerCase() as ItemType
+            itemStringToType[
+              origin == "LIT LISTENER"
+                ? "listener"
+                : origin == "THE DIAL"
+                ? "dial"
+                : (origin?.replaceAll(" ", "")?.toLowerCase() as ItemType)
             ],
         });
       });
