@@ -53,8 +53,10 @@ const useOrders = (
             buyer: string;
             blockTimestamp: string;
             transactionHash: string;
-            images: string[];
-            names: string[];
+            orderMetadata: {
+              images: string[];
+              names: string[];
+            };
             messages: string[];
             details: string;
             subOrderPrice: string[];
@@ -103,7 +105,7 @@ const useOrders = (
         );
 
         const orders = await Promise.all(promises);
-        setAllOrders(orders as Order[]);
+        setAllOrders(orders as any[]);
       }
     } catch (err: any) {
       console.error(err.message);

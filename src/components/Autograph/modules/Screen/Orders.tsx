@@ -125,8 +125,9 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                 src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
                               />
                             </div>
-                            {order?.images
+                            {order?.subOrders
                               ?.slice(0, 2)
+                              ?.map((item) => item?.collection?.image)
                               ?.map((image: string, index: number) => {
                                 return (
                                   <div

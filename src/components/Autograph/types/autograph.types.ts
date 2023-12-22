@@ -1358,8 +1358,10 @@ export interface Order {
   buyer: string;
   blockTimestamp: string;
   transactionHash: string;
-  images: string[];
-  names: string[];
+  orderMetadata: {
+    names: string[];
+    messages: string[];
+  };
   messages: string[];
   details?: Details | EncryptedDetails | string;
   subOrders: Sub[];
