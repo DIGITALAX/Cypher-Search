@@ -34,6 +34,7 @@ export const F3M_ADDRESS: `0x${string}` =
 export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|ba[A-Za-z2-7]{57})\b/;
 export const PLACEHOLDERS: string[] = [
   "know the creator by name? @ them, we won't judge",
+  "transform, tinker, or totally overhaul – every mint & print on Cypher is CC0",
   "some ideas from trending hashes: #synthwave #neobrutalism #autonomy",
   "with the ecosystem at your fingertips, where do you start?",
   "don't know what you're looking for? try a random mix",
