@@ -157,8 +157,10 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                   simpleCollect
                 ),
           comment
-            ? () => comment()
-            : display
+            ? () => comment!()
+            : // : router?.asPath?.includes("/item/")
+            // ? () => {}
+            display
             ? () =>
                 router.push(
                   `/item/${display}/${(
@@ -385,12 +387,14 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
                 }`}
                 onClick={() => {
                   if (image[1] === "Comments") {
-                    (publication?.__typename === "Mirror"
-                      ? publication?.mirrorOn
-                      : (publication as Post)
-                    )?.openActionModules?.[0]?.contract?.address
-                      ?.toLowerCase()
-                      ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
+                    router?.asPath?.includes("/item/") && comment
+                      ? comment()
+                      : (publication?.__typename === "Mirror"
+                          ? publication?.mirrorOn
+                          : (publication as Post)
+                        )?.openActionModules?.[0]?.contract?.address
+                          ?.toLowerCase()
+                          ?.includes(CHROMADIN_OPEN_ACTION?.toLowerCase())
                       ? router.push(
                           `/item/chromadin/${(
                             (publication?.__typename === "Mirror"
