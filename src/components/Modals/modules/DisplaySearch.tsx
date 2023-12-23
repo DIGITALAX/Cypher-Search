@@ -52,7 +52,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
                 />
               </div>
             </div>
-            <div className="relative w-2/3 h-72 flex items-start justify-center overflow-y-scroll">
+            <div className="relative w-2/3 h-[30vh] flex items-start justify-center overflow-y-scroll">
               <div className="relative w-full h-fit flex flex-row flex-wrap items-start justify-center gap-2">
                 {galleryLoading
                   ? Array.from({ length: 20 })?.map((_, index: number) => {
