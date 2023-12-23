@@ -56,7 +56,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
               router.push(
                 `/autograph/${itemData?.handle?.suggestedFormatted?.localName?.split(
                   "@"
-                )}`
+                )?.[1]}`
               )
             }
           >
