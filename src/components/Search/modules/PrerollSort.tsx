@@ -19,7 +19,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className="relative w-full lg:w-[60rem] h-fit items-center justify-center flex p-px rounded-sm"
+      className="relative order-2 lg:order-3 w-full lg:w-[60rem] h-fit items-center justify-center flex p-px rounded-sm"
       id="preroll"
     >
       <div
@@ -87,6 +87,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                     <Image
                       layout="fill"
                       objectFit="cover"
+                      priority
                       className="rounded-sm flex w-2/3 h-full items-center justify-center"
                       src={`${INFURA_GATEWAY}/ipfs/${image[1]}`}
                       draggable={false}
@@ -171,6 +172,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                 <Image
                   layout="fill"
                   draggable={false}
+                  priority
                   src={`${INFURA_GATEWAY}/ipfs/QmRKmMYJj7KAwf4BDGwrd51tKWoS8djnLGWT5XNdrJMztk`}
                 />
               </div>
@@ -609,6 +611,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
           >
             <Image
               layout="fill"
+              priority
               src={`${INFURA_GATEWAY}/ipfs/QmeVXGLFHVhLHKFy5HzAuqF62cCyF9SniY3hPYLHLfBtGW`}
               draggable={false}
             />

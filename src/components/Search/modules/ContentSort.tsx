@@ -18,7 +18,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
   filterConstants,
 }): JSX.Element => {
   return (
-    <div className="relative w-full h-fit items-start justify-center flex flex-col gap-5">
+    <div className="order-1 lg:order-2 relative w-full h-fit items-start justify-center flex flex-col gap-5">
       <div className="relative w-full h-fit justify-between gap-3 flex items-center flex-row sm:flex-nowrap flex-wrap">
         <div className="font-bit text-white text-left flex items-center justify-center text-sm uppercase break-words h-fit w-fit">
           Find what you’re really looking for, with filters for everything you
@@ -33,6 +33,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             layout="fill"
             src={`${INFURA_GATEWAY}/ipfs/QmSqbSXEPerv869YdJAyY7sgE47qC4Btx8FbAeTMLArMqF`}
             draggable={false}
+            priority
           />
         </div>
       </div>
@@ -276,6 +277,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                 src={`${INFURA_GATEWAY}/ipfs/QmUFprxSMc6pQTbXkV5eZtwC4v2ksTzRkGZ19Yk9i244gY`}
                 layout="fill"
                 draggable={false}
+                priority
               />
             </div>
           );
@@ -288,6 +290,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               src={`${INFURA_GATEWAY}/ipfs/QmRpjossq3S23jYRHUSobGk2jeCeexcPgzeJpc3NE1ZPRf`}
               layout="fill"
               draggable={false}
+              priority
             />
           </div>
           <div className="relative w-10 h-10 flex items-center justify-center">
@@ -295,6 +298,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               src={`${INFURA_GATEWAY}/ipfs/QmUX8vJWZ2aJc3qCGKUwptgX9Ve9UYpQKgddk4oPAaXPdq`}
               layout="fill"
               draggable={false}
+              priority
             />
           </div>
         </div>

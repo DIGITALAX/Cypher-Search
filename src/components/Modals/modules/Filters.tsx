@@ -37,30 +37,33 @@ const Filters: FunctionComponent<FilterProps> = ({
       id="milestone"
     >
       <div className="relative flex flex-col lg:flex-row gap-10 mx-auto w-full p-4 h-fit lg:items-start items-center justify-start lg:justify-center">
-        <TileSwitch
-          type={publication?.type}
-          filterConstants={filterConstants}
-          lensConnected={lensConnected}
-          publication={publication}
-          layoutAmount={layoutAmount}
-          popUpOpen={popUpOpen}
-          setPopUpOpen={setPopUpOpen}
-          index={0}
-          dispatch={dispatch}
-          router={router}
-          cartItems={cartItems}
-          mirror={mirror}
-          like={like}
-          interactionsLoading={interactionsLoading}
-          openMirrorChoice={openMirrorChoice}
-          setOpenMirrorChoice={setOpenMirrorChoice}
-          followLoading={followLoading}
-          unfollowProfile={unfollowProfile}
-          followProfile={followProfile}
-          profileHovers={profileHovers}
-          setProfileHovers={setProfileHovers}
-        />
-
+        <div className="relative w-full h-fit flex lg:items-start items-center justify-start lg:justify-center lg:order-1 order-3">
+          {publication?.post && (
+            <TileSwitch
+              type={publication?.type}
+              filterConstants={filterConstants}
+              lensConnected={lensConnected}
+              publication={publication}
+              layoutAmount={layoutAmount}
+              popUpOpen={popUpOpen}
+              setPopUpOpen={setPopUpOpen}
+              index={0}
+              dispatch={dispatch}
+              router={router}
+              cartItems={cartItems}
+              mirror={mirror}
+              like={like}
+              interactionsLoading={interactionsLoading}
+              openMirrorChoice={openMirrorChoice}
+              setOpenMirrorChoice={setOpenMirrorChoice}
+              followLoading={followLoading}
+              unfollowProfile={unfollowProfile}
+              followProfile={followProfile}
+              profileHovers={profileHovers}
+              setProfileHovers={setProfileHovers}
+            />
+          )}
+        </div>
         <ContentSort
           filterConstants={filterConstants}
           handleResetFilters={handleResetFilters}

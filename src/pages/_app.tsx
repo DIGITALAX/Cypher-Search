@@ -76,6 +76,13 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, [router]);
 
+  useEffect(() => {
+    console.log(`                                  
+    _      _)_ _   _   _   _ _       
+   (_( (_( (_ (_) ) ) (_) ) ) ) (_(  
+                                  _) `)
+  }, [])
+
   if (routerChangeLoading) {
     return <RouterChange />;
   }
