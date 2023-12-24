@@ -203,7 +203,6 @@ const useItem = (
           item[0]?.toLowerCase() ===
           (id?.includes("re_de") ? id : id?.replaceAll("_", " "))?.toLowerCase()
       );
-      console.log({ item });
       const data = await getProfile(
         {
           forProfileId: `${toHexWithLeadingZero(Number(item?.[2]))}`,
