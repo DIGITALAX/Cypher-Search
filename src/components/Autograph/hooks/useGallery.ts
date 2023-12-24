@@ -373,7 +373,11 @@ const useGallery = (
       };
 
       if (existing != -1) {
-        attributes[existing].value = JSON.stringify(reducedDiplay);
+        attributes[existing] = {
+          key: "cypherDisplay",
+          value: JSON.stringify(reducedDiplay),
+          type: MetadataAttributeType.Json,
+        };
       } else {
         attributes.push({
           key: "cypherDisplay",
@@ -419,13 +423,12 @@ const useGallery = (
         },
       });
 
-
       if (test?.success) {
         const response = await fetch("/api/ipfs", {
           method: "POST",
           body: JSON.stringify(test?.data),
         });
-        
+
         const responseJSON = await response.json();
 
         const clientWallet = createWalletClient({
