@@ -22,12 +22,29 @@ import { useEffect, useState } from "react";
 import Footer from "@/components/Layout/modules/Footer";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import Cart from "@/components/Common/modules/Cart";
+import dynamic from "next/dynamic";
+import {
+  createReactClient,
+  studioProvider,
+  LivepeerConfig,
+} from "@livepeer/react";
+
+const KinoraProvider = dynamic(
+  () => import("kinora-sdk").then((mod) => mod.KinoraProvider),
+  { ssr: false },
+);
 
 const walletTheme = merge(darkTheme(), {
   colors: {
     accentColor: "#111313",
   },
 } as Theme);
+
+const livepeerClient = createReactClient({
+  provider: studioProvider({
+    apiKey: "fb6e59f6-4aba-4de6-9f38-06ee1a6d57d6",
+  }),
+});
 
 const { chains, publicClient } = configureChains(
   [polygon],
@@ -80,8 +97,8 @@ export default function App({ Component, pageProps }: AppProps) {
     console.log(`                                  
     _      _)_ _   _   _   _ _       
    (_( (_( (_ (_) ) ) (_) ) ) ) (_(  
-                                  _) `)
-  }, [])
+                                  _) `);
+  }, []);
 
   if (routerChangeLoading) {
     return <RouterChange />;
@@ -89,23 +106,29 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains} theme={walletTheme}>
-        <XMTPProvider dbVersion={2}>
-          <Provider store={store}>
-            <div
-              className={`relative w-full h-auto flex flex-col ${
-                router?.asPath?.includes("autograph")
-                  ? "bg-black"
-                  : "bg-offBlack"
-              }`}
-            >
-              <Component {...pageProps} router={router} client={client} />
-              <Modals router={router} />
-              {router?.asPath?.includes("/autograph/") &&
-                !router?.asPath?.includes("/drop/") && <Cart router={router} />}
-              <Footer handleRewind={handleRewind} />
-            </div>
-          </Provider>
-        </XMTPProvider>
+        <LivepeerConfig client={livepeerClient}>
+          <XMTPProvider dbVersion={2}>
+            <KinoraProvider errorHandlingModeStrict={false}>
+              <Provider store={store}>
+                <div
+                  className={`relative w-full h-auto flex flex-col ${
+                    router?.asPath?.includes("autograph")
+                      ? "bg-black"
+                      : "bg-offBlack"
+                  }`}
+                >
+                  <Component {...pageProps} router={router} client={client} />
+                  <Modals router={router} />
+                  {router?.asPath?.includes("/autograph/") &&
+                    !router?.asPath?.includes("/drop/") && (
+                      <Cart router={router} />
+                    )}
+                  <Footer handleRewind={handleRewind} />
+                </div>
+              </Provider>
+            </KinoraProvider>
+          </XMTPProvider>
+        </LivepeerConfig>
       </RainbowKitProvider>
     </WagmiConfig>
   );

@@ -8,6 +8,7 @@ const allowedOrigins = [
   "https://arweave.net/",
   "https://gw.ipfs-lens.dev",
   "https://hey.xyz",
+  "https://livepeer.studio/api/",
 ];
 
 const nextConfig = {
