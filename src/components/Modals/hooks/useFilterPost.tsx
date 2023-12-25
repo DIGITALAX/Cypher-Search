@@ -80,6 +80,7 @@ const useFilterPost = (
   );
 
   const mirror = async (id: string, creation = true) => {
+    if (!lensConnected?.id) return;
     setInteractionsLoading((prev) => {
       const arr = [...interactionsLoading];
       arr[0] = { ...arr[0], mirror: true };
@@ -126,6 +127,7 @@ const useFilterPost = (
   };
 
   const like = async (id: string, hasReacted: boolean) => {
+    if (!lensConnected?.id) return;
     setInteractionsLoading((prev) => {
       const arr = [...prev];
       arr[0] = { ...arr[0], like: true };
@@ -162,6 +164,7 @@ const useFilterPost = (
   };
 
   const unfollowProfile = async () => {
+    if (!lensConnected?.id) return;
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[0] = true;
@@ -224,6 +227,7 @@ const useFilterPost = (
   };
 
   const followProfile = async () => {
+    if (!lensConnected?.id) return;
     setFollowLoading((prev) => {
       const updatedArray = [...prev];
       updatedArray[0] = true;

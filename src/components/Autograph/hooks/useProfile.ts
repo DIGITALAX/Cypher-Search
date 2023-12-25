@@ -56,6 +56,7 @@ const useProfile = (
     feed?: boolean,
     main?: boolean
   ) => {
+    if (!lensConnected?.id) return;
     handleLoaders(true, main!, feed!, index);
 
     try {
@@ -111,6 +112,7 @@ const useProfile = (
     feed?: boolean,
     main?: boolean
   ) => {
+    if (!lensConnected?.id) return;
     handleLoaders(true, main!, feed!, index);
 
     try {

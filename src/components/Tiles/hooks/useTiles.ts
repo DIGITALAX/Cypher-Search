@@ -22,6 +22,7 @@ const useTiles = (
   const [followLoading, setFollowLoading] = useState<boolean[]>([]);
 
   const followProfile = async (id: string, index?: number) => {
+    if (!lensConnected?.id) return;
     if (index === -1) {
       return;
     }
@@ -88,6 +89,7 @@ const useTiles = (
   };
 
   const unfollowProfile = async (id: string, index?: number) => {
+    if (!lensConnected?.id) return;
     if (index === -1) {
       return;
     }

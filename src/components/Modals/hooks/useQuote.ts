@@ -133,6 +133,7 @@ const useQuote = (
   });
 
   const quote = async () => {
+    if (!lensConnected?.id) return;
     if (
       !makeQuote[0]?.content &&
       !makeQuote[0]?.images &&
@@ -546,6 +547,7 @@ const useQuote = (
   };
 
   const handleCollect = async () => {
+    if (!lensConnected?.id) return;
     setTransactionLoading(true);
     try {
       const clientWallet = createWalletClient({
@@ -576,6 +578,7 @@ const useQuote = (
   };
 
   const handleFollow = async () => {
+    if (!lensConnected?.id) return;
     setTransactionLoading(true);
     try {
       const clientWallet = createWalletClient({
