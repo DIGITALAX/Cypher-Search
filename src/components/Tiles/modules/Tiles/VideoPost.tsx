@@ -3,6 +3,8 @@ import { FunctionComponent, RefObject, useRef, useState } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import Controls from "../Controls";
 import { VideoPostProps } from "../../types/tiles.types";
+import dynamic from "next/dynamic";
+import { Player } from "@livepeer/react";
 import {
   AudioMetadataV3,
   Mirror,
@@ -12,6 +14,11 @@ import {
 } from "../../../../../graphql/generated";
 import { metadataMedia } from "../../../../../lib/helpers/postMetadata";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
+
+const KinoraPlayerWrapper = dynamic(
+  () => import("kinora-sdk").then((mod) => mod.KinoraPlayerWrapper),
+  { ssr: false }
+);
 
 const VideoPost: FunctionComponent<VideoPostProps> = ({
   dispatch,
@@ -77,7 +84,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
               draggable={false}
             />
           )}
-          {media?.type == "Audio" ?  (
+          {media?.type == "Audio" ? (
             <>
               <Image
                 layout="fill"
@@ -86,98 +93,129 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 src={media?.cover!}
                 onError={(e) => handleImageError(e)}
               />
-             {videoInfo?.isActive && <audio
+              {videoInfo?.isActive && (
+                <audio
+                  key={uniqueVideoKey}
+                  draggable={false}
+                  controls={false}
+                  playsInline
+                  autoPlay
+                  onPlay={() =>
+                    setVideoInfo((prev) => ({
+                      ...prev,
+                      isPlaying: true,
+                    }))
+                  }
+                  onLoadedMetadata={() => {
+                    setVideoInfo((prev) => ({
+                      ...prev,
+                      duration: videoRef?.current?.duration || 0,
+                    }));
+
+                    if (videoInfo?.currentTime != 0 && videoRef.current) {
+                      videoRef.current.currentTime = videoInfo?.currentTime;
+                    }
+                  }}
+                  onTimeUpdate={() =>
+                    setVideoInfo((prev) => ({
+                      ...prev,
+                      currentTime: videoRef?.current?.currentTime || 0,
+                      loading: false,
+                    }))
+                  }
+                  onVolumeChange={() =>
+                    setVideoInfo((prev) => ({
+                      ...prev,
+                      volume: videoRef?.current?.volume || 0,
+                    }))
+                  }
+                  hidden
+                  id={uniqueVideoKey}
+                  ref={videoRef as RefObject<HTMLVideoElement>}
+                >
+                  <source
+                    src={
+                      media?.url?.includes("/ipfs/")
+                        ? media?.url?.split("/ipfs/")?.[1]
+                        : media?.url
+                    }
+                  />
+                </audio>
+              )}
+            </>
+          ) : videoInfo?.isActive ? (
+            <div
+              id={uniqueVideoKey}
+              className="w-full h-full object-cover flex"
+            >
+              <KinoraPlayerWrapper
+                parentId={uniqueVideoKey}
                 key={uniqueVideoKey}
-                draggable={false}
-                controls={false}
-                playsInline
-                autoPlay
+                customControls={true}
+                // controls={false}
+                // playsInline
+                // autoPlay
+                fillWidthHeight
                 onPlay={() =>
                   setVideoInfo((prev) => ({
                     ...prev,
                     isPlaying: true,
                   }))
                 }
-                onLoadedMetadata={() => {
+                onPause={() =>
                   setVideoInfo((prev) => ({
                     ...prev,
-                    duration: videoRef?.current?.duration || 0,
+                    isPlaying: false,
+                    isActive: false,
+                  }))
+                }
+                onLoadedMetadata={(e) => {
+                  setVideoInfo((prev) => ({
+                    ...prev,
+                    duration: (e.target as any)?.duration || 0,
                   }));
 
-                  if (videoInfo?.currentTime != 0 && videoRef.current) {
-                    videoRef.current.currentTime = videoInfo?.currentTime;
+                  if (videoInfo?.currentTime != 0 && e.target) {
+                    (e.target as any).currentTime = videoInfo?.currentTime;
                   }
                 }}
-                onTimeUpdate={() =>
+                onTimeUpdate={(e) =>
                   setVideoInfo((prev) => ({
                     ...prev,
-                    currentTime: videoRef?.current?.currentTime || 0,
+                    currentTime: (e.target as any)?.currentTime || 0,
                     loading: false,
                   }))
                 }
-                onVolumeChange={() =>
+                onVolumeChange={(e) =>
                   setVideoInfo((prev) => ({
                     ...prev,
-                    volume: videoRef?.current?.volume || 0,
+                    volume: (e.target as any)?.volume || 0,
                   }))
                 }
-                hidden
-                id={uniqueVideoKey}
-                ref={videoRef as RefObject<HTMLVideoElement>}
-              >
-                <source src={media?.url} />
-              </audio>}
-            </>
-          ) : videoInfo?.isActive ? (
-            <video
-              key={uniqueVideoKey}
-              draggable={false}
-              controls={false}
-              playsInline
-              autoPlay
-              onPlay={() =>
-                setVideoInfo((prev) => ({
-                  ...prev,
-                  isPlaying: true,
-                }))
-              }
-              onPause={() =>
-                setVideoInfo((prev) => ({
-                  ...prev,
-                  isPlaying: false,
-                  isActive: false,
-                }))
-              }
-              onLoadedMetadata={() => {
-                setVideoInfo((prev) => ({
-                  ...prev,
-                  duration: videoRef?.current?.duration || 0,
-                }));
 
-                if (videoInfo?.currentTime != 0 && videoRef.current) {
-                  videoRef.current.currentTime = videoInfo?.currentTime;
-                }
-              }}
-              onTimeUpdate={() =>
-                setVideoInfo((prev) => ({
-                  ...prev,
-                  currentTime: videoRef?.current?.currentTime || 0,
-                  loading: false,
-                }))
-              }
-              onVolumeChange={() =>
-                setVideoInfo((prev) => ({
-                  ...prev,
-                  volume: videoRef?.current?.volume || 0,
-                }))
-              }
-              className="relative w-full h-full object-cover"
-              poster={media?.cover}
-              id={uniqueVideoKey}
-              ref={videoRef as RefObject<HTMLVideoElement>}
-            >
-              <source src={media?.url} />
-            </video>
+                // id={uniqueVideoKey}
+                // ref={videoRef as RefObject<HTMLVideoElement>}
+              >
+                {(setMediaElement: (node: HTMLVideoElement) => void) => (
+                  <Player
+                    mediaElementRef={setMediaElement}
+                    src={
+                      "https://thedial.infura-ipfs.io/ipfs/bafybeigtrokn3qww2qjuuuu6l3wjy2uex3xs2wpq4uykn4ait5opn2n3cq"
+                      // media?.url?.includes("/ipfs/")
+                      //   ? 
+                        // "ipfs://" + media?.url?.split("/ipfs/")?.[1]
+                        // : media?.url
+                    }
+                    // poster={media?.cover}
+                    objectFit="cover"
+                    autoUrlUpload={{
+                      fallback: true,
+                      ipfsGateway: INFURA_GATEWAY,
+                    }}
+                  />
+                )}
+              </KinoraPlayerWrapper>
+            </div>
           ) : (
             <Image
               layout="fill"
