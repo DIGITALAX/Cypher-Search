@@ -28,11 +28,12 @@ import {
   studioProvider,
   LivepeerConfig,
 } from "@livepeer/react";
+import { KinoraProvider } from "kinora-sdk";
 
-const KinoraProvider = dynamic(
-  () => import("kinora-sdk").then((mod) => mod.KinoraProvider),
-  { ssr: false },
-);
+// const KinoraProvider = dynamic(
+//   () => import("kinora-sdk").then((mod) => mod.KinoraProvider),
+//   { ssr: false }
+// );
 
 const walletTheme = merge(darkTheme(), {
   colors: {
@@ -42,7 +43,7 @@ const walletTheme = merge(darkTheme(), {
 
 const livepeerClient = createReactClient({
   provider: studioProvider({
-    apiKey: "fb6e59f6-4aba-4de6-9f38-06ee1a6d57d6",
+    apiKey: process.env.LIVEPEER_STUDIO_KEY!,
   }),
 });
 

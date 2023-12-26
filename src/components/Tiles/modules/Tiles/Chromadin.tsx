@@ -70,11 +70,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               type={publication?.collectionMetadata?.mediaTypes?.[0]}
               srcUrl={
                 publication?.collectionMetadata?.mediaTypes?.[0] == "video"
-                  ? `${INFURA_GATEWAY}/ipfs/${
-                      publication?.collectionMetadata?.video?.split(
-                        "ipfs://"
-                      )?.[1]
-                    }`
+                  ?  publication?.collectionMetadata?.video
                   : publication?.collectionMetadata?.mediaTypes?.[0] == "audio"
                   ? `${INFURA_GATEWAY}/ipfs/${
                       publication?.collectionMetadata?.audio?.split(
@@ -88,7 +84,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     }`
               }
               classNameVideo={
-                "object-cover w-full h-full flex items-center justify-center"
+                "object-cover w-full h-full flex items-center justify-center relative"
               }
               srcCover={
                 publication?.collectionMetadata?.mediaTypes?.[0] == "video" ||

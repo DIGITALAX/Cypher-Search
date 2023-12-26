@@ -193,7 +193,6 @@ const useSearch = (
         );
 
         let moreData: Post[] = [];
-
         if (
           publications?.length < 10 &&
           profileSearch?.data?.searchProfiles?.items &&

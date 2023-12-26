@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
 
 const allowedOrigins = [
   "https://api-v2-mumbai.lens.dev/",
@@ -48,6 +49,15 @@ const nextConfig = {
     });
 
     return headersConfig;
+  },
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.tsx?$/,
+      include: [path.resolve(__dirname, 'node_modules/kinora-sdk')],
+      use: [options.defaultLoaders.babel, { loader: 'ts-loader' }],
+    });
+
+    return config;
   },
 };
 

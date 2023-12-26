@@ -3,8 +3,6 @@ import { FunctionComponent, RefObject, useRef, useState } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
 import Controls from "../Controls";
 import { VideoPostProps } from "../../types/tiles.types";
-import dynamic from "next/dynamic";
-import { Player } from "@livepeer/react";
 import {
   AudioMetadataV3,
   Mirror,
@@ -14,11 +12,8 @@ import {
 } from "../../../../../graphql/generated";
 import { metadataMedia } from "../../../../../lib/helpers/postMetadata";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
-
-const KinoraPlayerWrapper = dynamic(
-  () => import("kinora-sdk").then((mod) => mod.KinoraPlayerWrapper),
-  { ssr: false }
-);
+import { KinoraPlayerWrapper } from "kinora-sdk";
+import { Player } from "@livepeer/react";
 
 const VideoPost: FunctionComponent<VideoPostProps> = ({
   dispatch,
@@ -51,7 +46,6 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
     isActive: false,
     loading: false,
   });
-
   const media = metadataMedia(
     (
       ((publication?.post as Mirror | Post | Quote)?.__typename === "Mirror"
@@ -73,7 +67,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
         <div
           className={`relative w-full flex bg-amo/30 ${
             layoutAmount === 4 ? "h-60" : "h-100"
-          } ${videoInfo?.loading && "opacity-50"}`}
+          } ${videoInfo?.isPlaying && "opacity-50"}`}
         >
           {videoInfo?.heart && (
             <Image
@@ -93,7 +87,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 src={media?.cover!}
                 onError={(e) => handleImageError(e)}
               />
-              {videoInfo?.isActive && (
+              {videoInfo?.isPlaying && (
                 <audio
                   key={uniqueVideoKey}
                   draggable={false}
@@ -152,32 +146,17 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 parentId={uniqueVideoKey}
                 key={uniqueVideoKey}
                 customControls={true}
-                // controls={false}
-                // playsInline
-                // autoPlay
+                play={!videoInfo?.loading ? true : false}
                 fillWidthHeight
-                onPlay={() =>
-                  setVideoInfo((prev) => ({
-                    ...prev,
-                    isPlaying: true,
-                  }))
-                }
-                onPause={() =>
-                  setVideoInfo((prev) => ({
-                    ...prev,
-                    isPlaying: false,
-                    isActive: false,
-                  }))
-                }
-                onLoadedMetadata={(e) => {
-                  setVideoInfo((prev) => ({
-                    ...prev,
-                    duration: (e.target as any)?.duration || 0,
-                  }));
-
-                  if (videoInfo?.currentTime != 0 && e.target) {
-                    (e.target as any).currentTime = videoInfo?.currentTime;
-                  }
+                onCanPlay={(e) => {
+                  videoInfo.isActive &&
+                    setVideoInfo((prev) => ({
+                      ...prev,
+                      duration: (e.target as any)?.duration || 0,
+                      currentTime: (e.target as any)?.currentTime,
+                      isPlaying: true,
+                      loading: false,
+                    }));
                 }}
                 onTimeUpdate={(e) =>
                   setVideoInfo((prev) => ({
@@ -186,27 +165,20 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                     loading: false,
                   }))
                 }
-                onVolumeChange={(e) =>
-                  setVideoInfo((prev) => ({
-                    ...prev,
-                    volume: (e.target as any)?.volume || 0,
-                  }))
-                }
-
-                // id={uniqueVideoKey}
-                // ref={videoRef as RefObject<HTMLVideoElement>}
+                volume={{
+                  id: Math.random() * 0.5,
+                  level: videoInfo?.volume,
+                }}
+                seekTo={{
+                  id: Math.random() * 0.5,
+                  time: videoInfo?.currentTime,
+                }}
               >
                 {(setMediaElement: (node: HTMLVideoElement) => void) => (
                   <Player
                     mediaElementRef={setMediaElement}
-                    src={
-                      "https://thedial.infura-ipfs.io/ipfs/bafybeigtrokn3qww2qjuuuu6l3wjy2uex3xs2wpq4uykn4ait5opn2n3cq"
-                      // media?.url?.includes("/ipfs/")
-                      //   ? 
-                        // "ipfs://" + media?.url?.split("/ipfs/")?.[1]
-                        // : media?.url
-                    }
-                    // poster={media?.cover}
+                    src={media?.url}
+                    poster={media?.cover}
                     objectFit="cover"
                     autoUrlUpload={{
                       fallback: true,
@@ -243,7 +215,6 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
             }
             router={router}
             connected={lensConnected?.id}
-            videoRef={videoRef}
           />
         </div>
         <div className="relative w-full h-fit p-2 bg-white flex flex-row justify-between gap-2 items-center">

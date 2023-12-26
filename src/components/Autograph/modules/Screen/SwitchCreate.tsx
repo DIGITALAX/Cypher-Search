@@ -201,11 +201,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             srcUrl={
                               item.collectionMetadata?.mediaTypes?.[0] ==
                               "video"
-                                ? `${INFURA_GATEWAY}/ipfs/${
-                                    item?.collectionMetadata?.video?.split(
-                                      "ipfs://"
-                                    )?.[1]
-                                  }`
+                                ? item?.collectionMetadata?.video
                                 : item.collectionMetadata?.mediaTypes?.[0] ==
                                   "audio"
                                 ? `${INFURA_GATEWAY}/ipfs/${

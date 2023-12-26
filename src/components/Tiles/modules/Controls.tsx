@@ -18,7 +18,6 @@ const Controls: FunctionComponent<ControlsProps> = ({
   router,
   connected,
   collect,
-  videoRef,
   setVideoInfo,
 }): JSX.Element => {
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,18 +49,16 @@ const Controls: FunctionComponent<ControlsProps> = ({
           className="relative w-full h-2 bg-white/40 rounded-sm cursor-pointer"
           // ref={progressRef}
           onClick={(e) => {
-            const progressRect = e.currentTarget.getBoundingClientRect();
-            const seekFraction =
-              (e.clientX - progressRect.left) / progressRect.width;
-
-            const video = videoRef?.current;
-
-            if (video && Number.isFinite(video.duration)) {
-              const seekTime = seekFraction * video.duration;
-              if (Number.isFinite(seekTime)) {
-                video.currentTime = seekTime;
-              }
-            }
+            const progressRect = (
+              e as any
+            ).currentTarget.getBoundingClientRect();
+            const seekPosition =
+              ((e as any).clientX - progressRect.left) / progressRect.width;
+            setVideoInfo((prev) => ({
+              ...prev,
+              currentTime: seekPosition * videoInfo?.duration,
+              id: Math.random(),
+            }));
           }}
         >
           <div
@@ -232,23 +229,13 @@ const Controls: FunctionComponent<ControlsProps> = ({
             videoInfo?.loading && "animate-spin"
           }`}
           onClick={() => {
-            const video = videoRef?.current;
-            if (video && video.readyState >= 3) {
-              const currentTime = videoRef.current?.currentTime || 0;
-              video.pause();
-              setVideoInfo((prev) => ({
-                ...prev,
-                isPlaying: false,
-                currentTime,
-                isActive: false,
-              }));
-            } else {
-              setVideoInfo((prev) => ({
-                ...prev,
-                isActive: true,
-                loading: true,
-              }));
-            }
+            setVideoInfo((prev) => ({
+              ...prev,
+              // loading: true,
+              isActive: !prev?.isActive,
+              loading: prev?.isActive ? false : true,
+              isPlaying: prev?.isPlaying ? false : prev?.isPlaying,
+            }));
           }}
         >
           {videoInfo?.loading ? (
@@ -256,7 +243,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
           ) : (
             <Image
               src={`${INFURA_GATEWAY}/ipfs/${
-                videoInfo?.isActive || videoInfo?.isPlaying
+                videoInfo?.isPlaying
                   ? "Qmbg8t4xoNywhtCexD5Ln5YWvcKMXGahfwyK6UHpR3nBip"
                   : "QmXw52mJFnzYXmoK8eExoHKv7YW9RBVEwSFtfvxXgy7sfp"
               }`}
@@ -292,13 +279,12 @@ const Controls: FunctionComponent<ControlsProps> = ({
             max={1}
             min={0}
             step={0.01}
-            onChange={(e) => {
-              const video = videoRef?.current;
-              const newVolume = parseFloat(e.target.value);
-              if (Number.isFinite(newVolume) && video) {
-                video.volume = newVolume;
-              }
-            }}
+            onChange={(e) =>
+              setVideoInfo((prev) => ({
+                ...prev,
+                volume: Number(e.target.value),
+              }))
+            }
           />
         )}
       </div>

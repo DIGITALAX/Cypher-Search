@@ -58,11 +58,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                 srcUrl={
                   displayType?.main?.collectionMetadata?.mediaTypes?.[0] ==
                   "video"
-                    ? `${INFURA_GATEWAY}/ipfs/${
-                        displayType?.main?.collectionMetadata?.video?.split(
-                          "ipfs://"
-                        )?.[1]
-                      }`
+                    ? displayType?.main?.collectionMetadata?.video
                     : displayType?.main?.collectionMetadata?.mediaTypes?.[0] ==
                       "audio"
                     ? `${INFURA_GATEWAY}/ipfs/${
@@ -155,13 +151,8 @@ const Display: FunctionComponent<DisplayProps> = ({
                       srcUrl={
                         displayType?.side?.[index]?.collectionMetadata
                           ?.mediaTypes?.[0] == "video"
-                          ? `${INFURA_GATEWAY}/ipfs/${
-                              displayType?.side?.[
-                                index
-                              ]?.collectionMetadata?.video?.split(
-                                "ipfs://"
-                              )?.[1]
-                            }`
+                          ? displayType?.side?.[index]?.collectionMetadata
+                              ?.video
                           : displayType?.side?.[index]?.collectionMetadata
                               ?.mediaTypes?.[0] == "audio"
                           ? `${INFURA_GATEWAY}/ipfs/${

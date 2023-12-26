@@ -74,14 +74,12 @@ const Creation: FunctionComponent<CreationProps> = ({
             hidden
             classNameImage={"rounded-md w-full h-full flex relative"}
             classNameVideo={
-              "object-cover w-full h-[252px] flex items-center justify-center rounded-md relative"
+              "object-cover w-full h-[252px] flex items-center justify-center relative rounded-md z-0"
             }
             classNameAudio={"rounded-md w-full h-full flex relative"}
             srcUrl={
               item?.collectionMetadata?.mediaTypes?.[0] == "video"
-                ? `${INFURA_GATEWAY}/ipfs/${
-                    item?.collectionMetadata?.video?.split("ipfs://")?.[1]
-                  }`
+                ? item?.collectionMetadata?.video
                 : item?.collectionMetadata?.mediaTypes?.[0] == "audio"
                 ? `${INFURA_GATEWAY}/ipfs/${
                     item?.collectionMetadata?.audio?.split("ipfs://")?.[1]

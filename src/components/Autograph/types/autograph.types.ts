@@ -1693,6 +1693,14 @@ export type WaveFormProps = {
   type: string;
   upload?: boolean;
   handleMedia?: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+  handlePlayVideo?: () => void;
+  handlePauseVideo?: () => void;
+  handleSeekVideo?: (e: number) => void;
+  videoInfo?: {
+    play: boolean;
+    currentTime: number;
+    duration: number;
+  };
 };
 
 export type PostSwitchProps = {

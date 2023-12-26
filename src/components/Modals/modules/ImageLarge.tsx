@@ -4,6 +4,8 @@ import { INFURA_GATEWAY, IPFS_REGEX } from "../../../../lib/constants";
 import { setImageViewer } from "../../../../redux/reducers/ImageLargeSlice";
 import { ImageLargeProps } from "../types/modals.types";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import dynamic from "next/dynamic";
+
 
 const ImageLarge: FunctionComponent<ImageLargeProps> = ({
   mainImage,

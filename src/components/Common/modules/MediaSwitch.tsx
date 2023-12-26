@@ -1,8 +1,11 @@
 import Waveform from "@/components/Autograph/modules/Screen/Waveform";
 import Image from "next/legacy/image";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { MediaProps } from "../types/common.types";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import { Player } from "@livepeer/react";
+import { INFURA_GATEWAY } from "kinora-sdk/src/constants";
+import { KinoraPlayerWrapper } from "kinora-sdk";
 
 const MediaSwitch: FunctionComponent<MediaProps> = ({
   type,
@@ -14,30 +17,85 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
   objectFit,
   hidden,
 }): JSX.Element => {
+  const [videoInfo, setVideoInfo] = useState<{
+    play: boolean;
+    currentTime: number;
+    duration: number;
+  }>({
+    play: false,
+    currentTime: 0,
+    duration: 0,
+  });
   switch (type?.toLowerCase()) {
     case "video":
       const keyValueVideo = srcUrl + Math.random().toString();
       return (
         <>
-          <video
-            draggable={false}
-            controls={false}
-            playsInline
-            id={keyValueVideo}
-            className={classNameVideo}
-            poster={srcCover}
-            autoPlay={hidden}
-            muted
-            loop={hidden}
-          >
-            <source src={srcUrl} />
-          </video>
+          <div id={keyValueVideo} className={classNameVideo}>
+            <KinoraPlayerWrapper
+              parentId={keyValueVideo}
+              key={keyValueVideo}
+              customControls={true}
+              play={videoInfo?.play}
+              fillWidthHeight
+              seekTo={{
+                id: Math.random() * 0.5,
+                time: videoInfo?.currentTime,
+              }}
+              onTimeUpdate={(e) =>
+                !hidden &&
+                setVideoInfo((prev) => ({
+                  ...prev,
+                  currentTime: (e.target as any)?.currentTime || 0,
+                }))
+              }
+              onError={(event) => {
+                console.error("Error en la reproducción del video:", event);
+              }}
+            >
+              {(setMediaElement: (node: HTMLVideoElement) => void) => (
+                <Player
+                  mediaElementRef={setMediaElement}
+                  src={srcUrl}
+                  poster={srcCover}
+                  showLoadingSpinner
+                  objectFit="cover"
+                  autoUrlUpload={{
+                    fallback: true,
+                    ipfsGateway: INFURA_GATEWAY,
+                  }}
+                  loop={hidden}
+                  autoPlay={hidden}
+                  muted={hidden}
+                />
+              )}
+            </KinoraPlayerWrapper>
+          </div>
           {!hidden && (
             <Waveform
               audio={srcUrl}
               type={"video"}
               keyValue={keyValueVideo}
               video={srcUrl}
+              handlePauseVideo={() =>
+                setVideoInfo((prev) => ({
+                  ...prev,
+                  play: false,
+                }))
+              }
+              handlePlayVideo={() => {
+                setVideoInfo((prev) => ({
+                  ...prev,
+                  play: true,
+                }));
+              }}
+              handleSeekVideo={(e) =>
+                setVideoInfo((prev) => ({
+                  ...prev,
+                  currentTime: e,
+                }))
+              }
+              videoInfo={videoInfo}
             />
           )}
         </>

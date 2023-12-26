@@ -486,16 +486,9 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                                       (value) => value.collectionId == item
                                     )?.collectionMetadata?.mediaTypes?.[0] ==
                                     "video"
-                                      ? `${INFURA_GATEWAY}/ipfs/${
-                                          allCollections
-                                            ?.find(
-                                              (value) =>
-                                                value.collectionId == item
-                                            )
-                                            ?.collectionMetadata?.video?.split(
-                                              "ipfs://"
-                                            )?.[1]
-                                        }`
+                                      ? allCollections?.find(
+                                          (value) => value.collectionId == item
+                                        )?.collectionMetadata?.video!
                                       : allCollections?.find(
                                           (value) => value.collectionId == item
                                         )?.collectionMetadata

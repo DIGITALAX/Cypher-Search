@@ -51,16 +51,12 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                     }
                     classNameImage={"rounded-sm w-full h-full flex relative"}
                     classNameVideo={
-                      "object-cover w-full h-full flex items-center justify-center rounded-sm"
+                      "object-cover w-full h-full z-0 relative flex items-center justify-center rounded-sm"
                     }
                     classNameAudio={"rounded-sm w-full h-full flex relative"}
                     srcUrl={
                       collection.collectionMetadata?.mediaTypes?.[0] == "video"
-                        ? `${INFURA_GATEWAY}/ipfs/${
-                            collection?.collectionMetadata?.video?.split(
-                              "ipfs://"
-                            )?.[1]
-                          }`
+                        ? collection?.collectionMetadata?.video
                         : collection.collectionMetadata?.mediaTypes?.[0] ==
                           "audio"
                         ? `${INFURA_GATEWAY}/ipfs/${

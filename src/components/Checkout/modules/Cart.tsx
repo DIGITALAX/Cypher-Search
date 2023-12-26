@@ -342,11 +342,7 @@ const Cart: FunctionComponent<CartProps> = ({
                         srcUrl={
                           currentItem?.item?.collectionMetadata
                             ?.mediaTypes?.[0] == "video"
-                            ? `${INFURA_GATEWAY}/ipfs/${
-                                currentItem?.item?.collectionMetadata?.video?.split(
-                                  "ipfs://"
-                                )?.[1]
-                              }`
+                            ? currentItem?.item?.collectionMetadata?.video
                             : currentItem?.item?.collectionMetadata
                                 ?.mediaTypes?.[0] == "audio"
                             ? `${INFURA_GATEWAY}/ipfs/${

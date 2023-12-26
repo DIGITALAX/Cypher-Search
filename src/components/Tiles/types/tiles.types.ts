@@ -143,7 +143,6 @@ export type TileSwitchProps = {
 export type ControlsProps = {
   router: NextRouter;
   connected: boolean;
-  videoRef: RefObject<HTMLVideoElement | null>;
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
   collect: (id: string, type: string) => Promise<void>;
@@ -162,7 +161,7 @@ export type ControlsProps = {
     duration: number;
     currentTime: number;
     isActive: boolean;
-    loading: boolean;
+    loading: boolean
   };
   setVideoInfo: (
     e: SetStateAction<{
@@ -173,7 +172,7 @@ export type ControlsProps = {
       duration: number;
       currentTime: number;
       isActive: boolean;
-      loading: boolean;
+      loading: boolean
     }>
   ) => void;
 };

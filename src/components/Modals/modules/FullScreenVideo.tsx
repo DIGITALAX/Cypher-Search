@@ -7,6 +7,7 @@ import { FullScreenVideoProps } from "../types/modals.types";
 import formatDuration from "../../../../lib/helpers/formatDuration";
 import { AiOutlineLoading } from "react-icons/ai";
 import { Post, VideoMetadataV3 } from "../../../../graphql/generated";
+import dynamic from "next/dynamic";
 
 const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
   dispatch,

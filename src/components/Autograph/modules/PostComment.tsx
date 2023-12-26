@@ -298,7 +298,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                       classNameImage={"rounded-md"}
                       classNameAudio={"rounded-md"}
                       classNameVideo={
-                        "object-cover w-full h-full flex items-center justify-center rounded-md"
+                        "object-cover w-full h-full flex items-center justify-center rounded-md relative"
                       }
                       srcUrl={media?.item}
                     />

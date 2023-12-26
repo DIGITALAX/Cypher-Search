@@ -13,6 +13,10 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
   video,
   upload,
   handleMedia,
+  handlePlayVideo,
+  handlePauseVideo,
+  handleSeekVideo,
+  videoInfo,
 }): JSX.Element => {
   const waveformRef = useRef(null);
   const wavesurfer = useRef<null | WaveSurfer>(null);
@@ -34,29 +38,41 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
         if (!wavesurfer.current) return;
 
         wavesurfer.current.on("seeking", function (seekProgress) {
-          const videoElement = document.getElementById(
-            keyValue
-          ) as HTMLVideoElement;
-          if (videoElement) {
-            videoElement.currentTime = seekProgress;
+          if (type == "video") {
+            handleSeekVideo!(seekProgress);
+          } else {
+            const audioElement = document.getElementById(
+              keyValue
+            ) as HTMLVideoElement;
+            if (audioElement) {
+              audioElement.currentTime = seekProgress;
+            }
           }
         });
 
         wavesurfer.current.on("play", function () {
-          const videoElement = document.getElementById(
-            keyValue
-          ) as HTMLVideoElement;
-          if (videoElement) {
-            videoElement.play();
+          if (type == "video") {
+            handlePlayVideo!();
+          } else {
+            const audioElement = document.getElementById(
+              keyValue
+            ) as HTMLVideoElement;
+            if (audioElement) {
+              audioElement.play();
+            }
           }
         });
 
         wavesurfer.current.on("pause", function () {
-          const videoElement = document.getElementById(
-            keyValue
-          ) as HTMLVideoElement;
-          if (videoElement) {
-            videoElement.pause();
+          if (type == "video") {
+            handlePauseVideo!();
+          } else {
+            const audioElement = document.getElementById(
+              keyValue
+            ) as HTMLVideoElement;
+            if (audioElement) {
+              audioElement.pause();
+            }
           }
         });
 
@@ -79,13 +95,20 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
   }, [audio, wavesurfer, video, type, waveformRef]);
 
   return (
-    <div className="absolute right-0 bottom-0 w-full h-10 flex flex-row gap-1.5 items-center justify-between bg-offBlack px-1 border border-white">
+    <div className="absolute right-0 bottom-0 w-full h-10 flex flex-row gap-1.5 items-center justify-between bg-offBlack px-1 border border-white z-1">
       <div
         className="relative flex w-fit h-fit items-center justify-center flex cursor-pointer active:scale-95"
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
-          handlePlayPause(keyValue, wavesurfer, type);
+
+          handlePlayPause(
+            wavesurfer,
+            type,
+            videoInfo?.play!,
+            handlePlayVideo!,
+            handlePauseVideo!
+          );
         }}
       >
         <HiOutlinePlayPause color="white" size={15} />

@@ -368,11 +368,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     }
                     srcUrl={
                       itemData?.collectionMetadata?.video
-                        ? `${INFURA_GATEWAY}/ipfs/${
-                            itemData?.collectionMetadata?.video?.split(
-                              "ipfs://"
-                            )?.[1]
-                          }`
+                        ? itemData?.collectionMetadata?.video
                         : itemData?.collectionMetadata?.audio
                         ? itemData?.collectionMetadata?.audio?.split(
                             "ipfs://"
@@ -511,7 +507,10 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end break-words text-sm cursor-pointer"
                   onClick={() =>
                     router.push(
-                      `/item/microbrand/${itemData?.collectionMetadata?.microbrand?.replaceAll(" ", "_")}`
+                      `/item/microbrand/${itemData?.collectionMetadata?.microbrand?.replaceAll(
+                        " ",
+                        "_"
+                      )}`
                     )
                   }
                 >

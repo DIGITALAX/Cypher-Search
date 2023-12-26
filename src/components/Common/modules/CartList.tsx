@@ -55,17 +55,13 @@ const CartList: FunctionComponent<CartListProps> = ({
                       }
                       classNameImage={"rounded-sm w-full h-full flex relative"}
                       classNameVideo={
-                        "object-cover w-full h-full flex items-center justify-center rounded-sm"
+                        "object-cover w-full h-full flex items-center justify-center relative rounded-sm"
                       }
                       classNameAudio={"rounded-sm w-full h-full flex relative"}
                       srcUrl={
                         item?.item?.collectionMetadata?.mediaTypes?.[0] ==
                         "video"
-                          ? `${INFURA_GATEWAY}/ipfs/${
-                              item?.item?.collectionMetadata?.video?.split(
-                                "ipfs://"
-                              )?.[1]
-                            }`
+                          ? item?.item?.collectionMetadata?.video
                           : item?.item?.collectionMetadata?.mediaTypes?.[0] ==
                             "audio"
                           ? `${INFURA_GATEWAY}/ipfs/${
