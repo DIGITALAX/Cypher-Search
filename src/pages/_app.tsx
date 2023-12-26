@@ -22,18 +22,12 @@ import { useEffect, useState } from "react";
 import Footer from "@/components/Layout/modules/Footer";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import Cart from "@/components/Common/modules/Cart";
-import dynamic from "next/dynamic";
 import {
   createReactClient,
   studioProvider,
   LivepeerConfig,
 } from "@livepeer/react";
 import { KinoraProvider } from "kinora-sdk";
-
-// const KinoraProvider = dynamic(
-//   () => import("kinora-sdk").then((mod) => mod.KinoraProvider),
-//   { ssr: false }
-// );
 
 const walletTheme = merge(darkTheme(), {
   colors: {

@@ -127,13 +127,7 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                   id={uniqueVideoKey}
                   ref={videoRef as RefObject<HTMLVideoElement>}
                 >
-                  <source
-                    src={
-                      media?.url?.includes("/ipfs/")
-                        ? media?.url?.split("/ipfs/")?.[1]
-                        : media?.url
-                    }
-                  />
+                  <source src={media?.url} />
                 </audio>
               )}
             </>
@@ -148,16 +142,16 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                 customControls={true}
                 play={!videoInfo?.loading ? true : false}
                 fillWidthHeight
-                onCanPlay={(e) => {
+                onCanPlay={(e) =>
                   videoInfo.isActive &&
-                    setVideoInfo((prev) => ({
-                      ...prev,
-                      duration: (e.target as any)?.duration || 0,
-                      currentTime: (e.target as any)?.currentTime,
-                      isPlaying: true,
-                      loading: false,
-                    }));
-                }}
+                  setVideoInfo((prev) => ({
+                    ...prev,
+                    duration: (e.target as any)?.duration || 0,
+                    currentTime: (e.target as any)?.currentTime,
+                    isPlaying: true,
+                    loading: false,
+                  }))
+                }
                 onTimeUpdate={(e) =>
                   setVideoInfo((prev) => ({
                     ...prev,

@@ -33,7 +33,7 @@ import {
   AllSearchItemsState,
   setAllSearchItems,
 } from "../../../../redux/reducers/searchItemsSlice";
-import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
+import { Creation, Publication } from "./../../Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import buildQuery from "../../../../lib/helpers/buildQuery";

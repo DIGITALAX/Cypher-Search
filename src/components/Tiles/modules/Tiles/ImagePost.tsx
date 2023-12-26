@@ -50,6 +50,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
       : (publication as Post)
     )?.by?.metadata?.picture
   );
+
   return (
     <div
       className={`relative w-full h-fit flex items-center justify-center flex rounded-sm border border-sol p-4 gap-4 flex-col`}

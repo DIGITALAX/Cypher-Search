@@ -5,6 +5,7 @@ import WaveSurfer from "wavesurfer.js";
 import { WaveFormProps } from "../../types/autograph.types";
 import handlePlayPause from "../../../../../lib/helpers/handlePlayPause";
 import getMediaUrl from "../../../../../lib/helpers/getMediaURL";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const Waveform: FunctionComponent<WaveFormProps> = ({
   keyValue,
@@ -92,12 +93,13 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
     return () => {
       wavesurfer.current?.destroy();
     };
+   
   }, [audio, wavesurfer, video, type, waveformRef]);
 
   return (
     <div className="absolute right-0 bottom-0 w-full h-10 flex flex-row gap-1.5 items-center justify-between bg-offBlack px-1 border border-white z-1">
       <div
-        className="relative flex w-fit h-fit items-center justify-center flex cursor-pointer active:scale-95"
+        className={`relative flex w-fit h-fit items-center justify-center flex cursor-pointer active:scale-95 `}
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -105,13 +107,17 @@ const Waveform: FunctionComponent<WaveFormProps> = ({
           handlePlayPause(
             wavesurfer,
             type,
-            videoInfo?.play!,
+            videoInfo?.isPlaying!,
             handlePlayVideo!,
             handlePauseVideo!
           );
         }}
       >
-        <HiOutlinePlayPause color="white" size={15} />
+        {/* {videoInfo?.loading ? (
+          <AiOutlineLoading color="white" size={12} />
+        ) : ( */}
+          <HiOutlinePlayPause color="white" size={15} />
+        {/* )} */}
       </div>
       <div
         className="relative w-full h-fit justify-center items-center cursor-pointer"

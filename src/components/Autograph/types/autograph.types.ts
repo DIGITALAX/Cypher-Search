@@ -1697,7 +1697,7 @@ export type WaveFormProps = {
   handlePauseVideo?: () => void;
   handleSeekVideo?: (e: number) => void;
   videoInfo?: {
-    play: boolean;
+    isPlaying: boolean;
     currentTime: number;
     duration: number;
   };

@@ -6,25 +6,24 @@ const handlePlayPause = (
   type: string,
   isPlaying: boolean,
   handlePlayVideo: () => void,
-  handlePauseVideo: () => void,
+  handlePauseVideo: () => void
 ) => {
-
   try {
     if (wavesurfer.current) {
       if (type === "video") {
         if (!isPlaying) {
-          handlePlayVideo()
+          handlePlayVideo();
           wavesurfer.current.play();
         } else {
-          handlePauseVideo()
+          handlePauseVideo();
           wavesurfer.current.pause();
         }
       } else {
-      if (wavesurfer.current.isPlaying()) {
-        wavesurfer.current.pause();
-      } else {
-        wavesurfer.current.play();
-      }
+        if (wavesurfer.current.isPlaying()) {
+          wavesurfer.current.pause();
+        } else {
+          wavesurfer.current.play();
+        }
       }
     }
   } catch (err: any) {

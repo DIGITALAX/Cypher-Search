@@ -231,7 +231,6 @@ const Controls: FunctionComponent<ControlsProps> = ({
           onClick={() => {
             setVideoInfo((prev) => ({
               ...prev,
-              // loading: true,
               isActive: !prev?.isActive,
               loading: prev?.isActive ? false : true,
               isPlaying: prev?.isPlaying ? false : prev?.isPlaying,

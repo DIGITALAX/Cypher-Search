@@ -1,11 +1,11 @@
-import Waveform from "@/components/Autograph/modules/Screen/Waveform";
+import Waveform from "./../../Autograph/modules/Screen/Waveform";
 import Image from "next/legacy/image";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useCallback, useRef, useState } from "react";
 import { MediaProps } from "../types/common.types";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 import { Player } from "@livepeer/react";
-import { INFURA_GATEWAY } from "kinora-sdk/src/constants";
 import { KinoraPlayerWrapper } from "kinora-sdk";
+import { INFURA_GATEWAY } from "../../../../lib/constants";
 
 const MediaSwitch: FunctionComponent<MediaProps> = ({
   type,
@@ -18,17 +18,19 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
   hidden,
 }): JSX.Element => {
   const [videoInfo, setVideoInfo] = useState<{
-    play: boolean;
+    loading: boolean;
     currentTime: number;
     duration: number;
+    isPlaying: boolean;
   }>({
-    play: false,
+    loading: false,
     currentTime: 0,
     duration: 0,
+    isPlaying: false,
   });
   switch (type?.toLowerCase()) {
     case "video":
-      const keyValueVideo = srcUrl + Math.random().toString();
+      const keyValueVideo = srcUrl;
       return (
         <>
           <div id={keyValueVideo} className={classNameVideo}>
@@ -36,29 +38,38 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
               parentId={keyValueVideo}
               key={keyValueVideo}
               customControls={true}
-              play={videoInfo?.play}
+              play={videoInfo?.isPlaying}
               fillWidthHeight
               seekTo={{
                 id: Math.random() * 0.5,
                 time: videoInfo?.currentTime,
               }}
               onTimeUpdate={(e) =>
-                !hidden &&
                 setVideoInfo((prev) => ({
                   ...prev,
                   currentTime: (e.target as any)?.currentTime || 0,
                 }))
               }
-              onError={(event) => {
-                console.error("Error en la reproducción del video:", event);
-              }}
+              onCanPlay={() =>
+                setVideoInfo((prev) => ({
+                  ...prev,
+                  isPlaying: true,
+                }))
+              }
             >
               {(setMediaElement: (node: HTMLVideoElement) => void) => (
                 <Player
                   mediaElementRef={setMediaElement}
-                  src={srcUrl}
+                  src={
+                    srcUrl?.includes("https://")
+                      ? srcUrl
+                      : `${INFURA_GATEWAY}/ipfs/${
+                          srcUrl?.includes("ipfs://")
+                            ? srcUrl?.split("ipfs://")[1]
+                            : srcUrl
+                        }`
+                  }
                   poster={srcCover}
-                  showLoadingSpinner
                   objectFit="cover"
                   autoUrlUpload={{
                     fallback: true,
@@ -78,21 +89,25 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
               keyValue={keyValueVideo}
               video={srcUrl}
               handlePauseVideo={() =>
-                setVideoInfo((prev) => ({
-                  ...prev,
-                  play: false,
-                }))
+                setVideoInfo((prev) => {
+                  return {
+                    ...prev,
+                    isPlaying: false,
+                  };
+                })
               }
-              handlePlayVideo={() => {
-                setVideoInfo((prev) => ({
-                  ...prev,
-                  play: true,
-                }));
-              }}
+              handlePlayVideo={() =>
+                setVideoInfo((prev) => {
+                  return {
+                    ...prev,
+                    isPlaying: true,
+                  };
+                })
+              }
               handleSeekVideo={(e) =>
                 setVideoInfo((prev) => ({
                   ...prev,
-                  currentTime: e,
+                  currentTime: e * videoInfo?.duration,
                 }))
               }
               videoInfo={videoInfo}
