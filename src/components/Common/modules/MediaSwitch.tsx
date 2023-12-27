@@ -33,12 +33,13 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
       const keyValueVideo = srcUrl;
       return (
         <>
-          <div id={keyValueVideo} className={classNameVideo}>
+          <div id={keyValueVideo} style={classNameVideo}>
             <KinoraPlayerWrapper
               parentId={keyValueVideo}
               key={keyValueVideo}
               customControls={true}
               play={videoInfo?.isPlaying}
+              styles={classNameVideo}
               fillWidthHeight
               seekTo={{
                 id: Math.random() * 0.5,
@@ -56,6 +57,10 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
                   isPlaying: true,
                 }))
               }
+              volume={{
+                id: Math.random() * 0.5,
+                level: hidden ? 0 : 0.5,
+              }}
             >
               {(setMediaElement: (node: HTMLVideoElement) => void) => (
                 <Player
@@ -77,7 +82,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
                   }}
                   loop={hidden}
                   autoPlay={hidden}
-                  muted={hidden}
+                  muted={true}
                 />
               )}
             </KinoraPlayerWrapper>

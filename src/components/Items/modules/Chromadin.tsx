@@ -388,9 +388,14 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           }`
                         : undefined
                     }
-                    classNameVideo={
-                      "flex items-center justify-center relative w-full h-full"
-                    }
+                    classNameVideo={{
+                      display: "flex",
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center",
+                      justifyItems: "center",
+                      position: "relative",
+                    }}
                     classNameAudio="flex items-center justify-center w-full h-full relative"
                     classNameImage="flex items-center justify-center w-full h-full relative"
                     objectFit="contain"

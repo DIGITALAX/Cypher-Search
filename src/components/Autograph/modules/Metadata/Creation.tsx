@@ -73,9 +73,17 @@ const Creation: FunctionComponent<CreationProps> = ({
             }
             hidden
             classNameImage={"rounded-md w-full h-full flex relative"}
-            classNameVideo={
-              "object-cover w-full h-[252px] flex items-center justify-center relative rounded-md z-0"
-            }
+            classNameVideo={{
+              objectFit: "cover",
+              display: "flex",
+              width: "100%",
+              height: "252px",
+              alignItems: "center",
+              justifyItems: "center",
+              borderRadius: "0.375rem",
+              position: "relative",
+              zIndex: "0",
+            }}
             classNameAudio={"rounded-md w-full h-full flex relative"}
             srcUrl={
               item?.collectionMetadata?.mediaTypes?.[0] == "video"

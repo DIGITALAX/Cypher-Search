@@ -54,9 +54,16 @@ const CartList: FunctionComponent<CartListProps> = ({
                           : "image"
                       }
                       classNameImage={"rounded-sm w-full h-full flex relative"}
-                      classNameVideo={
-                        "object-cover w-full h-full flex items-center justify-center relative rounded-sm"
-                      }
+                      classNameVideo={{
+                        objectFit: "cover",
+                        display: "flex",
+                        width: "100%",
+                        height: "100%",
+                        alignItems: "center",
+                        justifyItems: "center",
+                        borderRadius: "0.125rem",
+                        position: "relative",
+                      }}
                       classNameAudio={"rounded-sm w-full h-full flex relative"}
                       srcUrl={
                         item?.item?.collectionMetadata?.mediaTypes?.[0] ==

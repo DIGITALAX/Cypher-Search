@@ -230,9 +230,16 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                                 type={media?.type}
                                 srcUrl={media?.url}
                                 srcCover={media?.cover}
-                                classNameVideo={
-                                  "rounded-sm absolute w-full h-full object-cover"
-                                }
+                                classNameVideo={{
+                                  objectFit: "cover",
+                                  display: "flex",
+                                  width: "100%",
+                                  height: "100%",
+                                  alignItems: "center",
+                                  justifyItems: "center",
+                                  borderRadius: "0.125rem",
+                                  position: "absolute",
+                                }}
                                 classNameImage={"rounded-sm"}
                                 classNameAudio={"rounded-md"}
                               />
@@ -581,9 +588,16 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                                 type={media?.type}
                                 srcUrl={media?.url}
                                 srcCover={media?.cover}
-                                classNameVideo={
-                                  "rounded-sm absolute w-full h-full object-cover"
-                                }
+                                classNameVideo={{
+                                  objectFit: "cover",
+                                  display: "flex",
+                                  width: "100%",
+                                  height: "100%",
+                                  alignItems: "center",
+                                  justifyItems: "center",
+                                  borderRadius: "0.125rem",
+                                  position: "absolute",
+                                }}
                                 classNameImage={"rounded-sm"}
                                 classNameAudio={"rounded-md"}
                               />

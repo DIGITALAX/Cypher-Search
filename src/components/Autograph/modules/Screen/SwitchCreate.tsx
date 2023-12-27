@@ -195,9 +195,16 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             classNameAudio={
                               "rounded-md w-full h-full flex relative"
                             }
-                            classNameVideo={
-                              "object-cover w-full h-full flex items-center justify-center rounded-md relative"
-                            }
+                            classNameVideo={{
+                              objectFit: "cover",
+                              display: "flex",
+                              width: "100%",
+                              height: "100%",
+                              alignItems: "center",
+                              justifyItems: "center",
+                              borderRadius: "0.375rem",
+                              position: "relative",
+                            }}
                             srcUrl={
                               item.collectionMetadata?.mediaTypes?.[0] ==
                               "video"

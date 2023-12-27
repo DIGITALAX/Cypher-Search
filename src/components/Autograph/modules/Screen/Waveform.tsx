@@ -5,7 +5,6 @@ import WaveSurfer from "wavesurfer.js";
 import { WaveFormProps } from "../../types/autograph.types";
 import handlePlayPause from "../../../../../lib/helpers/handlePlayPause";
 import getMediaUrl from "../../../../../lib/helpers/getMediaURL";
-import { AiOutlineLoading } from "react-icons/ai";
 
 const Waveform: FunctionComponent<WaveFormProps> = ({
   keyValue,

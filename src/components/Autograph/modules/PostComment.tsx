@@ -297,9 +297,16 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                       type={media.type !== "video" ? "image" : "video"}
                       classNameImage={"rounded-md"}
                       classNameAudio={"rounded-md"}
-                      classNameVideo={
-                        "object-cover w-full h-full flex items-center justify-center rounded-md relative"
-                      }
+                      classNameVideo={{
+                        objectFit: "cover",
+                        display: "flex",
+                        width: "100%",
+                        height: "100%",
+                        alignItems: "center",
+                        justifyItems: "center",
+                        borderRadius: "0.375rem",
+                        position: "relative",
+                      }}
                       srcUrl={media?.item}
                     />
                     <div

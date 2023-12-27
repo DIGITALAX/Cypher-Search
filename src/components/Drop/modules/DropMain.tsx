@@ -50,9 +50,17 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                         : "image"
                     }
                     classNameImage={"rounded-sm w-full h-full flex relative"}
-                    classNameVideo={
-                      "object-cover w-full h-full z-0 relative flex items-center justify-center rounded-sm"
-                    }
+                    classNameVideo={{
+                      objectFit: "cover",
+                      display: "flex",
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center",
+                      justifyItems: "center",
+                      borderRadius: "0.125rem",
+                      position: "relative",
+                      zIndex: "0",
+                    }}
                     classNameAudio={"rounded-sm w-full h-full flex relative"}
                     srcUrl={
                       collection.collectionMetadata?.mediaTypes?.[0] == "video"

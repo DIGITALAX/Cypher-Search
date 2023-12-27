@@ -256,7 +256,7 @@ export type MediaProps = {
   type: string;
   srcUrl: string;
   srcCover?: string;
-  classNameVideo?: string;
+  classNameVideo?: React.CSSProperties;
   classNameImage?: string;
   classNameAudio?: string;
   objectFit?: string;
