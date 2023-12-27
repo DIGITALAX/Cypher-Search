@@ -128,12 +128,10 @@ const useItem = (
 
         case "pub":
           pub = (await getPub(id)) as Post;
-          console.log({pub})
           const collection = (await getCollection(
             (pub?.metadata as ImageMetadataV3)?.title,
             type
           )) as Creation;
-          console.log({collection})
           setItemData({
             post: collection
               ? {
