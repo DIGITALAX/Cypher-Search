@@ -5,15 +5,20 @@ import serializeQuery from "../../../lib/helpers/serializeQuery";
 export const getAllCollections = async (
   where: Object,
   first: number,
-  skip: number
+  skip: number,
+  orderDirection: string,
+  orderBy: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
   const queryPromise = graphPrintClient.query({
     query: gql(`
-    query($first: Int, $skip: Int) {
+    query($first: Int, $skip: Int, $orderDirection: String, $orderBy: String) {
       collectionCreateds(where: {${serializeQuery(
         where
-      )}}, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
+      )}}, first: $first, skip: $skip, orderDirection: ${orderDirection?.replaceAll(
+      '"',
+      ""
+    )}, orderBy: ${orderBy?.replaceAll('"', "")}) {
         amount
         dropMetadata {
           dropCover

@@ -47,7 +47,13 @@ const useSuggested = (
     try {
       const textWhere = buildTextQuery(pageProfile?.handle?.localName!);
       if (textWhere) {
-        const searchItems = await getAllCollections(textWhere, 25, 0);
+        const searchItems = await getAllCollections(
+          textWhere,
+          25,
+          0,
+          "desc",
+          "blockTimestamp"
+        );
 
         if (searchItems?.data?.collectionCreateds?.length > 0) {
           collections =
@@ -130,7 +136,9 @@ const useSuggested = (
         const searchItems = await getAllCollections(
           textWhere,
           25,
-          suggestedFeed?.graphCursor!
+          suggestedFeed?.graphCursor!,
+          "desc",
+          "blockTimestamp"
         );
         if (searchItems?.data?.collectionCreateds?.length > 0) {
           collections =

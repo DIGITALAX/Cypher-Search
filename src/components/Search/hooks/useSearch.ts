@@ -125,7 +125,13 @@ const useSearch = (
         if (filterEmpty(filters) && !backup) {
           const where = buildTextQuery(allSearchItems?.searchInput!);
           if (where) {
-            const searchItems = await getAllCollections(where, 10, 0);
+            const searchItems = await getAllCollections(
+              where,
+              10,
+              0,
+              "desc",
+              "blockTimestamp"
+            );
 
             if (searchItems?.data?.collectionCreateds?.length > 0)
               collections = await handleCollectionProfilesAndPublications(
@@ -140,13 +146,15 @@ const useSearch = (
       } else {
         collections = await filterSearch(0);
         if ((!allSearchItems?.searchInput || random) && !backup) {
-          query = filters?.hashtag || filters?.community;
+          query = filters?.hashtag?.split(",")?.[0];
         } else if (backup) {
           query = TAGS?.sort(() => Math.random() - 0.5)?.[0];
         } else {
           query = allSearchItems?.searchInput;
         }
       }
+
+      console.log({ query });
 
       if (query) {
         const pubSearch = await searchPubs(
@@ -339,10 +347,34 @@ const useSearch = (
       if (allSearchItems?.searchInput.trim() !== "") {
         const textWhere = buildTextQuery(allSearchItems?.searchInput!);
         const combinedWhere = combineQueryObjects(textWhere, where);
-        const searchItems = await getAllCollections(combinedWhere, 10, cursor);
+        const searchItems = await getAllCollections(
+          combinedWhere,
+          10,
+          cursor,
+          ["asc", "desc"][Math.floor(Math.random() * 2)],
+          [
+            "printType",
+            "origin",
+            "blockTimestamp",
+            "owner",
+            "collectionMetadata_title",
+          ][Math.floor(Math.random() * 2)]
+        );
         collections = searchItems?.data?.collectionCreateds;
       } else {
-        const searchItems = await getAllCollections(where, 10, cursor);
+        const searchItems = await getAllCollections(
+          where,
+          10,
+          cursor,
+          ["asc", "desc"][Math.floor(Math.random() * 2)],
+          [
+            "printType",
+            "origin",
+            "blockTimestamp",
+            "owner",
+            "collectionMetadata_title",
+          ][Math.floor(Math.random() * 2)]
+        );
         collections = searchItems?.data?.collectionCreateds;
       }
 
@@ -388,7 +420,9 @@ const useSearch = (
             const searchItems = await getAllCollections(
               where,
               10,
-              allSearchItems?.graphCursor
+              allSearchItems?.graphCursor,
+              "desc",
+              "blockTimestamp"
             );
 
             if (searchItems?.data?.collectionCreateds?.length > 0)
