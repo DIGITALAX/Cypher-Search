@@ -41,7 +41,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         dropDownValues={filteredDropDownValues?.hashtags}
         hashtag
         title={"Sort By Hashtag"}
-        value={filterValues?.hashtag}
+        value={filterValues?.hashtag || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
@@ -88,8 +88,9 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues.hashtag.includes(value)) {
-            const allValues = filterValues.hashtag.split(",");
+          if (!filterValues?.hashtag?.includes(value)) {
+            const allValues = filterValues?.hashtag?.split(",") || [];
+            if (allValues?.length < 1) return;
             const isPartialEntry =
               allValues[allValues.length - 1]?.trim() !== "";
 
@@ -97,9 +98,9 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
 
             if (isPartialEntry) {
               allValues[allValues.length - 1] = ` ${value},`;
-              newValues = allValues.join(", ")?.trim();
+              newValues = allValues?.join(", ")?.trim();
             } else {
-              newValues = filterValues.hashtag + ` ${value},`;
+              newValues = filterValues?.hashtag + ` ${value},`;
             }
 
             if (filterValues?.hashtag != newValues) {
@@ -118,7 +119,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.community}
         title={"Sort By Community"}
-        value={filterValues?.community}
+        value={filterValues?.community || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
@@ -165,8 +166,9 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           });
         }}
         onDropDownChoose={(value: string) => {
-          if (!filterValues?.community.includes(value)) {
-            const allValues = filterValues?.community.split(",");
+          if (!filterValues?.community?.includes(value)) {
+            const allValues = filterValues?.community?.split(",") || [];
+            if (allValues?.length < 1) return;
             const isPartialEntry =
               allValues[allValues?.length - 1]?.trim() !== "";
 
@@ -176,7 +178,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               allValues[allValues.length - 1] = ` ${value},`;
               newValues = allValues.join(", ")?.trim();
             } else {
-              newValues = filterValues.community + ` ${value},`;
+              newValues = filterValues?.community + ` ${value},`;
             }
 
             if (filterValues?.community != newValues) {
@@ -195,7 +197,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.microbrands}
         title={"Sort By Microbrand"}
-        value={filterValues?.microbrand}
+        value={filterValues?.microbrand || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
@@ -243,7 +245,8 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         }}
         onDropDownChoose={(value: string) => {
           if (!filterValues?.microbrand?.includes(value)) {
-            const allValues = filterValues?.microbrand?.split(",");
+            const allValues = filterValues?.microbrand?.split(",") || [];
+            if (allValues?.length < 1) return;
             const isPartialEntry =
               allValues[allValues?.length - 1]?.trim() !== "";
 
@@ -308,7 +311,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           title={"Sort By Origin"}
           cover
           rounded
-          value={filterValues?.origin}
+          value={filterValues?.origin || ""}
           onChange={(e: ChangeEvent) => {
             setFilteredDropDownValues({
               ...filteredDropDownValues,
@@ -357,7 +360,8 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
           }}
           onDropDownChoose={(value: string) => {
             if (!filterValues?.origin?.includes(value)) {
-              const allValues = filterValues?.origin?.split(",");
+              const allValues = filterValues?.origin?.split(",") || [];
+              if (allValues?.length < 1) return;
               const isPartialEntry =
                 allValues[allValues?.length - 1]?.trim() !== "";
 
@@ -387,7 +391,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       <DropDown
         dropDownValues={filteredDropDownValues?.format}
         title={"Sort By Media Format"}
-        value={filterValues?.format}
+        value={filterValues?.format || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
@@ -435,7 +439,8 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         }}
         onDropDownChoose={(value: string) => {
           if (!filterValues?.format?.includes(value)) {
-            const allValues = filterValues?.format.split(",");
+            const allValues = filterValues?.format?.split(",") || [];
+            if (allValues?.length < 1) return;
             const isPartialEntry =
               allValues[allValues?.length - 1]?.trim() !== "";
 
@@ -541,7 +546,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.access}
         title={"Sort By Access Eco Scale"}
-        value={filterValues?.access}
+        value={filterValues?.access || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
             ...filteredDropDownValues,
@@ -589,7 +594,8 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         }}
         onDropDownChoose={(value: string) => {
           if (!filterValues?.access?.includes(value)) {
-            const allValues = filterValues?.access?.split(",");
+            const allValues = filterValues?.access?.split(",") || [];
+            if (allValues?.length < 1) return;
             const isPartialEntry =
               allValues[allValues?.length - 1]?.trim() !== "";
 
@@ -624,7 +630,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             <input
               className="relative w-full h-full p-1.5 bg-offBlack flex items-center justify-center"
               type="number"
-              placeholder={String(filterValues.editions)}
+              placeholder={String(filterValues?.editions)}
               onChange={(e) => {
                 if (filterValues?.editions != Number(e.target.value)) {
                   dispatch(setFilterChange(true));
@@ -654,7 +660,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
             <div className="relative bg-offBlack flex flex-row w-full h-full justify-center items-center rounded-sm p-1 gap-2 text-sm font-bit text-center">
               <div
                 className={`relative w-10 px-1 h-fit items-center justify-center flex cursor-pointer ${
-                  filterValues.available ? "bg-brill text-black" : "text-white"
+                  filterValues?.available ? "bg-brill text-black" : "text-white"
                 }`}
                 onClick={() => {
                   if (filterValues?.available != true) {
@@ -672,7 +678,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               </div>
               <div
                 className={`relative w-10 px-1 h-fit items-center justify-center flex cursor-pointer ${
-                  !filterValues.available ? "bg-brill text-black" : "text-white"
+                  !filterValues?.available ? "bg-brill text-black" : "text-white"
                 }`}
                 onClick={() => {
                   if (filterValues?.available != false) {

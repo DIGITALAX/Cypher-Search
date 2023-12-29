@@ -2,7 +2,9 @@ import { KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { setSearchActive } from "../../../../redux/reducers/searchActiveSlice";
 import {
   CHROMADIN_ID,
+  FILTER_SHUFFLE,
   PLACEHOLDERS,
+  REFINED_TAGS,
   TAGS,
   numberToItemTypeMap,
 } from "../../../../lib/constants";
@@ -16,17 +18,14 @@ import {
   Mirror,
   SearchPublicationType,
   PublicationType,
+  PublicationsWhere,
 } from "../../../../graphql/generated";
 import filterEmpty from "../../../../lib/helpers/filterEmpty";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
 import { DropDown, Filter, FilterValues } from "../types/search.types";
 import { setFilterConstants } from "../../../../redux/reducers/filterConstantsSlice";
 import fetchIpfsJson from "../../../../lib/helpers/fetchIpfsJson";
-import {
-  getRandomArrayElement,
-  getRandomElement,
-  getRandomNumber,
-} from "../../../../lib/helpers/randomElements";
+import { getRandomElement } from "../../../../lib/helpers/randomElements";
 import searchPubs from "../../../../graphql/lens/queries/searchPubs";
 import searchProfiles from "../../../../graphql/lens/queries/searchProfiles";
 import {
@@ -36,8 +35,11 @@ import {
 import { Creation, Publication } from "./../../Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
-import buildQuery from "../../../../lib/helpers/buildQuery";
-import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
+import { buildQuery } from "../../../../lib/helpers/buildQuery";
+import {
+  FiltersOpenState,
+  setFiltersOpen,
+} from "../../../../redux/reducers/filtersOpenSlice";
 import { Dispatch } from "redux";
 import { getFilters } from "../../../../graphql/subgraph/queries/getFilters";
 import {
@@ -93,8 +95,8 @@ const useSearch = (
   const handleSearch = async (
     e?: KeyboardEvent | MouseEvent,
     click?: boolean,
-    random?: boolean,
-    backup?: boolean
+    backup?: boolean,
+    random?: Filter
   ) => {
     setLoaders((prev) => ({
       ...prev,
@@ -140,58 +142,19 @@ const useSearch = (
               );
           }
         } else {
-          collections = await filterSearch(0);
+          collections = await filterSearch(0, query || "");
         }
         query = allSearchItems?.searchInput;
       } else {
-        collections = await filterSearch(0);
-        if ((!allSearchItems?.searchInput || random) && !backup) {
-          query = filters?.hashtag?.split(",")?.[0];
-        } else if (backup) {
-          query = TAGS?.sort(() => Math.random() - 0.5)?.[0];
+        collections = await filterSearch(0, query || "", random);
+        if (!allSearchItems?.searchInput && backup) {
+          query = REFINED_TAGS?.sort(() => Math.random() - 0.5)?.[0];
         } else {
           query = allSearchItems?.searchInput;
         }
       }
 
-      console.log({ query });
-
       if (query) {
-        const pubSearch = await searchPubs(
-          {
-            limit: LimitType.Ten,
-            query,
-            where: {
-              publicationTypes: [SearchPublicationType.Post],
-              metadata: {
-                publishedOn: filters?.origin
-                  ? filters?.origin
-                      ?.split(",")
-                      .map((word) => word.trim())
-                      .filter((word: string) => word.length > 0)
-                  : undefined,
-                tags: filters?.hashtag
-                  ? {
-                      oneOf: filters?.hashtag
-                        ?.split(",")
-                        .map((word) => word.trim())
-                        .filter((word: string) => word.length > 0),
-                    }
-                  : undefined,
-                mainContentFocus: filters?.format
-                  ? (filters?.format
-                      ?.split(",")
-                      .map((word) => word.trim())
-                      .filter(
-                        (word: string) => word.length > 0
-                      ) as PublicationMetadataMainFocusType[])
-                  : undefined,
-              },
-            },
-          },
-          lensConnected?.id
-        );
-
         const profileSearch = await searchProfiles(
           {
             limit: LimitType.Ten,
@@ -200,41 +163,98 @@ const useSearch = (
           lensConnected?.id
         );
 
-        let moreData: Post[] = [];
-        if (
-          publications?.length < 10 &&
-          profileSearch?.data?.searchProfiles?.items &&
-          profileSearch?.data?.searchProfiles?.items?.length > 0
-        ) {
-          const data = await getPublications(
+        profiles = (profileSearch?.data?.searchProfiles?.items ||
+          []) as Profile[];
+        profileCursor = profileSearch?.data?.searchProfiles?.pageInfo?.next;
+
+        if (!filters?.microbrand && (!collections || collections?.length < 1)) {
+          const pubSearch = await searchPubs(
             {
               limit: LimitType.Ten,
+              query,
               where: {
-                from: profileSearch?.data?.searchProfiles?.items?.map(
-                  (item) => item?.id
-                ),
-                publicationTypes: [PublicationType.Post],
+                publicationTypes: [SearchPublicationType.Post],
+                metadata: {
+                  publishedOn: filters?.origin
+                    ? filters?.origin
+                        ?.split(",")
+                        .map((word) => word.trim())
+                        .filter((word: string) => word.length > 0)
+                    : undefined,
+                  tags: filters?.hashtag
+                    ? {
+                        oneOf: filters?.hashtag
+                          ?.split(",")
+                          .map((word) => word.trim())
+                          .filter((word: string) => word.length > 0),
+                      }
+                    : undefined,
+                  mainContentFocus: filters?.format
+                    ? (filters?.format
+                        ?.split(",")
+                        .map((word) => word.trim())
+                        .filter(
+                          (word: string) => word.length > 0
+                        ) as PublicationMetadataMainFocusType[])
+                    : undefined,
+                },
               },
             },
             lensConnected?.id
           );
-          moreData = data?.data?.publications?.items as Post[];
-          pubProfileCursor = data?.data?.publications?.pageInfo?.next;
+
+          publications = ([
+            ...(pubSearch?.data?.searchPublications?.items || []),
+          ] || []) as (Post | Comment | Mirror | Quote)[];
+          pubCursor = pubSearch?.data?.searchPublications?.pageInfo?.next;
+        }
+      }
+
+      if (publications?.length < 1) {
+        let where: PublicationsWhere = {
+          publicationTypes: [PublicationType.Post],
+        };
+
+        if (filters?.microbrand) {
+          where = {
+            ...where,
+            from: filterConstants?.microbrands
+              ?.filter((item) =>
+                filters?.microbrand
+                  ?.split(",")
+                  .map((word) => word.trim())
+                  ?.map((item) => item?.toLowerCase())
+                  ?.includes(item?.[0]?.toLowerCase())
+              )
+              ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`),
+          };
+        } else if (collections && collections?.length > 0) {
+          where = {
+            ...where,
+            from: collections?.map(
+              (item) => `${toHexWithLeadingZero(Number(item.profileId))}`
+            ),
+          };
         }
 
-        publications = ([
-          ...(pubSearch?.data?.searchPublications?.items || []),
-          ...moreData,
-        ] || []) as (Post | Comment | Mirror | Quote)[];
-        profiles = (profileSearch?.data?.searchProfiles?.items ||
-          []) as Profile[];
-        pubCursor = pubSearch?.data?.searchPublications?.pageInfo?.next;
-        profileCursor = profileSearch?.data?.searchProfiles?.pageInfo?.next;
+        if (where.from && where.from?.length > 0) {
+          const data = await getPublications(
+            {
+              limit: LimitType.Ten,
+              where,
+            },
+            lensConnected?.id
+          );
+
+          publications = ([...(data?.data?.publications?.items || [])] ||
+            []) as (Post | Comment | Mirror | Quote)[];
+          pubProfileCursor = data?.data?.publications?.pageInfo?.next;
+        }
       }
 
       if (
         (filters?.format?.toLowerCase()?.includes("video") ||
-          publications?.length + profiles?.length < 20) &&
+          publications?.length + profiles?.length < 10) &&
         publications?.filter(
           (item) =>
             (item as Post)?.metadata?.__typename == "VideoMetadataV3" ||
@@ -269,9 +289,15 @@ const useSearch = (
         const data = await getMicrobrands(
           {
             where: {
-              profileIds: filterConstants?.microbrands?.map(
-                (item) => `${toHexWithLeadingZero(Number(item[2]))}`
-              ),
+              profileIds: filterConstants?.microbrands
+                ?.filter((item) =>
+                  filters?.microbrand
+                    ?.split(",")
+                    .map((word) => word.trim())
+                    ?.map((item) => item?.toLowerCase())
+                    ?.includes(item?.[0]?.toLowerCase())
+                )
+                ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`),
             },
           },
           lensConnected?.id
@@ -311,11 +337,13 @@ const useSearch = (
 
       dispatch(
         setAllSearchItems({
-          actionItems: mixArrays(allItems),
+          actionItems: backup
+            ? [...(allSearchItems?.items || []), ...mixArrays(allItems)]
+            : mixArrays(allItems),
           actionGraphCursor: collections?.length == 10 ? 10 : undefined,
-          actionPubProfileCursor: pubProfileCursor,
           actionLensProfileCursor: profileCursor,
           actionLensPubCursor: pubCursor,
+          actionPubProfileCursor: pubProfileCursor,
           actionVideoCursor: videoCursor,
           actionHasMore:
             collections?.length == 10 ||
@@ -338,14 +366,15 @@ const useSearch = (
   };
 
   const filterSearch = async (
-    cursor: number
+    cursor: number,
+    query: string,
+    newFilters?: Filter
   ): Promise<Creation[] | undefined> => {
-    const where = buildQuery(filters);
+    const where = buildQuery(newFilters ? newFilters : filters);
     let collections;
-
     try {
-      if (allSearchItems?.searchInput.trim() !== "") {
-        const textWhere = buildTextQuery(allSearchItems?.searchInput!);
+      if (query.trim() !== "") {
+        const textWhere = buildTextQuery(query!);
         const combinedWhere = combineQueryObjects(textWhere, where);
         const searchItems = await getAllCollections(
           combinedWhere,
@@ -358,10 +387,64 @@ const useSearch = (
             "blockTimestamp",
             "owner",
             "collectionMetadata_title",
-          ][Math.floor(Math.random() * 2)]
+          ][Math.floor(Math.random() * 5)]
         );
         collections = searchItems?.data?.collectionCreateds;
       } else {
+        const searchItems = await getAllCollections(
+          where,
+          10,
+          cursor,
+          ["asc", "desc"][Math.floor(Math.random() * 2)],
+          "blockTimestamp"
+        );
+        collections = searchItems?.data?.collectionCreateds;
+      }
+
+      if (collections?.length < 1) {
+        let where: Object;
+        if (query.trim() !== "") {
+          where = buildTextQuery(query!)!;
+        } else {
+          const {
+            format,
+            origin,
+            fulfiller,
+            size,
+            color,
+            price,
+            catalog,
+            editions,
+            available,
+            token,
+            drop,
+            community,
+            ...rest
+          } = filters;
+          where = buildQuery({
+            ...rest,
+            format: "",
+            origin: "",
+            community: "",
+            fulfiller: "",
+            size: {
+              apparel: [],
+              poster: [],
+              sticker: [],
+            },
+            color: [],
+            price: {
+              min: 0,
+              max: 0,
+            },
+            catalog: "",
+            editions: 0,
+            available: true,
+            token: "",
+            drop: "",
+          });
+        }
+
         const searchItems = await getAllCollections(
           where,
           10,
@@ -393,9 +476,10 @@ const useSearch = (
 
   const handleMoreSearch = async () => {
     if (!allSearchItems?.hasMore) {
-      await handleSearch(undefined, undefined, false, true);
+      await handleSearch(undefined, undefined, true);
       return;
     }
+
     setLoaders((prev) => ({
       ...prev,
       moreSearchLoading: true,
@@ -407,8 +491,8 @@ const useSearch = (
       collections: Creation[] | undefined = [],
       profiles: Profile[] | undefined = [],
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
-      pubCursor: string | undefined,
       pubProfileCursor: string | undefined,
+      pubCursor: string | undefined,
       videoCursor: string | undefined,
       profileCursor: string | undefined,
       microbrands: Profile[] = [];
@@ -436,17 +520,20 @@ const useSearch = (
         query = allSearchItems?.searchInput;
       } else {
         if (allSearchItems?.graphCursor) {
-          collections = await filterSearch(allSearchItems?.graphCursor);
+          collections = await filterSearch(
+            allSearchItems?.graphCursor,
+            allSearchItems?.searchInput || ""
+          );
         }
-        if (!allSearchItems?.searchInput) {
-          query = filters?.hashtag || filters?.community;
-        } else {
-          query = allSearchItems?.searchInput;
-        }
+        query = allSearchItems?.searchInput;
       }
 
       if (query) {
-        if (allSearchItems?.lensPubCursor) {
+        if (
+          allSearchItems?.lensPubCursor &&
+          !filters?.microbrand &&
+          (!collections || collections?.length < 1)
+        ) {
           const pubSearch = await searchPubs(
             {
               limit: LimitType.Ten,
@@ -512,39 +599,82 @@ const useSearch = (
 
           profiles = (profileSearch?.data?.searchProfiles?.items ||
             []) as Profile[];
-
           profileCursor = profileSearch?.data?.searchProfiles?.pageInfo?.next;
         }
       }
 
-      let moreData: Post[] = [];
+      if (
+        filters?.microbrand ||
+        (collections && collections?.length > 0) ||
+        allSearchItems?.items?.filter(
+          (item) =>
+            (item.post as Creation)?.amount &&
+            Number((item.post as Creation)?.amount) > 0
+        )?.length > 0
+      ) {
+        let where: PublicationsWhere = {
+          publicationTypes: [PublicationType.Post],
+        };
 
-      if (publications?.length < 10 && allSearchItems?.pubProfileCursor) {
-        const items =
-          profiles?.length > 0
-            ? profiles
-            : (allSearchItems?.items
-                ?.filter((item) => item.type === "Profile")
-                .map((item) => item.post) as Profile[]);
+        if (filters?.microbrand) {
+          where = {
+            ...where,
+            from: filterConstants?.microbrands
+              ?.filter((item) =>
+                filters?.microbrand
+                  ?.split(",")
+                  .map((word) => word.trim())
+                  ?.map((item) => item?.toLowerCase())
+                  ?.includes(item?.[0]?.toLowerCase())
+              )
+              ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`),
+          };
+        } else if (
+          (collections && collections?.length > 0) ||
+          allSearchItems?.items?.filter(
+            (item) =>
+              (item.post as Creation)?.amount &&
+              Number((item.post as Creation)?.amount) > 0
+          )?.length > 0
+        ) {
+          where = {
+            ...where,
+            from:
+              collections && collections?.length > 0
+                ? collections?.map(
+                    (item: Creation) =>
+                      `${toHexWithLeadingZero(Number(item.profileId))}`
+                  )
+                : (
+                    allSearchItems?.items?.filter(
+                      (item) =>
+                        (item.post as Creation)?.amount &&
+                        Number((item.post as Creation)?.amount) > 0
+                    ) as Publication[]
+                  )?.map(
+                    (item: Publication) =>
+                      `${toHexWithLeadingZero(
+                        Number((item?.post as Creation)?.profileId)
+                      )}`
+                  ),
+          };
+        }
 
         const data = await getPublications(
           {
             limit: LimitType.Ten,
-            where: {
-              from: items?.map((item) => item?.id),
-              publicationTypes: [PublicationType.Post],
-            },
+            where,
             cursor: allSearchItems?.pubProfileCursor,
           },
           lensConnected?.id
         );
-        moreData = (data?.data?.publications?.items || []) as Post[];
+        publications = (data?.data?.publications?.items || []) as Post[];
         pubProfileCursor = data?.data?.publications?.pageInfo?.next;
       }
 
       if (
         (filters?.format?.toLowerCase()?.includes("video") ||
-          publications?.length + profiles?.length < 20) &&
+          publications?.length + profiles?.length < 10) &&
         allSearchItems?.videoCursor &&
         publications?.filter(
           (item) => (item as Post)?.metadata?.__typename == "VideoMetadataV3"
@@ -585,7 +715,7 @@ const useSearch = (
             type: "Microbrand",
           })) || []),
         ],
-        [...publications, ...moreData]?.map((item) => ({
+        [...publications]?.map((item) => ({
           post: item,
           publishedOn: item?.publishedOn,
           type:
@@ -604,8 +734,8 @@ const useSearch = (
             : undefined,
           actionLensProfileCursor: profileCursor,
           actionLensPubCursor: pubCursor,
-          actionPubProfileCursor: pubProfileCursor,
           actionVideoCursor: videoCursor,
+          actionPubProfileCursor: pubProfileCursor,
           actionHasMore:
             collections?.length == 10 ||
             publications?.length >= 10 ||
@@ -627,76 +757,12 @@ const useSearch = (
   };
 
   const handleShuffleSearch = async () => {
-    dispatch(
-      setFilter({
-        hashtag: getRandomElement(filterConstants?.hashtags!),
-        community:
-          filterConstants?.community?.length &&
-          filterConstants?.community?.length > 0
-            ? getRandomElement(
-                filterConstants?.community?.map((item) => item?.[0])!
-              )
-            : "",
-        microbrand:
-          filterConstants?.microbrands?.length &&
-          filterConstants?.microbrands?.length > 0
-            ? getRandomElement(
-                filterConstants?.microbrands?.map((item) => item?.[0])!
-              )
-            : "",
-        catalog: getRandomElement(filterConstants?.catalog!),
-        access:
-          filterConstants?.access?.length && filterConstants?.access?.length > 0
-            ? getRandomElement(
-                filterConstants?.access?.map((item) =>
-                  item?.[0]?.toUpperCase()
-                )!
-              )
-            : "",
-        format: getRandomElement(filterConstants?.format!),
-        origin:
-          filterConstants?.origin?.length && filterConstants?.origin?.length > 0
-            ? getRandomElement(
-                filterConstants?.origin?.map((item) =>
-                  item?.[0]?.toUpperCase()
-                )!
-              )
-            : "",
-        editions: getRandomNumber(1, 10),
-        available: true,
-        fulfiller:
-          filterConstants?.fulfiller?.length &&
-          filterConstants?.fulfiller?.length > 0
-            ? getRandomElement(filterConstants?.fulfiller!)
-            : "",
-        drop:
-          filterConstants?.dropsSuggested?.length &&
-          filterConstants?.dropsSuggested?.length > 0
-            ? getRandomElement(filterConstants?.dropsSuggested!)
-            : "",
-        size: {
-          apparel: getRandomArrayElement(filterConstants?.sizes?.apparel!),
-          poster: getRandomArrayElement(filterConstants?.sizes?.poster!),
-          sticker: getRandomArrayElement(filterConstants?.sizes?.sticker!),
-        },
-        color: getRandomArrayElement(filterConstants?.colors!),
-        price: {
-          min: getRandomNumber(1, 100),
-          max: getRandomNumber(50, 500),
-        },
-        token: getRandomElement(filterConstants?.token!),
-        printType: getRandomArrayElement([
-          "sticker",
-          "hoodie",
-          "sleeve",
-          "crop",
-          "shirt",
-          "poster",
-        ]),
-      })
-    );
+    const newFilters = FILTER_SHUFFLE?.[
+      Math.floor(Math.random() * FILTER_SHUFFLE.length)
+    ] as Filter;
+    dispatch(setFilter(newFilters));
 
-    await handleSearch(undefined, undefined, true);
+    await handleSearch(undefined, undefined, false, newFilters);
   };
 
   const handleResetFilters = () => {
