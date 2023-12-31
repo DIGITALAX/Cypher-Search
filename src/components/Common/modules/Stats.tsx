@@ -9,16 +9,19 @@ const Stats: FunctionComponent<StatsProps> = ({
   profile,
   dispatch,
   layoutAmount,
+  microbrand
 }): JSX.Element => {
   return (
     <div
-      className={`relative flex flex-row h-fit items-between justify-between gap-4 text-pez text-xxs font-bit ${
-        layoutAmount === 4 ? "flex-wrap w-full" : "flex-wrap w-full xl:flex-nowrap xl:w-fit"
+      className={`relative flex h-fit items-between justify-between gap-4 text-pez text-xxs font-bit ${
+        layoutAmount === 4
+          ? "flex-wrap w-full"
+          : "flex-wrap w-full xl:flex-nowrap xl:w-fit"
       }`}
     >
       <div
         className={`relative flex gap-2 items-between justify-between ${
-          layoutAmount === 4 ? "flex-row" : "flex-row xl:flex-col"
+        (microbrand || layoutAmount === 4) ? "flex-row" : "flex-row xl:flex-col"
         }`}
       >
         {[

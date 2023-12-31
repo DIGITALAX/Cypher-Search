@@ -121,6 +121,7 @@ export type TileSwitchProps = {
   popUpOpen: boolean[];
   filterConstants: FilterValues | undefined;
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
+  collectionsRelated?: Creation[];
   index: number;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
@@ -161,7 +162,7 @@ export type ControlsProps = {
     duration: number;
     currentTime: number;
     isActive: boolean;
-    loading: boolean
+    loading: boolean;
   };
   setVideoInfo: (
     e: SetStateAction<{
@@ -172,7 +173,7 @@ export type ControlsProps = {
       duration: number;
       currentTime: number;
       isActive: boolean;
-      loading: boolean
+      loading: boolean;
     }>
   ) => void;
 };
@@ -429,6 +430,7 @@ export type MicrobrandProps = {
   profileHovers: boolean[];
   lensConnected: Profile | undefined;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  collectionsRelated?: Creation[];
 };
 
 export enum ERC20Tokens {

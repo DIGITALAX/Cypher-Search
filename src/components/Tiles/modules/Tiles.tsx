@@ -1,6 +1,6 @@
 import { FunctionComponent, memo, useCallback, useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Publication, TilesProps } from "../types/tiles.types";
+import { Creation, Publication, TilesProps } from "../types/tiles.types";
 import TileSwitch from "./TileSwitch";
 import { Masonry } from "masonic";
 import { debounce } from "lodash";
@@ -38,7 +38,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   searchItems,
   moreSearchLoading,
   lensConnected,
-  filterConstants
+  filterConstants,
 }): JSX.Element => {
   const interactionsLoadingMemo = useDeepMemoize(interactionsLoading);
   const searchItemsMemo = useDeepMemoize(searchItems?.items || []);
@@ -77,6 +77,19 @@ const Tiles: FunctionComponent<TilesProps> = ({
           profileHovers={profileHovers}
           setProfileHovers={setProfileHovers}
           simpleCollect={simpleCollect}
+          collectionsRelated={
+            data?.type == "Microbrand"
+              ? (searchItems?.items
+                  ?.filter(
+                    (value) =>
+                      (
+                        value?.post as Creation
+                      )?.collectionMetadata?.microbrand?.toLowerCase() ===
+                      (data?.post as any)?.microbrandName?.toLowerCase()
+                  )
+                  ?.map((item) => item?.post) as Creation[])
+              : undefined
+          }
         />
       );
     },

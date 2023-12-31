@@ -178,7 +178,7 @@ export enum ItemType {
   F3M = "f3m",
   Other = "other",
   Kinora = "kinora",
-  TheDial = "dial"
+  TheDial = "dial",
 }
 
 export type CartItem = {
@@ -250,6 +250,7 @@ export type StatsProps = {
   profile: Profile;
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
+  microbrand?: boolean;
 };
 
 export type MediaProps = {

@@ -46,7 +46,8 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   setProfileHovers,
   simpleCollect,
   lensConnected,
-  filterConstants
+  filterConstants,
+  collectionsRelated
 }) => {
   if (type?.toLowerCase() == "loader") {
     return <LoadTile index={index} />;
@@ -101,6 +102,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         setProfileHovers={setProfileHovers}
         dispatch={dispatch}
         lensConnected={lensConnected}
+        collectionsRelated={collectionsRelated}
       />
     );
   }

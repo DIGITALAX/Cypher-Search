@@ -47,7 +47,7 @@ const config: Config = {
         hierba: "#03DB6A",
         afilado: "#4E4D4D",
         cereza: "#F28548",
-        humor: "#F7B500"
+        humor: "#F7B500",
       },
       fontFamily: {
         bit: "Bitblox",
@@ -84,12 +84,13 @@ const config: Config = {
         listener: `url("https://chromadin.infura-ipfs.io/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2")`,
         web: `url("https://chromadin.infura-ipfs.io/ipfs/QmYRZYGFKgH6wGJ39aWHbr7T1PsySh2kTSjo11yEZrrGcM")`,
         blurs: `url("https://chromadin.infura-ipfs.io/ipfs/QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY")`,
+        synth: `url("https://chromadin.infura-ipfs.io/ipfs/QmVaK6MVXPzdGb7XSBXqP4bXGzrsbtd1yECafztTT4dvjp")`,
       },
       screens: {
         tablet: "900px",
         galaxy: "300px",
         pre: "400px",
-        otro: "1350px"
+        otro: "1350px",
       },
     },
   },

@@ -125,7 +125,9 @@ const useSearch = (
         (click && allSearchItems?.searchInput.trim() !== "")
       ) {
         if (filterEmpty(filters) && !backup) {
-          const where = buildTextQuery(allSearchItems?.searchInput!);
+          const where = buildTextQuery(
+            allSearchItems?.searchInput?.replaceAll("@", "")!
+          );
           if (where) {
             const searchItems = await getAllCollections(
               where,
@@ -142,15 +144,19 @@ const useSearch = (
               );
           }
         } else {
-          collections = await filterSearch(0, query || "");
+          collections = await filterSearch(0, query?.replaceAll("@", "") || "");
         }
-        query = allSearchItems?.searchInput;
+        query = allSearchItems?.searchInput?.replaceAll("@", "");
       } else {
-        collections = await filterSearch(0, query || "", random);
+        collections = await filterSearch(
+          0,
+          query?.replaceAll("@", "") || "",
+          random
+        );
         if (!allSearchItems?.searchInput && backup) {
           query = REFINED_TAGS?.sort(() => Math.random() - 0.5)?.[0];
         } else {
-          query = allSearchItems?.searchInput;
+          query = allSearchItems?.searchInput?.replaceAll("@", "");
         }
       }
 
@@ -167,7 +173,10 @@ const useSearch = (
           []) as Profile[];
         profileCursor = profileSearch?.data?.searchProfiles?.pageInfo?.next;
 
-        if (!filters?.microbrand && (!collections || collections?.length < 1)) {
+        if (
+          (!filters?.microbrand || filters?.microbrand == "") &&
+          (!collections || collections?.length < 1)
+        ) {
           const pubSearch = await searchPubs(
             {
               limit: LimitType.Ten,
@@ -215,7 +224,7 @@ const useSearch = (
           publicationTypes: [PublicationType.Post],
         };
 
-        if (filters?.microbrand) {
+        if (filters?.microbrand && filterConstants?.microbrands) {
           where = {
             ...where,
             from: filterConstants?.microbrands
@@ -282,32 +291,56 @@ const useSearch = (
       }
 
       if (
-        filters?.microbrand &&
+        (filters?.microbrand?.trim() !== "" ||
+          (filterConstants?.microbrands?.filter((item) =>
+            item?.[0]?.toLowerCase()?.includes((query || "")?.toLowerCase())
+          )?.length &&
+            filterConstants?.microbrands?.filter((item) =>
+              item?.[0]?.toLowerCase()?.includes((query || "")?.toLowerCase())
+            )?.length > 0)) &&
         filterConstants?.microbrands &&
         filterConstants?.microbrands?.length > 0
       ) {
         const data = await getMicrobrands(
           {
             where: {
-              profileIds: filterConstants?.microbrands
-                ?.filter((item) =>
-                  filters?.microbrand
-                    ?.split(",")
-                    .map((word) => word.trim())
-                    ?.map((item) => item?.toLowerCase())
-                    ?.includes(item?.[0]?.toLowerCase())
-                )
-                ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`),
+              profileIds:
+                filters?.microbrand?.trim() !== ""
+                  ? filterConstants?.microbrands
+                      ?.filter((item) =>
+                        filters?.microbrand
+                          ?.split(",")
+                          .map((word) => word.trim())
+                          ?.map((item) => item?.toLowerCase())
+                          ?.includes(item?.[0]?.toLowerCase())
+                      )
+                      ?.map(
+                        (item) => `${toHexWithLeadingZero(Number(item[2]))}`
+                      )
+                  : filterConstants?.microbrands
+                      ?.filter((item) =>
+                        query?.toLowerCase()?.includes(item?.[0]?.toLowerCase())
+                      )
+                      ?.map(
+                        (item) => `${toHexWithLeadingZero(Number(item[2]))}`
+                      ),
             },
           },
           lensConnected?.id
         );
 
-        microbrands = (data?.data?.profiles?.items?.map((item, index) => ({
-          ...item,
-          microbandCover: filterConstants?.microbrands[index][1],
-          microbrandName: filterConstants?.microbrands[index][0],
-        })) || []) as any;
+        microbrands = (data?.data?.profiles?.items?.map((item) => {
+          const index = filterConstants?.microbrands?.findIndex(
+            (micro) =>
+              micro?.[2]?.toLowerCase() ==
+              parseInt(item?.id?.toLowerCase(), 16).toString()
+          );
+          return {
+            ...item,
+            microbandCover: filterConstants?.microbrands[index][1],
+            microbrandName: filterConstants?.microbrands[index][0],
+          };
+        }) || []) as any;
       }
 
       const allItems = [
@@ -374,7 +407,7 @@ const useSearch = (
     let collections;
     try {
       if (query.trim() !== "") {
-        const textWhere = buildTextQuery(query!);
+        const textWhere = buildTextQuery(query?.replaceAll("@", "")!);
         const combinedWhere = combineQueryObjects(textWhere, where);
         const searchItems = await getAllCollections(
           combinedWhere,
@@ -404,7 +437,7 @@ const useSearch = (
       if (collections?.length < 1) {
         let where: Object;
         if (query.trim() !== "") {
-          where = buildTextQuery(query!)!;
+          where = buildTextQuery(query?.replaceAll("@", "")!)!;
         } else {
           const {
             format,
@@ -499,7 +532,9 @@ const useSearch = (
     try {
       if (filterEmpty(filters) && allSearchItems?.searchInput) {
         if (allSearchItems?.graphCursor) {
-          const where = buildTextQuery(allSearchItems?.searchInput!);
+          const where = buildTextQuery(
+            allSearchItems?.searchInput?.replaceAll("@", "")!
+          );
           if (where) {
             const searchItems = await getAllCollections(
               where,
@@ -517,7 +552,7 @@ const useSearch = (
           }
         }
 
-        query = allSearchItems?.searchInput;
+        query = allSearchItems?.searchInput?.replaceAll("@", "");
       } else {
         if (allSearchItems?.graphCursor) {
           collections = await filterSearch(
@@ -525,13 +560,13 @@ const useSearch = (
             allSearchItems?.searchInput || ""
           );
         }
-        query = allSearchItems?.searchInput;
+        query = allSearchItems?.searchInput?.replaceAll("@", "");
       }
 
       if (query) {
         if (
           allSearchItems?.lensPubCursor &&
-          !filters?.microbrand &&
+          (!filters?.microbrand || filters?.microbrand == "") &&
           (!collections || collections?.length < 1)
         ) {
           const pubSearch = await searchPubs(
@@ -604,7 +639,7 @@ const useSearch = (
       }
 
       if (
-        filters?.microbrand ||
+        filters?.microbrand !== "" ||
         (collections && collections?.length > 0) ||
         allSearchItems?.items?.filter(
           (item) =>
@@ -616,7 +651,7 @@ const useSearch = (
           publicationTypes: [PublicationType.Post],
         };
 
-        if (filters?.microbrand) {
+        if (filters?.microbrand !== "") {
           where = {
             ...where,
             from: filterConstants?.microbrands
