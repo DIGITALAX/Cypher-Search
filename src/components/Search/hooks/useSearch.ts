@@ -224,7 +224,11 @@ const useSearch = (
           publicationTypes: [PublicationType.Post],
         };
 
-        if (filters?.microbrand && filterConstants?.microbrands) {
+        if (
+          filters?.microbrand &&
+          filters?.microbrand?.trim() !== "" &&
+          filterConstants?.microbrands
+        ) {
           where = {
             ...where,
             from: filterConstants?.microbrands
@@ -240,8 +244,12 @@ const useSearch = (
         } else if (collections && collections?.length > 0) {
           where = {
             ...where,
-            from: collections?.map(
-              (item) => `${toHexWithLeadingZero(Number(item.profileId))}`
+            from: Array.from(
+              new Set(
+                collections?.map(
+                  (item) => `${toHexWithLeadingZero(Number(item.profileId))}`
+                )
+              )
             ),
           };
         }
@@ -291,12 +299,13 @@ const useSearch = (
       }
 
       if (
-        (filters?.microbrand?.trim() !== "" ||
-          (filterConstants?.microbrands?.filter((item) =>
-            item?.[0]?.toLowerCase()?.includes((query || "")?.toLowerCase())
-          )?.length &&
+        ((filters?.microbrand?.trim() !== "" && filters?.microbrand) ||
+          (query &&
             filterConstants?.microbrands?.filter((item) =>
-              item?.[0]?.toLowerCase()?.includes((query || "")?.toLowerCase())
+              item?.[0]?.toLowerCase()?.includes(query?.toLowerCase() || "")
+            )?.length &&
+            filterConstants?.microbrands?.filter((item) =>
+              item?.[0]?.toLowerCase()?.includes(query?.toLowerCase() || "")
             )?.length > 0)) &&
         filterConstants?.microbrands &&
         filterConstants?.microbrands?.length > 0
@@ -305,7 +314,7 @@ const useSearch = (
           {
             where: {
               profileIds:
-                filters?.microbrand?.trim() !== ""
+                filters?.microbrand?.trim() !== "" && filters?.microbrand
                   ? filterConstants?.microbrands
                       ?.filter((item) =>
                         filters?.microbrand
@@ -566,7 +575,7 @@ const useSearch = (
       if (query) {
         if (
           allSearchItems?.lensPubCursor &&
-          (!filters?.microbrand || filters?.microbrand == "") &&
+          (!filters?.microbrand || filters?.microbrand?.trim() == "") &&
           (!collections || collections?.length < 1)
         ) {
           const pubSearch = await searchPubs(
@@ -639,7 +648,7 @@ const useSearch = (
       }
 
       if (
-        filters?.microbrand !== "" ||
+        (filters?.microbrand?.trim() !== "" && filters?.microbrand) ||
         (collections && collections?.length > 0) ||
         allSearchItems?.items?.filter(
           (item) =>
@@ -651,7 +660,7 @@ const useSearch = (
           publicationTypes: [PublicationType.Post],
         };
 
-        if (filters?.microbrand !== "") {
+        if (filters?.microbrand?.trim() !== "" && filters?.microbrand) {
           where = {
             ...where,
             from: filterConstants?.microbrands
@@ -676,9 +685,13 @@ const useSearch = (
             ...where,
             from:
               collections && collections?.length > 0
-                ? collections?.map(
-                    (item: Creation) =>
-                      `${toHexWithLeadingZero(Number(item.profileId))}`
+                ? Array.from(
+                    new Set(
+                      collections?.map(
+                        (item) =>
+                          `${toHexWithLeadingZero(Number(item.profileId))}`
+                      )
+                    )
                   )
                 : (
                     allSearchItems?.items?.filter(
