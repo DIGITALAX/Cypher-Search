@@ -3,7 +3,6 @@ import { Drop, GalleryProps } from "../types/autograph.types";
 import Image from "next/legacy/image";
 import { GALLERY_OPTIONS, INFURA_GATEWAY } from "../../../../lib/constants";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Creation as CreationType } from "@/components/Tiles/types/tiles.types";
 import Creation from "./Metadata/Creation";
 import getGallerySort from "../../../../lib/helpers/getGallerySort";
 import handleImageError from "../../../../lib/helpers/handleImageError";
@@ -34,6 +33,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   lensConnected,
   hasMoreGallery,
   moreGalleryLoading,
+  profile,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex flex-col gap-10 items-start justify-start flex-grow otro:order-2 order-1 sm:pt-0 pt-10">
@@ -149,6 +149,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
         <div className="relative w-full h-fit flex items-start justify-start overflow-x-scroll max-h-[40rem] otro:max-h-[60rem]">
           <div className="w-full h-fit items-start justify-center md:justify-start flex flex-row flex-wrap gap-8">
             {allDrops?.map((item: Drop, index: number) => {
+              console.log({ item });
               return (
                 item?.collectionIds?.length > 0 && (
                   <div
@@ -158,7 +159,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                       e.stopPropagation();
                       router.push(
                         `/autograph/${
-                          lensConnected?.handle?.suggestedFormatted?.localName?.split(
+                          profile?.handle?.suggestedFormatted?.localName?.split(
                             "@"
                           )?.[1]
                         }/drop/${item?.dropDetails?.dropTitle?.replaceAll(

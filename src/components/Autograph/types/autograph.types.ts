@@ -981,6 +981,7 @@ export type GalleryProps = {
     collected: Creation[];
     created: Creation[];
   };
+  profile: Profile
   hasMoreGallery: boolean;
   allDrops: Drop[] | undefined;
   cartItems: CartItem[];

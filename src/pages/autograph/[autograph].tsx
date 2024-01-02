@@ -735,6 +735,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   lensConnected={lensConnected}
                   mirror={galleryMirror}
                   like={galleryLike}
+                  profile={profile}
                   moreGalleryLoading={moreGalleryLoading}
                   openMirrorChoice={openMirrorGalleryChoice}
                   setOpenMirrorChoice={setOpenMirrorGalleryChoice}
