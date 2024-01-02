@@ -149,7 +149,6 @@ const Gallery: FunctionComponent<GalleryProps> = ({
         <div className="relative w-full h-fit flex items-start justify-start overflow-x-scroll max-h-[40rem] otro:max-h-[60rem]">
           <div className="w-full h-fit items-start justify-center md:justify-start flex flex-row flex-wrap gap-8">
             {allDrops?.map((item: Drop, index: number) => {
-              console.log({ item });
               return (
                 item?.collectionIds?.length > 0 && (
                   <div
