@@ -665,7 +665,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   ? publication?.mirrorOn
                   : (publication as Post)
                 )?.metadata as any
-              )?.content?.length > 0) && (
+              )?.content?.length > 0) ? (
               <div
                 className="relative w-full h-80 rounded-sm border border-mosgu bg-fuego p-1.5 font-bit text-nuba text-sm text-left break-words flex justify-start items-start overflow-y-scroll whitespace-preline"
                 dangerouslySetInnerHTML={{
@@ -696,7 +696,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   ),
                 }}
               ></div>
-            )}
+            ) : <div className="relative w-full h-80 flex"></div>}
             <div
               className={`relative h-full flex items-center justify-start gap-5 ${
                 // (publication?.__typename === "Mirror"
