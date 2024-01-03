@@ -412,10 +412,6 @@ const useWho = (
         showMoreActors();
         break;
 
-      case "Acts":
-        showMoreActors();
-        break;
-
       case "Mirrors":
         showMoreQuoteMirrors();
         break;
