@@ -149,8 +149,14 @@ const uploadPostContent = async (
       $schema,
       lens: {
         mainContentFocus,
-        title: title ? title : contentText ? contentText.slice(0, 20) : "",
-        content: contentText ? contentText : "",
+        title:
+          title && title?.trim() !== ""
+            ? title
+            : contentText && contentText?.trim() !== ""
+            ? contentText.slice(0, 20)
+            : undefined,
+        content:
+          contentText && contentText?.trim() !== "" ? contentText : undefined,
         appId: "cyphersearch",
         ...value,
         id: uuidv4(),
