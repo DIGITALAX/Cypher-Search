@@ -278,6 +278,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
             max={1}
             min={0}
             step={0.01}
+            value={videoInfo?.volume}
             onChange={(e) =>
               setVideoInfo((prev) => ({
                 ...prev,
