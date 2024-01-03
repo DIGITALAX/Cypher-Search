@@ -270,14 +270,15 @@ const useSearch = (
       }
 
       if (
-        (filters?.format?.toLowerCase()?.includes("video") ||
+        ((filters?.format?.toLowerCase()?.includes("video") ||
           publications?.length + profiles?.length < 10) &&
-        publications?.filter(
-          (item) =>
-            (item as Post)?.metadata?.__typename == "VideoMetadataV3" ||
-            item?.by?.id?.toLowerCase() == CHROMADIN_ID?.toLowerCase()
-        )?.length < 10 &&
-        query?.trim() == ""
+          publications?.filter(
+            (item) =>
+              (item as Post)?.metadata?.__typename == "VideoMetadataV3" ||
+              item?.by?.id?.toLowerCase() == CHROMADIN_ID?.toLowerCase()
+          )?.length < 10 &&
+          query?.trim() == "") ||
+        query?.toLowerCase()?.includes("chromadin")
       ) {
         const data = await getPublications(
           {
@@ -721,12 +722,13 @@ const useSearch = (
       }
 
       if (
-        (filters?.format?.toLowerCase()?.includes("video") ||
+        ((filters?.format?.toLowerCase()?.includes("video") ||
           publications?.length + profiles?.length < 10) &&
-        allSearchItems?.videoCursor &&
-        publications?.filter(
-          (item) => (item as Post)?.metadata?.__typename == "VideoMetadataV3"
-        )?.length < 10
+          allSearchItems?.videoCursor &&
+          publications?.filter(
+            (item) => (item as Post)?.metadata?.__typename == "VideoMetadataV3"
+          )?.length < 10) ||
+        query?.toLowerCase()?.includes("chromadin")
       ) {
         const data = await getPublications(
           {
