@@ -78,7 +78,8 @@ const uploadPostContent = async (
       mediaWithKeys.map(async (media) => {
         if (
           typeof media?.item == "string" &&
-          (media?.item as String)?.includes("ipfs://")
+          ((media?.item as String)?.includes("ipfs://") ||
+            (media?.item as String)?.includes("https://media.tenor.com"))
         ) {
           return { type: media?.type, item: media?.item };
         } else {
