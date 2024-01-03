@@ -31,6 +31,16 @@ const lensPost = async (
     openActionModules?.[0]?.collectOpenAction?.simpleCollectOpenAction
   ) {
     openActionModules = cleanCollect(openActionModules);
+  } else {
+    openActionModules = [
+      {
+        collectOpenAction: {
+          simpleCollectOpenAction: {
+            followerOnly: false,
+          },
+        },
+      },
+    ];
   }
 
   const metadata = await validateMetadata({
@@ -84,7 +94,7 @@ const lensPost = async (
       chain: polygon,
       args: [
         {
-          profileId: parseInt(typedData?.value.profileId,16),
+          profileId: parseInt(typedData?.value.profileId, 16),
           contentURI: typedData?.value.contentURI,
           actionModules: typedData?.value?.actionModules,
           actionModulesInitDatas: typedData?.value?.actionModulesInitDatas,

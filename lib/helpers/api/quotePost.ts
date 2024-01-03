@@ -4,7 +4,7 @@ import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
 import { OpenActionModuleInput, InputMaybe } from "../../../graphql/generated";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
-import {  polygon } from "viem/chains";
+import { polygon } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
@@ -31,6 +31,16 @@ const lensQuote = async (
     )
   ) {
     openActionModules = cleanCollect(openActionModules);
+  } else {
+    openActionModules = [
+      {
+        collectOpenAction: {
+          simpleCollectOpenAction: {
+            followerOnly: false,
+          },
+        },
+      },
+    ];
   }
 
   const metadata = await validateMetadata({
@@ -38,7 +48,7 @@ const lensQuote = async (
   });
 
   if (!metadata?.data?.validatePublicationMetadata.valid) {
-    dispatch(setInteractError(true))
+    dispatch(setInteractError(true));
     return;
   }
 
