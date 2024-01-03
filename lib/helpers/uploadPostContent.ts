@@ -68,9 +68,7 @@ const uploadPostContent = async (
       })),
       ...[...(gifs || []), ...(cleanedGifs || [])].map((gif) => ({
         type: "image/gif",
-        item:
-          gif &&
-          (gif?.includes("ipfs://") ? gif : convertToFile(gif, "image/gif")),
+        item: gif,
       })),
     ]
       ?.filter(Boolean)
