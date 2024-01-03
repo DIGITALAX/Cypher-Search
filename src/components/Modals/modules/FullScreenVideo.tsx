@@ -274,6 +274,7 @@ const FullScreenVideo: FunctionComponent<FullScreenVideoProps> = ({
                 max={1}
                 min={0}
                 step={0.01}
+                value={fullScreenVideo?.volume}
                 onChange={(e) => handleVolumeChange(e)}
               />
             )}
