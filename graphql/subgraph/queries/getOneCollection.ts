@@ -132,7 +132,7 @@ const COLLECTION_QUICK = `
 
 const COLLECTION_TITLE = `
   query($title: String!, $origin: String!) {
-    collectionCreateds(where: {collectionMetadata_: { title_contains_nocase: $title }, origin: $origin}, first: 1) {
+    collectionCreateds(where:{ and: [{collectionMetadata_: { title_starts_with_nocase: $title }}, {{collectionMetadata_: { title_ends_with_nocase: $title}}, {origin: $origin}]}, first: 1) {
       amount
       dropMetadata {
         dropCover

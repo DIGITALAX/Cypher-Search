@@ -121,7 +121,6 @@ const useWho = (
     setDataLoading(false);
   };
 
-
   const showActors = async () => {
     if (!reactBox.id) return;
     setDataLoading(true);
@@ -423,8 +422,6 @@ const useWho = (
       case "Following":
         showMoreFollowing();
         break;
-
-     
     }
   };
 
@@ -450,8 +447,6 @@ const useWho = (
         case "Following":
           reactors?.length < 1 && showFollowing();
           break;
-
-     
       }
     } else {
       setPageInfo(undefined);
