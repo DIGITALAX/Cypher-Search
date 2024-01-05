@@ -150,12 +150,12 @@ const FollowCollect: FunctionComponent<FollowCollectProps> = ({
                   collect?.item?.followerOnly))
                 ? approveSpend()
                 : approved &&
-                  type === "collect" &&
+                  (type === "collect" &&
                   (!collect?.item?.followerOnly ||
                     (follower?.operations?.isFollowedByMe?.value &&
                       collect?.item?.followerOnly))
-                ? handleCollect()
-                : handleFollow())
+                    ? handleCollect()
+                    : handleFollow()))
             }
           >
             <div
@@ -176,7 +176,12 @@ const FollowCollect: FunctionComponent<FollowCollectProps> = ({
                 (!collect?.item?.followerOnly ||
                   (follower?.operations?.isFollowedByMe?.value &&
                     collect?.item?.followerOnly)) ? (
-                "Collect"
+                Number(collect?.item?.collectLimit) ==
+                Number(collect?.stats) ? (
+                  "Sold Out"
+                ) : (
+                  "Collect"
+                )
               ) : (
                 "Follow"
               )}

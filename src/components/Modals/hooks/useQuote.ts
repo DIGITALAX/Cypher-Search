@@ -44,6 +44,8 @@ import {
 import getPublications from "../../../../graphql/lens/queries/publications";
 import { CHROMADIN_ID } from "../../../../lib/constants";
 import Draggable from "react-draggable";
+import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
+import findBalance from "../../../../lib/helpers/findBalance";
 
 const useQuote = (
   availableCurrencies: Erc20[],
@@ -550,7 +552,41 @@ const useQuote = (
   };
 
   const handleCollect = async () => {
+    if (
+      followCollect?.type === "collect" &&
+      Number(followCollect?.collect?.item?.collectLimit) ==
+        Number(followCollect?.collect?.stats)
+    )
+      return;
     if (!lensConnected?.id) return;
+
+    const balance = await findBalance(
+      publicClient,
+      followCollect?.type === "collect"
+        ? followCollect?.collect?.item?.amount?.asset?.contract?.address
+        : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
+            ?.amount?.asset?.contract?.address,
+      address as `0x${string}`
+    );
+
+    if (
+      Number(balance) <
+      Number(
+        followCollect?.type === "collect"
+          ? followCollect?.collect?.item?.amount?.value
+          : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
+              ?.amount?.value
+      )
+    ) {
+      dispatch(
+        setInsufficientBalance({
+          actionValue: true,
+          actionMessage: "Pockets Empty. Need to top up?",
+        })
+      );
+      return;
+    }
+
     setTransactionLoading(true);
     try {
       const clientWallet = createWalletClient({
