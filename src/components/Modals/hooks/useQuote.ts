@@ -406,6 +406,7 @@ const useQuote = (
   };
 
   const getCurrencies = async (): Promise<void> => {
+    if (!lensConnected?.id) return;
     try {
       const response = await getEnabledCurrencies({
         limit: LimitType.TwentyFive,
@@ -453,8 +454,8 @@ const useQuote = (
   };
 
   const checkCurrencyApproved = async () => {
+    if (!lensConnected?.id) return;
     setInformationLoading(true);
-    console.log("now")
     try {
       const { data } = await isApprovedData({
         currencies:
@@ -463,8 +464,6 @@ const useQuote = (
             : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
                 ?.amount.asset.contract.address,
       });
-
-      console.log({data})
 
       if (data && data.approvedModuleAllowanceAmount[0]) {
         parseInt(data.approvedModuleAllowanceAmount[0].allowance.value) >
@@ -482,8 +481,7 @@ const useQuote = (
     } catch (err: any) {
       console.error(err.message);
     }
-    console.log("here")
-    
+
     setInformationLoading(false);
   };
 
@@ -536,6 +534,7 @@ const useQuote = (
         account: data?.generateModuleCurrencyApprovalData
           ?.from as `0x${string}`,
         data: data?.generateModuleCurrencyApprovalData?.data,
+        value: BigInt("0"),
       });
       const tx = await publicClient.waitForTransactionReceipt({ hash: res });
       await handleIndexCheck(
@@ -660,7 +659,7 @@ const useQuote = (
     if (availableCurrencies?.length < 1) {
       getCurrencies();
     }
-  }, []);
+  }, [lensConnected]);
 
   useEffect(() => {
     if (
