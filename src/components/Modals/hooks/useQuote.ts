@@ -406,7 +406,6 @@ const useQuote = (
   };
 
   const getCurrencies = async (): Promise<void> => {
-    if (!lensConnected?.id) return;
     try {
       const response = await getEnabledCurrencies({
         limit: LimitType.TwentyFive,
@@ -659,7 +658,7 @@ const useQuote = (
     if (availableCurrencies?.length < 1) {
       getCurrencies();
     }
-  }, [lensConnected]);
+  }, []);
 
   useEffect(() => {
     if (
