@@ -530,7 +530,7 @@ const useQuote = (
         to: data?.generateModuleCurrencyApprovalData?.to as `0x${string}`,
         account: data?.generateModuleCurrencyApprovalData
           ?.from as `0x${string}`,
-        value: data?.generateModuleCurrencyApprovalData?.data,
+        data: data?.generateModuleCurrencyApprovalData?.data,
       });
       const tx = await publicClient.waitForTransactionReceipt({ hash: res });
       await handleIndexCheck(
