@@ -36,7 +36,7 @@ const Bio: FunctionComponent<BioProps> = ({
                 {profile?.metadata?.bio}
               </div>
             )}
-            <div className="relative w-full h-fit flex flex-row gap-10 justify-start items-center">
+            <div className="relative w-full h-fit flex flex-row gap-10 justify-start items-center flex-wrap">
               {[
                 ["Qmb6fQG6L2R7Npf1oS55YEB5RS9z7oCyTwxYnTf57DEEjV", "Followers"],
                 ["QmP141cw2U9TNsU6AXRoo5X5VCPawUTPkWAUJburJayg7x", "Following"],
@@ -48,7 +48,7 @@ const Bio: FunctionComponent<BioProps> = ({
 
                 return (
                   <div
-                    className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2"
+                    className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2 break-words"
                     key={indexTwo}
                     title={image[1]}
                   >
@@ -83,7 +83,7 @@ const Bio: FunctionComponent<BioProps> = ({
               {profile?.metadata?.attributes?.find(
                 (item) => item?.key === "location"
               )?.value && (
-                <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
+                <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2  break-words">
                   <div className="relative w-4 h-4 items-center justify-center flex">
                     <Image
                       layout="fill"
@@ -103,7 +103,7 @@ const Bio: FunctionComponent<BioProps> = ({
               {profile?.metadata?.attributes?.find(
                 (item) => item?.key === "website"
               )?.value && (
-                <div className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2">
+                <div className="font-aust text-white text-xs w-fit max-w-full h-fit relative items-start justify-center flex flex-col gap-2  break-words">
                   <div className="relative w-4 h-4 items-center justify-center flex">
                     <Image
                       draggable={false}
@@ -126,7 +126,7 @@ const Bio: FunctionComponent<BioProps> = ({
                             (item) => item?.key === "website"
                           )?.value) || ""
                     }
-                    className="relative w-fit h-fit flex cursor-pointer"
+                    className="relative break-all max-w-full w-fit h-fit flex cursor-pointer"
                   >
                     {
                       profile?.metadata?.attributes?.find(
@@ -162,7 +162,12 @@ const Bio: FunctionComponent<BioProps> = ({
                     key={index}
                     className="relative w-5 h-5 cursor-pointer active:scale-95"
                     onClick={() =>
-                      router.push(`/item/microbrand/${item?.microbrand?.replaceAll(" ", "_")}`)
+                      router.push(
+                        `/item/microbrand/${item?.microbrand?.replaceAll(
+                          " ",
+                          "_"
+                        )}`
+                      )
                     }
                     title={item?.microbrand}
                   >

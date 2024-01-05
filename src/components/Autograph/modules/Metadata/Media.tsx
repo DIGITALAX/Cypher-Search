@@ -55,7 +55,7 @@ const Media: FunctionComponent<ImageProps> = ({
                 return (
                   <div
                     key={index}
-                    className={`w-60 border border-white rounded-sm h-60 flex items-center justify-center bg-offBlack ${
+                    className={`w-60 relative border border-white rounded-sm h-60 flex items-center justify-center bg-offBlack ${
                       media?.url && !disabled && "cursor-pointer"
                     }`}
                     onClick={() =>

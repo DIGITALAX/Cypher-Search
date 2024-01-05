@@ -454,6 +454,7 @@ const useQuote = (
 
   const checkCurrencyApproved = async () => {
     setInformationLoading(true);
+    console.log("now")
     try {
       const { data } = await isApprovedData({
         currencies:
@@ -462,6 +463,8 @@ const useQuote = (
             : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
                 ?.amount.asset.contract.address,
       });
+
+      console.log({data})
 
       if (data && data.approvedModuleAllowanceAmount[0]) {
         parseInt(data.approvedModuleAllowanceAmount[0].allowance.value) >
@@ -479,6 +482,8 @@ const useQuote = (
     } catch (err: any) {
       console.error(err.message);
     }
+    console.log("here")
+    
     setInformationLoading(false);
   };
 

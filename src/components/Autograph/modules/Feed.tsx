@@ -68,7 +68,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           id={profileFeed?.length < 1 ? "" : "feedWrapper"}
         >
           <div
-            className={`relative h-[80rem] otro:h-[200rem] flex items-start  justify-center overflow-y-scroll ${
+            className={`relative h-[80rem] otro:h-[200rem] flex items-start  justify-center overflow-y-scroll max-w-full ${
               profileFeed?.length < 1 ? "w-full" : "w-fit"
             }`}
             id={profileFeed?.length < 1 ? "" : "feed"}
