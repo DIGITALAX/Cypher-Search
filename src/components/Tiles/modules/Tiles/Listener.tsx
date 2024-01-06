@@ -168,7 +168,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
                   level={undefined}
                   bottom={"50px"}
                   left={"-10px"}
-                  type={ItemType.CoinOp}
+                  type={ItemType.Listener}
                   cartItems={cartItems}
                 />
               )}
