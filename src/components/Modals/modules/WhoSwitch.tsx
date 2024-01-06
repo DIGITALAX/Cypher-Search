@@ -101,9 +101,11 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
                 className="relative w-full h-14 p-2 flex flex-row border border-black items-center justify-start font-bit text-white cursor-pointer border border-white"
                 id="prerollFaded"
                 onClick={() => {
-                  setReactBox({
-                    actionOpen: false,
-                  });
+                  dispatch(
+                    setReactBox({
+                      actionOpen: false,
+                    })
+                  );
                   router.push(
                     `/autograph/${
                       account?.handle?.suggestedFormatted?.localName?.split(
