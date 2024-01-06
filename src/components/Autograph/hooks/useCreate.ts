@@ -342,7 +342,9 @@ const useCreate = (
         ],
         address,
         clientWallet,
-        publicClient
+        publicClient,
+        undefined,
+        true
       );
 
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
