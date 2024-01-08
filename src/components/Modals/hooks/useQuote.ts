@@ -33,7 +33,6 @@ import refetchProfile from "../../../../lib/helpers/api/refetchProfile";
 import lensCollect from "../../../../lib/helpers/api/collectPost";
 import isApprovedData from "../../../../graphql/lens/mutations/isApproved";
 import approveCurrency from "../../../../graphql/lens/mutations/approve";
-import handleIndexCheck from "../../../../graphql/lens/queries/indexed";
 import lensPost from "../../../../lib/helpers/api/postChain";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
@@ -461,12 +460,16 @@ const useQuote = (
       const { data } = await isApprovedData({
         currencies:
           followCollect?.type === "collect"
-            ? followCollect?.collect?.item?.amount?.asset.contract.address
-            : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
-                ?.amount.asset.contract.address,
+            ? [followCollect?.collect?.item?.amount?.asset.contract.address]
+            : [
+                (
+                  followCollect?.follower
+                    ?.followModule as FeeFollowModuleSettings
+                )?.amount.asset.contract.address,
+              ],
       });
-      if (data && data.approvedModuleAllowanceAmount[0]) {
-        parseInt(data.approvedModuleAllowanceAmount[0].allowance.value) >
+      if (data && data.approvedModuleAllowanceAmount?.[0]) {
+        parseInt(data.approvedModuleAllowanceAmount?.[0].allowance.value) >
         (followCollect?.type === "collect"
           ? parseInt(followCollect?.collect?.item?.amount?.value || "")
           : parseInt(
