@@ -182,12 +182,12 @@ const useQuote = (
         await lensPost(
           contentURI?.string!,
           dispatch,
-          postCollectGif.collectTypes?.[postBox?.quote?.id]
+          postCollectGif.collectTypes?.[postBox?.quote?.id || "post"]
             ? [
                 {
                   collectOpenAction: {
                     simpleCollectOpenAction:
-                      postCollectGif.collectTypes?.[postBox?.quote?.id]!,
+                      postCollectGif.collectTypes?.[postBox?.quote?.id || "post"]!,
                   },
                 },
               ]
@@ -411,6 +411,7 @@ const useQuote = (
       const response = await getEnabledCurrencies({
         limit: LimitType.TwentyFive,
       });
+
       if (response && response.data) {
         dispatch(setAvailableCurrencies(response.data.currencies.items));
       }
@@ -557,7 +558,8 @@ const useQuote = (
     if (
       followCollect?.type === "collect" &&
       Number(followCollect?.collect?.item?.collectLimit) ==
-        Number(followCollect?.collect?.stats)
+        Number(followCollect?.collect?.stats) &&
+      Number(followCollect?.collect?.item?.collectLimit || 0) > 0
     )
       return;
     if (!lensConnected?.id) return;
