@@ -124,7 +124,7 @@ const useQuote = (
     search: "",
     collectibleOpen: false,
     collectible: "Yes",
-    award: "",
+    award: "No",
     whoCollectsOpen: false,
     creatorAwardOpen: false,
     currencyOpen: false,
@@ -713,36 +713,38 @@ const useQuote = (
 
   useEffect(() => {
     if (postCollectGif.type) {
-      setOpenMeasure((prev) => ({
-        ...prev,
-        collectibleOpen: false,
-        collectible:
-          postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
-          Number(
-            postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value
-          ) > 0
+      if (postCollectGif.collectTypes?.[postCollectGif?.id!]) {
+        setOpenMeasure((prev) => ({
+          ...prev,
+          collectibleOpen: false,
+          collectible:
+            postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
+            Number(
+              postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value
+            ) > 0
+              ? "Yes"
+              : "No",
+          award:
+            postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
+            Number(
+              postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value
+            )
+              ? "Yes"
+              : "No",
+          whoCollectsOpen: false,
+          creatorAwardOpen: false,
+          currencyOpen: false,
+          editionOpen: false,
+          edition: postCollectGif.collectTypes?.[postCollectGif?.id!]
+            ?.collectLimit
             ? "Yes"
             : "No",
-        award:
-          postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
-          Number(
-            postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value
-          )
+          timeOpen: false,
+          time: postCollectGif.collectTypes?.[postCollectGif?.id!]?.endsAt
             ? "Yes"
             : "No",
-        whoCollectsOpen: false,
-        creatorAwardOpen: false,
-        currencyOpen: false,
-        editionOpen: false,
-        edition: postCollectGif.collectTypes?.[postCollectGif?.id!]
-          ?.collectLimit
-          ? "Yes"
-          : "No",
-        timeOpen: false,
-        time: postCollectGif.collectTypes?.[postCollectGif?.id!]?.endsAt
-          ? "Yes"
-          : "No",
-      }));
+        }));
+      }
     }
   }, [postCollectGif.type]);
 
