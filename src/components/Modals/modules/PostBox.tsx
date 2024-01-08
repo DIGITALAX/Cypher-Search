@@ -78,7 +78,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
                 setContentLoading={setContentLoading}
                 dispatch={dispatch}
                 postCollectGif={postCollectGif}
-                id={quote?.id}
+                id={quote?.id || "post"}
               />
             </div>
           </div>

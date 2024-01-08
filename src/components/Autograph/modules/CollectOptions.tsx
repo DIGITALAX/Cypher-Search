@@ -102,6 +102,16 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                   amount: {
                     ...(newCTs[id]?.amount || {}),
                     value: item,
+                    currency:
+                      availableCurrencies?.find((value) => {
+                        if (
+                          value.contract.address ===
+                          collectTypes?.[id!]?.amount?.currency
+                        ) {
+                          return value;
+                        }
+                      })?.contract?.address! ||
+                      availableCurrencies?.[0]?.contract?.address,
                   },
                 } as any;
 
