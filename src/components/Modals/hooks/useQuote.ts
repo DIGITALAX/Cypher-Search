@@ -80,7 +80,7 @@ const useQuote = (
     x: 0,
     y: 0,
   });
-  const [approved, setApproved] = useState<boolean>(true);
+  const [approved, setApproved] = useState<boolean>(false);
   const [quoteLoading, setQuoteLoading] = useState<boolean[]>([false]);
   const [makeQuote, setMakeQuote] = useState<MakePostComment[]>([
     {
@@ -465,7 +465,6 @@ const useQuote = (
             : (followCollect?.follower?.followModule as FeeFollowModuleSettings)
                 ?.amount.asset.contract.address,
       });
-
       if (data && data.approvedModuleAllowanceAmount[0]) {
         parseInt(data.approvedModuleAllowanceAmount[0].allowance.value) >
         (followCollect?.type === "collect"
