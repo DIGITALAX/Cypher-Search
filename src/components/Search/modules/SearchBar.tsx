@@ -108,15 +108,17 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
               dispatch(
                 setLayoutSwitch(
                   layoutAmount <
-                    (window.innerWidth < 648
+                    (typeof window !== "undefined" && window.innerWidth < 648
                       ? 1
-                      : window.innerWidth < 1000
+                      : typeof window !== "undefined" &&
+                        window.innerWidth < 1000
                       ? 2
-                      : window.innerWidth < 1200
+                      : typeof window !== "undefined" &&
+                        window.innerWidth < 1200
                       ? 3
                       : 4)
                     ? layoutAmount + 1
-                    : window.innerWidth < 1200
+                    : typeof window !== "undefined" && window.innerWidth < 1200
                     ? 1
                     : 2
                 )

@@ -1,4 +1,3 @@
-import { CartItem } from "@/components/Common/types/common.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ClaimProfileState {

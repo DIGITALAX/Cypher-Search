@@ -93,7 +93,9 @@ const Publication: FunctionComponent<PublicationProps> = ({
       id={item?.id}
       style={{
         width:
-          window.innerWidth < 640 ? "calc(100vw - 3px)" : "30rem",
+          typeof window !== "undefined" && window.innerWidth < 640
+            ? "calc(100vw - 3px)"
+            : "30rem",
       }}
     >
       <div className="relative w-full h-fit flex items-center justify-between flex-row">
