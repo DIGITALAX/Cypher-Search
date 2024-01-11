@@ -219,7 +219,7 @@ const useItem = (
     creator: string
   ): Promise<Creation[] | undefined> => {
     try {
-      const data = await getCollectionsPaginated(creator, 10, 0);
+      const data = await getCollectionsPaginated(creator, 30, 0);
 
       return await handleCollectionProfilesAndPublications(
         data?.data?.collectionCreateds,
