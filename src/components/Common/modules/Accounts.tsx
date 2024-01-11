@@ -34,8 +34,11 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   return (
     <>
       <div
-        className={`w-fit h-10 flex flex-row gap-4 items-center justify-center ${
-          (searchActive || filtersOpen) && !auto
+        className={`w-full pre:w-fit h-10 flex flex-row gap-4 items-center justify-center ${
+          (searchActive || filtersOpen) &&
+          !auto &&
+          typeof window !== "undefined" &&
+          window.innerWidth > 400
             ? "absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative"
             : "relative"
         }`}
@@ -87,9 +90,11 @@ const Accounts: FunctionComponent<AccountsProps> = ({
           />
         </div>
         {cartItems?.length > 0 && (
-          <div className={`absolute rounded-full border border-mar bg-black w-5 flex items-center justify-center -bottom-1 h-5 p-1 font-vcr text-mar text-xxs z-1 ${
-            lensConnected?.id ? "right-[8.5rem]" : "right-[5.5rem]"
-          }`}>
+          <div
+            className={`absolute rounded-full border border-mar bg-black w-5 flex items-center justify-center -bottom-1 h-5 p-1 font-vcr text-mar text-xxs z-1 ${
+              lensConnected?.id ? "right-[8.5rem]" : "right-[5.5rem]"
+            }`}
+          >
             {cartItems?.length}
           </div>
         )}

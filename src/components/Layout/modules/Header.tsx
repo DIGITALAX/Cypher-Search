@@ -36,10 +36,10 @@ const Header: FunctionComponent<HeaderProps> = ({
 }): JSX.Element => {
   return (
     <div
-      className={`fixed w-full h-fit flex p-2 top-0 z-30 bg-offBlack ${
+      className={`fixed w-full h-fit flex p-2 top-0 z-30 flex-col sm:flex-row bg-offBlack ${
         searchActive || filtersOpen
-          ? "items-start justify-center flex-col sm:flex-row sm:items-center sm:justify-between gap-6 galaxy:gap-8"
-          : "flex-row items-center justify-between"
+          ? "items-start justify-center sm:items-center sm:justify-between gap-6 galaxy:gap-8"
+          : "items-center justify-between sm:gap-auto gap-3"
       } `}
     >
       <div className="relative w-fit h-fit flex items-center justify-center cursor-pointer active:scale-95">

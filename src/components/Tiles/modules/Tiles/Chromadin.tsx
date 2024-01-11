@@ -7,7 +7,6 @@ import InteractBar from "@/components/Common/modules/InteractBar";
 import { setImageViewer } from "../../../../../redux/reducers/ImageLargeSlice";
 import HoverProfile from "@/components/Common/modules/HoverProfile";
 import { ItemType } from "@/components/Common/types/common.types";
-import handleImageError from "../../../../../lib/helpers/handleImageError";
 import MediaSwitch from "@/components/Common/modules/MediaSwitch";
 
 const Chromadin: FunctionComponent<ChromadinProps> = ({
@@ -58,9 +57,18 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                   actionValue: true,
                   actionType: publication?.collectionMetadata?.mediaTypes?.[0],
                   actionImage: `${INFURA_GATEWAY}/ipfs/${
-                    publication?.collectionMetadata?.images?.[0]?.split(
-                      "ipfs://"
-                    )?.[1]
+                    publication?.collectionMetadata?.mediaTypes?.[0] == "video"
+                      ? publication?.collectionMetadata?.video?.split(
+                          "ipfs://"
+                        )?.[1]
+                      : publication?.collectionMetadata?.mediaTypes?.[0] ==
+                        "audio"
+                      ? publication?.collectionMetadata?.mediaCover?.split(
+                          "ipfs://"
+                        )?.[1]
+                      : publication?.collectionMetadata?.images?.[0]?.split(
+                          "ipfs://"
+                        )?.[1]
                   }`,
                 })
               )
@@ -142,21 +150,23 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               />
             )}
           </div>
-          <div
-            className="relative w-10 h-10 flex items-end justify-center mb-0 cursor-pointer active:scale-95"
-            onClick={() =>
-              setPopUpOpen((prev) => {
-                const openPopUps = [...prev];
-                openPopUps[index] = !openPopUps[index];
-                return openPopUps;
-              })
-            }
-          >
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/QmZ4v5pzdnCBeyKnS9VrjZiEAbUpAVy8ECArNcpxBt6Tw4`}
-              draggable={false}
-            />
+          <div className="relative w-fit h-fit flex items-end justify-center mb-0 cursor-pointer active:scale-95">
+            <div
+              className="relative w-10 h-10 flex"
+              onClick={() =>
+                setPopUpOpen((prev) => {
+                  const openPopUps = [...prev];
+                  openPopUps[index] = !openPopUps[index];
+                  return openPopUps;
+                })
+              }
+            >
+              <Image
+                layout="fill"
+                src={`${INFURA_GATEWAY}/ipfs/QmZ4v5pzdnCBeyKnS9VrjZiEAbUpAVy8ECArNcpxBt6Tw4`}
+                draggable={false}
+              />
+            </div>
           </div>
           {popUpOpen?.[index] && (
             <PopUp
