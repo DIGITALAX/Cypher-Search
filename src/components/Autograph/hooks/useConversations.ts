@@ -129,7 +129,7 @@ const useConversations = (
         transport: custom((window as any).ethereum),
       });
 
-      const client = await Client.create(clientWallet, {
+      const client = await Client.create(clientWallet as any, {
         env: "production",
       });
       setClient(client);
