@@ -28,6 +28,7 @@ import {
   LivepeerConfig,
 } from "@livepeer/react";
 import { KinoraProvider } from "kinora-sdk";
+import { apolloClient } from "../../lib/lens/client";
 
 const walletTheme = merge(darkTheme(), {
   colors: {
@@ -103,7 +104,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <RainbowKitProvider chains={chains} theme={walletTheme}>
         <LivepeerConfig client={livepeerClient}>
           <XMTPProvider dbVersion={2}>
-            <KinoraProvider errorHandlingModeStrict={false}>
+            <KinoraProvider playerAuthedApolloClient={apolloClient}>
               <Provider store={store}>
                 <div
                   className={`relative w-full h-auto flex flex-col ${
