@@ -31,7 +31,7 @@
     "http-proxy-middleware": "^2.0.6",
     "ipfs-http-client": "60.0.1",
     "json-stable-stringify": "^1.1.0",
-    "kinora-sdk": "0.0.51",
+    "kinora-sdk": "1.0.1",
     "leaflet": "^1.9.4",
     "lodash.merge": "^4.6.2",
     "masonic": "^3.7.0",
