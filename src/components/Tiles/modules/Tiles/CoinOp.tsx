@@ -43,6 +43,9 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
       className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
       id={publication?.pubId}
     >
+      {publication?.collectionMetadata?.tags?.includes("kinora") && (
+        <div className="w-full h-full rounded-sm flex top-0 left-0 absolute bg-nave" id="game"></div>
+      )}
       <InteractBar
         mirror={mirror}
         like={like}

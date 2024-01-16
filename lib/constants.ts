@@ -17,6 +17,8 @@ export const LISTENER_OPEN_ACTION: `0x${string}` =
   "0xF1e111fD643954234d6C8482fFa5f4dE778e7aD6";
 export const COIN_OP_OPEN_ACTION: `0x${string}` =
   "0x179ACb90575CfF001c6c767b197FFe100B6ADc3a";
+export const KINORA_OPEN_ACTION: `0x${string}` =
+  "0x196f267A4aCA1243CCCB85AD7098D1fDA1D683CD";
 export const F3M_OPEN_ACTION: `0x${string}` =
   "0xb92725B5Bea87C7Ed856898AaC3122548aBA6349";
 export const LEGEND_OPEN_ACTION: `0x${string}` = "0x";

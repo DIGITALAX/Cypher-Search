@@ -9,6 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        nave: "#0b0e16",
         offWhite: "#F2F2F2",
         offBlack: "#111313",
         midWhite: "#FAF4E8",

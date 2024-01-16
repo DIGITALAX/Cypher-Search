@@ -11,6 +11,7 @@ import {
   F3M_OPEN_ACTION,
   INFURA_GATEWAY,
   LISTENER_OPEN_ACTION,
+  KINORA_OPEN_ACTION,
 } from "../../../../lib/constants";
 import {
   Comment,
@@ -88,6 +89,13 @@ const Publication: FunctionComponent<PublicationProps> = ({
                 ?.includes(value?.toLowerCase())
             )
           ? "bg-[#3887c3]"
+          : (item?.__typename === "Mirror"
+              ? item?.mirrorOn
+              : (item as Post)
+            )?.openActionModules?.[0]?.contract?.address
+              ?.toLowerCase()
+              ?.includes(KINORA_OPEN_ACTION?.toLowerCase())
+          ? "bg-nave"
           : "bg-lirio"
       }`}
       id={item?.id}
