@@ -32,7 +32,7 @@ import {
   AllSearchItemsState,
   setAllSearchItems,
 } from "../../../../redux/reducers/searchItemsSlice";
-import { Creation, Publication } from "./../../Tiles/types/tiles.types";
+import { Award, Creation, Publication } from "./../../Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import { buildQuery } from "../../../../lib/helpers/buildQuery";
@@ -65,6 +65,8 @@ import {
   getQuestsWhere,
 } from "../../../../graphql/subgraph/queries/getQuests";
 import handleQuestData from "../../../../lib/helpers/handleQuestData";
+import { getAllRewards } from "../../../../graphql/subgraph/queries/getAllRewards";
+import handleAwardsData from "../../../../lib/helpers/handleAwardsData";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -120,6 +122,7 @@ const useSearch = (
     let query: string | undefined,
       collections: Creation[] | undefined = [],
       quests: Quest[] | undefined = [],
+      awards: Award[] | undefined = [],
       profiles: Profile[] | undefined = [],
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
       pubCursor: string | undefined,
@@ -348,6 +351,16 @@ const useSearch = (
       }
 
       if (
+        filters?.origin?.toLowerCase()?.includes("kinora") ||
+        query?.toLowerCase()?.includes("kinora")
+      ) {
+        const data = await getAllRewards(10, 0);
+        if (data?.data?.rewards?.length > 0) {
+          awards = await handleAwardsData(data?.data?.rewards);
+        }
+      }
+
+      if (
         ((filters?.microbrand?.trim() !== "" && filters?.microbrand) ||
           (query &&
             filterConstants?.microbrands?.filter((item) =>
@@ -441,6 +454,10 @@ const useSearch = (
           post: item,
           type: "Kinora",
         })) || [],
+        awards?.map((item) => ({
+          post: item,
+          type: "Award",
+        })) || [],
         [
           ...(profiles?.map((item) => ({
             post: item,
@@ -468,6 +485,7 @@ const useSearch = (
             : mixArrays(allItems),
           actionGraphCursor: collections?.length == 10 ? 10 : undefined,
           actionKinoraCursor: quests?.length == 10 ? 10 : undefined,
+          actionAwardCursor: awards?.length == 10 ? 10 : undefined,
           actionLensProfileCursor: profileCursor,
           actionLensPubCursor: pubCursor,
           actionPubProfileCursor: pubProfileCursor,
@@ -636,6 +654,7 @@ const useSearch = (
     let query: string,
       collections: Creation[] | undefined = [],
       quests: Quest[] | undefined = [],
+      awards: Award[] | undefined = [],
       profiles: Profile[] | undefined = [],
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
       pubProfileCursor: string | undefined,
@@ -859,6 +878,13 @@ const useSearch = (
         ] as (Post | Comment | Quote | Mirror)[];
       }
 
+      if (allSearchItems?.awardCursor) {
+        const data = await getAllRewards(10, allSearchItems?.awardCursor);
+        if (data?.data?.rewards?.length > 0) {
+          awards = await handleAwardsData(data?.data?.rewards);
+        }
+      }
+
       const newItems = [
         collections?.map((item) => ({
           post: item,
@@ -867,6 +893,10 @@ const useSearch = (
         quests?.map((item) => ({
           post: item,
           type: "Kinora",
+        })) || [],
+        awards?.map((item) => ({
+          post: item,
+          type: "Award",
         })) || [],
         [
           ...(profiles?.map((item) => ({
@@ -898,6 +928,11 @@ const useSearch = (
           actionKinoraCursor: allSearchItems?.kinoraCursor
             ? quests?.length == 10
               ? allSearchItems?.kinoraCursor + 10
+              : undefined
+            : undefined,
+          actionAwardCursor: allSearchItems?.awardCursor
+            ? awards?.length == 10
+              ? allSearchItems?.awardCursor + 10
               : undefined
             : undefined,
           actionLensProfileCursor: profileCursor,

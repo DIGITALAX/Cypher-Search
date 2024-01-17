@@ -407,7 +407,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               className="relative w-full h-20 flex overflow-x-scroll items-center justify-start max-w-none sm:max-w-[35rem]"
               id="xScroll"
             >
-              <div className="relative flex w-fit h-full item-center justify-start sm:justify-end flex-row gap-3">
+              <div className="relative flex sm:ml-auto w-fit h-full item-center justify-start sm:justify-end flex-row gap-3">
                 {[itemData?.questMetadata?.cover, ...itemData?.milestones]?.map(
                   (item: Milestone | string, secondIndex: number) => {
                     return (
@@ -528,7 +528,6 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               <div className="relative w-fit h-fit flex items-center justify-center text-white text-sm">
                 Milestone Rewards
               </div>
-
               <div className="relative w-fit h-fit justify-start items-center gap-4 flex flex-row flex-wrap">
                 {itemData?.milestones[purchaseDetails?.imageIndex - 1]?.rewards
                   ?.flat()

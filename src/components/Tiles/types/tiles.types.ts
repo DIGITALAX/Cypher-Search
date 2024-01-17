@@ -78,7 +78,8 @@ export interface Publication {
     | Profile
     | Creation
     | Community
-    | Quest;
+    | Quest
+    | Award;
   type: string;
   publishedOn?: string;
 }
@@ -489,3 +490,41 @@ export type CommunityProps = {
 export type LoadTileProps = {
   index: number;
 };
+
+export type AwardProps = {
+  publication: Award;
+  router: NextRouter;
+  dispatch: Dispatch<AnyAction>;
+};
+
+export interface Award {
+  amount: string;
+  tokenAddress: string;
+  rewardMetadata: {
+    mediaCover: string;
+    images: string;
+    video: string;
+    mediaType: string;
+    audio: string;
+    title: string;
+    description: string;
+    prompt: string;
+  };
+  uri: string;
+  type: string;
+  questId: string;
+  pubId: string;
+  profileId: string;
+  milestone: string;
+  questURI: string;
+  questMetadata: {
+    title: string;
+    description: string;
+    cover: string;
+    videoCovers: {
+      title: string;
+      description: string;
+      cover: string;
+    }[];
+  };
+}

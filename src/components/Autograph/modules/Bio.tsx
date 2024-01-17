@@ -198,111 +198,122 @@ const Bio: FunctionComponent<BioProps> = ({
           {profile?.handle?.suggestedFormatted?.localName}
         </div>
         <div className="relative flex flex-col sm:flex-row gap-10 items-end sm:items-center justify-end w-full sm:w-fit h-fit">
-          <div className="relative flex w-10 h-7 tablet:w-20 tablet:h-16 items-center justify-center">
-            <Image
-              layout="fill"
-              src={`${INFURA_GATEWAY}/ipfs/QmcQibTswkoR7jFQoa4qJcwSmwNU3kBg6AkErsJ3q3qGCW`}
-              draggable={false}
-            />
+          <div className="relative w-fit h-fit flex items-center justify-center">
+            <div className="relative flex w-10 h-7 tablet:w-20 tablet:h-16 items-center justify-center">
+              <Image
+                layout="fill"
+                src={`${INFURA_GATEWAY}/ipfs/QmcQibTswkoR7jFQoa4qJcwSmwNU3kBg6AkErsJ3q3qGCW`}
+                draggable={false}
+              />
+            </div>
           </div>
           <div
-            className={`gap-2 flex flex-row items-center justify-start w-fit h-fit sm:flex-nowrap flex-wrap ${
-              questsLoading && "animate-pulse"
-            }`}
+            className="relative w-full h-fit flex items-center justify-start overflow-x-scroll max-w-[32rem]"
+            id="xScroll"
           >
-            {questsLoading || questSample?.length < 1
-              ? Array.from({ length: 4 })?.map((_, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
-                    >
-                      <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
-                        {questsLoading ? (
-                          <>
-                            Quests <br />
-                            Pending
-                          </>
-                        ) : (
-                          <>
-                            Kinora <br />
-                            Quests
-                          </>
-                        )}
-                      </div>
-                      <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
-                        <div
-                          className={`relative w-6 h-6 tablet:w-14 tablet:h-14 flex items-center justify-center ${
-                            !questsLoading &&
-                            questSample?.length < 1 &&
-                            "cursor-pointer"
-                          }`}
-                          onClick={() =>
-                            !questsLoading &&
-                            questSample?.length < 1 &&
-                            window.open("https://kinora.irrevocable.dev/")
-                          }
-                        >
-                          <Image
-                            draggable={false}
-                            layout="fill"
-                            src={`${INFURA_GATEWAY}/ipfs/QmQ4iytH1E7T6Mz383bEzSoPWfLhZmmvveb1nfwiHVgQYa`}
-                          />
+            <div
+              className={`gap-2 flex flex-row items-start justify-start w-fit h-fit sm:flex-nowrap flex-wrap ${
+                questsLoading && "animate-pulse"
+              }`}
+            >
+              {questsLoading || questSample?.length < 1
+                ? Array.from({ length: 4 })?.map((_, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
+                      >
+                        <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
+                          {questsLoading ? (
+                            <>
+                              Quests <br />
+                              Pending
+                            </>
+                          ) : (
+                            <>
+                              Kinora <br />
+                              Quests
+                            </>
+                          )}
                         </div>
-                        {index !== 3 && (
-                          <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
-                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
-                            <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
-                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })
-              : questSample?.map((quest: Quest, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
-                    >
-                      <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
-                        {quest?.questMetadata?.title?.length > 10
-                          ? quest?.questMetadata?.title?.slice(0, 7) + "..."
-                          : quest?.questMetadata?.title}
-                      </div>
-                      <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
-                        <div
-                          className={`relative w-6 h-6 tablet:w-14 tablet:h-14 cursor-pointer active:scale-95 flex items-center border-2 border-[#3887c3] rounded-full justify-center`}
-                          onClick={() =>
-                            router.push(
-                              `/item/kinora/${toHexWithLeadingZero(
-                                Number(quest?.profileId)
-                              )}-${toHexWithLeadingZero(Number(quest?.pubId))}`
-                            )
-                          }
-                        >
-                          <Image
-                            draggable={false}
-                            layout="fill"
-                            src={`${INFURA_GATEWAY}/ipfs/${
-                              quest?.questMetadata?.cover?.split("ipfs://")?.[1]
+                        <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
+                          <div
+                            className={`relative w-6 h-6 tablet:w-14 tablet:h-14 flex items-center justify-center ${
+                              !questsLoading &&
+                              questSample?.length < 1 &&
+                              "cursor-pointer"
                             }`}
-                            className="rounded-full"
-                            objectFit="cover"
-                          />
-                        </div>
-                        {index !== 3 && (
-                          <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
-                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
-                            <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
-                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                            onClick={() =>
+                              !questsLoading &&
+                              questSample?.length < 1 &&
+                              window.open("https://kinora.irrevocable.dev/")
+                            }
+                          >
+                            <Image
+                              draggable={false}
+                              layout="fill"
+                              src={`${INFURA_GATEWAY}/ipfs/QmQ4iytH1E7T6Mz383bEzSoPWfLhZmmvveb1nfwiHVgQYa`}
+                            />
                           </div>
-                        )}
+                          {index !== 3 && (
+                            <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
+                              <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                              <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
+                              <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                : questSample?.map((quest: Quest, index: number) => {
+                    return (
+                      <div
+                        key={index}
+                        className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
+                      >
+                        <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit items-center justify-center flex break-words whitespace-nowrap">
+                          {quest?.questMetadata?.title?.length > 10
+                            ? quest?.questMetadata?.title?.slice(0, 7) + "..."
+                            : quest?.questMetadata?.title}
+                        </div>
+                        <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
+                          <div
+                            className={`relative w-6 h-6 tablet:w-14 tablet:h-14 cursor-pointer active:scale-95 flex items-center border-2 border-[#3887c3] rounded-full justify-center`}
+                            onClick={() =>
+                              router.push(
+                                `/item/kinora/${toHexWithLeadingZero(
+                                  Number(quest?.profileId)
+                                )}-${toHexWithLeadingZero(
+                                  Number(quest?.pubId)
+                                )}`
+                              )
+                            }
+                          >
+                            <Image
+                              draggable={false}
+                              layout="fill"
+                              src={`${INFURA_GATEWAY}/ipfs/${
+                                quest?.questMetadata?.cover?.split(
+                                  "ipfs://"
+                                )?.[1]
+                              }`}
+                              className="rounded-full"
+                              objectFit="cover"
+                            />
+                          </div>
+                          {index !== questSample?.length - 1 && (
+                            <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
+                              <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                              <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
+                              <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+            </div>
           </div>
         </div>
       </div>

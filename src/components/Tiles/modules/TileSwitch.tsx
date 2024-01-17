@@ -5,6 +5,7 @@ import CoinOp from "./Tiles/CoinOp";
 import VideoPost from "./Tiles/VideoPost";
 import TextPost from "./Tiles/TextPost";
 import {
+  Award as AwardType,
   Community as CommunityType,
   Creation,
   TileSwitchProps,
@@ -24,6 +25,7 @@ import {
 import Community from "./Tiles/Community";
 import LoadTile from "./Tiles/LoadTile";
 import { Quest as QuestType } from "@/components/Search/types/search.types";
+import Award from "./Tiles/Award";
 
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
@@ -104,6 +106,16 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         dispatch={dispatch}
         lensConnected={lensConnected}
         collectionsRelated={collectionsRelated}
+      />
+    );
+  }
+
+  if (type?.toLowerCase() == "award") {
+    return (
+      <Award
+        dispatch={dispatch}
+        publication={publication?.post as AwardType}
+        router={router}
       />
     );
   }
