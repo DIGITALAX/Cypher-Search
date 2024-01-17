@@ -47,6 +47,7 @@ import { setInsufficientBalance } from "../../../../redux/reducers/insufficientB
 import findBalance from "../../../../lib/helpers/findBalance";
 import handleQuestData from "../../../../lib/helpers/handleQuestData";
 import { getQuest } from "../../../../graphql/subgraph/queries/getQuests";
+import { FetchResult } from "@apollo/client";
 
 const useItem = (
   type: string,
@@ -95,7 +96,6 @@ const useItem = (
             id?.replaceAll("_", " "),
             type
           )) as Creation;
-
           pub = (await getPub(
             `${toHexWithLeadingZero(
               Number(coll?.profileId)
@@ -320,10 +320,18 @@ const useItem = (
     type: string
   ): Promise<Creation | undefined> => {
     try {
-      const data = await getOneCollectionTitle(
+      let data: FetchResult | void;
+      data = await getOneCollectionTitle(
         title,
         itemTypeToNumber[itemStringToType[type]]
       );
+
+      if (data?.data?.collectionCreateds?.length < 1) {
+        data = await getOneCollectionTitle(
+          window.location.href?.split(`/item/${type}/`)[1],
+          itemTypeToNumber[itemStringToType[type]]
+        );
+      }
 
       if (data?.data?.collectionCreateds) {
         const collections = data?.data?.collectionCreateds?.map(
