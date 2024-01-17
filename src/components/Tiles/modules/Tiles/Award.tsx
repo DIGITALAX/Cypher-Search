@@ -56,7 +56,7 @@ const Award: FunctionComponent<AwardProps> = ({
         <div className="relative w-full h-px bg-gray-700"></div>
         <div className="relative flex flex-col sm:flex-row gap-2 justify-start sm:justify-between items-center sm:items-start w-full h-full">
           <div
-            className="relative w-full h-60 sm:h-full flex rounded-sm items-center justify-center border border-suave cursor-pointer active:scale-95"
+            className="relative w-full h-60 sm:h-full flex rounded-sm items-center justify-center border border-suave cursor-pointer active:scale-95 bg-amo/30"
             onClick={() =>
               dispatch(
                 setImageViewer({

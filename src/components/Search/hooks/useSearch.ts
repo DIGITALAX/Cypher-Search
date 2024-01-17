@@ -185,7 +185,7 @@ const useSearch = (
       } else {
         const data = await filterSearch(
           0,
-          0,
+          undefined,
           query?.replaceAll("@", "") || "",
           random
         );
@@ -352,7 +352,8 @@ const useSearch = (
 
       if (
         filters?.origin?.toLowerCase()?.includes("kinora") ||
-        query?.toLowerCase()?.includes("kinora")
+        query?.toLowerCase()?.includes("kinora") ||
+        query?.toLowerCase()?.includes("quest")
       ) {
         const data = await getAllRewards(10, 0);
         if (data?.data?.rewards?.length > 0) {

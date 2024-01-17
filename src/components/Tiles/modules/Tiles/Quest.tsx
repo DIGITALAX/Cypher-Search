@@ -70,7 +70,7 @@ const Quest: FunctionComponent<QuestProps> = ({
           </div>
         </div>
         <div className="relative w-full h-fit items-center justify-center flex flex-row gap-4">
-          <div className="relative p-2 rounded-sm border border-suave w-full h-20 items-center justify-center flex">
+          <div className="relative p-2 rounded-sm border border-suave w-full h-20 items-center justify-center flex bg-amo/30">
             <div className="absolute top-0 left-0 w-full h-full rounded-sm">
               <Image
                 className="rounded-sm"
