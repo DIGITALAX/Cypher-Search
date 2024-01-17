@@ -23,6 +23,7 @@ import {
 } from "../../../../graphql/generated";
 import Community from "./Tiles/Community";
 import LoadTile from "./Tiles/LoadTile";
+import { Quest as QuestType } from "@/components/Search/types/search.types";
 
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
@@ -47,7 +48,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   simpleCollect,
   lensConnected,
   filterConstants,
-  collectionsRelated
+  collectionsRelated,
 }) => {
   if (type?.toLowerCase() == "loader") {
     return <LoadTile index={index} />;
@@ -233,6 +234,29 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     );
   }
 
+  if (type?.toLowerCase()?.includes("kinora")) {
+    return (
+      <Quest
+        layoutAmount={layoutAmount}
+        router={router}
+        publication={publication?.post as QuestType}
+        followProfile={followProfile}
+        unfollowProfile={unfollowProfile}
+        followLoading={followLoading}
+        profileHovers={profileHovers}
+        setProfileHovers={setProfileHovers}
+        lensConnected={lensConnected}
+        dispatch={dispatch}
+        index={index}
+        mirror={mirror}
+        like={like}
+        interactionsLoading={interactionsLoading?.[index]}
+        openMirrorChoice={openMirrorChoice}
+        setOpenMirrorChoice={setOpenMirrorChoice}
+      />
+    );
+  }
+
   return (
     <ImagePost
       lensConnected={lensConnected}
@@ -255,19 +279,6 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     />
   );
 
-  // case "quest":
-  //   return (
-  //     <Quest
-  //       layoutAmount={layoutAmount}
-  //       router={router}
-  //       publication={publication?.post as Post | Comment | Quote | Mirror}
-  //       followProfile={followProfile}
-  //       unfollowProfile={unfollowProfile}
-  //       followLoading={followLoading}
-  //       profileHovers={profileHovers}
-  //       setProfileHovers={setProfileHovers}
-  //     />
-  //   );
   // case "legend":
   //   return (
   //     <Legend

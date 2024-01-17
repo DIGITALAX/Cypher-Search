@@ -5,6 +5,7 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 import Pub from "./Pub";
 import Community from "./Community";
 import Microbrand from "./Microbrand";
+import Kinora from "./Kinora";
 import {
   Mirror,
   Post,
@@ -12,6 +13,7 @@ import {
   Quote,
   Profile,
 } from "../../../../graphql/generated";
+import { Quest } from "@/components/Search/types/search.types";
 
 const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   type,
@@ -90,6 +92,8 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   setHoverPrompt,
   allSearchItems,
   galleryFollowLoading,
+  joinLoading,
+  handlePlayerJoin
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -153,6 +157,68 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
           openMoreOptions={openMoreOptions}
           handleBookmark={handleBookmark}
           handleHidePost={handleHidePost}
+          contentLoading={contentLoading}
+          setContentLoading={setContentLoading}
+          setMentionProfiles={setMentionProfiles}
+          setMentionProfilesMain={setMentionProfilesMain}
+          setProfilesOpen={setProfilesOpen}
+          setProfilesOpenMain={setProfilesOpenMain}
+          mentionProfiles={mentionProfiles}
+          mentionProfilesMain={mentionProfilesMain}
+          caretCoord={caretCoord}
+          caretCoordMain={caretCoordMain}
+          profilesOpen={profilesOpen}
+          profilesOpenMain={profilesOpenMain}
+        />
+      );
+
+    case "kinora":
+      return (
+        <Kinora
+          purchaseDetails={purchaseDetails}
+          setPurchaseDetails={setPurchaseDetails}
+          joinLoading={joinLoading}
+          handlePlayerJoin={handlePlayerJoin}
+          setCaretCoord={setCaretCoord}
+          handleHidePost={handleHidePost}
+          setCaretCoordMain={setCaretCoordMain}
+          allCommentsLoading={allCommentsLoading}
+          hasMoreComments={hasMoreComments}
+          handleMoreComments={handleMoreComments}
+          itemData={itemData?.post as Quest}
+          dispatch={dispatch}
+          router={router}
+          lensConnected={lensConnected}
+          mainInteractionsLoading={mainInteractionsLoading}
+          openMainMirrorChoice={openMainMirrorChoice}
+          setMainOpenMirrorChoice={setMainOpenMirrorChoice}
+          mirror={mirror}
+          like={like}
+          allComments={allComments}
+          commentSwitch={commentSwitch}
+          setCommentSwitch={setCommentSwitch}
+          mainMakeComment={mainMakeComment}
+          setMainMakeComment={setMainMakeComment!}
+          postCollectGif={postCollectGif!}
+          setMainContentLoading={setMainContentLoading!}
+          mainContentLoading={mainContentLoading!}
+          comment={comment}
+          setMakeComment={setMakeComment}
+          makeComment={makeComment}
+          setCommentsOpen={setCommentsOpen}
+          commentsOpen={commentsOpen}
+          interactionsLoading={interactionsLoading}
+          profileHovers={profileHovers}
+          setProfileHovers={setProfileHovers}
+          openMirrorChoice={openMirrorChoice}
+          setOpenMirrorChoice={setOpenMirrorChoice}
+          simpleCollect={simpleCollect}
+          followLoading={followLoading}
+          followProfile={followProfile}
+          unfollowProfile={unfollowProfile}
+          setOpenMoreOptions={setOpenMoreOptions}
+          openMoreOptions={openMoreOptions}
+          handleBookmark={handleBookmark}
           contentLoading={contentLoading}
           setContentLoading={setContentLoading}
           setMentionProfiles={setMentionProfiles}

@@ -22,7 +22,7 @@ import {
 } from "../../../../graphql/generated";
 import filterEmpty from "../../../../lib/helpers/filterEmpty";
 import { setFilter } from "../../../../redux/reducers/filterSlice";
-import { DropDown, Filter, FilterValues } from "../types/search.types";
+import { DropDown, Filter, FilterValues, Quest } from "../types/search.types";
 import { setFilterConstants } from "../../../../redux/reducers/filterConstantsSlice";
 import fetchIpfsJson from "../../../../lib/helpers/fetchIpfsJson";
 import { getRandomElement } from "../../../../lib/helpers/randomElements";
@@ -53,9 +53,18 @@ import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 import { getCommunityShort } from "../../../../graphql/subgraph/queries/getCommunities";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import buildTextQuery, {
+  buildKinoraProfileIds,
+  buildKinoraTextQuery,
   combineQueryObjects,
 } from "../../../../lib/helpers/buildTextQuery";
 import mixArrays from "../../../../lib/helpers/mixArrays";
+import {
+  getPlayers,
+  getQuestByProfile,
+  getQuests,
+  getQuestsWhere,
+} from "../../../../graphql/subgraph/queries/getQuests";
+import handleQuestData from "../../../../lib/helpers/handleQuestData";
 
 const useSearch = (
   filtersOpen: FiltersOpenState,
@@ -110,6 +119,7 @@ const useSearch = (
     }
     let query: string | undefined,
       collections: Creation[] | undefined = [],
+      quests: Quest[] | undefined = [],
       profiles: Profile[] | undefined = [],
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
       pubCursor: string | undefined,
@@ -128,6 +138,7 @@ const useSearch = (
           const where = buildTextQuery(
             allSearchItems?.searchInput?.replaceAll("@", "")!
           );
+
           if (where) {
             const searchItems = await getAllCollections(
               where,
@@ -143,16 +154,41 @@ const useSearch = (
                 lensConnected
               );
           }
+
+          const kinoraWhere = buildKinoraTextQuery(
+            allSearchItems?.searchInput?.replaceAll("@", "")!
+          );
+
+          if (kinoraWhere) {
+            const kinoraItems = await getQuestsWhere(kinoraWhere, 10, 0);
+
+            if (kinoraItems?.data?.questInstantiateds?.length > 0)
+              quests = await handleQuestData(
+                kinoraItems?.data?.questInstantiateds,
+                lensConnected
+              );
+          }
         } else {
-          collections = await filterSearch(0, query?.replaceAll("@", "") || "");
+          const data = await filterSearch(
+            0,
+            0,
+            query?.replaceAll("@", "") || ""
+          );
+
+          quests = data?.quests;
+          collections = data?.collections;
         }
         query = allSearchItems?.searchInput?.replaceAll("@", "");
       } else {
-        collections = await filterSearch(
+        const data = await filterSearch(
+          0,
           0,
           query?.replaceAll("@", "") || "",
           random
         );
+
+        quests = data?.quests;
+        collections = data?.collections;
         if (!allSearchItems?.searchInput && backup) {
           query = REFINED_TAGS?.sort(() => Math.random() - 0.5)?.[0];
         } else {
@@ -300,6 +336,18 @@ const useSearch = (
       }
 
       if (
+        (quests || [])?.length < 1 &&
+        filters?.origin?.toLowerCase()?.includes("kinora")
+      ) {
+        const kinoraItems = await getQuests(10, 0);
+        if (kinoraItems?.data?.questInstantiateds?.length > 0)
+          quests = await handleQuestData(
+            kinoraItems?.data?.questInstantiateds,
+            lensConnected
+          );
+      }
+
+      if (
         ((filters?.microbrand?.trim() !== "" && filters?.microbrand) ||
           (query &&
             filterConstants?.microbrands?.filter((item) =>
@@ -311,6 +359,35 @@ const useSearch = (
         filterConstants?.microbrands &&
         filterConstants?.microbrands?.length > 0
       ) {
+        if ((quests || [])?.length < 1) {
+          const where = buildKinoraProfileIds(
+            filters?.microbrand?.trim() !== "" && filters?.microbrand
+              ? filterConstants?.microbrands
+                  ?.filter((item) =>
+                    filters?.microbrand
+                      ?.split(",")
+                      .map((word) => word.trim())
+                      ?.map((item) => item?.toLowerCase())
+                      ?.includes(item?.[0]?.toLowerCase())
+                  )
+                  ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`)
+              : filterConstants?.microbrands
+                  ?.filter((item) =>
+                    item?.[0]?.toLowerCase()?.includes(query!?.toLowerCase())
+                  )
+                  ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`)
+          );
+          if (where) {
+            const kinoraItems = await getQuestByProfile(where, 10, 0);
+            if (kinoraItems?.data?.questInstantiateds?.length > 0) {
+              quests = await handleQuestData(
+                kinoraItems?.data?.questInstantiateds,
+                lensConnected
+              );
+            }
+          }
+        }
+
         const data = await getMicrobrands(
           {
             where: {
@@ -329,7 +406,9 @@ const useSearch = (
                       )
                   : filterConstants?.microbrands
                       ?.filter((item) =>
-                        query?.toLowerCase()?.includes(item?.[0]?.toLowerCase())
+                        item?.[0]
+                          ?.toLowerCase()
+                          ?.includes(query!?.toLowerCase())
                       )
                       ?.map(
                         (item) => `${toHexWithLeadingZero(Number(item[2]))}`
@@ -358,6 +437,10 @@ const useSearch = (
           post: item,
           type: numberToItemTypeMap[Number(item.origin)],
         })) || [],
+        quests?.map((item) => ({
+          post: item,
+          type: "Kinora",
+        })) || [],
         [
           ...(profiles?.map((item) => ({
             post: item,
@@ -384,6 +467,7 @@ const useSearch = (
             ? [...(allSearchItems?.items || []), ...mixArrays(allItems)]
             : mixArrays(allItems),
           actionGraphCursor: collections?.length == 10 ? 10 : undefined,
+          actionKinoraCursor: quests?.length == 10 ? 10 : undefined,
           actionLensProfileCursor: profileCursor,
           actionLensPubCursor: pubCursor,
           actionPubProfileCursor: pubProfileCursor,
@@ -409,42 +493,61 @@ const useSearch = (
   };
 
   const filterSearch = async (
-    cursor: number,
+    cursor: number | undefined,
+    kinoraCursor: number | undefined,
     query: string,
     newFilters?: Filter
-  ): Promise<Creation[] | undefined> => {
+  ): Promise<
+    | {
+        collections: Creation[];
+        quests: Quest[];
+      }
+    | undefined
+  > => {
     const where = buildQuery(newFilters ? newFilters : filters);
-    let collections;
+    let collections, quests;
+
     try {
-      if (query.trim() !== "") {
-        const textWhere = buildTextQuery(query?.replaceAll("@", "")!);
-        const combinedWhere = combineQueryObjects(textWhere, where);
-        const searchItems = await getAllCollections(
-          combinedWhere,
-          10,
-          cursor,
-          ["asc", "desc"][Math.floor(Math.random() * 2)],
-          [
-            "printType",
-            "origin",
-            "blockTimestamp",
-            "owner",
-            "collectionMetadata_title",
-          ][Math.floor(Math.random() * 5)]
-        );
-        collections = searchItems?.data?.collectionCreateds;
-      } else {
-        const searchItems = await getAllCollections(
-          where,
-          10,
-          cursor,
-          ["asc", "desc"][Math.floor(Math.random() * 2)],
-          "blockTimestamp"
-        );
-        collections = searchItems?.data?.collectionCreateds;
+      if (cursor !== undefined) {
+        if (query.trim() !== "") {
+          const textWhere = buildTextQuery(query?.replaceAll("@", "")!);
+          const combinedWhere = combineQueryObjects(textWhere, where);
+          const searchItems = await getAllCollections(
+            combinedWhere,
+            10,
+            cursor,
+            ["asc", "desc"][Math.floor(Math.random() * 2)],
+            [
+              "printType",
+              "origin",
+              "blockTimestamp",
+              "owner",
+              "collectionMetadata_title",
+            ][Math.floor(Math.random() * 5)]
+          );
+          collections = searchItems?.data?.collectionCreateds;
+        } else {
+          const searchItems = await getAllCollections(
+            where,
+            10,
+            cursor,
+            ["asc", "desc"][Math.floor(Math.random() * 2)],
+            "blockTimestamp"
+          );
+          collections = searchItems?.data?.collectionCreateds;
+        }
       }
 
-      if (collections?.length < 1) {
+      if (kinoraCursor !== undefined) {
+        const kinoraItems = await getQuests(10, kinoraCursor);
+        if (kinoraItems?.data?.questInstantiateds?.length > 0)
+          quests = await handleQuestData(
+            kinoraItems?.data?.questInstantiateds,
+            lensConnected
+          );
+      }
+
+      if (collections?.length < 1 && cursor !== undefined) {
         let where: Object;
         if (query.trim() !== "") {
           where = buildTextQuery(query?.replaceAll("@", "")!)!;
@@ -511,7 +614,7 @@ const useSearch = (
         );
       }
 
-      return collections || [];
+      return { collections: collections || [], quests: quests || [] };
     } catch (err: any) {
       console.error(err.message);
     }
@@ -532,6 +635,7 @@ const useSearch = (
     }
     let query: string,
       collections: Creation[] | undefined = [],
+      quests: Quest[] | undefined = [],
       profiles: Profile[] | undefined = [],
       publications: (Post | Comment | Quote | Mirror)[] | undefined = [],
       pubProfileCursor: string | undefined,
@@ -564,12 +668,17 @@ const useSearch = (
 
         query = allSearchItems?.searchInput?.replaceAll("@", "");
       } else {
-        if (allSearchItems?.graphCursor) {
-          collections = await filterSearch(
+        if (allSearchItems?.graphCursor || allSearchItems?.kinoraCursor) {
+          const data = await filterSearch(
             allSearchItems?.graphCursor,
+            allSearchItems?.kinoraCursor,
             allSearchItems?.searchInput || ""
           );
+
+          collections = data?.collections;
+          quests = data?.quests;
         }
+
         query = allSearchItems?.searchInput?.replaceAll("@", "");
       }
 
@@ -755,6 +864,10 @@ const useSearch = (
           post: item,
           type: numberToItemTypeMap[Number(item.origin)],
         })) || [],
+        quests?.map((item) => ({
+          post: item,
+          type: "Kinora",
+        })) || [],
         [
           ...(profiles?.map((item) => ({
             post: item,
@@ -780,6 +893,11 @@ const useSearch = (
           actionGraphCursor: allSearchItems?.graphCursor
             ? collections?.length == 10
               ? allSearchItems?.graphCursor + 10
+              : undefined
+            : undefined,
+          actionKinoraCursor: allSearchItems?.kinoraCursor
+            ? quests?.length == 10
+              ? allSearchItems?.kinoraCursor + 10
               : undefined
             : undefined,
           actionLensProfileCursor: profileCursor,

@@ -6,11 +6,15 @@ import Link from "next/link";
 import { setReactBox } from "../../../../redux/reducers/reactBoxSlice";
 import numeral from "numeral";
 import handleImageError from "../../../../lib/helpers/handleImageError";
+import { Quest } from "@/components/Search/types/search.types";
+import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 
 const Bio: FunctionComponent<BioProps> = ({
   profile,
   dispatch,
   router,
+  questSample,
+  questsLoading,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-wrap otro:flex-nowrap flex-row items-start justify-start gap-5 px-2 sm:px-5 sm:-top-3 tablet:-top-7 sm:pt-0 pt-4">
@@ -201,36 +205,104 @@ const Bio: FunctionComponent<BioProps> = ({
               draggable={false}
             />
           </div>
-          <div className="gap-2 flex flex-row items-center justify-start w-fit h-fit sm:flex-nowrap flex-wrap">
-            {Array.from({ length: 4 })?.map((_, index: number) => {
-              return (
-                <div
-                  key={index}
-                  className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
-                >
-                  <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
-                    Quests <br />
-                    Soon
-                  </div>
-                  <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
-                    <div className="relative w-6 h-6 tablet:w-14 tablet:h-14 flex items-center justify-center">
-                      <Image
-                        draggable={false}
-                        layout="fill"
-                        src={`${INFURA_GATEWAY}/ipfs/QmQ4iytH1E7T6Mz383bEzSoPWfLhZmmvveb1nfwiHVgQYa`}
-                      />
-                    </div>
-                    {index !== 3 && (
-                      <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
-                        <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
-                        <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
-                        <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+          <div
+            className={`gap-2 flex flex-row items-center justify-start w-fit h-fit sm:flex-nowrap flex-wrap ${
+              questsLoading && "animate-pulse"
+            }`}
+          >
+            {questsLoading || questSample?.length < 1
+              ? Array.from({ length: 4 })?.map((_, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
+                    >
+                      <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
+                        {questsLoading ? (
+                          <>
+                            Quests <br />
+                            Pending
+                          </>
+                        ) : (
+                          <>
+                            Kinora <br />
+                            Quests
+                          </>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                      <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
+                        <div
+                          className={`relative w-6 h-6 tablet:w-14 tablet:h-14 flex items-center justify-center ${
+                            !questsLoading &&
+                            questSample?.length < 1 &&
+                            "cursor-pointer"
+                          }`}
+                          onClick={() =>
+                            !questsLoading &&
+                            questSample?.length < 1 &&
+                            window.open("https://kinora.irrevocable.dev/")
+                          }
+                        >
+                          <Image
+                            draggable={false}
+                            layout="fill"
+                            src={`${INFURA_GATEWAY}/ipfs/QmQ4iytH1E7T6Mz383bEzSoPWfLhZmmvveb1nfwiHVgQYa`}
+                          />
+                        </div>
+                        {index !== 3 && (
+                          <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
+                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                            <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
+                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              : questSample?.map((quest: Quest, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
+                    >
+                      <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
+                        {quest?.questMetadata?.title?.length > 10
+                          ? quest?.questMetadata?.title?.slice(0, 7) + "..."
+                          : quest?.questMetadata?.title}
+                      </div>
+                      <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
+                        <div
+                          className={`relative w-6 h-6 tablet:w-14 tablet:h-14 cursor-pointer active:scale-95 flex items-center border-2 border-[#3887c3] rounded-full justify-center`}
+                          onClick={() =>
+                            router.push(
+                              `/item/kinora/${toHexWithLeadingZero(
+                                Number(quest?.profileId)
+                              )}-${toHexWithLeadingZero(Number(quest?.pubId))}`
+                            )
+                          }
+                        >
+                          <Image
+                            draggable={false}
+                            layout="fill"
+                            src={`${INFURA_GATEWAY}/ipfs/${
+                              quest?.questMetadata?.cover?.split("ipfs://")?.[1]
+                            }`}
+                            className="rounded-full"
+                            objectFit="cover"
+                          />
+                        </div>
+                        {index !== 3 && (
+                          <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
+                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                            <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
+                            <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
           </div>
         </div>
       </div>

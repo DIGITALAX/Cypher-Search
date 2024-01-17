@@ -27,6 +27,8 @@ import SuccessCheckout from "./SuccessCheckout";
 import PostSuccess from "./PostSuccess";
 import InsufficientBalance from "./InsufficientBalance";
 import ClaimProfile from "./ClaimProfile";
+import QuestGates from "./QuestGates";
+import QuestSuccess from "./QuestSuccess";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -56,6 +58,12 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
   );
   const filtersOpen = useSelector(
     (state: RootState) => state.app.filtersOpenReducer
+  );
+  const questSuccess = useSelector(
+    (state: RootState) => state.app.questSuccessReducer
+  );
+  const questGates = useSelector(
+    (state: RootState) => state.app.questGatesReducer
   );
   const successCheckout = useSelector(
     (state: RootState) => state.app.successCheckoutReducer
@@ -358,7 +366,11 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           message={insufficientBalance?.message!}
         />
       )}
+      {questGates?.gates && (
+        <QuestGates gates={questGates?.gates} dispatch={dispatch} />
+      )}
       {interactError?.value && <InteractError dispatch={dispatch} />}
+      {questSuccess?.value && <QuestSuccess dispatch={dispatch} />}
       {successCheckout?.value && (
         <SuccessCheckout
           dispatch={dispatch}

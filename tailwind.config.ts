@@ -49,6 +49,9 @@ const config: Config = {
         afilado: "#4E4D4D",
         cereza: "#F28548",
         humor: "#F7B500",
+        suave: "#C27AA0",
+        cost: "#847FF2",
+        girasol: "#FBD201",
       },
       fontFamily: {
         bit: "Bitblox",

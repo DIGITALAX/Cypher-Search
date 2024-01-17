@@ -5,6 +5,8 @@ import walletConnectedReducer from "./reducers/walletConnectedSlice";
 import lensConnectedReducer from "./reducers/lensConnectedSlice";
 import filterReducer from "./reducers/filterSlice";
 import availableCurrenciesReducer from "./reducers/availableCurrenciesSlice";
+import questSuccessReducer from "./reducers/questSuccessSlice";
+import questGatesReducer from "./reducers/questGatesSlice";
 import claimProfileReducer from "./reducers/claimProfileSlice";
 import insufficientBalanceReducer from "./reducers/insufficientBalanceSlice";
 import filterChangeReducer from "./reducers/filterChangeSlice";
@@ -53,9 +55,11 @@ const reducer = combineReducers({
   indexerReducer,
   postBoxReducer,
   screenDisplayReducer,
+  questSuccessReducer,
   followCollectReducer,
   availableCurrenciesReducer,
   postCollectGifReducer,
+  questGatesReducer,
   successCheckoutReducer,
   oracleDataReducer,
   isDesignerReducer,

@@ -14,7 +14,7 @@ import {
   Profile,
 } from "../../../../graphql/generated";
 import getPublication from "../../../../graphql/lens/queries/publication";
-import { FilterValues } from "@/components/Search/types/search.types";
+import { FilterValues, Quest } from "@/components/Search/types/search.types";
 import getProfile from "../../../../graphql/lens/queries/profile";
 import { getCollectionsPaginated } from "../../../../graphql/subgraph/queries/getCollections";
 import { getCommunityName } from "../../../../graphql/subgraph/queries/getCommunities";
@@ -45,6 +45,8 @@ import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import handleCollectionProfilesAndPublications from "../../../../lib/helpers/handleCollectionProfilesAndPublications";
 import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 import findBalance from "../../../../lib/helpers/findBalance";
+import handleQuestData from "../../../../lib/helpers/handleQuestData";
+import { getQuest } from "../../../../graphql/subgraph/queries/getQuests";
 
 const useItem = (
   type: string,
@@ -123,6 +125,26 @@ const useItem = (
             price: coll?.prices?.[0],
             imageIndex: 0,
             priceIndex: 0,
+          });
+          break;
+
+        case "kinora":
+          const data = await getQuest(
+            parseInt(id?.split("-")?.[0], 16),
+            parseInt(id?.split("-")?.[1], 16)
+          );
+
+          const quest = (
+            await handleQuestData(
+              data?.data?.questInstantiateds,
+              lensConnected,
+              true
+            )
+          )?.[0] as Quest;
+
+          setItemData({
+            post: quest,
+            type,
           });
           break;
 

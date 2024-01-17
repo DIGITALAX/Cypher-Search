@@ -8,3 +8,12 @@ export const graphPrintClient = new ApolloClient({
   link: httpLinkPrint,
   cache: new InMemoryCache(),
 });
+
+const httpLinkKinora = new HttpLink({
+  uri: "https://api.thegraph.com/subgraphs/name/digitalax/kinora",
+});
+
+export const graphKinoraClient = new ApolloClient({
+  link: httpLinkKinora,
+  cache: new InMemoryCache(),
+});

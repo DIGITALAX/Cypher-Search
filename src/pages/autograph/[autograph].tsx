@@ -31,6 +31,7 @@ import useDrop from "@/components/Autograph/hooks/useDrop";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../lib/constants";
+import useQuests from "@/components/Autograph/hooks/useQuests";
 
 const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   router,
@@ -171,6 +172,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     publicClient,
     address
   );
+  const { questsLoading, questSample } = useQuests(profile, lensConnected);
   const {
     galleryLike,
     galleryMirror,
@@ -687,7 +689,13 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 allDrops={allDrops}
                 createDropLoading={createDropLoading}
               />
-              <Bio profile={profile} dispatch={dispatch} router={router} />
+              <Bio
+                profile={profile}
+                dispatch={dispatch}
+                router={router}
+                questsLoading={questsLoading}
+                questSample={questSample}
+              />
               <div className="relative flex flex-row gap-12 otro:gap-3 items-start justify-between sm:px-4 w-full h-full otro:flex-nowrap flex-wrap">
                 <Feed
                   cartItems={cartItems}

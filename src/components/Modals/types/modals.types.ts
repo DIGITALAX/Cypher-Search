@@ -28,6 +28,7 @@ import { NextRouter } from "next/router";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import Draggable from "react-draggable";
+import { Creation } from "@/components/Tiles/types/tiles.types";
 
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
@@ -320,4 +321,20 @@ export type PostSuccessProps = {
 export type InsufficientBalanceProps = {
   dispatch: Dispatch<AnyAction>;
   message: string;
+};
+
+export type QuestGatesProps = {
+  dispatch: Dispatch<AnyAction>;
+  gates: {
+    erc20?: {
+      address: string;
+      amount: string;
+    }[];
+    erc721?: Creation[];
+    oneof?: boolean;
+  };
+};
+
+export type QuestSuccessProps = {
+  dispatch: Dispatch;
 };

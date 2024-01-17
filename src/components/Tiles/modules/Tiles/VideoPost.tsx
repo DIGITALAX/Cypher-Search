@@ -174,10 +174,11 @@ const VideoPost: FunctionComponent<VideoPostProps> = ({
                     src={media?.url}
                     poster={media?.cover}
                     objectFit="cover"
-                    autoUrlUpload={{
-                      fallback: true,
-                      ipfsGateway: INFURA_GATEWAY,
-                    }}
+                    // autoUrlUpload={{
+                    //   fallback: true,
+                    //   ipfsGateway: INFURA_GATEWAY,
+                      
+                    // }}
                   />
                 )}
               </KinoraPlayerWrapper>

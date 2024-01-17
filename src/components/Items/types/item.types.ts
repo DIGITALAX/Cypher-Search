@@ -1,6 +1,6 @@
 import { OracleData } from "@/components/Checkout/types/checkout.types";
 import { CartItem } from "@/components/Common/types/common.types";
-import { FilterValues } from "@/components/Search/types/search.types";
+import { FilterValues, Quest } from "@/components/Search/types/search.types";
 import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { NextRouter } from "next/router";
 import { ChangeEvent, SetStateAction } from "react";
@@ -86,6 +86,8 @@ export type SwitchTypeProps = {
     simpleCollect: boolean;
     hide: boolean;
   }[];
+  joinLoading: boolean;
+  handlePlayerJoin: () => Promise<void>;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   commentSwitch: boolean;
@@ -430,4 +432,115 @@ export type MicrobrandProps = {
   followLoading: boolean[];
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+};
+
+export type KinoraProps = {
+  itemData: Quest;
+  caretCoord: {
+    x: number;
+    y: number;
+  };
+  setCaretCoord: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  setCaretCoordMain: (
+    e: SetStateAction<{
+      x: number;
+      y: number;
+    }>
+  ) => void;
+  profilesOpen: boolean[];
+  mentionProfiles: Profile[];
+  setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
+  caretCoordMain: {
+    x: number;
+    y: number;
+  };
+  profilesOpenMain: boolean[];
+  mentionProfilesMain: Profile[];
+  setMentionProfilesMain: (e: SetStateAction<Profile[]>) => void;
+  setProfilesOpenMain: (e: SetStateAction<boolean[]>) => void;
+  router: NextRouter;
+  commentsOpen: boolean[];
+  setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
+  makeComment: MakePostComment[];
+  dispatch: Dispatch<AnyAction>;
+  lensConnected: Profile | undefined;
+  mirror: (id: string, main: boolean) => Promise<void>;
+  like: (id: string, hasReacted: boolean, main?: boolean) => Promise<void>;
+  mainInteractionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    comment: boolean;
+    bookmark: boolean;
+    simpleCollect: boolean;
+    hide: boolean;
+  }[];
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  openMirrorChoice: boolean[];
+  commentSwitch: boolean;
+  setCommentSwitch: (e: SetStateAction<boolean>) => void;
+  allComments: (Comment & {
+    decrypted: any;
+  })[];
+  comment: (id: string, main: boolean) => Promise<void>;
+  handleMoreComments: () => Promise<void>;
+  allCommentsLoading: boolean;
+  hasMoreComments: boolean;
+  openMoreOptions: boolean[];
+  profileHovers: boolean[];
+  setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
+  setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  simpleCollect: (id: string, type: string, main: boolean) => Promise<void>;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+    comment: boolean;
+    bookmark: boolean;
+    simpleCollect: boolean;
+    hide: boolean;
+  }[];
+  followLoading: boolean[];
+  unfollowProfile: (id: string, index: number) => Promise<void>;
+  followProfile: (id: string, index: number) => Promise<void>;
+  postCollectGif: PostCollectGifState;
+  setContentLoading: (
+    e: SetStateAction<
+      {
+        image: boolean;
+        video: boolean;
+      }[]
+    >
+  ) => void;
+  contentLoading: {
+    image: boolean;
+    video: boolean;
+  }[];
+  handleBookmark: (id: string, index: number, main?: boolean) => Promise<void>;
+  setMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
+  mainContentLoading: {
+    image: boolean;
+    video: boolean;
+  }[];
+  openMainMirrorChoice: boolean[];
+  setMainOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  mainMakeComment: MakePostComment[];
+  setMainMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
+  setMainContentLoading: (
+    e: SetStateAction<
+      {
+        image: boolean;
+        video: boolean;
+      }[]
+    >
+  ) => void;
+  handleHidePost: (id: string, index: number, main?: boolean) => Promise<void>;
+  joinLoading: boolean;
+  handlePlayerJoin: () => Promise<void>;
+  purchaseDetails: PurchaseDetails;
+  setPurchaseDetails: (e: SetStateAction<PurchaseDetails>) => void;
 };

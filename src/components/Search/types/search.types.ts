@@ -2,11 +2,12 @@ import { ChangeEvent, KeyboardEvent, MouseEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { NextRouter } from "next/router";
 import {
+  Post,
   Profile,
   PublicationMetadataMainFocusType,
 } from "../../../../graphql/generated";
 import { CartItem } from "@/components/Common/types/common.types";
-import { Publication } from "@/components/Tiles/types/tiles.types";
+import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 
@@ -207,4 +208,85 @@ export enum Origin {
   Legend,
   Listener,
   Other,
+}
+
+
+export interface Quest {
+  publication: Post;
+  gate: Gate;
+  questMetadata: {
+    title: string;
+    description: string;
+    cover: string;
+    videoCovers: {
+      title: string;
+      description: string;
+      cover: string;
+    }[];
+  };
+  status: boolean;
+  pubId: string;
+  profileId: string;
+  milestones: Milestone[];
+  questId: string;
+  transactionHash: string;
+  uri: string;
+  milestoneCount: string;
+  players: Player[];
+  maxPlayerCount: string;
+  blockTimestamp: string;
+}
+
+export interface Reward {
+  amount: string;
+  tokenAddress: string;
+  rewardMetadata: {
+    mediaCover: string;
+    images: string;
+    video: string;
+    mediaType: string;
+    audio: string;
+    title: string;
+    description: string;
+  };
+  uri: string;
+  type: string;
+}
+
+export interface Milestone {
+  gated: Gate;
+  milestoneMetadata: {
+    title: string;
+    description: string;
+    cover: string;
+  };
+  milestoneId: string;
+  rewards: Reward[];
+  rewardsLength: string;
+  videoLength: string;
+}
+
+export interface Player {
+  milestonesCompleted: {
+    questId: string;
+    milestonesCompleted: String;
+  }[];
+  eligibile: {
+    milestone: string;
+    questId: string;
+    status: boolean;
+  }[];
+  profileId: string;
+  questsCompleted: string[];
+  questsJoined: string[];
+  profile: Profile;
+}
+
+export interface Gate {
+  erc721Logic: Creation[];
+  erc20Logic: {
+    address: string;
+    amount: string;
+  }[];
+  oneOf: boolean;
 }

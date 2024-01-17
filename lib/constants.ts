@@ -32,6 +32,8 @@ export const ZERO_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000";
 export const F3M_ADDRESS: `0x${string}` =
   "0xbE20D3f61f6995996a5B8dd58B036ADa7cf30945";
+export const KINORA_QUEST_DATA: `0x${string}` =
+  "0xB638b8e910f5852d9B2b69D250883EB3E8575092";
 
 export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|ba[A-Za-z2-7]{57})\b/;
 export const PLACEHOLDERS: string[] = [

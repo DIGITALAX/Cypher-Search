@@ -10,7 +10,11 @@ import {
 import { NextRouter } from "next/router";
 import { CartItem } from "@/components/Common/types/common.types";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
-import { FilterValues, Origin } from "@/components/Search/types/search.types";
+import {
+  FilterValues,
+  Origin,
+  Quest,
+} from "@/components/Search/types/search.types";
 
 export interface Creation {
   amount: string;
@@ -73,7 +77,8 @@ export interface Publication {
       })
     | Profile
     | Creation
-    | Community;
+    | Community
+    | Quest;
   type: string;
   publishedOn?: string;
 }
@@ -318,12 +323,23 @@ export type TextPostProps = {
 export type QuestProps = {
   layoutAmount: number;
   router: NextRouter;
-  publication: Post | Comment | Quote | Mirror;
+  publication: Quest;
+  lensConnected: Profile | undefined;
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
   followLoading: boolean[];
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
+  dispatch: Dispatch<AnyAction>;
+  index: number;
+  interactionsLoading: {
+    like: boolean;
+    mirror: boolean;
+  };
+  setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
+  openMirrorChoice: boolean[];
+  mirror: (id: string) => Promise<void>;
+  like: (id: string, hasReacted: boolean) => Promise<void>;
 };
 
 export type ImagePostProps = {

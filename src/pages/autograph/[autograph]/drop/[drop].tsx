@@ -180,7 +180,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
           profile &&
           collections?.length > 0 && (
             <div
-              className="relative flex flex-col w-full h-full flex-grow"
+              className="relative flex flex-col w-full h-full flex-grow pre:pt-0 pt-24"
               id="results"
             >
               <Head>

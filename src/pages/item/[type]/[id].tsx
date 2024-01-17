@@ -29,6 +29,10 @@ import useComment from "@/components/Items/hooks/useComment";
 import useProfile from "@/components/Autograph/hooks/useProfile";
 import { itemTypeToString } from "../../../../lib/constants";
 import { ItemType } from "@/components/Common/types/common.types";
+import useQuest from "@/components/Tiles/hooks/useQuest";
+import { Quest } from "@/components/Search/types/search.types";
+import { apolloClient } from "../../../../lib/lens/client";
+import { Dispatch as KinoraDispatch } from "kinora-sdk";
 
 const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
@@ -36,6 +40,9 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     transport: http(
       `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
+  });
+  const kinoraDispatch = new KinoraDispatch({
+    playerAuthedApolloClient: apolloClient,
   });
   const { type, id } = router.query;
   const dispatch = useDispatch();
@@ -181,6 +188,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
         type === "listener" ||
         type === "f3m"
         ? (itemData?.post as Creation)?.profile
+        : type == "kinora"
+        ? (itemData?.post as Quest)?.publication?.by
         : (itemData?.post as Mirror)?.__typename === "Mirror"
         ? (itemData?.post as Mirror)?.mirrorOn?.by
         : (itemData?.post as Profile),
@@ -275,6 +284,13 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address
   );
+  const { joinLoading, handlePlayerJoin } = useQuest(
+    address,
+    kinoraDispatch,
+    itemData?.post as Quest,
+    publicClient,
+    dispatch
+  );
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (!itemLoading) {
@@ -314,7 +330,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
         ) : (
           itemData && (
             <div
-              className="relative flex flex-col w-full h-full flex-grow"
+              className="relative flex flex-col w-full h-full flex-grow pre:pt-0 pt-24"
               id="results"
             >
               <Head>
@@ -467,6 +483,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 cartAnim={cartAnim}
                 component={
                   <SwitchType
+                    joinLoading={joinLoading}
+                    handlePlayerJoin={handlePlayerJoin}
                     allSearchItems={allSearchItems}
                     setCaretCoord={setCaretCoord}
                     hoverPrompt={hoverPrompt}

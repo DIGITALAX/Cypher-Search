@@ -21,7 +21,7 @@ import { ChangeEvent, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import { CartItem } from "@/components/Common/types/common.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
-import { FilterValues } from "@/components/Search/types/search.types";
+import { FilterValues, Quest } from "@/components/Search/types/search.types";
 import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
 import { ProfileOptions } from "@lens-protocol/metadata";
 
@@ -424,6 +424,8 @@ export type BioProps = {
   profile: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
+  questSample: Quest[];
+  questsLoading: boolean;
 };
 
 export type GalleryScreenProps = {
@@ -981,7 +983,7 @@ export type GalleryProps = {
     collected: Creation[];
     created: Creation[];
   };
-  profile: Profile
+  profile: Profile;
   hasMoreGallery: boolean;
   allDrops: Drop[] | undefined;
   cartItems: CartItem[];

@@ -6,6 +6,7 @@ import {
   F3M_OPEN_ACTION,
   INFURA_GATEWAY,
   IPFS_REGEX,
+  KINORA_OPEN_ACTION,
   LISTENER_OPEN_ACTION,
 } from "../../../../../lib/constants";
 import { ImagePostProps } from "../../types/tiles.types";
@@ -628,7 +629,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
             </div>
           </div>
           <div className="relative w-full h-full flex flex-col md:flex-row gap-5 items-center justify-center">
-            {(((publication?.__typename === "Mirror"
+            {((publication?.__typename === "Mirror"
               ? publication?.mirrorOn
               : (publication as Post)
             )?.isEncrypted &&
@@ -643,29 +644,29 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   : (publication as Post)
                 )?.metadata as any
               )?.title?.length > 0) ||
+            (
+              (publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+              )?.metadata as any
+            )?.content?.length > 0 ||
+            (!(
+              publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+            )?.isEncrypted &&
               (
                 (publication?.__typename === "Mirror"
                   ? publication?.mirrorOn
                   : (publication as Post)
                 )?.metadata as any
-              )?.content?.length > 0 ||
-              (!(
-                publication?.__typename === "Mirror"
-                  ? publication?.mirrorOn
-                  : (publication as Post)
-              )?.isEncrypted &&
-                (
-                  (publication?.__typename === "Mirror"
-                    ? publication?.mirrorOn
-                    : (publication as Post)
-                  )?.metadata as any
-                )?.title?.length > 0) ||
-              (
-                (publication?.__typename === "Mirror"
-                  ? publication?.mirrorOn
-                  : (publication as Post)
-                )?.metadata as any
-              )?.content?.length > 0) ? (
+              )?.title?.length > 0) ||
+            (
+              (publication?.__typename === "Mirror"
+                ? publication?.mirrorOn
+                : (publication as Post)
+              )?.metadata as any
+            )?.content?.length > 0 ? (
               <div
                 className="relative w-full h-80 rounded-sm border border-mosgu bg-fuego p-1.5 font-bit text-nuba text-sm text-left break-words flex justify-start items-start overflow-y-scroll whitespace-preline"
                 dangerouslySetInnerHTML={{
@@ -696,7 +697,9 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                   ),
                 }}
               ></div>
-            ) : <div className="relative w-full h-80 flex"></div>}
+            ) : (
+              <div className="relative w-full h-80 flex"></div>
+            )}
             <div
               className={`relative h-full flex items-center justify-start gap-5 ${
                 // (publication?.__typename === "Mirror"
@@ -969,6 +972,20 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                                 : (publication as Post)
                               )?.metadata as ImageMetadataV3
                             )?.title?.replaceAll(" ", "_")}`
+                          )
+                        : (publication?.__typename == "Mirror"
+                            ? publication?.mirrorOn
+                            : (publication as Post)
+                          )?.openActionModules?.[0]?.contract?.address
+                            ?.toLowerCase()
+                            ?.includes(KINORA_OPEN_ACTION?.toLowerCase())
+                        ? router.push(
+                            `/item/kinora/${
+                              (publication?.__typename === "Mirror"
+                                ? publication?.mirrorOn
+                                : (publication as Post)
+                              )?.id
+                            }`
                           )
                         : router.push(`/item/pub/${publication?.id}`);
                     }}
