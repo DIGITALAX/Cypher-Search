@@ -46,10 +46,6 @@ const useSignIn = (
   const handleLensConnect = async () => {
     setSignInLoading(true);
     try {
-      // await createProfile({
-      //   handle: "anotherp",
-      //   to: address,
-      // });
 
       const profile = await getDefaultProfile(
         {

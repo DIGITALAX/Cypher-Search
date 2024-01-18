@@ -75,7 +75,13 @@ const QuestGates: FunctionComponent<QuestGatesProps> = ({
                               />
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center font-vcr text-acei text-sm">
-                              {`${Number(erc20?.amount) / 10 ** 18} ${
+                              {`${
+                                Number(erc20?.amount) /
+                                (erc20?.address?.toLowerCase() ==
+                                ACCEPTED_TOKENS[2][2]?.toLowerCase()
+                                  ? 10 ** 6
+                                  : 10 ** 18)
+                              } ${
                                 ACCEPTED_TOKENS?.filter(
                                   (token) =>
                                     erc20?.address?.toLowerCase() ==
@@ -97,45 +103,43 @@ const QuestGates: FunctionComponent<QuestGatesProps> = ({
                   </div>
                   <div className="relative w-full h-fit justify-center items-center flex overflow-y-scroll">
                     <div className="relative w-fit h-fit justify-start items-center gap-3 flex flex-wrap">
-                      {gates?.erc721?.map(
-                        (erc721: Creation, index: number) => {
-                          return (
-                            <div
-                              key={index}
-                              className="relative w-32 h-32 flex items-center justify-center gap-1 cursor-pointer active:scale-95 border border-girasol rounded-sm"
-                              onClick={() =>
-                                window.open(
-                                  `https://cypher.digitalax.xyz/item/${
-                                    numberToItemTypeMap[Number(erc721?.origin)]
-                                  }/${erc721?.collectionMetadata?.title?.replaceAll(
-                                    " ",
-                                    "_"
-                                  )}`
-                                )
-                              }
-                              // id="northern"
-                            >
-                              <div className="relative w-full h-full flex items-center justify-center rounded-sm">
-                                <Image
-                                  draggable={false}
-                                  layout="fill"
-                                  objectFit="cover"
-                                  className="rounded-sm"
-                                  src={`${INFURA_GATEWAY}/ipfs/${
-                                    erc721?.collectionMetadata?.mediaCover
-                                      ? erc721?.collectionMetadata?.mediaCover?.split(
-                                          "ipfs://"
-                                        )?.[1]
-                                      : erc721?.collectionMetadata?.images?.[0].split(
-                                          "ipfs://"
-                                        )?.[1]
-                                  }`}
-                                />
-                              </div>
+                      {gates?.erc721?.map((erc721: Creation, index: number) => {
+                        return (
+                          <div
+                            key={index}
+                            className="relative w-32 h-32 flex items-center justify-center gap-1 cursor-pointer active:scale-95 border border-girasol rounded-sm"
+                            onClick={() =>
+                              window.open(
+                                `https://cypher.digitalax.xyz/item/${
+                                  numberToItemTypeMap[Number(erc721?.origin)]
+                                }/${erc721?.collectionMetadata?.title?.replaceAll(
+                                  " ",
+                                  "_"
+                                )}`
+                              )
+                            }
+                            // id="northern"
+                          >
+                            <div className="relative w-full h-full flex items-center justify-center rounded-sm">
+                              <Image
+                                draggable={false}
+                                layout="fill"
+                                objectFit="cover"
+                                className="rounded-sm"
+                                src={`${INFURA_GATEWAY}/ipfs/${
+                                  erc721?.collectionMetadata?.mediaCover
+                                    ? erc721?.collectionMetadata?.mediaCover?.split(
+                                        "ipfs://"
+                                      )?.[1]
+                                    : erc721?.collectionMetadata?.images?.[0].split(
+                                        "ipfs://"
+                                      )?.[1]
+                                }`}
+                              />
                             </div>
-                          );
-                        }
-                      )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

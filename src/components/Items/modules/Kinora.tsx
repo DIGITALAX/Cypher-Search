@@ -553,7 +553,13 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                               />
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center font-vcr text-acei text-xxs">
-                              {`${Number(reward?.amount) / 10 ** 18} ${
+                              {`${
+                                Number(reward?.amount) /
+                                (reward?.tokenAddress?.toLowerCase() ==
+                                ACCEPTED_TOKENS[2][2]?.toLowerCase()
+                                  ? 10 ** 6
+                                  : 10 ** 18)
+                              } ${
                                 ACCEPTED_TOKENS?.filter(
                                   (token) =>
                                     reward?.tokenAddress?.toLowerCase() ==
