@@ -139,6 +139,10 @@ export default function Home({ router }: { router: NextRouter }) {
       <Head>
         <title>Cyper Search</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="og:url"
+          content={"https://cypher.digitalax.xyz/card.png/"}
+        />
       </Head>
       <div
         className={`relative w-full h-fit flex items-center justify-center gap-10 flex-col h-full z-0`}

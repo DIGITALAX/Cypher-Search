@@ -114,6 +114,10 @@ const Checkout: NextPage<{
       <Head>
         <title>Checkout</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="og:url"
+          content={"https://cypher.digitalax.xyz/card.png/"}
+        />
       </Head>
       <Header
         filterChange={filterChange}

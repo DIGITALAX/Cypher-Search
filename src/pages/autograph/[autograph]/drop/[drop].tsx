@@ -188,6 +188,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                   {(drop as string)?.replaceAll("_", " ")?.toUpperCase()} |{" "}
                   {profile?.handle?.localName?.toUpperCase()}
                 </title>
+                <link rel="icon" href="/favicon.ico" />
                 <meta
                   name="og:url"
                   content={`https://cypher.digitalax.xyz/autograph/${

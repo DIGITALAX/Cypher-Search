@@ -419,6 +419,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 <title>
                   Cypher | {profile?.handle?.localName?.toUpperCase()}
                 </title>
+                <link rel="icon" href="/favicon.ico" />
                 <meta
                   name="og:url"
                   content={`https://cypher.digitalax.xyz/autograph/${
