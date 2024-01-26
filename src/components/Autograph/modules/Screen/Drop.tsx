@@ -35,7 +35,7 @@ const Drop: FunctionComponent<DropProps> = ({
                 return (
                   <div
                     key={index}
-                    className={`relative w-40 h-40 rounded-sm p-px cursor-pointer ${
+                    className={`relative w-40 h-40 rounded-sm p-px cursor-pointer z-0 ${
                       dropDetails?.dropId === item?.dropId &&
                       "border-2 border-white"
                     }`}
@@ -69,7 +69,7 @@ const Drop: FunctionComponent<DropProps> = ({
                         />
                       )}
                     </div>
-                    <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
+                    <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1 z-10">
                       <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">
                         {item?.dropDetails?.dropTitle?.length > 15
                           ? item?.dropDetails?.dropTitle?.slice(0, 12) + "..."

@@ -91,7 +91,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                     return (
                       <div
                         key={index}
-                        className="relative w-40 h-40 rounded-sm p-px cursor-pointer"
+                        className="relative w-40 h-40 rounded-sm p-px cursor-pointer z-0"
                         id="pfp"
                         onClick={() => {
                           setCreateCase("collection");
@@ -233,7 +233,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                             }
                           />
                         </div>
-                        <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1">
+                        <div className="absolute bottom-0 right-0 w-full h-6 bg-offBlack flex items-center justify-end px-1 z-10">
                           <div className="relative mr-auto flex items-center justify-start text-white font-aust text-xxs">
                             {item?.collectionMetadata?.title?.length > 15
                               ? item?.collectionMetadata?.title?.slice(0, 12) +
