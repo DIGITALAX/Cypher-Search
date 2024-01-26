@@ -3,7 +3,7 @@ import { graphPrintClient } from "../../../lib/graph/client";
 
 const DROPS = `
   query($creator: String!) {
-    dropCreateds(where: { creator: $creator}) {
+    dropCreateds(where: { creator: $creator}, first: 1000) {
       creator
       dropId
       collectionIds
