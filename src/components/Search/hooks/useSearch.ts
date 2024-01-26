@@ -36,10 +36,7 @@ import { Award, Creation, Publication } from "./../../Tiles/types/tiles.types";
 import getMicrobrands from "../../../../graphql/lens/queries/microbrands";
 import { getAllCollections } from "../../../../graphql/subgraph/queries/getAllCollections";
 import { buildQuery } from "../../../../lib/helpers/buildQuery";
-import {
-  FiltersOpenState,
-  setFiltersOpen,
-} from "../../../../redux/reducers/filtersOpenSlice";
+import { FiltersOpenState } from "../../../../redux/reducers/filtersOpenSlice";
 import { Dispatch } from "redux";
 import { getFilters } from "../../../../graphql/subgraph/queries/getFilters";
 import {

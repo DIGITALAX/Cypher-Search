@@ -3,7 +3,7 @@ import { graphPrintClient } from "../../../lib/graph/client";
 
 const COLLECTIONS = `
   query($owner: String!) {
-    collectionCreateds(where: {owner: $owner}) {
+    collectionCreateds(where: {owner: $owner}, first: 1000) {
       amount
       dropMetadata {
         dropCover
