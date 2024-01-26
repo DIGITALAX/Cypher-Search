@@ -105,6 +105,7 @@ const lensPost = async (
       ],
       account: address,
     });
+
     const res = await clientWallet.writeContract(request);
     dispatch(
       setIndexer({

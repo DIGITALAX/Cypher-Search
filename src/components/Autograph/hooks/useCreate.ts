@@ -291,7 +291,6 @@ const useCreate = (
           collectionSettings?.origin == "chromadin"
             ? ZERO_ADDRESS
             : DIGITALAX_ADDRESS,
-        creatorAddress: address,
         amount: Number(collectionDetails?.amount),
         dropId: Number(collectionDetails?.dropId),
         unlimited: false,
@@ -302,14 +301,14 @@ const useCreate = (
         collectionSettings?.origin == "chromadin"
           ? coder.encode(
               [
-                "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, address creatorAddress, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
+                "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
               ],
               [dataObject]
             )
           : coder.encode(
               [
-                "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, address creatorAddress, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
-                "uint8",
+                "tuple(uint256[] prices, uint256[] communityIds, address[] acceptedTokens, string uri, address fulfiller, uint256 amount, uint256 dropId, bool unlimited, bool encrypted)",
+                "uint256",
               ],
               [
                 dataObject,
