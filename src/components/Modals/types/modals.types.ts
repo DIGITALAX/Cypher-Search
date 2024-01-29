@@ -240,8 +240,6 @@ export type PostCollectGifProps = {
   openMeasure: {
     searchedGifs: string[];
     search: string;
-    collectibleOpen: boolean;
-    collectible: string;
     award: string;
     whoCollectsOpen: boolean;
     creatorAwardOpen: boolean;
@@ -255,8 +253,6 @@ export type PostCollectGifProps = {
     e: SetStateAction<{
       searchedGifs: string[];
       search: string;
-      collectibleOpen: boolean;
-      collectible: string;
       award: string;
       whoCollectsOpen: boolean;
       creatorAwardOpen: boolean;

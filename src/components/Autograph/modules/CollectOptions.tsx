@@ -21,35 +21,13 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
           {[
             {
               type: "drop",
-              title: "Collectible?",
-              dropValues: ["Yes", "No"],
-              dropOpen: openMeasure.collectibleOpen,
-              chosenValue: openMeasure.collectible,
-              showObject: true,
-              openDropdown: () =>
-                setOpenMeasure((prev) => ({
-                  ...prev,
-                  collectibleOpen: !prev.collectibleOpen,
-                })),
-              setValue: (item: string) =>
-                setOpenMeasure((prev) => ({
-                  ...prev,
-                  collectible: item,
-                })),
-            },
-            {
-              type: "drop",
               title: "Who can collect?",
               dropValues: ["Everyone", "Only Followers"],
               dropOpen: openMeasure.whoCollectsOpen,
               chosenValue: collectTypes?.[id]?.followerOnly
                 ? "Only Followers"
                 : "Everyone",
-              showObject:
-                openMeasure.collectible === "Yes" &&
-                openMeasure.collectible === "Yes"
-                  ? true
-                  : false,
+              showObject: true,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
@@ -59,17 +37,22 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                 const newCTs =
                   typeof collectTypes === "object" ? { ...collectTypes } : {};
 
-                newCTs[id] = {
-                  ...(newCTs[id] || {}),
-                  followerOnly: item === "Only Followers" ? true : false,
-                };
+                newCTs[id] =
+                  openMeasure?.award == "No"
+                    ? {
+                        followerOnly: item === "Only Followers" ? true : false,
+                      }
+                    : {
+                        ...(newCTs[id] || {}),
+                        followerOnly: item === "Only Followers" ? true : false,
+                      };
 
                 dispatch(
                   setPostCollectGif({
                     actionType: type,
                     actionId: id,
                     actionCollectTypes: newCTs,
-                    actionGifs: gifs,
+                    actionMedia: gifs,
                   })
                 );
               },
@@ -80,30 +63,45 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               dropValues: ["Yes", "No"],
               dropOpen: openMeasure.creatorAwardOpen,
               chosenValue: openMeasure.award,
-              showObject:
-                openMeasure.collectible === "Yes" &&
-                openMeasure.collectible === "Yes"
-                  ? true
-                  : false,
+              showObject: true,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
                   creatorAwardOpen: !prev.creatorAwardOpen,
                 })),
-              setValue: (item: string) =>
+              setValue: (item: string) => {
                 setOpenMeasure((prev) => ({
                   ...prev,
                   award: item,
-                })),
+                }));
+
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
+
+                newCTs[id] =
+                  openMeasure?.award == "No"
+                    ? {
+                        followerOnly: item === "Only Followers" ? true : false,
+                      }
+                    : ({
+                        ...(newCTs[id] || {}),
+                      } as any);
+
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionMedia: gifs,
+                  })
+                );
+              },
             },
             {
               type: "input",
               title: "Award amount",
               chosenValue: collectTypes?.[id]?.amount?.value || "0",
-              showObject:
-                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
-                  ? true
-                  : false,
+              showObject: openMeasure.award === "Yes" ? true : false,
               setValue: (item: string) => {
                 const newCTs =
                   typeof collectTypes === "object" ? { ...collectTypes } : {};
@@ -131,7 +129,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                     actionType: type,
                     actionId: id,
                     actionCollectTypes: newCTs,
-                    actionGifs: gifs,
+                    actionMedia: gifs,
                   })
                 );
               },
@@ -150,10 +148,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                   }
                 })?.symbol! || availableCurrencies?.[0]?.symbol,
               dropOpen: openMeasure.currencyOpen,
-              showObject:
-                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
-                  ? true
-                  : false,
+              showObject: openMeasure.award === "Yes" ? true : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
@@ -179,7 +174,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                     actionType: type,
                     actionId: id,
                     actionCollectTypes: newCTs,
-                    actionGifs: gifs,
+                    actionMedia: gifs,
                   })
                 );
               },
@@ -188,10 +183,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               type: "input",
               title: "Referral?",
               chosenValue: String(collectTypes?.[id]?.referralFee || "0"),
-              showObject:
-                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
-                  ? true
-                  : false,
+              showObject: openMeasure.award === "Yes" ? true : false,
 
               setValue: (item: string) => {
                 const newCTs =
@@ -207,7 +199,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                     actionType: type,
                     actionId: id,
                     actionCollectTypes: newCTs,
-                    actionGifs: gifs,
+                    actionMedia: gifs,
                   })
                 );
               },
@@ -218,45 +210,67 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               dropValues: ["Yes", "No"],
               dropOpen: openMeasure.editionOpen,
               chosenValue: openMeasure.edition,
-              showObject:
-                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
-                  ? true
-                  : false,
+              showObject: openMeasure.award === "Yes" ? true : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
                   editionOpen: !prev.editionOpen,
                 })),
-              setValue: (item: string) =>
+              setValue: (item: string) => {
                 setOpenMeasure((prev) => ({
                   ...prev,
                   edition: item,
-                })),
-            },
-            {
-              type: "input",
-              title: "Edition amount",
-              chosenValue: collectTypes?.[id]?.collectLimit || "0",
-              showObject:
-                openMeasure.collectible === "Yes" &&
-                openMeasure.edition === "Yes"
-                  ? true
-                  : false,
-              setValue: (item: string) => {
+                }));
+
                 const newCTs =
                   typeof collectTypes === "object" ? { ...collectTypes } : {};
 
-                newCTs[id] = {
-                  ...(newCTs[id] || {}),
-                  collectLimit: item,
-                } as any;
+                newCTs[id] =
+                  openMeasure?.edition == "No"
+                    ? {
+                        ...(newCTs[id] || {}),
+                        collectLimit: undefined,
+                      }
+                    : ({
+                        ...(newCTs[id] || {}),
+                      } as any);
 
                 dispatch(
                   setPostCollectGif({
                     actionType: type,
                     actionId: id,
                     actionCollectTypes: newCTs,
-                    actionGifs: gifs,
+                    actionMedia: gifs,
+                  })
+                );
+              },
+            },
+            {
+              type: "input",
+              title: "Edition amount",
+              chosenValue: collectTypes?.[id]?.collectLimit || "0",
+              showObject: openMeasure?.edition === "Yes" ? true : false,
+              setValue: (item: string) => {
+                const newCTs =
+                  typeof collectTypes === "object" ? { ...collectTypes } : {};
+
+                newCTs[id] =
+                  openMeasure?.edition == "No"
+                    ? {
+                        ...(newCTs[id] || {}),
+                        collectLimit: undefined,
+                      }
+                    : ({
+                        ...(newCTs[id] || {}),
+                        collectLimit: item,
+                      } as any);
+
+                dispatch(
+                  setPostCollectGif({
+                    actionType: type,
+                    actionId: id,
+                    actionCollectTypes: newCTs,
+                    actionMedia: gifs,
                   })
                 );
               },
@@ -267,10 +281,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               dropValues: ["Yes", "No"],
               dropOpen: openMeasure.timeOpen,
               chosenValue: openMeasure.time,
-              showObject:
-                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
-                  ? true
-                  : false,
+              showObject: openMeasure.award === "Yes" ? true : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
@@ -303,7 +314,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                     actionType: type,
                     actionId: id,
                     actionCollectTypes: newCTs,
-                    actionGifs: gifs,
+                    actionMedia: gifs,
                   })
                 );
               },

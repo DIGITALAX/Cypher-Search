@@ -1304,8 +1304,6 @@ export type CollectOptionsProps = {
   openMeasure: {
     searchedGifs: string[];
     search: string;
-    collectibleOpen: boolean;
-    collectible: string;
     award: string;
     whoCollectsOpen: boolean;
     creatorAwardOpen: boolean;
@@ -1319,8 +1317,6 @@ export type CollectOptionsProps = {
     e: SetStateAction<{
       searchedGifs: string[];
       search: string;
-      collectibleOpen: boolean;
-      collectible: string;
       award: string;
       whoCollectsOpen: boolean;
       creatorAwardOpen: boolean;

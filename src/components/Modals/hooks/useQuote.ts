@@ -108,8 +108,6 @@ const useQuote = (
   const [openMeasure, setOpenMeasure] = useState<{
     searchedGifs: string[];
     search: string;
-    collectibleOpen: boolean;
-    collectible: string;
     award: string;
     whoCollectsOpen: boolean;
     creatorAwardOpen: boolean;
@@ -121,8 +119,6 @@ const useQuote = (
   }>({
     searchedGifs: [],
     search: "",
-    collectibleOpen: false,
-    collectible: "Yes",
     award: "No",
     whoCollectsOpen: false,
     creatorAwardOpen: false,
@@ -187,7 +183,9 @@ const useQuote = (
                 {
                   collectOpenAction: {
                     simpleCollectOpenAction:
-                      postCollectGif.collectTypes?.[postBox?.quote?.id || "post"]!,
+                      postCollectGif.collectTypes?.[
+                        postBox?.quote?.id || "post"
+                      ]!,
                   },
                 },
               ]
@@ -714,14 +712,6 @@ const useQuote = (
       if (postCollectGif.collectTypes?.[postCollectGif?.id!]) {
         setOpenMeasure((prev) => ({
           ...prev,
-          collectibleOpen: false,
-          collectible:
-            postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
-            Number(
-              postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value
-            ) > 0
-              ? "Yes"
-              : "No",
           award:
             postCollectGif.collectTypes?.[postCollectGif?.id!]?.amount?.value ||
             Number(
