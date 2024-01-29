@@ -45,7 +45,11 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               chosenValue: collectTypes?.[id]?.followerOnly
                 ? "Only Followers"
                 : "Everyone",
-              showObject: openMeasure.collectible === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" &&
+                openMeasure.collectible === "Yes"
+                  ? true
+                  : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
@@ -76,7 +80,11 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               dropValues: ["Yes", "No"],
               dropOpen: openMeasure.creatorAwardOpen,
               chosenValue: openMeasure.award,
-              showObject: openMeasure.collectible === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" &&
+                openMeasure.collectible === "Yes"
+                  ? true
+                  : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
@@ -92,7 +100,10 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               type: "input",
               title: "Award amount",
               chosenValue: collectTypes?.[id]?.amount?.value || "0",
-              showObject: openMeasure.award === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
+                  ? true
+                  : false,
               setValue: (item: string) => {
                 const newCTs =
                   typeof collectTypes === "object" ? { ...collectTypes } : {};
@@ -139,7 +150,10 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                   }
                 })?.symbol! || availableCurrencies?.[0]?.symbol,
               dropOpen: openMeasure.currencyOpen,
-              showObject: openMeasure.award === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
+                  ? true
+                  : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
@@ -174,7 +188,10 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               type: "input",
               title: "Referral?",
               chosenValue: String(collectTypes?.[id]?.referralFee || "0"),
-              showObject: openMeasure.award === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
+                  ? true
+                  : false,
 
               setValue: (item: string) => {
                 const newCTs =
@@ -201,7 +218,10 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               dropValues: ["Yes", "No"],
               dropOpen: openMeasure.editionOpen,
               chosenValue: openMeasure.edition,
-              showObject: openMeasure.award === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
+                  ? true
+                  : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,
@@ -217,7 +237,11 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               type: "input",
               title: "Edition amount",
               chosenValue: collectTypes?.[id]?.collectLimit || "0",
-              showObject: openMeasure.edition === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" &&
+                openMeasure.edition === "Yes"
+                  ? true
+                  : false,
               setValue: (item: string) => {
                 const newCTs =
                   typeof collectTypes === "object" ? { ...collectTypes } : {};
@@ -243,7 +267,10 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               dropValues: ["Yes", "No"],
               dropOpen: openMeasure.timeOpen,
               chosenValue: openMeasure.time,
-              showObject: openMeasure.award === "Yes" ? true : false,
+              showObject:
+                openMeasure.collectible === "Yes" && openMeasure.award === "Yes"
+                  ? true
+                  : false,
               openDropdown: () =>
                 setOpenMeasure((prev) => ({
                   ...prev,

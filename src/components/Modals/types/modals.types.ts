@@ -1,11 +1,5 @@
 import { Filter } from "@/components/Search/types/search.types";
-import {
-  ChangeEvent,
-  MouseEvent,
-  MutableRefObject,
-  RefObject,
-  SetStateAction,
-} from "react";
+import { ChangeEvent, MouseEvent, RefObject, SetStateAction } from "react";
 import { AnyAction, Dispatch } from "redux";
 import {
   Erc20,

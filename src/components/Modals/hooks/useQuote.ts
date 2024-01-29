@@ -541,12 +541,6 @@ const useQuote = (
         value: BigInt("0"),
       });
       await publicClient.waitForTransactionReceipt({ hash: res });
-      // await handleIndexCheck(
-      //   {
-      //     forTxHash: tx.transactionHash,
-      //   },
-      //   dispatch
-      // );
       setApproved(true);
     } catch (err: any) {
       console.error(err.message);
