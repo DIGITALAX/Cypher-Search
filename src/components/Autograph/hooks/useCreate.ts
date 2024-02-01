@@ -699,7 +699,7 @@ const useCreate = (
           {
             contractAddress: NFT_CREATOR_ADDRESS,
             standardContractType: "ERC721",
-            chain: 80001,
+            chain: 137,
             method: "balanceOf",
             parameters: [":userAddress"],
             returnValueTest: {
@@ -769,7 +769,7 @@ const useCreate = (
       const result = await client.gated.encryptPublicationMetadata(
         postContentURI as any,
         erc721OwnershipCondition({
-          contract: { address: NFT_CREATOR_ADDRESS, chainId: 80001 },
+          contract: { address: NFT_CREATOR_ADDRESS, chainId: 137 },
         })
       );
 
