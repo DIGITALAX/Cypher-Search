@@ -102,7 +102,7 @@ const QuestGates: FunctionComponent<QuestGatesProps> = ({
                     Cypher Collections
                   </div>
                   <div className="relative w-full h-fit justify-center items-center flex overflow-y-scroll">
-                    <div className="relative w-fit h-fit justify-start items-center gap-3 flex flex-wrap">
+                    <div className="relative w-fit h-fit justify-center items-center gap-3 flex flex-wrap">
                       {gates?.erc721?.map((erc721: Creation, index: number) => {
                         return (
                           <div
@@ -118,7 +118,7 @@ const QuestGates: FunctionComponent<QuestGatesProps> = ({
                                 )}`
                               )
                             }
-                            // id="northern"
+                            id="northern"
                           >
                             <div className="relative w-full h-full flex items-center justify-center rounded-sm">
                               <Image

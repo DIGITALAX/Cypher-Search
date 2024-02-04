@@ -2,7 +2,10 @@ import { Gate } from "@/components/Search/types/search.types";
 import { Creation } from "@/components/Tiles/types/tiles.types";
 import { PublicClient } from "viem";
 import { getOrdersQuick } from "../../graphql/subgraph/queries/getOrders";
-import { getCollectionId } from "../../graphql/subgraph/queries/getCollections";
+import {
+  getCollectionId,
+  getCollectionByUri,
+} from "../../graphql/subgraph/queries/getCollections";
 
 const checkGates = async (
   gates: Gate,
@@ -65,16 +68,21 @@ const checkGates = async (
     if (gates?.erc721Logic?.length > 0) {
       const orders = await getOrdersQuick(address);
 
-      if (orders?.data?.orderCreateds?.length > 0) {
-        let collectionURIs: string[] = [];
-        const promises = orders?.data?.orderCreateds?.map(
-          (item: { subOrderCollectionIds: string[] }) =>
-            item?.subOrderCollectionIds?.map(async (item: string) => {
-              const data = await getCollectionId(item);
-              if (data?.data?.collectionCreateds?.[0]) {
-                collectionURIs?.push(data?.data?.collectionCreateds?.[0]);
-              }
-            })
+      if (
+        orders?.data?.orderCreateds?.length > 0 ||
+        orders?.data?.nftonlyOrderCreateds?.length > 0
+      ) {
+        let collectionURIs: Creation[] = [];
+        const promises = [
+          ...(orders?.data?.orderCreateds || []),
+          ...(orders?.data?.nftonlyOrderCreateds?.length || []),
+        ]?.map((item: { subOrderCollectionIds: string[] }) =>
+          item?.subOrderCollectionIds?.map(async (item: string) => {
+            const data = await getCollectionId(item);
+            if (data?.data?.collectionCreateds?.[0]) {
+              collectionURIs?.push(data?.data?.collectionCreateds?.[0]);
+            }
+          })
         );
 
         await Promise.all(promises);
@@ -87,7 +95,7 @@ const checkGates = async (
         } else {
           gates?.erc721Logic?.map((logic) => {
             const found = collectionURIs?.find(
-              (uri) => uri?.toLowerCase() == logic?.uri?.toLowerCase()
+              (col) => col?.uri?.toLowerCase() == logic?.uri?.toLowerCase()
             );
             if (!found) {
               erc721s.push(logic);
@@ -104,7 +112,17 @@ const checkGates = async (
           }
         }
       } else {
-        return undefined;
+        const promises = await Promise.all(
+          (gates?.erc721Logic as any)?.[0]?.uris?.map(async (item: string) => {
+            const data = await getCollectionByUri(item);
+            return data?.data?.collectionCreateds?.[0];
+          })
+        );
+
+        return {
+          erc20: erc20s,
+          erc721: promises as Creation[],
+        };
       }
     }
   } catch (err: any) {

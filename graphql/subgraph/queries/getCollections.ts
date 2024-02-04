@@ -191,7 +191,7 @@ export const getCollectionsQuick = async (
     variables: {
       owner,
       skip,
-      first
+      first,
     },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
@@ -225,6 +225,7 @@ export const getCollectionId = async (
           mediaCover
           images
         }
+        uri
         origin
       }
     }
@@ -246,6 +247,40 @@ export const getCollectionId = async (
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
 
   timeoutId && clearTimeout(timeoutId);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};
+
+export const getCollectionByUri = async (uri: string): Promise<any> => {
+  const queryPromise = graphPrintClient.query({
+    query: gql(`query($uri: String) {
+      collectionCreateds(first: 1, where: { uri: $uri}, orderDirection: desc, orderBy: blockTimestamp) {
+        collectionMetadata {
+          title
+          mediaCover
+          images
+        }
+        uri
+        origin
+      }
+    }`),
+    variables: {
+      uri,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
   if (result.timedOut) {
     return;
   } else {
