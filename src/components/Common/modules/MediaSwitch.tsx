@@ -30,13 +30,12 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
   });
   switch (type?.toLowerCase()) {
     case "video":
-      const keyValueVideo = srcUrl;
       return (
         <>
-          <div id={keyValueVideo} style={classNameVideo}>
+          <div id={srcUrl} style={classNameVideo}>
             <KinoraPlayerWrapper
-              parentId={keyValueVideo}
-              key={keyValueVideo}
+              parentId={srcUrl}
+              key={srcUrl}
               customControls={true}
               play={videoInfo?.isPlaying}
               styles={classNameVideo}
@@ -51,10 +50,11 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
                   currentTime: (e.target as any)?.currentTime || 0,
                 }))
               }
-              onCanPlay={() =>
+              onCanPlay={(e) =>
                 setVideoInfo((prev) => ({
                   ...prev,
                   isPlaying: true,
+                  duration: (e.target as any)?.duration || 0,
                 }))
               }
               volume={{
@@ -91,7 +91,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
             <Waveform
               audio={srcUrl}
               type={"video"}
-              keyValue={keyValueVideo}
+              keyValue={srcUrl}
               video={srcUrl}
               handlePauseVideo={() =>
                 setVideoInfo((prev) => {
@@ -112,7 +112,7 @@ const MediaSwitch: FunctionComponent<MediaProps> = ({
               handleSeekVideo={(e) =>
                 setVideoInfo((prev) => ({
                   ...prev,
-                  currentTime: e * videoInfo?.duration,
+                  currentTime: e,
                 }))
               }
               videoInfo={videoInfo}
