@@ -14,7 +14,7 @@ const descriptionRegex = (description: string, colorChange: boolean) => {
           .map((word) => `<span style="color: #FF0000;">${word}</span>`)
           .join(" ") +
         parts[1];
-      return `<span>${styledSpecialPhrase}</span>`;
+      return `<span>${styledSpecialPhrase?.replaceAll("undefined", "")}</span>`;
     } else {
       const words = line.split(/(?=[@#])|\s+/);
       const styledWords = words.map((word) => {

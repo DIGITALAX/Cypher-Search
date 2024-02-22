@@ -5,6 +5,7 @@ import { ACCEPTED_TOKENS, INFURA_GATEWAY } from "../../../../../lib/constants";
 import Image from "next/legacy/image";
 import SubOrder from "./SubOrder";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const Orders: FunctionComponent<OrdersProps> = ({
   allOrders,
@@ -207,10 +208,19 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                         orderActions?.[index]?.decryptLoading &&
                                         "animate-spin"
                                       } w-fit h-fit flex items-center justify-center`}
-                                    ></div>
-                                    {!order?.decrypted
-                                      ? "Decrypt"
-                                      : "Decrypted"}
+                                    >
+                                      {" "}
+                                      {orderActions?.[index]?.decryptLoading ? (
+                                        <AiOutlineLoading
+                                          color="white"
+                                          size={12}
+                                        />
+                                      ) : !order?.decrypted ? (
+                                        "Decrypt"
+                                      ) : (
+                                        "Decrypted"
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
