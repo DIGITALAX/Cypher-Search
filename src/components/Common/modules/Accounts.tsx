@@ -265,7 +265,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             onClick={() => handleLogout()}
           >
             <div className="relative w-fit h-fit items-center justify-center p-2 flex">
-              {t("aut")}
+              {t("log")}
             </div>
           </div>
         </div>

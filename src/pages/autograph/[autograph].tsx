@@ -394,7 +394,13 @@ const Autograph: NextPage<{
     return () => clearTimeout(timeoutId);
   }, [profileLoading, feedLoading, galleryLoading]);
 
-  if (!profileLoading && !globalLoading && !feedLoading && !galleryLoading) {
+  if (
+    !profileLoading &&
+    !globalLoading &&
+    !feedLoading &&
+    !galleryLoading &&
+    i18n.isInitialized
+  ) {
     return (
       <>
         {!profile ? (
