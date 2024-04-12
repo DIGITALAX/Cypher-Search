@@ -157,6 +157,7 @@ export type NotFoundProps = {
   router: NextRouter;
   searchActive: boolean;
   cartAnim: boolean;
+  i18n: i18n;
   openConnectModal: (() => void) | undefined;
   handleLogout: () => void;
   handleLensConnect: () => Promise<void>;

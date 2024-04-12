@@ -34,13 +34,14 @@ import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../lib/constants";
 import useQuests from "@/components/Autograph/hooks/useQuests";
 import { useTranslation } from "next-i18next";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
 
 const Autograph: NextPage<{
   router: NextRouter;
   client: LitNodeClient;
   tCom: TFunction<"404", undefined>;
-}> = ({ router, client, tCom }): JSX.Element => {
+  i18n: i18n;
+}> = ({ router, client, tCom, i18n }): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation("autograph");
   const { address, isConnected } = useAccount();
@@ -399,6 +400,7 @@ const Autograph: NextPage<{
         {!profile ? (
           <NotFound
             t={tCom}
+            i18n={i18n}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}

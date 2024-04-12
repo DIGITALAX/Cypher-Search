@@ -11,6 +11,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   lensConnected,
   walletConnected,
   handleLensConnect,
+  i18n,
   openConnectModal,
   setOpenAccount,
   cartItems,
@@ -62,6 +63,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
           searchActive={searchActive}
           filtersOpen={filtersOpen}
           t={t}
+          i18n={i18n}
           lensConnected={lensConnected}
           walletConnected={walletConnected}
           handleLensConnect={handleLensConnect}

@@ -11,12 +11,13 @@ import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
 
 const Custom404: NextPage<{
   router: NextRouter;
+  i18n: i18n;
   tCom: TFunction<"404", undefined>;
-}> = ({ router, tCom }): JSX.Element => {
+}> = ({ router, tCom, i18n }): JSX.Element => {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
@@ -98,6 +99,7 @@ const Custom404: NextPage<{
       </Head>
 
       <NotFound
+        i18n={i18n}
         fullScreenVideo={fullScreenVideo}
         router={router}
         cartAnim={cartAnim}

@@ -205,6 +205,6 @@ export default Checkout;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["checkout", "footer"])),
+    ...(await serverSideTranslations(locale, ["checkout", "footer", "common"])),
   },
 });

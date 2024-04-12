@@ -167,6 +167,7 @@ const Drop: NextPage<{
       <>
         {!profile || collections?.length < 1 ? (
           <NotFound
+            i18n={i18n}
             t={tCom}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}

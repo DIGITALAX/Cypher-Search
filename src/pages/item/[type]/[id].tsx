@@ -322,6 +322,7 @@ const Item: NextPage<{
           (itemData?.post as any)?.decrypted === undefined) ? (
           <NotFound
             t={tCom}
+            i18n={i18n}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
