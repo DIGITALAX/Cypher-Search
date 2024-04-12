@@ -54,7 +54,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             <div
               className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
               onClick={() => {
-                if (router.locale == "en") {
+                if (router?.locale == "en") {
                   i18n.changeLanguage("es");
                   router.push(router.asPath, undefined, {
                     locale: "es",
@@ -74,7 +74,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                 <Image
                   layout="fill"
                   src={`${INFURA_GATEWAY}/ipfs/${
-                    router.locale == "es"
+                    router?.locale == "es"
                       ? "QmY43U5RovVkoGrkLiFyA2VPMnGxf5e3NgYZ95u9aNJdem"
                       : "QmXdyvCYjZ7FkPjgFX5BPi98WTpPdJT5FHhzhtbyzkJuNs"
                   }`}
@@ -85,7 +85,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             <div
               className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
               onClick={() => {
-                if (router.locale == "en") {
+                if (router?.locale == "en") {
                   i18n.changeLanguage("es");
                   router.push(router.asPath, undefined, {
                     locale: "es",

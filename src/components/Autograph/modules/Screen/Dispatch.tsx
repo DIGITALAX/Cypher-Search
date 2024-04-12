@@ -1254,7 +1254,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                 }}
                               >
                                 <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
-                                  {item?.[router.locale as ("en"| "es")]}
+                                  {item?.[router?.locale as ("en"| "es")]}
                                 </div>
                               </div>
                             );

@@ -87,7 +87,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                       ? "preroll"
                       : "tiles"
                   }
-                  title={image.title?.[router.locale as "en" | "es"]}
+                  title={image.title?.[router?.locale as "en" | "es"]}
                   onClick={() => {
                     if (
                       filterValues?.printType !==

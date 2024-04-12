@@ -73,7 +73,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                       }}
                     >
                       <div className="relative w-fit h-fit flex items-center justify-center text-xs sm:text-sm">
-                        {item?.[router.locale as "en" | "es"]}
+                        {item?.[router?.locale as "en" | "es"]}
                       </div>
                     </div>
                   );

@@ -287,7 +287,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                               }
                             >
                               <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                                {item?.[router.locale as "en" | "es"]}
+                                {item?.[router?.locale as "en" | "es"]}
                               </div>
                             </div>
                           );
@@ -328,7 +328,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                             }
                           >
                             <div className="relative w-fit h-fit items-center justify-center flex top-px">
-                              {item?.[router.locale as "en" | "es"]}
+                              {item?.[router?.locale as "en" | "es"]}
                             </div>
                           </div>
                         );

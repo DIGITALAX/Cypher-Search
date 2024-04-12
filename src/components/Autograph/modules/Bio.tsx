@@ -74,7 +74,7 @@ const Bio: FunctionComponent<BioProps> = ({
                     <div
                       className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2 break-words"
                       key={indexTwo}
-                      title={image.title?.[router.locale as "en" | "es"]}
+                      title={image.title?.[router?.locale as "en" | "es"]}
                     >
                       <div className="relative w-4 h-4 items-center justify-center flex">
                         <Image
