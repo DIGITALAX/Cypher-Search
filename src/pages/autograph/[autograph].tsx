@@ -815,6 +815,11 @@ export async function getStaticPaths() {
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["autograph", "footer", "404"])),
+    ...(await serverSideTranslations(locale, [
+      "autograph",
+      "footer",
+      "404",
+      "common",
+    ])),
   },
 });

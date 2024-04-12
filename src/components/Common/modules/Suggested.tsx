@@ -46,6 +46,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   filterChange,
   filterConstants,
   t,
+  i18n,
 }) => {
   return (
     <div
@@ -54,6 +55,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
     >
       <Header
         t={t}
+        i18n={i18n}
         fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         filterChange={filterChange}

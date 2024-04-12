@@ -9,6 +9,10 @@ import { setPostBox } from "../../../../redux/reducers/postBoxSlice";
 import { setFullScreenVideo } from "../../../../redux/reducers/fullScreenVideoSlice";
 import handleImageError from "../../../../lib/helpers/handleImageError";
 import CartList from "./CartList";
+import {
+  PiArrowFatLinesLeftFill,
+  PiArrowFatLinesRightFill,
+} from "react-icons/pi";
 
 const Accounts: FunctionComponent<AccountsProps> = ({
   searchActive,
@@ -30,6 +34,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   cartAnim,
   fullScreenVideo,
   t,
+  i18n,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(lensConnected?.metadata?.picture);
   return (
@@ -44,6 +49,60 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             : "relative"
         }`}
       >
+        <div className="relative w-fit h-fit flex items-center justify-center text-sol flex-col text-center font-vcr uppercase">
+          <div className="relative w-fit h-fit flex items-center justify-center flex-row gap-2">
+            <div
+              className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
+              onClick={() => {
+                if (router.locale == "en") {
+                  i18n.changeLanguage("es");
+                  router.push(router.asPath, undefined, {
+                    locale: "es",
+                  });
+                } else {
+                  i18n.changeLanguage("en");
+                  router.push(router.asPath, undefined, {
+                    locale: "en",
+                  });
+                }
+              }}
+            >
+              <PiArrowFatLinesLeftFill size={15} />
+            </div>
+            <div className="relative w-fit h-fit flex items-center justify-center">
+              <div className="relative w-8 h-10 flex items-center justify-center">
+                <Image
+                  layout="fill"
+                  src={`${INFURA_GATEWAY}/ipfs/${
+                    router.locale == "es"
+                      ? "QmY43U5RovVkoGrkLiFyA2VPMnGxf5e3NgYZ95u9aNJdem"
+                      : "QmXdyvCYjZ7FkPjgFX5BPi98WTpPdJT5FHhzhtbyzkJuNs"
+                  }`}
+                  draggable={false}
+                />
+              </div>
+            </div>
+            <div
+              className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
+              onClick={() => {
+                if (router.locale == "en") {
+                  i18n.changeLanguage("es");
+                  router.push(router.asPath, undefined, {
+                    locale: "es",
+                  });
+                } else {
+                  i18n.changeLanguage("en");
+                  router.push(router.asPath, undefined, {
+                    locale: "en",
+                  });
+                }
+              }}
+            >
+              <PiArrowFatLinesRightFill size={15} />
+            </div>
+          </div>
+        </div>
+
         {!lensConnected && (
           <div
             className={`w-24 h-8 relative flex items-center justify-center p-px rounded-sm text-center cursor-pointer active:scale-95 hover:opacity-70`}

@@ -34,6 +34,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   fullScreenVideo,
   filterChange,
   t,
+  i18n,
 }): JSX.Element => {
   return (
     <div
@@ -90,6 +91,7 @@ const Header: FunctionComponent<HeaderProps> = ({
       )}
       <Accounts
         t={t}
+        i18n={i18n}
         fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         searchActive={searchActive}

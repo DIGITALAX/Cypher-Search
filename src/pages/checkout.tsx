@@ -15,13 +15,15 @@ import { polygon } from "viem/chains";
 import { useTranslation } from "next-i18next";
 import { createPublicClient, http } from "viem";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
+import { SetStateAction } from "react";
 
 const Checkout: NextPage<{
   router: NextRouter;
   client: LitNodeClient;
   tCom: TFunction<"404", undefined>;
-}> = ({ router, client, tCom }): JSX.Element => {
+  i18n: i18n;
+}> = ({ router, client, tCom, i18n }): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation("checkout");
   const { address, isConnected } = useAccount();
@@ -127,6 +129,7 @@ const Checkout: NextPage<{
       </Head>
       <Header
         t={tCom}
+        i18n={i18n}
         filterChange={filterChange}
         fullScreenVideo={fullScreenVideo}
         searchItems={allSearchItems}

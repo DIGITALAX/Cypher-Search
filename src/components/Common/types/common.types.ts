@@ -18,7 +18,7 @@ import {
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
 
 export type BarProps = {
   title: string;
@@ -150,6 +150,7 @@ export type AccountsProps = {
   dispatch: Dispatch<AnyAction>;
   auto?: boolean;
   fullScreenVideo: FullScreenVideoState;
+  i18n: i18n;
 };
 
 export type NotFoundProps = {
@@ -209,6 +210,7 @@ export type SuggestedProps = {
   cartAnim: boolean;
   t: TFunction<"404", undefined>;
   filterConstants: FilterValues | undefined;
+  i18n: i18n;
   layoutAmount?: number;
   handleSearch?: (
     e: KeyboardEvent | MouseEvent,

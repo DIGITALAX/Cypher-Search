@@ -11,7 +11,7 @@ import { polygon } from "viem/chains";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useAccount } from "wagmi";
 import { RootState } from "../../../../../redux/store";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import useAutograph from "@/components/Autograph/hooks/useAutograph";
 import useSuggested from "@/components/Common/hooks/useSuggested";
 import useDrop from "@/components/Drop/hooks/useDrop";
@@ -21,12 +21,13 @@ import useTiles from "@/components/Tiles/hooks/useTiles";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import NotFound from "@/components/Common/modules/NotFound";
 import { useTranslation } from "next-i18next";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
 
 const Drop: NextPage<{
   router: NextRouter;
   tCom: TFunction<"404", undefined>;
-}> = ({ router, tCom }): JSX.Element => {
+  i18n: i18n;
+}> = ({ router, tCom, i18n }): JSX.Element => {
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(
@@ -334,6 +335,7 @@ const Drop: NextPage<{
               </Head>
               <Suggested
                 t={t}
+                i18n={i18n}
                 filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
@@ -406,6 +408,11 @@ export async function getStaticPaths() {
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["drop", "footer", "404"])),
+    ...(await serverSideTranslations(locale, [
+      "drop",
+      "footer",
+      "404",
+      "common",
+    ])),
   },
 });

@@ -10,7 +10,7 @@ import { CartItem } from "@/components/Common/types/common.types";
 import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
 
 export interface FilterValues {
   hashtags: string[];
@@ -68,6 +68,7 @@ export type HeaderProps = {
   t: TFunction<"404", undefined>;
   dispatch: Dispatch<AnyAction>;
   includeSearch: boolean;
+  i18n: i18n;
   router: NextRouter;
   layoutAmount?: number;
   filterChange: boolean;

@@ -65,7 +65,7 @@ init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const { t: tCom } = useTranslation("404");
+  const { t: tCom, i18n } = useTranslation("404");
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -121,6 +121,7 @@ function App({ Component, pageProps }: AppProps) {
                     {...pageProps}
                     router={router}
                     client={client}
+                    i18n={i18n}
                   />
                   <Modals t={tCom} router={router} />
                   {router?.asPath?.includes("/autograph/") &&

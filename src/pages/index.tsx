@@ -14,14 +14,17 @@ import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
+import { SetStateAction } from "react";
 
 export default function Home({
   router,
   tCom,
+  i18n,
 }: {
   router: NextRouter;
   tCom: TFunction<"404", undefined>;
+  i18n: i18n;
 }) {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
@@ -161,6 +164,7 @@ export default function Home({
       >
         <Header
           t={tCom}
+          i18n={i18n}
           fullScreenVideo={fullScreenVideo}
           cartAnim={cartAnim}
           filterChange={filterChange}

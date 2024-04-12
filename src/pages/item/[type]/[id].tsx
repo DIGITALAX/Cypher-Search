@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import useSuggested from "@/components/Common/hooks/useSuggested";
 import Suggested from "@/components/Common/modules/Suggested";
 import useTiles from "@/components/Tiles/hooks/useTiles";
@@ -35,12 +35,13 @@ import useQuest from "@/components/Tiles/hooks/useQuest";
 import { Quest } from "@/components/Search/types/search.types";
 import { apolloClient } from "../../../../lib/lens/client";
 import { Dispatch as KinoraDispatch } from "kinora-sdk";
-import { TFunction } from "i18next";
+import { TFunction, i18n } from "i18next";
 
 const Item: NextPage<{
   router: NextRouter;
   tCom: TFunction<"404", undefined>;
-}> = ({ router, tCom }): JSX.Element => {
+  i18n: i18n;
+}> = ({ router, tCom, i18n }): JSX.Element => {
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(
@@ -490,6 +491,7 @@ const Item: NextPage<{
               </Head>
               <Suggested
                 t={t}
+                i18n={i18n}
                 filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
@@ -636,6 +638,11 @@ export async function getStaticPaths() {
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["item", "footer", "404"])),
+    ...(await serverSideTranslations(locale, [
+      "item",
+      "footer",
+      "404",
+      "common",
+    ])),
   },
 });
