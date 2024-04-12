@@ -8,6 +8,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    ...nextI18NextConfig.i18n,
     fallbackLng: "en",
     debug: true,
     detection: {
@@ -28,11 +29,7 @@ i18n
     interpolation: {
       escapeValue: false,
       format: function (value, format, lng) {
-        if (value instanceof Date) {
-          return new Intl.DateTimeFormat(lng, { dateStyle: format }).format(
-            value
-          );
-        }
+        if (format === "uppercase") return value.toUpperCase();
         return value;
       },
     },
