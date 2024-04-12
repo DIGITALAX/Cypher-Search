@@ -66,7 +66,6 @@ init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  moment.utc();
   const { t: tCom, i18n } = useTranslation("404");
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
@@ -95,6 +94,7 @@ function App({ Component, pageProps }: AppProps) {
   }, [router]);
 
   useEffect(() => {
+    moment.utc();
     console.log(`                                  
     _      _)_ _   _   _   _ _       
    (_( (_( (_ (_) ) ) (_) ) ) ) (_(  
