@@ -248,7 +248,7 @@ const Display: FunctionComponent<DisplayProps> = ({
       {owner && (
         <div className="relative w-full h-fit flex justify-start tablet:justify-end items-center">
           <div
-            className={`relative w-20 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
+            className={`relative w-28 h-10 font-bit text-white flex items-center justify-center bg-fuego border border-white rounded-sm ${
               !displayLoading && "cursor-pointer active:scale-95"
             }`}
             onClick={() => !displayLoading && handleSetDisplay()}
