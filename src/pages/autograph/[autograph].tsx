@@ -22,7 +22,7 @@ import useProfile from "@/components/Autograph/hooks/useProfile";
 import useBookmarks from "@/components/Autograph/hooks/useBookmarks";
 import usePost from "@/components/Autograph/hooks/usePost";
 import { useAccount } from "wagmi";
-import { createPublicClient, http } from "viem";
+import { createPublicClient, fallback, http } from "viem";
 import { polygon } from "viem/chains";
 import useOrders from "@/components/Autograph/hooks/useOrders";
 import useSales from "@/components/Autograph/hooks/useSales";
@@ -817,6 +817,7 @@ export default Autograph;
 export async function getStaticPaths() {
   return {
     paths: [],
+    fallback: false,
   };
 }
 
