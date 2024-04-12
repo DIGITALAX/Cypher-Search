@@ -11,6 +11,7 @@ import handleImageError from "../../../../../lib/helpers/handleImageError";
 const Messages: FunctionComponent<MessagesProps> = ({
   conversations,
   messages,
+  t,
   handleConversations,
   client,
   sendMessageLoading,
@@ -213,6 +214,7 @@ const Messages: FunctionComponent<MessagesProps> = ({
                   handleSendMessage={handleSendMessage}
                   sendMessageLoading={sendMessageLoading}
                   canMessage={canMessage}
+                  t={t}
                 />
               </div>
             ) : (
@@ -225,7 +227,7 @@ const Messages: FunctionComponent<MessagesProps> = ({
                   onClick={() => handleConversations()}
                 >
                   <div className="relative w-fit h-fit flex items-center justify-center">
-                    Unlock
+                    {t("unl")}
                   </div>
                 </div>
               </div>

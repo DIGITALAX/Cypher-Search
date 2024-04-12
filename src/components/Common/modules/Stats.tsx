@@ -9,7 +9,8 @@ const Stats: FunctionComponent<StatsProps> = ({
   profile,
   dispatch,
   layoutAmount,
-  microbrand
+  microbrand,
+  t
 }): JSX.Element => {
   return (
     <div
@@ -25,8 +26,8 @@ const Stats: FunctionComponent<StatsProps> = ({
         }`}
       >
         {[
-          ["QmfLepA6hufGLdzWXXCjJZJTyTFjQKhTAXcCB3mNsRq4Nw", "Followers"],
-          ["QmZo867R8s4UE5ofN7fSCzPuPrcwpy5cEKUWHbZiUXqJL2", "Following"],
+          ["QmfLepA6hufGLdzWXXCjJZJTyTFjQKhTAXcCB3mNsRq4Nw", t("folo")],
+          ["QmZo867R8s4UE5ofN7fSCzPuPrcwpy5cEKUWHbZiUXqJL2", t("foll")],
         ].map((image: string[], indexTwo: number) => {
           return (
             <div
@@ -67,10 +68,10 @@ const Stats: FunctionComponent<StatsProps> = ({
       </div>
       <div className="relative flex flex-wrap gap-4 items-between justify-center">
         {[
-          ["QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3", "Total Mirrors"],
-          ["QmeE3M7kBpSzBC4j63Da846Sk8ukQrV4qf4FkqF1nBdiDE", "Total Pubs"],
-          ["QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF", "Total Collects"],
-          ["QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n", "Total Comments"],
+          ["QmPRRRX1S3kxpgJdLC4G425pa7pMS1AGNnyeSedngWmfK3", t("mirT")],
+          ["QmeE3M7kBpSzBC4j63Da846Sk8ukQrV4qf4FkqF1nBdiDE", t("pubT")],
+          ["QmNomDrWUNrcy2SAVzsKoqd5dPMogeohB8PSuHCg57nyzF", t("colT")],
+          ["QmXD3LnHiiLSqG2TzaNd1Pmhk2nVqDHDqn8k7RtwVspE6n", t("comT")],
         ].map((image: string[], indexTwo: number) => {
           const stats = [
             profile?.stats?.mirrors || 0,

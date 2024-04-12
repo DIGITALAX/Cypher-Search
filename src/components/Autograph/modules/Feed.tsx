@@ -48,18 +48,20 @@ const Feed: FunctionComponent<FeedProps> = ({
   profilesOpen,
   setCaretCoord,
   cartItems,
+  t,
+  tCom,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10 otro:order-1 order-2">
       <div className="relative flex items-center justify-start flex-col gap-4 bg-olor rounded-sm px-px sm:px-4 py-4 w-full sm:w-96 h-fit">
         <div className="absolute flex items-center justify-center text-xl sm:text-3xl font-bit text-[#00FFBA] top-3 w-fit h-fit blur-sm break-words">
-          Recent Updates
+          {t("upd")}
         </div>
         <div className="absolute flex items-center justify-center text-xl sm:text-3xl font-bit text-white top-3.5 w-fit h-fit blur-sm break-words">
-          Recent Updates
+          {t("upd")}
         </div>
         <div className="relative flex items-center justify-center text-xl sm:text-3xl font-bit text-saph w-fit h-fit break-words">
-          Recent Updates
+          {t("upd")}
         </div>
         <div
           className={`relative flex items-start justify-center w-fit h-full ${
@@ -75,7 +77,7 @@ const Feed: FunctionComponent<FeedProps> = ({
           >
             {profileFeed?.length < 1 ? (
               <div className="relative w-fit h-fit flex items-start justify-center text-center font-bit text-lirio text-xs">
-                Nothing to see here yet, check back soon.
+                {t("nada")}
               </div>
             ) : (
               <InfiniteScroll
@@ -98,6 +100,7 @@ const Feed: FunctionComponent<FeedProps> = ({
                         : (item as Post);
                     return (
                       <Publication
+                        t={tCom}
                         top={
                           type?.metadata?.content?.length < 100 &&
                           type?.metadata?.__typename !== "AudioMetadataV3" &&

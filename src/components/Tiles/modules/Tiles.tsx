@@ -16,6 +16,7 @@ const useDeepMemoize = (value: Object[]) => {
 const Tiles: FunctionComponent<TilesProps> = ({
   handleMoreSearch,
   searchActive,
+  t,
   layoutAmount,
   popUpOpen,
   setPopUpOpen,
@@ -59,6 +60,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
           filterConstants={filterConstants}
           lensConnected={lensConnected}
           publication={data}
+          t={t}
           cartItems={cartItems}
           layoutAmount={layoutAmount}
           popUpOpen={popUpOpen}
@@ -107,7 +109,9 @@ const Tiles: FunctionComponent<TilesProps> = ({
   return (
     <div
       className={`relative w-full min-h-screen h-fit overflow-y-scroll pb-6 px-4 ${
-        searchActive || filtersOpen ? "pt-72 galaxy:pt-52 tablet:pt-24" : "pt-24"
+        searchActive || filtersOpen
+          ? "pt-72 galaxy:pt-52 tablet:pt-24"
+          : "pt-24"
       }`}
       id="tileSearch"
     >

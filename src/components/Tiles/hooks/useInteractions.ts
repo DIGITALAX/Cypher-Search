@@ -19,6 +19,7 @@ import {
 } from "../../../../redux/reducers/searchItemsSlice";
 import errorChoice from "../../../../lib/helpers/errorChoice";
 import { Creation } from "../types/tiles.types";
+import { TFunction } from "i18next";
 
 const useInteractions = (
   allSearchItems: AllSearchItemsState | undefined,
@@ -28,7 +29,8 @@ const useInteractions = (
   lensConnected: Profile | undefined,
   setSuggestedFeed:
     | ((e: SetStateAction<AllSearchItemsState | undefined>) => void)
-    | undefined
+    | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [openMirrorChoice, setOpenMirrorChoice] = useState<boolean[]>([]);
   const [interactionsLoading, setInteractionsLoading] = useState<
@@ -64,7 +66,7 @@ const useInteractions = (
     });
 
     try {
-      await lensLike(id, dispatch, hasReacted);
+      await lensLike(id, dispatch, hasReacted, t);
       updateInteractions(
         index!,
         {
@@ -85,7 +87,8 @@ const useInteractions = (
             "reactions",
             hasReacted ? false : true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -125,7 +128,8 @@ const useInteractions = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
 
       updateInteractions(
@@ -156,7 +160,8 @@ const useInteractions = (
             "countOpenActions",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -195,7 +200,8 @@ const useInteractions = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         index!,
@@ -217,7 +223,8 @@ const useInteractions = (
             "mirrors",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
     setInteractionsLoading((prev) => {

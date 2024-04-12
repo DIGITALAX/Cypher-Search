@@ -13,7 +13,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
   dispatch,
   top,
   cartItems,
-  index,
+  t,
   cartItem,
   level,
   type,
@@ -41,8 +41,8 @@ const PopUp: FunctionComponent<PopUpProps> = ({
           cartItem?.amount !== undefined &&
           cartItem?.soldTokens !== undefined &&
           cartItem?.amount == cartItem?.soldTokens
-            ? "Sold Out"
-            : "Add to Cart"
+            ? t("sod")
+            : t("cart")
         }
         onClick={() => {
           if (cartItem?.amount == cartItem?.soldTokens) return;
@@ -61,8 +61,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             dispatch(
               setInsufficientBalance({
                 actionValue: true,
-                actionMessage:
-                  "We know you're eager, but you've reached this creations' collect limit!",
+                actionMessage: t("lim"),
               })
             );
             return;
@@ -138,7 +137,7 @@ const PopUp: FunctionComponent<PopUpProps> = ({
             }/${cartItem?.collectionMetadata?.title?.replaceAll(" ", "_")}`
           );
         }}
-        title="View Item"
+        title={t("view")}
       >
         <Image
           layout="fill"

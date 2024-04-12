@@ -12,6 +12,7 @@ import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import cleanCollect from "../cleanCollect";
 import validateMetadata from "../../../graphql/lens/queries/validate";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
+import { TFunction } from "i18next";
 
 const lensQuote = async (
   quoteOn: string,
@@ -21,6 +22,7 @@ const lensQuote = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
+  t: TFunction<"404", undefined>,
   closeBox?: () => void
 ): Promise<void> => {
   if (
@@ -77,7 +79,7 @@ const lensQuote = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
     closeBox && closeBox();
@@ -85,7 +87,8 @@ const lensQuote = async (
       {
         forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
       },
-      dispatch
+      dispatch,
+      t
     );
   } else {
     const { request } = await publicClient.simulateContract({
@@ -114,7 +117,7 @@ const lensQuote = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
     closeBox && closeBox();
@@ -123,7 +126,8 @@ const lensQuote = async (
       {
         forTxHash: tx.transactionHash,
       },
-      dispatch
+      dispatch,
+      t
     );
   }
   setTimeout(() => {

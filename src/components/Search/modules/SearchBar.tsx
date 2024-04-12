@@ -17,6 +17,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
   layoutAmount,
   router,
   searchItems,
+  t,
   filterChange,
 }): JSX.Element => {
   return (
@@ -77,7 +78,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             onClick={(e) => handleSearch(e, true)}
           >
             <div className="relative w-full h-full flex items-center justify-center text-center bg-black rounded-sm text-lg">
-              GO
+              {t("go")}
             </div>
           </div>
         </div>

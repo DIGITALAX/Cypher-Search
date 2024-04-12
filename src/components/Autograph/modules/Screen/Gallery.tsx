@@ -15,6 +15,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   createDrop,
   createCollection,
   creationLoading,
+  t,
   router,
   collectionSettings,
   setCollectionSettings,
@@ -60,6 +61,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
             }`}
           >
             <SwitchCreate
+              t={t}
               setCreateCase={setCreateCase}
               dropDetails={dropDetails}
               dropsLoading={dropsLoading}
@@ -92,14 +94,13 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
         <div className="relative w-full h-fit tablet:h-[35rem] flex flex-col bg-piloto gap-6 items-center justify-start p-3">
           {!createCase && (
             <div className="font-bit text-white text-xs text-center flex w-4/5 h-fit relative">
-              Fine-Tune Your gallery, with Art, collectibles, and rare gems that
-              are more than they seem.
+              {t("fine")}
             </div>
           )}
           {!isDesigner && (
             <div className="relative w-full h-fit flex items-center justify-center flex-col gap-1">
               <div className="relative w-fit h-fit flex items-center justify-center text-center font-bit text-white text-sm">
-                Interested to mint? Send us a message!
+                {t("mint")}
               </div>
               <textarea
                 className={`relative w-full p-1 bg-offBlack border border-white rounded-md h-32 font-bit text-xs flex items-center justify-center ${
@@ -131,7 +132,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     {digiMessageLoading ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
-                      "Send"
+                      t("send")
                     )}
                   </div>
                 </div>
@@ -149,7 +150,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                   className="relative w-fit h-fit relative justify-center items-center font-bit text-xs flex cursor-pointer text-white"
                   onClick={() => setCreateCase(undefined)}
                 >
-                  {`<<<  Back to gallery`}
+                  {t("back")}
                 </div>
               </div>
             )}
@@ -219,7 +220,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                   }}
                 >
                   <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                    + New Collection
+                    {t("new")}
                   </div>
                 </div>
                 <div
@@ -227,7 +228,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                   onClick={() => isDesigner && setCreateCase("drop")}
                 >
                   <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                    + New Drop
+                    {t("newD")}
                   </div>
                 </div>
               </>
@@ -236,72 +237,81 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
               <div className="relative w-full h-fit flex flex-col sm:flex-row tablet:flex-col items-start justify-start gap-4">
                 <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
                   <div className="relative w-fit h-fit font-bit text-white text-sm">
-                    Choose Origin
+                    {t("orig")}
                   </div>
                   <div className="relative w-full h-fit flex overflow-y-scroll max-h-[14rem]">
                     <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
                       {[
-                        "chromadin",
-                        "coinop",
-                        "listener",
-                        "autograph quarterly",
-                        "legend",
-                        "the dial",
-                        "f3m",
-                      ]?.map((item: string, index: number) => {
-                        return (
-                          <div
-                            key={index}
-                            className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
-                              item === collectionSettings?.origin
-                                ? "border-2"
-                                : "border"
-                            } ${
-                              ((index === 6 &&
-                                address?.toLowerCase() ==
-                                  F3M_ADDRESS?.toLowerCase()) ||
-                                index == 0 ||
-                                index == 1 ||
-                                index == 2) &&
-                              createCase === "collection" &&
-                              collectionDetails?.collectionId == ""
-                                ? "cursor-pointer active:scale-95"
-                                : "opacity-50"
-                            }`}
-                            onClick={() =>
-                              (index === 0 ||
-                                index === 1 ||
-                                index === 2 ||
-                                (index === 6 && address === F3M_ADDRESS)) &&
-                              collectionDetails?.collectionId == "" &&
-                              setCollectionSettings((prev) => ({
-                                ...prev,
-                                origin: item,
-                                imageIndex: 0,
-                              }))
-                            }
-                          >
-                            <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                              {item}
+                        { es: "chromadin", en: "chromadin" },
+                        { es: "coinop", en: "coinop" },
+                        { es: "oyente", en: "listener" },
+                        {
+                          es: "autógrafo trimestral",
+                          en: "autograph quarterly",
+                        },
+                        { es: "leyenda", en: "legend" },
+                        { es: "el dial", en: "the dial" },
+                        { es: "f3m", en: "f3m" },
+                      ]?.map(
+                        (item: { es: string; en: string }, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
+                                item?.en === collectionSettings?.origin
+                                  ? "border-2"
+                                  : "border"
+                              } ${
+                                ((index === 6 &&
+                                  address?.toLowerCase() ==
+                                    F3M_ADDRESS?.toLowerCase()) ||
+                                  index == 0 ||
+                                  index == 1 ||
+                                  index == 2) &&
+                                createCase === "collection" &&
+                                collectionDetails?.collectionId == ""
+                                  ? "cursor-pointer active:scale-95"
+                                  : "opacity-50"
+                              }`}
+                              onClick={() =>
+                                (index === 0 ||
+                                  index === 1 ||
+                                  index === 2 ||
+                                  (index === 6 && address === F3M_ADDRESS)) &&
+                                collectionDetails?.collectionId == "" &&
+                                setCollectionSettings((prev) => ({
+                                  ...prev,
+                                  origin: item?.en,
+                                  imageIndex: 0,
+                                }))
+                              }
+                            >
+                              <div className="relative w-fit h-fit items-center justify-center flex top-1">
+                                {item?.[router.locale as "en" | "es"]}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        }
+                      )}
                     </div>
                   </div>
                 </div>
                 <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
                   <div className="relative w-fit h-fit font-bit text-white text-sm">
-                    Choose Media
+                    {t("med")}
                   </div>
                   <div className="relative w-full h-fit flex flex-col items-center justify-start gap-2">
-                    {["static", "audio", "video"]?.map(
-                      (item: string, index: number) => {
+                    {[
+                      { es: "estática", en: "static" },
+                      { es: "audio", en: "audio" },
+                      { es: "vídeo", en: "video" },
+                    ]?.map(
+                      (item: { es: string; en: string }, index: number) => {
                         return (
                           <div
                             key={index}
                             className={`relative w-44 h-8 bg-[#DAB275] border-olor flex items-center justify-center text-white font-bit text-sm ${
-                              collectionSettings?.media === item
+                              collectionSettings?.media === item?.en
                                 ? "border-2"
                                 : "border"
                             } ${
@@ -313,12 +323,12 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                               collectionSettings?.origin == "chromadin" &&
                               setCollectionSettings((prev) => ({
                                 ...prev,
-                                media: item,
+                                media: item.en,
                               }))
                             }
                           >
                             <div className="relative w-fit h-fit items-center justify-center flex top-px">
-                              {item}
+                              {item?.[router.locale as "en" | "es"]}
                             </div>
                           </div>
                         );
@@ -334,7 +344,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                   <div className="relative w-fit h-fit flex items-center justify-center flex-col gap-2">
                     <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 font-aust text-white">
                       <div className="relative w-fit h-fit text-sm">
-                        Drop Title
+                        {t("dropT")}
                       </div>
                       <input
                         className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60"
@@ -388,7 +398,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                       <>
                         <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 font-aust text-white relative">
                           <div className="relative w-fit h-fit text-sm">
-                            Add Collections
+                            {t("add")}
                           </div>
                           <input
                             className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60"
@@ -614,7 +624,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                   ) ? (
                     <AiOutlineLoading color="white" size={15} />
                   ) : (
-                    "Create"
+                    t("crea")
                   )}
                 </div>
               </div>
@@ -652,7 +662,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     ) ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
-                      "Edit"
+                      t("ed")
                     )}
                   </div>
                 </div>
@@ -685,7 +695,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     ) ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
-                      "Delete"
+                      t("del")
                     )}
                   </div>
                 </div>

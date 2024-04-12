@@ -16,18 +16,18 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
   filterValues,
   handleResetFilters,
   filterConstants,
+  t,
 }): JSX.Element => {
   return (
     <div className="order-1 lg:order-2 relative w-full h-fit items-start justify-center flex flex-col gap-5">
       <div className="relative w-full h-fit justify-between gap-3 flex items-center flex-row sm:flex-nowrap flex-wrap">
         <div className="font-bit text-white text-left flex items-center justify-center text-sm uppercase break-words h-fit w-fit">
-          Find what you’re really looking for, with filters for everything you
-          can imagine:
+          {t("find")}
         </div>
         <div
           className="relative w-12 h-9 cursor-pointer flex items-center justify-center active:scale-95"
           onClick={() => handleResetFilters()}
-          title="reset filters"
+          title={t("res")}
         >
           <Image
             layout="fill"
@@ -40,7 +40,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       <DropDown
         dropDownValues={filteredDropDownValues?.hashtags}
         hashtag
-        title={"Sort By Hashtag"}
+        title={t("hash")}
         value={filterValues?.hashtag || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
@@ -118,7 +118,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       />
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.community}
-        title={"Sort By Community"}
+        title={t("com")}
         value={filterValues?.community || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
@@ -196,7 +196,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       />
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.microbrands}
-        title={"Sort By Microbrand"}
+        title={t("mic")}
         value={filterValues?.microbrand || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
@@ -308,7 +308,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
         <ImageDropDown
           dropDownValues={filteredDropDownValues?.origin}
           reverse
-          title={"Sort By Origin"}
+          title={t("ori")}
           cover
           rounded
           value={filterValues?.origin || ""}
@@ -390,7 +390,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       </div>
       <DropDown
         dropDownValues={filteredDropDownValues?.format}
-        title={"Sort By Media Format"}
+        title={t("form")}
         value={filterValues?.format || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
@@ -468,7 +468,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       />
       <DropDown
         dropDownValues={filteredDropDownValues?.catalog}
-        title={"Sort By Catalog"}
+        title={t("cat")}
         value={filterValues?.catalog}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
@@ -545,7 +545,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       />
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.access}
-        title={"Sort By Access Eco Scale"}
+        title={t("eco")}
         value={filterValues?.access || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
@@ -645,13 +645,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
               value={filterValues?.editions}
             />
             <div className="relative w-full h-full p-1.5 bg-offBlack flex items-center justify-center text-sm uppercase">
-              editions
+              {t("eds")}
             </div>
           </div>
         </div>
         <div className="relative w-fit h-fit items-center justify-center flex flex-col">
           <div className="relative w-full h-full p-1.5 bg-offBlack flex items-center justify-center font-bit text-sol text-xs text-center uppercase">
-            available?
+            {t("av")}
           </div>
           <div
             id="borderSearch"
@@ -674,11 +674,13 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                   );
                 }}
               >
-                yes
+                {t("yes")?.toLowerCase()}
               </div>
               <div
                 className={`relative w-10 px-1 h-fit items-center justify-center flex cursor-pointer ${
-                  !filterValues?.available ? "bg-brill text-black" : "text-white"
+                  !filterValues?.available
+                    ? "bg-brill text-black"
+                    : "text-white"
                 }`}
                 onClick={() => {
                   if (filterValues?.available != false) {
@@ -692,7 +694,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
                   );
                 }}
               >
-                no
+                {t("no")?.toLowerCase()}
               </div>
             </div>
           </div>

@@ -4,21 +4,21 @@ import { BsTwitter } from "react-icons/bs";
 import { BiArrowToTop } from "react-icons/bi";
 import { FooterProps } from "../types/footer.types";
 import { INFURA_GATEWAY } from "../../../../lib/constants";
+import { useTranslation } from "next-i18next";
 
 const Footer: FunctionComponent<FooterProps> = ({
   handleRewind,
 }): JSX.Element => {
+  const { t } = useTranslation("footer");
   return (
-    <div
-      className={`relative bottom-0 w-full h-fit flex w-full`}
-    >
+    <div className={`relative bottom-0 w-full h-fit flex w-full`}>
       <div className="relative grid auto-rows-auto grid-flow-row w-full h-full pt-12">
         <div className="relative row-start-4 w-full h-full text-midWhite">
           <div className="relative grid auto-cols-auto grid-flow-col h-full w-full">
             <div className="col-start-1 h-full w-full relative pt-6">
               <div className="relative w-fit h-fit grid grid-flow-row auto-rows-auto">
                 <div className="relative w-fit h-fit col-start-1 row-start-1 sm:row-start-1 pl-6 pb-1 hover:text-skyBlue cursor-pointer hover:rotate-3">
-                  END OF LINE
+                  {t("fin")}
                 </div>
                 <div className={`relative w-36 h-4 row-start-2`}>
                   <Image
@@ -40,7 +40,7 @@ const Footer: FunctionComponent<FooterProps> = ({
                   <BiArrowToTop color="#F7F8E8" size={20} />
                 </div>
                 <div className="col-start-2 w-full h-fit place-self-center">
-                  BE KIND, REWIND
+                  {t("rebo")}
                 </div>
               </div>
             </div>

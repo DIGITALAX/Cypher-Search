@@ -8,6 +8,7 @@ import { NextRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useAccount } from "wagmi";
 import { RootState } from "../../../../../redux/store";
 import { useEffect, useState } from "react";
@@ -19,14 +20,20 @@ import DropMain from "@/components/Drop/modules/DropMain";
 import useTiles from "@/components/Tiles/hooks/useTiles";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import NotFound from "@/components/Common/modules/NotFound";
+import { useTranslation } from "next-i18next";
+import { TFunction } from "i18next";
 
-const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
+const Drop: NextPage<{
+  router: NextRouter;
+  tCom: TFunction<"404", undefined>;
+}> = ({ router, tCom }): JSX.Element => {
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(
       `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
+  const { t } = useTranslation("drop");
   const { autograph, drop } = router.query;
   const dispatch = useDispatch();
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
@@ -120,7 +127,8 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address,
     lensConnected,
-    setSuggestedFeed
+    setSuggestedFeed,
+    tCom
   );
   const { dropLoading, dropItem, collections } = useDrop(
     drop as string,
@@ -139,7 +147,8 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     lensConnected,
     dispatch,
     publicClient,
-    address
+    address,
+    tCom
   );
 
   useEffect(() => {
@@ -157,6 +166,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
       <>
         {!profile || collections?.length < 1 ? (
           <NotFound
+            t={tCom}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
@@ -323,6 +333,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                t={t}
                 filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
@@ -335,6 +346,7 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                     router={router}
                     dispatch={dispatch}
                     cartItems={cartItems}
+                    t={tCom}
                   />
                 }
                 handleSearch={handleSearch}
@@ -384,3 +396,16 @@ const Drop: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
 };
 
 export default Drop;
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+}
+
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["drop", "footer", "404"])),
+  },
+});

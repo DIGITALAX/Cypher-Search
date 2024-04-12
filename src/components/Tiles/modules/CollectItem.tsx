@@ -16,11 +16,12 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
   cartItems,
   dispatch,
   item,
+  t,
   router,
 }): JSX.Element => {
   return (
     <div className="relative w-60 h-full flex flex-col">
-      <Bar title={`Collect Lvl.${index}`} />
+      <Bar title={`${t("colL")}${index}`} />
       <div className="relative w-full h-110 flex flex-col bg-virg gap-6 justify-between items-center p-2 border-b border-x rounded-b-sm border-black">
         <div className="relative w-52 h-52 rounded-sm border border-black flex items-center justify-center">
           {item?.collectionMetadata?.images && (
@@ -43,7 +44,7 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
         </div>
         <div className="relative flex flex-col gap-1.5 justify-start items-center text-black font-dog text-xxs">
           <div className="relative flex justify-start items-center">
-            Choose Size
+            {t("choS")}
           </div>
           <div className="relative flex flex-row gap-1 items-center justify-center">
             {["xs", "s", "m", "l", "xl"].map(
@@ -74,7 +75,7 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
         </div>
         <div className="relative flex flex-col gap-1.5 justify-start items-center text-black font-dog text-xxs">
           <div className="relative flex justify-start items-center">
-            Choose Base Color
+            {t("choC")}
           </div>
           <div className="relative flex flex-row gap-1 items-center justify-center">
             {["#000000", "#FFFFFF", "#97D1FD", "#F66054"].map(
@@ -105,7 +106,9 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
           </div>
         </div>
         <div className="relative flex flex-col gap-1.5 justify-start items-center font-dog text-black text-xs">
-          <div className="relative flex justify-start items-center">Amount</div>
+          <div className="relative flex justify-start items-center">
+            {t("amt")}
+          </div>
           <div className="relative flex justify-start items-center">
             $ {item?.prices[index]}
           </div>
@@ -168,8 +171,8 @@ const CollectItem: FunctionComponent<CollectItemProps> = ({
               value?.item?.collectionId === item?.collectionId &&
               value?.level === index
           )
-            ? "Go to Cart"
-            : "Choose Level"}
+            ? t("goC")
+            : t("lev")}
         </div>
       </div>
     </div>

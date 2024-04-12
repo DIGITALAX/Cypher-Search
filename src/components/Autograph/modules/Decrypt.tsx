@@ -9,15 +9,12 @@ const Decrypt: FunctionComponent<DecryptProps> = ({
   decryptLoading,
   canDecrypt,
   toDecrypt,
+  t,
 }): JSX.Element => {
   return (
     <div
       className="relative w-full p-1.5 h-10 flex items-center justify-end"
-      title={
-        canDecrypt
-          ? "Decrypt Post"
-          : "You don't hold the keys to Decrypt this post yet."
-      }
+      title={canDecrypt ? t("dec") : t("keys")}
     >
       <div
         className={`relative w-5 h-5 flex items-center justify-end ml-auto cursor-pointer  ${

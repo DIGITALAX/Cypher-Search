@@ -23,6 +23,7 @@ const Web: FunctionComponent<WebProps> = ({
   mirror,
   comment,
   like,
+  t,
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
@@ -107,6 +108,7 @@ const Web: FunctionComponent<WebProps> = ({
   dropDetails,
   setDropDetails,
   createDropLoading,
+  tCom,
   dropsLoading,
   allDrops,
   conversations,
@@ -166,19 +168,19 @@ const Web: FunctionComponent<WebProps> = ({
                 [
                   {
                     image: "QmVnr2XT1hbkSNBWQNGC4GcTeWJx4cWRFxQjhe26JReQC1",
-                    text: "private",
+                    text: t("priv")?.toLowerCase(),
                     function: () => setSortType(SortType.Private),
                     type: SortType.Private,
                   },
                   {
                     image: "QmTwkfEqUXHAfY47BeMfQm7wGEtVwLxaRQzy5BrsgKyX8r",
-                    text: "community",
+                    text: t("com")?.toLowerCase(),
                     function: () => setSortType(SortType.Community),
                     type: SortType.Community,
                   },
                   {
                     image: "QmNno9d9M82f21Z1633FBLtvA8ZNH8BSmy7BwSwHnuBEy8",
-                    text: "public",
+                    text: t("pub")?.toLowerCase(),
                     function: () => setSortType(SortType.Public),
                     type: SortType.Public,
                   },
@@ -221,6 +223,8 @@ const Web: FunctionComponent<WebProps> = ({
           }
         </div>
         <ScreenSwitch
+          t={t}
+          tCom={tCom}
           address={address}
           handleMessageImage={handleMessageImage}
           messageImage={messageImage}
@@ -361,7 +365,7 @@ const Web: FunctionComponent<WebProps> = ({
           {[
             {
               image: "QmRozkh6CWW9u3ATqcMKr4w4LUEd4h1vNN4Gon3zsrtCA4",
-              text: "display",
+              text: t("dis"),
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Display)),
               width: "2.5rem",
               height: "2.25rem",
@@ -371,7 +375,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmaGQyeUd1Upcei8b9UxiTC7TuDaQPP4Ps5mZpVB1w6Gto",
-              text: "gallery",
+              text: t("gal")?.toLowerCase(),
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Gallery)),
               width: "2.5rem",
               height: "2rem",
@@ -381,7 +385,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmTTtDqqjwxYbz3rvfGuyB3fz8YQj27qEVdJLHRYkFg4D9",
-              text: "circuits",
+              text: t("cirs"),
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Circuits)),
               width: "2.5rem",
@@ -392,7 +396,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmaRcPqtKii9T6FZzFekRvaPHMMLzZzQi37KxkMxLW72so",
-              text: "bookmarks",
+              text: t("books"),
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Bookmarks)),
               width: "2rem",
@@ -403,7 +407,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmeBzqFPc3nvegBtwpNjViVNtiEkWsPSWjJaTem9bysdBU",
-              text: "post",
+              text: t("pos"),
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Post)),
               width: "2.5rem",
               height: "2.5rem",
@@ -413,7 +417,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "Qmd7w4HyNrtWvSy48jGnidSx77mSqgAALTsVrbcVcSMeoG",
-              text: "orders",
+              text: t("ords"),
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Orders)),
               width: "2.5rem",
               height: "2.5rem",
@@ -423,7 +427,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmQ8U7cmvoUizxS7tFeWGcUs7f54svfBdxE6aXfTgPbshw",
-              text: "sales",
+              text: t("sal"),
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Sales)),
               width: "2.5rem",
               height: "2.5rem",
@@ -433,7 +437,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmevFbk17FCsk2hxS6UChLyMd2rJX1UsgbBThQZ32AKY4V",
-              text: "settings",
+              text: t("set"),
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Settings)),
               width: "2.5rem",
@@ -444,7 +448,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmXm26YHs1k1cZuBBXsNB5ifuAdq2db7AmZHSoHYSY6x6c",
-              text: "messages",
+              text: t("mes")?.toLowerCase(),
               function: () =>
                 dispatch(setScreenDisplay(ScreenDisplay.Messages)),
               width: "2.5rem",
@@ -511,10 +515,10 @@ const Web: FunctionComponent<WebProps> = ({
                 ? "QmZKHPMFLzxngWNbik7TS9jSiHasYSbRPeJs9xXBUvHSwm"
                 : "QmdvSykeWq4MphAA8CerK3VqEXMjJBNeVje3Ae2BkKgZxb",
               text: !walletConnected
-                ? "connect"
+                ? t("cont")
                 : walletConnected && !lensConnected?.id
-                ? "lens"
-                : "logout",
+                ? t("len")
+                : t("log"),
               function: !walletConnected
                 ? openConnectModal!
                 : walletConnected && !lensConnected?.id
@@ -525,7 +529,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmP7ESx5WEVSxyvKvsWBCWYhpWJytVt2Eozr6wqMnyb3M5",
-              text: "home",
+              text: t("hom"),
               function: lensConnected?.handle?.suggestedFormatted?.localName
                 ? () =>
                     router.push(
@@ -543,7 +547,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmYbjMNQAVuQSWNNQ5AKbQtt4Dxw2ax4SvLNwKhCNDniL2",
-              text: "discover",
+              text: t("disc"),
               function: () => {
                 handleShuffleSearch();
                 router.push("/");

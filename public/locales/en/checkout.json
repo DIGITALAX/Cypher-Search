@@ -1,0 +1,23 @@
+{
+  "cant": "Qty.",
+  "lim": "We know you're eager, but you've reached this creations' collect limit!",
+  "var": "Add Variation",
+  "check": "Checkout",
+  "clam": "Claim your cart. Each Lens collect is unique like you—one by one checkouts give them that personal touch. No batch buys at this time.",
+  "ful": "Fulfillment Details",
+  "ext": "These NFTs extend beyond screens. When collected, you've unlocked IRL customization. Encrypt your parameters and fulfillment details to get started.",
+  "tok": "Checkout Token",
+  "sTot": "Selected Item Total",
+  "miss": "Just missed it! This creation was snapped up by another collector. Time to update your cart. Change of plans? Maybe it's for the best.",
+  "colI": "Collect Item",
+  "apS": "Approve Spend",
+  "enc": "Encrypt Fulfillment",
+  "sold": "SOLD OUT",
+  "name": "Name",
+  "add": "Address",
+  "cit": "City",
+  "zip": "Zip",
+  "con": "Country",
+  "sta": "State",
+  "car": "Cart"
+}

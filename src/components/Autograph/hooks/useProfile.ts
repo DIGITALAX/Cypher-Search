@@ -16,6 +16,7 @@ import { createWalletClient, custom, PublicClient } from "viem";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import { NextRouter } from "next/router";
+import { TFunction } from "i18next";
 
 const useProfile = (
   profileFeed: (Post | Quote | Mirror | Comment)[] | Creation[],
@@ -29,7 +30,8 @@ const useProfile = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  router: NextRouter
+  router: NextRouter,
+  t: TFunction<"404", undefined>
 ) => {
   const [feedProfileHovers, setFeedProfileHovers] = useState<boolean[]>([]);
   const [feedFollowLoading, setFeedFollowLoading] = useState<boolean[]>([]);
@@ -71,7 +73,8 @@ const useProfile = (
         undefined,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
@@ -89,7 +92,7 @@ const useProfile = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 
@@ -126,7 +129,8 @@ const useProfile = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
@@ -144,7 +148,7 @@ const useProfile = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 

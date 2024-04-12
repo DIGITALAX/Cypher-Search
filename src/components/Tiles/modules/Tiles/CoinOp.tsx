@@ -37,6 +37,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   unfollowProfile,
   lensConnected,
   filterConstants,
+  t
 }): JSX.Element => {
   return (
     <div
@@ -44,7 +45,10 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
       id={publication?.pubId}
     >
       {publication?.collectionMetadata?.tags?.includes("kinora") && (
-        <div className="w-full h-full rounded-sm flex top-0 left-0 absolute bg-nave" id="game"></div>
+        <div
+          className="w-full h-full rounded-sm flex top-0 left-0 absolute bg-nave"
+          id="game"
+        ></div>
       )}
       <InteractBar
         mirror={mirror}
@@ -88,6 +92,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           {publication?.origin !== "4" ? (
             <>
               <PrintType
+                t={t}
                 printType={
                   printTypeToString[
                     Number(publication?.printType) as unknown as PrintTagType
@@ -214,6 +219,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
             </div>
             {popUpOpen?.[index] && (
               <PopUp
+                t={t}
                 cartItem={publication}
                 index={index}
                 dispatch={dispatch}

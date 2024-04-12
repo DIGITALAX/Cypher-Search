@@ -15,6 +15,7 @@ const Bio: FunctionComponent<BioProps> = ({
   router,
   questSample,
   questsLoading,
+  t,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-wrap otro:flex-nowrap flex-row items-start justify-start gap-5 px-2 sm:px-5 sm:-top-3 tablet:-top-7 sm:pt-0 pt-4">
@@ -22,16 +23,13 @@ const Bio: FunctionComponent<BioProps> = ({
         <div className="w-full h-fit items-start flex gap-3 flex-col sm:flex-row relative">
           <div className="relative flex items-start justify-between gap-1 w-fit h-fit max-w-[18rem] border border-saph bg-black p-2 flex-col">
             <div className="font-bit text-ballena blur-sm w-fit h-fit absolute top-1 flex tablet:text-base text-xs">
-              Caption on display:
+              {t("cap")}
             </div>
             <div className="font-bit text-olor w-fit h-fit relative flex tablet:text-base text-xs">
-              Caption on display:
+              {t("cap")}
             </div>
-            <div className="font-aust text-white text-xxs tablet:text-xs w-fit h-fit relative flex">
-              Oscillating between 2023 and 1983, where AI meets analog and
-              decentralization dons a neon glow. Here, epochs blend and
-              governance dances to the beat of synthwave. The underlying ethos:
-              &quot;In Autonomy We Trust.&quot;
+            <div className="font-aust text-white text-xxs tablet:text-xs w-fit h-fit relative flex break-words whitespace-preline">
+              {t("osc")}
             </div>
           </div>
           <div className="relative flex items-start justify-between gap-2 w-full h-fit p-2 top-auto sm:top-7 flex-col">
@@ -42,48 +40,71 @@ const Bio: FunctionComponent<BioProps> = ({
             )}
             <div className="relative w-full h-fit flex flex-row gap-10 justify-start items-center flex-wrap">
               {[
-                ["Qmb6fQG6L2R7Npf1oS55YEB5RS9z7oCyTwxYnTf57DEEjV", "Followers"],
-                ["QmP141cw2U9TNsU6AXRoo5X5VCPawUTPkWAUJburJayg7x", "Following"],
-              ].map((image: string[], indexTwo: number) => {
-                const amounts: number[] = [
-                  profile?.stats?.followers || 0,
-                  profile?.stats?.following || 0,
-                ];
+                {
+                  image: "Qmb6fQG6L2R7Npf1oS55YEB5RS9z7oCyTwxYnTf57DEEjV",
+                  title: {
+                    en: "Followers",
+                    es: "Seguidores",
+                  },
+                },
+                {
+                  image: "QmP141cw2U9TNsU6AXRoo5X5VCPawUTPkWAUJburJayg7x",
+                  title: {
+                    en: "Following",
+                    es: "Siguiendo",
+                  },
+                },
+              ].map(
+                (
+                  image: {
+                    image: string;
+                    title: {
+                      en: string;
+                      es: string;
+                    };
+                  },
+                  indexTwo: number
+                ) => {
+                  const amounts: number[] = [
+                    profile?.stats?.followers || 0,
+                    profile?.stats?.following || 0,
+                  ];
 
-                return (
-                  <div
-                    className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2 break-words"
-                    key={indexTwo}
-                    title={image[1]}
-                  >
-                    <div className="relative w-4 h-4 items-center justify-center flex">
-                      <Image
-                        layout="fill"
-                        src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
-                        draggable={false}
-                        onError={(e) => handleImageError(e)}
-                      />
-                    </div>
+                  return (
                     <div
-                      className={`relative w-fit h-fit flex ${
-                        amounts[indexTwo] > 0 && "cursor-pointer"
-                      }`}
-                      onClick={() =>
-                        amounts[indexTwo] > 0 &&
-                        dispatch(
-                          setReactBox({
-                            actionOpen: true,
-                            actionId: profile?.id,
-                            actionType: image[1],
-                          })
-                        )
-                      }
+                      className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2 break-words"
+                      key={indexTwo}
+                      title={image.title?.[router.locale as "en" | "es"]}
                     >
-                      {numeral(amounts[indexTwo]).format("0a")}
+                      <div className="relative w-4 h-4 items-center justify-center flex">
+                        <Image
+                          layout="fill"
+                          src={`${INFURA_GATEWAY}/ipfs/${image.image}`}
+                          draggable={false}
+                          onError={(e) => handleImageError(e)}
+                        />
+                      </div>
+                      <div
+                        className={`relative w-fit h-fit flex ${
+                          amounts[indexTwo] > 0 && "cursor-pointer"
+                        }`}
+                        onClick={() =>
+                          amounts[indexTwo] > 0 &&
+                          dispatch(
+                            setReactBox({
+                              actionOpen: true,
+                              actionId: profile?.id,
+                              actionType: image.title?.en,
+                            })
+                          )
+                        }
+                      >
+                        {numeral(amounts[indexTwo]).format("0a")}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
               {profile?.metadata?.attributes?.find(
                 (item) => item?.key === "location"
               )?.value && (
@@ -223,18 +244,8 @@ const Bio: FunctionComponent<BioProps> = ({
                         key={index}
                         className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
                       >
-                        <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit">
-                          {questsLoading ? (
-                            <>
-                              Quests <br />
-                              Pending
-                            </>
-                          ) : (
-                            <>
-                              Kinora <br />
-                              Quests
-                            </>
-                          )}
+                        <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit break-all whitespace-preline">
+                          {questsLoading ? <>{t("quest")}</> : <>{t("kin")}</>}
                         </div>
                         <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
                           <div

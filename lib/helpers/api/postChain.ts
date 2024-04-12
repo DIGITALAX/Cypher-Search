@@ -12,6 +12,7 @@ import postOnChain from "../../../graphql/lens/mutations/post";
 import cleanCollect from "../cleanCollect";
 import validateMetadata from "../../../graphql/lens/queries/validate";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
+import { TFunction } from "i18next";
 
 const lensPost = async (
   contentURI: string,
@@ -20,6 +21,7 @@ const lensPost = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
+  t: TFunction<"404", undefined>,
   closeBox?: () => void,
   create?: boolean
 ): Promise<void> => {
@@ -77,7 +79,7 @@ const lensPost = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
     closeBox && closeBox();
@@ -85,7 +87,8 @@ const lensPost = async (
       {
         forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
       },
-      dispatch
+      dispatch,
+      t
     );
   } else {
     const { request } = await publicClient.simulateContract({
@@ -110,7 +113,7 @@ const lensPost = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
     closeBox && closeBox();
@@ -119,7 +122,8 @@ const lensPost = async (
       {
         forTxHash: tx.transactionHash,
       },
-      dispatch
+      dispatch,
+      t
     );
   }
   setTimeout(() => {

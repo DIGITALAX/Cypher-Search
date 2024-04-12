@@ -7,6 +7,7 @@ import { setQuestSuccess } from "../../../../redux/reducers/questSuccessSlice";
 
 const QuestSuccess: FunctionComponent<QuestSuccessProps> = ({
   dispatch,
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -20,10 +21,8 @@ const QuestSuccess: FunctionComponent<QuestSuccessProps> = ({
             />
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3 pb-4">
-            <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-white text-sm">
-              Quest accepted! <br /> <br /> Keep up with your stats in every
-              video & head to the Kinora App to complete milestones & claim
-              rewards.
+            <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-white text-sm whitespace-preline">
+              {t("acce")}
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] flex items-center justify-center rounded-sm p-px cursor-pointer"

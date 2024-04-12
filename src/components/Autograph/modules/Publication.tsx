@@ -68,6 +68,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
   bottom,
   left,
   right,
+  t,
 }): JSX.Element => {
   return (
     <div
@@ -167,19 +168,19 @@ const Publication: FunctionComponent<PublicationProps> = ({
               }
             >
               {item?.__typename === "Comment"
-                ? `Comment on ${
+                ? `${t("comOn")} ${
                     (
                       (item as Comment)?.commentOn
                         ?.metadata as TextOnlyMetadataV3
                     )?.content?.slice(0, 10) + "..."
                   }`
                 : item?.__typename === "Mirror"
-                ? `Mirror of ${
+                ? `${t("mirOn")} ${
                     (
                       (item as Mirror)?.mirrorOn?.metadata as TextOnlyMetadataV3
                     )?.content?.slice(0, 10) + "..."
                   }`
-                : `Quote on ${
+                : `${t("quoOn")} ${
                     (
                       (item as Quote)?.quoteOn?.metadata as TextOnlyMetadataV3
                     )?.content?.slice(0, 10) + "..."
@@ -210,6 +211,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
             : (item as Post)) as any
         )?.decrypted && (
           <Decrypt
+            t={t}
             toDecrypt={
               item?.__typename === "Mirror" ? item?.mirrorOn : (item as Post)
             }
@@ -268,6 +270,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
         <PostComment
           caretCoord={caretCoord!}
           router={router}
+          t={t}
           profilesOpen={profilesOpen?.[index]!}
           mentionProfiles={mentionProfiles!}
           setMentionProfiles={setMentionProfiles!}

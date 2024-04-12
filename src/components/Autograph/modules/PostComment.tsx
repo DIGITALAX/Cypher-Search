@@ -36,6 +36,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
   caretCoord,
   setCaretCoord,
   router,
+  t,
 }): JSX.Element => {
   const textElement = useRef(null);
   return (
@@ -138,93 +139,109 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
       <div className="relative w-full h-fit flex flex-col sm:flex-row items-between justify-center sm:items-center sm:justify-between sm:gap-1.5 gap-4">
         <div className="relative w-full sm:w-fit h-fit items-center justify-start flex flex-row gap-2">
           {[
-            ["QmetvVH6tdXP4ZfvB7ihH9J9oQ6KfVUVVktyHpbbaAzztX", "image"],
-            ["QmNd2Rj7tzTJiN7vMbWaFoYJuUARUfEnXRpjKRkQ4uEKoD", "video"],
-            ["QmVxaEvPaBfLdLfYX2bUV2Dze6NRDCtepHz7y4NJ6xojue", "gifs"],
-            [
-              "QmXA7NqjfnoLMWBoA2KsesRQb1SNGQBe2SBxkcT2jEtT4G",
-              "collect options",
-            ],
-          ].map((image: string[], indexTwo: number) => {
-            const loaders = [contentLoading?.image, contentLoading?.video];
-            return loaders[indexTwo] ? (
-              <div
-                key={indexTwo}
-                className={`relative flex items-center justify-center  ${
-                  loaders[indexTwo] && "animate-spin"
-                }`}
-                title={image[1]}
-                style={{
-                  height: imageHeight,
-                  width: imageWidth,
-                }}
-              >
-                <AiOutlineLoading size={15} color={"white"} />
-              </div>
-            ) : indexTwo !== 2 && indexTwo !== 3 ? (
-              <label
-                key={indexTwo}
-                className={`relative flex items-center justify-center cursor-pointer active:scale-95`}
-                title={image[1]}
-                style={{
-                  height: imageHeight,
-                  width: imageWidth,
-                }}
-              >
-                {
+            {
+              image: "QmetvVH6tdXP4ZfvB7ihH9J9oQ6KfVUVVktyHpbbaAzztX",
+              title: { en: "image", es: "imagen" },
+            },
+            {
+              image: "QmNd2Rj7tzTJiN7vMbWaFoYJuUARUfEnXRpjKRkQ4uEKoD",
+              title: { en: "video", es: "vídeo" },
+            },
+            {
+              image: "QmVxaEvPaBfLdLfYX2bUV2Dze6NRDCtepHz7y4NJ6xojue",
+              title: { en: "gifs", es: "gifs" },
+            },
+            {
+              image: "QmXA7NqjfnoLMWBoA2KsesRQb1SNGQBe2SBxkcT2jEtT4G",
+              title: { en: "collect options", es: "opciones de coleccionar" },
+            },
+          ].map(
+            (
+              image: { image: string; title: { en: string; es: string } },
+              indexTwo: number
+            ) => {
+              const loaders = [contentLoading?.image, contentLoading?.video];
+              return loaders[indexTwo] ? (
+                <div
+                  key={indexTwo}
+                  className={`relative flex items-center justify-center  ${
+                    loaders[indexTwo] && "animate-spin"
+                  }`}
+                  title={image.title?.[router.locale as "en" | "es"]}
+                  style={{
+                    height: imageHeight,
+                    width: imageWidth,
+                  }}
+                >
+                  <AiOutlineLoading size={15} color={"white"} />
+                </div>
+              ) : indexTwo !== 2 && indexTwo !== 3 ? (
+                <label
+                  key={indexTwo}
+                  className={`relative flex items-center justify-center cursor-pointer active:scale-95`}
+                  title={image.title?.[router.locale as "en" | "es"]}
+                  style={{
+                    height: imageHeight,
+                    width: imageWidth,
+                  }}
+                >
+                  {
+                    <Image
+                      layout="fill"
+                      src={`${INFURA_GATEWAY}/ipfs/${image.image}`}
+                      draggable={false}
+                      onError={(e) => handleImageError(e)}
+                    />
+                  }
+                  <input
+                    hidden
+                    type="file"
+                    accept={
+                      indexTwo === 0 ? "image/png, image/gif" : "video/mp4"
+                    }
+                    multiple={true}
+                    onChange={(e) =>
+                      e?.target?.files?.[0] &&
+                      setPostMedia(
+                        e,
+                        image.title.en,
+                        setMakePostComment,
+                        setContentLoading,
+                        index
+                      )
+                    }
+                  />
+                </label>
+              ) : (
+                <div
+                  key={indexTwo}
+                  className={`relative flex items-center justify-center cursor-pointer active:scale-95`}
+                  title={image.title?.[router.locale as "en" | "es"]}
+                  style={{
+                    height: imageHeight,
+                    width: imageWidth,
+                  }}
+                  onClick={() =>
+                    dispatch(
+                      setPostCollectGif({
+                        actionType: indexTwo === 2 ? "gif" : "collect",
+                        actionId: id,
+                        actionGifs: postCollectGif?.gifs,
+                        actionCollectTypes: postCollectGif?.collectTypes,
+                      })
+                    )
+                  }
+                >
                   <Image
                     layout="fill"
-                    src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
+                    src={`${INFURA_GATEWAY}/ipfs/${image.image}`}
                     draggable={false}
                     onError={(e) => handleImageError(e)}
                   />
-                }
-                <input
-                  hidden
-                  type="file"
-                  accept={indexTwo === 0 ? "image/png, image/gif" : "video/mp4"}
-                  multiple={true}
-                  onChange={(e) =>
-                    e?.target?.files?.[0] &&
-                    setPostMedia(
-                      e,
-                      image[1],
-                      setMakePostComment,
-                      setContentLoading,
-                      index
-                    )
-                  }
-                />
-              </label>
-            ) : (
-              <div
-                key={indexTwo}
-                className={`relative flex items-center justify-center cursor-pointer active:scale-95`}
-                title={image[1]}
-                style={{
-                  height: imageHeight,
-                  width: imageWidth,
-                }}
-                onClick={() =>
-                  dispatch(
-                    setPostCollectGif({
-                      actionType: indexTwo === 2 ? "gif" : "collect",
-                      actionId: id,
-                      actionGifs: postCollectGif?.gifs,
-                      actionCollectTypes: postCollectGif?.collectTypes,
-                    })
-                  )
-                }
-              >
-                <Image
-                  layout="fill"
-                  src={`${INFURA_GATEWAY}/ipfs/${image[0]}`}
-                  draggable={false}
-                  onError={(e) => handleImageError(e)}
-                />
-              </div>
-            );
-          })}
+                </div>
+              );
+            }
+          )}
         </div>
         <div className="relative w-full sm:w-fit h-fit items-center justify-end flex">
           <div
@@ -255,7 +272,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
               {commentPostLoading ? (
                 <AiOutlineLoading size={15} color="white" />
               ) : (
-                "Send It"
+                t("send")
               )}
             </div>
           </div>

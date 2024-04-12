@@ -44,7 +44,8 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   moreSearchLoading,
   fullScreenVideo,
   filterChange,
-  filterConstants
+  filterConstants,
+  t,
 }) => {
   return (
     <div
@@ -52,6 +53,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
       id="results"
     >
       <Header
+        t={t}
         fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         filterChange={filterChange}
@@ -79,6 +81,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
       />
       {component}
       <Tiles
+        t={t}
         searchItems={searchItems}
         layoutAmount={layoutAmount!}
         filtersOpen={filtersOpen}

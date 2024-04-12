@@ -4,7 +4,9 @@ import useSearch from "@/components/Search/hooks/useSearch";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { NextPage } from "next";
 import Head from "next/head";
+import { useTranslation } from "next-i18next";
 import { NextRouter } from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
@@ -33,14 +35,19 @@ import useQuest from "@/components/Tiles/hooks/useQuest";
 import { Quest } from "@/components/Search/types/search.types";
 import { apolloClient } from "../../../../lib/lens/client";
 import { Dispatch as KinoraDispatch } from "kinora-sdk";
+import { TFunction } from "i18next";
 
-const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
+const Item: NextPage<{
+  router: NextRouter;
+  tCom: TFunction<"404", undefined>;
+}> = ({ router, tCom }): JSX.Element => {
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(
       `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
+  const { t } = useTranslation("item");
   const kinoraDispatch = new KinoraDispatch({
     playerAuthedApolloClient: apolloClient,
   });
@@ -113,7 +120,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     address,
     publicClient,
     dispatch,
-    router
+    router,
+    tCom
   );
   const {
     handleMoreComments,
@@ -178,7 +186,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     relatedData?.collections,
     itemData,
     setItemData,
-    setRelatedData
+    setRelatedData,
+    tCom
   );
   const { getMoreSuggested, suggestedFeed, loaders, setSuggestedFeed } =
     useSuggested(
@@ -239,7 +248,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     publicClient,
     address,
     lensConnected,
-    setSuggestedFeed
+    setSuggestedFeed,
+    tCom
   );
   const {
     followProfile: followItemProfile,
@@ -267,7 +277,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     dispatch,
     publicClient,
     address,
-    router
+    router,
+    tCom
   );
   const {
     setPopUpOpen,
@@ -282,7 +293,8 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
     lensConnected,
     dispatch,
     publicClient,
-    address
+    address,
+    tCom
   );
   const { joinLoading, handlePlayerJoin } = useQuest(
     address,
@@ -308,6 +320,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
         (Object.keys(itemData?.post).length === 1 &&
           (itemData?.post as any)?.decrypted === undefined) ? (
           <NotFound
+            t={tCom}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
@@ -476,6 +489,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 />
               </Head>
               <Suggested
+                t={t}
                 filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
@@ -484,6 +498,7 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
                 cartAnim={cartAnim}
                 component={
                   <SwitchType
+                    t={tCom}
                     joinLoading={joinLoading}
                     handlePlayerJoin={handlePlayerJoin}
                     allSearchItems={allSearchItems}
@@ -611,3 +626,16 @@ const Item: NextPage<{ router: NextRouter }> = ({ router }): JSX.Element => {
 };
 
 export default Item;
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+}
+
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["item", "footer", "404"])),
+  },
+});

@@ -22,6 +22,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   dispatch,
   lensConnected,
   collectionsRelated,
+  t
 }): JSX.Element => {
   return (
     <div
@@ -88,6 +89,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
         dispatch={dispatch}
         profile={publication}
         microbrand
+        t={t}
       />
       {collectionsRelated && collectionsRelated?.length > 0 && (
         <div className="relative w-full overflow-y-scroll max-h-[10rem] h-fit flex justify-center items-start">

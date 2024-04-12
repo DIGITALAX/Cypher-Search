@@ -14,6 +14,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   collectionDetails,
   setCollectionDetails,
   handleMedia,
+  router,
   lensConnected,
   collectionSettings,
   setCollectionSettings,
@@ -22,6 +23,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   allDrops,
   setCreateCase,
   edit,
+  t,
 }): JSX.Element => {
   const microBrands = lensConnected?.metadata?.attributes?.find(
     (item) => item?.key === "microbrandCypher"
@@ -33,7 +35,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
           <div className="relative flex flex-col items-start justify-start gap-4">
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
-                Collection Title
+                {t("colT")}
               </div>
               <input
                 className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60 sm:w-80"
@@ -48,7 +50,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 relative">
               <div className="relative w-fit h-fit text-sm break-words">
-                Collection Description
+                {t("colD")}
               </div>
               <textarea
                 value={collectionDetails?.description || ""}
@@ -73,7 +75,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 relative">
               <div className="relative w-fit h-fit text-sm break-words">
-                Profilerate Your Creation. Share your prompt?
+                {t("prof")}
               </div>
               <textarea
                 value={collectionDetails?.prompt || ""}
@@ -100,7 +102,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
           <div className="relative flex flex-col items-start justify-start gap-4">
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
-                Artwork{" "}
+                {t("art")}{" "}
                 {collectionSettings?.media === "static"
                   ? "(png / gif)"
                   : collectionSettings?.media === "video"
@@ -282,13 +284,13 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-3">
               <div className="relative w-fit h-fit text-sm break-words">
-                Connect Microbrand?
+                {t("mic")}
               </div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
                 {microBrands && microBrands?.length > 0 ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                     <div className="relative w-fit h-fit text-xs">
-                      Current Brands:
+                      {t("marc")}
                     </div>
                     <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                       <div
@@ -355,7 +357,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                             >
                               <div className="relative w-fit h-fit flex items-center flex-row gap-1.5 justify-start">
                                 <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
-                                  No Brand
+                                  {t("marcN")}
                                 </div>
                               </div>
                             </div>
@@ -420,20 +422,20 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                       dispatch(setScreenDisplay(ScreenDisplay.Settings))
                     }
                   >
-                    Connect a microbrand in settings.
+                    {t("setM")}
                   </div>
                 )}
               </div>
             </div>
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-3">
               <div className="relative w-fit h-fit text-sm break-words">
-                Select Drop
+                {t("dropS")}
               </div>
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
                 {allDrops?.length > 0 ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                     <div className="relative w-fit h-fit text-xs">
-                      Available Drops:
+                      {t("dropA")}
                     </div>
                     <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                       <div
@@ -516,7 +518,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     className="relative text-xs w-fit h-fit flex break-words cursor-pointer"
                     onClick={() => setCreateCase("drop")}
                   >
-                    Create a Drop before continuing.
+                    {t("dropC")}
                   </div>
                 )}
               </div>
@@ -525,7 +527,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
           <div className="relative flex flex-col items-start justify-start gap-4">
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
               <div className="relative w-fit h-fit flex text-white font-aust text-sm">
-                Price {`( USD )`}
+                {t("pri")} {`( USD )`}
                 {collectionSettings?.origin !== "chromadin" &&
                   (collectionDetails?.printType === "sticker" ||
                     collectionDetails?.printType === "poster") &&
@@ -559,7 +561,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                   .map((size: string, index: number) => (
                     <div key={index}>
                       <div className="relative w-fit h-fit flex text-white font-aust text-sm">
-                        Price {`( USD ) ( ${size} )`}
+                        {t("pri")} {`( USD ) ( ${size} )`}
                       </div>
                       <input
                         type="number"
@@ -582,7 +584,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
               <div className="relative w-fit h-fit flex text-white font-aust text-sm">
-                Purchase Tokens
+                {t("toks")}
               </div>
               <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
                 {ACCEPTED_TOKENS?.map((item: string[], indexTwo: number) => {
@@ -625,7 +627,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
               <div className="relative w-fit h-fit flex text-white font-aust text-sm">
-                Amount
+                {t("am")}
               </div>
               <input
                 type="number"
@@ -644,7 +646,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 relative">
               <div className="relative w-fit h-fit text-sm break-words">
-                Discovery Tags
+                {t("tag")}
               </div>
               <input
                 value={collectionDetails?.tags}
@@ -714,7 +716,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
-                Eco-Access
+                {t("eco")}
               </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div
@@ -791,7 +793,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
-                Visibility
+                {t("vis")}
               </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div
@@ -871,7 +873,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             {collectionDetails?.visibility === "community" && (
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
-                  Communities
+                  {t("coms")}
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
@@ -965,7 +967,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             <div className="relative w-fit h-fit flex flex-wrap gap-4">
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
-                  Sizes
+                  {t("siz")}
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
@@ -1075,7 +1077,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
-                  Base Colors
+                 {t("col")}
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
@@ -1155,7 +1157,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
-                  Print Type
+                {t("type")}
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
@@ -1182,80 +1184,82 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
                       <div className="relative w-full h-fit flex flex-col items-center justify-start">
                         {[
-                          "sticker",
-                          "hoodie",
-                          "sleeve",
-                          "crop",
-                          "shirt",
-                          "poster",
-                        ]?.map((item: string, index: number) => {
-                          return (
-                            <div
-                              key={index}
-                              className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
-                              onClick={() => {
-                                setCollectionSettings((prev) => ({
-                                  ...prev,
-                                  printOpen: !prev.printOpen,
-                                }));
+                          { en: "sticker", es: "pegatina" },
+                          { en: "hoodie", es: "sudadera" },
+                          { en: "sleeve", es: "mangas largas" },
+                          { en: "crop", es: "corto" },
+                          { en: "shirt", es: "camiseta" },
+                          { en: "poster", es: "cartel" },
+                        ]?.map(
+                          (item: { es: string; en: string }, index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                className="relative w-full py-1 h-10 flex items-center justify-center text-white border-y border-sol font-aust cursor-pointer hover:opacity-80"
+                                onClick={() => {
+                                  setCollectionSettings((prev) => ({
+                                    ...prev,
+                                    printOpen: !prev.printOpen,
+                                  }));
 
-                                let sizes = collectionDetails?.sizes;
+                                  let sizes = collectionDetails?.sizes;
 
-                                if (
-                                  (item !== "poster" &&
-                                    item !== "sticker" &&
-                                    collectionDetails?.sizes
-                                      ?.split(/,\s*/)
-                                      ?.some(
-                                        (item) =>
-                                          filterConstants?.sizes?.sticker?.includes(
-                                            item
-                                          ) ||
-                                          filterConstants?.sizes?.poster?.includes(
-                                            item
-                                          )
-                                      )) ||
-                                  (item === "sticker" &&
-                                    collectionDetails?.sizes
-                                      ?.split(/,\s*/)
-                                      ?.some(
-                                        (item) =>
-                                          filterConstants?.sizes?.apparel?.includes(
-                                            item
-                                          ) ||
-                                          filterConstants?.sizes?.poster?.includes(
-                                            item
-                                          )
-                                      )) ||
-                                  (item === "poster" &&
-                                    collectionDetails?.sizes
-                                      ?.split(/,\s*/)
-                                      ?.some(
-                                        (item) =>
-                                          filterConstants?.sizes?.apparel?.includes(
-                                            item
-                                          ) ||
-                                          filterConstants?.sizes?.sticker?.includes(
-                                            item
-                                          )
-                                      ))
-                                ) {
-                                  sizes = "";
-                                }
+                                  if (
+                                    (item.en !== "poster" &&
+                                      item.en !== "sticker" &&
+                                      collectionDetails?.sizes
+                                        ?.split(/,\s*/)
+                                        ?.some(
+                                          (item) =>
+                                            filterConstants?.sizes?.sticker?.includes(
+                                              item
+                                            ) ||
+                                            filterConstants?.sizes?.poster?.includes(
+                                              item
+                                            )
+                                        )) ||
+                                    (item.en === "sticker" &&
+                                      collectionDetails?.sizes
+                                        ?.split(/,\s*/)
+                                        ?.some(
+                                          (item) =>
+                                            filterConstants?.sizes?.apparel?.includes(
+                                              item
+                                            ) ||
+                                            filterConstants?.sizes?.poster?.includes(
+                                              item
+                                            )
+                                        )) ||
+                                    (item.en === "poster" &&
+                                      collectionDetails?.sizes
+                                        ?.split(/,\s*/)
+                                        ?.some(
+                                          (item) =>
+                                            filterConstants?.sizes?.apparel?.includes(
+                                              item
+                                            ) ||
+                                            filterConstants?.sizes?.sticker?.includes(
+                                              item
+                                            )
+                                        ))
+                                  ) {
+                                    sizes = "";
+                                  }
 
-                                setCollectionDetails((prev) => ({
-                                  ...prev,
-                                  printType: item,
-                                  sizes,
-                                }));
-                              }}
-                            >
-                              <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
-                                {item}
+                                  setCollectionDetails((prev) => ({
+                                    ...prev,
+                                    printType: item.en,
+                                    sizes,
+                                  }));
+                                }}
+                              >
+                                <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
+                                  {item?.[router.locale as ("en"| "es")]}
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          }
+                        )}
                       </div>
                     </div>
                   )}
@@ -1264,7 +1268,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               {collectionSettings?.origin == "coinop" && (
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div className="relative w-fit h-fit text-sm break-words">
-                    On Chromadin?
+                    {t("chrom")}
                   </div>
                   <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                     <div
@@ -1383,7 +1387,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div className="relative w-fit h-fit text-sm break-words">
-                    Style
+                    {t("sty")}
                   </div>
                   <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                     <div

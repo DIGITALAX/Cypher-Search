@@ -2,8 +2,13 @@ import bookmark from "../../../graphql/lens/mutations/bookmark";
 import { AnyAction, Dispatch } from "redux";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
+import { TFunction } from "i18next";
 
-const lensBookmark = async (on: string, dispatch: Dispatch<AnyAction>) => {
+const lensBookmark = async (
+  on: string,
+  dispatch: Dispatch<AnyAction>,
+  t: TFunction<"404", undefined>
+) => {
   try {
     const { data } = await bookmark({
       on,
@@ -17,13 +22,14 @@ const lensBookmark = async (on: string, dispatch: Dispatch<AnyAction>) => {
           {
             forTxId: data?.addPublicationBookmark?.txId,
           },
-          dispatch
+          dispatch,
+          t
         );
       } else {
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
         setTimeout(() => {

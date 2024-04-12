@@ -36,6 +36,7 @@ import findBalance from "../../../../lib/helpers/findBalance";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import { setScreenDisplay } from "../../../../redux/reducers/screenDisplaySlice";
 import { NextRouter } from "next/router";
+import { TFunction } from "i18next";
 
 const useCheckout = (
   publicClient: PublicClient,
@@ -45,7 +46,8 @@ const useCheckout = (
   client: LitNodeClient,
   oracleData: OracleData[],
   cartItems: CartItem[],
-  router: NextRouter
+  router: NextRouter,
+  t: TFunction<"404", undefined>
 ) => {
   const [details, setDetails] = useState<Details>({
     name: "",
@@ -181,7 +183,7 @@ const useCheckout = (
         dispatch(
           setInsufficientBalance({
             actionValue: true,
-            actionMessage: "Pockets Empty. Need to top up?",
+            actionMessage: t("poc"),
           })
         );
         setCollectPostLoading(false);
@@ -214,7 +216,8 @@ const useCheckout = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
 
       if (success) {

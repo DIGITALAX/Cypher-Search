@@ -3,6 +3,7 @@ import { PrintTypeProps } from "../types/common.types";
 
 const PrintType: FunctionComponent<PrintTypeProps> = ({
   printType,
+  t,
 }): JSX.Element => {
   return (
     <div
@@ -22,7 +23,7 @@ const PrintType: FunctionComponent<PrintTypeProps> = ({
     >
       <div className="relative w-2 h-2 rounded-full bg-white flex items-center justify-center"></div>
       <div className="relative w-fit h-fit flex items-center justify-center text-xxs">
-        {printType}
+        {t(printType.toLowerCase())}
       </div>
     </div>
   );

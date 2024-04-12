@@ -1,7 +1,7 @@
 import Image from "next/legacy/image";
 import { FunctionComponent } from "react";
 import { INFURA_GATEWAY } from "../../../../../lib/constants";
-import { Drop, DropProps } from "../../types/autograph.types";
+import { Drop as DropType, DropProps } from "../../types/autograph.types";
 import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const Drop: FunctionComponent<DropProps> = ({
@@ -11,6 +11,7 @@ const Drop: FunctionComponent<DropProps> = ({
   dropDetails,
   handle,
   dropsLoading,
+  t
 }): JSX.Element => {
   return allDrops?.length > 0 || dropsLoading ? (
     <div
@@ -31,7 +32,7 @@ const Drop: FunctionComponent<DropProps> = ({
                   ></div>
                 );
               })
-            : allDrops?.map((item: Drop, index: number) => {
+            : allDrops?.map((item: DropType, index: number) => {
                 return (
                   <div
                     key={index}
@@ -77,7 +78,7 @@ const Drop: FunctionComponent<DropProps> = ({
                       </div>
                       <div
                         className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
-                        title="Go to Drop"
+                        title={t("goDrop")}
                         onClick={(e) => {
                           e.stopPropagation();
                           router.push(

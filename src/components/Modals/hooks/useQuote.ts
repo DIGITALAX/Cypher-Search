@@ -45,6 +45,7 @@ import { CHROMADIN_ID } from "../../../../lib/constants";
 import Draggable from "react-draggable";
 import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 import findBalance from "../../../../lib/helpers/findBalance";
+import { TFunction } from "i18next";
 
 const useQuote = (
   availableCurrencies: Erc20[],
@@ -55,7 +56,8 @@ const useQuote = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  fullScreenVideo: FullScreenVideoState
+  fullScreenVideo: FullScreenVideoState,
+  t: TFunction<"404", undefined>
 ) => {
   const videoRef = useRef<null | HTMLVideoElement>(null);
   const wrapperRef = useRef<Draggable | null>(null);
@@ -172,6 +174,7 @@ const useQuote = (
           address as `0x${string}`,
           clientWallet,
           publicClient,
+          t,
           () => clearBox()
         );
       } else {
@@ -193,6 +196,7 @@ const useQuote = (
           address as `0x${string}`,
           clientWallet,
           publicClient,
+          t,
           () => clearBox()
         );
       }
@@ -222,7 +226,7 @@ const useQuote = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 
@@ -577,7 +581,7 @@ const useQuote = (
       dispatch(
         setInsufficientBalance({
           actionValue: true,
-          actionMessage: "Pockets Empty. Need to top up?",
+          actionMessage: t("poc"),
         })
       );
       return;
@@ -598,7 +602,8 @@ const useQuote = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
 
       dispatch(
@@ -652,7 +657,8 @@ const useQuote = (
           : undefined,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
       if (

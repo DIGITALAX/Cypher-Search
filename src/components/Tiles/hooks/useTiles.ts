@@ -9,13 +9,15 @@ import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import { TFunction } from "i18next";
 
 const useTiles = (
   allSearchItems: Publication[],
   lensConnected: Profile | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>([]);
   const [profileHovers, setProfileHovers] = useState<boolean[]>([]);
@@ -45,7 +47,8 @@ const useTiles = (
         undefined,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
@@ -67,7 +70,7 @@ const useTiles = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 
@@ -110,7 +113,8 @@ const useTiles = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
@@ -132,7 +136,7 @@ const useTiles = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 

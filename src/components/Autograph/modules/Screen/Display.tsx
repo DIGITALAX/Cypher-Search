@@ -23,6 +23,7 @@ const Display: FunctionComponent<DisplayProps> = ({
   displayLoading,
   owner,
   router,
+  t
 }): JSX.Element => {
   const displayType =
     sortType === SortType.Community
@@ -260,7 +261,7 @@ const Display: FunctionComponent<DisplayProps> = ({
               {displayLoading ? (
                 <AiOutlineLoading size={15} color="white" />
               ) : (
-                "Update"
+                t("up")
               )}
             </div>
           </div>

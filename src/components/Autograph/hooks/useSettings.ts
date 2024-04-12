@@ -32,6 +32,7 @@ import { setInteractError } from "../../../../redux/reducers/interactErrorSlice"
 import convertToFile from "../../../../lib/helpers/convertToFile";
 import errorChoice from "../../../../lib/helpers/errorChoice";
 import cleanObject from "../../../../lib/helpers/cleanObject";
+import { TFunction } from "i18next";
 
 const useSettings = (
   lensConnected: Profile | undefined,
@@ -41,7 +42,8 @@ const useSettings = (
   address: `0x${string}` | undefined,
   screenDisplay: ScreenDisplay,
   isDesigner: boolean,
-  pageProfile: Profile | undefined
+  pageProfile: Profile | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [settingsUpdateLoading, setSettingsUpdateLoading] =
     useState<boolean>(false);
@@ -278,7 +280,8 @@ const useSettings = (
           dispatch,
           address as `0x${string}`,
           clientWallet,
-          publicClient
+          publicClient,
+          t
         );
 
         await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
@@ -286,7 +289,7 @@ const useSettings = (
         dispatch(setInteractError(true));
       }
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(err, () => {}, dispatch, t);
     }
     setSettingsUpdateLoading(false);
   };
@@ -343,20 +346,21 @@ const useSettings = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Indexing Interaction",
+            actionMessage: t("ind"),
           })
         );
         await handleIndexCheck(
           {
             forTxHash: tx.transactionHash,
           },
-          dispatch
+          dispatch,
+          t
         );
       } else {
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Indexing Interaction",
+            actionMessage: t("ind"),
           })
         );
         setTimeout(async () => {
@@ -365,7 +369,8 @@ const useSettings = (
               forTxId: (broadcastResult?.data?.broadcastOnchain as RelaySuccess)
                 .txId,
             },
-            dispatch
+            dispatch,
+            t
           );
         }, 7000);
       }

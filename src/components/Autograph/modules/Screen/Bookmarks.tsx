@@ -40,10 +40,12 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   mentionProfiles,
   setMentionProfiles,
   setProfilesOpen,
+  tCom,
   caretCoord,
   profilesOpen,
   setCaretCoord,
   cartItems,
+  t,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -92,6 +94,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                         : (item as Post);
                     return (
                       <Publication
+                        t={tCom}
                         setCaretCoord={setCaretCoord}
                         mentionProfiles={mentionProfiles}
                         profilesOpen={profilesOpen}
@@ -156,7 +159,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
               </InfiniteScroll>
             ) : (
               <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
-                {`Your bookmarked posts will appear here :)`}
+                {t("book")}
               </div>
             )}
           </div>

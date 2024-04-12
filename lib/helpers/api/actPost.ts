@@ -10,6 +10,7 @@ import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { polygon } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import { setInsufficientBalance } from "../../../redux/reducers/insufficientBalanceSlice";
+import { TFunction } from "i18next";
 
 const actPost = async (
   pubId: string,
@@ -17,7 +18,8 @@ const actPost = async (
   dispatch: Dispatch<AnyAction>,
   address: `0x${string}`,
   clientWallet: WalletClient,
-  publicClient: PublicClient
+  publicClient: PublicClient,
+  t: TFunction<"404", undefined>
 ): Promise<boolean | void> => {
   try {
     const { data } = await collectPost({
@@ -35,7 +37,6 @@ const actPost = async (
       account: address as `0x${string}`,
     });
 
-
     const broadcastResult = await broadcast({
       id: data?.createActOnOpenActionTypedData?.id,
       signature,
@@ -48,7 +49,8 @@ const actPost = async (
         {
           forTxId: broadcastResult?.data?.broadcastOnchain.txId,
         },
-        dispatch
+        dispatch,
+        t
       );
     } else {
       const { request } = await publicClient.simulateContract({
@@ -82,7 +84,7 @@ const actPost = async (
       dispatch(
         setIndexer({
           actionOpen: true,
-          actionMessage: "Indexing Collect",
+          actionMessage: t("indC"),
         })
       );
 
@@ -90,7 +92,8 @@ const actPost = async (
         {
           forTxHash: tx.transactionHash,
         },
-        dispatch
+        dispatch,
+        t
       );
 
       dispatch(

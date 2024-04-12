@@ -12,13 +12,18 @@ import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
+import { useTranslation } from "next-i18next";
 import { createPublicClient, http } from "viem";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { TFunction } from "i18next";
 
 const Checkout: NextPage<{
   router: NextRouter;
   client: LitNodeClient;
-}> = ({ router, client }): JSX.Element => {
+  tCom: TFunction<"404", undefined>;
+}> = ({ router, client, tCom }): JSX.Element => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("checkout");
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
@@ -105,7 +110,8 @@ const Checkout: NextPage<{
     client,
     oracleData,
     cartItems,
-    router
+    router,
+    tCom
   );
   return (
     <div
@@ -120,6 +126,7 @@ const Checkout: NextPage<{
         />
       </Head>
       <Header
+        t={tCom}
         filterChange={filterChange}
         fullScreenVideo={fullScreenVideo}
         searchItems={allSearchItems}
@@ -143,6 +150,7 @@ const Checkout: NextPage<{
       />
       <div className="relative w-full h-fit flex items-start justify-start flex-col md:flex-row gap-4 md:flex-nowrap flex-wrap px-4 md:pt-auto pt-32">
         <Fulfillment
+          t={t}
           collectPostLoading={collectPostLoading}
           details={details}
           encryptionLoading={encryptionLoading}
@@ -174,6 +182,7 @@ const Checkout: NextPage<{
         />
         <Cart
           router={router}
+          t={t}
           cartItems={cartItems}
           chooseCartItem={chooseCartItem}
           setChooseCartItem={setChooseCartItem}
@@ -190,3 +199,9 @@ const Checkout: NextPage<{
 };
 
 export default Checkout;
+
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["checkout", "footer"])),
+  },
+});

@@ -27,6 +27,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
   cartItems,
   interactionsLoading,
   mirror,
+  t,
   like,
   openMirrorChoice,
   setOpenMirrorChoice,
@@ -92,6 +93,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
           )}
           <div className="absolute right-2 top-2 w-fit h-fit">
             <PrintType
+              t={t}
               printType={
                 printTypeToString[
                   Number(publication?.printType) as unknown as PrintTagType
@@ -161,6 +163,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
               </div>
               {popUpOpen?.[index] && (
                 <PopUp
+                  t={t}
                   cartItem={publication}
                   index={index}
                   dispatch={dispatch}

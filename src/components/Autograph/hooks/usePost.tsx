@@ -12,12 +12,14 @@ import {
 } from "../../../../redux/reducers/postCollectGifSlice";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
+import { TFunction } from "i18next";
 
 const usePost = (
   dispatch: Dispatch,
   postCollectGif: PostCollectGifState,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [postLoading, setPostLoading] = useState<boolean[]>([false]);
   const [postContentLoading, setPostContentLoading] = useState<
@@ -78,7 +80,8 @@ const usePost = (
           : undefined,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       const gifs = { ...postCollectGif.gifs };
       delete gifs["post"];
@@ -108,7 +111,7 @@ const usePost = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 

@@ -13,6 +13,7 @@ import { Creation } from "@/components/Tiles/types/tiles.types";
 const QuestGates: FunctionComponent<QuestGatesProps> = ({
   dispatch,
   gates,
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -27,18 +28,16 @@ const QuestGates: FunctionComponent<QuestGatesProps> = ({
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3 pb-4 text-white font-bit">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words text-sm">
-              Ready player? Gather your tokens to accept this quest.
+              {t("play")}
             </div>
             <div className="relative w-fit h-fit flex items-center justify-center text-gray-500 text-xs">
-              {gates?.oneof
-                ? "Collect & Hold At Least One Token to Join Quest."
-                : "Collect & Hold All Tokens To Join Quest."}
+              {gates?.oneof ? t("one") : t("all")}
             </div>
             <div className="relative w-full h-fit flex flex-col pt-4 gap-8">
               {gates?.erc20 && gates?.erc20?.length > 0 && (
                 <div className="relative w-full h-fit flex flex-col items-center justify-center gap-2 break-words">
                   <div className="relative w-fit h-fit flex items-center justify-center text-sm">
-                    Token Thresholds
+                    {t("thr")}
                   </div>
                   <div className="relative w-fit h-fit justify-center items-center gap-4 flex flex-row flex-wrap">
                     {gates?.erc20?.map(
@@ -99,7 +98,7 @@ const QuestGates: FunctionComponent<QuestGatesProps> = ({
               {gates?.erc721 && gates?.erc721?.length > 0 && (
                 <div className="relative w-full h-fit flex flex-col items-center justify-center gap-2 px-2 break-words">
                   <div className="relative w-fit h-fit flex items-center justify-center text-sm">
-                    Cypher Collections
+                    {t("cip")}
                   </div>
                   <div className="relative w-full h-fit justify-center items-center flex overflow-y-scroll">
                     <div className="relative w-fit h-fit justify-center items-center gap-3 flex flex-wrap">

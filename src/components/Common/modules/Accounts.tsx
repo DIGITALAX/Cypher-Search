@@ -29,6 +29,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   auto,
   cartAnim,
   fullScreenVideo,
+  t,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(lensConnected?.metadata?.picture);
   return (
@@ -66,9 +67,9 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                 {signInLoading ? (
                   <AiOutlineLoading size={15} color={"white"} />
                 ) : !walletConnected ? (
-                  "connect"
+                  t("con")
                 ) : (
-                  walletConnected && !lensConnected && "lens"
+                  walletConnected && !lensConnected && t("len")
                 )}
               </div>
             </div>
@@ -116,7 +117,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
               })
             )
           }
-          title="The Dial Pirate Radio"
+          title={t("rad")}
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/QmUkpLp5Jf9NB9eT6dCupJa9fGvA2NkuzTKkqA1uaNFqXL`}
@@ -197,7 +198,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             }}
           >
             <div className="relative w-fit h-fit items-center justify-center p-2 flex">
-              Autograph
+              {t("aut")}
             </div>
           </div>
           <div
@@ -205,7 +206,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             onClick={() => handleLogout()}
           >
             <div className="relative w-fit h-fit items-center justify-center p-2 flex">
-              Logout
+              {t("aut")}
             </div>
           </div>
         </div>
@@ -214,6 +215,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
         <CartList
           dispatch={dispatch}
           router={router}
+          t={t}
           cartItems={cartItems}
           setCartListOpen={setCartListOpen}
           searchActive={searchActive}

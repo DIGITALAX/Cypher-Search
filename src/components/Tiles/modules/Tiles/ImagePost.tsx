@@ -40,6 +40,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   profileHovers,
   setProfileHovers,
   followLoading,
+  t,
   followProfile,
   unfollowProfile,
   simpleCollect,
@@ -685,8 +686,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                             ? publication?.mirrorOn
                             : (publication as Post)
                           )?.metadata as any
-                        )?.title +
-                          "<br /><br /> ... This post is encrypted. Do you hold the keys to unlock its' secrets?"
+                        )?.title + t("poE")
                       : (
                           (publication?.__typename === "Mirror"
                             ? publication?.mirrorOn
@@ -858,7 +858,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                     }`}
                   >
                     <div className="relative flex items-end justify-end text-right break-words text-white font-bit uppercase text-sm">
-                      posted
+                      {t("pos")}
                     </div>
                     <div className="relative flex items-end justify-end text-right break-words text-white/70 font-bit uppercase text-sm">
                       {(publication?.__typename === "Mirror"

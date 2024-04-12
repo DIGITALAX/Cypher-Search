@@ -49,6 +49,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   comment,
   openMirrorChoiceBookmark,
   unfollowProfile,
+  t,
   followProfile,
   openMoreOptions,
   profileHovers,
@@ -94,6 +95,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleSendMessage,
   digiMessage,
   setDigiMessage,
+  tCom,
   digiMessageLoading,
   handleMedia,
   lensConnected,
@@ -141,13 +143,14 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   messageImage,
   handleMessageImage,
   cartItems,
-  address
+  address,
 }): JSX.Element => {
   if (!owner) {
     return (
       <Display
         dispatch={dispatch}
         mirror={mirror}
+        t={t}
         like={like}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
@@ -163,11 +166,12 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   } else {
     switch (screenDisplay) {
       case ScreenDisplay.Circuits:
-        return <Circuits />;
+        return <Circuits t={t} />;
 
       case ScreenDisplay.Gallery:
         return (
           <Gallery
+            t={t}
             address={address}
             allCollections={allCollections}
             editDrop={editDrop}
@@ -208,6 +212,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
           <ScreenPost
             makePost={makePost}
             post={post}
+            t={tCom}
             router={router}
             setMakePost={setMakePost}
             postLoading={postLoading}
@@ -228,6 +233,8 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       case ScreenDisplay.Bookmarks:
         return (
           <Bookmarks
+            t={t}
+            tCom={tCom}
             cartItems={cartItems}
             setCaretCoord={setCaretCoordBookmark}
             caretCoord={caretCoordBookmark}
@@ -273,6 +280,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       case ScreenDisplay.Settings:
         return (
           <Settings
+            t={t}
             isDesigner={isDesigner}
             settingsData={settingsData}
             setSettingsData={setSettingsData}
@@ -297,6 +305,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
         return (
           <Messages
             messageImage={messageImage}
+            t={t}
             handleMessageImage={handleMessageImage}
             dispatch={dispatch}
             sendMessageLoading={sendMessageLoading}
@@ -321,6 +330,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       case ScreenDisplay.Orders:
         return (
           <Orders
+            t={t}
             allOrders={allOrders}
             decryptOrder={decryptOrder}
             orderActions={orderActions}
@@ -333,6 +343,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       case ScreenDisplay.Sales:
         return (
           <Sales
+            t={t}
             allSales={allSales}
             salesLoading={salesLoading}
             router={router}
@@ -342,6 +353,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       default:
         return (
           <Display
+            t={t}
             dispatch={dispatch}
             mirror={mirror}
             like={like}

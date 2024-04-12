@@ -7,6 +7,7 @@ import Image from "next/legacy/image";
 
 const InteractError: FunctionComponent<InteractErrorProps> = ({
   dispatch,
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -21,7 +22,7 @@ const InteractError: FunctionComponent<InteractErrorProps> = ({
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3 pb-4">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
-              Something Went Wrong Indexing Your Interaction. Try Again?
+              {t("error")}
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] flex items-center justify-center rounded-sm p-px"

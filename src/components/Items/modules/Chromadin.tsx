@@ -41,6 +41,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   lensConnected,
   mirror,
   like,
+  t,
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
@@ -139,6 +140,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               ) : (
                 <div className="relative w-5/6 h-full flex flex-col gap-10 justify-start items-center">
                   <PostComment
+                    t={t}
                     itemId={undefined}
                     router={router}
                     setCaretCoord={setCaretCoordMain}
@@ -181,6 +183,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                           ) => {
                             return (
                               <Publication
+                                t={t}
                                 setCaretCoord={setCaretCoord}
                                 caretCoord={caretCoord}
                                 profilesOpen={profilesOpen}
@@ -251,7 +254,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     </div>
                   ) : (
                     <div className="relative w-fit h-fit items-center justify-center flex text-white font-bit break-words">
-                      No comments yet. Make one?
+                      {t("coms")}
                     </div>
                   )}
                 </div>
@@ -443,6 +446,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-sm mt-0">
               {itemData?.origin !== "4" ? (
                 <PrintType
+                  t={t}
                   printType={
                     printTypeToString[
                       Number(itemData?.printType) as unknown as PrintTagType
@@ -506,7 +510,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             {itemData?.collectionMetadata?.microbrandCover && (
               <div className="relative w-fit h-fit flex flex-col gap-px items-end justify-end font-aust text-white break-words text-sm">
                 <div className="relative w-fit h-fit items-center justify-center flex text-xxs">
-                  Microbrand
+                  {t("marc")}
                 </div>
                 <div
                   className="relative w-fit h-fit flex flex-row gap-2 items-end justify-end break-words text-sm cursor-pointer"
@@ -548,7 +552,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 ? `${
                     itemData?.soldTokens ? Number(itemData?.soldTokens || 0) : 0
                   }/${Number(itemData?.amount)}`
-                : "SOLD OUT"}
+                : t("sold")}
             </div>
           </div>
           <div className="relative w-fit h-fit flex items-start justify-center sm:justify-end font-aust text-white break-words text-xs text-center sm:text-right mt-0 max-h-[6rem] overflow-y-scroll">
@@ -720,7 +724,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               </div>
               <div className="relative flex items-end justify-end items-center justify-center h-fit w-fit flex-col gap-1.5 ml-auto">
                 <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
-                  Size
+                  {t("siz")}
                 </div>
                 <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
                   {itemData?.collectionMetadata?.sizes?.map(
@@ -779,7 +783,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 itemData?.amount != itemData?.soldTokens &&
                 (isApprovedSpend ? handleInstantPurchase() : approveSpend())
               }
-              title="Instant Checkout"
+              title={t("checkI")}
             >
               <div
                 className={`relative w-fit h-fit flex items-center justify-center ${
@@ -791,13 +795,13 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 ) : itemData?.amount !== undefined &&
                   itemData?.soldTokens !== undefined &&
                   itemData?.amount == itemData?.soldTokens ? (
-                  "SOLD OUT"
+                  t("sold")
                 ) : !lensConnected?.id ? (
-                  "Connect"
+                  t("con2")
                 ) : !isApprovedSpend ? (
-                  "Approve Spend"
+                  t("ap")
                 ) : (
-                  "Collect Item"
+                  t("col2")
                 )}
               </div>
             </div>

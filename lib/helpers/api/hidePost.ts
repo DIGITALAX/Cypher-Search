@@ -2,8 +2,13 @@ import { AnyAction, Dispatch } from "redux";
 import hidePost from "../../../graphql/lens/mutations/hide";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
+import { TFunction } from "i18next";
 
-const lensHide = async (id: string, dispatch: Dispatch<AnyAction>) => {
+const lensHide = async (
+  id: string,
+  dispatch: Dispatch<AnyAction>,
+  t: TFunction<"404", undefined>
+) => {
   try {
     const { data } = await hidePost({
       for: id,
@@ -17,13 +22,14 @@ const lensHide = async (id: string, dispatch: Dispatch<AnyAction>) => {
           {
             forTxId: data?.hidePublication?.txId,
           },
-          dispatch
+          dispatch,
+          t
         );
       } else {
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
         setTimeout(() => {

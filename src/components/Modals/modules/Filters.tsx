@@ -30,6 +30,7 @@ const Filters: FunctionComponent<FilterProps> = ({
   profileHovers,
   setProfileHovers,
   lensConnected,
+  t,
 }): JSX.Element => {
   return (
     <div
@@ -40,6 +41,7 @@ const Filters: FunctionComponent<FilterProps> = ({
         <div className="relative w-full h-fit flex lg:items-start items-center justify-start lg:justify-center lg:order-1 order-3">
           {publication?.post && (
             <TileSwitch
+              t={t}
               type={publication?.type}
               filterConstants={filterConstants}
               lensConnected={lensConnected}
@@ -65,6 +67,7 @@ const Filters: FunctionComponent<FilterProps> = ({
           )}
         </div>
         <ContentSort
+          t={t}
           filterConstants={filterConstants}
           handleResetFilters={handleResetFilters}
           dispatch={dispatch}
@@ -75,6 +78,8 @@ const Filters: FunctionComponent<FilterProps> = ({
           filterValues={filterValues}
         />
         <PrerollSort
+          router={router}
+          t={t}
           openDropDown={openDropDown}
           setOpenDropDown={setOpenDropDown}
           setFilteredDropDownValues={setFilteredDropDownValues}

@@ -3,12 +3,14 @@ import reportPost from "../../../graphql/lens/mutations/report";
 import { ReportingReasonInput } from "../../../graphql/generated";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
+import { TFunction } from "i18next";
 
 const lensReport = async (
   id: string,
   reason: ReportingReasonInput,
   additionalComments: string,
-  dispatch: Dispatch<AnyAction>
+  dispatch: Dispatch<AnyAction>,
+  t: TFunction<"404", undefined>
 ) => {
   try {
     const { data } = await reportPost({
@@ -25,13 +27,14 @@ const lensReport = async (
           {
             forTxId: data?.reportPublication?.txId,
           },
-          dispatch
+          dispatch,
+          t
         );
       } else {
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
         setTimeout(() => {

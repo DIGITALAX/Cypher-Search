@@ -18,6 +18,7 @@ import {
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
+import { TFunction } from "i18next";
 
 export type BarProps = {
   title: string;
@@ -33,6 +34,7 @@ export type PopUpProps = {
   cartItems: CartItem[];
   index: number;
   cartItem: Creation;
+  t: TFunction<"404", undefined>;
   level: number | undefined;
   type: ItemType;
 };
@@ -143,6 +145,7 @@ export type AccountsProps = {
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;
+  t: TFunction<"404", undefined>;
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   auto?: boolean;
@@ -168,6 +171,7 @@ export type NotFoundProps = {
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   handleShuffleSearch: () => void;
+  t: TFunction<"404", undefined>;
 };
 
 export enum ItemType {
@@ -203,6 +207,7 @@ export type SuggestedProps = {
   router: NextRouter;
   fullScreenVideo: FullScreenVideoState;
   cartAnim: boolean;
+  t: TFunction<"404", undefined>;
   filterConstants: FilterValues | undefined;
   layoutAmount?: number;
   handleSearch?: (
@@ -251,6 +256,7 @@ export type StatsProps = {
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   microbrand?: boolean;
+  t: TFunction<"404", undefined>;
 };
 
 export type MediaProps = {
@@ -267,6 +273,7 @@ export type MediaProps = {
 export type CartListProps = {
   cartItems: CartItem[];
   router: NextRouter;
+  t: TFunction<"404", undefined>;
   dispatch: Dispatch<AnyAction>;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
   page?: boolean;
@@ -275,4 +282,5 @@ export type CartListProps = {
 
 export type PrintTypeProps = {
   printType: string;
+  t: TFunction<"404", undefined>;
 };

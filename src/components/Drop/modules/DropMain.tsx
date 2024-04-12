@@ -14,6 +14,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
   router,
   dispatch,
   cartItems,
+  t
 }) => {
   return (
     <div className="relative w-full h-fit flex items-center justify-center flex-row pt-52 sm:pt-40 md:pt-36 px-2 sm:px-10">
@@ -106,7 +107,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                           ? "opacity-70"
                           : "cursor-pointer active:scale-95"
                       }`}
-                      title="Add to Cart"
+                      title={t("cart")}
                       onClick={() => {
                         if (collection?.amount == collection?.soldTokens)
                           return;
@@ -128,8 +129,7 @@ const DropMain: FunctionComponent<DropMainProps> = ({
                           dispatch(
                             setInsufficientBalance({
                               actionValue: true,
-                              actionMessage:
-                                "We know you're eager, but you've reached this creations' collect limit!",
+                              actionMessage: t("lim"),
                             })
                           );
                           return;

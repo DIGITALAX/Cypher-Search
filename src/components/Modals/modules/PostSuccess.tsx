@@ -12,6 +12,7 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
   pubId,
   handle,
   successType,
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -34,14 +35,13 @@ const PostSuccess: FunctionComponent<PostSuccessProps> = ({
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3 pb-4">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
-              Your {type === "collection" ? "Collection" : "Drop"} is{" "}
+              {t("yo")} {type === "collection" ? t("coP") : t("coD")} {t("is")}{" "}
               {successType === "created"
-                ? "Live"
+                ? t("live")
                 : successType === "deleted"
-                ? "Deleted"
-                : "Updated"}
-              ! It may take a few moments for your creations to show correctly,
-              don&apos;t fret, check back in a bit.
+                ? t("del")
+                : t("up")}
+              ! {t("mom")}
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] lex items-center justify-center rounded-sm p-px cursor-pointer active:scale-95"

@@ -15,8 +15,10 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
   id,
   handleReportPost,
   reason,
+  t,
   setReason,
   reportLoading,
+  router
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -38,11 +40,11 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-6 font-bit">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words  text-sol text-sm">
-              Report Publication {id}
+              {t("rep")} {id}
             </div>
             <div className="relative flex flex-col gap-2 items-center justify-center w-fit h-fit">
               <div className="relative w-full h-fit flex flex-col items-center justify-center text-white text-center">
-                What&quot;s the core reason for reporting?
+                {t("rea")}
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center gap-2 flex flex-wrap">
                 {["Fraud", "Illegal", "Sensitive", "Spam"].map(
@@ -84,7 +86,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
             </div>
             <div className="relative flex flex-col gap-2 items-center justify-center w-fit h-fit">
               <div className="relative w-full h-fit flex flex-col items-center justify-center text-white text-center">
-                And a little more specific...
+                {t("spec")}
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center gap-2 flex flex-wrap">
                 {(reason.main === "Fraud"
@@ -131,7 +133,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
             </div>
             <div className="relative flex flex-col gap-2 items-center justify-center w-2/3 h-fit">
               <div className="relative w-full h-fit flex flex-col items-center justify-center text-white text-center">
-                Anything else you can share?
+                {t("other")}
               </div>
               <div className="relative w-full h-fit flex items-center justify-center gap-2 flex flex-wrap border border-white">
                 <textarea
@@ -170,7 +172,7 @@ const ReportPub: FunctionComponent<ReportPubProps> = ({
                 {reportLoading ? (
                   <AiOutlineLoading size={15} color="white" />
                 ) : (
-                  "Submit Report"
+                  t("other")
                 )}
               </div>
             </div>

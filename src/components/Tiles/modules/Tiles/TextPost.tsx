@@ -18,6 +18,7 @@ import handleImageError from "../../../../../lib/helpers/handleImageError";
 
 const TextPost: FunctionComponent<TextPostProps> = ({
   layoutAmount,
+  t,
   router,
   publication,
   mirror,
@@ -69,7 +70,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
                     ? publication?.mirrorOn
                     : (publication as Post)
                   )?.metadata as any
-                )?.title + "<br /><br /> ... This post is encrypted. Do you hold the keys to unlock its' secrets?"
+                )?.title + t("poE")
               : (
                   (publication?.__typename === "Mirror"
                     ? publication?.mirrorOn
@@ -125,7 +126,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
               </div>
               <div className="relative w-full h-fit items-end justify-start flex flex-col">
                 <div className="relative flex items-center justify-center text-right break-words text-white font-bit uppercase text-sm">
-                  posted
+                  {t("pos")}
                 </div>
                 <div className="relative flex items-center justify-center text-right break-words text-white/70 font-bit uppercase text-sm">
                   {(publication?.__typename === "Mirror"

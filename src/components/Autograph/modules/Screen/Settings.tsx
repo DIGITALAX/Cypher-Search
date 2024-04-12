@@ -25,6 +25,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
   setCurrencyOpen,
   currencyOpen,
   isDesigner,
+  t,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -101,7 +102,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
               </label>
               <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
                 <div className="relative font font-bit text-white text-sm">
-                  Display Name
+                  {t("name")}
                 </div>
                 <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
                   <input
@@ -142,7 +143,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
               <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left gap-2 font-bit text-sm flex-wrap sm:flex-nowrap">
                 <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
                   <div className="relative w-fit h-fit justify-start items-center">
-                    Location?
+                    {t("loca")}
                   </div>
                   <input
                     onChange={(e) => {
@@ -178,7 +179,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                 <div className="relative flex flex-row items-center justify-center h-fit w-full text-white text-left font-fit">
                   <div className="relative flex flex-col gap-1 items-start justify-center w-full h-fit">
                     <div className="relative w-fit h-fit justify-start items-center">
-                      Link?
+                      {t("link")}
                     </div>
                     <input
                       onChange={(e) => {
@@ -219,7 +220,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
               {isDesigner && (
                 <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
                   <div className="relative font font-bit text-white text-sm">
-                    Connected Microbrands
+                    {t("conM")}
                   </div>
                   <div className="relative w-full h-fit flex flex-row gap-2 sm:flex-nowrap flex-wrap">
                     <label
@@ -294,7 +295,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                       <div
                         className={`top-px relative w-fit h-fit flex items-center justify-center text-center`}
                       >
-                        Add Micro
+                        {t("micro")}
                       </div>
                     </div>
                   </div>
@@ -383,7 +384,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     {settingsUpdateLoading ? (
                       <AiOutlineLoading size={15} color="white" />
                     ) : (
-                      "Update Settings"
+                      t("sett")
                     )}
                   </div>
                 </div>
@@ -391,7 +392,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
               <div className="relative w-full h-fit flex flex-row gap-2 items-start justify-start md:flex-nowrap flex-wrap">
                 <div className="relative w-fit h-fit flex flex-col gap-2 items-start justify-start">
                   <div className="relative font font-bit text-white text-sm">
-                    Follow Module
+                    {t("modF")}
                   </div>
                   <div className="relative flex flex-row items-start justify-start gap-3">
                     <div className="relative flex flex-col items-start justify-start h-10 w-44 galaxy:w-60">
@@ -443,7 +444,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                   <div className="relative flex flex-row gap-3 items-center justify-start sm:justify-center sm:flex-nowrap flex-wrap">
                     <div className="relative w-44 galaxy:w-60 sm:w-full h-fit flex flex-col gap-2 items-start justify-start">
                       <div className="relative font font-bit text-white text-sm">
-                        Amount
+                        {t("amount")}
                       </div>
                       <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
                         <textarea
@@ -463,7 +464,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     </div>
                     <div className="relative w-full h-fit flex flex-col gap-2 items-start justify-start">
                       <div className="relative font font-bit text-white text-sm">
-                        Currency
+                        {t("currency")}
                       </div>
                       <div className="relative flex flex-row items-start justify-start gap-3">
                         <div className="relative flex flex-col items-start justify-start h-10 w-44 galaxy:w-60">
@@ -521,7 +522,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                     {followUpdateLoading ? (
                       <AiOutlineLoading size={15} color="white" />
                     ) : (
-                      "Update Follow Module"
+                      t("followMod")
                     )}
                   </div>
                 </div>

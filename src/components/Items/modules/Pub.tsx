@@ -63,12 +63,14 @@ const Pub: FunctionComponent<PublicationProps> = ({
   profilesOpenMain,
   setCaretCoord,
   setCaretCoordMain,
+  t,
 }): JSX.Element => {
   return (
     <div className="relative w-full min-h-[50rem] flex items-center justify-center flex-col xl:flex-row pt-52 sm:pt-40 md:pt-36 px-2 sm:px-12 gap-7 h-fit">
       <div className="relative w-full h-full flex items-start justify-center">
         <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] xl:w-[30rem] 2xl:w-[40rem] h-full">
           <Publication
+            t={t}
             setCaretCoord={setCaretCoord}
             caretCoord={caretCoordMain}
             profilesOpen={profilesOpenMain}
@@ -133,6 +135,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
             ) : (
               <div className="relative w-full md:w-5/6 h-[37rem] flex flex-col gap-10 justify-start items-center">
                 <PostComment
+                  t={t}
                   itemId={
                     itemData?.__typename === "Mirror"
                       ? itemData?.mirrorOn?.id
@@ -183,6 +186,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                               caretCoord={caretCoord}
                               setCaretCoord={setCaretCoord}
                               profilesOpen={profilesOpen}
+                              t={t}
                               mentionProfiles={mentionProfiles}
                               setMentionProfiles={setMentionProfiles}
                               setProfilesOpen={setProfilesOpen}
@@ -248,7 +252,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                   </div>
                 ) : (
                   <div className="relative w-fit h-fit items-center justify-center flex text-white font-bit break-words">
-                    No comments yet. Make one?
+                    {t("coms")}
                   </div>
                 )}
               </div>

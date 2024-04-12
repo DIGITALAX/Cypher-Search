@@ -68,6 +68,7 @@ const ImageDropDown: FunctionComponent<ImageDropDownProps> = ({
                     objectFit={cover ? "cover" : "contain"}
                     className={`${rounded && "rounded-full"}`}
                     onError={(e) => handleImageError(e)}
+                    draggable={false}
                   />
                 </div>
               );

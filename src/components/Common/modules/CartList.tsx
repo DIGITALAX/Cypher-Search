@@ -13,6 +13,7 @@ const CartList: FunctionComponent<CartListProps> = ({
   dispatch,
   setCartListOpen,
   page,
+  t,
   searchActive,
 }): JSX.Element => {
   return (
@@ -142,8 +143,7 @@ const CartList: FunctionComponent<CartListProps> = ({
                             dispatch(
                               setInsufficientBalance({
                                 actionValue: true,
-                                actionMessage:
-                                  "We know you're eager, but you've reached this creations' collect limit!",
+                                actionMessage: t("lim"),
                               })
                             );
                             return;
@@ -226,8 +226,8 @@ const CartList: FunctionComponent<CartListProps> = ({
             })}
           </div>
         ) : (
-          <div className="relative flex items-center justify-center font-dog text-white text-xxs break-words w-full h-full text-center">
-            No Items <br /> In Cart Yet.
+          <div className="relative flex items-center justify-center font-dog text-white text-xxs break-words w-full h-full text-center whitespace-preline">
+            {t("items")}
           </div>
         )}
       </div>
@@ -244,7 +244,7 @@ const CartList: FunctionComponent<CartListProps> = ({
           }
         }}
       >
-        Checkout
+        {t("check")}
       </div>
     </div>
   );

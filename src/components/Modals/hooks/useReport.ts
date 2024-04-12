@@ -13,8 +13,9 @@ import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import { Dispatch } from "redux";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { TFunction } from "i18next";
 
-const useReport = (dispatch: Dispatch) => {
+const useReport = (dispatch: Dispatch, t: TFunction<"404", undefined>) => {
   const [reportLoading, setReportLoading] = useState<boolean>(false);
   const [reason, setReason] = useState<{
     main: "Fraud" | "Illegal" | "Sensitive" | "Spam";
@@ -74,12 +75,18 @@ const useReport = (dispatch: Dispatch) => {
           break;
       }
 
-      await lensReport(id, reportReason, reason.additionalComments, dispatch);
+      await lensReport(
+        id,
+        reportReason,
+        reason.additionalComments,
+        dispatch,
+        t
+      );
 
       dispatch(
         setIndexer({
           actionOpen: true,
-          actionMessage: "Report Submitted. Thank you!",
+          actionMessage: t("repS"),
         })
       );
       dispatch(setReportPub(false));
@@ -92,7 +99,6 @@ const useReport = (dispatch: Dispatch) => {
           })
         );
       }, 4000);
-
     } catch (err: any) {
       if (
         !err?.messages?.includes("Block at number") &&
@@ -104,7 +110,7 @@ const useReport = (dispatch: Dispatch) => {
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 
@@ -116,14 +122,13 @@ const useReport = (dispatch: Dispatch) => {
             })
           );
         }, 3000);
-
       }
     }
     setReportLoading(false);
   };
 
   useEffect(() => {
-    setReason({ 
+    setReason({
       ...reason,
       subreason:
         reason.main === "Fraud"

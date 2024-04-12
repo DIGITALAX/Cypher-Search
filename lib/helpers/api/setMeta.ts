@@ -8,13 +8,15 @@ import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { PublicClient, WalletClient } from "viem";
 import profileMetadata from "../../../graphql/lens/mutations/metadata";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
+import { TFunction } from "i18next";
 
 const setMeta = async (
   metadataURI: string,
   dispatch: Dispatch<AnyAction>,
   address: `0x${string}`,
   clientWallet: WalletClient,
-  publicClient: PublicClient
+  publicClient: PublicClient,
+  t: TFunction<"404", undefined>
 ): Promise<void> => {
   const { data } = await profileMetadata({
     metadataURI,
@@ -39,7 +41,7 @@ const setMeta = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
 
@@ -47,7 +49,8 @@ const setMeta = async (
       {
         forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
       },
-      dispatch
+      dispatch,
+      t
     );
   } else {
     const { request } = await publicClient.simulateContract({
@@ -63,14 +66,15 @@ const setMeta = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
     await handleIndexCheck(
       {
         forTxHash: tx.transactionHash,
       },
-      dispatch
+      dispatch,
+      t
     );
   }
 

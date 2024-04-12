@@ -10,10 +10,13 @@ import { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { TFunction } from "i18next";
 
 const Custom404: NextPage<{
   router: NextRouter;
-}> = ({ router }): JSX.Element => {
+  tCom: TFunction<"404", undefined>;
+}> = ({ router, tCom }): JSX.Element => {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
@@ -99,6 +102,7 @@ const Custom404: NextPage<{
         router={router}
         cartAnim={cartAnim}
         searchActive={searchActive}
+        t={tCom}
         filtersOpen={filtersOpen.value}
         lensConnected={lensConnected}
         walletConnected={walletConnected}
@@ -119,3 +123,9 @@ const Custom404: NextPage<{
 };
 
 export default Custom404;
+
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["404", "footer"])),
+  },
+});

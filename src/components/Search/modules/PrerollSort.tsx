@@ -16,6 +16,8 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
   dispatch,
   filterValues,
   filterConstants,
+  t,
+  router
 }): JSX.Element => {
   return (
     <div
@@ -28,7 +30,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
       >
         <div className="relative w-full h-fit flex flex-row justify-between items-center gap-5">
           <div className="font-bit text-white text-left flex items-center justify-center text-base uppercase break-words h-fit w-3/5">
-            Looking for that exact preroll fit?
+            {t("look")}
           </div>
           <div
             className="relative p-px rounded-sm h-6 w-6 flex items-center justify-center"
@@ -41,67 +43,98 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
         </div>
         <div className="relative w-full h-fit flex flex-wrap justify-center items-center gap-4">
           {[
-            ["shirt", "QmVbePRht5te5J9JzGGrnMocPZkSWnqGPEaNMZTSjFoYDr"],
-            ["hoodie", "QmRMWKP63xaJQsspfnLL9Fhou484LEb2VbTWFyfYsJ1aep"],
-            ["poster", "QmPpDcEHfhMr3z2Romz45P7ETV4hZEXRbcorF9sDsDfxyC"],
-            ["sticker", "QmUADJfzGsFgp9n4XUZD66inxTCijJ9fwMXeUkjuKjHVzs"],
-            ["sleeve", "QmUNhw5w6JzS9PZH9Wgb9f3k9NNsA8yJVXXoBA1NkduypL"],
-            ["crop", "QmYctXVUMpgeeqzUgPUhrMaHGEToRqGQxvr9mbBMdRcCib"],
-          ].map((image: string[], index: number) => {
-            return (
-              <div
-                className="relative w-32 h-20 items-center justify-center flex rounded-sm p-px cursor-pointer"
-                key={index}
-                id={
-                  filterValues.printType.includes(image[0])
-                    ? "preroll"
-                    : "tiles"
-                }
-                title={image[0]}
-                onClick={() => {
-                  if (
-                    filterValues?.printType !==
-                    (filterValues.printType.includes(image[0])
-                      ? filterValues.printType.filter(
-                          (item: string) => item !== image[0]
-                        )
-                      : [...filterValues.printType, image[0]])
-                  ) {
-                    dispatch(setFilterChange(true));
+            {
+              title: { en: "shirt", es: "" },
+              image: "QmVbePRht5te5J9JzGGrnMocPZkSWnqGPEaNMZTSjFoYDr",
+            },
+            {
+              title: { en: "hoodie", es: "sudadera" },
+              image: "QmRMWKP63xaJQsspfnLL9Fhou484LEb2VbTWFyfYsJ1aep",
+            },
+            {
+              title: { en: "poster", es: "cartel" },
+              image: "QmPpDcEHfhMr3z2Romz45P7ETV4hZEXRbcorF9sDsDfxyC",
+            },
+            {
+              title: { en: "sticker", es: "pegatina" },
+              image: "QmUADJfzGsFgp9n4XUZD66inxTCijJ9fwMXeUkjuKjHVzs",
+            },
+            {
+              title: { en: "sleeve", es: "mangas largas" },
+              image: "QmUNhw5w6JzS9PZH9Wgb9f3k9NNsA8yJVXXoBA1NkduypL",
+            },
+            {
+              title: { en: "crop", es: "corto" },
+              image: "QmYctXVUMpgeeqzUgPUhrMaHGEToRqGQxvr9mbBMdRcCib",
+            },
+          ].map(
+            (
+              image: {
+                image: string;
+                title: {
+                  en: string;
+                  es: string;
+                };
+              },
+              index: number
+            ) => {
+              return (
+                <div
+                  className="relative w-32 h-20 items-center justify-center flex rounded-sm p-px cursor-pointer"
+                  key={index}
+                  id={
+                    filterValues.printType.includes(image.title.en)
+                      ? "preroll"
+                      : "tiles"
                   }
-
-                  dispatch(
-                    setFilter({
-                      ...filterValues,
-                      printType: filterValues.printType.includes(image[0])
+                  title={image.title?.[router.locale as "en" | "es"]}
+                  onClick={() => {
+                    if (
+                      filterValues?.printType !==
+                      (filterValues.printType.includes(image.title.en)
                         ? filterValues.printType.filter(
-                            (item: string) => item !== image[0]
+                            (item: string) => item !== image.title.en
                           )
-                        : [...filterValues.printType, image[0]],
-                    })
-                  );
-                }}
-              >
-                <div className="relative w-full h-full rounded-sm flex bg-black items-center justify-center">
-                  <div className="relative w-2/3 h-full rounded-sm flex">
-                    <Image
-                      layout="fill"
-                      objectFit="cover"
-                      priority
-                      className="rounded-sm flex w-2/3 h-full items-center justify-center"
-                      src={`${INFURA_GATEWAY}/ipfs/${image[1]}`}
-                      draggable={false}
-                      onError={(e) => handleImageError(e)}
-                    />
+                        : [...filterValues.printType, image.title.en])
+                    ) {
+                      dispatch(setFilterChange(true));
+                    }
+
+                    dispatch(
+                      setFilter({
+                        ...filterValues,
+                        printType: filterValues.printType.includes(
+                          image.title.en
+                        )
+                          ? filterValues.printType.filter(
+                              (item: string) => item !== image.title.en
+                            )
+                          : [...filterValues.printType, image.title.en],
+                      })
+                    );
+                  }}
+                >
+                  <div className="relative w-full h-full rounded-sm flex bg-black items-center justify-center">
+                    <div className="relative w-2/3 h-full rounded-sm flex">
+                      <Image
+                        layout="fill"
+                        objectFit="cover"
+                        priority
+                        className="rounded-sm flex w-2/3 h-full items-center justify-center"
+                        src={`${INFURA_GATEWAY}/ipfs/${image.image}`}
+                        draggable={false}
+                        onError={(e) => handleImageError(e)}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
         </div>
         <div className="relative flex flex-col gap-1 w-full h-fit items-start justify-center">
           <div className="relative flex justify-start items-center text-white font-bit uppercase text-sm">
-            sizes
+            {t("sizs")}
           </div>
           <div className="relative w-full h-fit flex flex-col items-start justify-items gap-1">
             <div className="relative w-full h-fit flex flex-row items-center justify-center">
@@ -291,7 +324,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
         </div>
         <div className="relative flex flex-col gap-1 w-full h-fit items-start justify-center">
           <div className="relative flex justify-start items-center text-white font-bit uppercase text-sm">
-            base colors
+            {t("cols")}
           </div>
           <div className="relative flex flex-row gap-2 items-center justify-start sm:flex-nowrap flex-wrap">
             {filterConstants?.colors &&
@@ -342,7 +375,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
         <div className="relative flex flex-row gap-3 w-full h-fit items-center justify-start sm:flex-nowrap flex-wrap">
           <div className="relative flex flex-col items-center justify-center">
             <div className="relative flex justify-start items-center text-white font-bit uppercase text-sm">
-              price range
+              {t("rang")}
             </div>
             <div className="relative w-fit h-fit flex flex-row gap-1 items-center justify-center">
               <div
@@ -375,7 +408,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                 />
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center font-bit text-white text-sm uppercase">
-                to
+                {t("to")}
               </div>
               <div
                 className="relative w-full h-8 p-px rounded-sm flex flex-row items-center justify-center font-bit text-sol text-center"
@@ -410,7 +443,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
           </div>
           <DropDown
             dropDownValues={filteredDropDownValues?.token}
-            title={"Token"}
+            title={t("tok")}
             value={filterValues?.token}
             onChange={(e: ChangeEvent) => {
               if (
@@ -473,10 +506,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                   newValues = filterValues.token + ` ${value},`;
                 }
 
-                if (
-                  filterValues?.token !==
-                  newValues
-                ) {
+                if (filterValues?.token !== newValues) {
                   dispatch(setFilterChange(true));
                 }
 
@@ -498,31 +528,30 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             <input
               className={`relative w-full h-full p-1.5 bg-offBlack flex items-center rounded-sm text-white font-bit justify-center uppercase text-sm`}
               id="searchBar"
-              placeholder={"find by drop name"}
+              placeholder={t("dropN")}
               value={filterValues.drop}
-              onChange={(e) =>
-             {  
-              if (
-                filterValues?.drop !==
-                (e.target as HTMLInputElement).value.toLowerCase()
-              ) {
-                dispatch(setFilterChange(true));
-              }
-              
-              dispatch(
+              onChange={(e) => {
+                if (
+                  filterValues?.drop !==
+                  (e.target as HTMLInputElement).value.toLowerCase()
+                ) {
+                  dispatch(setFilterChange(true));
+                }
+
+                dispatch(
                   setFilter({
                     ...filterValues,
                     drop: (e.target as HTMLInputElement).value.toLowerCase(),
                   })
-                )}
-              }
+                );
+              }}
             />
           </div>
         </div>
         <div className="relative flex flex-row gap-5 w-full h-fit items-center justify-center">
           <DropDown
             dropDownValues={filteredDropDownValues?.fulfiller}
-            title={"Find by Local Fulfiller"}
+            title={t("fulL")}
             value={filterValues?.fulfiller}
             onChange={(e: ChangeEvent) => {
               if (
@@ -531,8 +560,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
               ) {
                 dispatch(setFilterChange(true));
               }
-           
-           
+
               setFilteredDropDownValues({
                 ...filteredDropDownValues,
                 fulfiller: filterConstants!.fulfiller.filter((value) =>
@@ -573,9 +601,6 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
             }}
             onDropDownChoose={(value: string) => {
               if (!filterValues.fulfiller.includes(value)) {
-              
-              
-              
                 const allValues = filterValues.fulfiller.split(",");
                 const isPartialEntry =
                   allValues[allValues.length - 1]?.trim() !== "";
@@ -589,10 +614,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                   newValues = filterValues.fulfiller + ` ${value},`;
                 }
 
-                if (
-                  filterValues?.fulfiller !==
-                  newValues
-                ) {
+                if (filterValues?.fulfiller !== newValues) {
                   dispatch(setFilterChange(true));
                 }
 

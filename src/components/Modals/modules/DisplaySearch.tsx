@@ -17,6 +17,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
   numberIndex,
   selectedItem,
   galleryLoading,
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -39,7 +40,7 @@ const DisplaySearch: FunctionComponent<DisplaySearchProps> = ({
           <div className="relative w-full h-fit items-center justify-start flex flex-col gap-3">
             <div className="relative w-5/6 sm:w-2/3 h-fit flex flex-col gap-2 items-center justify-center">
               <div className="relative font font-bit text-white text-sm text-center">
-                Search Collected & Created
+                {t("sear")}
               </div>
               <div className="relative w-full h-10 rounded-sm bg-piloto border border-fuera p-px flex items-start justify-start text-left text-white font-bit">
                 <input

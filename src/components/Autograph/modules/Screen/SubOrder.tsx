@@ -12,6 +12,7 @@ const SubOrder: FunctionComponent<SubOrderProps> = ({
   router,
   decrypted,
   details,
+  t
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex md:flex-nowrap flex-wrap flex-row items-center justify-between gap-3">
@@ -43,10 +44,11 @@ const SubOrder: FunctionComponent<SubOrderProps> = ({
           ${Number(item?.price) / Number(item?.amount)}
         </div>
         <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white">
-          {item?.isFulfilled || !details ? "Fulfilled" : "Fulfilling"}
+          {item?.isFulfilled || !details ? t("fuld") : t("fulg")}
         </div>
         <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white">
-          Qty.{item?.amount}
+          {t("cant")}
+          {item?.amount}
         </div>
         {details && (
           <div

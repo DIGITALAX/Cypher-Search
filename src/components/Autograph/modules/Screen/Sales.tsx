@@ -14,6 +14,7 @@ const Sales: FunctionComponent<SalesProps> = ({
   allSales,
   salesLoading,
   router,
+  t,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
@@ -56,15 +57,15 @@ const Sales: FunctionComponent<SalesProps> = ({
                         <div className="relative justify-center items-start flex flex-col font-ignite gap-2">
                           <div className="relative w-fit h-fit gap-2 flex items-center justify-center flex-row">
                             <div className="relative justify-center items-center flex w-fit h-fit text-white text-xl">
-                              Order {allSales?.length - index}
+                              {t("od")} {allSales?.length - index}
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center text-sol">
-                              Qty. {sale?.amount}
+                              {t("cant")} {sale?.amount}
                             </div>
                           </div>
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-sol text-sm">
                             <div className="relative w-fit h-fit flex items-center justify-center text-white">
-                              Block:
+                              {t("block")}
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center">
                               {sale?.blockTimestamp}
@@ -168,8 +169,7 @@ const Sales: FunctionComponent<SalesProps> = ({
               </div>
             ) : (
               <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
-                Your sales ledger remains untapped. Ready to fill more orders?
-                Expand your collection by minting new prints and apparel.
+                {t("ledger")}
               </div>
             )}
           </div>

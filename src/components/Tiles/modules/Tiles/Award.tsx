@@ -9,6 +9,7 @@ const Award: FunctionComponent<AwardProps> = ({
   publication,
   router,
   dispatch,
+  t,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit sm:h-80 border border-cost rounded-sm p-2 flex">
@@ -84,7 +85,7 @@ const Award: FunctionComponent<AwardProps> = ({
           <div className="relative w-full h-fit flex items-end justify-start gap-2 flex-col font-vcr overflow-y-scroll">
             <div className="relative w-fit h-fit flex flex-col gap-1 items-end justify-end">
               <div className="relative text-xs text-girasol flex items-center justify-center w-fit h-fit">
-                Title
+                {t("ti")}
               </div>
               <div className="relative w-fit h-fit flex items-center justify-center w-fit h-fit text-xxs text-white">
                 {publication?.rewardMetadata?.title}
@@ -92,7 +93,7 @@ const Award: FunctionComponent<AwardProps> = ({
             </div>
             <div className="relative w-fit h-fit flex flex-col gap-1 items-end justify-end">
               <div className="relative text-xs text-girasol flex items-center justify-center w-fit h-fit">
-                Description
+                {t("des")}
               </div>
               <div className="relative w-fit h-fit flex items-start justify-end text-right w-fit h-fit text-xxs text-white max-h-[10rem] overflow-y-scroll">
                 {publication?.rewardMetadata?.description}

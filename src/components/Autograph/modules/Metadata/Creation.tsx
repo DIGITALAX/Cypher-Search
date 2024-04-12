@@ -19,6 +19,7 @@ import { setFiltersOpen } from "../../../../../redux/reducers/filtersOpenSlice";
 const Creation: FunctionComponent<CreationProps> = ({
   item,
   index,
+  t,
   profileHovers,
   setProfileHovers,
   router,
@@ -112,7 +113,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             {item?.amount !== undefined &&
             item?.soldTokens !== undefined &&
             item?.amount == item?.soldTokens
-              ? "SOLD OUT"
+              ? t("sold")
               : `${item?.soldTokens ? item?.soldTokens : 0}/${item?.amount}`}
           </div>
         </div>
@@ -140,8 +141,7 @@ const Creation: FunctionComponent<CreationProps> = ({
                 dispatch(
                   setInsufficientBalance({
                     actionValue: true,
-                    actionMessage:
-                      "We know you're eager, but you've reached this creations' collect limit!",
+                    actionMessage: t("lim"),
                   })
                 );
                 return;
@@ -188,7 +188,7 @@ const Creation: FunctionComponent<CreationProps> = ({
               dispatch(setCartAnim(true));
             }}
             title={
-              item?.amount == item?.soldTokens ? "Sold Out" : "Add to Cart"
+              item?.amount == item?.soldTokens ? t("sol2") : t("car")
             }
           >
             <Image

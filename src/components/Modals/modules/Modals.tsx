@@ -29,12 +29,14 @@ import InsufficientBalance from "./InsufficientBalance";
 import ClaimProfile from "./ClaimProfile";
 import QuestGates from "./QuestGates";
 import QuestSuccess from "./QuestSuccess";
+import { TFunction } from "i18next";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
-const Modals: FunctionComponent<{ router: NextRouter }> = ({
-  router,
-}): JSX.Element => {
+const Modals: FunctionComponent<{
+  router: NextRouter;
+  t: TFunction<"404", undefined>;
+}> = ({ router, t }): JSX.Element => {
   const dispatch = useDispatch();
   const { address } = useAccount();
   const publicClient = createPublicClient({
@@ -168,7 +170,8 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     dispatch,
     address,
     publicClient,
-    lensConnected
+    lensConnected,
+    t
   );
   const {
     makeQuote,
@@ -211,10 +214,13 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
     dispatch,
     publicClient,
     address,
-    fullScreenVideo
+    fullScreenVideo,
+    t
   );
-  const { handleReportPost, reason, setReason, reportLoading } =
-    useReport(dispatch);
+  const { handleReportPost, reason, setReason, reportLoading } = useReport(
+    dispatch,
+    t
+  );
   return (
     <>
       {fullScreenVideo?.open && (
@@ -231,9 +237,12 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           wrapperRef={wrapperRef}
         />
       )}
-      {mapOpen?.value && <Map dispatch={dispatch} filterValues={filters} />}
+      {mapOpen?.value && (
+        <Map t={t} dispatch={dispatch} filterValues={filters} />
+      )}
       {filtersOpen?.value && (
         <Filters
+          t={t}
           lensConnected={lensConnected}
           filterConstants={filterConstants}
           openDropDown={openDropDown}
@@ -263,6 +272,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {reactBox?.open && (
         <Who
+          t={t}
           router={router}
           lensConnected={lensConnected}
           dispatch={dispatch}
@@ -287,6 +297,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {displaySearch?.value !== undefined && (
         <DisplaySearch
+          t={t}
           dispatch={dispatch}
           sortType={displaySearch?.type!}
           gallery={gallery}
@@ -301,6 +312,8 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {reportReason?.open && (
         <ReportPub
+          t={t}
+          router={router}
           dispatch={dispatch}
           id={reportReason?.for!}
           reason={reason}
@@ -311,6 +324,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {followCollect?.type && (
         <FollowCollect
+          t={t}
           dispatch={dispatch}
           type={followCollect?.type!}
           collect={followCollect?.collect}
@@ -325,6 +339,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {postBox?.open && (
         <PostBox
+          t={t}
           lensConnected={lensConnected}
           setCaretCoord={setCaretCoord}
           setMentionProfiles={setMentionProfiles}
@@ -347,6 +362,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       {postCollectGif?.type && (
         <PostCollectGif
           dispatch={dispatch}
+          t={t}
           openMeasure={openMeasure}
           setOpenMeasure={setOpenMeasure}
           availableCurrencies={availableCurrencies}
@@ -367,12 +383,13 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
         />
       )}
       {questGates?.gates && (
-        <QuestGates gates={questGates?.gates} dispatch={dispatch} />
+        <QuestGates t={t} gates={questGates?.gates} dispatch={dispatch} />
       )}
-      {interactError?.value && <InteractError dispatch={dispatch} />}
-      {questSuccess?.value && <QuestSuccess dispatch={dispatch} />}
+      {interactError?.value && <InteractError t={t} dispatch={dispatch} />}
+      {questSuccess?.value && <QuestSuccess t={t} dispatch={dispatch} />}
       {successCheckout?.value && (
         <SuccessCheckout
+          t={t}
           dispatch={dispatch}
           router={router}
           handle={
@@ -382,6 +399,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
       )}
       {postSuccess?.value && (
         <PostSuccess
+          t={t}
           router={router}
           type={postSuccess?.value!}
           dispatch={dispatch}
@@ -394,7 +412,7 @@ const Modals: FunctionComponent<{ router: NextRouter }> = ({
           }
         />
       )}
-      {claimProfile?.value && <ClaimProfile dispatch={dispatch} />}
+      {claimProfile?.value && <ClaimProfile t={t} dispatch={dispatch} />}
       {indexer?.open && <Index message={indexer?.message} />}
     </>
   );

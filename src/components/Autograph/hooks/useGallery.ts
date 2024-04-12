@@ -26,6 +26,7 @@ import errorChoice from "../../../../lib/helpers/errorChoice";
 import getGallerySort from "../../../../lib/helpers/getGallerySort";
 import { ProfileMetadataSchema } from "@lens-protocol/metadata";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
+import { TFunction } from "i18next";
 
 const useGallery = (
   lensConnected: Profile | undefined,
@@ -33,7 +34,8 @@ const useGallery = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  pageProfile: Profile | undefined
+  pageProfile: Profile | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [sortType, setSortType] = useState<SortType>(SortType.Public);
   const [interactionsGalleryLoading, setInteractionsGalleryLoading] = useState<
@@ -441,7 +443,8 @@ const useGallery = (
           dispatch,
           address as `0x${string}`,
           clientWallet,
-          publicClient
+          publicClient,
+          t
         );
 
         await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
@@ -449,7 +452,7 @@ const useGallery = (
         dispatch(setInteractError(true));
       }
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(err, () => {}, dispatch, t);
     }
     setDisplayLoading(false);
   };
@@ -470,7 +473,7 @@ const useGallery = (
     });
 
     try {
-      await lensLike(id, dispatch, hasReacted);
+      await lensLike(id, dispatch, hasReacted, t);
       updateInteractions(
         index,
         {
@@ -491,7 +494,8 @@ const useGallery = (
             "reactions",
             hasReacted ? false : true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -527,7 +531,8 @@ const useGallery = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         index,
@@ -549,7 +554,8 @@ const useGallery = (
             "mirrors",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -573,7 +579,7 @@ const useGallery = (
     });
 
     try {
-      await lensLike(id, dispatch, hasReacted);
+      await lensLike(id, dispatch, hasReacted, t);
       updateInteractions(
         index,
         {
@@ -598,7 +604,8 @@ const useGallery = (
             true,
             id
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -627,7 +634,8 @@ const useGallery = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         index,
@@ -653,7 +661,8 @@ const useGallery = (
             true,
             id
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 

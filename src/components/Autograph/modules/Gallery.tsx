@@ -13,6 +13,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   selectedOption,
   mirror,
   like,
+  t,
   router,
   openMirrorChoice,
   handleOptionSelect,
@@ -40,7 +41,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
       <div className="relative w-full justify-end flex items-center h-fit sm:px-0 px-1">
         <div className="relative w-[16rem] h-fit flex items-center justify-between flex p-2 border border-afilado rounded-md gap-3 font-bit">
           <div className="relative w-fit h-fit flex items-center justify-center text-white text-sm sm:text-base top-px">
-            Gallery
+            {t("gal")}
           </div>
           <div
             className="relative flex flex-row justify-between gap-2 cursor-pointer border items-center rounded-sm w-fit h-fit border-hierba p-2"
@@ -60,22 +61,24 @@ const Gallery: FunctionComponent<GalleryProps> = ({
         {optionsOpen && (
           <div className="absolute flex items-start justify-center w-40 sm:w-60 h-40 top-14 z-10 bg-black overflow-y-scroll border border-afilado rounded-md">
             <div className="relative flex flex-col w-full h-fit gap-2 items-center justify-start">
-              {GALLERY_OPTIONS?.map((item: string, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative w-full h-fit border-b border-afilado flex items-center justify-center cursor-pointer hover:opacity-70 text-white font-bit top-px"
-                    onClick={() => {
-                      handleOptionSelect(item);
-                      setOptionsOpen(false);
-                    }}
-                  >
-                    <div className="relative w-fit h-fit flex items-center justify-center text-xs sm:text-sm">
-                      {item}
+              {GALLERY_OPTIONS?.map(
+                (item: { es: string; en: string }, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-full h-fit border-b border-afilado flex items-center justify-center cursor-pointer hover:opacity-70 text-white font-bit top-px"
+                      onClick={() => {
+                        handleOptionSelect(item.en);
+                        setOptionsOpen(false);
+                      }}
+                    >
+                      <div className="relative w-fit h-fit flex items-center justify-center text-xs sm:text-sm">
+                        {item?.[router.locale as "en" | "es"]}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
             </div>
           </div>
         )}
@@ -113,6 +116,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                 </div>
               ) : (
                 <Creation
+                  t={t}
                   lensConnected={lensConnected}
                   dispatch={dispatch}
                   cartItems={cartItems}
@@ -193,7 +197,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                         </div>
                         <div
                           className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
-                          title="Go to Drop"
+                          title={t("goDrop")}
                         >
                           <Image
                             draggable={false}

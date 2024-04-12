@@ -30,6 +30,7 @@ import Award from "./Tiles/Award";
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
   publication,
+  t,
   layoutAmount,
   popUpOpen,
   setPopUpOpen,
@@ -76,6 +77,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   if (type?.toLowerCase()?.includes("profile")) {
     return (
       <Profile
+        t={t}
         publication={publication?.post as LensProfile}
         index={index}
         router={router}
@@ -94,6 +96,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   if (type?.toLowerCase() == "microbrand") {
     return (
       <Microbrand
+        t={t}
         publication={publication?.post as LensProfile}
         index={index}
         router={router}
@@ -116,6 +119,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         dispatch={dispatch}
         publication={publication?.post as AwardType}
         router={router}
+        t={t}
       />
     );
   }
@@ -123,6 +127,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   if (type?.toLowerCase() == "listener") {
     return (
       <Listener
+        t={t}
         lensConnected={lensConnected}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
@@ -153,6 +158,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         popUpOpen={popUpOpen}
+        t={t}
         setPopUpOpen={setPopUpOpen}
         layoutAmount={layoutAmount}
         index={index}
@@ -175,6 +181,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   if (type?.toLowerCase() == "coinop" || type?.toLowerCase() == "f3m") {
     return (
       <CoinOp
+        t={t}
         lensConnected={lensConnected}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
@@ -230,6 +237,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         setOpenMirrorChoice={setOpenMirrorChoice}
         layoutAmount={layoutAmount}
         router={router}
+        t={t}
         publication={publication?.post as Post | Comment | Quote | Mirror}
         dispatch={dispatch}
         mirror={mirror}
@@ -265,12 +273,14 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         interactionsLoading={interactionsLoading?.[index]}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
+        t={t}
       />
     );
   }
 
   return (
     <ImagePost
+      t={t}
       lensConnected={lensConnected}
       openMirrorChoice={openMirrorChoice}
       setOpenMirrorChoice={setOpenMirrorChoice}

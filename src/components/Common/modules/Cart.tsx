@@ -5,10 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import CartList from "./CartList";
 import { NextRouter } from "next/router";
+import { TFunction } from "i18next";
 
-const Cart: FunctionComponent<{ router: NextRouter }> = ({
-  router,
-}): JSX.Element => {
+const Cart: FunctionComponent<{
+  router: NextRouter;
+  t: TFunction<"404", undefined>;
+}> = ({ router, t }): JSX.Element => {
   const dispatch = useDispatch();
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
@@ -28,7 +30,7 @@ const Cart: FunctionComponent<{ router: NextRouter }> = ({
         <div
           className="relative w-8 h-8 flex items-center justify-center cursor-pointer active:scale-95"
           id={cartAnim ? "cartAnim" : ""}
-          title="Cart"
+          title={t("car")}
         >
           <Image
             src={`${INFURA_GATEWAY}/ipfs/QmT5ewiqFhfo8EHxSYiFwFR67pBpg7xesdtwAu9oWBoqqu`}
@@ -45,6 +47,7 @@ const Cart: FunctionComponent<{ router: NextRouter }> = ({
       {cartListOpen && (
         <CartList
           dispatch={dispatch}
+          t={t}
           router={router}
           cartItems={cartItems}
           setCartListOpen={setCartListOpen}

@@ -23,6 +23,7 @@ import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import { NextRouter } from "next/router";
 import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import errorChoice from "../../../../lib/helpers/errorChoice";
+import { TFunction } from "i18next";
 
 const useComment = (
   address: `0x${string}` | undefined,
@@ -48,7 +49,8 @@ const useComment = (
         }
       | undefined
     >
-  ) => void
+  ) => void,
+  t: TFunction<"404", undefined>
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);
@@ -228,9 +230,9 @@ const useComment = (
       });
     }
     try {
-      await lensHide(id, dispatch);
+      await lensHide(id, dispatch, t);
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(err, () => {}, dispatch, t);
     }
     if (main) {
       setMainInteractionsLoading((prev) => {
@@ -272,7 +274,7 @@ const useComment = (
     }
 
     try {
-      await lensBookmark(on, dispatch);
+      await lensBookmark(on, dispatch, t);
       updateInteractions(
         index,
         {
@@ -295,7 +297,8 @@ const useComment = (
             true,
             main!
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
     if (main) {
@@ -361,7 +364,8 @@ const useComment = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         index!,
@@ -393,7 +397,8 @@ const useComment = (
             true,
             main
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -491,7 +496,8 @@ const useComment = (
         address as `0x${string}`,
         clientWallet,
         publicClient,
-        () => clearComment(index, main!)
+        () => clearComment(index, main!),
+        t
       );
       updateInteractions(index!, {}, "comments", true, main!);
       await getComments();
@@ -499,7 +505,8 @@ const useComment = (
       errorChoice(
         err,
         () => updateInteractions(index!, {}, "comments", true, main!),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -598,7 +605,8 @@ const useComment = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         index!,
@@ -622,7 +630,8 @@ const useComment = (
             true,
             main!
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -646,7 +655,7 @@ const useComment = (
     if (!main && index == -1) return;
     handleLoaders(false, main!, index, "like");
     try {
-      await lensLike(id, dispatch, hasReacted);
+      await lensLike(id, dispatch, hasReacted, t);
       updateInteractions(
         index!,
         {
@@ -669,7 +678,8 @@ const useComment = (
             hasReacted ? false : true,
             main!
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 

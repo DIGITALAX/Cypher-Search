@@ -15,6 +15,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   encryptFulfillment,
   setDetails,
   openDropdown,
+  t,
   setOpenDropdown,
   encryptedStrings,
   total,
@@ -33,48 +34,45 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   return (
     <div className="relative w-fit h-fit relative flex items-start justify-start p-2 flex-col gap-6">
       <div className="relative w-fit h-fit flex items-center justify-center font-aust text-3xl text-white">
-        Checkout
+        {t("check")}
       </div>
       <div className="relative w-fit md:w-96 h-fit flex items-center justify-center break-words font-bit text-white text-xs">
-        Claim your cart. Each Lens collect is unique like you—one by one
-        checkouts give them that personal touch. No batch buys at this time.
+        {t("clam")}
       </div>
       {cartItems?.find((item) => item?.item?.origin !== "1") && (
         <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
           <div className="relative w-fit h-fit flex text-white font-aust text-2xl">
-            Fulfillment Details
+            {t("ful")}
           </div>
           {chooseCartItem?.item?.origin == "4" && (
             <div className="relative w-fit h-fit flex text-sol font-aust text-xs opacity-90">
-              These NFTs extend beyond screens. When collected, you&apos;ve
-              unlocked IRL customization. Encrypt your parameters and
-              fulfillment details to get started.
+              {t("ext")}
             </div>
           )}
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
             {[
               {
-                title: "Name",
+                title: t("name"),
                 drop: false,
               },
               {
-                title: "Address",
+                title: t("add"),
                 drop: false,
               },
               {
-                title: "Zip",
+                title: t("zip"),
                 drop: false,
               },
               {
-                title: "City",
+                title: t("cit"),
                 drop: false,
               },
               {
-                title: "State",
+                title: t("sta"),
                 drop: false,
               },
               {
-                title: "Country",
+                title: t("con"),
                 drop: true,
               },
             ].map(
@@ -201,7 +199,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
         </div>
         <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
           <div className="relative w-fit h-fit flex text-white font-aust text-xl">
-            Checkout Token
+            {t("tok")}
           </div>
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
             {ACCEPTED_TOKENS?.filter((value) =>
@@ -237,7 +235,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
         </div>
         <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3 font-aust">
           <div className="relative w-fit h-fit flex text-xl text-white break-words">
-            Selected Item Total
+            {t("sTot")}
           </div>
           {groupedByPubId[chooseCartItem?.item?.pubId!] && (
             <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit text-sol">
@@ -272,9 +270,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
       {Number(chooseCartItem?.item?.amount) ==
         Number(chooseCartItem?.item?.soldTokens) && (
         <div className="relative w-3/4 h-fit flex items-center justify-center break-words text-white text-xs font-bit">
-          Just missed it! This creation was snapped up by another collector.
-          Time to update your cart. Change of plans? Maybe it&apos;s for the
-          best.
+          {t("miss")}
         </div>
       )}
       <div
@@ -315,17 +311,17 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
             chooseCartItem?.item?.soldTokens !== undefined &&
             Number(chooseCartItem?.item?.amount) ==
               Number(chooseCartItem?.item?.soldTokens || 0) ? (
-            "SOLD OUT"
+            t("sold")
           ) : cartItems?.find((item) => item?.item?.origin !== "1") &&
             !encryptedStrings?.find(
               (item) => item?.pubId == chooseCartItem?.item?.pubId
             ) &&
             chooseCartItem?.item?.origin !== "1" ? (
-            "Encrypt Fulfillment"
+            t("enc")
           ) : !isApprovedSpend ? (
-            "Approve Spend"
+            t("apS")
           ) : (
-            "Collect Item"
+            t("colI")
           )}
         </div>
       </div>

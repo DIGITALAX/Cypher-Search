@@ -25,6 +25,7 @@ import { Dispatch } from "redux";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
 import errorChoice from "../../../../lib/helpers/errorChoice";
+import { TFunction } from "i18next";
 
 const useFeed = (
   lensConnected: Profile | undefined,
@@ -32,7 +33,8 @@ const useFeed = (
   profile: Profile | undefined,
   dispatch: Dispatch,
   publicClient: PublicClient,
-  address: `0x${string}` | undefined
+  address: `0x${string}` | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []
@@ -184,7 +186,6 @@ const useFeed = (
         postCollectGif?.gifs?.[id] || []
       );
 
-
       const clientWallet = createWalletClient({
         chain: polygon,
         transport: custom((window as any).ethereum),
@@ -206,14 +207,16 @@ const useFeed = (
         address as `0x${string}`,
         clientWallet,
         publicClient,
-        () => clearComment(index)
+        () => clearComment(index),
+        t
       );
       updateInteractions(index!, {}, "comments", true);
     } catch (err: any) {
       errorChoice(
         err,
         () => updateInteractions(index!, {}, "comments", true),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -255,7 +258,7 @@ const useFeed = (
     });
 
     try {
-      await lensLike(id, dispatch, hasReacted);
+      await lensLike(id, dispatch, hasReacted, t);
       updateInteractions(
         index,
         {
@@ -276,7 +279,8 @@ const useFeed = (
             "reactions",
             hasReacted ? false : true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -314,7 +318,8 @@ const useFeed = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         index,
@@ -344,7 +349,8 @@ const useFeed = (
             "countOpenActions",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -379,7 +385,8 @@ const useFeed = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         index,
@@ -401,7 +408,8 @@ const useFeed = (
             "mirrors",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -420,9 +428,9 @@ const useFeed = (
       return updatedArray;
     });
     try {
-      await lensHide(id, dispatch);
+      await lensHide(id, dispatch, t);
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(err, () => {}, dispatch, t);
     }
     setInteractionsFeedLoading((prev) => {
       const updatedArray = [...prev];
@@ -438,7 +446,7 @@ const useFeed = (
       return updatedArray;
     });
     try {
-      await lensBookmark(on, dispatch);
+      await lensBookmark(on, dispatch, t);
       updateInteractions(
         index,
         {
@@ -459,7 +467,8 @@ const useFeed = (
             "bookmarks",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
     setInteractionsFeedLoading((prev) => {

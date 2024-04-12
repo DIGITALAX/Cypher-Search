@@ -26,13 +26,15 @@ import {
 } from "../../../../lib/constants";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import collectionFixer from "../../../../lib/helpers/collectionFixer";
+import { TFunction } from "i18next";
 
 const useFilterPost = (
   filtersOpen: FiltersOpenState,
   dispatch: Dispatch<AnyAction>,
   address: `0x${string}` | undefined,
   publicClient: PublicClient,
-  lensConnected: Profile | undefined
+  lensConnected: Profile | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [publication, setPublication] = useState<Publication>();
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>(
@@ -96,7 +98,8 @@ const useFilterPost = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       updateInteractions(
         {
@@ -116,7 +119,8 @@ const useFilterPost = (
             "mirrors",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
     setInteractionsLoading((prev) => {
@@ -134,7 +138,7 @@ const useFilterPost = (
       return arr;
     });
     try {
-      await lensLike(id, dispatch, hasReacted);
+      await lensLike(id, dispatch, hasReacted, t);
       updateInteractions(
         {
           hasReacted: hasReacted ? false : true,
@@ -153,7 +157,8 @@ const useFilterPost = (
             "reactions",
             hasReacted ? false : true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
     setInteractionsLoading((prev) => {
@@ -182,7 +187,8 @@ const useFilterPost = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
@@ -204,7 +210,7 @@ const useFilterPost = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 
@@ -246,7 +252,8 @@ const useFilterPost = (
         undefined,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
@@ -268,7 +275,7 @@ const useFilterPost = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 

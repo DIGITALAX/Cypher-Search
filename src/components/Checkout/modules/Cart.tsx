@@ -23,6 +23,7 @@ const Cart: FunctionComponent<CartProps> = ({
   chosenVariation,
   setChosenVariation,
   encryptedStrings,
+  t,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-[95vh]  relative flex items-start justify-center flex-row gap-4 xl:flex-nowrap flex-wrap overflow-y-scroll">
@@ -76,7 +77,7 @@ const Cart: FunctionComponent<CartProps> = ({
                         }
                       </div>
                       <div className="relative w-fit h-fit text-ama flex items-center justify-center">
-                        Qty. x{" "}
+                        {t("cant")} x{" "}
                         {
                           groupedByPubId[chooseCartItem?.item?.pubId!]?.amounts[
                             index
@@ -112,8 +113,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                 dispatch(
                                   setInsufficientBalance({
                                     actionValue: true,
-                                    actionMessage:
-                                      "We know you're eager, but you've reached this creations' collect limit!",
+                                    actionMessage: t("lim"),
                                   })
                                 );
                                 return;
@@ -572,8 +572,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                       dispatch(
                                         setInsufficientBalance({
                                           actionValue: true,
-                                          actionMessage:
-                                            "We know you're eager, but you've reached this creations' collect limit!",
+                                          actionMessage: t("lim"),
                                         })
                                       );
                                       return;
@@ -646,7 +645,7 @@ const Cart: FunctionComponent<CartProps> = ({
                                 }}
                               >
                                 <div className="relative w-fit h-fit flex items-center justify-center">
-                                  Add Variation
+                                  {t("var")}
                                 </div>
                               </div>
                             </div>

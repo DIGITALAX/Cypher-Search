@@ -43,6 +43,7 @@ import { setInteractError } from "../../../../redux/reducers/interactErrorSlice"
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import collectionFixer from "../../../../lib/helpers/collectionFixer";
+import { TFunction } from "i18next";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -60,7 +61,8 @@ const useCreate = (
   screenDisplay: ScreenDisplay,
   pageProfile: Profile | undefined,
   client: LitNodeClient,
-  isDesigner: boolean
+  isDesigner: boolean,
+  t: TFunction<"404", undefined>
 ) => {
   const coder = new ethers.AbiCoder();
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);
@@ -249,7 +251,8 @@ const useCreate = (
           `${toHexWithLeadingZero(
             Number(collectionDetails?.profileId)
           )}-${toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
-          dispatch
+          dispatch,
+          t
         );
         const { request } = await publicClient.simulateContract({
           address: COLLECTION_CREATOR,
@@ -342,6 +345,7 @@ const useCreate = (
         address,
         clientWallet,
         publicClient,
+        t,
         undefined,
         true
       );
@@ -363,7 +367,7 @@ const useCreate = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 
@@ -392,7 +396,8 @@ const useCreate = (
         `${toHexWithLeadingZero(
           Number(collectionDetails?.profileId)
         )}-${toHexWithLeadingZero(Number(collectionDetails?.pubId))}`,
-        dispatch
+        dispatch,
+        t
       );
 
       const { request } = await publicClient.simulateContract({
@@ -422,7 +427,7 @@ const useCreate = (
         dispatch(
           setIndexer({
             actionOpen: true,
-            actionMessage: "Successfully Indexed",
+            actionMessage: t("suc"),
           })
         );
 

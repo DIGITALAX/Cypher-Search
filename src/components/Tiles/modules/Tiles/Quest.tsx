@@ -9,6 +9,7 @@ import InteractBar from "@/components/Common/modules/InteractBar";
 
 const Quest: FunctionComponent<QuestProps> = ({
   layoutAmount,
+  t,
   router,
   publication,
   profileHovers,
@@ -65,9 +66,7 @@ const Quest: FunctionComponent<QuestProps> = ({
               />
             </div>
           </div>
-          <div className="font-bit text-sm text-cost font-bit">
-            Kinora Quest
-          </div>
+          <div className="font-bit text-sm text-cost font-bit">{t("kin")}</div>
         </div>
         <div className="relative w-full h-fit items-center justify-center flex flex-row gap-4">
           <div className="relative p-2 rounded-sm border border-suave w-full h-20 items-center justify-center flex bg-amo/30">
@@ -182,7 +181,7 @@ const Quest: FunctionComponent<QuestProps> = ({
           </div>
           <div className="relative w-full h-fit flex flex-row items-center justify-start gap-1 break-words">
             <div className="relative w-fit h-fit flex items-center justify-center">
-              Milestone Count:
+              {t("cont")}
             </div>
             <div className="relative w-fit h-fit flex items-center justify-center text-girasol break-words">
               {publication?.milestoneCount}
@@ -190,7 +189,7 @@ const Quest: FunctionComponent<QuestProps> = ({
           </div>
           <div className="relative w-full h-fit flex flex-row items-center justify-start gap-1 break-words">
             <div className="relative w-fit h-fit flex items-center justify-center">
-              Video Count:
+              {t("contV")}
             </div>
             <div className="relative w-fit h-fit flex items-center justify-center text-girasol break-words">
               {publication?.milestones?.reduce(
@@ -212,7 +211,7 @@ const Quest: FunctionComponent<QuestProps> = ({
           </div>
           <div className="relative w-full h-fit flex flex-row items-center justify-start gap-px break-words">
             <div className="relative w-fit h-fit flex items-center justify-center">
-              Reward Mix:
+              {t("rew")}
             </div>
             <div className="relative w-fit h-fit flex items-center justify-center text-girasol break-words">
               {(publication?.milestones

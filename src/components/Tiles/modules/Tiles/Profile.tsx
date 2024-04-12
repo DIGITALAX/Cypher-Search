@@ -18,6 +18,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
   setProfileHovers,
   dispatch,
   lensConnected,
+  t
 }): JSX.Element => {
   const profilePicture = createProfilePicture(publication?.metadata?.picture);
   const cover = createProfilePicture(publication?.metadata?.coverPicture);
@@ -108,6 +109,7 @@ const Profile: FunctionComponent<ProfileProps> = ({
         layoutAmount={layoutAmount}
         dispatch={dispatch}
         profile={publication}
+        t={t}
       />
     </div>
   );

@@ -18,6 +18,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   collectionDetails,
   setCollectionDetails,
   router,
+  t,
   handleMedia,
   lensConnected,
   collectionSettings,
@@ -38,6 +39,8 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
       return (
         <Dispatch
           allDrops={allDrops}
+          t={t}
+          router={router}
           filterConstants={filterConstants}
           collectionDetails={collectionDetails}
           setCollectionDetails={setCollectionDetails}
@@ -54,6 +57,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
     case "drop":
       return (
         <Drop
+          t={t}
           handle={
             lensConnected?.handle?.suggestedFormatted?.localName?.split(
               "@"
@@ -242,7 +246,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                           </div>
                           <div
                             className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
-                            title="Go to Collection"
+                            title={t("goC")}
                             onClick={(e) => {
                               e.stopPropagation();
                               router.push(
@@ -269,7 +273,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
         </div>
       ) : (
         <div className="relative w-1/2 h-fit flex items-center justify-center font-ignite text-xl text-white text-center break-words">
-          Nothing to see here yet. Create products for the market!
+          {t("noth")}
         </div>
       );
   }

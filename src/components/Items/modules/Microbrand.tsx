@@ -26,6 +26,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   profileHovers,
   setProfileHovers,
   lensConnected,
+  t
 }): JSX.Element => {
   const profilePicture = createProfilePicture(itemData?.metadata?.picture);
   return (
@@ -54,9 +55,11 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
             className="relative w-fit h-fit gap-2 flex items-center justify-center flex-row text-sm cursor-pointer"
             onClick={() =>
               router.push(
-                `/autograph/${itemData?.handle?.suggestedFormatted?.localName?.split(
-                  "@"
-                )?.[1]}`
+                `/autograph/${
+                  itemData?.handle?.suggestedFormatted?.localName?.split(
+                    "@"
+                  )?.[1]
+                }`
               )
             }
           >
@@ -92,6 +95,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
                   <Creation
                     lensConnected={lensConnected}
                     dispatch={dispatch}
+                    t={t}
                     cartItems={cartItems}
                     key={index}
                     followProfile={followProfile}

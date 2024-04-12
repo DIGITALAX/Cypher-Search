@@ -71,6 +71,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
   handlePlayerJoin,
   purchaseDetails,
   setPurchaseDetails,
+  t
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.publication?.by?.metadata?.picture
@@ -117,6 +118,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               ) : (
                 <div className="relative w-5/6 h-full flex flex-col gap-10 justify-start items-center">
                   <PostComment
+                    t={t}
                     itemId={undefined}
                     router={router}
                     setCaretCoord={setCaretCoordMain}
@@ -159,6 +161,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                           ) => {
                             return (
                               <Publication
+                                t={t}
                                 setCaretCoord={setCaretCoord}
                                 caretCoord={caretCoord}
                                 profilesOpen={profilesOpen}
@@ -227,7 +230,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                     </div>
                   ) : (
                     <div className="relative w-fit h-fit items-center justify-center flex text-white font-bit break-words">
-                      No comments yet. Make one?
+                      {t("coms")}
                     </div>
                   )}
                 </div>
@@ -399,7 +402,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
             }
           >
             <div className="relative w-fit h-fit flex items-center justify-center">
-              {`See Quest >`}
+              {t("ques")}
             </div>
           </div>
           <div className="relative w-full h-fit flex items-center justify-center sm:justify-end">
@@ -449,7 +452,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
             <div className="relative w-full h-fit flex flex-col items-center sm:items-end justify-center sm:justify-end gap-2 font-vcr text-white text-xs">
               <div className="relative w-fit h-fit flex flex-row items-center justify-start gap-1 break-words">
                 <div className="relative w-fit h-fit flex items-center justify-center">
-                  Milestone Count:
+                  {t("cont")}
                 </div>
                 <div className="relative w-fit h-fit flex items-center justify-center text-girasol break-words">
                   {itemData?.milestoneCount}
@@ -457,7 +460,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               </div>
               <div className="relative w-fit h-fit flex flex-row items-center justify-start gap-1 break-words">
                 <div className="relative w-fit h-fit flex items-center justify-center">
-                  Video Count:
+                  {t("contV")}
                 </div>
                 <div className="relative w-fit h-fit flex items-center justify-center text-girasol break-words">
                   {itemData?.milestones?.reduce(
@@ -479,7 +482,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               </div>
               <div className="relative w-fit h-fit flex flex-row items-center justify-start gap-px break-words">
                 <div className="relative w-fit h-fit flex items-center justify-center">
-                  Reward Mix:
+                  {t("rew")}
                 </div>
                 <div className="relative w-fit h-fit flex items-center justify-center text-girasol break-words">
                   {(itemData?.milestones
@@ -526,7 +529,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               id="xScroll"
             >
               <div className="relative w-fit h-fit flex items-center justify-center text-white text-sm">
-                Milestone Rewards
+                {t("rewM")}
               </div>
               <div className="relative w-fit h-fit justify-start items-center gap-4 flex flex-row flex-wrap">
                 {itemData?.milestones[purchaseDetails?.imageIndex - 1]?.rewards
@@ -657,14 +660,14 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               {itemData?.players
                 ?.find((item) => item?.profile?.id == lensConnected?.id)
                 ?.questsCompleted?.includes(itemData?.questId)
-                ? "Quest Completed"
+                ? t("compQ")
                 : itemData?.players?.some(
                     (item) => item?.profile?.id == lensConnected?.id
                   )
-                ? "Quest Joined"
+                ? t("joinedQ")
                 : !itemData?.status
-                ? "Quest Closed"
-                : "Join Quest"}
+                ? t("cloQ")
+                : t("joinQ")}
             </div>
           </div>
         </div>

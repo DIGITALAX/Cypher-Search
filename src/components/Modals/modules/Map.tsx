@@ -12,6 +12,7 @@ import { setFilterChange } from "../../../../redux/reducers/filterChangeSlice";
 const Map: FunctionComponent<MapProps> = ({
   dispatch,
   filterValues,
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -25,7 +26,7 @@ const Map: FunctionComponent<MapProps> = ({
             />
           </div>
           <div className="relative w-full h-fit items-center justify-center text-center break-words font-bit text-sol text-lg">
-            Fulfiller Map
+            {t("map")}
           </div>
           <MapContainer
             center={[40.7477249, -73.9903851]}
@@ -59,7 +60,7 @@ const Map: FunctionComponent<MapProps> = ({
               }}
             >
               <Popup className="bg-offBlack border border-white text-white">
-                The Manufactory
+                {t("manu")}
               </Popup>
             </Marker>
           </MapContainer>

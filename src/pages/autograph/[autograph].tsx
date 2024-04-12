@@ -4,6 +4,7 @@ import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import useAutograph from "@/components/Autograph/hooks/useAutograph";
 import RouterChange from "@/components/Common/modules/RouterChange";
 import NotFound from "@/components/Common/modules/NotFound";
@@ -32,12 +33,16 @@ import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../lib/constants";
 import useQuests from "@/components/Autograph/hooks/useQuests";
+import { useTranslation } from "next-i18next";
+import { TFunction } from "i18next";
 
-const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
-  router,
-  client,
-}): JSX.Element => {
+const Autograph: NextPage<{
+  router: NextRouter;
+  client: LitNodeClient;
+  tCom: TFunction<"404", undefined>;
+}> = ({ router, client, tCom }): JSX.Element => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("autograph");
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
@@ -70,9 +75,6 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
   );
   const fullScreenVideo = useSelector(
     (state: RootState) => state.app.fullScreenVideoReducer
-  );
-  const postSuccess = useSelector(
-    (state: RootState) => state.app.postSuccessReducer.value
   );
   const walletConnected = useSelector(
     (state: RootState) => state.app.walletConnectedReducer.value
@@ -170,7 +172,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     profile,
     dispatch,
     publicClient,
-    address
+    address,
+    tCom
   );
   const { questsLoading, questSample } = useQuests(profile, lensConnected);
   const {
@@ -205,7 +208,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     dispatch,
     publicClient,
     address,
-    profile
+    profile,
+    tCom
   );
   const {
     followProfile,
@@ -223,7 +227,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     dispatch,
     publicClient,
     address,
-    router
+    router,
+    tCom
   );
   const {
     createDrop,
@@ -259,7 +264,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     screenDisplay,
     profile,
     client,
-    isDesigner
+    isDesigner,
+    tCom
   );
   const {
     handleSendMessage,
@@ -308,7 +314,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     address,
     screenDisplay,
     isDesigner,
-    profile
+    profile,
+    tCom
   );
   const {
     handleMoreBookmarks,
@@ -350,7 +357,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     dispatch,
     publicClient,
     address,
-    profile
+    profile,
+    tCom
   );
   const {
     makePost,
@@ -359,7 +367,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
     postLoading,
     postContentLoading,
     setPostContentLoading,
-  } = usePost(dispatch, postCollectGif, publicClient, address);
+  } = usePost(dispatch, postCollectGif, publicClient, address, tCom);
   const {
     allOrders,
     ordersLoading,
@@ -390,6 +398,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
       <>
         {!profile ? (
           <NotFound
+            t={tCom}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
@@ -552,6 +561,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 />
               </Head>
               <Web
+                t={t}
+                tCom={tCom}
                 cartItems={cartItems}
                 address={address}
                 handleMessageImage={handleMessageImage}
@@ -691,6 +702,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                 createDropLoading={createDropLoading}
               />
               <Bio
+                t={t}
                 profile={profile}
                 dispatch={dispatch}
                 router={router}
@@ -699,6 +711,8 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
               />
               <div className="relative flex flex-row gap-12 otro:gap-3 items-start justify-between sm:px-4 w-full h-full otro:flex-nowrap flex-wrap">
                 <Feed
+                  t={t}
+                  tCom={tCom}
                   cartItems={cartItems}
                   caretCoord={caretCoordFeed}
                   setCaretCoord={setCaretCoordFeed}
@@ -740,6 +754,7 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
                   postCollectGif={postCollectGif}
                 />
                 <Gallery
+                  t={t}
                   hasMoreGallery={cursorInfo?.hasMore}
                   lensConnected={lensConnected}
                   mirror={galleryMirror}
@@ -790,3 +805,16 @@ const Autograph: NextPage<{ router: NextRouter; client: LitNodeClient }> = ({
 };
 
 export default Autograph;
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+}
+
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["autograph", "footer", "404"])),
+  },
+});

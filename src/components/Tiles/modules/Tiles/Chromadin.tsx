@@ -28,6 +28,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   followLoading,
   unfollowProfile,
   lensConnected,
+  t
 }): JSX.Element => {
   return (
     <div
@@ -179,6 +180,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               level={undefined}
               right={"-5px"}
               bottom={"60px"}
+              t={t}
             />
           )}
         </div>

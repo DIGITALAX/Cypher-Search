@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
-const path = require('path');
+const path = require("path");
+const { i18n } = require("./next-i18next.config");
 
 const allowedOrigins = [
   "https://api-v2-mumbai.lens.dev/",
@@ -14,6 +15,7 @@ const allowedOrigins = [
 
 const nextConfig = {
   reactStrictMode: true,
+  i18n,
   images: {
     remotePatterns: [
       {
@@ -53,8 +55,8 @@ const nextConfig = {
   webpack: (config, options) => {
     config.module.rules.push({
       test: /\.tsx?$/,
-      include: [path.resolve(__dirname, 'node_modules/kinora-sdk')],
-      use: [options.defaultLoaders.babel, { loader: 'ts-loader' }],
+      include: [path.resolve(__dirname, "node_modules/kinora-sdk")],
+      use: [options.defaultLoaders.babel, { loader: "ts-loader" }],
     });
 
     return config;

@@ -7,6 +7,7 @@ import { INFURA_GATEWAY } from "../../../../lib/constants";
 
 const ClaimProfile: FunctionComponent<ClaimProfileProps> = ({
   dispatch,
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-50 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -21,7 +22,7 @@ const ClaimProfile: FunctionComponent<ClaimProfileProps> = ({
           </div>
           <div className="relative w-full h-fit items-center justify-center flex flex-col gap-3 pb-4">
             <div className="relative w-2/3 h-fit items-center justify-center text-center break-words font-bit text-sol text-sm">
-              Haven&apos;t claimed your Lens profile yet? Try here.
+              {t("claim")}
             </div>
             <div
               className="relative w-full sm:w-2/3 h-full min-h-[25vh] flex items-center justify-center rounded-sm p-px"
@@ -40,7 +41,7 @@ const ClaimProfile: FunctionComponent<ClaimProfileProps> = ({
               className="relative border border-white w-32 h-8 cursor-pointer flex items-center justify-center active:scale-95 py-1 rounded-md text-xs font-bit text-white"
             >
               <div className="relative w-fit h-fit flex items-center justify-center">
-                Claim Profile
+                {t("re")}
               </div>
             </div>
           </div>

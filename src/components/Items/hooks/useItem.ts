@@ -48,6 +48,7 @@ import findBalance from "../../../../lib/helpers/findBalance";
 import handleQuestData from "../../../../lib/helpers/handleQuestData";
 import { getQuest } from "../../../../graphql/subgraph/queries/getQuests";
 import { FetchResult } from "@apollo/client";
+import { TFunction } from "i18next";
 
 const useItem = (
   type: string,
@@ -58,7 +59,8 @@ const useItem = (
   address: `0x${string}` | undefined,
   publicClient: PublicClient,
   dispatch: Dispatch<AnyAction>,
-  router: NextRouter
+  router: NextRouter,
+  t: TFunction<"404", undefined>
 ) => {
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
   const [itemLoading, setItemLoading] = useState<boolean>(false);
@@ -421,7 +423,7 @@ const useItem = (
         dispatch(
           setInsufficientBalance({
             actionValue: true,
-            actionMessage: "Pockets Empty. Need to top up?",
+            actionMessage: t("poc"),
           })
         );
         setInstantLoading(false);
@@ -462,7 +464,8 @@ const useItem = (
         dispatch,
         address!,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       if (complete) {
         dispatch(setSuccessCheckout(true));

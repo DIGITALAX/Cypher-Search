@@ -13,6 +13,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
   decryptOrder,
   setOrderActions,
   ordersLoading,
+  t,
   router,
 }): JSX.Element => {
   return (
@@ -52,11 +53,11 @@ const Orders: FunctionComponent<OrdersProps> = ({
                       <div className="relative w-full h-fit md:h-28 flex md:flex-nowrap flex-wrap flex-row justify-between items-center p-2 gap-6">
                         <div className="relative justify-center items-start flex flex-col font-ignite gap-2">
                           <div className="relative justify-center items-center flex w-fit h-fit text-white text-xl">
-                            Order {allOrders?.length - index}
+                            {t("od")} {allOrders?.length - index}
                           </div>
                           <div className="relative justify-center items-center flex flex-row gap-1 w-fit h-fit text-sol text-sm">
                             <div className="relative w-fit h-fit flex items-center justify-center text-white">
-                              Block:
+                              {t("block")}
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center">
                               {order?.blockTimestamp}
@@ -100,7 +101,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                               )}
                             </div>
                             <div className="relative w-fit h-fit flex items-center justify-center">
-                              items
+                              {t("items")}
                             </div>
                           </div>
                           <div className="relative w-fit h-fit flex flex-row flex items-center justify-center gap-3">
@@ -158,18 +159,18 @@ const Orders: FunctionComponent<OrdersProps> = ({
                             {order?.details && (
                               <div className="relative w-full h-fit flex flex-col items-start justify-start font-aust text-white gap-4">
                                 <div className="relative w-fit h-fit flex items-start justify-start">
-                                  Order Details
+                                 {t("ord")}
                                 </div>
                                 <div className="relative flex flex-row items-start justify-between w-full h-fit gap-6">
                                   <div className="relative w-fit h-fit flex items-start justify-start flex-row flex-wrap gap-4">
                                     {[
-                                      "Name",
-                                      "Contact",
-                                      "Address",
-                                      "Zip",
-                                      "City",
-                                      "State",
-                                      "Country",
+                                      t("nam"),
+                                      t("con"),
+                                      t("addr"),
+                                      t("zip"),
+                                      t("city"),
+                                      t("state"),
+                                      t("country"),
                                     ].map((item: string, indexTwo: number) => {
                                       return (
                                         <div
@@ -216,9 +217,9 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                           size={12}
                                         />
                                       ) : !order?.decrypted ? (
-                                        "Decrypt"
+                                        t("dec")
                                       ) : (
-                                        "Decrypted"
+                                        t("decd")
                                       )}
                                     </div>
                                   </div>
@@ -227,7 +228,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                             )}
                             <div className="relative w-full h-fit flex flex-col items-start justify-start font-aust text-white gap-4">
                               <div className="relative w-fit h-fit flex items-start justify-start">
-                                Messages
+                                {t("mes")}
                               </div>
                               <div className="relative flex flex-row items-start justify-between w-full h-fit gap-6">
                                 <div className="relative w-fit h-fit flex items-start justify-start flex-col flex-wrap gap-4">
@@ -249,7 +250,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                   ) : (
                                     <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1 break-words">
                                       <div className="relative w-fit h-fit flex text-sol text-xs">
-                                        No Messages Yet.
+                                        {t("mens")}
                                       </div>
                                     </div>
                                   )}
@@ -260,6 +261,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                           {order?.subOrders?.map((item: Sub, index: number) => {
                             return (
                               <SubOrder
+                                t={t}
                                 router={router}
                                 item={item}
                                 key={index}

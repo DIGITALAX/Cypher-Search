@@ -23,14 +23,17 @@ import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSl
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import Draggable from "react-draggable";
 import { Creation } from "@/components/Tiles/types/tiles.types";
+import { TFunction } from "i18next";
 
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
+  t: TFunction<"404", undefined>;
 };
 
 export type DisplaySearchProps = {
   dispatch: Dispatch<AnyAction>;
+  t: TFunction<"404", undefined>;
   galleryLoading: boolean;
   gallery:
     | {
@@ -92,16 +95,19 @@ export type DisplaySearchProps = {
 
 export type InteractErrorProps = {
   dispatch: Dispatch<AnyAction>;
+  t: TFunction<"404", undefined>;
 };
 
 export type ClaimProfileProps = {
   dispatch: Dispatch<AnyAction>;
+  t: TFunction<"404", undefined>;
 };
 
 export type SuccessCheckoutProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   handle: string;
+  t: TFunction<"404", undefined>;
 };
 
 export type FullScreenVideoProps = {
@@ -133,6 +139,7 @@ export type IndexProps = {
 
 export type ReportPubProps = {
   dispatch: Dispatch<AnyAction>;
+  t: TFunction<"404", undefined>;
   id: string;
   handleReportPost: (id: string) => Promise<void>;
   reason: {
@@ -156,6 +163,7 @@ export type ReportPubProps = {
     }>
   ) => void;
   reportLoading: boolean;
+  router: NextRouter
 };
 
 export type WhoProps = {
@@ -173,6 +181,7 @@ export type WhoProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   lensConnected: Profile | undefined;
+  t: TFunction<"404", undefined>;
 };
 
 export type WhoSwitchProps = {
@@ -180,6 +189,7 @@ export type WhoSwitchProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   reactors: any[];
+  t: TFunction<"404", undefined>;
   quoters: (Quote & {
     decrypted: any;
   })[];
@@ -201,6 +211,7 @@ export type PostBoxProps = {
     x: number;
     y: number;
   };
+  t: TFunction<"404", undefined>;
   setCaretCoord: (
     e: SetStateAction<{
       x: number;
@@ -236,6 +247,7 @@ export type PostCollectGifProps = {
   setCollects: (
     e: SetStateAction<SimpleCollectOpenActionModuleInput | undefined>
   ) => void;
+  t: TFunction<"404", undefined>;
   collects: SimpleCollectOpenActionModuleInput | undefined;
   openMeasure: {
     searchedGifs: string[];
@@ -280,6 +292,7 @@ export type PostCollectGifProps = {
 export type FollowCollectProps = {
   dispatch: Dispatch<AnyAction>;
   type: string;
+  t: TFunction<"404", undefined>;
   collect:
     | {
         item:
@@ -301,6 +314,7 @@ export type FollowCollectProps = {
 
 export type PostSuccessProps = {
   dispatch: Dispatch<AnyAction>;
+  t: TFunction<"404", undefined>;
   type: string;
   router: NextRouter;
   pubId: string;
@@ -315,6 +329,7 @@ export type InsufficientBalanceProps = {
 
 export type QuestGatesProps = {
   dispatch: Dispatch<AnyAction>;
+  t: TFunction<"404", undefined>;
   gates: {
     erc20?: {
       address: string;
@@ -326,5 +341,6 @@ export type QuestGatesProps = {
 };
 
 export type QuestSuccessProps = {
+  t: TFunction<"404", undefined>;
   dispatch: Dispatch;
 };

@@ -18,6 +18,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
   hasMore,
   mirrorQuote,
   dispatch,
+  t,
   lensConnected,
 }): JSX.Element => {
   if (mirrorQuote && quoters?.length > 0) {
@@ -39,6 +40,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
             ) => {
               return (
                 <Publication
+                  t={t}
                   lensConnected={lensConnected}
                   index={index}
                   item={item}

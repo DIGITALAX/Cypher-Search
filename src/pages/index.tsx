@@ -8,12 +8,21 @@ import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import useTiles from "@/components/Tiles/hooks/useTiles";
 import { NextRouter } from "next/router";
 import Head from "next/head";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
+import { TFunction } from "i18next";
 
-export default function Home({ router }: { router: NextRouter }) {
+export default function Home({
+  router,
+  tCom,
+}: {
+  router: NextRouter;
+  tCom: TFunction<"404", undefined>;
+}) {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
@@ -111,7 +120,8 @@ export default function Home({ router }: { router: NextRouter }) {
     publicClient,
     address,
     lensConnected,
-    undefined
+    undefined,
+    tCom
   );
   const {
     setPopUpOpen,
@@ -126,7 +136,8 @@ export default function Home({ router }: { router: NextRouter }) {
     lensConnected,
     dispatch,
     publicClient,
-    address
+    address,
+    tCom
   );
 
   return (
@@ -149,6 +160,7 @@ export default function Home({ router }: { router: NextRouter }) {
         id="results"
       >
         <Header
+          t={tCom}
           fullScreenVideo={fullScreenVideo}
           cartAnim={cartAnim}
           filterChange={filterChange}
@@ -176,6 +188,7 @@ export default function Home({ router }: { router: NextRouter }) {
         />
         {searchActive && (
           <Tiles
+            t={tCom}
             filterConstants={filterConstants}
             searchItems={allSearchItems}
             layoutAmount={layoutAmount}
@@ -207,3 +220,9 @@ export default function Home({ router }: { router: NextRouter }) {
     </div>
   );
 }
+
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["404", "footer"])),
+  },
+});

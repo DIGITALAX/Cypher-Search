@@ -1069,8 +1069,10 @@ const useSearch = (
   };
 
   useEffect(() => {
-    setPlaceholderText(PLACEHOLDERS[Math.floor(Math.random() * 4)]);
-  }, []);
+    setPlaceholderText(
+      PLACEHOLDERS[Math.floor(Math.random() * 4)][router.locale as "en" | "es"]
+    );
+  }, [router.locale]);
 
   useEffect(() => {
     if (!filterConstants) {

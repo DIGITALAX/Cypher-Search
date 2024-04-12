@@ -32,7 +32,8 @@ const Header: FunctionComponent<HeaderProps> = ({
   handleLogout,
   searchItems,
   fullScreenVideo,
-  filterChange
+  filterChange,
+  t,
 }): JSX.Element => {
   return (
     <div
@@ -75,6 +76,7 @@ const Header: FunctionComponent<HeaderProps> = ({
       {includeSearch && (
         <SearchBar
           filterChange={filterChange}
+          t={t}
           dispatch={dispatch}
           handleSearch={handleSearch!}
           searchActive={searchActive}
@@ -87,6 +89,7 @@ const Header: FunctionComponent<HeaderProps> = ({
         />
       )}
       <Accounts
+        t={t}
         fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         searchActive={searchActive}

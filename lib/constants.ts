@@ -36,12 +36,27 @@ export const KINORA_QUEST_DATA: `0x${string}` =
   "0xB638b8e910f5852d9B2b69D250883EB3E8575092";
 
 export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|ba[A-Za-z2-7]{57})\b/;
-export const PLACEHOLDERS: string[] = [
-  "know the creator by name? @ them, we won't judge",
-  "transform, tinker, or totally overhaul – every mint & print on Cypher is CC0",
-  "some ideas from trending hashes: #synthwave #neobrutalism #autonomy",
-  "with the ecosystem at your fingertips, where do you start?",
-  "don't know what you're looking for? try a random mix",
+export const PLACEHOLDERS: { en: string; es: string }[] = [
+  {
+    es: "¿Conoces al creador por nombre? menciónale con @, no juzgaremos",
+    en: "know the creator by name? @ them, we won't judge",
+  },
+  {
+    es: "tranformar, retocar, o renovar por completo — cada mineto e impresión en Cypher es CC0",
+    en: "transform, tinker, or totally overhaul – every mint & print on Cypher is CC0",
+  },
+  {
+    es: "algunas ideas de los hashes en tendencia: #synthwave #neobrutalism #autonomy",
+    en: "some ideas from trending hashes: #synthwave #neobrutalism #autonomy",
+  },
+  {
+    es: "Con el ecosistem a tus manos, ¿por dónde empiezas?",
+    en: "with the ecosystem at your fingertips, where do you start?",
+  },
+  {
+    es: "¿No sabes lo que buscas? prueba una mezcla aleatoria",
+    en: "don't know what you're looking for? try a random mix",
+  },
 ];
 
 export const ACCEPTED_TOKENS: string[][] = [
@@ -90,14 +105,14 @@ export const ACCEPTED_TOKENS_MUMBAI: string[][] = [
   ],
 ];
 
-export const GALLERY_OPTIONS: string[] = [
-  "NEWEST",
-  "OLDEST",
-  "PRINT TYPE",
-  "CREATED",
-  "COLLECTED",
-  "PRICE LOWEST",
-  "PRICE HIGHEST",
+export const GALLERY_OPTIONS: { en: string; es: string }[] = [
+  { es: "MÁS NUEVO", en: "NEWEST" },
+  { es: "MÁS VIEJO", en: "OLDEST" },
+  { es: "TIPO DE IMPRESIÓN", en: "PRINT TYPE" },
+  { es: "CREADO", en: "CREATED" },
+  { es: "COLECCIONADO", en: "COLLECTED" },
+  { es: "BAJO PRECIO", en: "PRICE LOWEST" },
+  { es: "ALTO PRECIO", en: "PRICE HIGHEST" },
 ];
 
 export const numberToItemTypeMap: { [key: number]: ItemType } = {

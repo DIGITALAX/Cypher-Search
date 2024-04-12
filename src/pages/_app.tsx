@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import "@rainbow-me/rainbowkit/styles.css";
 import { XMTPProvider } from "@xmtp/react-sdk";
 import { init } from "@airstack/airstack-react";
+import "./../../i18n";
+import { appWithTranslation, useTranslation } from "next-i18next";
 import {
   getDefaultWallets,
   RainbowKitProvider,
@@ -61,8 +63,9 @@ const wagmiConfig = createConfig({
 
 init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const { t: tCom } = useTranslation("404");
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -113,11 +116,16 @@ export default function App({ Component, pageProps }: AppProps) {
                       : "bg-offBlack"
                   }`}
                 >
-                  <Component {...pageProps} router={router} client={client} />
-                  <Modals router={router} />
+                  <Component
+                    tCom={tCom}
+                    {...pageProps}
+                    router={router}
+                    client={client}
+                  />
+                  <Modals t={tCom} router={router} />
                   {router?.asPath?.includes("/autograph/") &&
                     !router?.asPath?.includes("/drop/") && (
-                      <Cart router={router} />
+                      <Cart router={router} t={tCom} />
                     )}
                   <Footer handleRewind={handleRewind} />
                 </div>
@@ -129,3 +137,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </WagmiConfig>
   );
 }
+
+export default appWithTranslation(App);

@@ -2,19 +2,21 @@ import { omit } from "lodash";
 import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { AnyAction, Dispatch } from "redux";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
-import {  polygon } from "viem/chains";
+import { polygon } from "viem/chains";
 import { PublicClient, WalletClient } from "viem";
 import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import mirrorPost from "../../../graphql/lens/mutations/mirror";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
+import { TFunction } from "i18next";
 
 const lensMirror = async (
   mirrorOn: string,
   dispatch: Dispatch<AnyAction>,
   address: `0x${string}`,
   clientWallet: WalletClient,
-  publicClient: PublicClient
+  publicClient: PublicClient,
+  t: TFunction<"404", undefined>
 ): Promise<void> => {
   const data = await mirrorPost({
     mirrorOn,
@@ -39,14 +41,15 @@ const lensMirror = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
     await handleIndexCheck(
       {
         forTxId: broadcastResult?.data?.broadcastOnchain?.txId,
       },
-      dispatch
+      dispatch,
+      t
     );
   } else {
     const { request } = await publicClient.simulateContract({
@@ -71,7 +74,7 @@ const lensMirror = async (
     dispatch(
       setIndexer({
         actionOpen: true,
-        actionMessage: "Indexing Interaction",
+        actionMessage: t("ind"),
       })
     );
     const tx = await publicClient.waitForTransactionReceipt({ hash: res });
@@ -79,7 +82,8 @@ const lensMirror = async (
       {
         forTxHash: tx.transactionHash,
       },
-      dispatch
+      dispatch,
+      t
     );
   }
   setTimeout(() => {

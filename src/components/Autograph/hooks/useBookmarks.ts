@@ -29,6 +29,7 @@ import {
 } from "../../../../redux/reducers/postCollectGifSlice";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
 import errorChoice from "../../../../lib/helpers/errorChoice";
+import { TFunction } from "i18next";
 
 const useBookmarks = (
   lensConnected: Profile | undefined,
@@ -37,7 +38,8 @@ const useBookmarks = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  pageProfile: Profile | undefined
+  pageProfile: Profile | undefined,
+  t: TFunction<"404", undefined>
 ) => {
   const [allBookmarks, setAllBookmarks] = useState<
     ((Post | Comment | Quote | Mirror) & {
@@ -207,7 +209,8 @@ const useBookmarks = (
         address as `0x${string}`,
         clientWallet,
         publicClient,
-        () => clearComment(index)
+        () => clearComment(index),
+        t
       );
       updateInteractions(index!, {}, "comments", true);
       const gifs = { ...postCollectGif.gifs };
@@ -224,7 +227,8 @@ const useBookmarks = (
       errorChoice(
         err,
         () => updateInteractions(index!, {}, "comments", true),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -276,7 +280,8 @@ const useBookmarks = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
 
       updateInteractions(
@@ -299,7 +304,8 @@ const useBookmarks = (
             "mirrors",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -329,7 +335,7 @@ const useBookmarks = (
     });
 
     try {
-      await lensLike(id, dispatch, hasReacted);
+      await lensLike(id, dispatch, hasReacted, t);
       updateInteractions(
         index,
         {
@@ -350,7 +356,8 @@ const useBookmarks = (
             "reactions",
             hasReacted ? false : true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -387,7 +394,8 @@ const useBookmarks = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
 
       updateInteractions(
@@ -418,7 +426,8 @@ const useBookmarks = (
             "countOpenActions",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
 
@@ -437,9 +446,9 @@ const useBookmarks = (
       return updatedArray;
     });
     try {
-      await lensHide(id, dispatch);
+      await lensHide(id, dispatch, t);
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(err, () => {}, dispatch, t);
     }
     setInteractionsLoadingBookmark((prev) => {
       const updatedArray = [...prev];
@@ -456,7 +465,7 @@ const useBookmarks = (
       return updatedArray;
     });
     try {
-      await lensBookmark(on, dispatch);
+      await lensBookmark(on, dispatch, t);
       updateInteractions(
         index,
         {
@@ -477,7 +486,8 @@ const useBookmarks = (
             "bookmarks",
             true
           ),
-        dispatch
+        dispatch,
+        t
       );
     }
     setInteractionsLoadingBookmark((prev) => {
@@ -517,11 +527,12 @@ const useBookmarks = (
         undefined,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(err, () => {}, dispatch, t);
     }
 
     setFollowLoading((prev) => {
@@ -560,11 +571,12 @@ const useBookmarks = (
         dispatch,
         address as `0x${string}`,
         clientWallet,
-        publicClient
+        publicClient,
+        t
       );
       await refetchProfile(dispatch, lensConnected?.id, lensConnected?.id);
     } catch (err: any) {
-      errorChoice(err, () => {}, dispatch);
+      errorChoice(err, () => {}, dispatch, t);
     }
 
     setFollowLoading((prev) => {
