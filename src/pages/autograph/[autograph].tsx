@@ -821,9 +821,15 @@ export async function getStaticPaths() {
   };
 }
 
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
+export const getStaticProps = async ({
+  locale,
+  defaultLocale,
+}: {
+  locale: string;
+  defaultLocale: string;
+}) => ({
   props: {
-    ...(await serverSideTranslations(locale, [
+    ...(await serverSideTranslations(locale ?? defaultLocale ?? "en", [
       "autograph",
       "footer",
       "404",

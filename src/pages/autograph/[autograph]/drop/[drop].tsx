@@ -11,7 +11,7 @@ import { polygon } from "viem/chains";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useAccount } from "wagmi";
 import { RootState } from "../../../../../redux/store";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useAutograph from "@/components/Autograph/hooks/useAutograph";
 import useSuggested from "@/components/Common/hooks/useSuggested";
 import useDrop from "@/components/Drop/hooks/useDrop";
