@@ -11,8 +11,11 @@ i18n
     fallbackLng: "en",
     debug: true,
     detection: {
-      order: ["path", "queryString", "cookie", "localStorage", "subdomain"],
-      caches: ["cookie"],
+      order: ["path", "header", "localStorage", "cookie", "subdomain"],
+      lookupCookie: "i18next",
+      lookupLocalStorage: "i18nextLng",
+      lookupFromPathIndex: 0,
+      lookupFromSubdomainIndex: 0,
     },
     react: {
       useSuspense: false,

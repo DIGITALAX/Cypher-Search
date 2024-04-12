@@ -6,6 +6,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { XMTPProvider } from "@xmtp/react-sdk";
 import { init } from "@airstack/airstack-react";
 import "./../../i18n";
+import moment from 'moment';
 import { appWithTranslation, useTranslation } from "next-i18next";
 import {
   getDefaultWallets,
@@ -65,6 +66,7 @@ init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  moment.utc();
   const { t: tCom, i18n } = useTranslation("404");
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
