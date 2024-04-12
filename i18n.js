@@ -24,6 +24,14 @@ i18n
     lng: "en",
     interpolation: {
       escapeValue: false,
+      format: function (value, format, lng) {
+        if (value instanceof Date) {
+          return new Intl.DateTimeFormat(lng, { dateStyle: format }).format(
+            value
+          );
+        }
+        return value;
+      },
     },
     backend: {
       loadPath: "public/locales/{{lng}}/{{ns}}.json",
