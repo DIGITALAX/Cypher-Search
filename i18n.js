@@ -9,10 +9,13 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: "en",
-    debug: false,
+    debug: true,
     detection: {
-      order: ["queryString", "cookie", "localStorage", "path", "subdomain"],
+      order: ["path", "queryString", "cookie", "localStorage", "subdomain"],
       caches: ["cookie"],
+    },
+    react: {
+      useSuspense: false,
     },
     resources: {
       en: {
