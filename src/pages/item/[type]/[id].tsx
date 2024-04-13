@@ -630,19 +630,19 @@ const Item: NextPage<{
 
 export default Item;
 
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: false,
-  };
-}
+// export async function getStaticPaths() {
+//   return {
+//     paths: [],
+//     fallback: false,
+//   };
+// }
 
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? "en", [
-      "item",
-      "footer",
-      "common",
-    ])),
-  },
-});
+// export const getStaticProps = async ({ locale }: { locale: string }) => ({
+//   props: {
+//     ...(await serverSideTranslations(locale ?? "en", [
+//       "item",
+//       "footer",
+//       "common",
+//     ])),
+//   },
+// });
