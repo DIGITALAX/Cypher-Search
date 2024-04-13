@@ -282,8 +282,12 @@ const useConversations = (
         )?.filter(Boolean);
 
         updatedConversations.sort((a, b) => {
-          const dateA = a?.createdAt && new Date(a?.createdAt);
-          const dateB = b?.createdAt && new Date(b?.createdAt);
+          const dateA =
+            a?.createdAt &&
+            new Date(a?.createdAt).getTime().toLocaleString("default");
+          const dateB =
+            b?.createdAt &&
+            new Date(b?.createdAt).getTime().toLocaleString("default");
           return ((dateB || 0) as number) - ((dateA || 0) as number);
         });
         const uniqueConvoSet = new Set();
