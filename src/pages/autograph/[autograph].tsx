@@ -568,7 +568,7 @@ const Autograph: NextPage<{
                   type="font/ttf"
                 />
               </Head>
-              <Web
+              {/* <Web
                 t={t}
                 tCom={tCom}
                 cartItems={cartItems}
@@ -717,7 +717,7 @@ const Autograph: NextPage<{
                 questsLoading={questsLoading}
                 questSample={questSample}
               />
-              {/* <div className="relative flex flex-row gap-12 otro:gap-3 items-start justify-between sm:px-4 w-full h-full otro:flex-nowrap flex-wrap">
+              <div className="relative flex flex-row gap-12 otro:gap-3 items-start justify-between sm:px-4 w-full h-full otro:flex-nowrap flex-wrap">
                 <Feed
                   t={t}
                   tCom={tCom}
