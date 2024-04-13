@@ -27,7 +27,7 @@ i18n
         },
       },
     },
-    lng: "en",
+    lng: undefined,
     interpolation: {
       escapeValue: false,
       format: function (value, format, lng) {
