@@ -387,7 +387,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
             }`}</div>
           </div>
           <div className="relative w-fit h-fit flex items-start justify-center sm:justify-end font-vcr text-white break-words text-xs text-center sm:text-right mt-0 max-h-[6rem] overflow-y-scroll">
-            <div className="relative w-5/6 h-fit flex items-start justiy-center sm:justify-end">
+            <div className="relative w-5/6 h-fit flex items-start justiy-center sm:justify-end break-all">
               {
                 (purchaseDetails?.imageIndex == 0
                   ? itemData?.questMetadata

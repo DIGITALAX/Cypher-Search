@@ -154,7 +154,7 @@ const Quest: FunctionComponent<QuestProps> = ({
             <div
               className={`relative flex items-start justify-start gap-2 w-full h-fit`}
             >
-              <div className="relative w-full flex-1 items-start justify-start font-vcr text-gray-400 text-sm break-words text-overflow-truncate h-[6rem] overflow-y-scroll">
+              <div className="relative w-full flex-1 items-start justify-start font-vcr text-gray-400 text-sm break-all text-overflow-truncate h-[6rem] overflow-y-scroll">
                 {publication?.questMetadata?.description?.length > 100
                   ? publication?.questMetadata?.description?.slice(0, 100) +
                     "..."

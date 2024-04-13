@@ -95,7 +95,7 @@ const Award: FunctionComponent<AwardProps> = ({
               <div className="relative text-xs text-girasol flex items-center justify-center w-fit h-fit">
                 {t("des")}
               </div>
-              <div className="relative w-fit h-fit flex items-start justify-end text-right w-fit h-fit text-xxs text-white max-h-[10rem] overflow-y-scroll">
+              <div className="relative w-fit h-fit flex items-start justify-end text-right w-fit h-fit text-xxs text-white max-h-[10rem] overflow-y-scroll break-all">
                 {publication?.rewardMetadata?.description}
               </div>
             </div>

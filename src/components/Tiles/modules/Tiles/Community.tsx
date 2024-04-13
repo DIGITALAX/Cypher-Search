@@ -36,7 +36,7 @@ const Community: FunctionComponent<CommunityProps> = ({
         </div>
       </div>
       <div className="relative w-4/5 h-20  p-2 text-white text-center font-bit text-sm border border-[#1B4986] bg-fuego">
-        <div className="relative w-full h-full flex items-start justify-center overflow-y-scroll">
+        <div className="relative w-full h-full flex items-start justify-center overflow-y-scroll break-all">
           {community?.communityMetadata?.description}
         </div>
       </div>

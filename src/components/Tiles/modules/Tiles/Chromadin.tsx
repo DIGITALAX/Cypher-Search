@@ -119,7 +119,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         </div>
         <div className="relative flex flex-row justify-between gap-2 w-full h-fit items-center">
           <div className="relative gap-1 flex flex-col items-start justify-center">
-            <div className="relative flex w-fit h-fit break-words text-nuba font-bit text-lg uppercase">
+            <div className="relative flex w-fit h-fit break-all text-nuba font-bit text-lg uppercase">
               {publication?.collectionMetadata?.title}
             </div>
             <div

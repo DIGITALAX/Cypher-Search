@@ -60,13 +60,13 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     description: e.target.value,
                   }))
                 }
-                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-60 w-60 sm:w-80"
+                className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-60 w-60 sm:w-80 break-all"
                 style={{
                   resize: "none",
                 }}
               ></textarea>
               <div
-                className={`absolute flex items-center justify-center bottom-1 z-10 right-1 text-xs font-bit ${
+                className={`absolute flex items-center justify-center bottom-1 z-10 right-1 text-xs font-bit break-all ${
                   collectionDetails?.description?.length > 1990
                     ? "text-sol"
                     : "text-white"
