@@ -821,12 +821,18 @@ export async function getStaticPaths() {
   };
 }
 
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? "en", [
-      "autograph",
-      "footer",
-      "common",
-    ])),
-  },
-});
+export const getStaticProps = async ({ locale }: { locale: string }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? "en", [
+        "autograph",
+        "footer",
+        "common",
+      ])),
+    },
+  };
+};
+
+// export async function getServerSideProps() {
+//   return { props: {} };
+// }
