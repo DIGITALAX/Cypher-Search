@@ -35,6 +35,7 @@ import { INFURA_GATEWAY } from "../../../lib/constants";
 import useQuests from "@/components/Autograph/hooks/useQuests";
 import { useTranslation } from "next-i18next";
 import { TFunction, i18n } from "i18next";
+import { useParams } from "next/navigation";
 
 const Autograph: NextPage<{
   router: NextRouter;
@@ -43,6 +44,7 @@ const Autograph: NextPage<{
   i18n: i18n;
 }> = ({ router, client, tCom, i18n }): JSX.Element => {
   const dispatch = useDispatch();
+  const params = useParams<{ autograph: string }>();
   const { t } = useTranslation("autograph");
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
@@ -51,7 +53,6 @@ const Autograph: NextPage<{
       `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
-  const { autograph } = router.query;
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
   const postCollectGif = useSelector(
     (state: RootState) => state.app.postCollectGifReducer
@@ -103,7 +104,7 @@ const Autograph: NextPage<{
   );
 
   const { profileLoading, profile } = useAutograph(
-    autograph as string,
+    params?.autograph,
     lensConnected
   );
   const { handleShuffleSearch } = useSearch(
