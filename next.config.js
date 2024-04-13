@@ -52,6 +52,14 @@ const nextConfig = {
 
     return headersConfig;
   },
+  rewrites() {
+    return [
+      {
+        source: "/:lang(en|es|ar)/:path*",
+        destination: "/:path*",
+      },
+    ];
+  },
   webpack: (config, options) => {
     config.module.rules.push({
       test: /\.tsx?$/,
