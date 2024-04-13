@@ -818,12 +818,16 @@ export default Autograph;
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: false,
+    fallback: true,
   };
 }
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["autograph", "footer", "common"])),
+    ...(await serverSideTranslations(locale, [
+      "autograph",
+      "footer",
+      "common",
+    ])),
   },
 });

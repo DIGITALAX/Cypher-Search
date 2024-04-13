@@ -633,7 +633,7 @@ export default Item;
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: false,
   };
 }
 
@@ -642,7 +642,6 @@ export const getStaticProps = async ({ locale }: { locale: string }) => ({
     ...(await serverSideTranslations(locale, [
       "item",
       "footer",
-      "common",
       "common",
     ])),
   },

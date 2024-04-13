@@ -403,17 +403,12 @@ export default Drop;
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: true,
   };
 }
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, [
-      "drop",
-      "footer",
-      "common",
-      "common",
-    ])),
+    ...(await serverSideTranslations(locale, ["drop", "footer", "common"])),
   },
 });
