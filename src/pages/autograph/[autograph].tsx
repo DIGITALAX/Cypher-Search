@@ -817,7 +817,7 @@ export default Autograph;
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: true,
+    fallback: false,
   };
 }
 
