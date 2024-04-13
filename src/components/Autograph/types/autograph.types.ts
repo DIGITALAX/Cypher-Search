@@ -24,7 +24,6 @@ import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSl
 import { FilterValues, Quest } from "@/components/Search/types/search.types";
 import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
 import { ProfileOptions } from "@lens-protocol/metadata";
-import { TFunction } from "i18next";
 import { PublicClient } from "wagmi";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 
@@ -40,6 +39,7 @@ export type WebProps = {
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   profilesOpen: boolean[];
   mentionProfiles: Profile[];
+  locale: "en" | "es"
   messageImage: {
     image: string;
     type: string;
@@ -239,8 +239,7 @@ export type WebProps = {
   setSortType: (e: SetStateAction<SortType>) => void;
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string, hasReacted: boolean) => Promise<void>;
-  t: TFunction<"autograph", undefined>;
-  tCom: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -339,8 +338,7 @@ export type WebProps = {
 };
 
 export type BookmarksProps = {
-  t: TFunction<"autograph", undefined>;
-  tCom: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   bookmarks: ((Post | Mirror | Comment | Quote) & {
     decrypted: any;
   })[];
@@ -387,6 +385,7 @@ export type BookmarksProps = {
   mirror: (id: string) => Promise<void>;
   comment: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
+  locale: "en" | "es";
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -431,13 +430,15 @@ export type BioProps = {
   profile: Profile | undefined;
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   questSample: Quest[];
+  locale: "es" | "en";
   questsLoading: boolean;
 };
 
 export type GalleryScreenProps = {
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
+  locale: "es" | "en";
   dropDetails: {
     collectionIds: string[];
     title: string;
@@ -467,7 +468,7 @@ export type GalleryScreenProps = {
   filterConstants: FilterValues | undefined;
   creationLoading: boolean;
   isDesigner: boolean;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   lensConnected: Profile | undefined;
   handleSendMessage: (digitalax?: boolean) => Promise<void>;
   digiMessageLoading: boolean;
@@ -531,6 +532,7 @@ export type ScreenSwitchProps = {
     type: string;
   };
   cartItems: CartItem[];
+  locale: "en" | "es"
   handleMessageImage: (
     e: ChangeEvent<HTMLInputElement> | undefined,
     remove?: boolean
@@ -786,8 +788,7 @@ export type ScreenSwitchProps = {
   openMirrorChoiceBookmark: boolean[];
   unfollowProfile: (id: string) => Promise<void>;
   followProfile: (id: string) => Promise<void>;
-  t: TFunction<"autograph", undefined>;
-  tCom: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   openMoreOptions: boolean[];
   profileHovers: boolean[];
   setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
@@ -822,7 +823,7 @@ export type ScreenSwitchProps = {
 
 export type SettingsProps = {
   isDesigner: boolean;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   setSettingsData: (
     e: SetStateAction<
       ProfileOptions & {
@@ -878,7 +879,7 @@ export type SettingsProps = {
 };
 
 export type DisplayProps = {
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string, hasReacted: boolean) => Promise<void>;
   interactionsLoading: {
@@ -892,6 +893,7 @@ export type DisplayProps = {
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
   sortType: SortType;
+  locale: "en" | "es"
   display: Display | undefined;
   dispatch: Dispatch<AnyAction>;
   handleSetDisplay: () => void;
@@ -932,8 +934,7 @@ export type FeedProps = {
     x: number;
     y: number;
   };
-  tCom: TFunction<"common", undefined>;
-  t: TFunction<"autograh", undefined>;
+  t: (key: string | number) => string;
   setCaretCoord: (
     e: SetStateAction<{
       x: number;
@@ -983,6 +984,7 @@ export type FeedProps = {
   getMoreFeed: () => Promise<void>;
   router: NextRouter;
   followLoading: boolean[];
+  locale: "en" | "es";
   unfollowProfile: (id: string, index: number, feed?: boolean) => Promise<void>;
   followProfile: (id: string, index: number, feed?: boolean) => Promise<void>;
   profileHovers: boolean[];
@@ -998,6 +1000,7 @@ export type GalleryProps = {
     collected: Creation[];
     created: Creation[];
   };
+  locale: "es" | "en";
   profile: Profile;
   hasMoreGallery: boolean;
   allDrops: Drop[] | undefined;
@@ -1017,7 +1020,7 @@ export type GalleryProps = {
   followProfile: (id: string, index: number, feed?: boolean) => Promise<void>;
   router: NextRouter;
   profileHovers: boolean[];
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   openMirrorChoice: boolean[];
@@ -1036,10 +1039,11 @@ export type CreationProps = {
   index: number;
   dispatch: Dispatch<AnyAction>;
   followLoading: boolean[];
+  locale: "en" | "es";
   unfollowProfile: (id: string, index: number) => Promise<void>;
   followProfile: (id: string, index: number) => Promise<void>;
   router: NextRouter;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   lensConnected: Profile | undefined;
   cartItems: CartItem[];
   profileHovers: boolean[];
@@ -1130,12 +1134,13 @@ export type PublicationProps = {
   item: (Post | Comment | Quote | Mirror) & {
     decrypted: any;
   };
+  locale: "en" | "es";
   index: number;
   top: string;
   bottom: string;
   left: string;
   right: string;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   cartItems?: CartItem[];
   decryptLoading?: boolean;
   mentionProfiles?: Profile[];
@@ -1236,7 +1241,7 @@ export type PostCommentProps = {
   router: NextRouter;
   mentionProfiles: Profile[];
   profilesOpen: boolean;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   lensConnected: Profile | undefined;
@@ -1244,6 +1249,7 @@ export type PostCommentProps = {
   setMakePostComment: (e: SetStateAction<MakePostComment[]>) => void;
   main?: boolean | undefined;
   itemId: string | undefined;
+  locale: "es" | "en";
   commentPost:
     | ((id: string) => Promise<void>)
     | (() => Promise<void>)
@@ -1287,10 +1293,11 @@ export type ScreenPostProps = {
     }>
   ) => void;
   router: NextRouter;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   lensConnected: Profile | undefined;
   profilesOpen: boolean[];
   mentionProfiles: Profile[];
+  locale: "en" | "es";
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   setContentLoading: (
@@ -1310,7 +1317,7 @@ export type ScreenPostProps = {
 export type CollectOptionsProps = {
   id: string;
   type: string;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   dispatch: Dispatch<AnyAction>;
   collectTypes:
     | {
@@ -1390,7 +1397,7 @@ export interface Order {
 
 export type OrdersProps = {
   allOrders: Order[];
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   ordersLoading: boolean;
   orderActions: {
     decryptLoading: boolean;
@@ -1415,7 +1422,7 @@ export type SubOrderProps = {
   router: NextRouter;
   decrypted: boolean;
   details: boolean;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
 };
 
 export interface Sub {
@@ -1438,7 +1445,7 @@ export type SalesProps = {
   allSales: Sale[];
   salesLoading: boolean;
   router: NextRouter;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
 };
 
 export interface Sale {
@@ -1459,12 +1466,12 @@ export type DispatchProps = {
   collectionDetails: CollectionDetails;
   setCollectionDetails: (e: SetStateAction<CollectionDetails>) => void;
   allDrops: Drop[];
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   edit: boolean;
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
-  router: NextRouter;
+  locale: "es" | "en";
   setCreateCase: (e: SetStateAction<string | undefined>) => void;
   lensConnected: Profile | undefined;
   collectionSettings: {
@@ -1584,7 +1591,7 @@ export type MessagesProps = {
   handleConversations: () => Promise<void>;
   client: Client | undefined;
   conversationsLoading: boolean;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type SwitchCreateProps = {
@@ -1614,7 +1621,7 @@ export type SwitchCreateProps = {
   router: NextRouter;
   filterConstants: FilterValues | undefined;
   handleMedia: (e: ChangeEvent<HTMLInputElement>, id: string) => Promise<void>;
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   collectionSettings: {
     origin: string;
     media: string;
@@ -1650,6 +1657,7 @@ export type SwitchCreateProps = {
     }>
   ) => void;
   edit: boolean;
+  locale: "en" | "es"
   lensConnected: Profile | undefined;
 };
 
@@ -1660,7 +1668,7 @@ export type MediaSwitchProps = {
 export type DropProps = {
   router: NextRouter;
   allDrops: Drop[];
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   handle: string;
   dropDetails: {
     collectionIds: string[];
@@ -1701,7 +1709,7 @@ export type NewConversationProps = {
     image: string;
     type: string;
   };
-  t: TFunction<"autograph", undefined>;
+  t: (key: string | number) => string;
   handleMessageImage: (
     e: ChangeEvent<HTMLInputElement> | undefined,
     remove?: boolean
@@ -1756,7 +1764,7 @@ export type DecryptProps = {
   decryptLoading: boolean;
   canDecrypt: boolean;
   toDecrypt: Post | Comment | Quote;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export interface AuthSig {
@@ -1768,7 +1776,7 @@ export interface AuthSig {
 
 export type AutoHydrateProps = {
   router: NextRouter;
-  tCom: TFunction<"common", undefined>;
+  tCom: (key: string | number) => string;
   dispatch: Dispatch<AnyAction>;
   lensConnected: Profile | undefined;
   publicClient: PublicClient;

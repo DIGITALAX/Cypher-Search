@@ -17,7 +17,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
   filterValues,
   filterConstants,
   t,
-  router
+  locale
 }): JSX.Element => {
   return (
     <div
@@ -87,7 +87,7 @@ const PrerollSort: FunctionComponent<PrerollSortProps> = ({
                       ? "preroll"
                       : "tiles"
                   }
-                  title={image.title?.[router?.locale as "en" | "es"]}
+                  title={image.title?.[locale as "en" | "es"]}
                   onClick={() => {
                     if (
                       filterValues?.printType !==

@@ -25,7 +25,6 @@ import { setFilter } from "../../../../redux/reducers/filterSlice";
 import { DropDown, Filter, FilterValues, Quest } from "../types/search.types";
 import { setFilterConstants } from "../../../../redux/reducers/filterConstantsSlice";
 import fetchIpfsJson from "../../../../lib/helpers/fetchIpfsJson";
-import { getRandomElement } from "../../../../lib/helpers/randomElements";
 import searchPubs from "../../../../graphql/lens/queries/searchPubs";
 import searchProfiles from "../../../../graphql/lens/queries/searchProfiles";
 import {
@@ -56,7 +55,6 @@ import buildTextQuery, {
 } from "../../../../lib/helpers/buildTextQuery";
 import mixArrays from "../../../../lib/helpers/mixArrays";
 import {
-  getPlayers,
   getQuestByProfile,
   getQuests,
   getQuestsWhere,
@@ -73,7 +71,8 @@ const useSearch = (
   filters: Filter,
   allSearchItems: AllSearchItemsState | undefined,
   dispatch: Dispatch,
-  router: NextRouter
+  router: NextRouter,
+  locale: "es" | "en"
 ) => {
   const [loaders, setLoaders] = useState<{
     searchLoading: boolean;
@@ -1070,9 +1069,9 @@ const useSearch = (
 
   useEffect(() => {
     setPlaceholderText(
-      PLACEHOLDERS[Math.floor(Math.random() * 4)][router?.locale as "en" | "es"]
+      PLACEHOLDERS[Math.floor(Math.random() * 4)][locale as "en" | "es"]
     );
-  }, [router?.locale]);
+  }, [locale]);
 
   useEffect(() => {
     if (!filterConstants) {

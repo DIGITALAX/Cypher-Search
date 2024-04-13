@@ -13,7 +13,6 @@ import { polygon } from "viem/chains";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { FetchResult } from "@apollo/client";
 import { BroadcastOnchainMutation } from "../../../graphql/generated";
-import { TFunction } from "i18next";
 
 const lensCollect = async (
   id: string,
@@ -22,7 +21,7 @@ const lensCollect = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<void> => {
   let broadcastResult: FetchResult<BroadcastOnchainMutation>,
     functionName: string,

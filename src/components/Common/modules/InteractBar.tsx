@@ -30,6 +30,7 @@ function isSingleArgFunction(
 }
 const InteractBar: FunctionComponent<InteractBarProps> = ({
   col,
+  locale,
   layoutAmount,
   mirror,
   like,
@@ -374,7 +375,7 @@ const InteractBar: FunctionComponent<InteractBarProps> = ({
             <div
               className="relative w-full h-full flex flex-row items-center justify-center gap-2"
               key={indexTwo}
-              title={image?.title?.[router?.locale as "en" | "es"]}
+              title={image?.title?.[locale as "en" | "es"]}
             >
               <div
                 className={`relative w-fit h-fit flex items-center justify-center ${

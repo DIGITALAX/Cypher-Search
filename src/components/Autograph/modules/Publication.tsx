@@ -31,6 +31,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
   dispatch,
   mirror,
   comment,
+  locale,
   like,
   interactionsLoading,
   profileHovers,
@@ -268,6 +269,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
       />
       {commentsOpen?.[index] && (
         <PostComment
+          locale={locale}
           caretCoord={caretCoord!}
           router={router}
           t={t}

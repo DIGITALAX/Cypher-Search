@@ -1,13 +1,12 @@
 import { AnyAction, Dispatch } from "redux";
 import { setInteractError } from "../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../redux/reducers/indexerSlice";
-import { TFunction } from "i18next";
 
 const errorChoice = async (
   err: any,
   runner: (() => Promise<void>) | (() => void),
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   if (err?.message?.includes("User rejected the request")) return;
   if (

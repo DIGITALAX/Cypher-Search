@@ -16,7 +16,6 @@ import { createWalletClient, custom, PublicClient } from "viem";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import { NextRouter } from "next/router";
-import { TFunction } from "i18next";
 
 const useProfile = (
   profileFeed: (Post | Quote | Mirror | Comment)[] | Creation[],
@@ -31,7 +30,7 @@ const useProfile = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   router: NextRouter,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [feedProfileHovers, setFeedProfileHovers] = useState<boolean[]>([]);
   const [feedFollowLoading, setFeedFollowLoading] = useState<boolean[]>([]);

@@ -48,7 +48,6 @@ import findBalance from "../../../../lib/helpers/findBalance";
 import handleQuestData from "../../../../lib/helpers/handleQuestData";
 import { getQuest } from "../../../../graphql/subgraph/queries/getQuests";
 import { FetchResult } from "@apollo/client";
-import { TFunction } from "i18next";
 
 const useItem = (
   type: string,
@@ -60,7 +59,7 @@ const useItem = (
   publicClient: PublicClient,
   dispatch: Dispatch<AnyAction>,
   router: NextRouter,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
   const [itemLoading, setItemLoading] = useState<boolean>(false);

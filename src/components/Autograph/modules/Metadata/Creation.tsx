@@ -35,6 +35,7 @@ const Creation: FunctionComponent<CreationProps> = ({
   like,
   mirror,
   dispatch,
+  locale,
   cartItems,
   lensConnected,
 }): JSX.Element => {
@@ -188,7 +189,7 @@ const Creation: FunctionComponent<CreationProps> = ({
               dispatch(setCartAnim(true));
             }}
             title={
-              item?.amount == item?.soldTokens ? t("sol2") : t("car")
+              item?.amount == item?.soldTokens ? t("sol2") : t("carA")
             }
           >
             <Image
@@ -274,6 +275,7 @@ const Creation: FunctionComponent<CreationProps> = ({
               simpleCollect={undefined}
               dispatch={dispatch}
               like={like}
+              locale={locale}
               mirror={mirror}
               openMirrorChoice={openMirrorChoice}
               setOpenMirrorChoice={setOpenMirrorChoice}

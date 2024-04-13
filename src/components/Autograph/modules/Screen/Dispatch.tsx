@@ -14,7 +14,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
   collectionDetails,
   setCollectionDetails,
   handleMedia,
-  router,
+  locale,
   lensConnected,
   collectionSettings,
   setCollectionSettings,
@@ -35,7 +35,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
           <div className="relative flex flex-col items-start justify-start gap-4">
             <div className="flex flex-col items-start justify-start w-fit h-fit gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
-                {t("colT")}
+                {t("colTi")}
               </div>
               <input
                 className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60 sm:w-80"
@@ -290,7 +290,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                 {microBrands && microBrands?.length > 0 ? (
                   <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                     <div className="relative w-fit h-fit text-xs">
-                      {t("marc")}
+                      {t("marcC")}
                     </div>
                     <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                       <div
@@ -716,7 +716,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             </div>
             <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
               <div className="relative w-fit h-fit text-sm break-words">
-                {t("eco")}
+                {t("ecoA")}
               </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div
@@ -873,7 +873,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
             {collectionDetails?.visibility === "community" && (
               <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
-                  {t("coms")}
+                  {t("comm")}
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
@@ -1077,7 +1077,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
-                 {t("col")}
+                  {t("col")}
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
@@ -1157,7 +1157,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
               </div>
               <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                 <div className="relative w-fit h-fit text-sm break-words">
-                {t("type")}
+                  {t("type")}
                 </div>
                 <div className="relative w-fit h-fit flex flex-col items-start justify-start gap-1">
                   <div
@@ -1254,7 +1254,7 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                                 }}
                               >
                                 <div className="relative w-fit h-fit flex items-center justify-center font-aust text-white text-xs">
-                                  {item?.[router?.locale as ("en"| "es")]}
+                                  {item?.[locale as "en" | "es"]}
                                 </div>
                               </div>
                             );
@@ -1294,7 +1294,10 @@ const Dispatch: FunctionComponent<DispatchProps> = ({
                     {collectionSettings?.chromadinOpen && (
                       <div className="absolute top-10 bg-offBlack z-10 w-full max-w-[15rem] max-h-[6rem] h-fit flex border border-sol rounded-md overflow-y-scroll">
                         <div className="relative w-full h-fit flex flex-col items-center justify-start">
-                          {["yes", "no"]?.map((item: string, index: number) => {
+                          {[
+                            t("yes")?.toLowerCase(),
+                            t("no")?.toLowerCase(),
+                          ]?.map((item: string, index: number) => {
                             return (
                               <div
                                 key={index}

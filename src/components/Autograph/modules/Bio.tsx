@@ -16,6 +16,7 @@ const Bio: FunctionComponent<BioProps> = ({
   questSample,
   questsLoading,
   t,
+  locale
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-wrap otro:flex-nowrap flex-row items-start justify-start gap-5 px-2 sm:px-5 sm:-top-3 tablet:-top-7 sm:pt-0 pt-4">
@@ -74,7 +75,7 @@ const Bio: FunctionComponent<BioProps> = ({
                     <div
                       className="font-aust text-white text-xs w-fit h-fit relative items-start justify-center flex flex-col gap-2 break-words"
                       key={indexTwo}
-                      title={image.title?.[router?.locale as "en" | "es"]}
+                      title={image.title?.[locale as "en" | "es"]}
                     >
                       <div className="relative w-4 h-4 items-center justify-center flex">
                         <Image
@@ -245,7 +246,7 @@ const Bio: FunctionComponent<BioProps> = ({
                         className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
                       >
                         <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit break-all whitespace-preline">
-                          {questsLoading ? <>{t("quest")}</> : <>{t("kin")}</>}
+                          {questsLoading ? <>{t("quest")}</> : <>{t("kinQ")}</>}
                         </div>
                         <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
                           <div

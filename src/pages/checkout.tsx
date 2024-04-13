@@ -12,20 +12,16 @@ import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
-import { useTranslation } from "next-i18next";
 import { createPublicClient, http } from "viem";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { TFunction, i18n } from "i18next";
-import { SetStateAction } from "react";
+import { useTranslation } from "./_app";
 
 const Checkout: NextPage<{
   router: NextRouter;
   client: LitNodeClient;
-  tCom: TFunction<"common", undefined>;
-  i18n: i18n;
-}> = ({ router, client, tCom, i18n }): JSX.Element => {
+  tCom: (key: string | number) => string;
+}> = ({ router, client }): JSX.Element => {
   const dispatch = useDispatch();
-  const { t } = useTranslation("checkout");
+  const { t, setLocale, locale } = useTranslation();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
@@ -113,7 +109,7 @@ const Checkout: NextPage<{
     oracleData,
     cartItems,
     router,
-    tCom
+    t
   );
   return (
     <div
@@ -128,8 +124,9 @@ const Checkout: NextPage<{
         />
       </Head>
       <Header
-        t={tCom}
-        i18n={i18n}
+        locale={locale}
+        t={t}
+        setLocale={setLocale}
         filterChange={filterChange}
         fullScreenVideo={fullScreenVideo}
         searchItems={allSearchItems}
@@ -202,9 +199,3 @@ const Checkout: NextPage<{
 };
 
 export default Checkout;
-
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ["checkout", "footer", "common"])),
-  },
-});

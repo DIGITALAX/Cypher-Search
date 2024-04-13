@@ -36,7 +36,6 @@ import findBalance from "../../../../lib/helpers/findBalance";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import { setScreenDisplay } from "../../../../redux/reducers/screenDisplaySlice";
 import { NextRouter } from "next/router";
-import { TFunction } from "i18next";
 
 const useCheckout = (
   publicClient: PublicClient,
@@ -47,7 +46,7 @@ const useCheckout = (
   oracleData: OracleData[],
   cartItems: CartItem[],
   router: NextRouter,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [details, setDetails] = useState<Details>({
     name: "",

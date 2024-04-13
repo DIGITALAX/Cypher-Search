@@ -17,6 +17,7 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
   profilesOpen,
   caretCoord,
   lensConnected,
+  locale,
   setCaretCoord,
   t,
   router,
@@ -32,6 +33,7 @@ const ScreenPost: FunctionComponent<ScreenPostProps> = ({
             <div className="relative flex items-center justify-center w-full tablet:w-2/3 h-full">
               <PostComment
                 t={t}
+                locale={locale}
                 setCaretCoord={setCaretCoord}
                 router={router}
                 itemId={undefined}

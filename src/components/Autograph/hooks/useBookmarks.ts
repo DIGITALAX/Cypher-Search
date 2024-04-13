@@ -29,7 +29,6 @@ import {
 } from "../../../../redux/reducers/postCollectGifSlice";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
 import errorChoice from "../../../../lib/helpers/errorChoice";
-import { TFunction } from "i18next";
 
 const useBookmarks = (
   lensConnected: Profile | undefined,
@@ -39,7 +38,7 @@ const useBookmarks = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   pageProfile: Profile | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [allBookmarks, setAllBookmarks] = useState<
     ((Post | Comment | Quote | Mirror) & {

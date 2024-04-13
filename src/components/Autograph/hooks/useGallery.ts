@@ -26,7 +26,8 @@ import errorChoice from "../../../../lib/helpers/errorChoice";
 import getGallerySort from "../../../../lib/helpers/getGallerySort";
 import { ProfileMetadataSchema } from "@lens-protocol/metadata";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
-import { TFunction } from "i18next";
+import { NextRouter } from "next/router";
+import { GALLERY_OPTIONS } from "../../../../lib/constants";
 
 const useGallery = (
   lensConnected: Profile | undefined,
@@ -35,7 +36,8 @@ const useGallery = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   pageProfile: Profile | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string,
+  locale: "es" | "en"
 ) => {
   const [sortType, setSortType] = useState<SortType>(SortType.Public);
   const [interactionsGalleryLoading, setInteractionsGalleryLoading] = useState<
@@ -92,7 +94,9 @@ const useGallery = (
   const [optionsOpen, setOptionsOpen] = useState<boolean>(false);
   const [galleryLoading, setGalleryLoading] = useState<boolean>(false);
   const [openInteractions, setOpenInteractions] = useState<boolean[]>([]);
-  const [selectedOption, setSelectedOption] = useState<string>("NEWEST");
+  const [selectedOption, setSelectedOption] = useState<string>(
+    GALLERY_OPTIONS[0]?.[locale as "en" | "es"]
+  );
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
@@ -740,7 +744,11 @@ const useGallery = (
 
       dispatch(setProfileDisplay(newDisplay));
     } else {
-      const allGallery = getGallerySort(selectedOption, gallery);
+      const allGallery = getGallerySort(
+        selectedOption,
+        gallery,
+        locale as "en" | "es"
+      );
       allGallery[index] = {
         ...allGallery[index],
         publication: {

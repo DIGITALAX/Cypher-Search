@@ -45,6 +45,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   setOpenMirrorChoice,
   followLoading,
   unfollowProfile,
+  locale,
   followProfile,
   profileHovers,
   setProfileHovers,
@@ -127,6 +128,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   if (type?.toLowerCase() == "listener") {
     return (
       <Listener
+        locale={locale}
         t={t}
         lensConnected={lensConnected}
         openMirrorChoice={openMirrorChoice}
@@ -159,6 +161,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         setOpenMirrorChoice={setOpenMirrorChoice}
         popUpOpen={popUpOpen}
         t={t}
+        locale={locale}
         setPopUpOpen={setPopUpOpen}
         layoutAmount={layoutAmount}
         index={index}
@@ -186,6 +189,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
         popUpOpen={popUpOpen}
+        locale={locale}
         filterConstants={filterConstants}
         setPopUpOpen={setPopUpOpen}
         layoutAmount={layoutAmount}
@@ -232,6 +236,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   ) {
     return (
       <TextPost
+        locale={locale}
         lensConnected={lensConnected}
         openMirrorChoice={openMirrorChoice}
         setOpenMirrorChoice={setOpenMirrorChoice}
@@ -257,6 +262,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   if (type?.toLowerCase()?.includes("kinora")) {
     return (
       <Quest
+        locale={locale}
         layoutAmount={layoutAmount}
         router={router}
         publication={publication?.post as QuestType}
@@ -280,6 +286,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
 
   return (
     <ImagePost
+      locale={locale}
       t={t}
       lensConnected={lensConnected}
       openMirrorChoice={openMirrorChoice}

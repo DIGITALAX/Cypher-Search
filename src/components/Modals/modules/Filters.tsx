@@ -11,6 +11,7 @@ const Filters: FunctionComponent<FilterProps> = ({
   filteredDropDownValues,
   dispatch,
   filterValues,
+  locale,
   handleResetFilters,
   filterConstants,
   publication,
@@ -42,6 +43,7 @@ const Filters: FunctionComponent<FilterProps> = ({
           {publication?.post && (
             <TileSwitch
               t={t}
+              locale={locale}
               type={publication?.type}
               filterConstants={filterConstants}
               lensConnected={lensConnected}
@@ -78,7 +80,7 @@ const Filters: FunctionComponent<FilterProps> = ({
           filterValues={filterValues}
         />
         <PrerollSort
-          router={router}
+          locale={locale}
           t={t}
           openDropDown={openDropDown}
           setOpenDropDown={setOpenDropDown}

@@ -95,7 +95,6 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   handleSendMessage,
   digiMessage,
   setDigiMessage,
-  tCom,
   digiMessageLoading,
   handleMedia,
   lensConnected,
@@ -143,11 +142,13 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
   messageImage,
   handleMessageImage,
   cartItems,
+  locale,
   address,
 }): JSX.Element => {
   if (!owner) {
     return (
       <Display
+        locale={locale}
         dispatch={dispatch}
         mirror={mirror}
         t={t}
@@ -172,6 +173,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
         return (
           <Gallery
             t={t}
+            locale={locale}
             address={address}
             allCollections={allCollections}
             editDrop={editDrop}
@@ -210,9 +212,10 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
       case ScreenDisplay.Post:
         return (
           <ScreenPost
+            t={t}
+            locale={locale}
             makePost={makePost}
             post={post}
-            t={tCom}
             router={router}
             setMakePost={setMakePost}
             postLoading={postLoading}
@@ -234,10 +237,10 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
         return (
           <Bookmarks
             t={t}
-            tCom={tCom}
             cartItems={cartItems}
             setCaretCoord={setCaretCoordBookmark}
             caretCoord={caretCoordBookmark}
+            locale={locale}
             setMentionProfiles={setMentionProfilesBookmark}
             setProfilesOpen={setProfilesOpenBookmark}
             mentionProfiles={mentionProfilesBookmark}
@@ -354,6 +357,7 @@ const ScreenSwitch: FunctionComponent<ScreenSwitchProps> = ({
         return (
           <Display
             t={t}
+            locale={locale}
             dispatch={dispatch}
             mirror={mirror}
             like={like}

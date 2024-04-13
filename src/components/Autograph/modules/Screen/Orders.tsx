@@ -165,7 +165,7 @@ const Orders: FunctionComponent<OrdersProps> = ({
                                   <div className="relative w-fit h-fit flex items-start justify-start flex-row flex-wrap gap-4">
                                     {[
                                       t("nam"),
-                                      t("con"),
+                                      t("coun"),
                                       t("addr"),
                                       t("zip"),
                                       t("city"),

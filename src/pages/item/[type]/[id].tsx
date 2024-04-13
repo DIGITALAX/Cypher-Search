@@ -4,14 +4,12 @@ import useSearch from "@/components/Search/hooks/useSearch";
 import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useTranslation } from "next-i18next";
 import { NextRouter } from "next/router";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import { useAccount } from "wagmi";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSuggested from "@/components/Common/hooks/useSuggested";
 import Suggested from "@/components/Common/modules/Suggested";
 import useTiles from "@/components/Tiles/hooks/useTiles";
@@ -35,20 +33,18 @@ import useQuest from "@/components/Tiles/hooks/useQuest";
 import { Quest } from "@/components/Search/types/search.types";
 import { apolloClient } from "../../../../lib/lens/client";
 import { Dispatch as KinoraDispatch } from "kinora-sdk";
-import { TFunction, i18n } from "i18next";
+import { useTranslation } from "@/pages/_app";
 
 const Item: NextPage<{
   router: NextRouter;
-  tCom: TFunction<"common", undefined>;
-  i18n: i18n;
-}> = ({ router, tCom, i18n }): JSX.Element => {
+}> = ({ router }): JSX.Element => {
+  const { t, setLocale, locale } = useTranslation();
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(
       `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
-  const { t } = useTranslation("item");
   const kinoraDispatch = new KinoraDispatch({
     playerAuthedApolloClient: apolloClient,
   });
@@ -122,7 +118,7 @@ const Item: NextPage<{
     publicClient,
     dispatch,
     router,
-    tCom
+    t
   );
   const {
     handleMoreComments,
@@ -136,7 +132,6 @@ const Item: NextPage<{
     comment,
     makeComment,
     setMakeComment,
-    setCommentsOpen,
     commentsOpen,
     interactionsItemsLoading,
     openItemMirrorChoice,
@@ -150,6 +145,7 @@ const Item: NextPage<{
     setContentLoading,
     commentSwitch,
     setCommentSwitch,
+    setCommentsOpen,
     mainInteractionsLoading,
     setMainOpenMirrorChoice,
     openMainMirrorChoice,
@@ -188,7 +184,7 @@ const Item: NextPage<{
     itemData,
     setItemData,
     setRelatedData,
-    tCom
+    t
   );
   const { getMoreSuggested, suggestedFeed, loaders, setSuggestedFeed } =
     useSuggested(
@@ -213,7 +209,8 @@ const Item: NextPage<{
     filters,
     suggestedFeed,
     dispatch,
-    router
+    router,
+    locale
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -250,7 +247,7 @@ const Item: NextPage<{
     address,
     lensConnected,
     setSuggestedFeed,
-    tCom
+    t
   );
   const {
     followProfile: followItemProfile,
@@ -279,7 +276,7 @@ const Item: NextPage<{
     publicClient,
     address,
     router,
-    tCom
+    t
   );
   const {
     setPopUpOpen,
@@ -295,7 +292,7 @@ const Item: NextPage<{
     dispatch,
     publicClient,
     address,
-    tCom
+    t
   );
   const { joinLoading, handlePlayerJoin } = useQuest(
     address,
@@ -321,8 +318,9 @@ const Item: NextPage<{
         (Object.keys(itemData?.post).length === 1 &&
           (itemData?.post as any)?.decrypted === undefined) ? (
           <NotFound
-            t={tCom}
-            i18n={i18n}
+            t={t}
+            locale={locale}
+            setLocale={setLocale}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
@@ -492,7 +490,8 @@ const Item: NextPage<{
               </Head>
               <Suggested
                 t={t}
-                i18n={i18n}
+                locale={locale}
+                setLocale={setLocale}
                 filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
@@ -501,7 +500,8 @@ const Item: NextPage<{
                 cartAnim={cartAnim}
                 component={
                   <SwitchType
-                    t={tCom}
+                    t={t}
+                    locale={locale}
                     joinLoading={joinLoading}
                     handlePlayerJoin={handlePlayerJoin}
                     allSearchItems={allSearchItems}
@@ -629,20 +629,3 @@ const Item: NextPage<{
 };
 
 export default Item;
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: false,
-  };
-}
-
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? "en", [
-      "item",
-      "footer",
-      "common",
-    ])),
-  },
-});

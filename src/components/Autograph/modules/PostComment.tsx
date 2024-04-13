@@ -18,6 +18,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
   setMakePostComment,
   commentPostLoading,
   id,
+  locale,
   itemId,
   height,
   imageHeight,
@@ -167,7 +168,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                   className={`relative flex items-center justify-center  ${
                     loaders[indexTwo] && "animate-spin"
                   }`}
-                  title={image.title?.[router?.locale as "en" | "es"]}
+                  title={image.title?.[locale as "en" | "es"]}
                   style={{
                     height: imageHeight,
                     width: imageWidth,
@@ -179,7 +180,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                 <label
                   key={indexTwo}
                   className={`relative flex items-center justify-center cursor-pointer active:scale-95`}
-                  title={image.title?.[router?.locale as "en" | "es"]}
+                  title={image.title?.[locale as "en" | "es"]}
                   style={{
                     height: imageHeight,
                     width: imageWidth,
@@ -216,7 +217,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
                 <div
                   key={indexTwo}
                   className={`relative flex items-center justify-center cursor-pointer active:scale-95`}
-                  title={image.title?.[router?.locale as "en" | "es"]}
+                  title={image.title?.[locale as "en" | "es"]}
                   style={{
                     height: imageHeight,
                     width: imageWidth,
@@ -272,7 +273,7 @@ const PostComment: FunctionComponent<PostCommentProps> = ({
               {commentPostLoading ? (
                 <AiOutlineLoading size={15} color="white" />
               ) : (
-                t("send")
+                t("sendI")
               )}
             </div>
           </div>

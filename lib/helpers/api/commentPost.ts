@@ -12,7 +12,6 @@ import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import cleanCollect from "../cleanCollect";
 import validateMetadata from "../../../graphql/lens/queries/validate";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
-import { TFunction } from "i18next";
 
 const lensComment = async (
   id: string,
@@ -23,7 +22,7 @@ const lensComment = async (
   clientWallet: WalletClient,
   publicClient: PublicClient,
   clearComment: () => void,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<void> => {
   if (
     openActionModules &&

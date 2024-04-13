@@ -9,7 +9,6 @@ import { polygon } from "viem/chains";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { FollowModuleRedeemInput } from "../../../graphql/generated";
-import { TFunction } from "i18next";
 
 const lensFollow = async (
   id: string,
@@ -18,7 +17,7 @@ const lensFollow = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<void> => {
   const { data } = await follow({
     follow: [

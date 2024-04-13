@@ -10,6 +10,7 @@ import InteractBar from "@/components/Common/modules/InteractBar";
 const Quest: FunctionComponent<QuestProps> = ({
   layoutAmount,
   t,
+  locale,
   router,
   publication,
   profileHovers,
@@ -41,6 +42,7 @@ const Quest: FunctionComponent<QuestProps> = ({
         <InteractBar
           mirror={mirror}
           like={like}
+          locale={locale}
           interactionsLoading={interactionsLoading}
           openMirrorChoice={openMirrorChoice}
           setOpenMirrorChoice={setOpenMirrorChoice}

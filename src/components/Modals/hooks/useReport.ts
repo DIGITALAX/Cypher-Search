@@ -13,9 +13,8 @@ import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import { setReportPub } from "../../../../redux/reducers/reportPubSlice";
 import { Dispatch } from "redux";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
-import { TFunction } from "i18next";
 
-const useReport = (dispatch: Dispatch, t: TFunction<"common", undefined>) => {
+const useReport = (dispatch: Dispatch, t: (key: string | number) => string) => {
   const [reportLoading, setReportLoading] = useState<boolean>(false);
   const [reason, setReason] = useState<{
     main: "Fraud" | "Illegal" | "Sensitive" | "Spam";

@@ -8,7 +8,6 @@ import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { PublicClient, WalletClient } from "viem";
 import profileMetadata from "../../../graphql/lens/mutations/metadata";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
-import { TFunction } from "i18next";
 
 const setMeta = async (
   metadataURI: string,
@@ -16,7 +15,7 @@ const setMeta = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<void> => {
   const { data } = await profileMetadata({
     metadataURI,

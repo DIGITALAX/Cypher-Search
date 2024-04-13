@@ -12,6 +12,7 @@ import Publication from "./Publication";
 const Feed: FunctionComponent<FeedProps> = ({
   profileFeed,
   getMoreFeed,
+  locale,
   interactionsLoading,
   mirror,
   openMirrorChoice,
@@ -49,7 +50,6 @@ const Feed: FunctionComponent<FeedProps> = ({
   setCaretCoord,
   cartItems,
   t,
-  tCom,
 }): JSX.Element => {
   return (
     <div className="relative flex items-start justify-start w-full h-auto z-10 otro:order-1 order-2">
@@ -100,7 +100,8 @@ const Feed: FunctionComponent<FeedProps> = ({
                         : (item as Post);
                     return (
                       <Publication
-                        t={tCom}
+                        t={t}
+                        locale={locale}
                         top={
                           type?.metadata?.content?.length < 100 &&
                           type?.metadata?.__typename !== "AudioMetadataV3" &&

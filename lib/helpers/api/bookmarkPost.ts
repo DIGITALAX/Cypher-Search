@@ -2,12 +2,11 @@ import bookmark from "../../../graphql/lens/mutations/bookmark";
 import { AnyAction, Dispatch } from "redux";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
-import { TFunction } from "i18next";
 
 const lensBookmark = async (
   on: string,
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   try {
     const { data } = await bookmark({

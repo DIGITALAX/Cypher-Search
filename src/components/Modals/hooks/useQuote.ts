@@ -45,7 +45,6 @@ import { CHROMADIN_ID } from "../../../../lib/constants";
 import Draggable from "react-draggable";
 import { setInsufficientBalance } from "../../../../redux/reducers/insufficientBalanceSlice";
 import findBalance from "../../../../lib/helpers/findBalance";
-import { TFunction } from "i18next";
 
 const useQuote = (
   availableCurrencies: Erc20[],
@@ -57,7 +56,7 @@ const useQuote = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   fullScreenVideo: FullScreenVideoState,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const videoRef = useRef<null | HTMLVideoElement>(null);
   const wrapperRef = useRef<Draggable | null>(null);

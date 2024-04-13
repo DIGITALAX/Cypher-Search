@@ -12,6 +12,7 @@ const Who: FunctionComponent<WhoProps> = ({
   reactors,
   quoters,
   hasMore,
+  locale,
   hasMoreQuote,
   showMore,
   mirrorQuote,
@@ -20,7 +21,7 @@ const Who: FunctionComponent<WhoProps> = ({
   router,
   dispatch,
   lensConnected,
-  t
+  t,
 }): JSX.Element => {
   return (
     <div className="inset-0 justify-center fixed z-20 bg-opacity-50 backdrop-blur-sm overflow-y-hidden grid grid-flow-col auto-cols-auto w-full h-auto">
@@ -76,6 +77,7 @@ const Who: FunctionComponent<WhoProps> = ({
 
               {!dataLoading ? (
                 <WhoSwitch
+                  locale={locale}
                   router={router}
                   lensConnected={lensConnected}
                   type={type}

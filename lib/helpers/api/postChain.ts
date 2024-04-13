@@ -12,7 +12,6 @@ import postOnChain from "../../../graphql/lens/mutations/post";
 import cleanCollect from "../cleanCollect";
 import validateMetadata from "../../../graphql/lens/queries/validate";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
-import { TFunction } from "i18next";
 
 const lensPost = async (
   contentURI: string,
@@ -21,7 +20,7 @@ const lensPost = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"common", undefined>,
+  t: (key: string | number) => string,
   closeBox?: () => void,
   create?: boolean
 ): Promise<void> => {

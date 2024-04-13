@@ -18,7 +18,6 @@ import {
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 import { FilterValues } from "@/components/Search/types/search.types";
-import { TFunction, i18n } from "i18next";
 
 export type BarProps = {
   title: string;
@@ -34,7 +33,7 @@ export type PopUpProps = {
   cartItems: CartItem[];
   index: number;
   cartItem: Creation;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   level: number | undefined;
   type: ItemType;
 };
@@ -54,6 +53,7 @@ export type PurchaseTokensProps = {
 
 export type InteractBarProps = {
   col?: boolean;
+  locale: "es" | "en";
   layoutAmount?: number;
   index: number;
   creation?: boolean;
@@ -145,24 +145,25 @@ export type AccountsProps = {
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;
-  t: TFunction<"common", undefined>;
+  setLocale: (locale: "en" | "es") => void;
+  locale: "en" | "es";
+  t: (key: string | number) => string;
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   auto?: boolean;
   fullScreenVideo: FullScreenVideoState;
-  i18n: i18n;
 };
 
 export type NotFoundProps = {
   router: NextRouter;
   searchActive: boolean;
   cartAnim: boolean;
-  i18n: i18n;
   openConnectModal: (() => void) | undefined;
   handleLogout: () => void;
   handleLensConnect: () => Promise<void>;
   cartListOpen: boolean;
   fullScreenVideo: FullScreenVideoState;
+  setLocale: (locale: "en" | "es") => void;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
   lensConnected: Profile | undefined;
   walletConnected: boolean;
@@ -173,7 +174,8 @@ export type NotFoundProps = {
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   handleShuffleSearch: () => void;
-  t: TFunction<"common", undefined>;
+  locale: "en" | "es";
+  t: (key: string | number) => string;
 };
 
 export enum ItemType {
@@ -209,9 +211,10 @@ export type SuggestedProps = {
   router: NextRouter;
   fullScreenVideo: FullScreenVideoState;
   cartAnim: boolean;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   filterConstants: FilterValues | undefined;
-  i18n: i18n;
+  locale: "en" | "es";
+  setLocale: (e: "en" | "es") => void;
   layoutAmount?: number;
   handleSearch?: (
     e: KeyboardEvent | MouseEvent,
@@ -259,7 +262,7 @@ export type StatsProps = {
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   microbrand?: boolean;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type MediaProps = {
@@ -276,7 +279,7 @@ export type MediaProps = {
 export type CartListProps = {
   cartItems: CartItem[];
   router: NextRouter;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   dispatch: Dispatch<AnyAction>;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
   page?: boolean;
@@ -285,5 +288,5 @@ export type CartListProps = {
 
 export type PrintTypeProps = {
   printType: string;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };

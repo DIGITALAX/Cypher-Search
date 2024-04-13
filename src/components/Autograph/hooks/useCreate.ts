@@ -43,7 +43,6 @@ import { setInteractError } from "../../../../redux/reducers/interactErrorSlice"
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import collectionFixer from "../../../../lib/helpers/collectionFixer";
-import { TFunction } from "i18next";
 
 const useCreate = (
   publicClient: PublicClient,
@@ -62,7 +61,7 @@ const useCreate = (
   pageProfile: Profile | undefined,
   client: LitNodeClient,
   isDesigner: boolean,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const coder = new ethers.AbiCoder();
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);

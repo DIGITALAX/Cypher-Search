@@ -31,8 +31,6 @@ import { v4 as uuidv4 } from "uuid";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import convertToFile from "../../../../lib/helpers/convertToFile";
 import errorChoice from "../../../../lib/helpers/errorChoice";
-import cleanObject from "../../../../lib/helpers/cleanObject";
-import { TFunction } from "i18next";
 
 const useSettings = (
   lensConnected: Profile | undefined,
@@ -43,7 +41,7 @@ const useSettings = (
   screenDisplay: ScreenDisplay,
   isDesigner: boolean,
   pageProfile: Profile | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [settingsUpdateLoading, setSettingsUpdateLoading] =
     useState<boolean>(false);

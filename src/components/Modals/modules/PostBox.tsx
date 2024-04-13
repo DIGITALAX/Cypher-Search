@@ -11,6 +11,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
   makePost,
   post,
   setMakePost,
+  locale,
   postLoading,
   setContentLoading,
   contentLoading,
@@ -58,6 +59,7 @@ const PostBox: FunctionComponent<PostBoxProps> = ({
             <div className="relative h-full w-4/5 items-center justify-center flex">
               <PostComment
                 t={t}
+                locale={locale}
                 itemId={undefined}
                 router={router}
                 setCaretCoord={setCaretCoord}

@@ -26,6 +26,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
   setProfileHovers,
   unfollowProfile,
   gallery,
+  locale,
   openInteractions,
   setOpenInteractions,
   dispatch,
@@ -53,6 +54,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
             <div className="relative w-3 h-2 items-center justify-center flex">
               <Image
                 layout="fill"
+                draggable={false}
                 src={`${INFURA_GATEWAY}/ipfs/QmUvWVFG5Wq1etv6i7u8T5rrq5t2p4W5kEt1sbQg91236x`}
               />
             </div>
@@ -68,12 +70,12 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                       key={index}
                       className="relative w-full h-fit border-b border-afilado flex items-center justify-center cursor-pointer hover:opacity-70 text-white font-bit top-px"
                       onClick={() => {
-                        handleOptionSelect(item.en);
+                        handleOptionSelect(item?.[locale as "en" | "es"]);
                         setOptionsOpen(false);
                       }}
                     >
                       <div className="relative w-fit h-fit flex items-center justify-center text-xs sm:text-sm">
-                        {item?.[router?.locale as "en" | "es"]}
+                        {item?.[locale as "en" | "es"]}
                       </div>
                     </div>
                   );
@@ -97,10 +99,14 @@ const Gallery: FunctionComponent<GalleryProps> = ({
           >
             {(moreGalleryLoading
               ? [
-                  ...getGallerySort(selectedOption, gallery),
+                  ...getGallerySort(
+                    selectedOption,
+                    gallery,
+                    locale as "en" | "es"
+                  ),
                   ...Array.from({ length: 20 }),
                 ]
-              : getGallerySort(selectedOption, gallery)
+              : getGallerySort(selectedOption, gallery, locale as "en" | "es")
             )?.map((item: any, index: number) => {
               return moreGalleryLoading &&
                 index >
@@ -119,6 +125,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                   t={t}
                   lensConnected={lensConnected}
                   dispatch={dispatch}
+                  locale={locale}
                   cartItems={cartItems}
                   key={index}
                   followProfile={followProfile}
@@ -181,6 +188,7 @@ const Gallery: FunctionComponent<GalleryProps> = ({
                           src={`${INFURA_GATEWAY}/ipfs/${
                             item?.dropDetails?.dropCover?.split("ipfs://")?.[1]
                           }`}
+                          draggable={false}
                           className="rounded-sm"
                           objectFit="cover"
                           layout="fill"

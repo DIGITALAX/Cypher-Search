@@ -23,17 +23,16 @@ import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSl
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
 import Draggable from "react-draggable";
 import { Creation } from "@/components/Tiles/types/tiles.types";
-import { TFunction } from "i18next";
 
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type DisplaySearchProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   galleryLoading: boolean;
   gallery:
     | {
@@ -95,19 +94,19 @@ export type DisplaySearchProps = {
 
 export type InteractErrorProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type ClaimProfileProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type SuccessCheckoutProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   handle: string;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type FullScreenVideoProps = {
@@ -139,7 +138,7 @@ export type IndexProps = {
 
 export type ReportPubProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   id: string;
   handleReportPost: (id: string) => Promise<void>;
   reason: {
@@ -163,7 +162,7 @@ export type ReportPubProps = {
     }>
   ) => void;
   reportLoading: boolean;
-  router: NextRouter
+  router: NextRouter;
 };
 
 export type WhoProps = {
@@ -174,6 +173,7 @@ export type WhoProps = {
   })[];
   hasMore: boolean;
   hasMoreQuote: boolean;
+  locale: "en" | "es";
   showMore: () => void;
   mirrorQuote: boolean;
   setMirrorQuote: (e: SetStateAction<boolean>) => void;
@@ -181,7 +181,7 @@ export type WhoProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   lensConnected: Profile | undefined;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type WhoSwitchProps = {
@@ -189,10 +189,11 @@ export type WhoSwitchProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   reactors: any[];
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   quoters: (Quote & {
     decrypted: any;
   })[];
+  locale: "en" | "es";
   hasMore: boolean;
   hasMoreQuote: boolean;
   mirrorQuote: boolean;
@@ -211,7 +212,7 @@ export type PostBoxProps = {
     x: number;
     y: number;
   };
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   setCaretCoord: (
     e: SetStateAction<{
       x: number;
@@ -225,6 +226,7 @@ export type PostBoxProps = {
   setMakePost: (e: SetStateAction<MakePostComment[]>) => void;
   postLoading: boolean[];
   router: NextRouter;
+  locale: "en" | "es";
   setContentLoading: (
     e: SetStateAction<
       {
@@ -247,7 +249,7 @@ export type PostCollectGifProps = {
   setCollects: (
     e: SetStateAction<SimpleCollectOpenActionModuleInput | undefined>
   ) => void;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   collects: SimpleCollectOpenActionModuleInput | undefined;
   openMeasure: {
     searchedGifs: string[];
@@ -292,7 +294,7 @@ export type PostCollectGifProps = {
 export type FollowCollectProps = {
   dispatch: Dispatch<AnyAction>;
   type: string;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   collect:
     | {
         item:
@@ -314,7 +316,7 @@ export type FollowCollectProps = {
 
 export type PostSuccessProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   type: string;
   router: NextRouter;
   pubId: string;
@@ -329,7 +331,7 @@ export type InsufficientBalanceProps = {
 
 export type QuestGatesProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   gates: {
     erc20?: {
       address: string;
@@ -341,6 +343,6 @@ export type QuestGatesProps = {
 };
 
 export type QuestSuccessProps = {
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   dispatch: Dispatch;
 };

@@ -227,7 +227,7 @@ const CartList: FunctionComponent<CartListProps> = ({
           </div>
         ) : (
           <div className="relative flex items-center justify-center font-dog text-white text-xxs break-words w-full h-full text-center whitespace-preline">
-            {t("items")}
+            {t("noitems")}
           </div>
         )}
       </div>

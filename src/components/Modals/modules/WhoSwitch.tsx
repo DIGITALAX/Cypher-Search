@@ -11,6 +11,7 @@ import handleImageError from "../../../../lib/helpers/handleImageError";
 const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
   type,
   router,
+  locale,
   reactors,
   quoters,
   showMore,
@@ -41,6 +42,7 @@ const WhoSwitch: FunctionComponent<WhoSwitchProps> = ({
               return (
                 <Publication
                   t={t}
+                  locale={locale}
                   lensConnected={lensConnected}
                   index={index}
                   item={item}

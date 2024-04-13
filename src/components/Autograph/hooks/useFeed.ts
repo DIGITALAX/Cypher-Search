@@ -25,7 +25,6 @@ import { Dispatch } from "redux";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { decryptPost } from "../../../../lib/helpers/decryptPost";
 import errorChoice from "../../../../lib/helpers/errorChoice";
-import { TFunction } from "i18next";
 
 const useFeed = (
   lensConnected: Profile | undefined,
@@ -34,7 +33,7 @@ const useFeed = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []

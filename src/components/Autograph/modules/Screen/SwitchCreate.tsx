@@ -33,14 +33,15 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
   allCollections,
   collectionLoading,
   edit,
+  locale
 }): JSX.Element => {
   switch (type) {
     case "collection":
       return (
         <Dispatch
+          locale={locale}
           allDrops={allDrops}
           t={t}
-          router={router}
           filterConstants={filterConstants}
           collectionDetails={collectionDetails}
           setCollectionDetails={setCollectionDetails}
@@ -246,7 +247,7 @@ const SwitchCreate: FunctionComponent<SwitchCreateProps> = ({
                           </div>
                           <div
                             className="relative w-4 h-4 justify-end flex items-center cursor-pointer active:scale-95 ml-auto"
-                            title={t("goC")}
+                            title={t("goCo")}
                             onClick={(e) => {
                               e.stopPropagation();
                               router.push(

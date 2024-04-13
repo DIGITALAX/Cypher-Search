@@ -9,7 +9,6 @@ import lensUnfollow from "../../../../lib/helpers/api/unfollowProfile";
 import lensFollow from "../../../../lib/helpers/api/followProfile";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
-import { TFunction } from "i18next";
 
 const useTiles = (
   allSearchItems: Publication[],
@@ -17,7 +16,7 @@ const useTiles = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>([]);
   const [profileHovers, setProfileHovers] = useState<boolean[]>([]);

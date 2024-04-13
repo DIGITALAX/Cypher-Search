@@ -11,6 +11,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
   allComments,
   allCommentsLoading,
   itemData,
+  locale,
   setMainMakeComment,
   mainMakeComment,
   setMainContentLoading,
@@ -71,6 +72,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
         <div className="relative flex flex-col gap-2 items-center justify-center w-[40rem] xl:w-[30rem] 2xl:w-[40rem] h-full">
           <Publication
             t={t}
+            locale={locale}
             setCaretCoord={setCaretCoord}
             caretCoord={caretCoordMain}
             profilesOpen={profilesOpenMain}
@@ -136,6 +138,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
               <div className="relative w-full md:w-5/6 h-[37rem] flex flex-col gap-10 justify-start items-center">
                 <PostComment
                   t={t}
+                  locale={locale}
                   itemId={
                     itemData?.__typename === "Mirror"
                       ? itemData?.mirrorOn?.id
@@ -183,6 +186,7 @@ const Pub: FunctionComponent<PublicationProps> = ({
                         ) => {
                           return (
                             <Publication
+                              locale={locale}
                               caretCoord={caretCoord}
                               setCaretCoord={setCaretCoord}
                               profilesOpen={profilesOpen}

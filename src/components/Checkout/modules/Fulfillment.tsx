@@ -52,11 +52,11 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
             {[
               {
-                title: t("name"),
+                title: t("nam"),
                 drop: false,
               },
               {
-                title: t("add"),
+                title: t("addr"),
                 drop: false,
               },
               {
@@ -64,15 +64,15 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
                 drop: false,
               },
               {
-                title: t("cit"),
+                title: t("city"),
                 drop: false,
               },
               {
-                title: t("sta"),
+                title: t("state"),
                 drop: false,
               },
               {
-                title: t("con"),
+                title: t("country"),
                 drop: true,
               },
             ].map(
@@ -199,7 +199,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
         </div>
         <div className="relative w-full h-fit flex flex-col items-start justify-start gap-3">
           <div className="relative w-fit h-fit flex text-white font-aust text-xl">
-            {t("tok")}
+            {t("tokC")}
           </div>
           <div className="relative flex flex-row flex-wrap items-start justify-start gap-5 w-full h-fit">
             {ACCEPTED_TOKENS?.filter((value) =>

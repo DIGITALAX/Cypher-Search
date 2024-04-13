@@ -14,6 +14,7 @@ const Display: FunctionComponent<DisplayProps> = ({
   display,
   mirror,
   like,
+  locale,
   openMirrorChoice,
   sortType,
   setOpenMirrorChoice,
@@ -23,7 +24,7 @@ const Display: FunctionComponent<DisplayProps> = ({
   displayLoading,
   owner,
   router,
-  t
+  t,
 }): JSX.Element => {
   const displayType =
     sortType === SortType.Community
@@ -113,6 +114,7 @@ const Display: FunctionComponent<DisplayProps> = ({
           {displayType?.main && (
             <div className="absolute bottom-4 left-4 w-fit h-fit rounded-sm bg-black/70 flex flex-col items-start justify-center p-2 border gap-2 border-[#372B48]">
               <InteractBar
+                locale={locale}
                 router={router}
                 dispatch={dispatch}
                 mirror={mirror}
@@ -221,6 +223,7 @@ const Display: FunctionComponent<DisplayProps> = ({
                 {displayType?.side?.[index] && (
                   <div className="absolute bottom-2 left-2 flex items-center justify-center sm:hidden tablet:flex">
                     <InteractBar
+                      locale={locale}
                       router={router}
                       dispatch={dispatch}
                       mirror={mirror}
@@ -261,7 +264,7 @@ const Display: FunctionComponent<DisplayProps> = ({
               {displayLoading ? (
                 <AiOutlineLoading size={15} color="white" />
               ) : (
-                t("up")
+                t("update")
               )}
             </div>
           </div>

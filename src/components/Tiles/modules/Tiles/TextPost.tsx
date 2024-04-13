@@ -23,6 +23,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
   publication,
   mirror,
   like,
+  locale,
   interactionsLoading,
   setOpenMirrorChoice,
   openMirrorChoice,
@@ -86,6 +87,7 @@ const TextPost: FunctionComponent<TextPostProps> = ({
           <InteractBar
             mirror={mirror}
             router={router}
+            locale={locale}
             like={like}
             dispatch={dispatch}
             interactionsLoading={interactionsLoading}

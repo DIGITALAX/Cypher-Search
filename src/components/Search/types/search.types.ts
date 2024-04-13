@@ -10,7 +10,6 @@ import { CartItem } from "@/components/Common/types/common.types";
 import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
 import { FullScreenVideoState } from "../../../../redux/reducers/fullScreenVideoSlice";
-import { TFunction, i18n } from "i18next";
 
 export interface FilterValues {
   hashtags: string[];
@@ -61,14 +60,15 @@ export type SearchBarProps = {
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   searchItems: AllSearchItemsState | undefined;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };
 
 export type HeaderProps = {
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   dispatch: Dispatch<AnyAction>;
   includeSearch: boolean;
-  i18n: i18n;
+  locale: "en" | "es";
+  setLocale: (locale: "en" | "es") => void;
   router: NextRouter;
   layoutAmount?: number;
   filterChange: boolean;
@@ -123,7 +123,7 @@ export type ImageDropDownProps = {
 
 export type ContentSortProps = {
   handleResetFilters: () => void;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   filterConstants: FilterValues | undefined;
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
@@ -139,8 +139,8 @@ export type PrerollSortProps = {
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
   openDropDown: DropDown;
-  t: TFunction<"common", undefined>;
-  router: NextRouter;
+  t: (key: string | number) => string;
+  locale: "es" | "en";
   filterConstants: FilterValues | undefined;
   setOpenDropDown: (e: SetStateAction<DropDown>) => void;
   setFilteredDropDownValues: (
@@ -150,13 +150,14 @@ export type PrerollSortProps = {
 };
 
 export type FilterProps = {
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
   filterValues: Filter;
   openDropDown: DropDown;
   lensConnected: Profile | undefined;
   handleResetFilters: () => void;
+  locale: "en" | "es";
   setOpenDropDown: (e: SetStateAction<DropDown>) => void;
   setFilteredDropDownValues: (
     e: SetStateAction<FilterValues | undefined>

@@ -12,14 +12,13 @@ import {
 } from "../../../../redux/reducers/postCollectGifSlice";
 import { setInteractError } from "../../../../redux/reducers/interactErrorSlice";
 import { setIndexer } from "../../../../redux/reducers/indexerSlice";
-import { TFunction } from "i18next";
 
 const usePost = (
   dispatch: Dispatch,
   postCollectGif: PostCollectGifState,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [postLoading, setPostLoading] = useState<boolean[]>([false]);
   const [postContentLoading, setPostContentLoading] = useState<

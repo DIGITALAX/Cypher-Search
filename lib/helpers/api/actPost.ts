@@ -10,7 +10,6 @@ import LensHubProxy from "./../../../abis/LensHubProxy.json";
 import { polygon } from "viem/chains";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import { setInsufficientBalance } from "../../../redux/reducers/insufficientBalanceSlice";
-import { TFunction } from "i18next";
 
 const actPost = async (
   pubId: string,
@@ -19,7 +18,7 @@ const actPost = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<boolean | void> => {
   try {
     const { data } = await collectPost({

@@ -8,7 +8,6 @@ import broadcast from "../../../graphql/lens/mutations/broadcast";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import mirrorPost from "../../../graphql/lens/mutations/mirror";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
-import { TFunction } from "i18next";
 
 const lensMirror = async (
   mirrorOn: string,
@@ -16,7 +15,7 @@ const lensMirror = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<void> => {
   const data = await mirrorPost({
     mirrorOn,

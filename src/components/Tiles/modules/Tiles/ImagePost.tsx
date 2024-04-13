@@ -33,6 +33,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
   dispatch,
   mirror,
   like,
+  locale,
   interactionsLoading,
   openMirrorChoice,
   setOpenMirrorChoice,
@@ -306,6 +307,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
               <InteractBar
                 mirror={mirror}
                 like={like}
+                locale={locale}
                 interactionsLoading={interactionsLoading}
                 layoutAmount={layoutAmount}
                 openMirrorChoice={openMirrorChoice}
@@ -614,6 +616,7 @@ const ImagePost: FunctionComponent<ImagePostProps> = ({
                 mirror={mirror}
                 router={router}
                 like={like}
+                locale={locale}
                 interactionsLoading={interactionsLoading}
                 col
                 openMirrorChoice={openMirrorChoice}

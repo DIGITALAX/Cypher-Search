@@ -19,7 +19,6 @@ import {
 } from "../../../../redux/reducers/searchItemsSlice";
 import errorChoice from "../../../../lib/helpers/errorChoice";
 import { Creation } from "../types/tiles.types";
-import { TFunction } from "i18next";
 
 const useInteractions = (
   allSearchItems: AllSearchItemsState | undefined,
@@ -30,7 +29,7 @@ const useInteractions = (
   setSuggestedFeed:
     | ((e: SetStateAction<AllSearchItemsState | undefined>) => void)
     | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [openMirrorChoice, setOpenMirrorChoice] = useState<boolean[]>([]);
   const [interactionsLoading, setInteractionsLoading] = useState<

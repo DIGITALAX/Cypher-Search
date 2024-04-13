@@ -3,14 +3,13 @@ import reportPost from "../../../graphql/lens/mutations/report";
 import { ReportingReasonInput } from "../../../graphql/generated";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
-import { TFunction } from "i18next";
 
 const lensReport = async (
   id: string,
   reason: ReportingReasonInput,
   additionalComments: string,
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   try {
     const { data } = await reportPost({

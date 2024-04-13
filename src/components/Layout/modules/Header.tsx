@@ -34,7 +34,8 @@ const Header: FunctionComponent<HeaderProps> = ({
   fullScreenVideo,
   filterChange,
   t,
-  i18n,
+  setLocale,
+  locale
 }): JSX.Element => {
   return (
     <div
@@ -90,8 +91,9 @@ const Header: FunctionComponent<HeaderProps> = ({
         />
       )}
       <Accounts
+        setLocale={setLocale}
+        locale={locale}
         t={t}
-        i18n={i18n}
         fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         searchActive={searchActive}

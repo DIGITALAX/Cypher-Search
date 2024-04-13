@@ -34,7 +34,8 @@ const Accounts: FunctionComponent<AccountsProps> = ({
   cartAnim,
   fullScreenVideo,
   t,
-  i18n,
+  setLocale,
+  locale
 }): JSX.Element => {
   const profilePicture = createProfilePicture(lensConnected?.metadata?.picture);
   return (
@@ -54,13 +55,13 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             <div
               className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
               onClick={() => {
-                if (router?.locale == "en") {
-                  i18n.changeLanguage("es");
+                if (locale == "en") {
+                  setLocale("es");
                   router.push(router.asPath, undefined, {
                     locale: "es",
                   });
                 } else {
-                  i18n.changeLanguage("en");
+                  setLocale("en");
                   router.push(router.asPath, undefined, {
                     locale: "en",
                   });
@@ -74,7 +75,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
                 <Image
                   layout="fill"
                   src={`${INFURA_GATEWAY}/ipfs/${
-                    router?.locale == "es"
+                    locale == "es"
                       ? "QmY43U5RovVkoGrkLiFyA2VPMnGxf5e3NgYZ95u9aNJdem"
                       : "QmXdyvCYjZ7FkPjgFX5BPi98WTpPdJT5FHhzhtbyzkJuNs"
                   }`}
@@ -85,13 +86,13 @@ const Accounts: FunctionComponent<AccountsProps> = ({
             <div
               className="relative flex items-center justify-center w-fit h-fit active:scale-95 cursor-pointer"
               onClick={() => {
-                if (router?.locale == "en") {
-                  i18n.changeLanguage("es");
+                if (locale == "en") {
+                  setLocale("es");
                   router.push(router.asPath, undefined, {
                     locale: "es",
                   });
                 } else {
-                  i18n.changeLanguage("en");
+                  setLocale("en");
                   router.push(router.asPath, undefined, {
                     locale: "en",
                   });

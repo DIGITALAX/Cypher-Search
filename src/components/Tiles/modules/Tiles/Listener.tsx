@@ -24,6 +24,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
   dispatch,
   router,
   publication,
+  locale,
   cartItems,
   interactionsLoading,
   mirror,
@@ -50,6 +51,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
         <div className="absolute w-full h-full mix-blend-hard-light bg-listener opacity-60 bg-center bg-cover right-0 top-0"></div>
         <InteractBar
           router={router}
+          locale={locale}
           mirror={mirror}
           like={like}
           dispatch={dispatch}

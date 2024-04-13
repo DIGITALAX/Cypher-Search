@@ -8,7 +8,6 @@ import { NextRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useAccount } from "wagmi";
 import { RootState } from "../../../../../redux/store";
 import { useEffect, useState } from "react";
@@ -20,21 +19,18 @@ import DropMain from "@/components/Drop/modules/DropMain";
 import useTiles from "@/components/Tiles/hooks/useTiles";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import NotFound from "@/components/Common/modules/NotFound";
-import { useTranslation } from "next-i18next";
-import { TFunction, i18n } from "i18next";
+import { useTranslation } from "@/pages/_app";
 
 const Drop: NextPage<{
   router: NextRouter;
-  tCom: TFunction<"common", undefined>;
-  i18n: i18n;
-}> = ({ router, tCom, i18n }): JSX.Element => {
+}> = ({ router }): JSX.Element => {
   const publicClient = createPublicClient({
     chain: polygon,
     transport: http(
       `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
     ),
   });
-  const { t } = useTranslation("drop");
+  const { t, setLocale, locale } = useTranslation();
   const { autograph, drop } = router.query;
   const dispatch = useDispatch();
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
@@ -92,7 +88,8 @@ const Drop: NextPage<{
     filters,
     suggestedFeed,
     dispatch,
-    router
+    router,
+    locale
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -129,7 +126,7 @@ const Drop: NextPage<{
     address,
     lensConnected,
     setSuggestedFeed,
-    tCom
+    t
   );
   const { dropLoading, dropItem, collections } = useDrop(
     drop as string,
@@ -149,7 +146,7 @@ const Drop: NextPage<{
     dispatch,
     publicClient,
     address,
-    tCom
+    t
   );
 
   useEffect(() => {
@@ -167,8 +164,9 @@ const Drop: NextPage<{
       <>
         {!profile || collections?.length < 1 ? (
           <NotFound
-            i18n={i18n}
-            t={tCom}
+            t={t}
+            locale={locale}
+            setLocale={setLocale}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
@@ -335,8 +333,9 @@ const Drop: NextPage<{
                 />
               </Head>
               <Suggested
+                locale={locale}
+                setLocale={setLocale}
                 t={t}
-                i18n={i18n}
                 filterConstants={filterConstants}
                 filterChange={filterChange}
                 fullScreenVideo={fullScreenVideo}
@@ -349,7 +348,7 @@ const Drop: NextPage<{
                     router={router}
                     dispatch={dispatch}
                     cartItems={cartItems}
-                    t={tCom}
+                    t={t}
                   />
                 }
                 handleSearch={handleSearch}
@@ -399,16 +398,3 @@ const Drop: NextPage<{
 };
 
 export default Drop;
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: false,
-  };
-}
-
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? "en", ["drop", "footer", "common"])),
-  },
-});

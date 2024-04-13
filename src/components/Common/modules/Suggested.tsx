@@ -46,7 +46,8 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
   filterChange,
   filterConstants,
   t,
-  i18n,
+  locale,
+  setLocale,
 }) => {
   return (
     <div
@@ -55,7 +56,8 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
     >
       <Header
         t={t}
-        i18n={i18n}
+        locale={locale}
+        setLocale={setLocale}
         fullScreenVideo={fullScreenVideo}
         cartAnim={cartAnim}
         filterChange={filterChange}
@@ -83,6 +85,7 @@ const Suggested: FunctionComponent<SuggestedProps> = ({
       />
       {component}
       <Tiles
+        locale={locale}
         t={t}
         searchItems={searchItems}
         layoutAmount={layoutAmount!}

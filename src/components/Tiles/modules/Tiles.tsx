@@ -38,6 +38,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
   setProfileHovers,
   searchItems,
   moreSearchLoading,
+  locale,
   lensConnected,
   filterConstants,
 }): JSX.Element => {
@@ -56,6 +57,7 @@ const Tiles: FunctionComponent<TilesProps> = ({
     ({ index, data }: { index: number; data: Publication }) => {
       return (
         <TileSwitchMemo
+          locale={locale}
           type={data?.type}
           filterConstants={filterConstants}
           lensConnected={lensConnected}

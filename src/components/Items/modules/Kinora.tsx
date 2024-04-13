@@ -16,6 +16,7 @@ import { Milestone, Reward } from "@/components/Search/types/search.types";
 
 const Kinora: FunctionComponent<KinoraProps> = ({
   itemData,
+  locale,
   router,
   dispatch,
   lensConnected,
@@ -71,7 +72,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
   handlePlayerJoin,
   purchaseDetails,
   setPurchaseDetails,
-  t
+  t,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(
     itemData?.publication?.by?.metadata?.picture
@@ -82,6 +83,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
         <div className="relative flex flex-col gap-2 items-center justify-center w-full sm:w-[40rem] h-full">
           <InteractBar
             mirror={mirror}
+            locale={locale}
             like={like}
             interactionsLoading={mainInteractionsLoading?.[0]}
             publication={itemData?.publication}
@@ -119,6 +121,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                 <div className="relative w-5/6 h-full flex flex-col gap-10 justify-start items-center">
                   <PostComment
                     t={t}
+                    locale={locale}
                     itemId={undefined}
                     router={router}
                     setCaretCoord={setCaretCoordMain}
@@ -162,6 +165,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                             return (
                               <Publication
                                 t={t}
+                                locale={locale}
                                 setCaretCoord={setCaretCoord}
                                 caretCoord={caretCoord}
                                 profilesOpen={profilesOpen}

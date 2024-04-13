@@ -12,6 +12,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   itemData,
   dispatch,
   router,
+  locale,
   cartItems,
   mirror,
   like,
@@ -26,7 +27,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
   profileHovers,
   setProfileHovers,
   lensConnected,
-  t
+  t,
 }): JSX.Element => {
   const profilePicture = createProfilePicture(itemData?.metadata?.picture);
   return (
@@ -96,6 +97,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
                     lensConnected={lensConnected}
                     dispatch={dispatch}
                     t={t}
+                    locale={locale}
                     cartItems={cartItems}
                     key={index}
                     followProfile={followProfile}

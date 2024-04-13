@@ -39,6 +39,7 @@ const Web: FunctionComponent<WebProps> = ({
   handleImage,
   pfpImage,
   dispatch,
+  locale,
   displayLoading,
   handleSetDisplay,
   handleFollowUpdate,
@@ -108,7 +109,6 @@ const Web: FunctionComponent<WebProps> = ({
   dropDetails,
   setDropDetails,
   createDropLoading,
-  tCom,
   dropsLoading,
   allDrops,
   conversations,
@@ -224,7 +224,7 @@ const Web: FunctionComponent<WebProps> = ({
         </div>
         <ScreenSwitch
           t={t}
-          tCom={tCom}
+          locale={locale}
           address={address}
           handleMessageImage={handleMessageImage}
           messageImage={messageImage}
@@ -407,7 +407,7 @@ const Web: FunctionComponent<WebProps> = ({
             },
             {
               image: "QmeBzqFPc3nvegBtwpNjViVNtiEkWsPSWjJaTem9bysdBU",
-              text: t("pos"),
+              text: t("posT"),
               function: () => dispatch(setScreenDisplay(ScreenDisplay.Post)),
               width: "2.5rem",
               height: "2.5rem",
@@ -518,7 +518,7 @@ const Web: FunctionComponent<WebProps> = ({
                 ? t("cont")
                 : walletConnected && !lensConnected?.id
                 ? t("len")
-                : t("log"),
+                : t("log")?.toLowerCase(),
               function: !walletConnected
                 ? openConnectModal!
                 : walletConnected && !lensConnected?.id

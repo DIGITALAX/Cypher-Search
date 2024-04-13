@@ -100,7 +100,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
             },
             {
               type: "input",
-              title: t("am"),
+              title: t("amA"),
               chosenValue: collectTypes?.[id]?.amount?.value || "0",
               showObject: openMeasure.award === t("yes") ? true : false,
               setValue: (item: string) => {
@@ -141,10 +141,7 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
               dropValues: availableCurrencies?.map((item) => item.symbol),
               chosenValue:
                 availableCurrencies?.find((item) => {
-                  if (
-                    item.contract.address ===
-                    collectTypes?.[id]?.amount?.currency
-                  ) {
+                  if (item.contract?.address === collectTypes?.[id]?.amount?.currency) {
                     return item;
                   }
                 })?.symbol! || availableCurrencies?.[0]?.symbol,
@@ -166,7 +163,9 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                   ...(newCTs[id] || {}),
                   amount: {
                     ...(newCTs[id]?.amount || {}),
-                    currency: item,
+                    currency: availableCurrencies?.find(
+                      (val) => item == val.symbol
+                    )?.contract?.address,
                   },
                 } as any;
 

@@ -28,7 +28,8 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   followLoading,
   unfollowProfile,
   lensConnected,
-  t
+  t,
+  locale
 }): JSX.Element => {
   return (
     <div
@@ -36,6 +37,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
       id={publication?.pubId}
     >
       <InteractBar
+        locale={locale}
         mirror={mirror}
         like={like}
         interactionsLoading={interactionsLoading}

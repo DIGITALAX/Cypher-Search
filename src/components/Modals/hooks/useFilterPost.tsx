@@ -26,7 +26,6 @@ import {
 } from "../../../../lib/constants";
 import toHexWithLeadingZero from "../../../../lib/helpers/leadingZero";
 import collectionFixer from "../../../../lib/helpers/collectionFixer";
-import { TFunction } from "i18next";
 
 const useFilterPost = (
   filtersOpen: FiltersOpenState,
@@ -34,7 +33,7 @@ const useFilterPost = (
   address: `0x${string}` | undefined,
   publicClient: PublicClient,
   lensConnected: Profile | undefined,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [publication, setPublication] = useState<Publication>();
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>(

@@ -4,7 +4,6 @@ import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import useAutograph from "@/components/Autograph/hooks/useAutograph";
 import RouterChange from "@/components/Common/modules/RouterChange";
 import NotFound from "@/components/Common/modules/NotFound";
@@ -33,18 +32,15 @@ import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import Image from "next/legacy/image";
 import { INFURA_GATEWAY } from "../../../lib/constants";
 import useQuests from "@/components/Autograph/hooks/useQuests";
-import { useTranslation } from "next-i18next";
-import { TFunction, i18n } from "i18next";
+import { useTranslation } from "../_app";
 
 const Autograph: NextPage<{
   router: NextRouter;
   client: LitNodeClient;
-  tCom: TFunction<"common", undefined>;
-  i18n: i18n;
-}> = ({ router, client, tCom, i18n }): JSX.Element => {
+}> = ({ router, client }): JSX.Element => {
   const dispatch = useDispatch();
   const { autograph } = router.query;
-  const { t } = useTranslation("autograph");
+  const { t, setLocale, locale } = useTranslation();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
@@ -114,7 +110,8 @@ const Autograph: NextPage<{
     filters,
     allSearchItems,
     dispatch,
-    router
+    router,
+    locale
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -174,7 +171,7 @@ const Autograph: NextPage<{
     dispatch,
     publicClient,
     address,
-    tCom
+    t
   );
   const { questsLoading, questSample } = useQuests(profile, lensConnected);
   const {
@@ -210,7 +207,8 @@ const Autograph: NextPage<{
     publicClient,
     address,
     profile,
-    tCom
+    t,
+    locale
   );
   const {
     followProfile,
@@ -229,7 +227,7 @@ const Autograph: NextPage<{
     publicClient,
     address,
     router,
-    tCom
+    t
   );
   const {
     createDrop,
@@ -266,7 +264,7 @@ const Autograph: NextPage<{
     profile,
     client,
     isDesigner,
-    tCom
+    t
   );
   const {
     handleSendMessage,
@@ -316,7 +314,7 @@ const Autograph: NextPage<{
     screenDisplay,
     isDesigner,
     profile,
-    tCom
+    t
   );
   const {
     handleMoreBookmarks,
@@ -359,7 +357,7 @@ const Autograph: NextPage<{
     publicClient,
     address,
     profile,
-    tCom
+    t
   );
   const {
     makePost,
@@ -368,7 +366,7 @@ const Autograph: NextPage<{
     postLoading,
     postContentLoading,
     setPostContentLoading,
-  } = usePost(dispatch, postCollectGif, publicClient, address, tCom);
+  } = usePost(dispatch, postCollectGif, publicClient, address, t);
   const {
     allOrders,
     ordersLoading,
@@ -394,19 +392,14 @@ const Autograph: NextPage<{
     return () => clearTimeout(timeoutId);
   }, [profileLoading, feedLoading, galleryLoading]);
 
-  if (
-    !profileLoading &&
-    !globalLoading &&
-    !feedLoading &&
-    !galleryLoading &&
-    i18n.isInitialized
-  ) {
+  if (!profileLoading && !globalLoading && !feedLoading && !galleryLoading) {
     return (
       <>
         {!profile ? (
           <NotFound
-            t={tCom}
-            i18n={i18n}
+            t={t}
+            locale={locale}
+            setLocale={setLocale}
             fullScreenVideo={fullScreenVideo}
             cartAnim={cartAnim}
             router={router}
@@ -570,7 +563,7 @@ const Autograph: NextPage<{
               </Head>
               <Web
                 t={t}
-                tCom={tCom}
+                locale={locale}
                 cartItems={cartItems}
                 address={address}
                 handleMessageImage={handleMessageImage}
@@ -711,6 +704,7 @@ const Autograph: NextPage<{
               />
               <Bio
                 t={t}
+                locale={locale}
                 profile={profile}
                 dispatch={dispatch}
                 router={router}
@@ -719,8 +713,8 @@ const Autograph: NextPage<{
               />
               <div className="relative flex flex-row gap-12 otro:gap-3 items-start justify-between sm:px-4 w-full h-full otro:flex-nowrap flex-wrap">
                 <Feed
+                  locale={locale}
                   t={t}
-                  tCom={tCom}
                   cartItems={cartItems}
                   caretCoord={caretCoordFeed}
                   setCaretCoord={setCaretCoordFeed}
@@ -762,6 +756,7 @@ const Autograph: NextPage<{
                   postCollectGif={postCollectGif}
                 />
                 <Gallery
+                  locale={locale}
                   t={t}
                   hasMoreGallery={cursorInfo?.hasMore}
                   lensConnected={lensConnected}
@@ -813,26 +808,3 @@ const Autograph: NextPage<{
 };
 
 export default Autograph;
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: false,
-  };
-}
-
-export const getStaticProps = async ({ locale }: { locale: string }) => {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale ?? "en", [
-        "autograph",
-        "footer",
-        "common",
-      ])),
-    },
-  };
-};
-
-// export async function getServerSideProps() {
-//   return { props: {} };
-// }

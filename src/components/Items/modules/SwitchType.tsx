@@ -95,6 +95,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
   joinLoading,
   handlePlayerJoin,
   t,
+  locale,
 }) => {
   switch (type.toLowerCase()) {
     case "chromadin":
@@ -104,6 +105,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
       return (
         <Chromadin
           t={t}
+          locale={locale}
           allSearchItems={allSearchItems}
           hoverPrompt={hoverPrompt}
           setHoverPrompt={setHoverPrompt}
@@ -179,6 +181,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
         <Kinora
           purchaseDetails={purchaseDetails}
           t={t}
+          locale={locale}
           setPurchaseDetails={setPurchaseDetails}
           joinLoading={joinLoading}
           handlePlayerJoin={handlePlayerJoin}
@@ -244,6 +247,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
           setCaretCoordMain={setCaretCoordMain}
           setMentionProfiles={setMentionProfiles}
           t={t}
+          locale={locale}
           setMentionProfilesMain={setMentionProfilesMain}
           setProfilesOpen={setProfilesOpen}
           setProfilesOpenMain={setProfilesOpenMain}
@@ -311,6 +315,7 @@ const SwitchType: FunctionComponent<SwitchTypeProps> = ({
     case "microbrand":
       return (
         <Microbrand
+          locale={locale}
           lensConnected={lensConnected}
           relatedData={relatedData}
           t={t}

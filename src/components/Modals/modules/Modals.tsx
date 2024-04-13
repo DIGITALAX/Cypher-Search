@@ -29,15 +29,15 @@ import InsufficientBalance from "./InsufficientBalance";
 import ClaimProfile from "./ClaimProfile";
 import QuestGates from "./QuestGates";
 import QuestSuccess from "./QuestSuccess";
-import { TFunction } from "i18next";
+import { useTranslation } from "@/pages/_app";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
 const Modals: FunctionComponent<{
   router: NextRouter;
-  t: TFunction<"common", undefined>;
-}> = ({ router, t }): JSX.Element => {
+}> = ({ router }): JSX.Element => {
   const dispatch = useDispatch();
+  const { t, locale } = useTranslation();
   const { address } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
@@ -130,7 +130,8 @@ const Modals: FunctionComponent<{
     filters,
     allSearchItems,
     dispatch,
-    router
+    router,
+    locale
   );
   const {
     handleItemSelect,
@@ -243,6 +244,7 @@ const Modals: FunctionComponent<{
       {filtersOpen?.value && (
         <Filters
           t={t}
+          locale={locale}
           lensConnected={lensConnected}
           filterConstants={filterConstants}
           openDropDown={openDropDown}
@@ -272,6 +274,7 @@ const Modals: FunctionComponent<{
       )}
       {reactBox?.open && (
         <Who
+          locale={locale}
           t={t}
           router={router}
           lensConnected={lensConnected}
@@ -339,6 +342,7 @@ const Modals: FunctionComponent<{
       )}
       {postBox?.open && (
         <PostBox
+          locale={locale}
           t={t}
           lensConnected={lensConnected}
           setCaretCoord={setCaretCoord}

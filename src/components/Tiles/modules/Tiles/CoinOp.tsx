@@ -19,6 +19,7 @@ import PrintType from "@/components/Common/modules/PrintType";
 const CoinOp: FunctionComponent<CoinOpProps> = ({
   layoutAmount,
   popUpOpen,
+  locale,
   index,
   setPopUpOpen,
   dispatch,
@@ -37,7 +38,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
   unfollowProfile,
   lensConnected,
   filterConstants,
-  t
+  t,
 }): JSX.Element => {
   return (
     <div
@@ -51,6 +52,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
         ></div>
       )}
       <InteractBar
+        locale={locale}
         mirror={mirror}
         like={like}
         interactionsLoading={interactionsLoading}

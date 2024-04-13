@@ -11,6 +11,7 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   router,
   mirror,
   comment,
+  locale,
   like,
   interactionsLoading,
   openMirrorChoice,
@@ -40,7 +41,6 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
   mentionProfiles,
   setMentionProfiles,
   setProfilesOpen,
-  tCom,
   caretCoord,
   profilesOpen,
   setCaretCoord,
@@ -94,7 +94,8 @@ const Bookmarks: FunctionComponent<BookmarksProps> = ({
                         : (item as Post);
                     return (
                       <Publication
-                        t={tCom}
+                        t={t}
+                        locale={locale}
                         setCaretCoord={setCaretCoord}
                         mentionProfiles={mentionProfiles}
                         profilesOpen={profilesOpen}

@@ -1,7 +1,6 @@
-import { TFunction } from "i18next";
 import { FunctionComponent } from "react";
 
-const Circuits: FunctionComponent<{ t: TFunction<"autograph", undefined> }> = ({
+const Circuits: FunctionComponent<{ t: (key: string | number) => string }> = ({
   t,
 }): JSX.Element => {
   return (

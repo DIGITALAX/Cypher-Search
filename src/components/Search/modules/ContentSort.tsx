@@ -118,7 +118,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       />
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.community}
-        title={t("com")}
+        title={t("comS")}
         value={filterValues?.community || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({
@@ -196,7 +196,7 @@ const ContentSort: FunctionComponent<ContentSortProps> = ({
       />
       <ImageDropDown
         dropDownValues={filteredDropDownValues?.microbrands}
-        title={t("mic")}
+        title={t("micS")}
         value={filterValues?.microbrand || ""}
         onChange={(e: ChangeEvent) => {
           setFilteredDropDownValues({

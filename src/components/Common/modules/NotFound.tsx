@@ -11,10 +11,10 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   lensConnected,
   walletConnected,
   handleLensConnect,
-  i18n,
   openConnectModal,
   setOpenAccount,
   cartItems,
+  locale,
   openAccount,
   cartListOpen,
   signInLoading,
@@ -26,6 +26,7 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
   cartAnim,
   fullScreenVideo,
   t,
+  setLocale,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center gap-5 pre:pt-0 pt-20">
@@ -59,11 +60,12 @@ const NotFound: FunctionComponent<NotFoundProps> = ({
       </div>
       <div className="absolute right-2 top-2 flex">
         <Accounts
+          locale={locale}
+          setLocale={setLocale}
           fullScreenVideo={fullScreenVideo}
           searchActive={searchActive}
           filtersOpen={filtersOpen}
           t={t}
-          i18n={i18n}
           lensConnected={lensConnected}
           walletConnected={walletConnected}
           handleLensConnect={handleLensConnect}

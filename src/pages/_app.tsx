@@ -5,9 +5,7 @@ import { Provider } from "react-redux";
 import "@rainbow-me/rainbowkit/styles.css";
 import { XMTPProvider } from "@xmtp/react-sdk";
 import { init } from "@airstack/airstack-react";
-import "./../../i18n";
 import moment from "moment";
-import { appWithTranslation, useTranslation } from "next-i18next";
 import {
   getDefaultWallets,
   RainbowKitProvider,
@@ -21,7 +19,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import Modals from "@/components/Modals/modules/Modals";
 import RouterChange from "@/components/Common/modules/RouterChange";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Footer from "@/components/Layout/modules/Footer";
 import { LitNodeClient } from "@lit-protocol/lit-node-client";
 import Cart from "@/components/Common/modules/Cart";
@@ -38,6 +36,26 @@ const walletTheme = merge(darkTheme(), {
     accentColor: "#111313",
   },
 } as Theme);
+
+interface Translations {
+  [key: string]: string;
+}
+
+type LanguageContextType = {
+  t: (key: keyof Translations) => string;
+  setLocale: (locale: "es" | "en") => void;
+  locale: "es" | "en";
+};
+
+const defaultState: LanguageContextType = {
+  t: () => "",
+  setLocale: () => {},
+  locale: "en",
+};
+
+const LanguageContext = createContext<LanguageContextType>(defaultState);
+export const useTranslation = (): LanguageContextType =>
+  useContext(LanguageContext);
 
 const livepeerClient = createReactClient({
   provider: studioProvider({
@@ -66,13 +84,20 @@ init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const { t: tCom, i18n } = useTranslation("common");
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  const [locale, setLocale] = useState<"en" | "es">("en");
+  const [translations, setTranslations] = useState<Translations>({});
+  const t = (key: keyof Translations) => translations[key] || (key as string);
   const [routerChangeLoading, setRouterChangeLoading] =
     useState<boolean>(false);
+  useEffect(() => {
+    fetch(`/locales/${locale}.json`)
+      .then((res) => res.json())
+      .then((data) => setTranslations(data));
+  }, [locale]);
   useEffect(() => {
     const handleStart = () => {
       setRouterChangeLoading(true);
@@ -105,40 +130,36 @@ function App({ Component, pageProps }: AppProps) {
     return <RouterChange />;
   }
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains} theme={walletTheme}>
-        <LivepeerConfig client={livepeerClient}>
-          <XMTPProvider dbVersion={2}>
-            <KinoraProvider playerAuthedApolloClient={apolloClient}>
-              <Provider store={store}>
-                <div
-                  className={`relative w-full h-auto flex flex-col ${
-                    router?.asPath?.includes("autograph")
-                      ? "bg-black"
-                      : "bg-offBlack"
-                  }`}
-                >
-                  <Component
-                    tCom={tCom}
-                    {...pageProps}
-                    router={router}
-                    client={client}
-                    i18n={i18n}
-                  />
-                  <Modals t={tCom} router={router} />
-                  {router?.asPath?.includes("/autograph/") &&
-                    !router?.asPath?.includes("/drop/") && (
-                      <Cart router={router} t={tCom} />
-                    )}
-                  <Footer handleRewind={handleRewind} />
-                </div>
-              </Provider>
-            </KinoraProvider>
-          </XMTPProvider>
-        </LivepeerConfig>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <LanguageContext.Provider value={{ t, setLocale, locale }}>
+      <WagmiConfig config={wagmiConfig}>
+        <RainbowKitProvider chains={chains} theme={walletTheme}>
+          <LivepeerConfig client={livepeerClient}>
+            <XMTPProvider dbVersion={2}>
+              <KinoraProvider playerAuthedApolloClient={apolloClient}>
+                <Provider store={store}>
+                  <div
+                    className={`relative w-full h-auto flex flex-col ${
+                      router?.asPath?.includes("autograph")
+                        ? "bg-black"
+                        : "bg-offBlack"
+                    }`}
+                  >
+                    <Component {...pageProps} router={router} client={client} />
+                    <Modals router={router} />
+                    {router?.asPath?.includes("/autograph/") &&
+                      !router?.asPath?.includes("/drop/") && (
+                        <Cart router={router} />
+                      )}
+                    <Footer handleRewind={handleRewind} />
+                  </div>
+                </Provider>
+              </KinoraProvider>
+            </XMTPProvider>
+          </LivepeerConfig>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </LanguageContext.Provider>
   );
 }
 
-export default appWithTranslation(App);
+export default App;

@@ -3,13 +3,12 @@ import likePost from "../../../graphql/lens/mutations/like";
 import { AnyAction, Dispatch } from "redux";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
-import { TFunction } from "i18next";
 
 const lensLike = async (
   id: string,
   dispatch: Dispatch<AnyAction>,
   downvote: boolean,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<void> => {
   const data = await likePost({
     for: id,

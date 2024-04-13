@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import CartList from "./CartList";
 import { NextRouter } from "next/router";
-import { TFunction } from "i18next";
+import { useTranslation } from "@/pages/_app";
 
 const Cart: FunctionComponent<{
   router: NextRouter;
-  t: TFunction<"common", undefined>;
-}> = ({ router, t }): JSX.Element => {
+}> = ({ router }): JSX.Element => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const cartItems = useSelector(
     (state: RootState) => state.app.cartItemsReducer.items
   );

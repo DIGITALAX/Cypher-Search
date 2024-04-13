@@ -27,6 +27,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
   setCreateCase,
   createCase,
   handleMedia,
+  locale,
   lensConnected,
   filterConstants,
   dispatch,
@@ -62,6 +63,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
           >
             <SwitchCreate
               t={t}
+              locale={locale}
               setCreateCase={setCreateCase}
               dropDetails={dropDetails}
               dropsLoading={dropsLoading}
@@ -287,7 +289,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                               }
                             >
                               <div className="relative w-fit h-fit items-center justify-center flex top-1">
-                                {item?.[router?.locale as "en" | "es"]}
+                                {item?.[locale as "en" | "es"]}
                               </div>
                             </div>
                           );
@@ -328,7 +330,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                             }
                           >
                             <div className="relative w-fit h-fit items-center justify-center flex top-px">
-                              {item?.[router?.locale as "en" | "es"]}
+                              {item?.[locale as "en" | "es"]}
                             </div>
                           </div>
                         );
@@ -398,7 +400,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                       <>
                         <div className="flex flex-col items-start justify-start w-fit h-fit gap-1 font-aust text-white relative">
                           <div className="relative w-fit h-fit text-sm">
-                            {t("add")}
+                            {t("addC")}
                           </div>
                           <input
                             className="relative rounded-md p-1 bg-offBlack text-xs border border-sol h-10 w-60"
@@ -662,7 +664,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     ) ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
-                      t("ed")
+                      t("edit")
                     )}
                   </div>
                 </div>
@@ -695,7 +697,7 @@ const Gallery: FunctionComponent<GalleryScreenProps> = ({
                     ) ? (
                       <AiOutlineLoading color="white" size={15} />
                     ) : (
-                      t("del")
+                      t("delete")
                     )}
                   </div>
                 </div>

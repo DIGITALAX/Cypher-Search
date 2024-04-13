@@ -89,6 +89,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
   caretCoordMain,
   caretCoord,
   setCaretCoord,
+  locale,
   setCaretCoordMain,
   hoverPrompt,
   setHoverPrompt,
@@ -102,6 +103,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
       <div className="relative w-full h-full flex items-center justify-center">
         <div className="relative flex flex-col gap-2 items-center justify-center w-full sm:w-[40rem] h-full">
           <InteractBar
+            locale={locale}
             mirror={mirror}
             like={like}
             interactionsLoading={mainInteractionsLoading?.[0]}
@@ -141,6 +143,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                 <div className="relative w-5/6 h-full flex flex-col gap-10 justify-start items-center">
                   <PostComment
                     t={t}
+                    locale={locale}
                     itemId={undefined}
                     router={router}
                     setCaretCoord={setCaretCoordMain}
@@ -184,6 +187,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                             return (
                               <Publication
                                 t={t}
+                                locale={locale}
                                 setCaretCoord={setCaretCoord}
                                 caretCoord={caretCoord}
                                 profilesOpen={profilesOpen}

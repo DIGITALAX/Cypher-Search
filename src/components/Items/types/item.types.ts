@@ -15,7 +15,6 @@ import {
 import { MakePostComment } from "@/components/Autograph/types/autograph.types";
 import { PostCollectGifState } from "../../../../redux/reducers/postCollectGifSlice";
 import { AllSearchItemsState } from "../../../../redux/reducers/searchItemsSlice";
-import { TFunction } from "i18next";
 
 export type SwitchTypeProps = {
   itemData: Publication;
@@ -88,9 +87,10 @@ export type SwitchTypeProps = {
     hide: boolean;
   }[];
   joinLoading: boolean;
+  locale: "en" | "es";
   handlePlayerJoin: () => Promise<void>;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   openMirrorChoice: boolean[];
   commentSwitch: boolean;
   setCommentSwitch: (e: SetStateAction<boolean>) => void;
@@ -171,6 +171,7 @@ export type ChromadinProps = {
     x: number;
     y: number;
   };
+  locale: "en" | "es";
   allSearchItems: AllSearchItemsState;
   setCaretCoord: (
     e: SetStateAction<{
@@ -238,7 +239,7 @@ export type ChromadinProps = {
   setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   simpleCollect: (id: string, type: string, main: boolean) => Promise<void>;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -309,7 +310,7 @@ export type PublicationProps = {
       y: number;
     }>
   ) => void;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   setCaretCoordMain: (
     e: SetStateAction<{
       x: number;
@@ -347,6 +348,7 @@ export type PublicationProps = {
     bookmark: boolean;
     hide: boolean;
   }[];
+  locale: "en" | "es";
   setMainMakeComment: (e: SetStateAction<MakePostComment[]>) => void;
   setMainContentLoading: (
     e: SetStateAction<
@@ -407,7 +409,7 @@ export type MicrobrandProps = {
   dispatch: Dispatch<AnyAction>;
   itemData: Profile;
   lensConnected: Profile | undefined;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
   relatedData:
     | {
         collections: Creation[];
@@ -423,6 +425,7 @@ export type MicrobrandProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean, main?: boolean) => Promise<void>;
   openMirrorChoice: boolean[];
+  locale: "en" | "es";
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
   interactionsLoading: {
     like: boolean;
@@ -471,6 +474,7 @@ export type KinoraProps = {
   setProfilesOpenMain: (e: SetStateAction<boolean[]>) => void;
   router: NextRouter;
   commentsOpen: boolean[];
+  locale: "en" | "es";
   setCommentsOpen: (e: SetStateAction<boolean[]>) => void;
   makeComment: MakePostComment[];
   dispatch: Dispatch<AnyAction>;
@@ -548,5 +552,5 @@ export type KinoraProps = {
   handlePlayerJoin: () => Promise<void>;
   purchaseDetails: PurchaseDetails;
   setPurchaseDetails: (e: SetStateAction<PurchaseDetails>) => void;
-  t: TFunction<"common", undefined>;
+  t: (key: string | number) => string;
 };

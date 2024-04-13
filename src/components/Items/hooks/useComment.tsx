@@ -23,7 +23,6 @@ import lensMirror from "../../../../lib/helpers/api/mirrorPost";
 import { NextRouter } from "next/router";
 import { Creation, Publication } from "@/components/Tiles/types/tiles.types";
 import errorChoice from "../../../../lib/helpers/errorChoice";
-import { TFunction } from "i18next";
 
 const useComment = (
   address: `0x${string}` | undefined,
@@ -50,7 +49,7 @@ const useComment = (
       | undefined
     >
   ) => void,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);

@@ -8,22 +8,14 @@ import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import useTiles from "@/components/Tiles/hooks/useTiles";
 import { NextRouter } from "next/router";
 import Head from "next/head";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
-import { TFunction, i18n } from "i18next";
+import { useTranslation } from "./_app";
 
-export default function Home({
-  router,
-  tCom,
-  i18n,
-}: {
-  router: NextRouter;
-  tCom: TFunction<"common", undefined>;
-  i18n: i18n;
-}) {
+export default function Home({ router }: { router: NextRouter }) {
+  const { t, setLocale, locale } = useTranslation();
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
@@ -85,7 +77,8 @@ export default function Home({
     filters,
     allSearchItems,
     dispatch,
-    router
+    router,
+    locale
   );
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
@@ -122,7 +115,7 @@ export default function Home({
     address,
     lensConnected,
     undefined,
-    tCom
+    t
   );
   const {
     setPopUpOpen,
@@ -138,7 +131,7 @@ export default function Home({
     dispatch,
     publicClient,
     address,
-    tCom
+    t
   );
 
   return (
@@ -161,8 +154,9 @@ export default function Home({
         id="results"
       >
         <Header
-          t={tCom}
-          i18n={i18n}
+          t={t}
+          locale={locale}
+          setLocale={setLocale}
           fullScreenVideo={fullScreenVideo}
           cartAnim={cartAnim}
           filterChange={filterChange}
@@ -190,7 +184,8 @@ export default function Home({
         />
         {searchActive && (
           <Tiles
-            t={tCom}
+            locale={locale}
+            t={t}
             filterConstants={filterConstants}
             searchItems={allSearchItems}
             layoutAmount={layoutAmount}
@@ -222,9 +217,3 @@ export default function Home({
     </div>
   );
 }
-
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ["common", "footer"])),
-  },
-});

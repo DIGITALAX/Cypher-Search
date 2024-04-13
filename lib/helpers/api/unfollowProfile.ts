@@ -8,7 +8,6 @@ import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import { LENS_HUB_PROXY_ADDRESS_MATIC } from "../../constants";
 import { polygon } from "viem/chains";
 import handleIndexCheck from "../../../graphql/lens/queries/indexed";
-import { TFunction } from "i18next";
 
 const lensUnfollow = async (
   id: string,
@@ -16,7 +15,7 @@ const lensUnfollow = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ): Promise<void> => {
   const { data } = await unfollow({
     unfollow: [id],

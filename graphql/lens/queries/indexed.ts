@@ -9,12 +9,11 @@ import {
 import { AnyAction, Dispatch } from "redux";
 import { setIndexer } from "../../../redux/reducers/indexerSlice";
 import { setInteractError } from "../../../redux/reducers/interactErrorSlice";
-import { TFunction } from "i18next";
 
 const handleIndexCheck = async (
   tx: LensTransactionStatusRequest,
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"common", undefined>
+  t: (key: string | number) => string
 ) => {
   const indexedStatus = await pollUntilIndexed(tx);
   if (indexedStatus) {

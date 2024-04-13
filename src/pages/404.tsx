@@ -10,15 +10,13 @@ import { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { TFunction, i18n } from "i18next";
+import { useTranslation } from "./_app";
 
 const Custom404: NextPage<{
   router: NextRouter;
-  i18n: i18n;
-  tCom: TFunction<"common", undefined>;
-}> = ({ router, tCom, i18n }): JSX.Element => {
+}> = ({ router }): JSX.Element => {
   const dispatch = useDispatch();
+  const { t, setLocale, locale } = useTranslation();
   const { address, isConnected } = useAccount();
   const publicClient = createPublicClient({
     chain: polygon,
@@ -69,7 +67,8 @@ const Custom404: NextPage<{
     filters,
     allSearchItems,
     dispatch,
-    router
+    router,
+    locale
   );
   const {
     handleLensConnect,
@@ -97,14 +96,14 @@ const Custom404: NextPage<{
         <title>Page Not Found</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <NotFound
-        i18n={i18n}
+        locale={locale}
+        setLocale={setLocale}
         fullScreenVideo={fullScreenVideo}
         router={router}
         cartAnim={cartAnim}
         searchActive={searchActive}
-        t={tCom}
+        t={t}
         filtersOpen={filtersOpen.value}
         lensConnected={lensConnected}
         walletConnected={walletConnected}
@@ -125,9 +124,3 @@ const Custom404: NextPage<{
 };
 
 export default Custom404;
-
-export const getStaticProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ["common", "footer"])),
-  },
-});

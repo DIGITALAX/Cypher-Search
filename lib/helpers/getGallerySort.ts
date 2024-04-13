@@ -1,26 +1,27 @@
 import { Creation } from "@/components/Tiles/types/tiles.types";
+import { GALLERY_OPTIONS } from "../constants";
 
 const getGallerySort = (
   selectedOption: string,
-  gallery:
-    | {
-        created: Creation[];
-        collected: Creation[];
-      }
+  gallery: {
+    created: Creation[];
+    collected: Creation[];
+  },
+  lan: "es" | "en"
 ): Creation[] => {
-  return selectedOption === "NEWEST"
+  return selectedOption === GALLERY_OPTIONS[0]?.[lan]
     ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort(
         (a, b) => Number(b.blockTimestamp) - Number(a.blockTimestamp)
       )
-    : selectedOption === "OLDEST"
+    : selectedOption === GALLERY_OPTIONS[1]?.[lan]
     ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort(
         (a, b) => Number(a.blockTimestamp) - Number(b.blockTimestamp)
       )
-    : selectedOption === "CREATED"
+    : selectedOption === GALLERY_OPTIONS[3]?.[lan]
     ? [...(gallery?.created || []), ...(gallery?.collected || [])]
-    : selectedOption === "COLLECTED"
+    : selectedOption === GALLERY_OPTIONS[4]?.[lan]
     ? [...(gallery?.collected || []), ...(gallery?.created || [])]
-    : selectedOption === "PRINT TYPE"
+    : selectedOption === GALLERY_OPTIONS[2]?.[lan]
     ? Object.values(
         [...(gallery?.collected || []), ...(gallery?.created || [])].reduce(
           (acc: Record<string, any>, item) => {
@@ -32,7 +33,7 @@ const getGallerySort = (
           {}
         )
       ).flat()
-    : selectedOption === "PRICE LOWEST"
+    : selectedOption === GALLERY_OPTIONS[5]?.[lan]
     ? [...(gallery?.collected || []), ...(gallery?.created || [])].sort(
         (a, b) => (Number(a.prices?.[0]) || 0) - (Number(b.prices?.[0]) || 0)
       )

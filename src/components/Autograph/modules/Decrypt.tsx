@@ -14,7 +14,7 @@ const Decrypt: FunctionComponent<DecryptProps> = ({
   return (
     <div
       className="relative w-full p-1.5 h-10 flex items-center justify-end"
-      title={canDecrypt ? t("dec") : t("keys")}
+      title={canDecrypt ? t("decP") : t("keys")}
     >
       <div
         className={`relative w-5 h-5 flex items-center justify-end ml-auto cursor-pointer  ${
