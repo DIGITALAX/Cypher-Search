@@ -22,6 +22,11 @@ i18n
           key: "value",
         },
       },
+      es: {
+        translation: {
+          key: "value",
+        },
+      },
     },
     interpolation: {
       escapeValue: false,
