@@ -301,7 +301,8 @@ const CollectOptions: FunctionComponent<CollectOptionsProps> = ({
                   newCTs[id] = {
                     ...(newCTs[id] || {}),
                     endsAt: new Date(
-                      new Date().getTime() + 24 * 60 * 60 * 1000
+                      new Date().getTime().toLocaleString("default") +
+                        24 * 60 * 60 * 1000
                     ),
                   } as any;
                 } else {

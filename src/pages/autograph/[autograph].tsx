@@ -817,33 +817,12 @@ export default Autograph;
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: false,
+    fallback: "blocking",
   };
 }
 
-export const getStaticProps = async ({
-  locale,
-  defaultLocale,
-}: {
-  locale: string;
-  defaultLocale: string;
-}) => {
-  try {
-    const translations = await serverSideTranslations(
-      locale ?? defaultLocale ?? "en",
-      ["autograph", "footer", "404"]
-    );
-
-    return {
-      props: {
-        ...translations,
-      },
-      revalidate: 5,
-    };
-  } catch (error) {
-    console.error("Error loading translations", error);
-    return {
-      notFound: true,
-    };
-  }
-};
+export const getStaticProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["autograph", "footer", "404"])),
+  },
+});
