@@ -25,6 +25,8 @@ import { FilterValues, Quest } from "@/components/Search/types/search.types";
 import { Client, Conversation, DecodedMessage } from "@xmtp/react-sdk";
 import { ProfileOptions } from "@lens-protocol/metadata";
 import { TFunction } from "i18next";
+import { PublicClient } from "wagmi";
+import { LitNodeClient } from "@lit-protocol/lit-node-client";
 
 export type WebProps = {
   router: NextRouter;
@@ -1763,3 +1765,21 @@ export interface AuthSig {
   signedMessage: string;
   address: string;
 }
+
+export type AutoHydrateProps = {
+  router: NextRouter;
+  tCom: TFunction<"common", undefined>;
+  dispatch: Dispatch<AnyAction>;
+  lensConnected: Profile | undefined;
+  publicClient: PublicClient;
+  address: `0x${string}` | undefined;
+  client: LitNodeClient;
+  profile: Profile;
+  cartItems: CartItem[];
+  openConnectModal: (() => void) | undefined;
+  handleLensConnect: () => Promise<void>;
+  walletConnected: boolean;
+  handleLogout: () => void;
+  filterConstants: FilterValues | undefined;
+  handleShuffleSearch: () => Promise<void>;
+};

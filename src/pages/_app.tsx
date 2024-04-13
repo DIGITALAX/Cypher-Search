@@ -6,7 +6,6 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { XMTPProvider } from "@xmtp/react-sdk";
 import { init } from "@airstack/airstack-react";
 import "./../../i18n";
-import { I18nextProvider } from "react-i18next";
 import moment from "moment";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import {
@@ -106,41 +105,39 @@ function App({ Component, pageProps }: AppProps) {
     return <RouterChange />;
   }
   return (
-    <I18nextProvider i18n={i18n}>
-      <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains} theme={walletTheme}>
-          <LivepeerConfig client={livepeerClient}>
-            <XMTPProvider dbVersion={2}>
-              <KinoraProvider playerAuthedApolloClient={apolloClient}>
-                <Provider store={store}>
-                  <div
-                    className={`relative w-full h-auto flex flex-col ${
-                      router?.asPath?.includes("autograph")
-                        ? "bg-black"
-                        : "bg-offBlack"
-                    }`}
-                  >
-                    <Component
-                      tCom={tCom}
-                      {...pageProps}
-                      router={router}
-                      client={client}
-                      i18n={i18n}
-                    />
-                    <Modals t={tCom} router={router} />
-                    {router?.asPath?.includes("/autograph/") &&
-                      !router?.asPath?.includes("/drop/") && (
-                        <Cart router={router} t={tCom} />
-                      )}
-                    <Footer handleRewind={handleRewind} />
-                  </div>
-                </Provider>
-              </KinoraProvider>
-            </XMTPProvider>
-          </LivepeerConfig>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </I18nextProvider>
+    <WagmiConfig config={wagmiConfig}>
+      <RainbowKitProvider chains={chains} theme={walletTheme}>
+        <LivepeerConfig client={livepeerClient}>
+          <XMTPProvider dbVersion={2}>
+            <KinoraProvider playerAuthedApolloClient={apolloClient}>
+              <Provider store={store}>
+                <div
+                  className={`relative w-full h-auto flex flex-col ${
+                    router?.asPath?.includes("autograph")
+                      ? "bg-black"
+                      : "bg-offBlack"
+                  }`}
+                >
+                  <Component
+                    tCom={tCom}
+                    {...pageProps}
+                    router={router}
+                    client={client}
+                    i18n={i18n}
+                  />
+                  <Modals t={tCom} router={router} />
+                  {router?.asPath?.includes("/autograph/") &&
+                    !router?.asPath?.includes("/drop/") && (
+                      <Cart router={router} t={tCom} />
+                    )}
+                  <Footer handleRewind={handleRewind} />
+                </div>
+              </Provider>
+            </KinoraProvider>
+          </XMTPProvider>
+        </LivepeerConfig>
+      </RainbowKitProvider>
+    </WagmiConfig>
   );
 }
 
