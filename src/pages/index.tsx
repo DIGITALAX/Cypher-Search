@@ -8,14 +8,12 @@ import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import useTiles from "@/components/Tiles/hooks/useTiles";
 import { NextRouter } from "next/router";
 import Head from "next/head";
-import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import useInteractions from "@/components/Tiles/hooks/useInteractions";
 import { useAccount } from "wagmi";
 import { polygon } from "viem/chains";
 import { createPublicClient, http } from "viem";
 import { TFunction, i18n } from "i18next";
-import { SetStateAction } from "react";
 
 export default function Home({
   router,

@@ -568,7 +568,7 @@ const Autograph: NextPage<{
                   type="font/ttf"
                 />
               </Head>
-              {/* <Web
+              <Web
                 t={t}
                 tCom={tCom}
                 cartItems={cartItems}
@@ -801,7 +801,7 @@ const Autograph: NextPage<{
                     objectFit="contain"
                   />
                 </div>
-              </div> */}
+              </div>
             </div>
           )
         )}
@@ -836,4 +836,5 @@ export const getStaticProps = async ({
       "common",
     ])),
   },
+  revalidate: 10,
 });
