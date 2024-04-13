@@ -16,7 +16,7 @@ const Bio: FunctionComponent<BioProps> = ({
   questSample,
   questsLoading,
   t,
-  locale
+  locale,
 }): JSX.Element => {
   return (
     <div className="relative w-full h-fit flex flex-wrap otro:flex-nowrap flex-row items-start justify-start gap-5 px-2 sm:px-5 sm:-top-3 tablet:-top-7 sm:pt-0 pt-4">
@@ -239,45 +239,51 @@ const Bio: FunctionComponent<BioProps> = ({
               }`}
             >
               {questsLoading || questSample?.length < 1
-                ? Array.from({ length: 4 })?.map((_, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
-                      >
-                        <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit break-all whitespace-preline">
-                          {questsLoading ? <>{t("quest")}</> : <>{t("kinQ")}</>}
-                        </div>
-                        <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
-                          <div
-                            className={`relative w-6 h-6 tablet:w-14 tablet:h-14 flex items-center justify-center ${
-                              !questsLoading &&
-                              questSample?.length < 1 &&
-                              "cursor-pointer"
-                            }`}
-                            onClick={() =>
-                              !questsLoading &&
-                              questSample?.length < 1 &&
-                              window.open("https://kinora.irrevocable.dev/")
-                            }
-                          >
-                            <Image
-                              draggable={false}
-                              layout="fill"
-                              src={`${INFURA_GATEWAY}/ipfs/QmQ4iytH1E7T6Mz383bEzSoPWfLhZmmvveb1nfwiHVgQYa`}
-                            />
+                ? Array.from({ length: locale == "en" ? 4 : 3 })?.map(
+                    (_, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className="gap-3 flex flex-col items-start justify-center w-fit h-fit"
+                        >
+                          <div className="relative text-white text-xxs tablet:text-xs font-bit w-fit h-fit break-all whitespace-preline">
+                            {questsLoading ? (
+                              <>{t("quest")}</>
+                            ) : (
+                              <>{t("kinQ")}</>
+                            )}
                           </div>
-                          {index !== 3 && (
-                            <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
-                              <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
-                              <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
-                              <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                          <div className="relative flex flex-row gap-4 items-center justify-center w-fit h-fit">
+                            <div
+                              className={`relative w-6 h-6 tablet:w-14 tablet:h-14 flex items-center justify-center ${
+                                !questsLoading &&
+                                questSample?.length < 1 &&
+                                "cursor-pointer"
+                              }`}
+                              onClick={() =>
+                                !questsLoading &&
+                                questSample?.length < 1 &&
+                                window.open("https://kinora.irrevocable.dev/")
+                              }
+                            >
+                              <Image
+                                draggable={false}
+                                layout="fill"
+                                src={`${INFURA_GATEWAY}/ipfs/QmQ4iytH1E7T6Mz383bEzSoPWfLhZmmvveb1nfwiHVgQYa`}
+                              />
                             </div>
-                          )}
+                            {index !== 3 && (
+                              <div className="relative flex flex-row items-center justify-center gap-4 w-fit h-fit">
+                                <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                                <div className="relative w-2 h-2 tablet:w-4 tablet:h-4 items-center justify-center flex bg-olor rounded-full"></div>
+                                <div className="relative w-1 h-1 tablet:w-3 tablet:h-3 items-center justify-center flex bg-lirio rounded-full"></div>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })
+                      );
+                    }
+                  )
                 : questSample?.map((quest: Quest, index: number) => {
                     return (
                       <div
