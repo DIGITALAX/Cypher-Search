@@ -432,7 +432,7 @@ const Autograph: NextPage<{
               className="relative flex flex-col w-full h-full flex-grow"
               id="results"
             >
-              <Head>
+              {/* <Head>
                 <title>
                   Cypher | {profile?.handle?.localName?.toUpperCase()}
                 </title>
@@ -567,7 +567,7 @@ const Autograph: NextPage<{
                   crossOrigin="anonymous"
                   type="font/ttf"
                 />
-              </Head>
+              </Head> */}
               <Web
                 t={t}
                 tCom={tCom}
