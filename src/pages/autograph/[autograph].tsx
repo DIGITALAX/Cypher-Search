@@ -22,7 +22,7 @@ import useProfile from "@/components/Autograph/hooks/useProfile";
 import useBookmarks from "@/components/Autograph/hooks/useBookmarks";
 import usePost from "@/components/Autograph/hooks/usePost";
 import { useAccount } from "wagmi";
-import { createPublicClient, fallback, http } from "viem";
+import { createPublicClient, http } from "viem";
 import { polygon } from "viem/chains";
 import useOrders from "@/components/Autograph/hooks/useOrders";
 import useSales from "@/components/Autograph/hooks/useSales";
@@ -821,6 +821,16 @@ export default Autograph;
 //     fallback: false,
 //   };
 // }
+
+export const getServerSideProps = async ({ locale }: { locale: string }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? "en", [
+      "autograph",
+      "footer",
+      "common",
+    ])),
+  },
+});
 
 // export const getStaticProps = async ({ locale }: { locale: string }) => ({
 //   props: {

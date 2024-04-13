@@ -100,12 +100,12 @@ const Publication: FunctionComponent<PublicationProps> = ({
           : "bg-lirio"
       }`}
       id={item?.id}
-      // style={{
-      //   width:
-      //     typeof window !== "undefined" && window.innerWidth < 640
-      //       ? "calc(100vw - 3px)"
-      //       : "30rem",
-      // }}
+      style={{
+        width:
+          typeof window !== "undefined" && window.innerWidth < 640
+            ? "calc(100vw - 3px)"
+            : "30rem",
+      }}
     >
       <div className="relative w-full h-fit flex items-center justify-between flex-row">
         <div

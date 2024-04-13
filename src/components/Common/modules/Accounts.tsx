@@ -43,7 +43,7 @@ const Accounts: FunctionComponent<AccountsProps> = ({
         className={`w-full pre:w-fit h-10 flex flex-row gap-4 items-center justify-center ${
           (searchActive || filtersOpen) &&
           !auto &&
-          // typeof window !== "undefined" &&
+          typeof window !== "undefined" &&
           window.innerWidth > 400
             ? "absolute top-2 right-2 sm:top-auto sm:right-auto sm:relative"
             : "relative"
