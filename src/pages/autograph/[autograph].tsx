@@ -177,41 +177,41 @@ const Autograph: NextPage<{
   //   tCom
   // );
   const { questsLoading, questSample } = useQuests(profile, lensConnected);
-  const {
-    galleryLike,
-    galleryMirror,
-    openMirrorGalleryChoice,
-    setOpenMirrorGalleryChoice,
-    interactionsGalleryLoading,
-    interactionsDisplayLoading,
-    openMirrorDisplayChoice,
-    setOpenMirrorDisplayChoice,
-    displayLike,
-    displayMirror,
-    handleSetDisplay,
-    displayLoading,
-    handleOptionSelect,
-    selectedOption,
-    setOptionsOpen,
-    optionsOpen,
-    galleryLoading,
-    getMoreGallery,
-    openInteractions,
-    setOpenInteractions,
-    sortType,
-    setSortType,
-    gallery,
-    cursorInfo,
-    moreGalleryLoading,
-  } = useGallery(
-    lensConnected,
-    profileDisplay,
-    dispatch,
-    publicClient,
-    address,
-    profile,
-    tCom
-  );
+  // const {
+  //   galleryLike,
+  //   galleryMirror,
+  //   openMirrorGalleryChoice,
+  //   setOpenMirrorGalleryChoice,
+  //   interactionsGalleryLoading,
+  //   interactionsDisplayLoading,
+  //   openMirrorDisplayChoice,
+  //   setOpenMirrorDisplayChoice,
+  //   displayLike,
+  //   displayMirror,
+  //   handleSetDisplay,
+  //   displayLoading,
+  //   handleOptionSelect,
+  //   selectedOption,
+  //   setOptionsOpen,
+  //   optionsOpen,
+  //   galleryLoading,
+  //   getMoreGallery,
+  //   openInteractions,
+  //   setOpenInteractions,
+  //   sortType,
+  //   setSortType,
+  //   gallery,
+  //   cursorInfo,
+  //   moreGalleryLoading,
+  // } = useGallery(
+  //   lensConnected,
+  //   profileDisplay,
+  //   dispatch,
+  //   publicClient,
+  //   address,
+  //   profile,
+  //   tCom
+  // );
   // const {
   //   followProfile,
   //   unfollowProfile,
@@ -243,31 +243,31 @@ const Autograph: NextPage<{
     editDrop,
     deleteDrop,
   } = useDrop(publicClient, dispatch, address, profile);
-  const {
-    setCollectionDetails,
-    setCreateCase,
-    createCase,
-    collectionDetails,
-    createCollection,
-    creationLoading,
-    setCollectionSettings,
-    collectionSettings,
-    handleMedia,
-    deleteCollection,
-    allCollections,
-    collectionLoading,
-  } = useCreate(
-    publicClient,
-    address,
-    dispatch,
-    lensConnected,
-    setDropDetails,
-    screenDisplay,
-    profile,
-    client,
-    isDesigner,
-    tCom
-  );
+  // const {
+  //   setCollectionDetails,
+  //   setCreateCase,
+  //   createCase,
+  //   collectionDetails,
+  //   createCollection,
+  //   creationLoading,
+  //   setCollectionSettings,
+  //   collectionSettings,
+  //   handleMedia,
+  //   deleteCollection,
+  //   allCollections,
+  //   collectionLoading,
+  // } = useCreate(
+  //   publicClient,
+  //   address,
+  //   dispatch,
+  //   lensConnected,
+  //   setDropDetails,
+  //   screenDisplay,
+  //   profile,
+  //   client,
+  //   isDesigner,
+  //   tCom
+  // );
   const {
     handleSendMessage,
     sendMessageLoading,
@@ -291,84 +291,84 @@ const Autograph: NextPage<{
     handleMessageImage,
     messageImage,
   } = useConversations(address, screenDisplay, lensConnected, profile);
-  const {
-    handleSettingsUpdate,
-    settingsUpdateLoading,
-    setSettingsData,
-    settingsData,
-    coverImage,
-    handleImage,
-    pfpImage,
-    handleFollowUpdate,
-    followData,
-    setFollowData,
-    followUpdateLoading,
-    openType,
-    setOpenType,
-    currencyOpen,
-    setCurrencyOpen,
-  } = useSettings(
-    lensConnected,
-    availableCurrencies,
-    dispatch,
-    publicClient,
-    address,
-    screenDisplay,
-    isDesigner,
-    profile,
-    tCom
-  );
-  const {
-    handleMoreBookmarks,
-    openMirrorChoiceBookmark,
-    setOpenMirrorChoiceBookmark,
-    setOpenMoreOptionsBookmark,
-    interactionsLoadingBookmark,
-    openMoreOptionsBookmark,
-    bookmarksLoading,
-    handleBookmarkForBookmark,
-    handleHidePostForBookmark,
-    bookmarkCollect,
-    bookmarkComment,
-    bookmarkLike,
-    bookmarkMirror,
-    hasMoreBookmarks,
-    unfollowProfileBookmark,
-    setProfileHovers,
-    followProfileBookmark,
-    profileHovers,
-    followLoading,
-    allBookmarks,
-    setCommentsBookmarkOpen,
-    commentsBookmarkOpen,
-    makeCommentBookmark,
-    setMakeCommentBookmark,
-    handleDecryptBookmark,
-    decryptLoadingBookmark,
-    setCaretCoordBookmark,
-    setMentionProfilesBookmark,
-    setProfilesOpenBookmark,
-    mentionProfilesBookmark,
-    profilesOpenBookmark,
-    caretCoordBookmark,
-  } = useBookmarks(
-    lensConnected,
-    postCollectGif,
-    screenDisplay,
-    dispatch,
-    publicClient,
-    address,
-    profile,
-    tCom
-  );
-  const {
-    makePost,
-    setMakePost,
-    post,
-    postLoading,
-    postContentLoading,
-    setPostContentLoading,
-  } = usePost(dispatch, postCollectGif, publicClient, address, tCom);
+  // const {
+  //   handleSettingsUpdate,
+  //   settingsUpdateLoading,
+  //   setSettingsData,
+  //   settingsData,
+  //   coverImage,
+  //   handleImage,
+  //   pfpImage,
+  //   handleFollowUpdate,
+  //   followData,
+  //   setFollowData,
+  //   followUpdateLoading,
+  //   openType,
+  //   setOpenType,
+  //   currencyOpen,
+  //   setCurrencyOpen,
+  // } = useSettings(
+  //   lensConnected,
+  //   availableCurrencies,
+  //   dispatch,
+  //   publicClient,
+  //   address,
+  //   screenDisplay,
+  //   isDesigner,
+  //   profile,
+  //   tCom
+  // );
+  // const {
+  //   handleMoreBookmarks,
+  //   openMirrorChoiceBookmark,
+  //   setOpenMirrorChoiceBookmark,
+  //   setOpenMoreOptionsBookmark,
+  //   interactionsLoadingBookmark,
+  //   openMoreOptionsBookmark,
+  //   bookmarksLoading,
+  //   handleBookmarkForBookmark,
+  //   handleHidePostForBookmark,
+  //   bookmarkCollect,
+  //   bookmarkComment,
+  //   bookmarkLike,
+  //   bookmarkMirror,
+  //   hasMoreBookmarks,
+  //   unfollowProfileBookmark,
+  //   setProfileHovers,
+  //   followProfileBookmark,
+  //   profileHovers,
+  //   followLoading,
+  //   allBookmarks,
+  //   setCommentsBookmarkOpen,
+  //   commentsBookmarkOpen,
+  //   makeCommentBookmark,
+  //   setMakeCommentBookmark,
+  //   handleDecryptBookmark,
+  //   decryptLoadingBookmark,
+  //   setCaretCoordBookmark,
+  //   setMentionProfilesBookmark,
+  //   setProfilesOpenBookmark,
+  //   mentionProfilesBookmark,
+  //   profilesOpenBookmark,
+  //   caretCoordBookmark,
+  // } = useBookmarks(
+  //   lensConnected,
+  //   postCollectGif,
+  //   screenDisplay,
+  //   dispatch,
+  //   publicClient,
+  //   address,
+  //   profile,
+  //   tCom
+  // );
+  // const {
+  //   makePost,
+  //   setMakePost,
+  //   post,
+  //   postLoading,
+  //   postContentLoading,
+  //   setPostContentLoading,
+  // } = usePost(dispatch, postCollectGif, publicClient, address, tCom);
   const {
     allOrders,
     ordersLoading,
@@ -384,6 +384,8 @@ const Autograph: NextPage<{
     profile
   );
 
+  console.log({profile})
+
   // useEffect(() => {
   //   const timeoutId = setTimeout(() => {
   //     if (!profileLoading && !feedLoading && !galleryLoading) {
@@ -398,7 +400,7 @@ const Autograph: NextPage<{
     !profileLoading &&
     !globalLoading &&
     // !feedLoading &&
-    !galleryLoading &&
+    // !galleryLoading &&
     i18n.isInitialized
   ) {
     return (
@@ -450,7 +452,7 @@ const Autograph: NextPage<{
                   content={profile?.handle?.localName?.toUpperCase()}
                 />
                 <meta name="og:description" content={profile?.metadata?.bio} />
-                <meta
+                {/* <meta
                   name="og:image"
                   content={
                     !gallery?.created[0]?.collectionMetadata?.images?.[0]
@@ -459,7 +461,7 @@ const Autograph: NextPage<{
                           "ipfs://"
                         )}`
                   }
-                />
+                /> */}
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:site" content="@digitalax" />
