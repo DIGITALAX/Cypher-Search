@@ -14,7 +14,7 @@ import { TFunction } from "i18next";
 const handleIndexCheck = async (
   tx: LensTransactionStatusRequest,
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const indexedStatus = await pollUntilIndexed(tx);
   if (indexedStatus) {

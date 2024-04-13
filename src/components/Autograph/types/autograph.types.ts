@@ -238,7 +238,7 @@ export type WebProps = {
   mirror: (index: number, id: string) => Promise<void>;
   like: (index: number, id: string, hasReacted: boolean) => Promise<void>;
   t: TFunction<"autograph", undefined>;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -338,7 +338,7 @@ export type WebProps = {
 
 export type BookmarksProps = {
   t: TFunction<"autograph", undefined>;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   bookmarks: ((Post | Mirror | Comment | Quote) & {
     decrypted: any;
   })[];
@@ -785,7 +785,7 @@ export type ScreenSwitchProps = {
   unfollowProfile: (id: string) => Promise<void>;
   followProfile: (id: string) => Promise<void>;
   t: TFunction<"autograph", undefined>;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   openMoreOptions: boolean[];
   profileHovers: boolean[];
   setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
@@ -930,7 +930,7 @@ export type FeedProps = {
     x: number;
     y: number;
   };
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   t: TFunction<"autograh", undefined>;
   setCaretCoord: (
     e: SetStateAction<{
@@ -1133,7 +1133,7 @@ export type PublicationProps = {
   bottom: string;
   left: string;
   right: string;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   cartItems?: CartItem[];
   decryptLoading?: boolean;
   mentionProfiles?: Profile[];
@@ -1234,7 +1234,7 @@ export type PostCommentProps = {
   router: NextRouter;
   mentionProfiles: Profile[];
   profilesOpen: boolean;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   setMentionProfiles: (e: SetStateAction<Profile[]>) => void;
   setProfilesOpen: (e: SetStateAction<boolean[]>) => void;
   lensConnected: Profile | undefined;
@@ -1285,7 +1285,7 @@ export type ScreenPostProps = {
     }>
   ) => void;
   router: NextRouter;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   lensConnected: Profile | undefined;
   profilesOpen: boolean[];
   mentionProfiles: Profile[];
@@ -1308,7 +1308,7 @@ export type ScreenPostProps = {
 export type CollectOptionsProps = {
   id: string;
   type: string;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   dispatch: Dispatch<AnyAction>;
   collectTypes:
     | {
@@ -1754,7 +1754,7 @@ export type DecryptProps = {
   decryptLoading: boolean;
   canDecrypt: boolean;
   toDecrypt: Post | Comment | Quote;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export interface AuthSig {

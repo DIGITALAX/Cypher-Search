@@ -101,7 +101,7 @@ export type TilesProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
   simpleCollect: (id: string, type: string) => Promise<void>;
@@ -126,7 +126,7 @@ export type TileSwitchProps = {
   lensConnected: Profile | undefined;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   layoutAmount: number;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   popUpOpen: boolean[];
   filterConstants: FilterValues | undefined;
   setPopUpOpen: (e: SetStateAction<boolean[]>) => void;
@@ -238,7 +238,7 @@ export type LegendProps = {
 export type CollectItemProps = {
   index: number;
   router: NextRouter;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   setCollectChoice: (
     e: SetStateAction<{ color: string; size: string }[]>
   ) => void;
@@ -263,7 +263,7 @@ export type ChromadinProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
   lensConnected: Profile | undefined;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -284,7 +284,7 @@ export type CoinOpProps = {
   index: number;
   filterConstants: FilterValues | undefined;
   router: NextRouter;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   dispatch: Dispatch<AnyAction>;
   publication: Creation;
   cartItems: CartItem[];
@@ -308,7 +308,7 @@ export type TextPostProps = {
   layoutAmount: number;
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   publication: Post | Comment | Quote | Mirror;
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
@@ -332,7 +332,7 @@ export type QuestProps = {
   layoutAmount: number;
   router: NextRouter;
   publication: Quest;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   lensConnected: Profile | undefined;
   followProfile: (id: string) => Promise<void>;
   unfollowProfile: (id: string) => Promise<void>;
@@ -372,11 +372,11 @@ export type ImagePostProps = {
   followLoading: boolean[];
   profileHovers: boolean[];
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type LevelOneProps = {
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   index: {
     levelIndex: number;
     imageIndex: number;
@@ -406,7 +406,7 @@ export type ListenerProps = {
   mirror: (id: string) => Promise<void>;
   like: (id: string, hasReacted: boolean) => Promise<void>;
   lensConnected: Profile | undefined;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -444,7 +444,7 @@ export type ProfileProps = {
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   dispatch: Dispatch<AnyAction>;
   lensConnected: Profile | undefined;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type MicrobrandProps = {
@@ -460,7 +460,7 @@ export type MicrobrandProps = {
   lensConnected: Profile | undefined;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   collectionsRelated?: Creation[];
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export enum ERC20Tokens {
@@ -506,7 +506,7 @@ export type LoadTileProps = {
 
 export type AwardProps = {
   publication: Award;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
 };

@@ -19,7 +19,7 @@ const usePost = (
   postCollectGif: PostCollectGifState,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [postLoading, setPostLoading] = useState<boolean[]>([false]);
   const [postContentLoading, setPostContentLoading] = useState<

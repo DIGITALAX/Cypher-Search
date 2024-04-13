@@ -17,7 +17,7 @@ const useTiles = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>([]);
   const [profileHovers, setProfileHovers] = useState<boolean[]>([]);

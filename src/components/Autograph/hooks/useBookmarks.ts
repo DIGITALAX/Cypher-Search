@@ -39,7 +39,7 @@ const useBookmarks = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   pageProfile: Profile | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [allBookmarks, setAllBookmarks] = useState<
     ((Post | Comment | Quote | Mirror) & {

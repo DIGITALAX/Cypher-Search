@@ -34,7 +34,7 @@ const useFilterPost = (
   address: `0x${string}` | undefined,
   publicClient: PublicClient,
   lensConnected: Profile | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [publication, setPublication] = useState<Publication>();
   const [popUpOpen, setPopUpOpen] = useState<boolean[]>(

@@ -30,7 +30,7 @@ const useInteractions = (
   setSuggestedFeed:
     | ((e: SetStateAction<AllSearchItemsState | undefined>) => void)
     | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [openMirrorChoice, setOpenMirrorChoice] = useState<boolean[]>([]);
   const [interactionsLoading, setInteractionsLoading] = useState<

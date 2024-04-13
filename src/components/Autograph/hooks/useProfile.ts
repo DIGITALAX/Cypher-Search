@@ -31,7 +31,7 @@ const useProfile = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   router: NextRouter,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [feedProfileHovers, setFeedProfileHovers] = useState<boolean[]>([]);
   const [feedFollowLoading, setFeedFollowLoading] = useState<boolean[]>([]);

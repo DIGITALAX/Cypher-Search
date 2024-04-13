@@ -10,7 +10,7 @@ const lensReport = async (
   reason: ReportingReasonInput,
   additionalComments: string,
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   try {
     const { data } = await reportPost({

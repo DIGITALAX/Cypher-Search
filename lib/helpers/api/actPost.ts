@@ -19,7 +19,7 @@ const actPost = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ): Promise<boolean | void> => {
   try {
     const { data } = await collectPost({

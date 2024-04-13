@@ -21,7 +21,7 @@ const lensPost = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"404", undefined>,
+  t: TFunction<"common", undefined>,
   closeBox?: () => void,
   create?: boolean
 ): Promise<void> => {

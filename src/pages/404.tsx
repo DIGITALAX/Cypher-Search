@@ -16,7 +16,7 @@ import { TFunction, i18n } from "i18next";
 const Custom404: NextPage<{
   router: NextRouter;
   i18n: i18n;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
 }> = ({ router, tCom, i18n }): JSX.Element => {
   const dispatch = useDispatch();
   const { address, isConnected } = useAccount();
@@ -128,6 +128,6 @@ export default Custom404;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["404", "footer"])),
+    ...(await serverSideTranslations(locale, ["common", "footer"])),
   },
 });

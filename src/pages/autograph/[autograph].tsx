@@ -40,7 +40,7 @@ import { useParams } from "next/navigation";
 const Autograph: NextPage<{
   router: NextRouter;
   client: LitNodeClient;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   i18n: i18n;
 }> = ({ router, client, tCom, i18n }): JSX.Element => {
   const dispatch = useDispatch();
@@ -818,12 +818,12 @@ export default Autograph;
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: false,
   };
 }
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["autograph", "footer", "404"])),
+    ...(await serverSideTranslations(locale, ["autograph", "footer", "common"])),
   },
 });

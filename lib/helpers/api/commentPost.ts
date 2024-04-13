@@ -23,7 +23,7 @@ const lensComment = async (
   clientWallet: WalletClient,
   publicClient: PublicClient,
   clearComment: () => void,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ): Promise<void> => {
   if (
     openActionModules &&

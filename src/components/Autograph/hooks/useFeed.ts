@@ -34,7 +34,7 @@ const useFeed = (
   dispatch: Dispatch,
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [openMirrorFeedChoice, setOpenMirrorFeedChoice] = useState<boolean[]>(
     []

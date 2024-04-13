@@ -21,7 +21,7 @@ import { SetStateAction } from "react";
 const Checkout: NextPage<{
   router: NextRouter;
   client: LitNodeClient;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   i18n: i18n;
 }> = ({ router, client, tCom, i18n }): JSX.Element => {
   const dispatch = useDispatch();

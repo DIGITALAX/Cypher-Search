@@ -60,7 +60,7 @@ const useItem = (
   publicClient: PublicClient,
   dispatch: Dispatch<AnyAction>,
   router: NextRouter,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
   const [itemLoading, setItemLoading] = useState<boolean>(false);

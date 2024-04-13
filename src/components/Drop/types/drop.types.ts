@@ -9,5 +9,5 @@ export type DropMainProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   cartItems: CartItem[];
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };

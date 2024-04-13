@@ -50,7 +50,7 @@ const useComment = (
       | undefined
     >
   ) => void,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [commentSwitch, setCommentSwitch] = useState<boolean>(false);
   const [allCommentsLoading, setAllCommentsLoading] = useState<boolean>(false);

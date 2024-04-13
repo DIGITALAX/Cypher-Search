@@ -22,7 +22,7 @@ const lensCollect = async (
   address: `0x${string}`,
   clientWallet: WalletClient,
   publicClient: PublicClient,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ): Promise<void> => {
   let broadcastResult: FetchResult<BroadcastOnchainMutation>,
     functionName: string,

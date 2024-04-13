@@ -12,10 +12,6 @@ i18n
     debug: false,
     detection: {
       order: ["path", "header", "localStorage", "cookie", "subdomain"],
-      lookupCookie: "i18next",
-      lookupLocalStorage: "i18nextLng",
-      lookupFromPathIndex: 0,
-      lookupFromSubdomainIndex: 0,
     },
     react: {
       useSuspense: false,
@@ -27,14 +23,10 @@ i18n
         },
       },
     },
-    lng: undefined,
     interpolation: {
       escapeValue: false,
-      format: function (value, format, lng) {
-        if (format === "uppercase") return value.toUpperCase();
-        return value;
-      },
     },
+    lng: undefined,
     backend: {
       loadPath: "public/locales/{{lng}}/{{ns}}.json",
     },

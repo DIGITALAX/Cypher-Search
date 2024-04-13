@@ -35,7 +35,7 @@ const useGallery = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   pageProfile: Profile | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [sortType, setSortType] = useState<SortType>(SortType.Public);
   const [interactionsGalleryLoading, setInteractionsGalleryLoading] = useState<

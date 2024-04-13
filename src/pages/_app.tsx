@@ -66,7 +66,7 @@ init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const { t: tCom, i18n } = useTranslation("404");
+  const { t: tCom, i18n } = useTranslation("common");
   const client = new LitNodeClient({ litNetwork: "cayenne", debug: false });
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });

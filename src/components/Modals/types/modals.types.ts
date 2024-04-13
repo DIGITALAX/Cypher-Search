@@ -28,12 +28,12 @@ import { TFunction } from "i18next";
 export type MapProps = {
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type DisplaySearchProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   galleryLoading: boolean;
   gallery:
     | {
@@ -95,19 +95,19 @@ export type DisplaySearchProps = {
 
 export type InteractErrorProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type ClaimProfileProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type SuccessCheckoutProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   handle: string;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type FullScreenVideoProps = {
@@ -139,7 +139,7 @@ export type IndexProps = {
 
 export type ReportPubProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   id: string;
   handleReportPost: (id: string) => Promise<void>;
   reason: {
@@ -181,7 +181,7 @@ export type WhoProps = {
   router: NextRouter;
   dispatch: Dispatch<AnyAction>;
   lensConnected: Profile | undefined;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type WhoSwitchProps = {
@@ -189,7 +189,7 @@ export type WhoSwitchProps = {
   dispatch: Dispatch<AnyAction>;
   router: NextRouter;
   reactors: any[];
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   quoters: (Quote & {
     decrypted: any;
   })[];
@@ -211,7 +211,7 @@ export type PostBoxProps = {
     x: number;
     y: number;
   };
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   setCaretCoord: (
     e: SetStateAction<{
       x: number;
@@ -247,7 +247,7 @@ export type PostCollectGifProps = {
   setCollects: (
     e: SetStateAction<SimpleCollectOpenActionModuleInput | undefined>
   ) => void;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   collects: SimpleCollectOpenActionModuleInput | undefined;
   openMeasure: {
     searchedGifs: string[];
@@ -292,7 +292,7 @@ export type PostCollectGifProps = {
 export type FollowCollectProps = {
   dispatch: Dispatch<AnyAction>;
   type: string;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   collect:
     | {
         item:
@@ -314,7 +314,7 @@ export type FollowCollectProps = {
 
 export type PostSuccessProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   type: string;
   router: NextRouter;
   pubId: string;
@@ -329,7 +329,7 @@ export type InsufficientBalanceProps = {
 
 export type QuestGatesProps = {
   dispatch: Dispatch<AnyAction>;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   gates: {
     erc20?: {
       address: string;
@@ -341,6 +341,6 @@ export type QuestGatesProps = {
 };
 
 export type QuestSuccessProps = {
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   dispatch: Dispatch;
 };

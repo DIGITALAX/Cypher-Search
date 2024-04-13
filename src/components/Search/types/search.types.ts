@@ -61,11 +61,11 @@ export type SearchBarProps = {
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   searchItems: AllSearchItemsState | undefined;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type HeaderProps = {
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   dispatch: Dispatch<AnyAction>;
   includeSearch: boolean;
   i18n: i18n;
@@ -123,7 +123,7 @@ export type ImageDropDownProps = {
 
 export type ContentSortProps = {
   handleResetFilters: () => void;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   filterConstants: FilterValues | undefined;
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
@@ -139,7 +139,7 @@ export type PrerollSortProps = {
   dispatch: Dispatch<AnyAction>;
   filterValues: Filter;
   openDropDown: DropDown;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   router: NextRouter;
   filterConstants: FilterValues | undefined;
   setOpenDropDown: (e: SetStateAction<DropDown>) => void;
@@ -150,7 +150,7 @@ export type PrerollSortProps = {
 };
 
 export type FilterProps = {
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   dispatch: Dispatch<AnyAction>;
   filterConstants: FilterValues | undefined;
   filterValues: Filter;

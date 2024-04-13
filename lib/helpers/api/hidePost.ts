@@ -7,7 +7,7 @@ import { TFunction } from "i18next";
 const lensHide = async (
   id: string,
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   try {
     const { data } = await hidePost({

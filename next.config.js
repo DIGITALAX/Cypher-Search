@@ -15,7 +15,6 @@ const allowedOrigins = [
 
 const nextConfig = {
   reactStrictMode: true,
-  i18n,
   images: {
     remotePatterns: [
       {
@@ -26,6 +25,7 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
+  i18n,
   async headers() {
     let headersConfig = [];
 

@@ -21,7 +21,7 @@ export default function Home({
   i18n,
 }: {
   router: NextRouter;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   i18n: i18n;
 }) {
   const dispatch = useDispatch();
@@ -225,6 +225,6 @@ export default function Home({
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["404", "footer", "common"])),
+    ...(await serverSideTranslations(locale, ["common", "footer", "common"])),
   },
 });

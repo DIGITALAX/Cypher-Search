@@ -90,7 +90,7 @@ export type SwitchTypeProps = {
   joinLoading: boolean;
   handlePlayerJoin: () => Promise<void>;
   setOpenMirrorChoice: (e: SetStateAction<boolean[]>) => void;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   openMirrorChoice: boolean[];
   commentSwitch: boolean;
   setCommentSwitch: (e: SetStateAction<boolean>) => void;
@@ -238,7 +238,7 @@ export type ChromadinProps = {
   setOpenMoreOptions: (e: SetStateAction<boolean[]>) => void;
   setProfileHovers: (e: SetStateAction<boolean[]>) => void;
   simpleCollect: (id: string, type: string, main: boolean) => Promise<void>;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   interactionsLoading: {
     like: boolean;
     mirror: boolean;
@@ -309,7 +309,7 @@ export type PublicationProps = {
       y: number;
     }>
   ) => void;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   setCaretCoordMain: (
     e: SetStateAction<{
       x: number;
@@ -407,7 +407,7 @@ export type MicrobrandProps = {
   dispatch: Dispatch<AnyAction>;
   itemData: Profile;
   lensConnected: Profile | undefined;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   relatedData:
     | {
         collections: Creation[];
@@ -548,5 +548,5 @@ export type KinoraProps = {
   handlePlayerJoin: () => Promise<void>;
   purchaseDetails: PurchaseDetails;
   setPurchaseDetails: (e: SetStateAction<PurchaseDetails>) => void;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };

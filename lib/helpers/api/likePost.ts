@@ -9,7 +9,7 @@ const lensLike = async (
   id: string,
   dispatch: Dispatch<AnyAction>,
   downvote: boolean,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ): Promise<void> => {
   const data = await likePost({
     for: id,

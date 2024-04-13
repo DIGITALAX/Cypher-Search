@@ -43,7 +43,7 @@ const useSettings = (
   screenDisplay: ScreenDisplay,
   isDesigner: boolean,
   pageProfile: Profile | undefined,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [settingsUpdateLoading, setSettingsUpdateLoading] =
     useState<boolean>(false);

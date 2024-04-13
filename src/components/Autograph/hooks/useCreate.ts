@@ -62,7 +62,7 @@ const useCreate = (
   pageProfile: Profile | undefined,
   client: LitNodeClient,
   isDesigner: boolean,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const coder = new ethers.AbiCoder();
   const [createCase, setCreateCase] = useState<string | undefined>(undefined);

@@ -39,7 +39,7 @@ import { TFunction, i18n } from "i18next";
 
 const Item: NextPage<{
   router: NextRouter;
-  tCom: TFunction<"404", undefined>;
+  tCom: TFunction<"common", undefined>;
   i18n: i18n;
 }> = ({ router, tCom, i18n }): JSX.Element => {
   const publicClient = createPublicClient({
@@ -642,7 +642,7 @@ export const getStaticProps = async ({ locale }: { locale: string }) => ({
     ...(await serverSideTranslations(locale, [
       "item",
       "footer",
-      "404",
+      "common",
       "common",
     ])),
   },

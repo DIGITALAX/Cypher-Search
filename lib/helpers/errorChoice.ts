@@ -7,7 +7,7 @@ const errorChoice = async (
   err: any,
   runner: (() => Promise<void>) | (() => void),
   dispatch: Dispatch<AnyAction>,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   if (err?.message?.includes("User rejected the request")) return;
   if (

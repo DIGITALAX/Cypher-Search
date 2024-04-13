@@ -34,7 +34,7 @@ export type PopUpProps = {
   cartItems: CartItem[];
   index: number;
   cartItem: Creation;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   level: number | undefined;
   type: ItemType;
 };
@@ -145,7 +145,7 @@ export type AccountsProps = {
   openAccount: boolean;
   signInLoading: boolean;
   filtersOpen: boolean;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   auto?: boolean;
@@ -173,7 +173,7 @@ export type NotFoundProps = {
   cartItems: CartItem[];
   dispatch: Dispatch<AnyAction>;
   handleShuffleSearch: () => void;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export enum ItemType {
@@ -209,7 +209,7 @@ export type SuggestedProps = {
   router: NextRouter;
   fullScreenVideo: FullScreenVideoState;
   cartAnim: boolean;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   filterConstants: FilterValues | undefined;
   i18n: i18n;
   layoutAmount?: number;
@@ -259,7 +259,7 @@ export type StatsProps = {
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
   microbrand?: boolean;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };
 
 export type MediaProps = {
@@ -276,7 +276,7 @@ export type MediaProps = {
 export type CartListProps = {
   cartItems: CartItem[];
   router: NextRouter;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
   dispatch: Dispatch<AnyAction>;
   setCartListOpen: (e: SetStateAction<boolean>) => void;
   page?: boolean;
@@ -285,5 +285,5 @@ export type CartListProps = {
 
 export type PrintTypeProps = {
   printType: string;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 };

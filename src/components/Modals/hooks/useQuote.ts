@@ -57,7 +57,7 @@ const useQuote = (
   publicClient: PublicClient,
   address: `0x${string}` | undefined,
   fullScreenVideo: FullScreenVideoState,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const videoRef = useRef<null | HTMLVideoElement>(null);
   const wrapperRef = useRef<Draggable | null>(null);

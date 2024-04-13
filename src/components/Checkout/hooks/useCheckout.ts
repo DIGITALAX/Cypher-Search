@@ -47,7 +47,7 @@ const useCheckout = (
   oracleData: OracleData[],
   cartItems: CartItem[],
   router: NextRouter,
-  t: TFunction<"404", undefined>
+  t: TFunction<"common", undefined>
 ) => {
   const [details, setDetails] = useState<Details>({
     name: "",

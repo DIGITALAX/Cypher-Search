@@ -9,7 +9,7 @@ import { TFunction } from "i18next";
 
 const Cart: FunctionComponent<{
   router: NextRouter;
-  t: TFunction<"404", undefined>;
+  t: TFunction<"common", undefined>;
 }> = ({ router, t }): JSX.Element => {
   const dispatch = useDispatch();
   const cartItems = useSelector(
