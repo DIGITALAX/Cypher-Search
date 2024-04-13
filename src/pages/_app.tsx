@@ -88,15 +88,18 @@ function App({ Component, pageProps }: AppProps) {
   const handleRewind = (): void => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const [locale, setLocale] = useState<"en" | "es">("en");
+  const [locale, setLocale] = useState<"en" | "es">();
   const [translations, setTranslations] = useState<Translations>({});
   const t = (key: keyof Translations) => translations[key] || (key as string);
   const [routerChangeLoading, setRouterChangeLoading] =
     useState<boolean>(false);
   useEffect(() => {
-    fetch(`/locales/${locale}.json`)
-      .then((res) => res.json())
-      .then((data) => setTranslations(data));
+    if (locale) {
+      localStorage.setItem("locale", locale);
+      fetch(`/locales/${locale}.json`)
+        .then((res) => res.json())
+        .then((data) => setTranslations(data));
+    }
   }, [locale]);
   useEffect(() => {
     const handleStart = () => {
@@ -119,6 +122,8 @@ function App({ Component, pageProps }: AppProps) {
   }, [router]);
 
   useEffect(() => {
+    const savedLocale = localStorage.getItem("locale") || "en";
+    setLocale(savedLocale as "en" | "es");
     moment.utc();
     console.log(`                                  
     _      _)_ _   _   _   _ _       
@@ -130,7 +135,7 @@ function App({ Component, pageProps }: AppProps) {
     return <RouterChange />;
   }
   return (
-    <LanguageContext.Provider value={{ t, setLocale, locale }}>
+    <LanguageContext.Provider value={{ t, setLocale, locale: locale ?? "en" }}>
       <WagmiConfig config={wagmiConfig}>
         <RainbowKitProvider chains={chains} theme={walletTheme}>
           <LivepeerConfig client={livepeerClient}>
