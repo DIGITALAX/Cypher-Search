@@ -129,58 +129,60 @@ const Autograph: NextPage<{
   if (
     !profileLoading &&
     !globalLoading &&
+    profile &&
     // !feedLoading &&
     // !galleryLoading &&
     i18n.isInitialized
   ) {
     return (
-      <>
-        {!profile ? (
-          <NotFound
-            t={tCom}
-            i18n={i18n}
-            fullScreenVideo={fullScreenVideo}
-            cartAnim={cartAnim}
-            router={router}
-            searchActive={searchActive}
-            filtersOpen={filtersOpen.value}
-            lensConnected={lensConnected}
-            walletConnected={walletConnected}
-            handleLensConnect={handleLensConnect}
-            openConnectModal={openConnectModal}
-            setOpenAccount={setOpenAccount}
-            cartItems={cartItems}
-            openAccount={openAccount}
-            cartListOpen={cartListOpen}
-            signInLoading={signInLoading}
-            setCartListOpen={setCartListOpen}
-            handleLogout={handleLogout}
-            dispatch={dispatch}
-            handleShuffleSearch={handleShuffleSearch}
-          />
-        ) : (
-          profile && (
-            <AutoHydrateSSR
-              router={router}
-              tCom={tCom}
-              dispatch={dispatch}
-              lensConnected={lensConnected}
-              publicClient={publicClient}
-              address={address}
-              client={client}
-              profile={profile}
-              cartItems={cartItems}
-              openConnectModal={openConnectModal}
-              handleLensConnect={handleLensConnect}
-              walletConnected={walletConnected}
-              handleLogout={handleLogout}
-              filterConstants={filterConstants}
-              handleShuffleSearch={handleShuffleSearch}
-            />
-          )
-        )}
-      </>
+      // <>
+      //   {!profile ? (
+      //     <NotFound
+      //       t={tCom}
+      //       i18n={i18n}
+      //       fullScreenVideo={fullScreenVideo}
+      //       cartAnim={cartAnim}
+      //       router={router}
+      //       searchActive={searchActive}
+      //       filtersOpen={filtersOpen.value}
+      //       lensConnected={lensConnected}
+      //       walletConnected={walletConnected}
+      //       handleLensConnect={handleLensConnect}
+      //       openConnectModal={openConnectModal}
+      //       setOpenAccount={setOpenAccount}
+      //       cartItems={cartItems}
+      //       openAccount={openAccount}
+      //       cartListOpen={cartListOpen}
+      //       signInLoading={signInLoading}
+      //       setCartListOpen={setCartListOpen}
+      //       handleLogout={handleLogout}
+      //       dispatch={dispatch}
+      //       handleShuffleSearch={handleShuffleSearch}
+      //     />
+      //   ) : (
+      // profile && (
+      <AutoHydrateSSR
+        router={router}
+        tCom={tCom}
+        dispatch={dispatch}
+        lensConnected={lensConnected}
+        publicClient={publicClient}
+        address={address}
+        client={client}
+        profile={profile!}
+        cartItems={cartItems}
+        openConnectModal={openConnectModal}
+        handleLensConnect={handleLensConnect}
+        walletConnected={walletConnected}
+        handleLogout={handleLogout}
+        filterConstants={filterConstants}
+        handleShuffleSearch={handleShuffleSearch}
+      />
     );
+    // )
+    // }
+    //   </>
+    // );
   }
 
   return <RouterChange />;
