@@ -155,16 +155,16 @@ const useSettings = (
         }[] = [];
 
         if (existing != -1) {
-          const parsed = await JSON.parse(newAttributes[existing]?.value);
-
-          itemsToHash = [...settingsData?.microbrands, ...parsed].filter(
-            (value, index, array) =>
-              array.findIndex(
-                (v) =>
-                  v.microbrand === value?.microbrand &&
-                  v.microbrandCover === value?.microbrandCover
-              ) === index
-          );
+          itemsToHash = settingsData?.microbrands
+            .filter(Boolean)
+            .filter(
+              (value, index, array) =>
+                array.findIndex(
+                  (v) =>
+                    v.microbrand === value?.microbrand &&
+                    v.microbrandCover === value?.microbrandCover
+                ) === index
+            );
         } else {
           itemsToHash = settingsData?.microbrands;
         }
@@ -178,14 +178,19 @@ const useSettings = (
                 microbrandCover: string;
                 type: string;
               }) => {
-                const cover = await fetch("/api/ipfs", {
-                  method: "POST",
-                  body: convertToFile(item?.microbrandCover, item?.type),
-                });
-                const coverCID = await cover.json();
+                let microbrandCover = item.microbrandCover;
+                if (!microbrandCover.includes("ipfs://")) {
+                  const cover = await fetch("/api/ipfs", {
+                    method: "POST",
+                    body: convertToFile(item?.microbrandCover, item?.type),
+                  });
+                  const coverCID = await cover.json();
+                  microbrandCover = "ipfs://" + coverCID?.cid;
+                }
+
                 return {
                   microbrand: item.microbrand,
-                  microbrandCover: "ipfs://" + coverCID?.cid,
+                  microbrandCover,
                 };
               }
             );
@@ -194,7 +199,6 @@ const useSettings = (
 
           if (existing != -1) {
             newAttributes[existing].value = JSON.stringify([
-              ...(await JSON.parse(newAttributes[existing]?.value)),
               ...(awaited || []),
             ]);
           } else {

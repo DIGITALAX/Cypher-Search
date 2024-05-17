@@ -283,7 +283,7 @@ const Settings: FunctionComponent<SettingsProps> = ({
                               microbrandCover: string;
                               type: string;
                             },
-                          ],
+                          ].filter(Boolean),
                           tempMicro: {
                             microbrand: undefined,
                             microbrandCover: undefined,
