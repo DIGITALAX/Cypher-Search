@@ -515,7 +515,7 @@ const Web: FunctionComponent<WebProps> = ({
                 ? "QmZKHPMFLzxngWNbik7TS9jSiHasYSbRPeJs9xXBUvHSwm"
                 : "QmdvSykeWq4MphAA8CerK3VqEXMjJBNeVje3Ae2BkKgZxb",
               text: !walletConnected
-                ? t("cont")
+                ? t("con2")
                 : walletConnected && !lensConnected?.id
                 ? t("len")
                 : t("log")?.toLowerCase(),
