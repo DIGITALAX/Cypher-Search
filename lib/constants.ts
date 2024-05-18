@@ -38,7 +38,7 @@ export const KINORA_QUEST_DATA: `0x${string}` =
 export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|ba[A-Za-z2-7]{57})\b/;
 export const PLACEHOLDERS: { en: string; es: string }[] = [
   {
-    es: "¿Conoces al creador por nombre? menciónale con @, no juzgaremos",
+    es: "¿Conoce al creador por nombre? menciónele con @, no juzgaremos",
     en: "know the creator by name? @ them, we won't judge",
   },
   {
@@ -50,11 +50,11 @@ export const PLACEHOLDERS: { en: string; es: string }[] = [
     en: "some ideas from trending hashes: #synthwave #neobrutalism #autonomy",
   },
   {
-    es: "Con el ecosistem a tus manos, ¿por dónde empiezas?",
+    es: "Con el ecosistem a sus manos, ¿por dónde empieza?",
     en: "with the ecosystem at your fingertips, where do you start?",
   },
   {
-    es: "¿No sabes lo que buscas? prueba una mezcla aleatoria",
+    es: "¿No sabe lo que busca? pruebe una mezcla aleatoria",
     en: "don't know what you're looking for? try a random mix",
   },
 ];
