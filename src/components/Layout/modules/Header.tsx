@@ -79,6 +79,7 @@ const Header: FunctionComponent<HeaderProps> = ({
         <SearchBar
           filterChange={filterChange}
           t={t}
+          locale={locale}
           dispatch={dispatch}
           handleSearch={handleSearch!}
           searchActive={searchActive}

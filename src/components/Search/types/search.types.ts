@@ -59,6 +59,7 @@ export type SearchBarProps = {
   placeholderText: string | undefined;
   dispatch: Dispatch<AnyAction>;
   layoutAmount: number;
+  locale: "en" | "es";
   searchItems: AllSearchItemsState | undefined;
   t: (key: string | number) => string;
 };
