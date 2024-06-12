@@ -73,7 +73,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             />
           </div>
           <div
-            className="w-12 h-7 relative tablet:absolute tablet:right-2 flex items-center justify-center rounded-sm font-bit text-brill uppercase text-center p-px active:scale-95 hover:opacity-70 cursor-pointer"
+            className={`relative tablet:absolute tablet:right-2 flex items-center justify-center rounded-sm font-bit text-brill uppercase text-center p-px active:scale-95 h-7 hover:opacity-70 cursor-pointer ${router.locale == "es" ? "w-fit" : "w-12"}`}
             id="borderSearch"
             onClick={(e) => handleSearch(e, true)}
           >
