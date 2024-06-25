@@ -19,7 +19,7 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
   searchItems,
   t,
   filterChange,
-  locale
+  locale,
 }): JSX.Element => {
   return (
     <div
@@ -74,11 +74,17 @@ const SearchBar: FunctionComponent<SearchBarProps> = ({
             />
           </div>
           <div
-            className={`relative tablet:absolute tablet:right-2 flex items-center justify-center rounded-sm font-bit text-brill uppercase text-center p-px active:scale-95 h-7 hover:opacity-70 cursor-pointer ${locale == "es" ? "w-fit" : "w-12"}`}
+            className={`relative tablet:absolute tablet:right-2 flex items-center justify-center rounded-sm font-bit text-brill uppercase text-center p-px active:scale-95 h-7 hover:opacity-70 cursor-pointer ${
+              locale == "es" ? "w-fit" : "w-12"
+            }`}
             id="borderSearch"
             onClick={(e) => handleSearch(e, true)}
           >
-            <div className="relative w-full h-full flex items-center justify-center text-center bg-black rounded-sm text-lg">
+            <div
+              className={`relative w-full h-full flex items-center justify-center text-center bg-black rounded-sm  ${
+                locale == "es" ? "text-sm px-1" : "text-lg"
+              } `}
+            >
               {t("go")}
             </div>
           </div>
