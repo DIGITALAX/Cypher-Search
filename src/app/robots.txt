@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://cypher.digitalax.xyz/sitemap.xml

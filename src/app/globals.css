@@ -1,26 +1,818 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: "Bitblox";
+  src: url("/fonts/Bitblox.otf");
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: "Austral";
+  src: url("/fonts/Austral.otf");
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@font-face {
+  font-family: "Ignite";
+  src: url("/fonts/Ignite.otf");
+}
+
+@font-face {
+  font-family: "Bebas";
+  src: url("/fonts/BebasNeue.ttf");
+}
+@font-face {
+  font-family: "Vcr";
+  src: url("/fonts/Vcr.ttf");
+}
+
+@font-face {
+  font-family: "Internal Rainbows";
+  src: url("/fonts/InternalRainbows.otf");
+}
+
+@font-face {
+  font-family: "DS Digital";
+  font-weight: 400;
+  src: url("/fonts/DSDigi.ttf");
+}
+
+@font-face {
+  font-family: "Earls Revenge";
+  font-weight: 400;
+  src: url("/fonts/EarlsRevenge.ttf");
+}
+
+@font-face {
+  font-family: "Gamer";
+  src: url("/fonts/Gamer.ttf");
+}
+
+@font-face {
+  font-family: "Network";
+  src: url("/fonts/Network.ttf");
+}
+
+@font-face {
+  font-family: "Dogica";
+  src: url("/fonts/Dogica.ttf");
+}
+
+@theme {
+  --font-tee: 0.4rem;
+  --font-xxs: 0.6rem;
+
+  --font-bit: "Bitblox";
+  --font-vcr: "Vcr";
+  --font-rain: "Internal Rainbows";
+  --font-ignite: "Ignite";
+  --font-digi: "DS Digital";
+  --font-earl: "Earls Revenge";
+  --font-dog: "Dogica";
+  --font-gam: "Gamer";
+  --font-net: "Network";
+  --font-beb: "Bebas";
+  --font-aust: "Austral";
+
+  --color-nave: #0b0e16;
+  --color-offWhite: #f2f2f2;
+  --color-offBlack: #111313;
+  --color-midWhite: #faf4e8;
+  --color-skyBlue: #bbeeff;
+  --color-violet: #ffdcff;
+  --color-brill: #11f313;
+  --color-sol: #fbdb86;
+  --color-azul: #6a82fa;
+  --color-mosgu: #1c4d8d;
+  --color-fuego: #111929;
+  --color-nuba: #c9d8e4;
+  --color-frio: #132742;
+  --color-mar: #27bbcc;
+  --color-amo: #44d7b6;
+  --color-mos: #05a5b7;
+  --color-pez: #81a8f8;
+  --color-virg: #efefef;
+  --color-lima: #caed00;
+  --color-viol: #d07bf7;
+  --color-fondo: #1a08f1;
+  --color-oscuro: #0d35ca;
+  --color-naran: #ff9147;
+  --color-amar: #ffd86d;
+  --color-geren: #a9e7ff;
+  --color-marron: #d49e78;
+  --color-cafe: #222222;
+  --color-fertil: #11fceb;
+  --color-ballena: #ffd85f;
+  --color-emeral: #6dd400;
+  --color-piloto: #191919;
+  --color-fuera: #85aeff;
+  --color-trip: #078fd6;
+  --color-saph: #0091ff;
+  --color-olor: #f9ed00;
+  --color-lirio: #d401f8;
+  --color-hierba: #03db6a;
+  --color-afilado: #4e4d4d;
+  --color-cereza: #f28548;
+  --color-humor: #f7b500;
+  --color-suave: #c27aa0;
+  --color-cost: #847ff2;
+  --color-girasol: #fbd201;
+
+  --bg-legend: url("https://chromadin.infura-ipfs.io/ipfs/QmWDqwGn7JgWzFsvUuC6pR7P58v6ab1npPueJ9Vfaez8iW");
+  --bg-grant: url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ");
+  --bg-listener: url("https://chromadin.infura-ipfs.io/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2");
+  --bg-web: url("https://chromadin.infura-ipfs.io/ipfs/QmYRZYGFKgH6wGJ39aWHbr7T1PsySh2kTSjo11yEZrrGcM");
+  --bg-blurs: url("https://chromadin.infura-ipfs.io/ipfs/QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY");
+  --bg-synth: url("https://chromadin.infura-ipfs.io/ipfs/QmVaK6MVXPzdGb7XSBXqP4bXGzrsbtd1yECafztTT4dvjp");
+
+  --breakpoint-tablet: 56.25rem;
+  --breakpoint-galaxy: 18.75rem;
+  --breakpoint-pre: 25rem;
+  --breakpoint-otro: 84.375rem;
+
+  --z-1: 1;
+  --z-60: 60;
+  --z-40: 40;
+  --z-50: 50;
+  --z-30: 30;
+}
+
+/* === CUSTOM UTILITIES === */
+@layer utilities {
+  .text-tee {
+    font-size: var(--font-tee);
+  }
+  .text-xxs {
+    font-size: var(--font-xxs);
+  }
+
+  .font-bit {
+    font-family: var(--font-bit);
+  }
+  .font-vcr {
+    font-family: var(--font-vcr);
+  }
+  .font-rain {
+    font-family: var(--font-rain);
+  }
+  .font-ignite {
+    font-family: var(--font-ignite);
+  }
+  .font-digi {
+    font-family: var(--font-digi);
+  }
+  .font-earl {
+    font-family: var(--font-earl);
+  }
+  .font-gam {
+    font-family: var(--font-gam);
+  }
+  .font-dog {
+    font-family: var(--font-dog);
+  }
+  .font-net {
+    font-family: var(--font-net);
+  }
+  .font-beb {
+    font-family: var(--font-beb);
+  }
+
+  .font-aust {
+    font-family: var(--font-aust);
+  }
+
+  .w-100 {
+    width: 26rem;
+  }
+  .w-110 {
+    width: 30rem;
+  }
+
+  .h-100 {
+    height: 26rem;
+  }
+  .h-110 {
+    height: 32rem;
+  }
+
+  .z-1 {
+    z-index: var(--z-1);
+  }
+  .z-60 {
+    z-index: var(--z-60);
+  }
+
+  .z-40 {
+    z-index: var(--z-40);
+  }
+
+  .z-50 {
+    z-index: var(--z-50);
+  }
+
+  .z-30 {
+    z-index: var(--z-30);
+  }
+
+  .bg-legend {
+    background-image: var(--bg-legend);
+  }
+  .bg-grant {
+    background-image: var(--bg-grant);
+  }
+  .bg-listener {
+    background-image: var(--bg-listener);
+  }
+  .bg-tripleA {
+    background-color: #0000f5;
+    background-image: url("https://thedial.infura-ipfs.io/ipfs/QmdDfSDsqnZhPJHUHprkhyUTZiEh3MG16Xq2nKJnon9bX5");
+  }
+  .bg-web {
+    background-image: var(--bg-web);
+  }
+  .bg-blurs {
+    background-image: var(--bg-blurs);
+  }
+  .bg-synth {
+    background-image: var(--bg-synth);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+html {
+  background-color: #111313;
+}
+
+body::-webkit-scrollbar {
+  width: 0px;
+  opacity: 0; /* Initially hide the scrollbar */
+}
+
+body:hover::-webkit-scrollbar {
+  opacity: 0; /* Show the scrollbar on hover */
+}
+
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+div::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  opacity: 0; /* Initially hide the scrollbar */
+}
+
+div:hover::-webkit-scrollbar {
+  opacity: 0; /* Show the scrollbar on hover */
+}
+
+div::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+#feed {
+  direction: rtl; /* Set direction to right-to-left to move scrollbar to the left */
+  overflow-y: scroll;
+}
+
+#feedWrapper {
+  direction: rtl; /* This will move the scrollbar to the 'start' of the container, which is now on the left */
+}
+
+#feed > * {
+  direction: ltr; /* Reset the direction of the content inside to left-to-right */
+}
+
+#feed::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+
+@media (max-width: 647px) {
+  #feed::-webkit-scrollbar {
+    width: 3px;
+  }
+}
+
+#feed::-webkit-scrollbar-track {
+  background-color: transparent; /* Make the track transparent */
+  box-shadow: inset 0 0 0 10px #0090ff; /* Simulate padding with box shadow */
+}
+
+#feed::-webkit-scrollbar-thumb {
+  background: linear-gradient(#f3f6f7, #f7f7f3, #f9e8fa, #f0ecf6, #f3f6f7);
+}
+
+.searchTransition {
+  animation: fadeMoveFade 3s forwards;
+}
+
+.fadeTiles {
+  animation: fadeIn 3s ease-in-out;
+}
+
+#searchBar:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+@keyframes fadeMoveFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#borderSearch {
+  background: linear-gradient(
+    rgba(133, 174, 255, 0.6),
+    rgba(122, 157, 228, 0.6),
+    rgba(124, 148, 232, 0.6),
+    rgba(106, 130, 250, 0.6),
+    rgba(105, 125, 242, 0.6),
+    rgba(87, 124, 246, 0.6),
+    rgba(132, 174, 255, 0.6)
+  );
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+input[type="number"]::-webkit-inner-spin-button:focus,
+input[type="number"]::-webkit-outer-spin-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+#dropDown {
+  background: linear-gradient(
+    rgba(133, 174, 255, 0.6),
+    rgba(122, 157, 228, 0.6),
+    rgba(124, 148, 232, 0.6),
+    rgba(106, 130, 250, 0.6),
+    rgba(105, 125, 242, 0.6),
+    rgba(87, 124, 246, 0.6),
+    rgba(132, 174, 255, 0.6)
+  );
+}
+
+#dropDown::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Initially hide the scrollbar */
+  transition: opacity 0.3s ease;
+}
+
+#dropDown:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#dropDown::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+#dropDown::-webkit-scrollbar-thumb {
+  background-color: rgba(106, 130, 250, 0.6);
+}
+
+#preroll {
+  background: linear-gradient(#712af6, #7e07d6, #9806cf, #5a0ac7, #682af6);
+}
+
+#prerollFaded {
+  background: linear-gradient(
+    rgba(113, 42, 246, 0.1),
+    rgba(126, 7, 214, 0.1),
+    rgba(152, 6, 207, 0.1),
+    rgba(90, 10, 199, 0.1),
+    rgba(104, 42, 246, 0.1)
+  );
+}
+
+#tiles {
+  background: linear-gradient(#f3f6f7, #f7f7f3, #f9e8fa, #f0ecf6, #f3f6f7);
+}
+
+#prerollScroll::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Initially hide the scrollbar */
+  transition: opacity 0.3s ease;
+}
+
+#prerollScroll:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#prerollScroll::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+#prerollScroll::-webkit-scrollbar-thumb {
+  background-color: rgba(106, 130, 250, 0.6);
+}
+
+#results::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0; /* Initially hide the scrollbar */
+  transition: opacity 0.3s ease;
+}
+
+#results:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#results::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+#results::-webkit-scrollbar-thumb {
+  background-color: rgba(106, 130, 250, 0.6);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #111313 !important;
+  color: white !important;
+  font-family: "Bitblox" !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: white !important;
+}
+
+.leaflet-popup-tip {
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+}
+
+.leaflet-bar a {
+  background-color: black !important;
+  color: white !important;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+}
+
+#pfp {
+  background: linear-gradient(#fc9cf3, #b9d9ff, #0091ff, #fd99dc);
+}
+
+#success {
+  background: linear-gradient(
+    #fc9cf3,
+    #0ac7ab,
+    #0091ff,
+    #9cceda,
+    #fd99dc,
+    #c5d6e1
+  );
+}
+
+#smoke {
+  background: linear-gradient(
+    #9acce6,
+    #537684,
+    #45747e,
+    #9cceda,
+    #2f5566,
+    #c5d6e1
+  );
+}
+
+#mar {
+  background: linear-gradient(
+    #2abdf6,
+    #078fd6,
+    #06a9cf,
+    #0ac7ab,
+    #2f5566,
+    #2abcf6
+  );
+}
+
+#cartAnim {
+  transform: scale(1.1);
+  animation: shake 1s ease;
+}
+@keyframes shake {
+  0% {
+    transform: translate(0, 0) rotate(0);
+  }
+  20% {
+    transform: translate(-10px, 0) rotate(-20deg);
+  }
+  30% {
+    transform: translate(10px, 0) rotate(20deg);
+  }
+  50% {
+    transform: translate(-10px, 0) rotate(-10deg);
+  }
+  60% {
+    transform: translate(10px, 0) rotate(10deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
+}
+
+#bar {
+  background-image: url("https://chromadin.infura-ipfs.io/ipfs/QmeQ2sdjGXxUCQHCnK6kHU2c9Do3rjs557hU87jGorAvTs");
+  background-size: cover;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+textarea::-webkit-inner-spin-button:focus,
+textarea::-webkit-outer-spin-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(87, 124, 246, 0.6);
+}
+
+#milestone::-webkit-scrollbar {
+  width: 3px;
+  opacity: 1; /* Initially hide the scrollbar */
+}
+
+#milestone:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#milestone::-webkit-scrollbar-track {
+  background-color: #222222;
+}
+
+#milestone::-webkit-scrollbar-thumb {
+  background-color: #d49e78;
+}
+
+#legend::-webkit-scrollbar {
+  height: 3px;
+  opacity: 1; /* Initially hide the scrollbar */
+}
+
+#legend:hover::-webkit-scrollbar {
+  opacity: 1; /* Show the scrollbar on hover */
+}
+
+#legend::-webkit-scrollbar-track {
+  background-color: #222222;
+}
+
+#legend::-webkit-scrollbar-thumb {
+  background-color: #d49e78;
+}
+
+#noCode {
+  background-image: linear-gradient(
+    to bottom,
+    #e3e1ee,
+    #e3e1ee,
+    #f7fff0,
+    #89eff5,
+    #23fefc,
+    #2b90fd,
+    #341cfe,
+    #341cfe,
+    #341cfe
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+#explainerBg {
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to right, #1c24ff6a 1px, transparent 1px),
+    linear-gradient(to bottom, #1c24ff6a 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+#tripleBg {
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to right, #00bff5 1px, transparent 1px),
+    linear-gradient(to bottom, #f50092 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+#staticLoad {
+  background-image: repeating-radial-gradient(
+    circle at 18% 36%,
+    #d401f8,
+    #f9ed00 1.8px
+  );
+  animation: back 10s linear infinite;
+}
+
+@keyframes back {
+  from {
+    background-size: 100% 100%;
+  }
+  to {
+    background-size: 200% 200%;
+  }
+}
+
+#mold {
+  background: linear-gradient(
+    rgba(243, 246, 247, 0.8),
+    rgba(247, 247, 243, 0.8),
+    rgba(249, 232, 250, 0.8),
+    rgba(240, 236, 246, 0.8)
+  );
+}
+
+#fadedQuote {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #151316 0%,
+    #131313 70%,
+    transparent 95%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    to bottom,
+    #1f2937 0%,
+    #1f2937 50%,
+    transparent 100%
+  );
+}
+
+#videoplayer {
+  background-image: url("https://chromadin.infura-ipfs.io/ipfs/QmekpQQEtQBP1M71SohCHiDRQbV1Sc2bKveVvwEfzAJCPx");
+  background-color: black;
+  background-position: center;
+  background-size: cover;
+}
+
+#videoplayer:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.2);
+  filter: blur(5px);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: white;
+  opacity: 80%;
+  height: 0.3rem;
+}
+
+/******** Firefox ********/
+input[type="range"]::-moz-range-track {
+  background: white;
+  opacity: 80%;
+  height: 0.3rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -4px; /* Centers thumb on the track */
+  background-color: #f62ada;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+}
+
+/***** Thumb Styles *****/
+/***** Firefox *****/
+input[type="range"]::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 0; /*Removes default border-radius that FF applies*/
+  background-color: #f62ada;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+}
+
+.close {
+  position: relative;
+  display: flex;
+  justify-items: end;
+  width: fit-content;
+  height: fit-content;
+  margin-left: auto;
+  padding-bottom: 0.5rem;
+}
+#postBox,
+#highlighted-content {
+  font-family: "Austral";
+  font-size: 1rem;
+  line-height: 1.2rem;
+  white-space: pre-wrap;
+  scrollbar-width: none;
+  box-sizing: border-box;
+}
+
+#postBox::-webkit-scrollbar,
+#highlighted-content::-webkit-scrollbar {
+  display: none;
+}
+
+#postBox {
+  position: absolute;
+  z-index: 1;
+  color: transparent;
+  caret-color: white;
+}
+
+#highlighted-content {
+  position: absolute;
+  z-index: 0;
+}
+
+.infinite-scroll-component__outerdiv {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#game {
+  box-shadow: inset 0 0 100px rgba(0, 0, 255, 0.5);
+}
+
+#northern {
+  background-image: radial-gradient(
+      18% 28% at 24% 50%,
+      #cefaffff 7%,
+      #073aff00 100%
+    ),
+    radial-gradient(18% 28% at 18% 71%, #ffffff59 6%, #073aff00 100%),
+    radial-gradient(70% 53% at 36% 76%, #73f2ffff 0%, #073aff00 100%),
+    radial-gradient(42% 53% at 15% 94%, #ffffffff 7%, #073aff00 100%),
+    radial-gradient(42% 53% at 34% 72%, #ffffffff 7%, #073aff00 100%),
+    radial-gradient(18% 28% at 35% 87%, #ffffffff 7%, #073aff00 100%),
+    radial-gradient(31% 43% at 7% 98%, #ffffffff 24%, #073aff00 100%),
+    radial-gradient(21% 37% at 72% 23%, #d3ff6d9c 24%, #073aff00 100%),
+    radial-gradient(35% 56% at 91% 74%, #8a4ffff5 9%, #073aff00 100%),
+    radial-gradient(74% 86% at 67% 38%, #6dffaef5 24%, #073aff00 100%),
+    linear-gradient(125deg, #4eb5ffff 1%, #4c00fcff 100%);
+}
+
+#xScroll::-webkit-scrollbar {
+  height: 0px;
+  background-color: white;
+}
+
+#xScroll::-webkit-scrollbar-track {
+  background-color: white;
+}
+
+#xScroll::-webkit-scrollbar-thumb {
+  background-color: white;
 }
