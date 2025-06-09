@@ -28,6 +28,7 @@
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "masonic": "^4.1.0",
+    "moment": "^2.30.1",
     "negotiator": "^1.0.0",
     "next": "15.3.2",
     "numeral": "^2.0.6",
