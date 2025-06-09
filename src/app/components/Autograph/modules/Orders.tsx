@@ -81,7 +81,7 @@ const Orders: FunctionComponent<{
                             <Link
                               target="_blank"
                               rel="noreferrer"
-                              href={`https://polygonscan.com/tx/${order?.transactionHash}`}
+                              href={`https://explorer.lens.xyz/tx/${order?.transactionHash}`}
                               className="relative w-fit h-fit flex items-center justify-center cursor-pointer break-all"
                             >
                               {order?.transactionHash?.slice(0, 30) + "..."}

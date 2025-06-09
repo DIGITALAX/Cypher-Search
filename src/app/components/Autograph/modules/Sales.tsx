@@ -77,7 +77,7 @@ const Sales: FunctionComponent<{ dict: any; profile: Account | undefined }> = ({
                             <Link
                               target="_blank"
                               rel="noreferrer"
-                              href={`https://polygonscan.com/tx/${sale?.transactionHash}`}
+                              href={`https://explorer.lens.xyz/tx/${sale?.transactionHash}`}
                               className="relative w-fit h-fit flex items-center justify-center cursor-pointer break-all"
                             >
                               {sale?.transactionHash?.slice(0, 30) + "..."}
