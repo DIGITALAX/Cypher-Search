@@ -100,7 +100,7 @@ const TripleA: FunctionComponent<TripleAProps> = ({
       </div>
       <div className="relative w-full h-fit flex items-center sm:items-end justify-start ml-auto flex-col gap-12">
         <div className="relative w-full h-full flex items-center sm:items-end justify-start ml-auto flex-col gap-4">
-          <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-5xl mt-0">
+          <div className="relative w-fit h-fit flex items-center sm:items-end justify-center sm:justify-end sm:text-right text-center font-aust text-white break-all text-5xl mt-0">
             {itemData?.post?.metadata?.title}
           </div>
 
@@ -240,8 +240,8 @@ const TripleA: FunctionComponent<TripleAProps> = ({
             </div>
           </div>
           {itemData?.post?.collectionType == CollectionType.IRL && (
-            <div className="relative w-fit h-fit flex flex-col gap-6 items-end justify-end">
-              <div className="relative w-fit h-fit flex flex-row gap-6 items-end justify-end text-white font-bit text-xxs pt-4">
+            <div className="relative w-fit h-fit flex flex-col gap-6 items-center sm:items-end justify-center sm:justify-end">
+              <div className="relative w-fit h-fit flex flex-row gap-6 items-center justify-center sm:items-end sm:justify-end text-white font-bit text-xxs pt-4">
                 <div className="relative flex items-end w-fit h-fit justify-end items-center justify-center flex-col gap-1.5 ml-auto">
                   <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
                     Color

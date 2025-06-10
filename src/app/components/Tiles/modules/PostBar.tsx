@@ -310,9 +310,9 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                     (meta?.metadata as ImageMetadata)?.title!
                   );
 
-                  const coll =
-                    returned?.data?.collectionCreateds?.[0]?.metadata
-                      ?.colors?.[0];
+                  const coll = returned?.data?.collectionCreateds?.[0];
+
+                  if (!coll) return;
 
                   const newItem = {
                     buyAmount: 1,

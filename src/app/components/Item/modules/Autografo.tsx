@@ -51,7 +51,7 @@ const Autografo: FunctionComponent<AutografoProps> = ({
           >
             <div className="flex items-center justify-center w-full h-full bg-amo/30 p-1">
               <div
-                className={`relative w-full h-full flex items-center justify-centercursor-pointer`}
+                className={`relative w-full h-full flex items-center justify-center cursor-pointer`}
                 onClick={() =>
                   context?.setImageViewer({
                     image: `${INFURA_GATEWAY}/ipfs/${
@@ -76,7 +76,7 @@ const Autografo: FunctionComponent<AutografoProps> = ({
       </div>
       <div className="relative w-full h-fit flex items-center sm:items-end justify-start ml-auto flex-col gap-12">
         <div className="relative w-full h-full flex items-center sm:items-end justify-start ml-auto flex-col gap-4">
-          <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-5xl mt-0">
+          <div className="relative w-fit h-fit flex items-center sm:items-end justify-center sm:justify-end sm:text-right text-center font-aust text-white break-all text-5xl mt-0">
             {itemData?.post?.titulo}
           </div>
 
@@ -136,8 +136,8 @@ const Autografo: FunctionComponent<AutografoProps> = ({
                 : dict?.sold}
             </div>
           </div>
-          <div className="relative w-fit h-fit flex items-start justify-center sm:justify-end font-aust text-white break-words text-xs text-center sm:text-right mt-0 max-h-[6rem] overflow-y-scroll">
-            <div className="relative w-5/6 h-fit flex items-start justiy-center sm:justify-end break-all">
+          <div className="relative w-full h-fit flex items-start justify-center sm:justify-end font-aust text-white break-words text-xs text-center sm:text-right mt-0 max-h-[6rem] overflow-y-scroll">
+            <div className="relative w-fit max-w-5/6 h-fit flex items-start justiy-center sm:justify-end break-all sm:break-words">
               {itemData?.post?.descripcion}
             </div>
           </div>

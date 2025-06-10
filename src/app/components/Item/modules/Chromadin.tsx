@@ -316,7 +316,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
       </div>
       <div className="relative w-full h-fit flex items-center sm:items-end justify-start ml-auto flex-col gap-12">
         <div className="relative w-full h-full flex items-center sm:items-end justify-start ml-auto flex-col gap-4">
-          <div className="relative w-fit h-fit flex items-end justify-end font-aust text-white break-all text-5xl mt-0">
+          <div className="relative w-fit h-fit flex items-center sm:items-end justify-center sm:justify-end sm:text-right text-center font-aust text-white break-all text-5xl mt-0">
             {itemData?.post?.metadata?.title}
           </div>
           {itemData?.post?.metadata?.onChromadin === "yes" && (
@@ -601,83 +601,85 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
             </div>
           </div>
           {type !== "chromadin" && (
-            <div className="relative w-fit h-fit flex flex-col gap-6 items-end justify-end">
-              <div className="relative w-fit h-fit flex flex-row gap-6 items-end justify-end text-white font-bit text-xxs pt-4">
-                <div className="relative flex items-end w-fit h-fit justify-end items-center justify-center flex-col gap-1.5 ml-auto">
-                  <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
-                    Color
+            <div className="relative w-fit h-fit flex flex-col gap-6 items-center sm:items-end justify-center sm:justify-end">
+              {type !== "f3m" && (
+                <div className="relative w-fit h-fit flex flex-row gap-6 items-center justify-center sm:items-end sm:justify-end text-white font-bit text-xxs pt-4">
+                  <div className="relative flex items-end w-fit h-fit justify-end items-center justify-center flex-col gap-1.5 ml-auto">
+                    <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
+                      Color
+                    </div>
+                    <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
+                      {itemData?.post?.metadata?.colors?.map(
+                        (item: string, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer active:scale-95 border ${
+                                item === purchaseDetails?.color
+                                  ? "border-sol opacity-70"
+                                  : "border-white opacity-100"
+                              }`}
+                              style={{
+                                backgroundColor: item,
+                              }}
+                              onClick={() =>
+                                setPurchaseDetails((prev) => ({
+                                  ...prev,
+                                  color: item,
+                                }))
+                              }
+                            ></div>
+                          );
+                        }
+                      )}
+                    </div>
                   </div>
-                  <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
-                    {itemData?.post?.metadata?.colors?.map(
-                      (item: string, index: number) => {
-                        return (
-                          <div
-                            key={index}
-                            className={`relative w-6 h-6 flex items-center justify-center rounded-full cursor-pointer active:scale-95 border ${
-                              item === purchaseDetails?.color
-                                ? "border-sol opacity-70"
-                                : "border-white opacity-100"
-                            }`}
-                            style={{
-                              backgroundColor: item,
-                            }}
-                            onClick={() =>
-                              setPurchaseDetails((prev) => ({
-                                ...prev,
-                                color: item,
-                              }))
-                            }
-                          ></div>
-                        );
-                      }
-                    )}
-                  </div>
-                </div>
-                <div className="relative flex items-end justify-end items-center justify-center h-fit w-fit flex-col gap-1.5 ml-auto">
-                  <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
-                    {dict?.siz}
-                  </div>
-                  <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
-                    {itemData?.post?.metadata?.sizes?.map(
-                      (item: string, index: number) => {
-                        return (
-                          <div
-                            key={index}
-                            className={`${
-                              printTypeToString[
-                                Number(
-                                  itemData?.post?.printType
-                                ) as unknown as PrintTypeTag
-                              ] == "poster" ||
-                              printTypeToString[
-                                Number(
-                                  itemData?.post?.printType
-                                ) as unknown as PrintTypeTag
-                              ] == "sticker"
-                                ? "w-fit px-1.5 py-1 rounded-sm"
-                                : "w-6 rounded-full"
-                            }relative flex h-6 items-center justify-center cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
-                              item === purchaseDetails?.size
-                                ? "border-sol opacity-70"
-                                : "border-white opacity-100"
-                            }`}
-                            onClick={() =>
-                              setPurchaseDetails((prev) => ({
-                                ...prev,
-                                size: item,
-                              }))
-                            }
-                          >
-                            <div className="relative w-fit h-fit flex items-center justify-center top-px">
-                              {item}
+                  <div className="relative flex items-end justify-end items-center justify-center h-fit w-fit flex-col gap-1.5 ml-auto">
+                    <div className="relative w-full h-fit items-end justify-end text-base ml-auto">
+                      {dict?.siz}
+                    </div>
+                    <div className="relative flex flex-row gap-2 items-center justify-center w-fit h-fit flex-wrap">
+                      {itemData?.post?.metadata?.sizes?.map(
+                        (item: string, index: number) => {
+                          return (
+                            <div
+                              key={index}
+                              className={`${
+                                printTypeToString[
+                                  Number(
+                                    itemData?.post?.printType
+                                  ) as unknown as PrintTypeTag
+                                ] == "poster" ||
+                                printTypeToString[
+                                  Number(
+                                    itemData?.post?.printType
+                                  ) as unknown as PrintTypeTag
+                                ] == "sticker"
+                                  ? "w-fit px-1.5 py-1 rounded-sm"
+                                  : "w-6 rounded-full"
+                              }relative flex h-6 items-center justify-center cursor-pointer text-white font-bit text-xxs active:scale-95 border ${
+                                item === purchaseDetails?.size
+                                  ? "border-sol opacity-70"
+                                  : "border-white opacity-100"
+                              }`}
+                              onClick={() =>
+                                setPurchaseDetails((prev) => ({
+                                  ...prev,
+                                  size: item,
+                                }))
+                              }
+                            >
+                              <div className="relative w-fit h-fit flex items-center justify-center top-px">
+                                {item}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      }
-                    )}
+                          );
+                        }
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               <Fulfillment
                 loading={instantLoading}
                 dict={dict}

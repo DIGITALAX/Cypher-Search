@@ -53,6 +53,7 @@ import {
   getAllCollectionsTripleA,
 } from "../../../../../graphql/queries/getAllCollections";
 import handleCollectionProfilesAndPublicationsTripleA from "@/app/lib/helpers/handleCollectionProfilesAndPublicationsTripleA";
+import { manejearCatalogos } from "@/app/lib/helpers/manejarCatalogos";
 
 const useSearch = () => {
   const context = useContext(ModalContext);
@@ -343,9 +344,14 @@ const useSearch = () => {
       //   }
       // }
 
-      // if (context?.filters?.catalog?.trim() !== "") {
-      //   catalogos = await manejearCatalogos(lensConnected, 10, 0);
-      // }
+      if (context?.filters?.catalog?.trim() !== "") {
+        catalogos = await manejearCatalogos(
+          context?.lensConectado!,
+          context?.clienteLens!,
+          10,
+          0
+        );
+      }
 
       if (
         ((context?.filters?.microbrand?.trim() !== "" &&
@@ -574,7 +580,7 @@ const useSearch = () => {
             ["asc", "desc"][Math.floor(Math.random() * 2)],
             "blockTimestamp"
           );
-     
+
           tripleA = searchItems?.data?.collectionCreateds;
         }
       }
@@ -654,10 +660,10 @@ const useSearch = () => {
           context?.clienteLens!
         );
       }
-    
+
       if (tripleA?.length < 1 && tripleACursor !== undefined) {
         let where: Object;
- 
+
         if (query.trim() !== "") {
           where = buildTextQueryTripleA(query?.replaceAll("@", "")!)!;
         } else {
@@ -709,7 +715,6 @@ const useSearch = () => {
           ]
         );
         tripleA = searchItems?.data?.collectionCreateds;
-        
       }
 
       if (tripleA?.length > 0) {
@@ -1021,13 +1026,14 @@ const useSearch = () => {
       //   }
       // }
 
-      // if (context?.searchItems?.catalogoCursor) {
-      //   catalogos = await manejearCatalogos(
-      //     lensConnected,
-      //     10,
-      //     context?.searchItems?.catalogoCursor
-      //   );
-      // }
+      if (context?.searchItems?.catalogoCursor) {
+        catalogos = await manejearCatalogos(
+          context?.lensConectado!,
+          context?.clienteLens!,
+          10,
+          context?.searchItems?.catalogoCursor
+        );
+      }
 
       const newItems = [
         collections?.map((item) => ({

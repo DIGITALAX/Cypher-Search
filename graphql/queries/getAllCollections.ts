@@ -113,7 +113,7 @@ const COLLECTION_QUICK_POSTID = `
 `;
 
 const COLLECTION_QUICK = `
-  query($origin: Int!, title: String!) {
+  query($origin: Int!, $title: String!) {
   collectionCreateds(where: {origin: $origin, metadata_: {title_contains_nocase: $title}}, first: 1) {
         amount
       drop {
@@ -174,7 +174,7 @@ query($first: Int, $skip: Int) {
       uri
       origin
       }
-    }`
+    }`;
 
 const COLLECTIONS_PAGINATED = `
   query($designer: String!, $first: Int, $skip: Int) {

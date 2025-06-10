@@ -14,9 +14,9 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
   const [openFulfillment, setOpenFulfillment] = useState<boolean>(false);
 
   return (
-    <div className="relative w-fit h-fit flex flex-col gap-2 items-end justify-end">
+    <div className="relative w-full sm:w-fit h-fit flex flex-col gap-2 items-center sm:items-end justify-center sm:justify-end">
       <div
-        className="relative w-fit h-fit flex items-end justify-end cursor-pointer active:scale-95"
+        className="relative w-fit h-fit flex sm:items-end justify-center sm:justify-end cursor-pointer active:scale-95"
         onClick={() => setOpenFulfillment(!openFulfillment)}
       >
         {openFulfillment ? (
@@ -27,7 +27,7 @@ const Fulfillment: FunctionComponent<FulfillmentProps> = ({
       </div>
 
       {openFulfillment && (
-        <div className="relative flex flex-row flex-wrap items-end justify-end gap-5 w-full h-fit">
+        <div className="relative flex flex-row flex-wrap sm:items-end justify-center sm:justify-end gap-5 w-full h-fit">
           {[
             {
               title: dict?.nam,

@@ -36,11 +36,6 @@ export const manejearCatalogos = async (
         prof = res?.value?.items?.[0]?.account as Account;
       }
 
-      const cadena = await fetch(
-        `${INFURA_GATEWAY}/ipfs/${
-          datos?.data?.autographCreateds[0].uri?.split("ipfs://")?.[1]
-        }`
-      );
       articulos = [
         {
           paginas: datos?.data?.autographCreateds[0].pages,
@@ -70,10 +65,11 @@ export const manejearCatalogos = async (
       const res = await fetchAccountsAvailable(
         lensConectado?.sessionClient ?? clienteLens,
         {
-          managedBy: todos?.data?.autographCreateds[0].designer,
+          managedBy: todos?.data?.collections?.[0]?.designer,
           includeOwned: true,
         }
       );
+
       if (res?.isOk()) {
         prof = res?.value?.items?.[0]?.account as Account;
       }

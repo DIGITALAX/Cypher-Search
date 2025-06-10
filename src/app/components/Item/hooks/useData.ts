@@ -9,7 +9,6 @@ import { useContext, useEffect, useState } from "react";
 import { GeneralPub } from "../../Tiles/types/tiles.types";
 import { Collection } from "../../Common/types/common.types";
 import {
-  fetchAccount,
   fetchAccountsAvailable,
   fetchPost,
 } from "@lens-protocol/client/actions";
