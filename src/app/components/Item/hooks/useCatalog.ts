@@ -40,7 +40,6 @@ const useCatalog = (
     transport: http("https://rpc.lens.xyz"),
   });
   const litClientRef = useRef<LitNodeClient | null>(null);
-  const coder = new ethers.AbiCoder();
   const { address } = useAccount();
   const path = usePathname();
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
