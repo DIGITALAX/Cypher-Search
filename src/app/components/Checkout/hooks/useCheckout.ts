@@ -7,6 +7,7 @@ import findBalance from "@/app/lib/helpers/findBalance";
 import { ModalContext } from "@/app/providers";
 import { AccessControlConditions } from "@lit-protocol/types";
 import {
+  checkAndSignAuthMessage,
   LitNodeClient,
   uint8arrayFromString,
 } from "@lit-protocol/lit-node-client";
@@ -23,10 +24,6 @@ import { Indexar } from "../../Search/types/search.types";
 
 const useCheckout = (dict: any) => {
   const { address } = useAccount();
-  const client = new LitNodeClient({
-    litNetwork: LIT_NETWORK.Datil,
-    debug: false,
-  });
   const router = useRouter();
   const publicClient = createPublicClient({
     chain: chains.mainnet,
@@ -34,6 +31,10 @@ const useCheckout = (dict: any) => {
   });
   const coder = new ethers.AbiCoder();
   const context = useContext(ModalContext);
+  const client = new LitNodeClient({
+    litNetwork: LIT_NETWORK.Datil,
+    debug: false,
+  });
   const [encrypted, setEncrypted] = useState<string[]>([]);
   const [details, setDetails] = useState<PurchaseDetailsCheckout>({
     address: "",
@@ -65,6 +66,13 @@ const useCheckout = (dict: any) => {
       return;
     setEncryptionLoading(true);
     try {
+      let nonce = await client.getLatestBlockhash();
+      await checkAndSignAuthMessage({
+        chain: "polygon",
+        nonce: nonce!,
+      });
+      await client.connect();
+
       const accessControlConditions = [
         {
           contractAddress: "",
