@@ -6,7 +6,7 @@ import {
 import { ModalContext } from "@/app/providers";
 import { chains } from "@lens-chain/sdk/viem";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { createPublicClient, createWalletClient, custom } from "viem";
 import { http, useAccount } from "wagmi";
 import {
@@ -39,7 +39,11 @@ const useCatalog = (
     chain: chains.mainnet,
     transport: http("https://rpc.lens.xyz"),
   });
-  const litClientRef = useRef<LitNodeClient | null>(null);
+  const client = new LitNodeClient({
+    litNetwork: LIT_NETWORK.Datil,
+    debug: false,
+  });
+  const coder = new ethers.AbiCoder();
   const { address } = useAccount();
   const path = usePathname();
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
@@ -134,12 +138,12 @@ const useCatalog = (
     )
       return;
     try {
-      let nonce = await litClientRef.current?.getLatestBlockhash();
+      let nonce = await client.getLatestBlockhash();
       await checkAndSignAuthMessage({
         chain: "polygon",
         nonce: nonce!,
       });
-      await litClientRef.current?.connect();
+      await client.connect();
 
       const accessControlConditions = [
         {
@@ -169,30 +173,29 @@ const useCatalog = (
         },
       ] as AccessControlConditions;
 
-      const { ciphertext, dataToEncryptHash } =
-        await litClientRef.current!?.encrypt({
-          accessControlConditions,
-          dataToEncrypt: uint8arrayFromString(
-            JSON.stringify({
-              nombre: context?.lensConectado?.profile?.username?.localName,
-              account: context?.lensConectado?.profile?.address,
-              direccion: purchaseDetails?.address,
-              zip: purchaseDetails?.zip,
-              ciudad: purchaseDetails?.city,
-              estado: purchaseDetails?.state,
-              pais: purchaseDetails?.country,
-              elementos: [
-                {
-                  id: (item?.post as AutographCollection)?.coleccionId || 0,
-                  color: purchaseDetails?.color,
-                  tamano: purchaseDetails?.size,
-                  cantidad: 1,
-                  tipo: item?.post?.tipo,
-                },
-              ],
-            })
-          ),
-        });
+      const { ciphertext, dataToEncryptHash } = await client.encrypt({
+        accessControlConditions,
+        dataToEncrypt: uint8arrayFromString(
+          JSON.stringify({
+            nombre: context?.lensConectado?.profile?.username?.localName,
+            account: context?.lensConectado?.profile?.address,
+            direccion: purchaseDetails?.address,
+            zip: purchaseDetails?.zip,
+            ciudad: purchaseDetails?.city,
+            estado: purchaseDetails?.state,
+            pais: purchaseDetails?.country,
+            elementos: [
+              {
+                id: (item?.post as AutographCollection)?.coleccionId || 0,
+                color: purchaseDetails?.color,
+                tamano: purchaseDetails?.size,
+                cantidad: 1,
+                tipo: item?.post?.tipo,
+              },
+            ],
+          })
+        ),
+      });
 
       const ipfsRes = await fetch("/api/ipfs", {
         method: "POST",
@@ -368,19 +371,7 @@ const useCatalog = (
       }));
     }
   }, [item]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && !litClientRef.current) {
-      import("@lit-protocol/lit-node-client").then(({ LitNodeClient }) => {
-        const client = new LitNodeClient({
-          litNetwork: LIT_NETWORK.Datil,
-          debug: false,
-        });
-
-        litClientRef.current = client;
-      });
-    }
-  }, []);
+  
 
   return {
     purchaseDetails,

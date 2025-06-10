@@ -37,6 +37,7 @@ export const config = createConfig(
     appUrl: "https://cypher.digitalax.xyz",
     appIcon: "https://cypher.digitalax.xyz/favicon.ico",
     chains: [chains.mainnet],
+    connectors: [],
     transports: {
       [chains.mainnet.id]: http("https://rpc.lens.xyz"),
     },
