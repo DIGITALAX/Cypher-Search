@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   EncryptedDetails,
   Order,
@@ -23,10 +23,7 @@ const useOrders = (pageProfile: Account | undefined) => {
   const [decryptLoading, setDecryptLoading] = useState<boolean[]>([]);
   const [orderOpen, setOrderOpen] = useState<boolean[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const client = new LitNodeClient({
-    litNetwork: LIT_NETWORK.Datil,
-    debug: false,
-  });
+  const litClientRef = useRef<LitNodeClient | null>(null);
 
   const getAllOrders = async () => {
     setOrdersLoading(true);
@@ -66,12 +63,12 @@ const useOrders = (pageProfile: Account | undefined) => {
     }
 
     try {
-      let nonce = await client.getLatestBlockhash();
-
-      const authSig = await checkAndSignAuthMessage({
+      let nonce = await litClientRef.current?.getLatestBlockhash();
+      let authSig = await checkAndSignAuthMessage({
         chain: "polygon",
-        nonce,
+        nonce: nonce!,
       });
+      await litClientRef.current?.connect();
 
       const data = await fetch(
         `${INFURA_GATEWAY}/ipfs/${
@@ -81,8 +78,7 @@ const useOrders = (pageProfile: Account | undefined) => {
 
       const details = (await data.json()) as EncryptedDetails;
 
-      await client.connect();
-      const { decryptedData } = await client.decrypt({
+      const { decryptedData } = await litClientRef.current!?.decrypt({
         dataToEncryptHash: details.dataToEncryptHash,
         accessControlConditions: details.accessControlConditions,
         chain: details.chain || "polygon",
@@ -123,6 +119,19 @@ const useOrders = (pageProfile: Account | undefined) => {
       getAllOrders();
     }
   }, [context?.screenDisplay, context?.lensConectado?.profile, pageProfile]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !litClientRef.current) {
+      import("@lit-protocol/lit-node-client").then(({ LitNodeClient }) => {
+        const client = new LitNodeClient({
+          litNetwork: LIT_NETWORK.Datil,
+          debug: false,
+        });
+
+        litClientRef.current = client;
+      });
+    }
+  }, []);
 
   return {
     ordersLoading,

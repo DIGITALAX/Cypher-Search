@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { createPublicClient, createWalletClient, custom, http } from "viem";
 import { COIN_OP_OPEN_ACTION, DIGITALAX_ADDRESS } from "@/app/lib/constants";
 import { useAccount } from "wagmi";
@@ -31,10 +31,7 @@ const useCheckout = (dict: any) => {
   });
   const coder = new ethers.AbiCoder();
   const context = useContext(ModalContext);
-  const client = new LitNodeClient({
-    litNetwork: LIT_NETWORK.Datil,
-    debug: false,
-  });
+  const litClientRef = useRef<LitNodeClient | null>(null);
   const [encrypted, setEncrypted] = useState<string[]>([]);
   const [details, setDetails] = useState<PurchaseDetailsCheckout>({
     address: "",
@@ -66,12 +63,12 @@ const useCheckout = (dict: any) => {
       return;
     setEncryptionLoading(true);
     try {
-      let nonce = await client.getLatestBlockhash();
+      let nonce = await litClientRef.current?.getLatestBlockhash();
       await checkAndSignAuthMessage({
         chain: "polygon",
         nonce: nonce!,
       });
-      await client.connect();
+      await litClientRef.current?.connect();
 
       const accessControlConditions = [
         {
@@ -107,22 +104,23 @@ const useCheckout = (dict: any) => {
         if (context?.cartItems?.[i]?.item?.origin == "0") {
           uploaded.push("");
         } else {
-          const { ciphertext, dataToEncryptHash } = await client.encrypt({
-            accessControlConditions,
-            dataToEncrypt: uint8arrayFromString(
-              JSON.stringify({
-                address: details?.address,
-                state: details?.state,
-                country: details?.country,
-                city: details?.city,
-                zip: details?.zip,
-                size: context?.cartItems?.[i]?.size,
-                color: context?.cartItems?.[i]?.color,
-                origin: context?.cartItems?.[i]?.item?.origin,
-                fulfillerAddress: [DIGITALAX_ADDRESS],
-              })
-            ),
-          });
+          const { ciphertext, dataToEncryptHash } =
+            await litClientRef.current!?.encrypt({
+              accessControlConditions,
+              dataToEncrypt: uint8arrayFromString(
+                JSON.stringify({
+                  address: details?.address,
+                  state: details?.state,
+                  country: details?.country,
+                  city: details?.city,
+                  zip: details?.zip,
+                  size: context?.cartItems?.[i]?.size,
+                  color: context?.cartItems?.[i]?.color,
+                  origin: context?.cartItems?.[i]?.item?.origin,
+                  fulfillerAddress: [DIGITALAX_ADDRESS],
+                })
+              ),
+            });
 
           const ipfsRes = await fetch("/api/ipfs", {
             method: "POST",
@@ -491,6 +489,19 @@ const useCheckout = (dict: any) => {
     address,
     context?.oracleData,
   ]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !litClientRef.current) {
+      import("@lit-protocol/lit-node-client").then(({ LitNodeClient }) => {
+        const client = new LitNodeClient({
+          litNetwork: LIT_NETWORK.Datil,
+          debug: false,
+        });
+
+        litClientRef.current = client;
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (

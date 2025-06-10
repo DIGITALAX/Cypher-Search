@@ -1,3 +1,5 @@
+"use client";
+
 import { FunctionComponent } from "react";
 import { SwitchTypeProps } from "../types/items.type";
 import {

@@ -6,7 +6,7 @@ import {
 import { ModalContext } from "@/app/providers";
 import { chains } from "@lens-chain/sdk/viem";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { createPublicClient, createWalletClient, custom } from "viem";
 import { http, useAccount } from "wagmi";
 import { CollectionType, NFTData } from "../../Tiles/types/tiles.types";
@@ -34,10 +34,7 @@ const useTripleA = (
     chain: chains.mainnet,
     transport: http("https://rpc.lens.xyz"),
   });
-  const client = new LitNodeClient({
-    litNetwork: LIT_NETWORK.Datil,
-    debug: false,
-  });
+  const litClientRef = useRef<LitNodeClient | null>(null);
   const { address } = useAccount();
   const path = usePathname();
   const [hoverPrompt, setHoverPrompt] = useState<boolean>(false);
@@ -141,12 +138,12 @@ const useTripleA = (
     )
       return;
     try {
-      let nonce = await client.getLatestBlockhash();
+      let nonce = await litClientRef.current?.getLatestBlockhash();
       await checkAndSignAuthMessage({
         chain: "polygon",
         nonce: nonce!,
       });
-      await client.connect();
+      await litClientRef.current?.connect();
 
       const accessControlConditions = [
         {
@@ -176,22 +173,23 @@ const useTripleA = (
         },
       ] as AccessControlConditions;
 
-      const { ciphertext, dataToEncryptHash } = await client.encrypt({
-        accessControlConditions,
-        dataToEncrypt: uint8arrayFromString(
-          JSON.stringify({
-            address: purchaseDetails?.address,
-            state: purchaseDetails?.state,
-            country: purchaseDetails?.country,
-            city: purchaseDetails?.city,
-            zip: purchaseDetails?.zip,
-            size: purchaseDetails?.size,
-            color: purchaseDetails?.color,
-            origin: "5",
-            fulfillerAddress: [DIGITALAX_ADDRESS],
-          })
-        ),
-      });
+      const { ciphertext, dataToEncryptHash } =
+        await litClientRef.current!?.encrypt({
+          accessControlConditions,
+          dataToEncrypt: uint8arrayFromString(
+            JSON.stringify({
+              address: purchaseDetails?.address,
+              state: purchaseDetails?.state,
+              country: purchaseDetails?.country,
+              city: purchaseDetails?.city,
+              zip: purchaseDetails?.zip,
+              size: purchaseDetails?.size,
+              color: purchaseDetails?.color,
+              origin: "5",
+              fulfillerAddress: [DIGITALAX_ADDRESS],
+            })
+          ),
+        });
 
       const ipfsRes = await fetch("/api/ipfs", {
         method: "POST",
@@ -383,6 +381,19 @@ const useTripleA = (
       }));
     }
   }, [itemData]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !litClientRef.current) {
+      import("@lit-protocol/lit-node-client").then(({ LitNodeClient }) => {
+        const client = new LitNodeClient({
+          litNetwork: LIT_NETWORK.Datil,
+          debug: false,
+        });
+
+        litClientRef.current = client;
+      });
+    }
+  }, []);
 
   return {
     purchaseDetails,
