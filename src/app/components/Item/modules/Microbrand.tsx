@@ -15,6 +15,7 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
 }): JSX.Element => {
   const context = useContext(ModalContext);
   const router = useRouter();
+
   return (
     <div
       className={`relative w-full min-h-[50rem] flex items-center justify-start flex-col pre:pt-60 tablet:pt-48 px-12 gap-7 h-fit ${

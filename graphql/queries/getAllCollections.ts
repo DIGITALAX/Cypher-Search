@@ -163,6 +163,19 @@ const COLLECTION_QUICK = `
     }
 `;
 
+const COLLECTIONS_PAGINATED_SITEMAP = `
+query($first: Int, $skip: Int) {
+  collectionCreateds(first: $first, skip: $skip) {
+      metadata {
+        title
+        images
+        mediaCover
+      }
+      uri
+      origin
+      }
+    }`
+
 const COLLECTIONS_PAGINATED = `
   query($designer: String!, $first: Int, $skip: Int) {
   collectionCreateds(where: {designer: $designer}, first: $first, skip: $skip) {
@@ -527,6 +540,33 @@ export const getOneCollection = async (
     timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
     }, 60000);
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};
+
+export const getCollectionsSitemap = async (
+  first: number,
+  skip: number
+): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
+  const queryPromise = graphClient.query({
+    query: gql(COLLECTIONS_PAGINATED_SITEMAP),
+    variables: { first, skip },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    timeoutId = setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);

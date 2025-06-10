@@ -1,12 +1,18 @@
-import { itemStringToType, itemTypeToNumber } from "@/app/lib/constants";
+import {
+  INFURA_GATEWAY,
+  itemStringToType,
+  itemTypeToNumber,
+} from "@/app/lib/constants";
 import { ModalContext } from "@/app/providers";
 import { Account, ImageMetadata, Post, Repost } from "@lens-protocol/client";
-import { usePathname } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 import { GeneralPub } from "../../Tiles/types/tiles.types";
 import { Collection } from "../../Common/types/common.types";
-import { fetchAccount, fetchPost } from "@lens-protocol/client/actions";
+import {
+  fetchAccount,
+  fetchAccountsAvailable,
+  fetchPost,
+} from "@lens-protocol/client/actions";
 import {
   getCollectionsPaginated,
   getOneCollectionTitle,
@@ -20,8 +26,6 @@ import handleCollectionProfilesAndPublicationsTripleA from "@/app/lib/helpers/ha
 
 const useData = (type: string, id: string) => {
   const context = useContext(ModalContext);
-  const { address } = useAccount();
-  const path = usePathname();
   const [globalLoading, setGlobalLoading] = useState<boolean>(true);
   const [itemLoading, setItemLoading] = useState<boolean>(false);
   const [itemData, setItemData] = useState<GeneralPub>();
@@ -150,22 +154,42 @@ const useData = (type: string, id: string) => {
 
         case "microbrand":
           const profile = await getIdProfile();
+
           const collections = await getIdCollections(profile?.owner);
           setItemData({
             post: profile,
             type,
           });
-          const item =
-            profile?.metadata?.attributes?.[
-              profile?.metadata?.attributes?.findIndex(
-                (item) => item?.key === "microbrandCypher"
-              )
-            ].value;
 
+          const micro = context?.filterConstants?.microbrands?.find(
+            (item) =>
+              item[0]?.toLowerCase() ===
+              (id?.includes("re_de")
+                ? id
+                : id?.replaceAll("_", " ")
+              )?.toLowerCase()
+          );
+
+          let item = profile?.metadata?.attributes?.[
+            profile?.metadata?.attributes?.findIndex(
+              (item) => item?.key === "microbrandCypher"
+            )
+          ]?.value as any;
+
+          if (item) {
+            item = await JSON.parse(item);
+          } else {
+            item = [
+              {
+                microbrand: micro?.[0]!,
+                microbrandCover: `ipfs://${micro?.[1]!}`,
+              },
+            ] as any;
+          }
           if (item) {
             setRelatedData({
               collections: collections || [],
-              microbrand: await JSON.parse(item),
+              microbrand: item,
             });
           }
 
@@ -186,15 +210,16 @@ const useData = (type: string, id: string) => {
           item[0]?.toLowerCase() ===
           (id?.includes("re_de") ? id : id?.replaceAll("_", " "))?.toLowerCase()
       );
-      const res = await fetchAccount(
+
+      const res = await fetchAccountsAvailable(
         context?.lensConectado?.sessionClient ?? context?.clienteLens!,
         {
-          legacyProfileId: item?.[2],
+          managedBy: item?.[2],
         }
       );
 
       if (res?.isOk()) {
-        return res?.value as Account;
+        return res?.value?.items?.[0]?.account as Account;
       }
     } catch (err: any) {
       console.error(err.message);
@@ -206,7 +231,6 @@ const useData = (type: string, id: string) => {
   ): Promise<Collection[] | undefined> => {
     try {
       const data = await getCollectionsPaginated(creator, 30, 0);
-
       return await handleCollectionProfilesAndPublications(
         data?.data?.collectionCreateds,
         context?.lensConectado!,
