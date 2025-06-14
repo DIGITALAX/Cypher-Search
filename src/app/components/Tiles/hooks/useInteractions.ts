@@ -249,7 +249,6 @@ const useInteractions = (dict: any, publication: Post) => {
         post: publication?.id,
       });
 
-      context?.setIndexar(Indexar.Success);
       setInteractions((prev) => ({
         ...prev,
         hasBookmarked: true,
