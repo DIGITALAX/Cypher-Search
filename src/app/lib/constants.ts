@@ -19,6 +19,8 @@ export const LISTENER_OPEN_ACTION: `0x${string}` =
 export const COIN_OP_OPEN_ACTION: `0x${string}` =
   "0x77D6D8A6d059820AD2C6DC2e3Fba73BcB1eFddf8";
 export const KINORA_OPEN_ACTION: `0x${string}` = "0xUNDEFINED";
+export const KINORA_OPEN_ACTION_PRINT: `0x${string}` =
+  "0x9Ae4DA281B93Fb83a62Ac9845a87c37C4a7b8850";
 export const F3M_OPEN_ACTION: `0x${string}` =
   "0xBe8FBd070bD469bd486794C5f6a8C7D1DB2FcDc1";
 export const PRINT_ACCESS_CONTROL: `0x${string}` =

@@ -5,6 +5,7 @@ import {
   LISTENER_OPEN_ACTION,
   F3M_OPEN_ACTION,
   KINORA_OPEN_ACTION,
+  KINORA_OPEN_ACTION_PRINT,
 } from "../constants";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { getOneCollectionByPostId } from "../../../../graphql/queries/getAllCollections";
@@ -18,6 +19,7 @@ const checkActions = async (item: Post | Repost, router: AppRouterInstance) => {
       COIN_OP_OPEN_ACTION,
       F3M_OPEN_ACTION,
       LISTENER_OPEN_ACTION,
+      KINORA_OPEN_ACTION_PRINT,
     ].some((add) => add == main?.actions?.[0]?.address) &&
     !title
   ) {

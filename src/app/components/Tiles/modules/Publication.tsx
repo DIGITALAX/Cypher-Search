@@ -7,6 +7,7 @@ import {
   F3M_OPEN_ACTION,
   INFURA_GATEWAY,
   KINORA_OPEN_ACTION,
+  KINORA_OPEN_ACTION_PRINT,
   LISTENER_OPEN_ACTION,
 } from "@/app/lib/constants";
 import { useRouter } from "next/navigation";
@@ -56,6 +57,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
           LISTENER_OPEN_ACTION,
           COIN_OP_OPEN_ACTION,
           F3M_OPEN_ACTION,
+          KINORA_OPEN_ACTION_PRINT
         ]?.some((value) =>
           (item?.__typename === "Repost"
             ? item?.repostOf

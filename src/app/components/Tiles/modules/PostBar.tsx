@@ -10,6 +10,7 @@ import {
   F3M_OPEN_ACTION,
   INFURA_GATEWAY,
   KINORA_OPEN_ACTION,
+  KINORA_OPEN_ACTION_PRINT,
   LISTENER_OPEN_ACTION,
 } from "@/app/lib/constants";
 import { ModalContext } from "@/app/providers";
@@ -260,7 +261,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
               LISTENER_OPEN_ACTION,
               COIN_OP_OPEN_ACTION,
               F3M_OPEN_ACTION,
-              KINORA_OPEN_ACTION,
+              KINORA_OPEN_ACTION_PRINT,
             ]?.some((value) =>
               (item?.__typename === "Repost"
                 ? item?.repostOf
@@ -294,6 +295,7 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                   LISTENER_OPEN_ACTION,
                   COIN_OP_OPEN_ACTION,
                   F3M_OPEN_ACTION,
+                  KINORA_OPEN_ACTION_PRINT,
                 ]?.some((value) =>
                   (item?.__typename === "Repost"
                     ? item?.repostOf
@@ -329,6 +331,10 @@ const PostBar: FunctionComponent<PostBarProps> = ({
                           ?.toLowerCase()
                           ?.includes(LISTENER_OPEN_ACTION?.toLowerCase())
                       ? "listener"
+                      : meta?.actions?.[0]?.address
+                          ?.toLowerCase()
+                          ?.includes(KINORA_OPEN_ACTION_PRINT?.toLowerCase())
+                      ? "kinora"
                       : "f3m",
                     color:
                       typeof coll?.metadata?.colors === "string"

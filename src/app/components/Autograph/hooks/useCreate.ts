@@ -3,7 +3,6 @@ import {
   CollectionDetails,
   CollectionSettings,
   Drop,
-  DropCreate,
   ScreenDisplay,
 } from "../types/autograph.types";
 import {
@@ -13,10 +12,10 @@ import {
   COLLECTION_CREATOR,
   DIGITALAX_ADDRESS,
   F3M_OPEN_ACTION,
+  KINORA_OPEN_ACTION_PRINT,
   LISTENER_OPEN_ACTION,
 } from "@/app/lib/constants";
 import collectionFixer from "@/app/lib/helpers/collectionFixer";
-import { getCollections } from "../../../../../graphql/queries/getAllCollections";
 import { useAccount } from "wagmi";
 import { post, deletePost } from "@lens-protocol/client/actions";
 import { ethers } from "ethers";
@@ -251,6 +250,8 @@ const useCreate = (profile: Account | undefined, dict: any) => {
                   ? LISTENER_OPEN_ACTION
                   : collectionSettings?.origin == "3"
                   ? F3M_OPEN_ACTION
+                  : collectionSettings?.origin == "4"
+                  ? KINORA_OPEN_ACTION_PRINT
                   : COIN_OP_OPEN_ACTION,
               params: [
                 {

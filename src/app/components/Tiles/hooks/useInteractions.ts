@@ -245,36 +245,16 @@ const useInteractions = (dict: any, publication: Post) => {
       bookmark: true,
     }));
     try {
-      const data = await bookmarkPost(context?.lensConectado?.sessionClient!, {
+      await bookmarkPost(context?.lensConectado?.sessionClient!, {
         post: publication?.id,
       });
 
-      if (data.isOk()) {
-        if ((data.value as any)?.reason?.includes("Signless")) {
-          context?.setSignless?.(true);
-        } else if ((data.value as any)?.hash) {
-          context?.setIndexar(Indexar.Indexando);
-          if (
-            await pollResult(
-              (data.value as any)?.hash,
-              context?.lensConectado?.sessionClient!
-            )
-          ) {
-            context?.setIndexar(Indexar.Success);
-            setInteractions((prev) => ({
-              ...prev,
-              hasBookmarked: true,
-              bookmarks: prev?.bookmarks + 1,
-            }));
-          } else {
-            context?.setModalOpen(dict?.error);
-          }
-
-          setTimeout(() => {
-            context?.setIndexar(Indexar.Inactive);
-          }, 3000);
-        }
-      }
+      context?.setIndexar(Indexar.Success);
+      setInteractions((prev) => ({
+        ...prev,
+        hasBookmarked: true,
+        bookmarks: prev?.bookmarks + 1,
+      }));
     } catch (err: any) {
       console.error(err.message);
     }

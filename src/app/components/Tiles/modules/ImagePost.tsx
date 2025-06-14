@@ -3,14 +3,7 @@ import { FunctionComponent, JSX, useContext, useState } from "react";
 import moment from "moment";
 import { ModalContext } from "@/app/providers";
 import { ImagePostProps } from "../types/tiles.types";
-import {
-  CHROMADIN_OPEN_ACTION,
-  COIN_OP_OPEN_ACTION,
-  F3M_OPEN_ACTION,
-  INFURA_GATEWAY,
-  KINORA_OPEN_ACTION,
-  LISTENER_OPEN_ACTION,
-} from "@/app/lib/constants";
+import { INFURA_GATEWAY } from "@/app/lib/constants";
 import {
   ImageMetadata,
   MediaAudio,

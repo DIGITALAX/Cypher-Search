@@ -4,6 +4,7 @@ import {
   COIN_OP_OPEN_ACTION,
   DIGITALAX_ADDRESS,
   F3M_OPEN_ACTION,
+  KINORA_OPEN_ACTION_PRINT,
   LISTENER_OPEN_ACTION,
 } from "@/app/lib/constants";
 import { ModalContext } from "@/app/providers";
@@ -110,7 +111,9 @@ const useItem = (
                   ? LISTENER_OPEN_ACTION
                   : item?.type === "coinop"
                   ? COIN_OP_OPEN_ACTION
-                  : F3M_OPEN_ACTION,
+                  : item?.type === "f3m"
+                  ? F3M_OPEN_ACTION
+                  : KINORA_OPEN_ACTION_PRINT,
               params: [
                 {
                   key: ethers.keccak256(
@@ -286,7 +289,9 @@ const useItem = (
             ? LISTENER_OPEN_ACTION
             : item?.type === "coinop"
             ? COIN_OP_OPEN_ACTION
-            : F3M_OPEN_ACTION,
+            : item?.type === "f3m"
+            ? F3M_OPEN_ACTION
+            : KINORA_OPEN_ACTION_PRINT,
           (((Number(item?.post?.price) * 10 ** 18) /
             Number(
               context?.oracleData?.find(
@@ -356,7 +361,9 @@ const useItem = (
             ? LISTENER_OPEN_ACTION
             : item?.type === "coinop"
             ? COIN_OP_OPEN_ACTION
-            : F3M_OPEN_ACTION,
+            : item?.type === "f3m"
+            ? F3M_OPEN_ACTION
+            : KINORA_OPEN_ACTION_PRINT,
         ],
       });
 
