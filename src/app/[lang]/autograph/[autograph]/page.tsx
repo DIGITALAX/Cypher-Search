@@ -1,6 +1,7 @@
 import { getDictionary } from "@/app/[lang]/dictionaries";
 import AutographEntry from "@/app/components/Autograph/modules/AutographEntry";
 import RouterChange from "@/app/components/Common/modules/RouterChange";
+import { LOCALES } from "@/app/lib/constants";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -17,7 +18,16 @@ export const generateMetadata = async ({
     title: `Autograph | ${autograph}`,
     openGraph: {
       title: `Autograph | ${autograph}`,
-    }
+    },
+    alternates: {
+      canonical: `https://cypher.digitalax.xyz/autograph/${autograph}/`,
+      languages: LOCALES.reduce((acc, item) => {
+        acc[
+          item
+        ] = `https://cypher.digitalax.xyz/${item}/autograph/${autograph}/`;
+        return acc;
+      }, {} as { [key: string]: string }),
+    },
   };
 };
 

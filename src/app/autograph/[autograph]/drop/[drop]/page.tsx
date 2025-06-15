@@ -2,7 +2,7 @@ import { getDictionary } from "@/app/[lang]/dictionaries";
 import DropEntry from "@/app/components/Autograph/modules/DropEntry";
 import { Drop as DropType } from "@/app/components/Autograph/types/autograph.types";
 import Wrapper from "@/app/components/Common/modules/Wrapper";
-import { INFURA_GATEWAY } from "@/app/lib/constants";
+import { INFURA_GATEWAY, LOCALES } from "@/app/lib/constants";
 import findDrop from "@/app/lib/helpers/findDrop";
 import { Metadata } from "next";
 
@@ -28,6 +28,15 @@ export const generateMetadata = async ({
       images: `${INFURA_GATEWAY}/ipfs/${
         res?.metadata?.cover?.split("ipfs://")?.[1]
       }`,
+    },
+    alternates: {
+      canonical: `https://cypher.digitalax.xyz/autograph/${autograph}/drop/${drop}/`,
+      languages: LOCALES.reduce((acc, item) => {
+        acc[
+          item
+        ] = `https://cypher.digitalax.xyz/${item}/autograph/${autograph}/drop/${drop}/`;
+        return acc;
+      }, {} as { [key: string]: string }),
     },
   };
 };

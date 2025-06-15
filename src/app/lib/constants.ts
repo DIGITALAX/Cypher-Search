@@ -106,6 +106,8 @@ export const ACCEPTED_TOKENS_MUMBAI: string[][] = [
     "0x07b722856369f6b923e1f276abca58dd3d15243d",
   ],
 ];
+export const LOCALES: string[] = ["en", "es"];
+
 
 export const GALLERY_OPTIONS: { en: string; es: string }[] = [
   { es: "MÁS NUEVO", en: "NEWEST" },
