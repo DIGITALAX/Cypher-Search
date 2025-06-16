@@ -61,7 +61,7 @@ export async function GET() {
         auto.title
       }/" />
         <image:image>
-          <image:loc>${INFURA_GATEWAY_INTERNAL}${auto.image}/</image:loc>
+          <image:loc>${INFURA_GATEWAY_INTERNAL}${auto.image}</image:loc>
           <image:title><![CDATA[${
             auto.title
           } | Autograph Cypher Search | DIGITALAX]]></image:title>
@@ -101,7 +101,7 @@ export async function GET() {
         numberToItemTypeMap[Number(coll?.origin)]
       }/${safeSlug}/" />
         <image:image>
-          <image:loc>${INFURA_GATEWAY_INTERNAL}${image}/</image:loc>
+          <image:loc>${INFURA_GATEWAY_INTERNAL}${image}</image:loc>
           <image:title><![CDATA[${title} | Autograph Cypher Search | DIGITALAX]]></image:title>
           <image:caption><![CDATA[${title} | Autograph Cypher Search | DIGITALAX]]></image:caption>
         </image:image>
