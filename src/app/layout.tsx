@@ -4,7 +4,7 @@ import Providers from "./providers";
 import { LOCALES } from "./lib/constants";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cypher.digitalax.xyz"),
+  metadataBase: new URL("https://cypher.digitalax.xyz/"),
   title: "Cypher Search",
   robots: {
     googleBot: {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   description: "Decentralised ecosystem search, mint, collect and fulfill.",
   keywords:
-    "Web3, Web3 Fashion, Moda Web3, Open Source, CC0, Emma-Jane MacKinnon-Lee, Open Source LLMs, DIGITALAX, F3Manifesto, www.digitalax.xyz, www.f3manifesto.xyz, Women, Life, Freedom.",
+    "Web3, Web3 Fashion, Moda Web3, Open Source, CC0, Emma-Jane MacKinnon-Lee, Open Source LLMs, DIGITALAX, F3Manifesto, digitalax.xyz, f3manifesto.xyz, Women, Life, Freedom.",
   twitter: {
     card: "summary_large_image",
     site: "@digitalax_",
@@ -48,6 +48,39 @@ export default function RootLayout({
 }>) {
   return (
     <html>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Cypher Search",
+              url: "https://cypher.digitalax.xyz/",
+              founder: {
+                "@type": "Person",
+                name: "Emma-Jane MacKinnon-Lee",
+                url: "https://emmajanemackinnonlee.com/",
+                sameAs: [
+                  "https://emmajanemackinnonlee.com/",
+                  "https://syntheticfutures.xyz/",
+                  "https://web3fashion.xyz/",
+                  "https://emancipa.xyz/",
+                  "https://highlangu.com/",
+                  "https://digitalax.xyz/",
+                  "https://cc0web3fashion.com/",
+                  "https://cc0web3.com/",
+                  "https://cuntism.net/",
+                  "https://dhawu.com/",
+                  "https://twitter.com/emmajane1313",
+                  "https://medium.com/@casadeespejos",
+                  "https://www.flickr.com/photos/emmajanemackinnonlee/",
+                ],
+              },
+            }),
+          }}
+        />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>
