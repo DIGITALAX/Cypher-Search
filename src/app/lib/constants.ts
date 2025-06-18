@@ -35,7 +35,9 @@ export const F3M_ADDRESS: `0x${string}` =
   "0xbE20D3f61f6995996a5B8dd58B036ADa7cf30945";
 export const TRIPLEA_MARKET: `0x${string}` =
   "0x6c7a9d566F6c2a9829B940b7571A220c70817c1a";
-export const KINORA_QUEST_DATA: `0x${string}` = "0x";
+export const KINORA_QUEST_DATA: `0x${string}` =
+  "0x73a8d6c331033c3fb30db0583525e8f604472e55";
+export const BASE_URL: string = "https://api.lens.xyz/graphql";
 
 export const IPFS_REGEX: RegExp = /\b(Qm[1-9A-Za-z]{44}|ba[A-Za-z2-7]{57})\b/;
 export const PLACEHOLDERS: { en: string; es: string }[] = [
@@ -108,7 +110,6 @@ export const ACCEPTED_TOKENS_MUMBAI: string[][] = [
 ];
 export const LOCALES: string[] = ["en", "es"];
 
-
 export const GALLERY_OPTIONS: { en: string; es: string }[] = [
   { es: "MÁS NUEVO", en: "NEWEST" },
   { es: "MÁS VIEJO", en: "OLDEST" },
@@ -124,6 +125,7 @@ export const numberToItemTypeMap: { [key: number]: ItemType } = {
   0: ItemType.Chromadin,
   5: ItemType.TripleA,
   4: ItemType.Kinora,
+   8: ItemType.Quest,
   2: ItemType.Listener,
   3: ItemType.F3M,
   6: ItemType.Other,
@@ -137,6 +139,7 @@ export const itemTypeToNumber: { [key in ItemType]: string } = {
   [ItemType.F3M]: "3",
   [ItemType.Other]: "6",
   [ItemType.Kinora]: "4",
+  [ItemType.Quest]: "8",
   [ItemType.TheDial]: "7",
 };
 
@@ -146,6 +149,7 @@ export const itemStringToNumber: { [key: string]: string } = {
   ["Listener"]: "2",
   ["F3M"]: "3",
   ["Kinora"]: "4",
+  ["Quest"]: "8",
   ["TripleA"]: "5",
   ["Other"]: "6",
   ["Dial"]: "7",
@@ -165,6 +169,7 @@ export const itemStringToType: { [key: string]: ItemType } = {
   ["listener"]: ItemType.Listener,
   ["f3m"]: ItemType.F3M,
   ["kinora"]: ItemType.Kinora,
+  ["quest"]: ItemType.Quest,
   ["TripleA"]: ItemType.TripleA,
   ["other"]: ItemType.Other,
   ["dial"]: ItemType.TheDial,
@@ -176,6 +181,7 @@ export const itemStringToNumberType: { [key: string]: string } = {
   ["listener"]: "2",
   ["f3m"]: "3",
   ["kinora"]: "4",
+  ["quest"]: "8",
   ["triplea"]: "5",
   ["other"]: "6",
   ["dial"]: "7",
@@ -187,6 +193,7 @@ export const itemTypeToString: { [key in ItemType]: string } = {
   [ItemType.Listener]: "listener",
   [ItemType.F3M]: "f3m",
   [ItemType.Kinora]: "kinora",
+  [ItemType.Quest]: "quest",
   [ItemType.TripleA]: "triplea",
   [ItemType.Other]: "other",
   [ItemType.TheDial]: "dial",

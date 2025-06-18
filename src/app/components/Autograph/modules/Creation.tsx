@@ -113,7 +113,7 @@ const Creation: FunctionComponent<CreationProps> = ({
         </div>
       </div>
       <div className="relative flex w-full h-fit flex flex-row justify-between gap-2">
-        {(item as Collection)?.publication?.id && (
+        {(item as Collection)?.post?.id && (
           <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">
             <div
               className={`relative w-7 h-7 items-center justify-center flex ${
@@ -246,7 +246,7 @@ const Creation: FunctionComponent<CreationProps> = ({
             right={"auto"}
           />
         )}
-        {(item as Collection)?.publication?.id && (
+        {(item as Collection)?.post?.id && (
           <div className="relative w-fit h-fit flex items-center justify-center bg-black p-1">
             <div
               className={
@@ -262,10 +262,10 @@ const Creation: FunctionComponent<CreationProps> = ({
             </div>
           </div>
         )}
-        {openInteractions && (item as Collection)?.publication?.id && (
+        {openInteractions && (item as Collection)?.post?.id && (
           <div className="absolute flex items-center w-fit h-fit justify-center -top-24 right-0">
             <InteractBar
-              publication={(item as Collection)?.publication!}
+              publication={(item as Collection)?.post!}
               dict={dict}
               hideCollect
               display={numberToItemTypeMap[Number(item?.origin)]}

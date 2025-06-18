@@ -33,7 +33,7 @@ const CoinOp: FunctionComponent<CoinOpProps> = ({
           id="game"
         ></div>
       )}
-      <InteractBar publication={publication?.publication!} dict={dict} />
+      <InteractBar publication={publication?.post!} dict={dict} />
       <div
         className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
         onClick={() =>

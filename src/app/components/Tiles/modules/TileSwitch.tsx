@@ -6,6 +6,7 @@ import {
   Catalogo as CatalogoTipo,
   Award as AwardType,
   Collection,
+  Quest as QuestType,
 } from "../../Common/types/common.types";
 import ImagePost from "./ImagePost";
 import { Account, Post, Repost } from "@lens-protocol/client";
@@ -20,6 +21,7 @@ import Listener from "./Listener";
 import Chromadin from "./Chromadin";
 import CoinOp from "./CoinOp";
 import TripleA from "./TripleA";
+import Quest from "./Quest";
 
 const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   type,
@@ -72,9 +74,7 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
   }
 
   if (type?.toLowerCase() == "triplea") {
-    return (
-      <TripleA dict={dict} publication={publication?.post as NFTData} />
-    );
+    return <TripleA dict={dict} publication={publication?.post as NFTData} />;
   }
 
   if (type?.toLowerCase() == "award") {
@@ -116,30 +116,8 @@ const TileSwitch: FunctionComponent<TileSwitchProps> = ({
     );
   }
 
-  if (type?.toLowerCase()?.includes("kinora")) {
-    return (
-      <></>
-      // <Quest
-      //   locale={locale}
-      //   layoutAmount={layoutAmount}
-      //   router={router}
-      //   publication={publication?.post as QuestType}
-      //   followProfile={followProfile}
-      //   unfollowProfile={unfollowProfile}
-      //   followLoading={followLoading}
-      //   profileHovers={profileHovers}
-      //   setProfileHovers={setProfileHovers}
-      //   lensConnected={lensConnected}
-      //   dispatch={dispatch}
-      //   index={index}
-      //   mirror={mirror}
-      //   like={like}
-      //   interactionsLoading={interactionsLoading?.[index]}
-      //   openMirrorChoice={openMirrorChoice}
-      //   setOpenMirrorChoice={setOpenMirrorChoice}
-      //   t={t}
-      // />
-    );
+  if (type?.toLowerCase()?.includes("quest")) {
+    return <Quest publication={publication?.post as QuestType} dict={dict} />;
   }
 
   return (

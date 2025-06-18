@@ -1,8 +1,4 @@
-import {
-  INFURA_GATEWAY,
-  itemStringToType,
-  itemTypeToNumber,
-} from "@/app/lib/constants";
+import { itemStringToType, itemTypeToNumber } from "@/app/lib/constants";
 import { ModalContext } from "@/app/providers";
 import { Account, ImageMetadata, Post, Repost } from "@lens-protocol/client";
 import { useContext, useEffect, useState } from "react";
@@ -22,6 +18,8 @@ import { FetchResult } from "@apollo/client";
 import { manejearCatalogos } from "@/app/lib/helpers/manejarCatalogos";
 import collectionFixer from "@/app/lib/helpers/collectionFixer";
 import handleCollectionProfilesAndPublicationsTripleA from "@/app/lib/helpers/handleCollectionProfilesAndPublicationsTripleA";
+import { getQuest } from "../../../../../graphql/queries/getQuests";
+import handleQuestData from "@/app/lib/helpers/handleQuestData";
 
 const useData = (type: string, id: string) => {
   const context = useContext(ModalContext);
@@ -77,15 +75,13 @@ const useData = (type: string, id: string) => {
             pub = res?.value as Post;
           }
 
-          if (coll) {
-          }
 
           setItemData({
             post: coll
               ? {
                   ...coll,
                   profile: pub?.author,
-                  publication: pub as Post,
+                  post: pub as Post,
                 }
               : pub,
             type,
@@ -94,23 +90,21 @@ const useData = (type: string, id: string) => {
           break;
 
         case "kinora":
-          //   const data = await getQuest(
-          //     parseInt(id?.split("-")?.[0], 16),
-          //     parseInt(id?.split("-")?.[1], 16)
-          //   );
+          const data = await getQuest(id);
 
-          //   const quest = (
-          //     await handleQuestData(
-          //       data?.data?.questInstantiateds,
-          //       lensConnected,
-          //       true
-          //     )
-          //   )?.[0] as Quest;
+          const quest = (
+            await handleQuestData(
+              data?.data?.questInstantiateds,
+              context?.lensConectado!,
+              context?.clienteLens!,
+              true
+            )
+          )?.[0];
 
-          //   setItemData({
-          //     post: quest,
-          //     type,
-          //   });
+          setItemData({
+            post: quest,
+            type,
+          });
           break;
 
         case "pub":
@@ -124,7 +118,7 @@ const useData = (type: string, id: string) => {
               ? {
                   ...collection,
                   profile: pub?.author,
-                  publication: pub,
+                  post: pub,
                 }
               : pub,
             type,

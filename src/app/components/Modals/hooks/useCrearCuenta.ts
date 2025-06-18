@@ -11,6 +11,7 @@ import { immutable } from "@lens-chain/storage-client";
 import { ModalContext } from "@/app/providers";
 import { account as accountMeta } from "@lens-protocol/metadata";
 import { useAccount } from "wagmi";
+import { getApolloLens } from "@/app/lib/lens/client";
 
 const useCrearCuenta = (dict: any) => {
   const { address } = useAccount();
@@ -126,9 +127,9 @@ const useCrearCuenta = (dict: any) => {
               });
             if (ownerSigner?.isOk()) {
               contexto?.setLensConectado?.({
-                ...contexto?.lensConectado,
                 profile: newAcc.value,
                 sessionClient: ownerSigner?.value,
+                apollo: getApolloLens(ownerSigner?.value?.getCredentials()),
               });
               contexto?.setCrearCuenta(false);
               setAccount({

@@ -21,11 +21,13 @@ import {
   Catalogo,
   Collection,
   Filter,
+  ItemType,
   PostFilter,
   Quest,
 } from "../types/common.types";
 import filterEmpty from "@/app/lib/helpers/filterEmpty";
 import buildTextQuery, {
+  buildKinoraProfiles,
   buildKinoraTextQuery,
   buildTextQueryTripleA,
   combineQueryObjects,
@@ -54,13 +56,20 @@ import {
 } from "../../../../../graphql/queries/getAllCollections";
 import handleCollectionProfilesAndPublicationsTripleA from "@/app/lib/helpers/handleCollectionProfilesAndPublicationsTripleA";
 import { manejearCatalogos } from "@/app/lib/helpers/manejarCatalogos";
+import {
+  getQuestByProfile,
+  getQuests,
+  getQuestsWhere,
+} from "../../../../../graphql/queries/getQuests";
+import handleQuestData from "@/app/lib/helpers/handleQuestData";
+import { getAllRewards } from "../../../../../graphql/queries/getAllRewards";
+import handleAwardsData from "@/app/lib/helpers/handleAwardsData";
 
 const useSearch = () => {
   const context = useContext(ModalContext);
   const [placeholder, setPlaceholder] = useState<string>();
   const path = usePathname();
   const router = useRouter();
-
   const handleSearch = async (
     e?: KeyboardEvent | MouseEvent,
     click?: boolean,
@@ -147,12 +156,13 @@ const useSearch = () => {
           );
 
           if (kinoraWhere) {
-            // const kinoraItems = await getQuestsWhere(kinoraWhere, 10, 0);
-            // if (kinoraItems?.data?.questInstantiateds?.length > 0)
-            //   quests = await handleQuestData(
-            //     kinoraItems?.data?.questInstantiateds,
-            //     lensConnected
-            //   );
+            const kinoraItems = await getQuestsWhere(kinoraWhere, 10, 0);
+            if (kinoraItems?.data?.questInstantiateds?.length > 0)
+              quests = await handleQuestData(
+                kinoraItems?.data?.questInstantiateds,
+                context?.lensConectado!,
+                context?.clienteLens!
+              );
           }
         } else {
           const data = await filterSearch(
@@ -321,28 +331,29 @@ const useSearch = () => {
         }
       }
 
-      // if (
-      //   (quests || [])?.length < 1 &&
-      //   context?.filters?.origin?.toLowerCase()?.includes("kinora")
-      // ) {
-      //   const kinoraItems = await getQuests(10, 0);
-      //   if (kinoraItems?.data?.questInstantiateds?.length > 0)
-      //     quests = await handleQuestData(
-      //       kinoraItems?.data?.questInstantiateds,
-      //       lensConnected
-      //     );
-      // }
+      if (
+        (quests || [])?.length < 1 &&
+        context?.filters?.origin?.toLowerCase()?.includes("kinora")
+      ) {
+        const kinoraItems = await getQuests(10, 0);
+        if (kinoraItems?.data?.questInstantiateds?.length > 0)
+          quests = await handleQuestData(
+            kinoraItems?.data?.questInstantiateds,
+            context?.lensConectado!,
+            context?.clienteLens!
+          );
+      }
 
-      // if (
-      //   context?.filters?.origin?.toLowerCase()?.includes("kinora") ||
-      //   query?.toLowerCase()?.includes("kinora") ||
-      //   query?.toLowerCase()?.includes("quest")
-      // ) {
-      //   const data = await getAllRewards(10, 0);
-      //   if (data?.data?.rewards?.length > 0) {
-      //     awards = await handleAwardsData(data?.data?.rewards);
-      //   }
-      // }
+      if (
+        context?.filters?.origin?.toLowerCase()?.includes("kinora") ||
+        query?.toLowerCase()?.includes("kinora") ||
+        query?.toLowerCase()?.includes("quest")
+      ) {
+        const data = await getAllRewards(10, 0);
+        if (data?.data?.rewards?.length > 0) {
+          awards = await handleAwardsData(data?.data?.rewards);
+        }
+      }
 
       if (context?.filters?.catalog?.trim() !== "") {
         catalogos = await manejearCatalogos(
@@ -367,33 +378,34 @@ const useSearch = () => {
         context?.filterConstants?.microbrands?.length > 0
       ) {
         if ((quests || [])?.length < 1) {
-          // const filter = buildKinoraProfileIds(
-          //   context?.filters?.microbrand?.trim() !== "" &&
-          //     context?.filters?.microbrand
-          //     ? context?.filterConstants?.microbrands
-          //         ?.filter((item) =>
-          //           context?.filters?.microbrand
-          //             ?.split(",")
-          //             .map((word) => word.trim())
-          //             ?.map((item) => item?.toLowerCase())
-          //             ?.includes(item?.[0]?.toLowerCase())
-          //         )
-          //         ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`)
-          //     : context?.filterConstants?.microbrands
-          //         ?.filter((item) =>
-          //           item?.[0]?.toLowerCase()?.includes(query!?.toLowerCase())
-          //         )
-          //         ?.map((item) => `${toHexWithLeadingZero(Number(item[2]))}`)
-          // );
-          // if (where) {
-          //   const kinoraItems = await getQuestByProfile(where, 10, 0);
-          //   if (kinoraItems?.data?.questInstantiateds?.length > 0) {
-          //     quests = await handleQuestData(
-          //       kinoraItems?.data?.questInstantiateds,
-          //       lensConnected
-          //     );
-          //   }
-          // }
+          const where = buildKinoraProfiles(
+            context?.filters?.microbrand?.trim() !== "" &&
+              context?.filters?.microbrand
+              ? context?.filterConstants?.microbrands
+                  ?.filter((item) =>
+                    context?.filters?.microbrand
+                      ?.split(",")
+                      .map((word) => word.trim())
+                      ?.map((item) => item?.toLowerCase())
+                      ?.includes(item?.[0]?.toLowerCase())
+                  )
+                  ?.map((item) => item[2])
+              : context?.filterConstants?.microbrands
+                  ?.filter((item) =>
+                    item?.[0]?.toLowerCase()?.includes(query!?.toLowerCase())
+                  )
+                  ?.map((item) => item[2])
+          );
+          if (where) {
+            const kinoraItems = await getQuestByProfile(where, 10, 0);
+            if (kinoraItems?.data?.questInstantiateds?.length > 0) {
+              quests = await handleQuestData(
+                kinoraItems?.data?.questInstantiateds,
+                context?.lensConectado!,
+                context?.clienteLens!
+              );
+            }
+          }
         }
 
         const data = await fetchAccountsBulk(
@@ -437,7 +449,8 @@ const useSearch = () => {
       const allItems = [
         collections?.map((item) => ({
           post: item,
-          type: numberToItemTypeMap[Number(item.origin)],
+          type:
+            item.origin == "4" ? ItemType.CoinOp : numberToItemTypeMap[Number(item.origin)],
         })) || [],
         tripleA?.map((item) => ({
           post: item,
@@ -445,7 +458,7 @@ const useSearch = () => {
         })) || [],
         quests?.map((item) => ({
           post: item,
-          type: "Kinora",
+          type: "Quest",
         })) || [],
         awards?.map((item) => ({
           post: item,
@@ -585,14 +598,15 @@ const useSearch = () => {
         }
       }
 
-      // if (kinoraCursor !== undefined) {
-      //   const kinoraItems = await getQuests(10, kinoraCursor);
-      //   if (kinoraItems?.data?.questInstantiateds?.length > 0)
-      //     quests = await handleQuestData(
-      //       kinoraItems?.data?.questInstantiateds,
-      //       lensConnected
-      //     );
-      // }
+      if (kinoraCursor !== undefined) {
+        const kinoraItems = await getQuests(10, kinoraCursor);
+        if (kinoraItems?.data?.questInstantiateds?.length > 0)
+          quests = await handleQuestData(
+            kinoraItems?.data?.questInstantiateds,
+            context?.lensConectado!,
+            context?.clienteLens!
+          );
+      }
 
       if (collections?.length < 1 && cursor !== undefined) {
         let where: Object;
@@ -1019,12 +1033,12 @@ const useSearch = () => {
         }
       }
 
-      // if (context?.searchItems?.awardCursor) {
-      //   const data = await getAllRewards(10, context?.searchItems?.awardCursor);
-      //   if (data?.data?.rewards?.length > 0) {
-      //     awards = await handleAwardsData(data?.data?.rewards);
-      //   }
-      // }
+      if (context?.searchItems?.awardCursor) {
+        const data = await getAllRewards(10, context?.searchItems?.awardCursor);
+        if (data?.data?.rewards?.length > 0) {
+          awards = await handleAwardsData(data?.data?.rewards);
+        }
+      }
 
       if (context?.searchItems?.catalogoCursor) {
         catalogos = await manejearCatalogos(
@@ -1038,11 +1052,12 @@ const useSearch = () => {
       const newItems = [
         collections?.map((item) => ({
           post: item,
-          type: numberToItemTypeMap[Number(item.origin)],
+          type:
+            item.origin == "4" ? ItemType.CoinOp : numberToItemTypeMap[Number(item.origin)],
         })) || [],
         quests?.map((item) => ({
           post: item,
-          type: "Kinora",
+          type: "Quest",
         })) || [],
         tripleA?.map((item) => ({
           post: item,

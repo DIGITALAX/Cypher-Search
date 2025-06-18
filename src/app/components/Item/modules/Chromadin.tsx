@@ -62,7 +62,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
     getMoreComments,
     commentInfo,
     allCommentsLoading,
-  } = useCommentItem(itemData?.post?.publication!, commentOpen);
+  } = useCommentItem(itemData?.post?.post!, commentOpen);
 
   return (
     <div
@@ -74,7 +74,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
         <div className="relative flex flex-col gap-2 items-center justify-center w-full sm:w-[40rem] h-full">
           <InteractBar
             dict={dict}
-            publication={itemData?.post?.publication!}
+            publication={itemData?.post?.post!}
             showOthers
             item
             comment={() => setCommentOpen((prev) => !prev)}
@@ -106,7 +106,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
                     setCommentDetails={setCommentDetails}
                     mentionProfiles={profilesFound}
                     setProfilesOpen={setProfilesOpen}
-                    id={itemData?.post?.publication?.id!}
+                    id={itemData?.post?.post?.id!}
                     comment={comment}
                     profilesOpen={profilesOpen}
                     commentLoading={commentLoading}
@@ -759,7 +759,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
               };
 
               const existingItem = context?.cartItems?.find(
-                (item) => item?.item?.postId === itemData?.post?.publication?.id
+                (item) => item?.item?.postId === itemData?.post?.post?.id
               );
 
               if (existingItem) {

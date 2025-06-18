@@ -860,3 +860,37 @@ export const getOneCollectionTripleA = async (
     return result;
   }
 };
+
+export const getCollectionByUri = async (uri: string): Promise<any> => {
+  const queryPromise = graphClient.query({
+    query: gql(`query($uri: String) {
+      collectionCreateds(first: 1, where: { uri: $uri}, orderDirection: desc, orderBy: blockTimestamp) {
+        metadata {
+          title
+          mediaCover
+          images
+        }
+        uri
+        origin
+      }
+    }`),
+    variables: {
+      uri,
+    },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};

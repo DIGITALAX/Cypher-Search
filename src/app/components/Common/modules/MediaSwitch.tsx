@@ -3,6 +3,9 @@ import Image from "next/legacy/image";
 import { FunctionComponent, JSX, useState } from "react";
 import Waveform from "./Waveform";
 import { MediaSwitchProps } from "../types/common.types";
+import { KinoraPlayerWrapper } from "kinora-sdk";
+import { Player } from "@livepeer/react";
+import { INFURA_GATEWAY } from "@/app/lib/constants";
 
 const MediaSwitch: FunctionComponent<MediaSwitchProps> = ({
   type,
@@ -25,12 +28,13 @@ const MediaSwitch: FunctionComponent<MediaSwitchProps> = ({
     duration: 0,
     isPlaying: false,
   });
+
   switch (type?.toLowerCase()) {
     case "video":
       return (
         <>
           <div id={srcUrl} style={classNameVideo}>
-            {/* <KinoraPlayerWrapper
+            <KinoraPlayerWrapper
               parentId={srcUrl}
               key={srcUrl}
               customControls={true}
@@ -62,15 +66,7 @@ const MediaSwitch: FunctionComponent<MediaSwitchProps> = ({
               {(setMediaElement: (node: HTMLVideoElement) => void) => (
                 <Player
                   mediaElementRef={setMediaElement}
-                  src={
-                    srcUrl?.includes("https://")
-                      ? srcUrl
-                      : `${INFURA_GATEWAY}/ipfs/${
-                          srcUrl?.includes("ipfs://")
-                            ? srcUrl?.split("ipfs://")[1]
-                            : srcUrl
-                        }`
-                  }
+                  src={srcUrl}
                   poster={srcCover}
                   objectFit="cover"
                   // autoUrlUpload={{
@@ -82,7 +78,7 @@ const MediaSwitch: FunctionComponent<MediaSwitchProps> = ({
                   muted={true}
                 />
               )}
-            </KinoraPlayerWrapper> */}
+            </KinoraPlayerWrapper>
           </div>
           {!hidden && (
             <Waveform

@@ -145,7 +145,7 @@ const Publication: FunctionComponent<PublicationProps> = ({
       </div>
       <PostSwitch disabled={disabled} item={item} />
       {(item as Post)?.quoteOf?.id && (
-        <PostQuote disabled={true} quote={(item as Post)?.quoteOf!} />
+        <PostQuote disabled={true} quote={(item as Post)?.quoteOf as Post} />
       )}
       <PostBar
         dict={dict}

@@ -19,6 +19,7 @@ import {
 } from "@/app/lib/helpers/aggregators";
 import { getFilters } from "../../../../../graphql/queries/getFilters";
 import { getCypherStorageCart } from "@/app/lib/utils";
+import { getApolloLens } from "@/app/lib/lens/client";
 
 const useLens = (
   isConnected: boolean,
@@ -66,6 +67,7 @@ const useLens = (
         contexto?.setLensConectado?.({
           profile: accounts.value.items?.[0]?.account,
           sessionClient: resumed?.value,
+          apollo: getApolloLens(resumed.value?.getCredentials()),
         });
       }
     } catch (err) {
@@ -120,6 +122,7 @@ const useLens = (
         contexto?.setLensConectado?.({
           sessionClient,
           profile: accounts.value.items?.[0]?.account,
+          apollo: getApolloLens(authenticated.value?.getCredentials()),
         });
       } else {
         const authenticatedOnboarding = await contexto?.clienteLens.login({
@@ -141,6 +144,9 @@ const useLens = (
 
         contexto?.setLensConectado?.({
           sessionClient,
+          apollo: getApolloLens(
+            authenticatedOnboarding.value?.getCredentials()
+          ),
         });
 
         contexto?.setCrearCuenta?.(true);

@@ -26,17 +26,17 @@ const useFilterPost = () => {
       );
       const coll = await collectionFixer(data?.data?.collectionCreateds?.[0]);
 
-      let publication: Post | undefined = undefined,
+      let post: Post | undefined = undefined,
         profile: Account | undefined = undefined;
 
       if (pubData?.isOk()) {
-        publication = pubData?.value as Post;
+        post = pubData?.value as Post;
         profile = pubData?.value?.author as Account;
       }
       setPublication({
         post: {
           ...coll,
-          publication,
+          post,
           profile,
         },
         type: numberToItemTypeMap[Number(itemStringToNumber[origin])],

@@ -13,10 +13,12 @@ import {
 import { ChangeEvent, ReactNode, SetStateAction } from "react";
 import { GeneralPub } from "../../Tiles/types/tiles.types";
 import { Drop } from "../../Autograph/types/autograph.types";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 
 export interface LensConnected {
   profile?: Account;
   sessionClient?: SessionClient;
+  apollo?: ApolloClient<NormalizedCacheObject>;
 }
 
 export interface FullScreenVideo {
@@ -55,6 +57,7 @@ export enum ItemType {
   Listener = "listener",
   F3M = "f3m",
   Kinora = "kinora",
+  Quest = "quest",
   TripleA = "triplea",
   Other = "other",
   TheDial = "dial",
@@ -114,7 +117,7 @@ export interface Collection {
   collectionId: string;
   unlimited: boolean;
   origin: string;
-  publication?: Post;
+  post?: Post;
   profile?: Account;
   blockTimestamp: string;
   drop: {
@@ -241,7 +244,7 @@ export interface Filter {
 }
 
 export interface Quest {
-  publication: Post;
+  post?: Post;
   gate: Gate;
   questMetadata: {
     title: string;

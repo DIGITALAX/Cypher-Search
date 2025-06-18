@@ -187,6 +187,12 @@ export type ControlsProps = {
   like: () => Promise<void>;
 };
 
+export type QuestProps = {
+  dict: any;
+  publication: Quest;
+};
+
+
 export type ProfileProps = {
   dict: any;
   profile: Account;

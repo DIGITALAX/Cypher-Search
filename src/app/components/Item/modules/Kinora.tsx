@@ -40,8 +40,8 @@ const Kinora: FunctionComponent<KinoraProps> = ({
     setCommentOpen,
   } = useComment();
   const { allComments, getMoreComments, commentInfo, allCommentsLoading } =
-    useCommentItem(itemData?.post?.publication, commentOpen);
-  const { joinLoading, handlePlayerJoin } = useQuest();
+    useCommentItem(itemData?.post?.post!, commentOpen);
+  const { joinLoading, handlePlayerJoin } = useQuest(dict, itemData?.post);
   return (
     <div
       className={`relative w-full h-fit xl:h-[50rem] flex items-center justify-center flex-row pre:pt-60 tablet:pt-40 lg:pt-32 px-2 sm:px-12 gap-12 xl:gap-7 flex-wrap xl:flex-nowrap ${
@@ -52,7 +52,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
         <div className="relative flex flex-col gap-2 items-center justify-center w-full sm:w-[40rem] h-full">
           <InteractBar
             item
-            publication={itemData?.post?.publication}
+            publication={itemData?.post?.post!}
             hideCollect
             comment={() => setCommentOpen((prev) => !prev)}
             showOthers
@@ -85,7 +85,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                     setCommentDetails={setCommentDetails}
                     mentionProfiles={profilesFound}
                     setProfilesOpen={setProfilesOpen}
-                    id={itemData?.post?.publication?.id}
+                    id={itemData?.post?.post?.id!}
                     caretCoord={caretCoord}
                     comment={comment}
                     profilesOpen={profilesOpen}
@@ -251,7 +251,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
               onClick={() => {
                 context?.setFiltersOpen({ value: false, allow: false });
                 router.push(
-                  `/autograph/${itemData?.post?.publication?.author?.username?.localName}`
+                  `/autograph/${itemData?.post?.post?.author?.username?.localName}`
                 );
               }}
             >
@@ -263,16 +263,16 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                   layout="fill"
                   draggable={false}
                   src={handleProfilePicture(
-                    itemData?.post?.publication?.author?.metadata?.picture
+                    itemData?.post?.post?.author?.metadata?.picture
                   )}
-                  key={itemData?.post?.publication?.author?.metadata?.picture}
+                  key={itemData?.post?.post?.author?.metadata?.picture}
                   onError={(e) => handleImageError(e)}
                   objectFit="cover"
                   className="rounded-full"
                 />
               </div>
               <div className="relative w-fit h-fit items-center justify-center flex">
-                {itemData?.post?.publication?.author?.username?.localName}
+                {itemData?.post?.post?.author?.username?.localName}
               </div>
             </div>
           </div>
@@ -301,7 +301,7 @@ const Kinora: FunctionComponent<KinoraProps> = ({
             className="relative flex items-center sm:items-end w-fit h-fit justify-end text-cost font-bit justify-center flex-col text-xs sm:ml-auto cursor-pointer"
             onClick={() =>
               window.open(
-                `https://kinora.irrevocable.dev/quest/${itemData?.post?.publication?.id}`
+                `https://kinora.irrevocable.dev/quest/${itemData?.post?.post?.id}`
               )
             }
           >

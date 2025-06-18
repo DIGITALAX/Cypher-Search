@@ -19,10 +19,10 @@ const handleCollectionProfilesAndPublications = async (
             post: collection?.postId,
           });
 
-          let publication, profile;
+          let post, profile;
 
           if (res?.isOk()) {
-            publication = res?.value;
+            post = res?.value;
             profile = res?.value?.author;
           }
 
@@ -31,7 +31,7 @@ const handleCollectionProfilesAndPublications = async (
           return {
             ...coll,
             profile,
-            publication,
+            post,
           } as Collection;
         }
       }

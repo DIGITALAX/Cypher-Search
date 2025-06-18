@@ -193,12 +193,12 @@ export const buildKinoraTextQuery = (inputText: string): Object | void => {
   return query;
 };
 
-export const buildKinoraProfileIds = (ids: string[]): Object | void => {
+export const buildKinoraProfiles = (ids: string[]): Object | void => {
   if (ids?.length < 1) return;
 
   let orConditions: any[] = [];
   ids?.forEach((id) => {
-    orConditions.push({ [`profileId`]: parseInt(id, 16) });
+    orConditions.push({ [`playerProfile`]: id });
   });
 
   const query = {

@@ -89,13 +89,13 @@ const Display: FunctionComponent<DisplayProps> = ({
               />
             </div>
           )}
-          {displayType?.main && displayType?.main?.publication && (
+          {displayType?.main && displayType?.main?.post && (
             <div className="absolute bottom-4 left-4 w-fit h-fit rounded-sm bg-black/70 flex flex-col items-start justify-center p-2 border gap-2 border-[#372B48]">
               <InteractBar
                 dict={dict}
                 hideCollect
                 display={numberToItemTypeMap[Number(displayType?.main?.origin)]}
-                publication={displayType?.main?.publication!}
+                publication={displayType?.main?.post!}
               />
             </div>
           )}
@@ -175,12 +175,12 @@ const Display: FunctionComponent<DisplayProps> = ({
                   </div>
                 )}
                 {displayType?.side?.[index] &&
-                  displayType?.side?.[index]?.publication && (
+                  displayType?.side?.[index]?.post && (
                     <div className="absolute bottom-2 left-2 flex items-center justify-center sm:hidden tablet:flex">
                       <InteractBar
                         dict={dict}
                         hideCollect
-                        publication={displayType?.side?.[index]?.publication!}
+                        publication={displayType?.side?.[index]?.post!}
                         display={
                           numberToItemTypeMap[
                             Number(displayType?.side?.[index]?.origin)

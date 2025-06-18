@@ -19,6 +19,8 @@ import SuccessCheckout from "./SuccessCheckout";
 import PostBox from "./PostBox";
 import Gifs from "./Gifs";
 import CollectOptions from "./CollectOptions";
+import QuestSuccess from "./QuestSuccess";
+import QuestGates from "./QuestGates";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
@@ -37,6 +39,8 @@ export default function ModalsEntry({ dict }: { dict: any }) {
       {context?.crearCuenta && <CrearCuenta dict={dict} />}
       {context?.signless && <Signless dict={dict} />}
       {context?.successCheckout && <SuccessCheckout dict={dict} />}
+      {context?.questSuccess && <QuestSuccess dict={dict} />}
+      {context?.gates && <QuestGates dict={dict} />}
       {context?.postBox?.open && <PostBox dict={dict} />}
       {context?.gif?.open && <Gifs dict={dict} />}
       {context?.collectOptions?.open && <CollectOptions dict={dict} />}

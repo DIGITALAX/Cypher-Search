@@ -1,13 +1,20 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { createContext, SetStateAction, useEffect, useState } from "react";
+import {
+  createContext,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Context, Post, PublicClient, mainnet } from "@lens-protocol/client";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { StorageClient } from "@lens-chain/storage-client";
 import { chains } from "@lens-chain/sdk/viem";
 import {
   CartItem,
+  Collection,
   DropDown,
   Filter,
   FilterValues,
@@ -28,6 +35,13 @@ import {
   ScreenDisplay,
   SortType,
 } from "./components/Autograph/types/autograph.types";
+import {
+  createReactClient,
+  studioProvider,
+  LivepeerConfig,
+} from "@livepeer/react";
+import { KinoraProvider } from "kinora-sdk";
+import { getApolloLens } from "./lib/lens/client";
 
 export const config = createConfig(
   getDefaultConfig({
@@ -44,6 +58,12 @@ export const config = createConfig(
     ssr: true,
   })
 );
+
+const livepeerClient = createReactClient({
+  provider: studioProvider({
+    apiKey: process.env.NEXT_PUBLIC_LIVEPEER_STUDIO_KEY!,
+  }),
+});
 
 const queryClient = new QueryClient();
 
@@ -181,6 +201,31 @@ export const ModalContext = createContext<
       ) => void;
       searchItems: SearchItems;
       setSearchItems: (e: SetStateAction<SearchItems>) => void;
+      gates:
+        | {
+            erc20?: {
+              address: string;
+              amount: string;
+            }[];
+            erc721?: Collection[];
+            oneOf?: boolean;
+          }
+        | undefined;
+      setGates: (
+        e: SetStateAction<
+          | {
+              erc20?: {
+                address: string;
+                amount: string;
+              }[];
+              erc721?: Collection[];
+              oneOf?: boolean;
+            }
+          | undefined
+        >
+      ) => void;
+      questSuccess: boolean;
+      setQuestSuccess: (e: SetStateAction<boolean>) => void;
       modalOpen: string | undefined;
       setModalOpen: (e: SetStateAction<string | undefined>) => void;
       postInfo: {
@@ -217,6 +262,18 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const [profileDisplay, setProfileDisplay] = useState<Display>();
   const [map, setMap] = useState<boolean>(false);
+  const [questSuccess, setQuestSuccess] = useState<boolean>(false);
+  const [gates, setGates] = useState<
+    | {
+        erc20?: {
+          address: string;
+          amount: string;
+        }[];
+        erc721?: Collection[];
+        oneOf?: boolean;
+      }
+    | undefined
+  >();
   const [isDesigner, setIsDesigner] = useState<boolean>(false);
   const [reportPub, setReportPub] = useState<string | undefined>();
   const [clienteLens, setClienteLens] = useState<PublicClient>();
@@ -348,6 +405,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const [filterChange, setFilterChange] = useState<boolean>(false);
   const [layoutSwitch, setLayoutSwitch] = useState<number>(3);
 
+  const apolloClient = useMemo(() => {
+    return getApolloLens(
+      lensConectado?.sessionClient?.getCredentials()!
+    ) as any;
+  }, [lensConectado?.sessionClient]);
+
   useEffect(() => {
     if (!clienteLens) {
       setClienteLens(
@@ -367,86 +430,94 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             "--ck-font-family": '"Manaspace", cursive',
           }}
         >
-          <ModalContext.Provider
-            value={{
-              successCheckout,
-              setSuccessCheckout,
-              profileDisplay,
-              setProfileDisplay,
-              displaySearch,
-              setDisplaySearch,
-              sortType,
-              setSortType,
-              screenDisplay,
-              postSuccess,
-              setPostSuccess,
-              setScreenDisplay,
-              postInfo,
-              setPostInfo,
-              reactBox,
-              setReactBox,
-              reportPub,
-              setReportPub,
-              imageViewer,
-              setImageViewer,
-              indexar,
-              setIndexar,
-              map,
-              setMap,
-              filters,
-              setFilters,
-              filterDropDown,
-              setFilterDropDown,
-              filterConstants,
-              setFilterConstants,
-              postBox,
-              setPostBox,
-              cartAnim,
-              setCartAnim,
-              cartItems,
-              setCartItems,
-              searchItems,
-              setSearchItems,
-              searchActive,
-              setSearchActive,
-              oracleData,
-              setOracleData,
-              fullScreenVideo,
-              setFullScreenVideo,
-              crearCuenta,
-              setCrearCuenta,
-              clienteLens,
-              clienteAlmacenamiento,
-              lensConectado,
-              setLensConectado,
-              signless,
-              setSignless,
-              header,
-              setHeader,
-              filtersOpen,
-              setFiltersOpen,
-              modalOpen,
-              setModalOpen,
-              filterChange,
-              setFilterChange,
-              layoutSwitch,
-              setLayoutSwitch,
-              gif,
-              setGif,
-              collectOptions,
-              setCollectOptions,
-              isDesigner,
-              setIsDesigner,
-            }}
-          >
-            <div
-              className={`relative w-full h-auto flex flex-col ${
-                path?.includes("autograph") ? "bg-black" : "bg-offBlack"
-              }`}
-            >
-              {children}
-            </div>
-          </ModalContext.Provider>
+          <LivepeerConfig client={livepeerClient}>
+            <KinoraProvider playerAuthedApolloClient={apolloClient}>
+              <ModalContext.Provider
+                value={{
+                  questSuccess,
+                  setQuestSuccess,
+                  gates,
+                  setGates,
+                  successCheckout,
+                  setSuccessCheckout,
+                  profileDisplay,
+                  setProfileDisplay,
+                  displaySearch,
+                  setDisplaySearch,
+                  sortType,
+                  setSortType,
+                  screenDisplay,
+                  postSuccess,
+                  setPostSuccess,
+                  setScreenDisplay,
+                  postInfo,
+                  setPostInfo,
+                  reactBox,
+                  setReactBox,
+                  reportPub,
+                  setReportPub,
+                  imageViewer,
+                  setImageViewer,
+                  indexar,
+                  setIndexar,
+                  map,
+                  setMap,
+                  filters,
+                  setFilters,
+                  filterDropDown,
+                  setFilterDropDown,
+                  filterConstants,
+                  setFilterConstants,
+                  postBox,
+                  setPostBox,
+                  cartAnim,
+                  setCartAnim,
+                  cartItems,
+                  setCartItems,
+                  searchItems,
+                  setSearchItems,
+                  searchActive,
+                  setSearchActive,
+                  oracleData,
+                  setOracleData,
+                  fullScreenVideo,
+                  setFullScreenVideo,
+                  crearCuenta,
+                  setCrearCuenta,
+                  clienteLens,
+                  clienteAlmacenamiento,
+                  lensConectado,
+                  setLensConectado,
+                  signless,
+                  setSignless,
+                  header,
+                  setHeader,
+                  filtersOpen,
+                  setFiltersOpen,
+                  modalOpen,
+                  setModalOpen,
+                  filterChange,
+                  setFilterChange,
+                  layoutSwitch,
+                  setLayoutSwitch,
+                  gif,
+                  setGif,
+                  collectOptions,
+                  setCollectOptions,
+                  isDesigner,
+                  setIsDesigner,
+                }}
+              >
+                <div
+                  className={`relative w-full h-auto flex flex-col ${
+                    path?.includes("autograph") ? "bg-black" : "bg-offBlack"
+                  }`}
+                >
+                  {children}
+                </div>
+              </ModalContext.Provider>
+            </KinoraProvider>
+          </LivepeerConfig>
         </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

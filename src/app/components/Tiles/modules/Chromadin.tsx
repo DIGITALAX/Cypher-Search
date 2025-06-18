@@ -22,7 +22,7 @@ const Chromadin: FunctionComponent<ChromadinProps> = ({
       className="relative w-full h-fit flex items-end justify-center flex flex-col rounded-sm border border-sol p-4 gap-4"
       id={publication?.postId}
     >
-      <InteractBar dict={dict} publication={publication?.publication!} />
+      <InteractBar dict={dict} publication={publication?.post!} />
       <div className="relative flex flex-col items-center justify-start w-full h-fit gap-5">
         <div className="relative flex flex-row w-full justifty-between items-start h-fit gap-4">
           <div

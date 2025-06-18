@@ -31,7 +31,7 @@ const Listener: FunctionComponent<ListenerProps> = ({
         className="relative w-full h-full flex items-end justify-center flex-col gap-4 p-4"
       >
         <div className="absolute w-full h-full mix-blend-hard-light bg-listener opacity-60 bg-center bg-cover right-0 top-0"></div>
-        <InteractBar dict={dict} publication={publication?.publication!} />
+        <InteractBar dict={dict} publication={publication?.post!} />
         <div
           className="relative flex w-full h-100 items-center justify-center border border-white bg-amo/30 cursor-pointer"
           onClick={() =>

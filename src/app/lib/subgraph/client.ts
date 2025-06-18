@@ -27,3 +27,11 @@ export const autographClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const httpLinkQuest = new HttpLink({
+  uri: `https://gateway-arbitrum.network.thegraph.com/api/${process.env.NEXT_PUBLIC_GRAPH_KEY}/subgraphs/id/Ajf3LcbRNx92R25fVFaUMVxQTUafksyQXLVdLXAoaYqD`,
+});
+
+export const graphKinoraClient = new ApolloClient({
+  link: httpLinkQuest,
+  cache: new InMemoryCache(),
+});

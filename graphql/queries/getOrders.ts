@@ -92,7 +92,6 @@ const ORDERS_PAGINATED = `
   }
 `;
 
-
 const ORDERS_PAGINATED_TRIPLEA = `
   query($buyer: String!, $first: Int, $skip: Int) {
     collectionPurchaseds(where: { buyer: $buyer }, first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp) {
@@ -125,7 +124,6 @@ const ORDERS_PAGINATED_TRIPLEA = `
     }
   }
 `;
-
 
 export const getOrders = async (buyer: string): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
@@ -179,8 +177,6 @@ export const getOrdersPaginated = async (
   }
 };
 
-
-
 export const getOrdersPaginatedTripleA = async (
   buyer: string,
   first: number,
@@ -190,6 +186,45 @@ export const getOrdersPaginatedTripleA = async (
   const queryPromise = tripleAClient.query({
     query: gql(ORDERS_PAGINATED_TRIPLEA),
     variables: { buyer, first, skip },
+    fetchPolicy: "no-cache",
+    errorPolicy: "all",
+  });
+
+  const timeoutPromise = new Promise((resolve) => {
+    timeoutId = setTimeout(() => {
+      resolve({ timedOut: true });
+    }, 60000); // 1 minute timeout
+  });
+
+  const result: any = await Promise.race([queryPromise, timeoutPromise]);
+  timeoutId && clearTimeout(timeoutId);
+  if (result.timedOut) {
+    return;
+  } else {
+    return result;
+  }
+};
+
+const ORDERS_QUICK = `
+  query($buyer: String!) {
+    orderCreateds(where: {buyer: $buyer}) {
+      collection {
+       uri
+       
+      }
+    }
+  }
+`;
+
+export const getOrdersQuick = async (
+  buyer: `0x${string}`
+): Promise<FetchResult | void> => {
+  let timeoutId: NodeJS.Timeout | undefined;
+  const queryPromise = graphClient.query({
+    query: gql(ORDERS_QUICK),
+    variables: {
+      buyer,
+    },
     fetchPolicy: "no-cache",
     errorPolicy: "all",
   });
