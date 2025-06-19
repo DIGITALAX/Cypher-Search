@@ -28,7 +28,9 @@ const DropMain: FunctionComponent<DropMainProps> = ({ drop, dict }) => {
                     context?.setFiltersOpen({ value: false, allow: false });
                     router.push(
                       `/item/${
-                        numberToItemTypeMap[Number(collection?.origin)]
+                        collection?.origin == "4"
+                          ? "coinop"
+                          : numberToItemTypeMap[Number(collection?.origin)]
                       }/${collection?.metadata?.title?.replaceAll(" ", "_")}`
                     );
                   }}

@@ -101,7 +101,11 @@ const QuestGates: FunctionComponent<{ dict: any }> = ({
                             onClick={() =>
                               window.open(
                                 `https://cypher.digitalax.xyz/item/${
-                                  numberToItemTypeMap[Number(erc721?.origin)]
+                                  erc721?.origin == "4"
+                                    ? "coinop"
+                                    : numberToItemTypeMap[
+                                        Number(erc721?.origin)
+                                      ]
                                 }/${erc721?.metadata?.title?.replaceAll(
                                   " ",
                                   "_"

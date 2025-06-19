@@ -144,9 +144,13 @@ const Sales: FunctionComponent<{ dict: any; profile: Account | undefined }> = ({
                                     });
                                     router.push(
                                       `/item/${
-                                        numberToItemTypeMap[
-                                          Number(sale?.collection?.printType)
-                                        ]
+                                        sale?.collection?.printType == "4"
+                                          ? "coinop"
+                                          : numberToItemTypeMap[
+                                              Number(
+                                                sale?.collection?.printType
+                                              )
+                                            ]
                                       }/${sale?.postId}`
                                     );
                                   }}

@@ -64,7 +64,7 @@ const checkGates = async (
     if (gates?.erc721Logic?.length > 0) {
       const orders = await getOrdersQuick(address);
 
-      if (orders?.data?.orderCreateds?.length < 1) {
+      if (orders?.data?.orderCreateds?.length > 0) {
         gates?.erc721Logic?.map((logic) => {
           const found = orders?.data?.orderCreateds?.find(
             (col: {

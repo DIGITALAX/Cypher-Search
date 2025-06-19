@@ -13,7 +13,7 @@ import {
 import { useContext } from "react";
 import { GeneralPub, NFTData } from "../../Tiles/types/tiles.types";
 import { Drop } from "../../Autograph/types/autograph.types";
-import { Collection } from "../types/common.types";
+import { Collection, ItemType } from "../types/common.types";
 import {
   fetchAccountsAvailable,
   fetchPosts,
@@ -142,7 +142,10 @@ const useSuggested = (data: Drop | GeneralPub | undefined) => {
         items: [
           ...(collections?.map((item) => ({
             post: item,
-            type: numberToItemTypeMap[Number(item.origin)],
+            type:
+              item.origin == "4"
+                ? ItemType.CoinOp
+                : numberToItemTypeMap[Number(item.origin)],
           })) || []),
           ...(tripleA?.map((item) => ({
             post: item,

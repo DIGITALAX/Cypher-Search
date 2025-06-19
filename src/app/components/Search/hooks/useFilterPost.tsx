@@ -6,6 +6,7 @@ import { GeneralPub } from "../../Tiles/types/tiles.types";
 import { fetchPost } from "@lens-protocol/client/actions";
 import { Account, Post } from "@lens-protocol/client";
 import { getOneRandomCollection } from "../../../../../graphql/queries/getAllCollections";
+import { ItemType } from "../../Common/types/common.types";
 
 const useFilterPost = () => {
   const context = useContext(ModalContext);
@@ -39,7 +40,10 @@ const useFilterPost = () => {
           post,
           profile,
         },
-        type: numberToItemTypeMap[Number(itemStringToNumber[origin])],
+        type:
+          itemStringToNumber[origin] == "4"
+            ? ItemType.CoinOp
+            : numberToItemTypeMap[Number(itemStringToNumber[origin])],
       });
     } catch (err: any) {
       console.error(err.message);

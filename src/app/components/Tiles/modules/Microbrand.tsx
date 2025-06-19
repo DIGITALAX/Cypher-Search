@@ -101,7 +101,9 @@ const Microbrand: FunctionComponent<MicrobrandProps> = ({
                       context?.setFiltersOpen({ value: false, allow: false });
                       router.push(
                         `/item/${
-                          numberToItemTypeMap[Number(item?.origin)]
+                          item?.origin == "4"
+                            ? "coinop"
+                            : numberToItemTypeMap[Number(item?.origin)]
                         }/${item?.metadata?.title?.replaceAll(" ", "_")}`
                       );
                     }}

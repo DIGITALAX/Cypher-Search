@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FunctionComponent, JSX, useContext, useState } from "react";
 import { CreationProps } from "../types/autograph.types";
 import MediaSwitch from "../../Common/modules/MediaSwitch";
-import { Collection } from "../../Common/types/common.types";
+import { Collection, ItemType } from "../../Common/types/common.types";
 import { setCypherStorageCart } from "@/app/lib/utils";
 import { NFTData } from "../../Tiles/types/tiles.types";
 import InteractBar from "../../Tiles/modules/InteractBar";
@@ -42,7 +42,9 @@ const Creation: FunctionComponent<CreationProps> = ({
 
           router.push(
             `/item/${
-              numberToItemTypeMap[Number(item?.origin)]
+              item?.origin == "4"
+                ? "coinop"
+                : numberToItemTypeMap[Number(item?.origin)]
             }/${item?.metadata?.title?.replaceAll(" ", "_")}`
           );
         }}
@@ -149,7 +151,10 @@ const Creation: FunctionComponent<CreationProps> = ({
                   item: item as Collection,
                   buyAmount: 1,
                   price: Number((item as Collection)?.price),
-                  type: numberToItemTypeMap[Number(item?.origin)],
+                  type:
+                    item?.origin == "4"
+                      ? ItemType.CoinOp
+                      : numberToItemTypeMap[Number(item?.origin)],
                   color: item?.metadata?.colors?.[0]!,
                   size: item?.metadata?.sizes?.[0]!,
                   currency: (item as Collection)?.acceptedTokens?.[0],

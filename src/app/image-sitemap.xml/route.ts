@@ -86,19 +86,25 @@ export async function GET() {
       return `
       <url>
         <loc>${baseUrl}/item/${
-        numberToItemTypeMap[Number(coll?.origin)]
+        coll?.origin == "4"
+          ? "coinop"
+          : numberToItemTypeMap[Number(coll?.origin)]
       }/${safeSlug}/</loc>
         ${locales
           .map(
             (altLocale) => `
           <xhtml:link rel="alternate" hreflang="${altLocale}" href="${baseUrl}/${altLocale}/item/${
-              numberToItemTypeMap[Number(coll?.origin)]
+              coll?.origin == "4"
+                ? "coinop"
+                : numberToItemTypeMap[Number(coll?.origin)]
             }/${safeSlug}/" />
           `
           )
           .join("")}
         <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/item/${
-        numberToItemTypeMap[Number(coll?.origin)]
+        coll?.origin == "4"
+          ? "coinop"
+          : numberToItemTypeMap[Number(coll?.origin)]
       }/${safeSlug}/" />
         <image:image>
           <image:loc>${INFURA_GATEWAY_INTERNAL}${image}</image:loc>
