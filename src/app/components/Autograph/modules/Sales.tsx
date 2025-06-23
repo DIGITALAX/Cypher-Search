@@ -151,7 +151,10 @@ const Sales: FunctionComponent<{ dict: any; profile: Account | undefined }> = ({
                                                 sale?.collection?.printType
                                               )
                                             ]
-                                      }/${sale?.postId}`
+                                      }/${sale?.collection?.metadata?.title?.replaceAll(
+                                  " ",
+                                  "_"
+                                )}`
                                     );
                                   }}
                                 >
