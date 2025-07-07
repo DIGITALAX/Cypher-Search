@@ -217,7 +217,7 @@ const useLens = (
   > => {
     try {
       const data = await getFilters();
-
+     
       return {
         microbrands: aggregateMicrobrands(data?.data?.collectionCreateds),
         dropsSuggested: aggregateUniqueValues(
@@ -247,7 +247,6 @@ const useLens = (
         hashtags: (data?.hashtags! || [])?.sort(() => Math.random() - 0.5),
         dropsSuggested: data?.dropsSuggested!,
       };
-
       contexto?.setFilterConstants(filters);
       contexto?.setFilterDropDown((prev) => ({
         ...prev,
