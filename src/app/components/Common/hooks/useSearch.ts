@@ -278,7 +278,7 @@ const useSearch = () => {
           filter = {
             ...filter,
             authors: Array.from(
-              new Set(collections?.map((item) => item?.profile?.address))
+              new Set(collections?.map((item) => item?.profile?.address).filter(Boolean))
             ),
           };
         }
@@ -487,15 +487,19 @@ const useSearch = () => {
         })) || [],
       ]?.filter((item) => item?.length > 0) as GeneralPub[][];
 
+      const newGraphCursor = Number(collections?.length) >= 10 ? 10 : undefined;
+      const newTripleACursor = Number(tripleA?.length) >= 10 ? 10 : undefined;
+      const newKinoraCursor = Number(quests?.length) >= 10 ? 10 : undefined;
+
       context?.setSearchItems((prev) => ({
         ...prev,
         items: backup
           ? [...(prev?.items || []), ...mixArrays(allItems)]
           : mixArrays(allItems),
-        graphCursor: Number(collections?.length) >= 10 ? 10 : undefined,
-        kinoraCursor: Number(quests?.length) >= 10 ? 10 : undefined,
+        graphCursor: newGraphCursor,
+        kinoraCursor: newKinoraCursor,
         awardCursor: Number(awards?.length) >= 10 ? 10 : undefined,
-        tripleACursor: Number(tripleA?.length) >= 10 ? 10 : undefined,
+        tripleACursor: newTripleACursor,
         catalogoCursor: Number(catalogos?.length) >= 10 ? 10 : undefined,
         lensProfileCursor: profileCursor,
         lensPubCursor: pubCursor,
@@ -533,9 +537,10 @@ const useSearch = () => {
       }
     | undefined
   > => {
+ 
     let filter = newFilters ? newFilters : context?.filters!;
     const where = buildQuery(filter);
-    const whereTripleA = buildQueryTripleA(filter);
+
 
     let collections, quests, tripleA;
     try {
@@ -570,6 +575,7 @@ const useSearch = () => {
       }
 
       if (tripleACursor !== undefined) {
+        const whereTripleA = buildQueryTripleA(filter);
         if (query.trim() !== "") {
           const textWhere = buildTextQueryTripleA(query?.replaceAll("@", "")!);
 
@@ -750,6 +756,7 @@ const useSearch = () => {
   };
 
   const handleMoreSearch = async () => {
+
     context?.setSearchItems((prev) => ({
       ...prev,
       moreSearch: false,
@@ -863,12 +870,14 @@ const useSearch = () => {
                 searchQuery: query,
                 postTypes: [PostType.Root],
                 metadata: {
-                  tags: context?.filters?.hashtag
+                  tags: context?.filters?.hashtag || context?.filters?.origin
                     ? {
-                        oneOf: context?.filters?.hashtag
-                          ?.split(",")
-                          .map((word) => word.trim())
-                          .filter((word: string) => word.length > 0),
+                        ...(context?.filters?.hashtag ? {
+                          oneOf: context?.filters?.hashtag
+                            ?.split(",")
+                            .map((word) => word.trim())
+                            .filter((word: string) => word.length > 0),
+                        } : {}),
                         all: context?.filters?.origin
                           ? [
                               ...context?.filters?.origin
@@ -1090,24 +1099,31 @@ const useSearch = () => {
         })) || [],
       ]?.filter((item) => item?.length > 0) as GeneralPub[][];
 
+      const newGraphCursor = context?.searchItems?.graphCursor
+        ? Number(collections?.length) >= 10
+          ? context?.searchItems?.graphCursor + 10
+          : undefined
+        : undefined;
+
+      const newTripleACursor = context?.searchItems?.tripleACursor
+        ? Number(tripleA?.length) >= 10
+          ? context?.searchItems?.tripleACursor + 10
+          : undefined
+        : undefined;
+
+      const newKinoraCursor = context?.searchItems?.kinoraCursor
+        ? Number(quests?.length) >= 10
+          ? context?.searchItems?.kinoraCursor + 10
+          : undefined
+        : undefined;
+
+
       context?.setSearchItems((prev) => ({
         ...prev,
         items: [...prev?.items!, ...mixArrays(newItems)],
-        graphCursor: prev?.graphCursor
-          ? Number(collections?.length) >= 10
-            ? prev?.graphCursor + 10
-            : undefined
-          : undefined,
-        tripleACursor: prev?.tripleACursor
-          ? Number(collections?.length) >= 10
-            ? prev?.tripleACursor + 10
-            : undefined
-          : undefined,
-        kinoraCursor: prev?.kinoraCursor
-          ? Number(quests?.length) >= 10
-            ? prev?.kinoraCursor + 10
-            : undefined
-          : undefined,
+        graphCursor: newGraphCursor,
+        tripleACursor: newTripleACursor,
+        kinoraCursor: newKinoraCursor,
         awardCursor: prev?.awardCursor
           ? Number(awards?.length) >= 10
             ? prev?.awardCursor + 10
