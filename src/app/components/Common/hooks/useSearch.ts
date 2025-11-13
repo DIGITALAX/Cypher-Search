@@ -22,7 +22,6 @@ import {
   Collection,
   Filter,
   ItemType,
-  PostFilter,
   Quest,
 } from "../types/common.types";
 import filterEmpty from "@/app/lib/helpers/filterEmpty";
@@ -253,48 +252,60 @@ const useSearch = () => {
       }
 
       if (publications?.length < 1) {
-        let filter: PostFilter = {
-          postTypes: [PostType.Root],
-        };
+        let authorsArray: ReturnType<typeof evmAddress>[] = [];
 
         if (
           context?.filters?.microbrand &&
           context?.filters?.microbrand?.trim() !== "" &&
           context?.filterConstants?.microbrands
         ) {
-          filter = {
-            ...filter,
-            authors: context?.filterConstants?.microbrands
-              ?.filter((item) =>
-                context?.filters?.microbrand
-                  ?.split(",")
-                  .map((word) => word.trim())
-                  ?.map((item) => item?.toLowerCase())
-                  ?.includes(item?.[0]?.toLowerCase())
-              )
-              ?.map((item) => evmAddress(item[2])),
-          };
+          authorsArray = context?.filterConstants?.microbrands
+            ?.filter((item) =>
+              context?.filters?.microbrand
+                ?.split(",")
+                .map((word) => word.trim())
+                ?.map((item) => item?.toLowerCase())
+                ?.includes(item?.[0]?.toLowerCase())
+            )
+            ?.map((item) => evmAddress(item[2])) || [];
         } else if (collections && collections?.length > 0) {
-          filter = {
-            ...filter,
-            authors: Array.from(
-              new Set(collections?.map((item) => item?.profile?.address).filter(Boolean))
-            ),
-          };
+          authorsArray = Array.from(
+            new Set(collections?.map((item) => item?.profile?.address).filter(Boolean))
+          );
         }
 
-        if (filter.authors && filter.authors?.length > 0) {
-          const data = await fetchPosts(
-            context?.lensConectado?.sessionClient ?? context?.clienteLens!,
-            {
-              pageSize: PageSize.Ten,
-              filter,
-            }
-          );
+        if (authorsArray && authorsArray?.length > 0) {
+          const CHUNK_SIZE = 50;
+          const chunks = [];
+          for (let i = 0; i < authorsArray.length; i += CHUNK_SIZE) {
+            chunks.push(authorsArray.slice(i, i + CHUNK_SIZE));
+          }
 
-          if (data?.isOk()) {
-            publications = (data?.value?.items || []) as (Post | Repost)[];
-            pubProfileCursor = data?.value?.pageInfo?.next!;
+          for (const chunk of chunks) {
+            const data = await fetchPosts(
+              context?.lensConectado?.sessionClient ?? context?.clienteLens!,
+              {
+                pageSize: PageSize.Ten,
+                filter: {
+                  postTypes: [PostType.Root],
+                  authors: chunk,
+                },
+              }
+            );
+
+            if (data?.isOk()) {
+              publications = [
+                ...publications,
+                ...((data?.value?.items || []) as (Post | Repost)[]),
+              ];
+              if (!pubProfileCursor) {
+                pubProfileCursor = data?.value?.pageInfo?.next!;
+              }
+            }
+
+            if (publications.length >= 10) {
+              break;
+            }
           }
         }
       }
@@ -946,27 +957,22 @@ const useSearch = () => {
             Number((item.post as Collection)?.amount) > 0
         )?.length > 0
       ) {
-        let filter: PostFilter = {
-          postTypes: [PostType.Root],
-        };
+        let authorsArray: ReturnType<typeof evmAddress>[] = [];
 
         if (
           context?.filters?.microbrand?.trim() !== "" &&
           context?.filters?.microbrand
         ) {
-          filter = {
-            ...filter,
-            authors: context?.filterConstants?.microbrands
-              ?.filter((item) =>
-                context?.filters?.microbrand
-                  ?.split(",")
-                  .map((word) => word.trim())
-                  ?.map((item) => item?.toLowerCase())
-                  ?.includes(item?.[0]?.toLowerCase())
-              )
-              ?.map((item) => evmAddress(item[2]))
-              ?.filter(Boolean),
-          };
+          authorsArray = context?.filterConstants?.microbrands
+            ?.filter((item) =>
+              context?.filters?.microbrand
+                ?.split(",")
+                .map((word) => word.trim())
+                ?.map((item) => item?.toLowerCase())
+                ?.includes(item?.[0]?.toLowerCase())
+            )
+            ?.map((item) => evmAddress(item[2]))
+            ?.filter(Boolean) || [];
         } else if (
           (collections && collections?.length > 0) ||
           context?.searchItems?.items?.filter(
@@ -975,39 +981,59 @@ const useSearch = () => {
               Number((item.post as Collection)?.amount) > 0
           )?.length > 0
         ) {
-          filter = {
-            ...filter,
-            authors:
-              collections && collections?.length > 0
-                ? Array.from(
-                    new Set(collections?.map((item) => item?.profile?.address))
-                  )?.filter(Boolean)
-                : (
-                    context?.searchItems?.items?.filter(
-                      (item) =>
-                        (item.post as Collection)?.amount &&
-                        Number((item.post as Collection)?.amount) > 0
-                    ) as GeneralPub[]
+          authorsArray =
+            collections && collections?.length > 0
+              ? Array.from(
+                  new Set(collections?.map((item) => item?.profile?.address))
+                )?.filter(Boolean)
+              : (
+                  context?.searchItems?.items?.filter(
+                    (item) =>
+                      (item.post as Collection)?.amount &&
+                      Number((item.post as Collection)?.amount) > 0
+                  ) as GeneralPub[]
+                )
+                  ?.map(
+                    (item: GeneralPub) =>
+                      (item?.post as Collection)?.profile?.address
                   )
-                    ?.map(
-                      (item: GeneralPub) =>
-                        (item?.post as Collection)?.profile?.address
-                    )
-                    ?.filter(Boolean),
-          };
+                  ?.filter(Boolean);
         }
 
-        const data = await fetchPosts(
-          context?.lensConectado?.sessionClient ?? context?.clienteLens!,
-          {
-            pageSize: PageSize.Ten,
-            filter,
-            cursor: context?.searchItems?.pubProfileCursor,
+        if (authorsArray && authorsArray?.length > 0) {
+          const CHUNK_SIZE = 50;
+          const chunks = [];
+          for (let i = 0; i < authorsArray.length; i += CHUNK_SIZE) {
+            chunks.push(authorsArray.slice(i, i + CHUNK_SIZE));
           }
-        );
-        if (data?.isOk()) {
-          publications = (data?.value?.items || []) as Post[];
-          pubProfileCursor = data?.value?.pageInfo?.next!;
+
+          for (const chunk of chunks) {
+            const data = await fetchPosts(
+              context?.lensConectado?.sessionClient ?? context?.clienteLens!,
+              {
+                pageSize: PageSize.Ten,
+                filter: {
+                  postTypes: [PostType.Root],
+                  authors: chunk,
+                },
+                cursor: context?.searchItems?.pubProfileCursor,
+              }
+            );
+
+            if (data?.isOk()) {
+              publications = [
+                ...publications,
+                ...((data?.value?.items || []) as Post[]),
+              ];
+              if (!pubProfileCursor) {
+                pubProfileCursor = data?.value?.pageInfo?.next!;
+              }
+            }
+
+            if (publications.length >= 10) {
+              break;
+            }
+          }
         }
       }
 
