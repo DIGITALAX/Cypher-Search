@@ -1,4 +1,4 @@
-import { graphClient } from "@/app/lib/subgraph/client";
+import { graphClient, graphPrintServer } from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 const HISTORY = `
@@ -31,7 +31,9 @@ query($designer: String!) {
 export const getSalesHistory = async (
   designer: string
 ): Promise<FetchResult<any>> => {
-  return graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  return client.query({
     query: gql(HISTORY),
     variables: {
       designer,

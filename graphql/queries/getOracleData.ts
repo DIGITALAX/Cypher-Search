@@ -1,4 +1,4 @@
-import { graphClient } from "@/app/lib/subgraph/client";
+import { graphClient, graphPrintServer } from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 const ORACLE = `
@@ -13,7 +13,9 @@ const ORACLE = `
 
 export const getOracleData = async (): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(ORACLE),
     fetchPolicy: "no-cache",
     errorPolicy: "all",

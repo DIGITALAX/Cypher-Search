@@ -1,4 +1,9 @@
-import { graphClient, tripleAClient } from "@/app/lib/subgraph/client";
+import {
+  graphClient,
+  tripleAClient,
+  graphPrintServer,
+  graphTripleServer,
+} from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 const ORDERS = `
@@ -127,7 +132,9 @@ const ORDERS_PAGINATED_TRIPLEA = `
 
 export const getOrders = async (buyer: string): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(ORDERS),
     variables: { buyer },
     fetchPolicy: "no-cache",
@@ -155,7 +162,9 @@ export const getOrdersPaginated = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(ORDERS_PAGINATED),
     variables: { buyer, first, skip },
     fetchPolicy: "no-cache",
@@ -183,7 +192,9 @@ export const getOrdersPaginatedTripleA = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = tripleAClient.query({
+  const client = typeof window === "undefined" ? graphTripleServer : tripleAClient;
+
+  const queryPromise = client.query({
     query: gql(ORDERS_PAGINATED_TRIPLEA),
     variables: { buyer, first, skip },
     fetchPolicy: "no-cache",
@@ -220,7 +231,9 @@ export const getOrdersQuick = async (
   buyer: `0x${string}`
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(ORDERS_QUICK),
     variables: {
       buyer,

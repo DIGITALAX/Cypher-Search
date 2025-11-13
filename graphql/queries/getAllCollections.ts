@@ -1,5 +1,10 @@
 import serializeQuery from "@/app/lib/helpers/serializeQuery";
-import { graphClient, tripleAClient } from "@/app/lib/subgraph/client";
+import {
+  graphClient,
+  tripleAClient,
+  graphPrintServer,
+  graphTripleServer,
+} from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 export const COLLECTION_RANDOM = `query($origin: String!) {
@@ -278,7 +283,9 @@ export const getAllCollections = async (
   orderBy: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($first: Int, $skip: Int, $orderDirection: String, $orderBy: String) {
       collectionCreateds(where: {${serializeQuery(
@@ -368,7 +375,9 @@ export const getAllCollectionsTripleA = async (
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
 
-  const queryPromise = tripleAClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphTripleServer : tripleAClient
+  ).query({
     query: gql(`
     query($first: Int, $skip: Int, $orderDirection: String, $orderBy: String) {
       collectionCreateds(where: {${serializeQuery(
@@ -441,7 +450,9 @@ export const getOneRandomCollection = async (
   origin: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(COLLECTION_RANDOM),
     variables: {
       origin,
@@ -469,7 +480,8 @@ export const getOneCollectionByPostId = async (
   postId: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+  const queryPromise = client.query({
     query: gql(COLLECTION_QUICK_POSTID),
     variables: {
       postId,
@@ -498,7 +510,9 @@ export const getOneCollectionQuick = async (
   title: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphPrintServer : graphClient
+  ).query({
     query: gql(COLLECTION_QUICK),
     variables: {
       origin,
@@ -527,7 +541,9 @@ export const getOneCollection = async (
   collectionId: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphPrintServer : graphClient
+  ).query({
     query: gql(COLLECTION),
     variables: {
       collectionId,
@@ -556,7 +572,9 @@ export const getCollectionsSitemap = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphPrintServer : graphClient
+  ).query({
     query: gql(COLLECTIONS_PAGINATED_SITEMAP),
     variables: { first, skip },
     fetchPolicy: "no-cache",
@@ -584,7 +602,9 @@ export const getCollectionsPaginated = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphPrintServer : graphClient
+  ).query({
     query: gql(COLLECTIONS_PAGINATED),
     variables: { designer, first, skip },
     fetchPolicy: "no-cache",
@@ -612,7 +632,9 @@ export const getCollectionsPaginatedTripleA = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = tripleAClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphTripleServer : tripleAClient
+  ).query({
     query: gql(COLLECTIONS_PAGINATED_TRIPLEA),
     variables: { artist, first, skip },
     fetchPolicy: "no-cache",
@@ -689,7 +711,9 @@ export const getCollections = async (
   designer: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphPrintServer : graphClient
+  ).query({
     query: gql(COLLECTIONS),
     variables: {
       designer,
@@ -769,7 +793,9 @@ export const getOneCollectionTitle = async (
   origin: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphPrintServer : graphClient
+  ).query({
     query: gql(COLLECTION_TITLE),
     variables: {
       title,
@@ -837,7 +863,9 @@ export const getOneCollectionTripleA = async (
   title: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = tripleAClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphTripleServer : tripleAClient
+  ).query({
     query: gql(COLLECTION_TITLE_TRIPLEA),
     variables: {
       title,
@@ -862,7 +890,9 @@ export const getOneCollectionTripleA = async (
 };
 
 export const getCollectionByUri = async (uri: string): Promise<any> => {
-  const queryPromise = graphClient.query({
+  const queryPromise = (
+    typeof window === "undefined" ? graphPrintServer : graphClient
+  ).query({
     query: gql(`query($uri: String) {
       collectionCreateds(first: 1, where: { uri: $uri}, orderDirection: desc, orderBy: blockTimestamp) {
         metadata {

@@ -1,4 +1,4 @@
-import { autographClient } from "@/app/lib/subgraph/client";
+import { autographClient, graphAutoServer } from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 const ARTICULO = gql`
@@ -56,7 +56,9 @@ export const getArticulo = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = autographClient.query({
+  const client = typeof window === "undefined" ? graphAutoServer : autographClient;
+
+  const queryPromise = client.query({
     query: ARTICULO,
     variables: {
       first,
@@ -87,7 +89,9 @@ export const getUnArticulo = async (
   title: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = autographClient.query({
+  const client = typeof window === "undefined" ? graphAutoServer : autographClient;
+
+  const queryPromise = client.query({
     query: UN_ARTICULO,
     variables: {
       title,

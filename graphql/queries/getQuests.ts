@@ -1,6 +1,6 @@
 import { KINORA_QUEST_DATA } from "@/app/lib/constants";
 import serializeQuery from "@/app/lib/helpers/serializeQuery";
-import { graphKinoraClient } from "@/app/lib/subgraph/client";
+import { graphKinoraClient, graphKinoraServer } from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 export const getQuestsWhere = async (
@@ -9,7 +9,9 @@ export const getQuestsWhere = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($first: Int, $skip: Int) {
       questInstantiateds(first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp, where: {${serializeQuery(
@@ -76,7 +78,9 @@ export const getQuests = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($first: Int, $skip: Int, $contractAddress: String) {
       questInstantiateds(first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp, where: {contractAddress: $contractAddress}) {
@@ -143,7 +147,9 @@ export const getQuestByProfile = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($first: Int, $skip: Int) {
       questInstantiateds(first: $first, skip: $skip, orderDirection: desc, orderBy: blockTimestamp, where: {${serializeQuery(
@@ -209,7 +215,9 @@ export const getQuestSample = async (
   playerProfile: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($playerProfile: String) {
       questInstantiateds(first: 4, orderDirection: desc, orderBy: blockTimestamp, where: {playerProfile: $playerProfile}) {
@@ -325,7 +333,9 @@ export const getPlayers = async (
   playerProfile: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($playerProfile: String) {
       players(first: 4, where: {playerProfile: $playerProfile}) {
@@ -361,7 +371,9 @@ export const getPlayers = async (
 
 export const getQuest = async (postId: string): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($postId: String, $contractAddress: String) {
       questInstantiateds(first: 1, orderDirection: desc, orderBy: blockTimestamp, where: {postId: $postId, contractAddress: $contractAddress}) {
@@ -478,7 +490,9 @@ export const getQuestById = async (
   questId: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($questId: Int, $contractAddress: String) {
       questInstantiateds(first: 1, orderDirection: desc, orderBy: blockTimestamp, where: {questId: $questId, contractAddress: $contractAddress}) {

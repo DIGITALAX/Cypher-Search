@@ -1,4 +1,9 @@
-import { graphClient, tripleAClient } from "@/app/lib/subgraph/client";
+import {
+  graphClient,
+  tripleAClient,
+  graphPrintServer,
+  graphTripleServer,
+} from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 export const DROP_TRIPLEA = `query($title: String!) {
@@ -51,7 +56,9 @@ export const getTripleADrop = async (
   title: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = tripleAClient.query({
+  const client = typeof window === "undefined" ? graphTripleServer : tripleAClient;
+
+  const queryPromise = client.query({
     query: gql(DROP_TRIPLEA),
     variables: {
       title,
@@ -192,7 +199,9 @@ export const getPrintDrop = async (
   title: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(DROP_PRINT),
     variables: {
       title,
@@ -220,7 +229,9 @@ export const getDropsPrint = async (
   designer: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(DROPS_ALL_PRINT),
     variables: {
       designer,
@@ -296,7 +307,9 @@ export const getDropsTripleA = async (
   artist: string
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = tripleAClient.query({
+  const client = typeof window === "undefined" ? graphTripleServer : tripleAClient;
+
+  const queryPromise = client.query({
     query: gql(DROPS_ALL_TRIPLEA),
     variables: {
       artist,

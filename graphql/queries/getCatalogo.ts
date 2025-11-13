@@ -1,4 +1,4 @@
-import { autographClient } from "@/app/lib/subgraph/client";
+import { autographClient, graphAutoServer } from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 const CATALOGO = gql(
@@ -23,7 +23,9 @@ const CATALOGO = gql(
 
 export const getCatalogo = async (): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = autographClient.query({
+  const client = typeof window === "undefined" ? graphAutoServer : autographClient;
+
+  const queryPromise = client.query({
     query: CATALOGO,
     fetchPolicy: "no-cache",
     errorPolicy: "all",

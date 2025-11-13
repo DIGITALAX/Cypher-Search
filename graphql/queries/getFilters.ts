@@ -1,4 +1,4 @@
-import { graphClient } from "@/app/lib/subgraph/client";
+import { graphClient, graphPrintServer } from "@/app/lib/subgraph/client";
 import { gql } from "@apollo/client";
 
 const FILTER = `
@@ -23,7 +23,9 @@ const FILTER = `
 
 export const getFilters = async (): Promise<any> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphClient.query({
+  const client = typeof window === "undefined" ? graphPrintServer : graphClient;
+
+  const queryPromise = client.query({
     query: gql(FILTER),
     fetchPolicy: "no-cache",
     errorPolicy: "all",

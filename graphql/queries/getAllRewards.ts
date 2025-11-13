@@ -1,5 +1,5 @@
 import { KINORA_QUEST_DATA } from "@/app/lib/constants";
-import { graphKinoraClient } from "@/app/lib/subgraph/client";
+import { graphKinoraClient, graphKinoraServer } from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 
@@ -8,7 +8,9 @@ export const getAllRewards = async (
   skip: number
 ): Promise<FetchResult | void> => {
   let timeoutId: NodeJS.Timeout | undefined;
-  const queryPromise = graphKinoraClient.query({
+  const client = typeof window === "undefined" ? graphKinoraServer : graphKinoraClient;
+
+  const queryPromise = client.query({
     query: gql(`
     query($first: Int, $skip: Int, $contractAddress: String) { 
         rewards(where:{ contractAddress: $contractAddress, type: 1}, first: $first, skip: $skip) {
