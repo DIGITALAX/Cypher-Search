@@ -266,5 +266,6 @@
   "time": "¿Límite de 24 horas?",
   "moneda": "Moneda del premio",
   "awardAmount": "Cantidad del premio",
-  "award": "¿Premio para el creador?"
+  "award": "¿Premio para el creador?",
+  "decryptPrompt": "Ingresa la clave privada de tu billetera para descifrar tus datos de cumplimiento.\n\nEsta interfaz es completamente de código abierto, se ejecuta solo en tu navegador y nunca almacena tu clave. Asegúrate de estar en un entorno seguro antes de ingresarla."
 }

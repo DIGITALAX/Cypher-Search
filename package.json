@@ -19,7 +19,6 @@
     "ethers-v5": "npm:ethers@^5.7.2",
     "@lens-protocol/client": "^0.0.0-canary-20250618120637",
     "@lens-protocol/metadata": "^2.0.0-next.7",
-    "@lit-protocol/lit-node-client": "^7.0.9",
     "@popperjs/core": "^2.11.8",
     "@tanstack/react-query": "^5.71.5",
     "@livepeer/react": "^3.1.9",
@@ -50,7 +49,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@lit-protocol/types": "^7.0.9",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.18",
     "@types/lodash": "^4.17.16",

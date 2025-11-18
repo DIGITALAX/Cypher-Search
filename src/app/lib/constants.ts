@@ -27,8 +27,12 @@ export const PRINT_ACCESS_CONTROL: `0x${string}` =
   "0xBA1b711Be72AF33B168613D61B6497c35B055190";
 export const COLLECTION_CREATOR: `0x${string}` =
   "0x52b229A682689Cd4f33E9fA7A47b0895cEB8Fe47";
+
 export const DIGITALAX_ADDRESS: `0x${string}` =
-  "0xAA3e5ee4fdC831e5274FE7836c95D670dC2502e6";
+  "0xdd35935c12e3748704c96492e5565d34dae73de7";
+
+export const DIGITALAX_PUBLIC_KEY: string =
+  "0x04d9824e95252fda536edb1e80797e5ba885d2a98e1a6d880ab9ccbe050aa850c8d0fdb95f347256c907468b74e058181b14edc8acb3f3b178f2b7946bb9170ebe";
 export const ZERO_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000";
 export const F3M_ADDRESS: `0x${string}` =
@@ -125,7 +129,7 @@ export const numberToItemTypeMap: { [key: number]: ItemType } = {
   0: ItemType.Chromadin,
   5: ItemType.TripleA,
   4: ItemType.Kinora,
-   8: ItemType.Quest,
+  8: ItemType.Quest,
   2: ItemType.Listener,
   3: ItemType.F3M,
   6: ItemType.Other,

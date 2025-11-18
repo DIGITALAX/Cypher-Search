@@ -1,32 +1,19 @@
 import { useContext, useEffect, useState } from "react";
-import {
-  EncryptedDetails,
-  Order,
-  ScreenDisplay,
-} from "../types/autograph.types";
+import { EncryptedData, Order, ScreenDisplay } from "../types/autograph.types";
 import { ModalContext } from "@/app/providers";
 import { useAccount } from "wagmi";
 import { getOrders } from "../../../../../graphql/queries/getOrders";
 import { INFURA_GATEWAY, orderStatus } from "@/app/lib/constants";
-import {
-  checkAndSignAuthMessage,
-  LitNodeClient,
-  uint8arrayToString,
-} from "@lit-protocol/lit-node-client";
-import { LIT_NETWORK } from "@lit-protocol/constants";
 import { Account } from "@lens-protocol/client";
-
-const useOrders = (pageProfile: Account | undefined) => {
+import { decryptData } from "@/app/lib/helpers/encryption";
+const useOrders = (pageProfile: Account | undefined, dict: any) => {
   const context = useContext(ModalContext);
   const { address } = useAccount();
   const [ordersLoading, setOrdersLoading] = useState<boolean>(false);
   const [decryptLoading, setDecryptLoading] = useState<boolean[]>([]);
   const [orderOpen, setOrderOpen] = useState<boolean[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const client = new LitNodeClient({
-    litNetwork: LIT_NETWORK.Datil,
-    debug: false,
-  });
+  const [privateKey, setPrivateKey] = useState<string | null>(null);
 
   const getAllOrders = async () => {
     setOrdersLoading(true);
@@ -66,31 +53,34 @@ const useOrders = (pageProfile: Account | undefined) => {
     }
 
     try {
-      let nonce = await client.getLatestBlockhash();
-
-      const authSig = await checkAndSignAuthMessage({
-        chain: "polygon",
-        nonce,
-      });
-
       const data = await fetch(
         `${INFURA_GATEWAY}/ipfs/${
           orders[index]?.details?.split("ipfs://")?.[1]
         }`
       );
 
-      const details = (await data.json()) as EncryptedDetails;
+      const details = (await data.json()) as EncryptedData;
 
-      await client.connect();
-      const { decryptedData } = await client.decrypt({
-        dataToEncryptHash: details.dataToEncryptHash,
-        accessControlConditions: details.accessControlConditions,
-        chain: details.chain || "polygon",
-        ciphertext: details.ciphertext,
-        authSig,
-      });
+      let key = privateKey;
 
-      const fulfillment = await JSON.parse(uint8arrayToString(decryptedData));
+      if (!key) {
+        const promptMessage = dict?.decryptPrompt;
+        const promptValue = window.prompt(promptMessage);
+
+        if (!promptValue) {
+          return;
+        }
+
+        key = promptValue.trim();
+
+        if (!key.startsWith("0x")) {
+          key = `0x${key}`;
+        }
+
+        setPrivateKey(key);
+      }
+
+      const fulfillment = await decryptData(details, key, address);
 
       setOrders((prev) => {
         const pedidos = [...prev];
@@ -123,8 +113,6 @@ const useOrders = (pageProfile: Account | undefined) => {
       getAllOrders();
     }
   }, [context?.screenDisplay, context?.lensConectado?.profile, pageProfile]);
-
-  
 
   return {
     ordersLoading,

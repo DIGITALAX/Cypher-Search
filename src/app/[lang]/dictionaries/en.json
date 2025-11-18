@@ -266,5 +266,6 @@
   "time": "24hr time limit?",
   "moneda": "Award currency",
   "awardAmount": "Award amount",
-  "award": "Creator award?"
+  "award": "Creator award?",
+  "decryptPrompt": "Enter your wallet private key to decrypt your fulfillment details.\n\nThis interface is fully open source, runs entirely in your browser, and never stores your key. Make sure you are in a secure environment before entering it."
 }

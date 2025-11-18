@@ -24,7 +24,7 @@ const Orders: FunctionComponent<{
     handleDecrypt,
     orderOpen,
     setOrderOpen,
-  } = useOrders(profile);
+  } = useOrders(profile, dict);
   const router = useRouter();
   const context = useContext(ModalContext);
   return (

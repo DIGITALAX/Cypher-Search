@@ -1,7 +1,6 @@
 import { Account } from "@lens-protocol/client";
 import { Collection } from "../../Common/types/common.types";
 import { NFTData } from "../../Tiles/types/tiles.types";
-import { AccessControlConditions } from "@lit-protocol/types";
 import { ChangeEvent, SetStateAction } from "react";
 import { MediaImageMimeType } from "@lens-protocol/metadata";
 
@@ -15,11 +14,12 @@ export interface Drop {
   collections: (Collection | NFTData)[];
 }
 
-export interface EncryptedDetails {
-  ciphertext: string;
-  dataToEncryptHash: string;
-  chain: string;
-  accessControlConditions: AccessControlConditions;
+export interface EncryptedData {
+  [address: string]: {
+    ephemPublicKey: string;
+    iv: string;
+    ciphertext: string;
+  };
 }
 
 export interface DropCreate {

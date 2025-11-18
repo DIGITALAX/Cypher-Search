@@ -2,6 +2,7 @@ import {
   ACCEPTED_TOKENS,
   AUTOGRAPH_MARKET,
   DIGITALAX_ADDRESS,
+  DIGITALAX_PUBLIC_KEY,
 } from "@/app/lib/constants";
 import { ModalContext } from "@/app/providers";
 import { chains } from "@lens-chain/sdk/viem";
@@ -18,14 +19,11 @@ import { PurchaseDetails } from "../types/items.type";
 import findBalance from "@/app/lib/helpers/findBalance";
 import { Indexar } from "../../Search/types/search.types";
 import { ethers } from "ethers";
-import {
-  checkAndSignAuthMessage,
-  LitNodeClient,
-  uint8arrayFromString,
-} from "@lit-protocol/lit-node-client";
-import { LIT_NETWORK } from "@lit-protocol/constants";
-import { AccessControlConditions } from "@lit-protocol/types";
 import MarketAbi from "./../../../../../abis/AutographMarketAbi.json";
+import {
+  encryptForMultipleRecipients,
+  getPublicKeyFromSignature,
+} from "@/app/lib/helpers/encryption";
 
 const useCatalog = (
   item: {
@@ -39,11 +37,6 @@ const useCatalog = (
     chain: chains.mainnet,
     transport: http("https://rpc.lens.xyz"),
   });
-  const client = new LitNodeClient({
-    litNetwork: LIT_NETWORK.Datil,
-    debug: false,
-  });
-  const coder = new ethers.AbiCoder();
   const { address } = useAccount();
   const path = usePathname();
   const [instantLoading, setInstantLoading] = useState<boolean>(false);
@@ -138,76 +131,53 @@ const useCatalog = (
     )
       return;
     try {
-      let nonce = await client.getLatestBlockhash();
-      await checkAndSignAuthMessage({
-        chain: "polygon",
-        nonce: nonce!,
+      const clientWallet = createWalletClient({
+        chain: chains.mainnet,
+        transport: custom((window as any).ethereum),
       });
-      await client.connect();
 
-      const accessControlConditions = [
-        {
-          contractAddress: "",
-          standardContractType: "",
-          chain: "polygon",
-          method: "",
-          parameters: [":userAddress"],
-          returnValueTest: {
-            comparator: "=",
-            value: address.toLowerCase(),
-          },
-        },
-        {
-          operator: "or",
-        },
-        {
-          contractAddress: "",
-          standardContractType: "",
-          chain: "polygon",
-          method: "",
-          parameters: [":userAddress"],
-          returnValueTest: {
-            comparator: "=",
-            value: DIGITALAX_ADDRESS?.toLowerCase() as string,
-          },
-        },
-      ] as AccessControlConditions;
-
-      const { ciphertext, dataToEncryptHash } = await client.encrypt({
-        accessControlConditions,
-        dataToEncrypt: uint8arrayFromString(
-          JSON.stringify({
-            nombre: context?.lensConectado?.profile?.username?.localName,
-            account: context?.lensConectado?.profile?.address,
-            direccion: purchaseDetails?.address,
-            zip: purchaseDetails?.zip,
-            ciudad: purchaseDetails?.city,
-            estado: purchaseDetails?.state,
-            pais: purchaseDetails?.country,
-            elementos: [
-              {
-                id: (item?.post as AutographCollection)?.coleccionId || 0,
-                color: purchaseDetails?.color,
-                tamano: purchaseDetails?.size,
-                cantidad: 1,
-                tipo: item?.post?.tipo,
-              },
-            ],
-          })
-        ),
+      const message = "Sign this message to encrypt your fulfillment details";
+      const signature = await clientWallet.signMessage({
+        account: address,
+        message,
       });
+
+      const buyerPublicKey = await getPublicKeyFromSignature(
+        message,
+        signature
+      );
+
+      const encryptedData = await encryptForMultipleRecipients(
+        {
+          nombre: context?.lensConectado?.profile?.username?.localName,
+          account: context?.lensConectado?.profile?.address,
+          direccion: purchaseDetails?.address,
+          zip: purchaseDetails?.zip,
+          ciudad: purchaseDetails?.city,
+          estado: purchaseDetails?.state,
+          pais: purchaseDetails?.country,
+          elementos: [
+            {
+              id: (item?.post as AutographCollection)?.coleccionId || 0,
+              color: purchaseDetails?.color,
+              tamano: purchaseDetails?.size,
+              cantidad: 1,
+              tipo: item?.post?.tipo,
+            },
+          ],
+        },
+        [
+          { address, publicKey: buyerPublicKey },
+          { address: DIGITALAX_ADDRESS, publicKey: DIGITALAX_PUBLIC_KEY },
+        ]
+      );
 
       const ipfsRes = await fetch("/api/ipfs", {
         method: "POST",
         headers: {
-          contentType: "application/json",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ciphertext,
-          dataToEncryptHash,
-          accessControlConditions,
-          chain: "polygon",
-        }),
+        body: JSON.stringify(encryptedData),
       });
       const json = await ipfsRes.json();
 
@@ -371,7 +341,6 @@ const useCatalog = (
       }));
     }
   }, [item]);
-  
 
   return {
     purchaseDetails,
