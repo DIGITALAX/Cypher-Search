@@ -435,7 +435,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             <KinoraProvider
               playerAuthedApolloClient={apolloClient}
               ipfsConfig={{
-                uploadEndpoint: `${window.location.origin}/api/ipfs`,
+                uploadEndpoint: `${process.env.NEXT_PUBLIC_BASE_URL}/api/ipfs`,
                 gateway: INFURA_GATEWAY,
                 headers: {},
               }}
