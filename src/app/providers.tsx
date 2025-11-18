@@ -42,6 +42,7 @@ import {
 } from "@livepeer/react";
 import { KinoraProvider } from "kinora-sdk";
 import { getApolloLens } from "./lib/lens/client";
+import { INFURA_GATEWAY } from "./lib/constants";
 
 export const config = createConfig(
   getDefaultConfig({
@@ -431,7 +432,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           }}
         >
           <LivepeerConfig client={livepeerClient}>
-            <KinoraProvider playerAuthedApolloClient={apolloClient}>
+            <KinoraProvider
+              playerAuthedApolloClient={apolloClient}
+              ipfsConfig={{
+                uploadEndpoint: `${window.location.origin}/api/ipfs`,
+                gateway: INFURA_GATEWAY,
+                headers: {},
+              }}
+            >
               <ModalContext.Provider
                 value={{
                   questSuccess,
