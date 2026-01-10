@@ -3,3 +3,4 @@ Allow: /
 
 Sitemap: https://cypher.digitalax.xyz/sitemap.xml
 Sitemap: https://cypher.digitalax.xyz/image-sitemap.xml
+Sitemap: https://cypher.digitalax.xyz/video-sitemap.xml

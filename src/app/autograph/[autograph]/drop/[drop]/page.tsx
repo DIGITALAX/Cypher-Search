@@ -21,13 +21,25 @@ export const generateMetadata = async ({
     res = await findDrop(drop);
   }
 
+  const title = res?.metadata?.title || drop;
+  const image = res?.metadata?.cover?.split("ipfs://")?.[1];
+  const description = `Web3 Fashion Drop: ${title} by ${autograph} | DIGITALAX Cypher Search`;
+
   return {
-    title: `Drop | ${res?.metadata?.title}`,
+    title: `Drop | ${title}`,
+    description,
+    keywords: `web3 fashion drop, digitalax, ${autograph}, ${title}, nft drop, crypto fashion, cc0 fashion`,
     openGraph: {
-      title: `Drop | ${res?.metadata?.title}`,
-      images: `${INFURA_GATEWAY}/ipfs/${
-        res?.metadata?.cover?.split("ipfs://")?.[1]
-      }`,
+      title: `Drop | ${title}`,
+      description,
+      images: image ? [`${INFURA_GATEWAY}/ipfs/${image}`] : undefined,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Drop | ${title}`,
+      description,
+      images: image ? [`${INFURA_GATEWAY}/ipfs/${image}`] : undefined,
     },
     alternates: {
       canonical: `https://cypher.digitalax.xyz/autograph/${autograph}/drop/${drop}/`,

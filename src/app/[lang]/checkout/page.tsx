@@ -9,7 +9,7 @@ import { LOCALES } from "@/app/lib/constants";
 export const metadata: Metadata = {
   title: "Checkout",
   alternates: {
-    canonical: `https://cypher.digitalax.xyz/autograph/checkout/`,
+    canonical: `https://cypher.digitalax.xyz/checkout/`,
     languages: LOCALES.reduce((acc, item) => {
       acc[item] = `https://cypher.digitalax.xyz/${item}/checkout/`;
       return acc;
