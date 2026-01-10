@@ -10,9 +10,10 @@ export const generateMetadata = async ({
 }: {
   params: Promise<{
     autograph: string;
+    lang: string;
   }>;
 }): Promise<Metadata> => {
-  const { autograph } = await params;
+  const { autograph, lang } = await params;
 
   const autographImages: { [key: string]: string } = {
     f3manifesto: "QmcEnNAaFA8FKP5jr1SjTjwhM67G6sXqdR8ebdAoGwYVZc",
@@ -40,7 +41,7 @@ export const generateMetadata = async ({
       images: image ? [`https://digitalax.xyz/api/infura/${image}`] : undefined,
     },
     alternates: {
-      canonical: `https://cypher.digitalax.xyz/autograph/${autograph}/`,
+      canonical: `https://cypher.digitalax.xyz/${lang}/autograph/${autograph}/`,
       languages: LOCALES.reduce((acc, item) => {
         acc[
           item

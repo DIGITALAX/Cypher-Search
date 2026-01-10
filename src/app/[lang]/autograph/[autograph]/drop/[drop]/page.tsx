@@ -13,9 +13,10 @@ export const generateMetadata = async ({
   params: Promise<{
     autograph: string;
     drop: string;
+    lang: string;
   }>;
 }): Promise<Metadata> => {
-  const { autograph, drop } = await params;
+  const { autograph, drop, lang } = await params;
   let res: DropType | undefined | void = undefined;
 
   if (drop && autograph) {
@@ -43,7 +44,7 @@ export const generateMetadata = async ({
       images: image ? [`${INFURA_GATEWAY}/ipfs/${image}`] : undefined,
     },
     alternates: {
-      canonical: `https://cypher.digitalax.xyz/autograph/${autograph}/drop/${drop}/`,
+      canonical: `https://cypher.digitalax.xyz/${lang}/autograph/${autograph}/drop/${drop}/`,
       languages: LOCALES.reduce((acc, item) => {
         acc[
           item

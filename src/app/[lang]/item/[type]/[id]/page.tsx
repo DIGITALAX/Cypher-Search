@@ -12,9 +12,10 @@ export const generateMetadata = async ({
   params: Promise<{
     type: string;
     id: string;
+    lang: string;
   }>;
 }): Promise<Metadata> => {
-  const { type, id } = await params;
+  const { type, id, lang } = await params;
 
   const collectionData = await getCollectionMetadata(type, id);
   const title = collectionData?.title || decodeURIComponent(id?.replaceAll("_", " "));
@@ -38,7 +39,7 @@ export const generateMetadata = async ({
       images: image ? [image] : undefined,
     },
     alternates: {
-      canonical: `https://cypher.digitalax.xyz/item/${type}/${id}/`,
+      canonical: `https://cypher.digitalax.xyz/${lang}/item/${type}/${id}/`,
       languages: LOCALES.reduce((acc, item) => {
         acc[item] = `https://cypher.digitalax.xyz/${item}/item/${type}/${id}/`;
         return acc;
@@ -81,7 +82,7 @@ export default async function Item({
             : Number(collectionData.amount) > 0
             ? "https://schema.org/InStock"
             : "https://schema.org/OutOfStock",
-          url: `https://cypher.digitalax.xyz/item/${type}/${id}/`,
+          url: `https://cypher.digitalax.xyz/${lang}/item/${type}/${id}/`,
         },
         category: "Web3 Fashion",
         keywords: `web3 fashion, nft fashion, digitalax, ${type}, crypto fashion`,

@@ -3,6 +3,8 @@ import { graphClient, graphPrintServer } from "../lib/subgraph/client";
 import { gql } from "@apollo/client";
 import { INFURA_GATEWAY_INTERNAL, numberToItemTypeMap } from "../lib/constants";
 
+const locales = ["en", "es"];
+
 function escapeXml(unsafe: string) {
   if (!unsafe) return "";
   return unsafe.replace(/[<>&'"]/g, (c) => {
@@ -81,6 +83,18 @@ export async function GET() {
       return `
     <url>
       <loc>${pageUrl}</loc>
+      ${locales
+        .map(
+          (altLocale) => `
+      <xhtml:link rel="alternate" hreflang="${altLocale}" href="${baseUrl}/${altLocale}/item/${
+            coll?.origin == "4"
+              ? "coinop"
+              : numberToItemTypeMap[Number(coll?.origin)]
+          }/${safeSlug}/" />
+      `
+        )
+        .join("")}
+      <xhtml:link rel="alternate" hreflang="x-default" href="${pageUrl}" />
       <video:video>
         <video:thumbnail_loc>${INFURA_GATEWAY_INTERNAL}${thumbnail}</video:thumbnail_loc>
         <video:title><![CDATA[${title} | Web3 Fashion | DIGITALAX]]></video:title>
@@ -99,7 +113,8 @@ export async function GET() {
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   ${videosXml}
 </urlset>`;
 

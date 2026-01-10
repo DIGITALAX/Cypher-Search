@@ -133,6 +133,17 @@ export async function GET() {
           .join("")}
         <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/" />
       </url>
+      <url>
+        <loc>${baseUrl}/checkout/</loc>
+        ${locales
+          .map(
+            (locale) => `
+          <xhtml:link rel="alternate" hreflang="${locale}" href="${baseUrl}/${locale}/checkout/" />
+          `
+          )
+          .join("")}
+        <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/checkout/" />
+      </url>
 
       ${collectionsXml}
       ${autographXml}

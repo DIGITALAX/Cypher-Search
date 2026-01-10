@@ -6,15 +6,23 @@ import { getDictionary } from "../dictionaries";
 import { Metadata } from "next";
 import { LOCALES } from "@/app/lib/constants";
 
-export const metadata: Metadata = {
-  title: "Checkout",
-  alternates: {
-    canonical: `https://cypher.digitalax.xyz/checkout/`,
-    languages: LOCALES.reduce((acc, item) => {
-      acc[item] = `https://cypher.digitalax.xyz/${item}/checkout/`;
-      return acc;
-    }, {} as { [key: string]: string }),
-  },
+export const generateMetadata = async ({
+  params,
+}: {
+  params: tParams;
+}): Promise<Metadata> => {
+  const { lang } = await params;
+
+  return {
+    title: "Checkout",
+    alternates: {
+      canonical: `https://cypher.digitalax.xyz/${lang}/checkout/`,
+      languages: LOCALES.reduce((acc, item) => {
+        acc[item] = `https://cypher.digitalax.xyz/${item}/checkout/`;
+        return acc;
+      }, {} as { [key: string]: string }),
+    },
+  };
 };
 
 export default async function Checkout({ params }: { params: tParams }) {

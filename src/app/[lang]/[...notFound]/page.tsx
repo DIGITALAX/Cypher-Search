@@ -3,6 +3,26 @@ import { tParams } from "../layout";
 import NotFoundEntry from "@/app/components/Common/modules/NotFoundEntry";
 import RouterChange from "@/app/components/Common/modules/RouterChange";
 import { getDictionary } from "../dictionaries";
+import { Metadata } from "next";
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: tParams;
+}): Promise<Metadata> => {
+  const { lang } = await params;
+
+  return {
+    title: "Not Found",
+    robots: {
+      index: false,
+      follow: false,
+    },
+    alternates: {
+      canonical: `https://cypher.digitalax.xyz/${lang}/`,
+    },
+  };
+};
 
 export default async function NotFound({ params }: { params: tParams }) {
   const { lang } = await params;
