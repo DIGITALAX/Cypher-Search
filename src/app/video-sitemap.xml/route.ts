@@ -86,7 +86,6 @@ export async function GET() {
         <video:title><![CDATA[${title} | Web3 Fashion | DIGITALAX]]></video:title>
         <video:description><![CDATA[${description}]]></video:description>
         <video:content_loc>${INFURA_GATEWAY_INTERNAL}${videoUri}</video:content_loc>
-        <video:player_loc>${pageUrl}</video:player_loc>
         <video:family_friendly>yes</video:family_friendly>
         <video:requires_subscription>no</video:requires_subscription>
         <video:uploader info="https://cypher.digitalax.xyz/">Cypher Search</video:uploader>
