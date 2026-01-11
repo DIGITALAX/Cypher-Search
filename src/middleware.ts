@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/videos") ||
     pathname.startsWith("/favicon.ico") ||
     pathname.startsWith("/api") ||
-    pathname.startsWith("/opengraph_image.png") ||
+    pathname.startsWith("/opengraph-image.png") ||
     pathname.startsWith("/sitemap.xml") ||
     pathname.startsWith("/image-sitemap.xml") ||
     pathname.startsWith("/video-sitemap.xml") ||
@@ -73,6 +73,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next|images|fonts|videos|favicon.ico|opengraph_image.png|api|sitemap|image-sitemap|video-sitemap|BingSiteAuth).*)",
+    "/((?!_next|images|fonts|videos|favicon.ico|opengraph-image.png|api|sitemap|image-sitemap|video-sitemap|BingSiteAuth).*)",
   ],
 };
