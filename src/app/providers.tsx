@@ -1,6 +1,7 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
+import { injected } from "wagmi/connectors";
 import {
   createContext,
   SetStateAction,
@@ -9,7 +10,7 @@ import {
   useState,
 } from "react";
 import { Context, Post, PublicClient, mainnet } from "@lens-protocol/client";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { ConnectKitProvider } from "connectkit";
 import { StorageClient } from "@lens-chain/storage-client";
 import { chains } from "@lens-chain/sdk/viem";
 import {
@@ -43,22 +44,14 @@ import {
 import { KinoraProvider } from "kinora-sdk";
 import { getApolloLens } from "./lib/lens/client";
 import { INFURA_GATEWAY } from "./lib/constants";
-
-export const config = createConfig(
-  getDefaultConfig({
-    appName: "Cypher Search",
-    walletConnectProjectId: process.env
-      .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
-    appUrl: "https://cypher.digitalax.xyz",
-    appIcon: "https://cypher.digitalax.xyz/favicon.ico",
-    chains: [chains.mainnet],
-    connectors: [],
-    transports: {
-      [chains.mainnet.id]: http("https://rpc.lens.xyz"),
-    },
-    ssr: true,
-  })
-);
+export const config = createConfig({
+  chains: [chains.mainnet],
+  connectors: [injected()],
+  transports: {
+    [chains.mainnet.id]: http("https://rpc.lens.xyz"),
+  },
+  ssr: true,
+});
 
 const livepeerClient = createReactClient({
   provider: studioProvider({
