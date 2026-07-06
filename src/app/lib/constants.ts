@@ -4,10 +4,10 @@ import { ItemType, PrintType } from "../components/Common/types/common.types";
 
 export const CHROMADIN: `0x${string}` =
   "0x16a362A10C1f6Bc0565C8fFAd298f1c2761630C5";
-export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
+export const INFURA_GATEWAY: string = "https://cdn.digitalax.xyz";
 export const GROVE_GATEWAY: string = "https://api.grove.storage/";
 export const INFURA_GATEWAY_INTERNAL: string =
-  "https://digitalax.xyz/api/infura/";
+  "https://cdn.digitalax.xyz/ipfs/";
 export const AUTOGRAPH_MARKET: `0x${string}` =
   "0x67819a22df4232726C7B911C1D4d5c06Cf080Cf8";
 export const NFT_CREATOR_ADDRESS: `0x${string}` =

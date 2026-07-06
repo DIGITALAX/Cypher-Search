@@ -116,12 +116,12 @@
   --color-cost: #847ff2;
   --color-girasol: #fbd201;
 
-  --bg-legend: url("https://chromadin.infura-ipfs.io/ipfs/QmWDqwGn7JgWzFsvUuC6pR7P58v6ab1npPueJ9Vfaez8iW");
-  --bg-grant: url("https://chromadin.infura-ipfs.io/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ");
-  --bg-listener: url("https://chromadin.infura-ipfs.io/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2");
-  --bg-web: url("https://chromadin.infura-ipfs.io/ipfs/QmYRZYGFKgH6wGJ39aWHbr7T1PsySh2kTSjo11yEZrrGcM");
-  --bg-blurs: url("https://chromadin.infura-ipfs.io/ipfs/QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY");
-  --bg-synth: url("https://chromadin.infura-ipfs.io/ipfs/QmVaK6MVXPzdGb7XSBXqP4bXGzrsbtd1yECafztTT4dvjp");
+  --bg-legend: url("https://cdn.digitalax.xyz/ipfs/QmWDqwGn7JgWzFsvUuC6pR7P58v6ab1npPueJ9Vfaez8iW");
+  --bg-grant: url("https://cdn.digitalax.xyz/ipfs/QmSGW3JvdMuWFtNqk7QHYTfWbDcixT4MW3KGsqPdUJYxoJ");
+  --bg-listener: url("https://cdn.digitalax.xyz/ipfs/Qmb8nqNPpXRrJTLgKJtRF6n9AW7cvKojtRSBLsbGoD1Ug2");
+  --bg-web: url("https://cdn.digitalax.xyz/ipfs/QmYRZYGFKgH6wGJ39aWHbr7T1PsySh2kTSjo11yEZrrGcM");
+  --bg-blurs: url("https://cdn.digitalax.xyz/ipfs/QmZh9CGujyhWtdfF2C1W1TxSUHP8zmaGbcuzLsi1LeEkXY");
+  --bg-synth: url("https://cdn.digitalax.xyz/ipfs/QmVaK6MVXPzdGb7XSBXqP4bXGzrsbtd1yECafztTT4dvjp");
 
   --breakpoint-tablet: 56.25rem;
   --breakpoint-galaxy: 18.75rem;
@@ -223,7 +223,7 @@
   }
   .bg-tripleA {
     background-color: #0000f5;
-    background-image: url("https://thedial.infura-ipfs.io/ipfs/QmdDfSDsqnZhPJHUHprkhyUTZiEh3MG16Xq2nKJnon9bX5");
+    background-image: url("https://cdn.digitalax.xyz/ipfs/QmdDfSDsqnZhPJHUHprkhyUTZiEh3MG16Xq2nKJnon9bX5");
   }
   .bg-web {
     background-image: var(--bg-web);
@@ -544,7 +544,7 @@ input[type="number"]::-webkit-outer-spin-button:focus {
 }
 
 #bar {
-  background-image: url("https://chromadin.infura-ipfs.io/ipfs/QmeQ2sdjGXxUCQHCnK6kHU2c9Do3rjs557hU87jGorAvTs");
+  background-image: url("https://cdn.digitalax.xyz/ipfs/QmeQ2sdjGXxUCQHCnK6kHU2c9Do3rjs557hU87jGorAvTs");
   background-size: cover;
 }
 
@@ -682,7 +682,7 @@ textarea::-webkit-outer-spin-button:focus {
 }
 
 #videoplayer {
-  background-image: url("https://chromadin.infura-ipfs.io/ipfs/QmekpQQEtQBP1M71SohCHiDRQbV1Sc2bKveVvwEfzAJCPx");
+  background-image: url("https://cdn.digitalax.xyz/ipfs/QmekpQQEtQBP1M71SohCHiDRQbV1Sc2bKveVvwEfzAJCPx");
   background-color: black;
   background-position: center;
   background-size: cover;

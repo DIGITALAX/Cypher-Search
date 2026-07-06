@@ -29,14 +29,14 @@ export const generateMetadata = async ({
     openGraph: {
       title: `Autograph | ${autograph}`,
       description,
-      images: image ? [`https://digitalax.xyz/api/infura/${image}`] : undefined,
+      images: image ? [`https://cdn.digitalax.xyz/ipfs/${image}`] : undefined,
       type: "profile",
     },
     twitter: {
       card: "summary_large_image",
       title: `Autograph | ${autograph}`,
       description,
-      images: image ? [`https://digitalax.xyz/api/infura/${image}`] : undefined,
+      images: image ? [`https://cdn.digitalax.xyz/ipfs/${image}`] : undefined,
     },
     alternates: {
       canonical: `https://cypher.digitalax.xyz/autograph/${autograph}/`,

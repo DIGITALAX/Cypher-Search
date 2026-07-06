@@ -102,12 +102,13 @@ const uploadPostContent = async (
         ) {
           return { type: media?.type, item: media?.item };
         } else {
-          const response = await fetch("/api/ipfs", {
-            method: "POST",
-            body: media.item,
-          });
-          const responseJSON = await response.json();
-          return { type: media?.type, item: "ipfs://" + responseJSON.cid };
+          const { uri } = await clienteAlmacenamiento?.uploadFile(
+            media.item as File,
+            {
+              acl,
+            }
+          )!;
+          return { type: media?.type, item: uri };
         }
       })
     );
@@ -117,14 +118,13 @@ const uploadPostContent = async (
       if (typeof cover == "string" && (cover as String)?.includes("ipfs://")) {
         coverJSON = cover;
       } else {
-        const loadedCover = await fetch("/api/ipfs", {
-          method: "POST",
-          body: cover?.includes("ipfs://")
-            ? cover
-            : convertToFile(cover, "image/png"),
-        });
-        const res = await loadedCover.json();
-        coverJSON = "ipfs://" + res?.cid;
+        const { uri } = await clienteAlmacenamiento?.uploadFile(
+          convertToFile(cover, "image/png"),
+          {
+            acl,
+          }
+        )!;
+        coverJSON = uri;
       }
     }
 

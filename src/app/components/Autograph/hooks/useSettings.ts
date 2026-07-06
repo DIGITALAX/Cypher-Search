@@ -88,12 +88,11 @@ const useSettings = (dict: any) => {
           (image) => image !== undefined
         );
         for (let i = 0; i < images.length; i++) {
-          const response = await fetch("/api/ipfs", {
-            method: "POST",
-            body: convertToFile(images[i] as string, "image/png"),
-          });
-          const responseJSON = await response.json();
-          newImages.push("ipfs://" + responseJSON.cid);
+          const { uri } = await context?.clienteAlmacenamiento?.uploadFile(
+            convertToFile(images[i] as string, "image/png"),
+            { acl: immutable(chains.mainnet.id) }
+          )!;
+          newImages.push(uri);
         }
       }
 
@@ -135,12 +134,12 @@ const useSettings = (dict: any) => {
               }) => {
                 let microbrandCover = item.microbrandCover;
                 if (!microbrandCover.includes("ipfs://")) {
-                  const cover = await fetch("/api/ipfs", {
-                    method: "POST",
-                    body: convertToFile(item?.microbrandCover, item?.type),
-                  });
-                  const coverCID = await cover.json();
-                  microbrandCover = "ipfs://" + coverCID?.cid;
+                  const { uri } =
+                    await context?.clienteAlmacenamiento?.uploadFile(
+                      convertToFile(item?.microbrandCover, item?.type),
+                      { acl: immutable(chains.mainnet.id) }
+                    )!;
+                  microbrandCover = uri;
                 }
 
                 return {

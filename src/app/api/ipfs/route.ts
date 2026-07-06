@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       body = new FormData();
       body.append("file", await req.blob(), "file.png");
     }
-    const response = await fetch("https://ipfs.infura.io:5001/api/v0/add", {
+    const response = await fetch("https://cdn.digitalax.xyz/api/v0/add", {
       method: "POST",
       headers: {
         authorization: auth,

@@ -7,7 +7,9 @@ const convertToFile = (base64: string, mimeType: string) => {
       ia[i] = byteString.charCodeAt(i);
     }
   
-    return new Blob([ab], { type: mimeType });
+    return new File([ab], `media.${mimeType.split("/")[1] ?? "bin"}`, {
+      type: mimeType,
+    });
   };
   
   export default convertToFile;
