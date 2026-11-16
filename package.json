@@ -25,7 +25,7 @@
     "critters": "^0.0.23",
     "ethers": "^6.13.5",
     "ethers-v5": "npm:ethers@^5.7.2",
-    "kinora-sdk": "3.0.0",
+    "kinora-sdk": "3.1.2",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "masonic": "^4.1.0",
