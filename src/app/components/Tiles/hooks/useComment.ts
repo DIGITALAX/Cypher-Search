@@ -152,25 +152,25 @@ const useComment = (publication?: Post) => {
       let actions = null;
 
       if (context?.postInfo?.collectTypes?.["post"]) {
-        let payToCollect =
-          context?.postInfo?.collectTypes?.["post"]?.payToCollect;
+        const { payToCollect, ...collectType } =
+          context?.postInfo?.collectTypes?.["post"]!;
 
-        if (payToCollect) {
-          payToCollect = {
-            ...payToCollect,
-            recipients: [
-              {
-                percent: 100,
-                address: evmAddress(address as string),
-              },
-            ],
-          };
-        }
         actions = [
           {
             simpleCollect: {
-              ...context?.postInfo?.collectTypes?.["post"]!,
-              payToCollect,
+              ...collectType,
+              ...(payToCollect
+                ? {
+                    amount: payToCollect.amount,
+                    referralShare: payToCollect.referralShare,
+                    recipients: [
+                      {
+                        percent: 100,
+                        address: evmAddress(address as string),
+                      },
+                    ],
+                  }
+                : {}),
             },
           },
         ];
@@ -318,25 +318,25 @@ const useComment = (publication?: Post) => {
       let actions = null;
 
       if (context?.postInfo?.collectTypes?.[publication!?.id]) {
-        let payToCollect =
-          context?.postInfo?.collectTypes?.[publication!?.id]?.payToCollect;
+        const { payToCollect, ...collectType } =
+          context?.postInfo?.collectTypes?.[publication!?.id]!;
 
-        if (payToCollect) {
-          payToCollect = {
-            ...payToCollect,
-            recipients: [
-              {
-                percent: 100,
-                address: evmAddress(address as string),
-              },
-            ],
-          };
-        }
         actions = [
           {
             simpleCollect: {
-              ...context?.postInfo?.collectTypes?.[publication!?.id]!,
-              payToCollect,
+              ...collectType,
+              ...(payToCollect
+                ? {
+                    amount: payToCollect.amount,
+                    referralShare: payToCollect.referralShare,
+                    recipients: [
+                      {
+                        percent: 100,
+                        address: evmAddress(address as string),
+                      },
+                    ],
+                  }
+                : {}),
             },
           },
         ];

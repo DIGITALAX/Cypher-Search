@@ -185,6 +185,16 @@ export type MediaSwitchProps = {
   hidden?: boolean;
 };
 
+export type NativeVideoProps = {
+  setMediaElement: (node: HTMLVideoElement) => void;
+  src: string;
+  poster?: string;
+  styles?: React.CSSProperties;
+  loop?: boolean;
+  autoPlay?: boolean;
+  muted?: boolean;
+};
+
 export interface FilterValues {
   hashtags: string[];
   microbrands: string[][];

@@ -368,16 +368,6 @@ const Kinora: FunctionComponent<KinoraProps> = ({
                     0
                   )}
                 </div>
-                <div
-                  className="relative w-3.5 h-3.5 flex items-center justify-center cursor-pointer active:scale-95"
-                  onClick={() => window.open("https://livepeer.studio/")}
-                >
-                  <Image
-                    draggable={false}
-                    layout="fill"
-                    src={`${INFURA_GATEWAY}/ipfs/QmVa8AWMYyAfcQAEpbqdUoRSxSkntpH1DEMpdyajZWz4AR`}
-                  />
-                </div>
               </div>
               <div className="relative w-fit h-fit flex flex-row items-center justify-start gap-px break-words">
                 <div className="relative w-fit h-fit flex items-center justify-center">

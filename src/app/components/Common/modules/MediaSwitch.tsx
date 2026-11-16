@@ -4,8 +4,8 @@ import { FunctionComponent, JSX, useState } from "react";
 import Waveform from "./Waveform";
 import { MediaSwitchProps } from "../types/common.types";
 import { KinoraPlayerWrapper } from "kinora-sdk";
-import { Player } from "@livepeer/react";
-import { INFURA_GATEWAY } from "@/app/lib/constants";
+import NativeVideo from "./NativeVideo";
+import { GROVE_GATEWAY, INFURA_GATEWAY } from "@/app/lib/constants";
 
 const MediaSwitch: FunctionComponent<MediaSwitchProps> = ({
   type,
@@ -64,15 +64,26 @@ const MediaSwitch: FunctionComponent<MediaSwitchProps> = ({
               }}
             >
               {(setMediaElement: (node: HTMLVideoElement) => void) => (
-                <Player
-                  mediaElementRef={setMediaElement}
-                  src={srcUrl}
+                <NativeVideo
+                  setMediaElement={setMediaElement}
+                  src={
+                    srcUrl?.includes("https://")
+                      ? srcUrl
+                      : srcUrl?.includes("lens://")
+                      ? `${GROVE_GATEWAY}${srcUrl?.split("lens://")?.[1]}`
+                      : srcUrl?.includes("ar://")
+                      ? `https://arweave.net/${srcUrl
+                          ?.split("ar://")?.[1]
+                          ?.replace(/"/g, "")
+                          ?.trim()}`
+                      : `${INFURA_GATEWAY}/ipfs/${
+                          srcUrl?.includes("ipfs://")
+                            ? srcUrl?.split("ipfs://")?.[1]
+                            : srcUrl
+                        }`
+                  }
                   poster={srcCover}
-                  objectFit="cover"
-                  // autoUrlUpload={{
-                  //   fallback: true,
-                  //   ipfsGateway: INFURA_GATEWAY,
-                  // }}
+                  styles={classNameVideo}
                   loop={hidden}
                   autoPlay={hidden}
                   muted={true}

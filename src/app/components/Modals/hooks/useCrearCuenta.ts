@@ -127,7 +127,9 @@ const useCrearCuenta = (dict: any) => {
               contexto?.setLensConectado?.({
                 profile: newAcc.value,
                 sessionClient: ownerSigner?.value,
-                apollo: getApolloLens(ownerSigner?.value?.getCredentials()),
+                apollo: getApolloLens(
+                  await ownerSigner?.value?.getCredentials()
+                ),
               });
               contexto?.setCrearCuenta(false);
               setAccount({

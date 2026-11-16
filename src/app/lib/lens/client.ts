@@ -19,15 +19,17 @@ const httpLink = new HttpLink({ uri: BASE_URL });
 
 const retryLink = new RetryLink();
 export const getApolloLens = (
-  creds: Result<
-    {
-      accessToken: AccessToken;
-      idToken: IdToken;
-      refreshToken: RefreshToken;
-    } | null,
-    UnexpectedError
-  >
-): ApolloClient<NormalizedCacheObject> => {
+  creds:
+    | Result<
+        {
+          accessToken: AccessToken;
+          idToken: IdToken;
+          refreshToken: RefreshToken;
+        } | null,
+        UnexpectedError
+      >
+    | undefined
+):ApolloClient<NormalizedCacheObject> => {
   if (creds?.isOk() && creds.value) {
     const staticAuthLink = new ApolloLink((operation, forward) => {
       operation.setContext({

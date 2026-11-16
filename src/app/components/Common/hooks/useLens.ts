@@ -67,7 +67,7 @@ const useLens = (
         contexto?.setLensConectado?.({
           profile: accounts.value.items?.[0]?.account,
           sessionClient: resumed?.value,
-          apollo: getApolloLens(resumed.value?.getCredentials()),
+          apollo: getApolloLens(await resumed.value?.getCredentials()),
         });
       }
     } catch (err) {
@@ -122,7 +122,7 @@ const useLens = (
         contexto?.setLensConectado?.({
           sessionClient,
           profile: accounts.value.items?.[0]?.account,
-          apollo: getApolloLens(authenticated.value?.getCredentials()),
+          apollo: getApolloLens(await authenticated.value?.getCredentials()),
         });
       } else {
         const authenticatedOnboarding = await contexto?.clienteLens.login({
@@ -145,7 +145,7 @@ const useLens = (
         contexto?.setLensConectado?.({
           sessionClient,
           apollo: getApolloLens(
-            authenticatedOnboarding.value?.getCredentials()
+            await authenticatedOnboarding.value?.getCredentials()
           ),
         });
 
@@ -162,7 +162,7 @@ const useLens = (
     setLensCargando(true);
     try {
       const auth =
-        contexto?.lensConectado?.sessionClient?.getAuthenticatedUser();
+        await contexto?.lensConectado?.sessionClient?.getAuthenticatedUser();
 
       if (auth?.isOk()) {
         await revokeAuthentication(contexto?.lensConectado?.sessionClient!, {
