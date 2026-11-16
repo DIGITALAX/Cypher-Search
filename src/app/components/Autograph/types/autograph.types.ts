@@ -108,17 +108,6 @@ export interface Order {
   tokenIds: string[];
   details: string;
   blockTimestamp: string;
-  fulfillment?: {
-    address: string;
-    zip: string;
-    city: string;
-    state: string;
-    country: string;
-    checkoutCurrency: string;
-    tamano: string;
-    color: string;
-  };
-  decrypted: boolean;
   buyer: string;
   currency: string;
   orderId: string;

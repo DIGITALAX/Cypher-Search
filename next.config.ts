@@ -41,8 +41,38 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@x402/core": false,
+      "@x402/evm": false,
+      "@x402/svm": false,
+      "@x402/extensions": false,
+      "@x402/express": false,
+      "@x402/fetch": false,
+    };
+    return config;
+  },
   async headers() {
-    let headersConfig: any = [];
+    let headersConfig: any = [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+        ],
+      },
+    ];
 
     const allowedOrigins = [
       "https://cdn.digitalax.xyz",

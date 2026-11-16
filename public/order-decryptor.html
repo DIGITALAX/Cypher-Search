@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Order Decryptor</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px 16px;
+        background: #111313;
+        color: #f4f4f4;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+      p {
+        margin: 0;
+        color: #c9c9c9;
+      }
+      ol {
+        margin: 0;
+        padding-left: 20px;
+        color: #c9c9c9;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      input,
+      textarea,
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #1c1f1f;
+        color: #f4f4f4;
+        border: 1px solid #5c6565;
+        border-radius: 4px;
+        font: inherit;
+      }
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .row button {
+        flex: 1 1 160px;
+        cursor: pointer;
+      }
+      #run {
+        background: #f4f4f4;
+        color: #111313;
+      }
+      #status {
+        min-height: 21px;
+        color: #f4c95d;
+      }
+      pre {
+        margin: 0;
+        padding: 12px;
+        min-height: 80px;
+        background: #1c1f1f;
+        border: 1px solid #5c6565;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Order Decryptor</h1>
+      <p>
+        This file decrypts your order details on your own computer. It makes no
+        network requests, loads nothing from the internet and stores nothing.
+        Close this tab when you are done.
+      </p>
+      <ol>
+        <li>Save this file and open the saved copy from your computer.</li>
+        <li>
+          Check that its SHA-256 checksum matches the one published on the
+          orders page.
+        </li>
+        <li>Disconnect from the internet if you want an extra guarantee.</li>
+        <li>
+          Load the encrypted order file you downloaded from the orders page.
+        </li>
+        <li>Enter the private key of the wallet that placed the order.</li>
+      </ol>
+      <label>
+        Encrypted order file
+        <input id="file" type="file" accept=".json,application/json" />
+      </label>
+      <label>
+        Or paste the encrypted order contents
+        <textarea id="payload" spellcheck="false" autocomplete="off"></textarea>
+      </label>
+      <label>
+        Wallet private key
+        <input
+          id="key"
+          type="password"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+        />
+      </label>
+      <div class="row">
+        <button id="run" type="button">Decrypt</button>
+        <button id="clear" type="button">Clear everything</button>
+      </div>
+      <p id="status"></p>
+      <pre id="output"></pre>
+    </main>
+    <script>
+      const P =
+        0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn;
+      const N =
+        0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
+
+      const mod = (value) => {
+        const result = value % P;
+        return result >= 0n ? result : result + P;
+      };
+
+      const invert = (value) => {
+        let a = mod(value);
+        let b = P;
+        let x = 0n;
+        let y = 1n;
+        let u = 1n;
+        let v = 0n;
+        while (a !== 0n) {
+          const q = b / a;
+          const r = b % a;
+          const m = x - u * q;
+          const n = y - v * q;
+          b = a;
+          a = r;
+          x = u;
+          y = v;
+          u = m;
+          v = n;
+        }
+        if (b !== 1n) throw new Error("Invalid public key");
+        return mod(x);
+      };
+
+      const double = (point) => {
+        if (!point || point.y === 0n) return null;
+        const slope = mod(3n * point.x * point.x * invert(2n * point.y));
+        const x = mod(slope * slope - 2n * point.x);
+        return { x, y: mod(slope * (point.x - x) - point.y) };
+      };
+
+      const add = (first, second) => {
+        if (!first) return second;
+        if (!second) return first;
+        if (first.x === second.x) {
+          return first.y === second.y ? double(first) : null;
+        }
+        const slope = mod((second.y - first.y) * invert(second.x - first.x));
+        const x = mod(slope * slope - first.x - second.x);
+        return { x, y: mod(slope * (first.x - x) - first.y) };
+      };
+
+      const multiply = (point, scalar) => {
+        let result = null;
+        let current = point;
+        let remaining = scalar;
+        while (remaining > 0n) {
+          if (remaining & 1n) result = add(result, current);
+          current = double(current);
+          remaining >>= 1n;
+        }
+        return result;
+      };
+
+      const cleanHex = (value) => {
+        const cleaned = String(value || "")
+          .trim()
+          .replace(/^0x/i, "");
+        if (!/^[0-9a-fA-F]*$/.test(cleaned) || cleaned.length % 2 !== 0) {
+          throw new Error("Invalid hex value");
+        }
+        return cleaned.toLowerCase();
+      };
+
+      const hexToBytes = (value) => {
+        const cleaned = cleanHex(value);
+        const bytes = new Uint8Array(cleaned.length / 2);
+        for (let i = 0; i < bytes.length; i++) {
+          bytes[i] = parseInt(cleaned.slice(i * 2, i * 2 + 2), 16);
+        }
+        return bytes;
+      };
+
+      const toHex32 = (value) => value.toString(16).padStart(64, "0");
+
+      const parsePublicKey = (value) => {
+        const cleaned = cleanHex(value);
+        if (cleaned.length !== 130 || !cleaned.startsWith("04")) {
+          throw new Error("Invalid public key");
+        }
+        const x = BigInt("0x" + cleaned.slice(2, 66));
+        const y = BigInt("0x" + cleaned.slice(66));
+        if (x >= P || y >= P || mod(y * y) !== mod(x * x * x + 7n)) {
+          throw new Error("Invalid public key");
+        }
+        return { x, y };
+      };
+
+      const parsePrivateKey = (value) => {
+        const cleaned = cleanHex(value);
+        if (cleaned.length !== 64) {
+          throw new Error("The private key must be 64 hex characters");
+        }
+        const scalar = BigInt("0x" + cleaned);
+        if (scalar <= 0n || scalar >= N) {
+          throw new Error("Invalid private key");
+        }
+        return scalar;
+      };
+
+      const sharedSecret = (privateKey, publicKey) => {
+        const point = multiply(
+          parsePublicKey(publicKey),
+          parsePrivateKey(privateKey)
+        );
+        if (!point) throw new Error("Invalid public key");
+        return hexToBytes("04" + toHex32(point.x) + toHex32(point.y));
+      };
+
+      const decryptEntry = async (entry, privateKey) => {
+        const secret = sharedSecret(privateKey, entry.ephemPublicKey);
+        const hash = await crypto.subtle.digest("SHA-256", secret);
+        const aesKey = await crypto.subtle.importKey(
+          "raw",
+          hash,
+          { name: "AES-GCM", length: 256 },
+          false,
+          ["decrypt"]
+        );
+        const decrypted = await crypto.subtle.decrypt(
+          { name: "AES-GCM", iv: hexToBytes(entry.iv) },
+          aesKey,
+          hexToBytes(entry.ciphertext)
+        );
+        return JSON.parse(new TextDecoder().decode(decrypted));
+      };
+
+      const decryptOrder = async (payload, privateKey) => {
+        let parsed;
+        try {
+          parsed = JSON.parse(payload);
+        } catch (err) {
+          throw new Error("The order file is not valid JSON");
+        }
+        const entries = Object.values(parsed || {}).filter(
+          (entry) =>
+            entry &&
+            typeof entry === "object" &&
+            typeof entry.ephemPublicKey === "string" &&
+            typeof entry.iv === "string" &&
+            typeof entry.ciphertext === "string"
+        );
+        if (entries.length < 1) {
+          throw new Error("This is not an encrypted order file");
+        }
+        parsePrivateKey(privateKey);
+        for (const entry of entries) {
+          try {
+            return await decryptEntry(entry, privateKey);
+          } catch (err) {
+            continue;
+          }
+        }
+        throw new Error("This private key cannot decrypt this order");
+      };
+
+      if (typeof document !== "undefined") {
+        const fileInput = document.getElementById("file");
+        const payloadInput = document.getElementById("payload");
+        const keyInput = document.getElementById("key");
+        const status = document.getElementById("status");
+        const output = document.getElementById("output");
+
+        fileInput.addEventListener("change", async () => {
+          const file = fileInput.files && fileInput.files[0];
+          if (!file) return;
+          payloadInput.value = await file.text();
+          status.textContent = "Order file loaded.";
+        });
+
+        document.getElementById("run").addEventListener("click", async () => {
+          output.textContent = "";
+          if (!globalThis.crypto || !crypto.subtle) {
+            status.textContent =
+              "This browser does not allow decryption here. Open the saved file in a current version of Chrome, Firefox or Safari.";
+            return;
+          }
+          status.textContent = "Decrypting...";
+          try {
+            const result = await decryptOrder(
+              payloadInput.value,
+              keyInput.value
+            );
+            output.textContent = JSON.stringify(result, null, 2);
+            status.textContent = "Decrypted.";
+          } catch (err) {
+            status.textContent = err.message;
+          }
+          keyInput.value = "";
+        });
+
+        document.getElementById("clear").addEventListener("click", () => {
+          fileInput.value = "";
+          payloadInput.value = "";
+          keyInput.value = "";
+          output.textContent = "";
+          status.textContent = "";
+        });
+      }
+    </script>
+  </body>
+</html>

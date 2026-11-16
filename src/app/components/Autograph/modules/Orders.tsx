@@ -6,6 +6,8 @@ import {
   ACCEPTED_TOKENS,
   INFURA_GATEWAY,
   numberToItemTypeMap,
+  ORDER_DECRYPTOR_PATH,
+  ORDER_DECRYPTOR_SHA256,
 } from "@/app/lib/constants";
 import { Account } from "@lens-protocol/client";
 import useOrders from "../hooks/useOrders";
@@ -20,11 +22,11 @@ const Orders: FunctionComponent<{
   const {
     ordersLoading,
     orders,
-    decryptLoading,
-    handleDecrypt,
+    downloadLoading,
+    handleDownloadDetails,
     orderOpen,
     setOrderOpen,
-  } = useOrders(profile, dict);
+  } = useOrders(profile);
   const router = useRouter();
   const context = useContext(ModalContext);
   return (
@@ -154,64 +156,52 @@ const Orders: FunctionComponent<{
                                 <div className="relative w-fit h-fit flex items-start justify-start">
                                   {dict?.ord}
                                 </div>
-                                <div className="relative flex flex-row items-start justify-between w-full h-fit gap-6">
-                                  <div className="relative w-fit h-fit flex items-start justify-start flex-row flex-wrap gap-4">
-                                    {[
-                                      dict?.nam,
-                                      dict?.coun,
-                                      dict?.addr,
-                                      dict?.zip,
-                                      dict?.city,
-                                      dict?.state,
-                                      dict?.country,
-                                    ].map((item: string, indexTwo: number) => {
-                                      return (
-                                        <div
-                                          key={indexTwo}
-                                          className="relative w-fit h-fit flex flex-col items-start justify-start gap-1"
-                                        >
-                                          <div className="relative w-fit h-fit flex text-sol text-xs break-words">
-                                            {item}
-                                          </div>
-                                          <div className="relative w-fit h-fit flex text-xxs">
-                                            {order?.decrypted
-                                              ? (order?.details as any)?.[
-                                                  item?.toLowerCase()
-                                                ]
-                                              : "%$70hg$LeeTdf"}
-                                          </div>
-                                        </div>
-                                      );
-                                    })}
+                                <div className="relative flex flex-col items-start justify-start w-full h-fit gap-4">
+                                  <div className="relative w-full h-fit flex text-xs break-words">
+                                    {dict?.decLocal}
                                   </div>
-                                  <div
-                                    className={`relative h-8 w-20 border border-white bg-sol/50 text-white font-aust flex items-center justify-center text-sm ${
-                                      !decryptLoading && !order?.decrypted
-                                        ? "cursor-pointer active:scale-95"
-                                        : "opacity-70"
-                                    }`}
-                                    onClick={() =>
-                                      !decryptLoading &&
-                                      !order?.decrypted &&
-                                      handleDecrypt(index)
-                                    }
-                                  >
+                                  <div className="relative w-full h-fit flex flex-row flex-wrap items-center justify-start gap-3">
                                     <div
-                                      className={`${
-                                        decryptLoading && "animate-spin"
-                                      } w-fit h-fit flex items-center justify-center`}
+                                      className={`relative h-8 w-fit px-2 border border-white bg-sol/50 text-white font-aust flex items-center justify-center text-sm ${
+                                        !downloadLoading?.[index]
+                                          ? "cursor-pointer active:scale-95"
+                                          : "opacity-70"
+                                      }`}
+                                      onClick={() =>
+                                        !downloadLoading?.[index] &&
+                                        handleDownloadDetails(index)
+                                      }
                                     >
-                                      {" "}
-                                      {decryptLoading ? (
-                                        <AiOutlineLoading
-                                          color="white"
-                                          size={12}
-                                        />
-                                      ) : !order?.decrypted ? (
-                                        dict?.dec
-                                      ) : (
-                                        dict?.decd
-                                      )}
+                                      <div
+                                        className={`${
+                                          downloadLoading?.[index] &&
+                                          "animate-spin"
+                                        } relative w-fit h-fit flex items-center justify-center`}
+                                      >
+                                        {downloadLoading?.[index] ? (
+                                          <AiOutlineLoading
+                                            color="white"
+                                            size={12}
+                                          />
+                                        ) : (
+                                          dict?.decFile
+                                        )}
+                                      </div>
+                                    </div>
+                                    <a
+                                      href={ORDER_DECRYPTOR_PATH}
+                                      download="order-decryptor.html"
+                                      className="relative h-8 w-fit px-2 border border-white bg-sol/50 text-white font-aust flex items-center justify-center text-sm cursor-pointer active:scale-95"
+                                    >
+                                      {dict?.decTool}
+                                    </a>
+                                  </div>
+                                  <div className="relative w-full h-fit flex flex-col items-start justify-start gap-1">
+                                    <div className="relative w-fit h-fit flex text-sol text-xs">
+                                      {dict?.decSum}
+                                    </div>
+                                    <div className="relative w-full h-fit flex text-xxs break-all">
+                                      {ORDER_DECRYPTOR_SHA256}
                                     </div>
                                   </div>
                                 </div>
@@ -291,47 +281,12 @@ const Orders: FunctionComponent<{
                                   Number(order?.collection?.amount)}
                               </div>
                               <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white">
-                                {order?.isFulfilled || !order?.fulfillment
-                                  ? dict?.fuld
-                                  : dict?.fulg}
+                                {order?.isFulfilled ? dict?.fuld : dict?.fulg}
                               </div>
                               <div className="relative flex w-fit h-fit items-center justify-center text-sm font-bit text-white">
                                 {dict?.cant}
                                 {order?.collection?.amount}
                               </div>
-                              {order?.fulfillment && (
-                                <div
-                                  className={`relative flex h-7 border border-white p-px items-center justify-center font-bit text-white ${
-                                    ["xs", "s", "m", "l", "xl", "2xl"].includes(
-                                      order?.fulfillment?.tamano?.toLowerCase() ||
-                                        ""
-                                    ) || !order?.decrypted
-                                      ? "rounded-full w-7 text-sm"
-                                      : "w-fit px-1 rounded-sm text-xxs"
-                                  }`}
-                                >
-                                  {order?.fulfillment?.tamano &&
-                                  order?.decrypted
-                                    ? order?.fulfillment?.tamano
-                                    : "??"}
-                                </div>
-                              )}
-                              {order?.details && (
-                                <div
-                                  className={`relative flex w-7 h-7 border border-white p-px rounded-full items-center justify-center text-sm font-bit text-white`}
-                                  style={{
-                                    backgroundColor:
-                                      order?.fulfillment?.color &&
-                                      order?.decrypted
-                                        ? `${order?.fulfillment?.color}`
-                                        : "#131313",
-                                  }}
-                                >
-                                  {(!order?.fulfillment?.color ||
-                                    !order?.decrypted) &&
-                                    "?"}
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>

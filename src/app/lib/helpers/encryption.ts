@@ -69,38 +69,3 @@ export const encryptForMultipleRecipients = async (
   return encryptedData;
 };
 
-export const decryptData = async (
-  encryptedData: EncryptedData,
-  privateKey: string,
-  address: string
-): Promise<any> => {
-  const encrypted = encryptedData[address.toLowerCase()];
-  if (!encrypted) {
-    throw new Error("No encrypted data found for this address");
-  }
-
-  const signingKey = new SigningKey(privateKey);
-
-  const sharedSecret = signingKey.computeSharedSecret(encrypted.ephemPublicKey);
-  const sharedSecretBytes = hexToBytes(sharedSecret);
-
-  const aesKey = await deriveAESKey(sharedSecretBytes);
-
-  const iv = hexToBytes(encrypted.iv);
-  const ciphertext = hexToBytes(encrypted.ciphertext);
-
-  const ivArray = Uint8Array.from(iv);
-  const ciphertextArray = Uint8Array.from(ciphertext);
-
-  const decrypted = await crypto.subtle.decrypt(
-    {
-      name: "AES-GCM",
-      iv: ivArray,
-    },
-    aesKey,
-    ciphertextArray
-  );
-
-  const decryptedString = new TextDecoder().decode(decrypted);
-  return JSON.parse(decryptedString);
-};

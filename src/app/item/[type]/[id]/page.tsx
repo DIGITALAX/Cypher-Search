@@ -4,6 +4,7 @@ import ItemEntry from "@/app/components/Item/modules/ItemEntry";
 import { LOCALES } from "@/app/lib/constants";
 import { Metadata } from "next";
 import { getCollectionMetadata } from "@/app/lib/helpers/getCollectionMetadata";
+import { safeJsonLd } from "@/app/lib/helpers/escapeHtml";
 
 export const generateMetadata = async ({
   params,
@@ -94,7 +95,7 @@ export default async function Item({
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: JSON.stringify(productSchema),
+                __html: safeJsonLd(productSchema),
               }}
             />
           )}

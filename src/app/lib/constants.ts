@@ -8,6 +8,15 @@ export const INFURA_GATEWAY: string = "https://cdn.digitalax.xyz";
 export const GROVE_GATEWAY: string = "https://api.grove.storage/";
 export const INFURA_GATEWAY_INTERNAL: string =
   "https://cdn.digitalax.xyz/ipfs/";
+export const MAX_UPLOAD_BYTES: number = 100 * 1024 * 1024;
+export const RATE_LIMIT_WINDOW_MS: number = 60 * 1000;
+export const RATE_LIMIT_MAX_REQUESTS: number = 120;
+export const GRAPHQL_RATE_LIMIT_MAX_REQUESTS: number = 1200;
+export const MAX_GRAPHQL_QUERY_LENGTH: number = 10000;
+export const MAX_GIF_QUERY_LENGTH: number = 200;
+export const ORDER_DECRYPTOR_PATH: string = "/order-decryptor.html";
+export const ORDER_DECRYPTOR_SHA256: string =
+  "780a7f4a32f88f74aa8fc58de69684c3374714a91fd4fa15d873fe1cb2dcc9a9";
 export const AUTOGRAPH_MARKET: `0x${string}` =
   "0x67819a22df4232726C7B911C1D4d5c06Cf080Cf8";
 export const NFT_CREATOR_ADDRESS: `0x${string}` =

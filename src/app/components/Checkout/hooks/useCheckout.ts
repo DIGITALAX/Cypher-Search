@@ -112,7 +112,7 @@ const useCheckout = (dict: any) => {
           });
           const json = await ipfsRes.json();
 
-          uploaded.push("ipfs://" + json);
+          uploaded.push("ipfs://" + json?.cid);
         }
       }
       setEncrypted(uploaded);

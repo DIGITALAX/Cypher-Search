@@ -10,12 +10,19 @@ import { Quest } from "../../Common/types/common.types";
 import { BioProps } from "../types/autograph.types";
 import useQuests from "../hooks/useQuests";
 import { getLocaleFromPath } from "@/app/lib/helpers/getLocalPath";
+import { safeHttpUrl } from "@/app/lib/helpers/escapeHtml";
 
 const Bio: FunctionComponent<BioProps> = ({ profile, dict }): JSX.Element => {
   const context = useContext(ModalContext);
   const { questsLoading, questSample } = useQuests(profile);
   const router = useRouter();
   const path = usePathname();
+  const website = profile?.metadata?.attributes?.find(
+    (item) => item?.key === "website"
+  )?.value;
+  const websiteHref = website
+    ? safeHttpUrl(website.trim()) || safeHttpUrl("https://" + website.trim())
+    : null;
   return (
     <div className="relative w-full h-fit flex flex-wrap otro:flex-nowrap flex-row items-start justify-start gap-5 px-2 sm:px-5 sm:-top-3 tablet:-top-7 sm:pt-0 pt-4">
       <div className="relative w-full h-fit flex flex-col gap-2">
@@ -118,29 +125,20 @@ const Bio: FunctionComponent<BioProps> = ({ profile, dict }): JSX.Element => {
                       src={`${INFURA_GATEWAY}/ipfs/QmPVS9QAg4HYCsAFgMnLA8ghd6j1WF6nMb2kbiReVcjRPn`}
                     />
                   </div>
-                  <Link
-                    target="blank"
-                    rel="noreferrer"
-                    href={
-                      (profile?.metadata?.attributes
-                        ?.find((item) => item?.key === "website")
-                        ?.value?.includes("https://")
-                        ? profile?.metadata?.attributes?.find(
-                            (item) => item?.key === "website"
-                          )?.value
-                        : "https://" +
-                          profile?.metadata?.attributes?.find(
-                            (item) => item?.key === "website"
-                          )?.value) || ""
-                    }
-                    className="relative break-all max-w-full w-fit h-fit flex cursor-pointer"
-                  >
-                    {
-                      profile?.metadata?.attributes?.find(
-                        (item) => item?.key === "website"
-                      )?.value
-                    }
-                  </Link>
+                  {websiteHref ? (
+                    <Link
+                      target="blank"
+                      rel="noopener noreferrer"
+                      href={websiteHref}
+                      className="relative break-all max-w-full w-fit h-fit flex cursor-pointer"
+                    >
+                      {website}
+                    </Link>
+                  ) : (
+                    <div className="relative break-all max-w-full w-fit h-fit flex">
+                      {website}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

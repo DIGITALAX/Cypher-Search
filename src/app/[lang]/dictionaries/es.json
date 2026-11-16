@@ -267,5 +267,8 @@
   "moneda": "Moneda del premio",
   "awardAmount": "Cantidad del premio",
   "award": "¿Premio para el creador?",
-  "decryptPrompt": "Ingresa la clave privada de tu billetera para descifrar tus datos de cumplimiento.\n\nEsta interfaz es completamente de código abierto, se ejecuta solo en tu navegador y nunca almacena tu clave. Asegúrate de estar en un entorno seguro antes de ingresarla."
+  "decLocal": "Tus datos permanecen cifrados en este sitio. Descarga el archivo cifrado y el descifrador, y abre el descifrador en tu propio ordenador para leerlos.",
+  "decFile": "Archivo cifrado",
+  "decTool": "Descifrador",
+  "decSum": "SHA-256 del descifrador"
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
 import { LOCALES } from "./lib/constants";
+import { safeJsonLd } from "./lib/helpers/escapeHtml";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://cypher.digitalax.xyz/"),
@@ -52,7 +53,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: safeJsonLd({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Cypher Search",

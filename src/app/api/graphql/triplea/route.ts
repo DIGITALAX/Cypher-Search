@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ApolloClient, InMemoryCache, HttpLink, gql } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import {
+  guardGraphqlRequest,
+  parseReadOnlyQuery,
+} from "@/app/lib/helpers/apiGuards";
 
 const serverTripleAClient = new ApolloClient({
   link: new HttpLink({
@@ -10,6 +14,9 @@ const serverTripleAClient = new ApolloClient({
 
 export async function POST(request: NextRequest) {
   try {
+    const blocked = guardGraphqlRequest(request, "graphql-triplea");
+    if (blocked) return blocked;
+
     const { query, variables } = await request.json();
 
     if (!query) {
@@ -19,8 +26,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const document = parseReadOnlyQuery(query);
+
+    if (!document) {
+      return NextResponse.json({ error: "Invalid query" }, { status: 400 });
+    }
+
     const result = await serverTripleAClient.query({
-      query: gql(query),
+      query: document,
       variables: variables || {},
       fetchPolicy: "no-cache",
       errorPolicy: "all",

@@ -1,19 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import { EncryptedData, Order, ScreenDisplay } from "../types/autograph.types";
+import { Order, ScreenDisplay } from "../types/autograph.types";
 import { ModalContext } from "@/app/providers";
 import { useAccount } from "wagmi";
 import { getOrders } from "../../../../../graphql/queries/getOrders";
 import { INFURA_GATEWAY, orderStatus } from "@/app/lib/constants";
 import { Account } from "@lens-protocol/client";
-import { decryptData } from "@/app/lib/helpers/encryption";
-const useOrders = (pageProfile: Account | undefined, dict: any) => {
+
+const useOrders = (pageProfile: Account | undefined) => {
   const context = useContext(ModalContext);
   const { address } = useAccount();
   const [ordersLoading, setOrdersLoading] = useState<boolean>(false);
-  const [decryptLoading, setDecryptLoading] = useState<boolean[]>([]);
+  const [downloadLoading, setDownloadLoading] = useState<boolean[]>([]);
   const [orderOpen, setOrderOpen] = useState<boolean[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [privateKey, setPrivateKey] = useState<string | null>(null);
 
   const getAllOrders = async () => {
     setOrdersLoading(true);
@@ -24,7 +23,6 @@ const useOrders = (pageProfile: Account | undefined, dict: any) => {
         (
           data?.data?.orderCreateds?.map((order: Order) => ({
             ...order,
-            decrypted: false,
             status: orderStatus[Number(order?.status)],
             totalPrice: Number(order?.totalPrice) / 10 ** 18,
           })) || []
@@ -39,8 +37,14 @@ const useOrders = (pageProfile: Account | undefined, dict: any) => {
     setOrdersLoading(false);
   };
 
-  const handleDecrypt = async (index: number) => {
-    setDecryptLoading((prev) => {
+  const handleDownloadDetails = async (index: number) => {
+    const cid = orders[index]?.details?.split("ipfs://")?.[1];
+
+    if (!cid || downloadLoading[index]) {
+      return;
+    }
+
+    setDownloadLoading((prev) => {
       let arr = [...prev];
 
       arr[index] = true;
@@ -48,53 +52,28 @@ const useOrders = (pageProfile: Account | undefined, dict: any) => {
       return arr;
     });
 
-    if (!address) {
-      return;
-    }
-
     try {
-      const data = await fetch(
-        `${INFURA_GATEWAY}/ipfs/${
-          orders[index]?.details?.split("ipfs://")?.[1]
-        }`
-      );
+      const data = await fetch(`${INFURA_GATEWAY}/ipfs/${cid}`);
 
-      const details = (await data.json()) as EncryptedData;
-
-      let key = privateKey;
-
-      if (!key) {
-        const promptMessage = dict?.decryptPrompt;
-        const promptValue = window.prompt(promptMessage);
-
-        if (!promptValue) {
-          return;
-        }
-
-        key = promptValue.trim();
-
-        if (!key.startsWith("0x")) {
-          key = `0x${key}`;
-        }
-
-        setPrivateKey(key);
+      if (!data.ok) {
+        throw new Error("Order details could not be downloaded");
       }
 
-      const fulfillment = await decryptData(details, key, address);
-
-      setOrders((prev) => {
-        const pedidos = [...prev];
-        pedidos[index] = {
-          ...pedidos[index],
-          fulfillment,
-          decrypted: true,
-        };
-        return pedidos;
-      });
+      const details = await data.text();
+      const url = URL.createObjectURL(
+        new Blob([details], { type: "application/json" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `order-${orders[index]?.orderId ?? index}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
     } catch (err: any) {
       console.error(err.message);
     }
-    setDecryptLoading((prev) => {
+    setDownloadLoading((prev) => {
       let arr = [...prev];
 
       arr[index] = false;
@@ -117,8 +96,8 @@ const useOrders = (pageProfile: Account | undefined, dict: any) => {
   return {
     ordersLoading,
     orders,
-    decryptLoading,
-    handleDecrypt,
+    downloadLoading,
+    handleDownloadDetails,
     orderOpen,
     setOrderOpen,
   };

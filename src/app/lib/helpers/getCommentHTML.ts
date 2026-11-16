@@ -11,15 +11,13 @@ const getCommentHTML = (
   //     return `<span style="color: #0091ff">${match}</span>`;
   //   }
   // );
-  const mentionHighlight = (saved ? e : e.target.value).replace(
-    regexMentions,
-    (match: string) => {
-      return `<span style="color: #0091ff">${match}</span>`;
-    }
-  );
-  const finalHTML = mentionHighlight
-    ?.replace(new RegExp("&", "g"), "&")
-    ?.replace(new RegExp("<", "g"), "<");
+  const escapedValue = String((saved ? e : e.target.value) ?? "")
+    .replace(new RegExp("&", "g"), "&amp;")
+    .replace(new RegExp("<", "g"), "&lt;")
+    .replace(new RegExp(">", "g"), "&gt;");
+  const finalHTML = escapedValue.replace(regexMentions, (match: string) => {
+    return `<span style="color: #0091ff">${match}</span>`;
+  });
   if (finalHTML && resultElement) (resultElement as any).innerHTML = finalHTML;
   return finalHTML;
 };
